@@ -1,0 +1,106 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-ij3b  lxd         localhost/localhost  3.6.1    unsupported  18:37:27Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-raj3t5n4                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.97.114.193             
+test-raj3t5n4/0*                active    idle   1        10.97.114.217   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.97.114.193  juju-59a93f-0  ubuntu@22.04      Running
+1        started  10.97.114.217  juju-59a93f-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 18:25:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:25:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-raj3t5n4-0: 18:28:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-raj3t5n4-0: 18:28:33 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:34 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:38 CRITICAL unit.test-raj3t5n4/0.juju-log image:0: test mode is enabled
+unit-test-raj3t5n4-0: 18:28:39 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:39 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:41 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:42 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:28:43 CRITICAL unit.test-raj3t5n4/0.juju-log image:0: test mode is enabled
+unit-test-raj3t5n4-0: 18:28:44 CRITICAL unit.test-raj3t5n4/0.juju-log image:0: test mode is enabled
+unit-test-raj3t5n4-0: 18:29:25 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:29:27 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:29:39 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:30:06 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:30:20 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:30:57 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:30:59 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:36:13 ERROR unit.test-raj3t5n4/0.juju-log Timeout creating openstack server test-raj3t5n4-0-4c93bfe73f4c
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-raj3t5n4-0: 18:36:15 ERROR unit.test-raj3t5n4/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-raj3t5n4-0-4c93bfe73f4c
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-raj3t5n4-0-4c93bfe73f4c openstack runner
+unit-test-raj3t5n4-0: 18:36:19 CRITICAL unit.test-raj3t5n4/0.juju-log test mode is enabled
+unit-test-raj3t5n4-0: 18:36:34 CRITICAL unit.test-raj3t5n4/0.juju-log image:0: test mode is enabled
+unit-test-raj3t5n4-0: 18:36:43 ERROR unit.test-raj3t5n4/0.juju-log image:0: Health check failed due to unable to find keyfile for test-raj3t5n4-0-4c93bfe73f4c
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-raj3t5n4-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-raj3t5n4-0-4c93bfe73f4c, key path: /home/runner-manager/.ssh/test-raj3t5n4-0-4c93bfe73f4c.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

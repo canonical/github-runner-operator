@@ -1,0 +1,2188 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-upgrade-43co on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] active:
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [executing] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [executing] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [executing] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-w6jtkeqx/0 [idle] blocked: Invalid token.
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                    Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-43co  lxd         localhost/localhost  3.1.10   unsupported  22:09:31Z
+
+App                          Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active       1  github-runner-image-builder  latest/edge    2  no       
+test-w6jtkeqx                         blocked      1  github-runner                               0  no       Invalid token.
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.32.17.203           
+test-w6jtkeqx/0*                blocked   idle   1        10.32.17.166           Invalid token.
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.32.17.203  juju-8c020b-0  ubuntu@22.04      Running
+1        started  10.32.17.166  juju-8c020b-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 19:07:06 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 19:07:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:07:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 19:07:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:10:06 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 19:10:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:10:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-w6jtkeqx-0: 19:10:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-w6jtkeqx-0: 19:10:30 ERROR unit.test-w6jtkeqx/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:16:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:16:50 ERROR unit.test-w6jtkeqx/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:21:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:27:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:33:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:38:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:44:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:50:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 19:56:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:02:07 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:07:14 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:12:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:17:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:23:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:29:23 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:34:44 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:40:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:46:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:51:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 20:57:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:02:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:08:48 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:14:33 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:20:40 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:26:48 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:31:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:37:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:43:58 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:50:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 21:56:32 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 22:01:59 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-w6jtkeqx-0: 22:07:33 ERROR unit.test-w6jtkeqx/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-w6jtkeqx-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
