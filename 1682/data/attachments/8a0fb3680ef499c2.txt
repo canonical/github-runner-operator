@@ -1,0 +1,233 @@
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-25 19:08:21+00:00, remaining=4641, limit=5000)
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-f7obqp4e/0 [executing] maintenance: Reconciling runners
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-v0uu  lxd         localhost/localhost  3.6.1    unsupported  18:49:35Z
+
+App                          Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active           1  github-runner-image-builder  latest/edge    2  no       
+test-f7obqp4e                         maintenance      1  github-runner                               0  no       Reconciling runners
+
+Unit                            Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active       idle       0        10.109.94.251          
+test-f7obqp4e/0*                maintenance  executing  1        10.109.94.33           Reconciling runners
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.109.94.251  juju-7fa3c8-0  ubuntu@22.04      Running
+1        started  10.109.94.33   juju-7fa3c8-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 18:25:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:25:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-f7obqp4e-0: 18:28:14 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-f7obqp4e-0: 18:28:29 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:30 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:33 CRITICAL unit.test-f7obqp4e/0.juju-log image:0: test mode is enabled
+unit-test-f7obqp4e-0: 18:28:34 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:35 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:36 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:38 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:28:39 CRITICAL unit.test-f7obqp4e/0.juju-log image:0: test mode is enabled
+unit-test-f7obqp4e-0: 18:28:40 CRITICAL unit.test-f7obqp4e/0.juju-log image:0: test mode is enabled
+unit-test-f7obqp4e-0: 18:29:22 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:29:24 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:32:14 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:32:53 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:32:54 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:33:23 ERROR unit.test-f7obqp4e/0.juju-log pre-job-metrics.json not found for runner test-f7obqp4e-0-8815b68dc893
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-f7obqp4e-0-8815b68dc893/pre-job-metrics.json'
+unit-test-f7obqp4e-0: 18:33:23 ERROR unit.test-f7obqp4e/0.juju-log Pre-job metrics for runner test-f7obqp4e-0-8815b68dc893 not found, stop extracting post-jobs metrics.
+unit-test-f7obqp4e-0: 18:33:29 ERROR unit.test-f7obqp4e/0.juju-log Unable to get SSH connection for instance test-f7obqp4e-0-8815b68dc893, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-f7obqp4e-0-8815b68dc893, key path: /home/runner-manager/.ssh/test-f7obqp4e-0-8815b68dc893.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-f7obqp4e-0-8815b68dc893
+unit-test-f7obqp4e-0: 18:33:30 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:33:42 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:34:04 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:34:05 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:39:25 ERROR unit.test-f7obqp4e/0.juju-log Timeout creating openstack server test-f7obqp4e-0-22d31c61e1ac
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-f7obqp4e-0: 18:39:28 ERROR unit.test-f7obqp4e/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-f7obqp4e-0-22d31c61e1ac
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-f7obqp4e-0-22d31c61e1ac openstack runner
+unit-test-f7obqp4e-0: 18:39:32 CRITICAL unit.test-f7obqp4e/0.juju-log test mode is enabled
+unit-test-f7obqp4e-0: 18:44:45 ERROR unit.test-f7obqp4e/0.juju-log Timeout creating openstack server test-f7obqp4e-0-98a4e6c5e748
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-f7obqp4e-0: 18:44:47 ERROR unit.test-f7obqp4e/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-f7obqp4e-0-98a4e6c5e748
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-f7obqp4e-0-98a4e6c5e748 openstack runner
+unit-test-f7obqp4e-0: 18:44:51 CRITICAL unit.test-f7obqp4e/0.juju-log image:0: test mode is enabled
+unit-test-f7obqp4e-0: 18:44:59 ERROR unit.test-f7obqp4e/0.juju-log image:0: runner-installed.timestamp not found for runner test-f7obqp4e-0-22d31c61e1ac
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-f7obqp4e-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-f7obqp4e-0-22d31c61e1ac/runner-installed.timestamp'
+unit-test-f7obqp4e-0: 18:44:59 ERROR unit.test-f7obqp4e/0.juju-log image:0: installed timestamp not found for runner test-f7obqp4e-0-22d31c61e1ac, will not extract any metrics.
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

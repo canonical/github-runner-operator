@@ -1,0 +1,395 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [idle] active:
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vgnplfch/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-kefz  lxd         localhost/localhost  3.6.1    unsupported  19:44:10Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-vgnplfch                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.194.183.136             
+mongodb/0*                      active    idle   2        10.194.183.14   27017/tcp  Primary
+test-vgnplfch/0*                active    idle   1        10.194.183.31              
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.194.183.136  juju-d09ee8-0  ubuntu@22.04      Running
+1        started  10.194.183.31   juju-d09ee8-1  ubuntu@22.04      Running
+2        started  10.194.183.14   juju-d09ee8-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 18:52:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:52:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 18:52:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:55:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:55:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vgnplfch-0: 18:55:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-vgnplfch-0: 18:56:12 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:13 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:17 CRITICAL unit.test-vgnplfch/0.juju-log image:0: test mode is enabled
+unit-test-vgnplfch-0: 18:56:18 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:19 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:20 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:21 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:56:22 CRITICAL unit.test-vgnplfch/0.juju-log image:0: test mode is enabled
+unit-test-vgnplfch-0: 18:56:23 CRITICAL unit.test-vgnplfch/0.juju-log image:0: test mode is enabled
+machine-2: 18:57:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:57:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:57:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:58:01 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:58:01 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:58:40 ERROR unit.mongodb/0.juju-log _on_secret_remove: Secret secret:ctm5bio6q7fd5e4tg600 seems to have no observers, could be removed
+unit-test-vgnplfch-0: 18:58:59 CRITICAL unit.test-vgnplfch/0.juju-log mongodb:3: test mode is enabled
+unit-test-vgnplfch-0: 18:59:00 CRITICAL unit.test-vgnplfch/0.juju-log mongodb:3: test mode is enabled
+unit-test-vgnplfch-0: 18:59:01 CRITICAL unit.test-vgnplfch/0.juju-log mongodb:3: test mode is enabled
+unit-test-vgnplfch-0: 18:59:03 CRITICAL unit.test-vgnplfch/0.juju-log mongodb:3: test mode is enabled
+unit-test-vgnplfch-0: 18:59:45 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 18:59:46 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:00:13 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:01:09 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:01:21 ERROR unit.test-vgnplfch/0.juju-log SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:01:26 ERROR unit.test-vgnplfch/0.juju-log SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:01:36 ERROR unit.test-vgnplfch/0.juju-log SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:01:36 ERROR unit.test-vgnplfch/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:01:50 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:02:45 CRITICAL unit.test-vgnplfch/0.juju-log image:0: test mode is enabled
+unit-test-vgnplfch-0: 19:02:55 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:00 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:10 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:10 ERROR unit.test-vgnplfch/0.juju-log image:0: Retry limit of 3 exceed: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:28 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:33 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:43 ERROR unit.test-vgnplfch/0.juju-log image:0: SSH connection failure with test-vgnplfch-0-331112d208cb during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:03:43 ERROR unit.test-vgnplfch/0.juju-log image:0: Retry limit of 3 exceed: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vgnplfch-0-331112d208cb
+unit-test-vgnplfch-0: 19:07:15 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:12:30 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:16:43 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:21:11 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:26:11 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:31:49 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:32:24 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:32:25 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:32:33 ERROR unit.test-vgnplfch/0.juju-log runner-installed.timestamp not found for runner test-vgnplfch-0-331112d208cb
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-vgnplfch-0-331112d208cb/runner-installed.timestamp'
+unit-test-vgnplfch-0: 19:32:33 ERROR unit.test-vgnplfch/0.juju-log installed timestamp not found for runner test-vgnplfch-0-331112d208cb, will not extract any metrics.
+unit-test-vgnplfch-0: 19:32:40 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:33:09 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:33:10 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:33:30 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:34:30 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:34:31 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:34:50 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:35:27 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:35:29 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:35:49 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:36:32 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:36:33 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:36:53 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:37:35 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:42:49 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:42:51 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:43:09 ERROR unit.test-vgnplfch/0.juju-log Health check failed due to unable to find keyfile for test-vgnplfch-0-4ea05b56231d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+unit-test-vgnplfch-0: 19:43:13 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:13 ERROR unit.test-vgnplfch/0.juju-log Failed to get SSH connection while removing test-vgnplfch-0-4ea05b56231d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+unit-test-vgnplfch-0: 19:43:24 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:28 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:30 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+unit-test-vgnplfch-0: 19:43:36 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:36 ERROR unit.test-vgnplfch/0.juju-log Failed to get SSH connection while removing test-vgnplfch-0-4ea05b56231d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+unit-test-vgnplfch-0: 19:43:48 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:53 ERROR unit.test-vgnplfch/0.juju-log Unable to get SSH connection for instance test-vgnplfch-0-4ea05b56231d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vgnplfch-0-4ea05b56231d, key path: /home/runner-manager/.ssh/test-vgnplfch-0-4ea05b56231d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vgnplfch-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-vgnplfch-0-4ea05b56231d
+unit-test-vgnplfch-0: 19:43:54 CRITICAL unit.test-vgnplfch/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
