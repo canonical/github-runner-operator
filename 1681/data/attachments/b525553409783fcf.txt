@@ -1,0 +1,104 @@
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 1 runners
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:220 Creating openstack server with test-n3ckec83-0-4d1dabe71859
+ERROR    github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:240 Timeout creating openstack server test-n3ckec83-0-4d1dabe71859
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:241 Attempting clean up of openstack server test-n3ckec83-0-4d1dabe71859 that timeout during creation
+ERROR    github_runner_manager.manager.runner_manager:runner_manager.py:278 Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-n3ckec83-0-4d1dabe71859
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-n3ckec83-0-4d1dabe71859 openstack runner
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:158 Getting runners...
+INFO     github_runner_manager.openstack_cloud.openstack_cloud:openstack_cloud.py:368 Getting all openstack servers managed by the charm
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:163 Found following runners: set()
