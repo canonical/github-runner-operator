@@ -1,0 +1,76 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-upgrade-ry7v on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active:
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [executing] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-gpw0k7ab/0 [idle] active:
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                    Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-ry7v  lxd         localhost/localhost  3.1.10   unsupported  19:17:00Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-gpw0k7ab                         active      1  github-runner                               1  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.153.114.118         
+test-gpw0k7ab/0*                active    idle   1        10.153.114.111         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.153.114.118  juju-34b865-0  ubuntu@22.04      Running
+1        started  10.153.114.111  juju-34b865-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 19:09:07 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 19:09:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:09:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 19:09:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:12:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:12:04 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 19:12:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-gpw0k7ab-0: 19:12:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-gpw0k7ab-0: 19:15:56 CRITICAL unit.test-gpw0k7ab/0.juju-log test mode is enabled
+unit-test-gpw0k7ab-0: 19:15:59 CRITICAL unit.test-gpw0k7ab/0.juju-log test mode is enabled
+unit-test-gpw0k7ab-0: 19:16:01 CRITICAL unit.test-gpw0k7ab/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

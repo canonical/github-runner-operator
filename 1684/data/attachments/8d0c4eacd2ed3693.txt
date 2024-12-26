@@ -1,0 +1,38 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-success-ss7a on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [executing] maintenance: Reconciling runners
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-cp1h1kon/0 [executing] maintenance: Reconciling runners
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1735238081.062012, "event": "reconciliation", "flavor": "test-cp1h1kon", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 322.7053551673889}
+{"timestamp": 1735238097.3009226, "event": "reconciliation", "flavor": "test-cp1h1kon", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 15.258370876312256}
+{"timestamp": 1735238143.342092, "event": "reconciliation", "flavor": "test-cp1h1kon", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.35957980155945}
+{"timestamp": 1735238175.4393826, "event": "reconciliation", "flavor": "test-cp1h1kon", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.140629053115845}
