@@ -1,0 +1,189 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-np6ja6h1/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-4us6  lxd         localhost/localhost  3.6.1    unsupported  07:18:16Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-np6ja6h1                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.224.149.225             
+mongodb/0*                      active    idle   2        10.224.149.160  27017/tcp  Primary
+test-np6ja6h1/0*                active    idle   1        10.224.149.217             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.224.149.225  juju-10ec60-0  ubuntu@22.04      Running
+1        started  10.224.149.217  juju-10ec60-1  ubuntu@22.04      Running
+2        started  10.224.149.160  juju-10ec60-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-np6ja6h1-0: 06:35:39 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:35:44 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:35:54 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:35:54 ERROR unit.test-np6ja6h1/0.juju-log image:0: Retry limit of 3 exceed: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:36:19 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:36:24 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:36:34 ERROR unit.test-np6ja6h1/0.juju-log image:0: SSH connection failure with test-np6ja6h1-0-043badc5e746 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:36:34 ERROR unit.test-np6ja6h1/0.juju-log image:0: Retry limit of 3 exceed: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-np6ja6h1-0-043badc5e746
+unit-test-np6ja6h1-0: 06:37:44 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 06:43:10 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 06:47:14 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 06:53:01 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 06:57:22 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:01:59 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:05:15 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:05:16 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:05:24 ERROR unit.test-np6ja6h1/0.juju-log runner-installed.timestamp not found for runner test-np6ja6h1-0-043badc5e746
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-np6ja6h1-0-043badc5e746/runner-installed.timestamp'
+unit-test-np6ja6h1-0: 07:05:24 ERROR unit.test-np6ja6h1/0.juju-log installed timestamp not found for runner test-np6ja6h1-0-043badc5e746, will not extract any metrics.
+unit-test-np6ja6h1-0: 07:05:36 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:06:09 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:06:11 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:06:44 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:07:16 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:07:57 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:07:59 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:08:26 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:09:12 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:09:13 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:09:40 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:10:31 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:10:32 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:10:58 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:11:58 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:16:42 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:17:02 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:17:03 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+unit-test-np6ja6h1-0: 07:17:29 ERROR unit.test-np6ja6h1/0.juju-log Health check failed due to unable to find keyfile for test-np6ja6h1-0-b869a2584c05
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-np6ja6h1-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-np6ja6h1-0-b869a2584c05, key path: /home/runner-manager/.ssh/test-np6ja6h1-0-b869a2584c05.key
+unit-test-np6ja6h1-0: 07:17:43 CRITICAL unit.test-np6ja6h1/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
