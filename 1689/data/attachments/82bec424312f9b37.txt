@@ -1,0 +1,241 @@
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2024-12-29 07:56:50+00:00, remaining=4768, limit=5000)
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-b9ec6n4u/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-b9ec6n4u/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-dzlz  lxd         localhost/localhost  3.6.1    unsupported  07:52:28Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-b9ec6n4u                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.31.182.15           
+test-b9ec6n4u/0*                active    idle   1        10.31.182.46           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.31.182.15  juju-e64525-0  ubuntu@22.04      Running
+1        started  10.31.182.46  juju-e64525-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-b9ec6n4u-0: 07:13:06 CRITICAL unit.test-b9ec6n4u/0.juju-log image:0: test mode is enabled
+unit-test-b9ec6n4u-0: 07:13:17 ERROR unit.test-b9ec6n4u/0.juju-log image:0: runner-installed.timestamp not found for runner test-b9ec6n4u-0-15fd5aeb4c0e
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-b9ec6n4u-0-15fd5aeb4c0e/runner-installed.timestamp'
+unit-test-b9ec6n4u-0: 07:13:17 ERROR unit.test-b9ec6n4u/0.juju-log image:0: installed timestamp not found for runner test-b9ec6n4u-0-15fd5aeb4c0e, will not extract any metrics.
+unit-test-b9ec6n4u-0: 07:13:44 ERROR unit.test-b9ec6n4u/0.juju-log image:0: pre-job-metrics.json not found for runner test-b9ec6n4u-0-25831517c574
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-b9ec6n4u-0-25831517c574/pre-job-metrics.json'
+unit-test-b9ec6n4u-0: 07:13:44 ERROR unit.test-b9ec6n4u/0.juju-log image:0: Pre-job metrics for runner test-b9ec6n4u-0-25831517c574 not found, stop extracting post-jobs metrics.
+unit-test-b9ec6n4u-0: 07:13:50 ERROR unit.test-b9ec6n4u/0.juju-log image:0: Unable to get SSH connection for instance test-b9ec6n4u-0-25831517c574, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-b9ec6n4u-0-25831517c574
+unit-test-b9ec6n4u-0: 07:13:50 ERROR unit.test-b9ec6n4u/0.juju-log image:0: Failed to get SSH connection while removing test-b9ec6n4u-0-25831517c574
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+unit-test-b9ec6n4u-0: 07:14:04 ERROR unit.test-b9ec6n4u/0.juju-log image:0: Unable to get SSH connection for instance test-b9ec6n4u-0-25831517c574, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-b9ec6n4u-0-25831517c574
+unit-test-b9ec6n4u-0: 07:14:11 ERROR unit.test-b9ec6n4u/0.juju-log image:0: Unable to get SSH connection for instance test-b9ec6n4u-0-25831517c574, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-b9ec6n4u-0-25831517c574
+unit-test-b9ec6n4u-0: 07:14:27 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:14:29 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:14:38 ERROR unit.test-b9ec6n4u/0.juju-log Unable to get SSH connection for instance test-b9ec6n4u-0-25831517c574, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 130, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 133, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.server_name}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-b9ec6n4u-0-25831517c574
+unit-test-b9ec6n4u-0: 07:14:38 ERROR unit.test-b9ec6n4u/0.juju-log Failed to get SSH connection while removing test-b9ec6n4u-0-25831517c574
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-b9ec6n4u-0-25831517c574, key path: /home/runner-manager/.ssh/test-b9ec6n4u-0-25831517c574.key
+unit-test-b9ec6n4u-0: 07:14:57 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:15:35 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:15:37 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:20:55 ERROR unit.test-b9ec6n4u/0.juju-log Timeout creating openstack server test-b9ec6n4u-0-481296f967c9
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-b9ec6n4u-0: 07:20:58 ERROR unit.test-b9ec6n4u/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-b9ec6n4u-0-481296f967c9
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-b9ec6n4u-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-b9ec6n4u-0-481296f967c9 openstack runner
+unit-test-b9ec6n4u-0: 07:21:05 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:21:30 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:25:41 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:29:57 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:35:31 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:41:29 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+unit-test-b9ec6n4u-0: 07:47:12 CRITICAL unit.test-b9ec6n4u/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
