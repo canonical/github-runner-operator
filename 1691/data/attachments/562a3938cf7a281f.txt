@@ -1,0 +1,67 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [executing] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-w7lhl446-0-701d1542372b
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([[{'version': 4, 'addr': '10.145.193.97', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6b:5c:28'}]])
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command nc -z localhost 8080 on test-w7lhl446-0-701d1542372b
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.97', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6b:5c:28'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-w7lhl446-0-701d1542372b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.97 nc -z localhost 8080'
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command curl http://localhost:8080 on test-w7lhl446-0-701d1542372b
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([[{'version': 4, 'addr': '10.145.193.97', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6b:5c:28'}]])
+WARNING  root:openstack.py:123 ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-w7lhl446-0-701d1542372b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.97 curl http://localhost:8080'
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-w7lhl446/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-ljqh  lxd         localhost/localhost  3.6.1    unsupported  07:37:30Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-w7lhl446                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.201.75.74              
+test-w7lhl446/0*                active    idle   1        10.201.75.23    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.201.75.74  juju-59b8de-0  ubuntu@22.04      Running
+1        started  10.201.75.23  juju-59b8de-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-w7lhl446-0: 07:26:14 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:26:15 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:26:59 ERROR unit.test-w7lhl446/0.juju-log post-job-metrics.json not found for runner test-w7lhl446-0-91686872bb16
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w7lhl446-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-w7lhl446-0-91686872bb16/post-job-metrics.json'
+unit-test-w7lhl446-0: 07:27:05 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:27:23 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:27:39 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:27:40 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:31:58 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:32:30 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:33:24 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:33:25 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:33:58 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:35:54 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:36:12 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:36:14 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+unit-test-w7lhl446-0: 07:36:46 CRITICAL unit.test-w7lhl446/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...

@@ -1,0 +1,109 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-sv8a85xp/0 [executing] maintenance: Reconciling runners
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-i8tq  lxd         localhost/localhost  3.6.1    unsupported  08:51:03Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-sv8a85xp                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.180.132.245             
+mongodb/0*                      active    idle   2        10.180.132.92   27017/tcp  Primary
+test-sv8a85xp/0*                active    idle   1        10.180.132.127             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.180.132.245  juju-13a5b1-0  ubuntu@22.04      Running
+1        started  10.180.132.127  juju-13a5b1-1  ubuntu@22.04      Running
+2        started  10.180.132.92   juju-13a5b1-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-sv8a85xp-0: 08:38:29 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:39:45 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:39:47 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:40:19 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:41:09 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:41:10 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:41:43 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:42:15 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:42:33 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:42:34 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:43:05 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:46:56 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:49:15 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:49:16 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:49:46 ERROR unit.test-sv8a85xp/0.juju-log Health check failed due to unable to find keyfile for test-sv8a85xp-0-3ca6f1f809d0
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sv8a85xp-0-3ca6f1f809d0, key path: /home/runner-manager/.ssh/test-sv8a85xp-0-3ca6f1f809d0.key
+unit-test-sv8a85xp-0: 08:49:53 ERROR unit.test-sv8a85xp/0.juju-log Failed to get SSH connection while removing test-sv8a85xp-0-3ca6f1f809d0
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sv8a85xp-0-3ca6f1f809d0, key path: /home/runner-manager/.ssh/test-sv8a85xp-0-3ca6f1f809d0.key
+unit-test-sv8a85xp-0: 08:50:15 CRITICAL unit.test-sv8a85xp/0.juju-log test mode is enabled
+unit-test-sv8a85xp-0: 08:50:25 ERROR unit.test-sv8a85xp/0.juju-log Failed to get SSH connection while removing test-sv8a85xp-0-3ca6f1f809d0
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sv8a85xp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sv8a85xp-0-3ca6f1f809d0, key path: /home/runner-manager/.ssh/test-sv8a85xp-0-3ca6f1f809d0.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
