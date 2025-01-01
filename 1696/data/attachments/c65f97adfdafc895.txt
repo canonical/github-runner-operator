@@ -1,0 +1,135 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [executing] active:
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-j008rvh7/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-whk9  lxd         localhost/localhost  3.6.1    unsupported  22:31:51Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-j008rvh7                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.64.113.88               
+mongodb/0*                      active    idle   2        10.64.113.91    27017/tcp  Primary
+test-j008rvh7/0*                active    idle   1        10.64.113.27               
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.64.113.88  juju-0116a5-0  ubuntu@22.04      Running
+1        started  10.64.113.27  juju-0116a5-1  ubuntu@22.04      Running
+2        started  10.64.113.91  juju-0116a5-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log runner-installed.timestamp not found for runner test-j008rvh7-0-7bae37b82841
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j008rvh7-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-j008rvh7-0-7bae37b82841/runner-installed.timestamp'
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log installed timestamp not found for runner test-j008rvh7-0-7bae37b82841, will not extract any metrics.
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log runner-installed.timestamp not found for runner test-j008rvh7-0-ebb4178a8a96
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j008rvh7-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-j008rvh7-0-ebb4178a8a96/runner-installed.timestamp'
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log installed timestamp not found for runner test-j008rvh7-0-ebb4178a8a96, will not extract any metrics.
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log runner-installed.timestamp not found for runner test-j008rvh7-0-7d25cb5f2c38
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j008rvh7-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-j008rvh7-0-7d25cb5f2c38/runner-installed.timestamp'
+unit-test-j008rvh7-0: 22:18:42 ERROR unit.test-j008rvh7/0.juju-log installed timestamp not found for runner test-j008rvh7-0-7d25cb5f2c38, will not extract any metrics.
+unit-test-j008rvh7-0: 22:18:55 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:19:32 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:19:34 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:20:09 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:21:26 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:21:27 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:22:01 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:22:52 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:22:53 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:23:23 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:23:54 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:24:12 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:24:13 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:24:44 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:27:15 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:30:54 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:30:55 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:31:14 CRITICAL unit.test-j008rvh7/0.juju-log test mode is enabled
+unit-test-j008rvh7-0: 22:31:23 ERROR unit.test-j008rvh7/0.juju-log runner-installed.timestamp not found for runner test-j008rvh7-0-4f6569ee18dc
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j008rvh7-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-j008rvh7-0-4f6569ee18dc/runner-installed.timestamp'
+unit-test-j008rvh7-0: 22:31:23 ERROR unit.test-j008rvh7/0.juju-log installed timestamp not found for runner test-j008rvh7-0-4f6569ee18dc, will not extract any metrics.
+unit-test-j008rvh7-0: 22:31:23 ERROR unit.test-j008rvh7/0.juju-log runner-installed.timestamp not found for runner test-j008rvh7-0-48c066eabf3d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j008rvh7-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-j008rvh7-0-48c066eabf3d/runner-installed.timestamp'
+unit-test-j008rvh7-0: 22:31:23 ERROR unit.test-j008rvh7/0.juju-log installed timestamp not found for runner test-j008rvh7-0-48c066eabf3d, will not extract any metrics.
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
