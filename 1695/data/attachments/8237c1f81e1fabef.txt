@@ -1,0 +1,172 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-viik  lxd         localhost/localhost  3.6.1    unsupported  06:33:26Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-vn0f1y42                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.87.189.17              
+test-vn0f1y42/0*                active    idle   1        10.87.189.193   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.87.189.17   juju-0951d1-0  ubuntu@22.04      Running
+1        started  10.87.189.193  juju-0951d1-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:25:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:25:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vn0f1y42-0: 06:28:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-vn0f1y42-0: 06:29:09 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:10 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:14 CRITICAL unit.test-vn0f1y42/0.juju-log image:0: test mode is enabled
+unit-test-vn0f1y42-0: 06:29:15 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:16 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:17 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:18 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:29:19 CRITICAL unit.test-vn0f1y42/0.juju-log image:0: test mode is enabled
+unit-test-vn0f1y42-0: 06:29:20 CRITICAL unit.test-vn0f1y42/0.juju-log image:0: test mode is enabled
+unit-test-vn0f1y42-0: 06:30:21 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:30:23 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:30:43 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:31:17 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:31:31 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:32:18 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:32:19 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:32:38 ERROR unit.test-vn0f1y42/0.juju-log Failed to create openstack server test-vn0f1y42-0-c2fdb4ef35d8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_compute.py", line 992, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/compute/v2/_proxy.py", line 727, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/proxy.py", line 643, in _create
+    return res.create(self, base_path=base_path)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1533, in create
+    self._translate_response(response, **response_kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1285, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/exceptions.py", line 247, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps6.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+unit-test-vn0f1y42-0: 06:32:38 ERROR unit.test-vn0f1y42/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_compute.py", line 992, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/compute/v2/_proxy.py", line 727, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/proxy.py", line 643, in _create
+    return res.create(self, base_path=base_path)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1533, in create
+    self._translate_response(response, **response_kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1285, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/exceptions.py", line 247, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps6.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 250, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-vn0f1y42-0-c2fdb4ef35d8
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-vn0f1y42-0-c2fdb4ef35d8 openstack runner
+unit-test-vn0f1y42-0: 06:32:43 CRITICAL unit.test-vn0f1y42/0.juju-log test mode is enabled
+unit-test-vn0f1y42-0: 06:32:59 ERROR unit.test-vn0f1y42/0.juju-log Failed to create openstack server test-vn0f1y42-0-1dfcb257de1f
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_compute.py", line 992, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/compute/v2/_proxy.py", line 727, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/proxy.py", line 643, in _create
+    return res.create(self, base_path=base_path)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1533, in create
+    self._translate_response(response, **response_kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1285, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/exceptions.py", line 247, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps6.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+unit-test-vn0f1y42-0: 06:32:59 ERROR unit.test-vn0f1y42/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/cloud/_compute.py", line 992, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/compute/v2/_proxy.py", line 727, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/proxy.py", line 643, in _create
+    return res.create(self, base_path=base_path)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1533, in create
+    self._translate_response(response, **response_kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/resource.py", line 1285, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/openstack/exceptions.py", line 247, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps6.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 250, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-vn0f1y42-0-1dfcb257de1f
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-vn0f1y42-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-vn0f1y42-0-1dfcb257de1f openstack runner
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
