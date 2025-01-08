@@ -1,0 +1,199 @@
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [idle] active:
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-vqhsp0cj/0 [idle] active: 
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-87jr  lxd         localhost/localhost  3.6.1    unsupported  22:04:14Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+mongodb                               active      1  mongodb                      6/edge       206  no       
+test-vqhsp0cj                         active      1  github-runner                               0  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.182.156.119             
+mongodb/0*                      active    idle   2        10.182.156.71   27017/tcp  Primary
+test-vqhsp0cj/0*                active    idle   1        10.182.156.189             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.182.156.119  juju-538be0-0  ubuntu@22.04      Running
+1        started  10.182.156.189  juju-538be0-1  ubuntu@22.04      Running
+2        started  10.182.156.71   juju-538be0-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 21:14:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 21:14:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 21:14:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 21:17:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 21:17:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vqhsp0cj-0: 21:17:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-vqhsp0cj-0: 21:17:27 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:29 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:32 CRITICAL unit.test-vqhsp0cj/0.juju-log image:0: test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:33 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:34 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:35 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:36 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:37 CRITICAL unit.test-vqhsp0cj/0.juju-log image:0: test mode is enabled
+unit-test-vqhsp0cj-0: 21:17:38 CRITICAL unit.test-vqhsp0cj/0.juju-log image:0: test mode is enabled
+machine-2: 21:18:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 21:18:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 21:18:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 21:19:12 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 21:19:12 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 21:19:50 ERROR unit.mongodb/0.juju-log _on_secret_remove: Secret secret:ctveno94rpcd5ecb6mvg seems to have no observers, could be removed
+unit-test-vqhsp0cj-0: 21:20:08 CRITICAL unit.test-vqhsp0cj/0.juju-log mongodb:3: test mode is enabled
+unit-test-vqhsp0cj-0: 21:20:09 CRITICAL unit.test-vqhsp0cj/0.juju-log mongodb:3: test mode is enabled
+unit-test-vqhsp0cj-0: 21:20:10 CRITICAL unit.test-vqhsp0cj/0.juju-log mongodb:3: test mode is enabled
+unit-test-vqhsp0cj-0: 21:20:12 CRITICAL unit.test-vqhsp0cj/0.juju-log mongodb:3: test mode is enabled
+unit-test-vqhsp0cj-0: 21:20:48 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:20:50 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:21:06 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:21:52 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:22:00 ERROR unit.test-vqhsp0cj/0.juju-log SSH connection failure with test-vqhsp0cj-0-80dd7075e4f5 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vqhsp0cj-0-80dd7075e4f5
+unit-test-vqhsp0cj-0: 21:22:05 ERROR unit.test-vqhsp0cj/0.juju-log SSH connection failure with test-vqhsp0cj-0-80dd7075e4f5 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vqhsp0cj-0-80dd7075e4f5
+unit-test-vqhsp0cj-0: 21:22:15 ERROR unit.test-vqhsp0cj/0.juju-log SSH connection failure with test-vqhsp0cj-0-80dd7075e4f5 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vqhsp0cj-0-80dd7075e4f5
+unit-test-vqhsp0cj-0: 21:22:15 ERROR unit.test-vqhsp0cj/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-vqhsp0cj-0-80dd7075e4f5
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 328, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-vqhsp0cj-0-80dd7075e4f5
+unit-test-vqhsp0cj-0: 21:22:56 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:23:24 CRITICAL unit.test-vqhsp0cj/0.juju-log image:0: test mode is enabled
+unit-test-vqhsp0cj-0: 21:23:37 ERROR unit.test-vqhsp0cj/0.juju-log image:0: pre-job-metrics.json not found for runner test-vqhsp0cj-0-80dd7075e4f5
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/metrics/runner.py", line 557, in _extract_file_from_storage
+    file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/runner-manager/runner-fs/test-vqhsp0cj-0-80dd7075e4f5/pre-job-metrics.json'
+unit-test-vqhsp0cj-0: 21:23:37 ERROR unit.test-vqhsp0cj/0.juju-log image:0: Pre-job metrics for runner test-vqhsp0cj-0-80dd7075e4f5 not found, stop extracting post-jobs metrics.
+unit-test-vqhsp0cj-0: 21:28:28 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:33:32 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:39:03 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:44:07 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:48:33 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:08 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:09 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:20 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:35 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:52 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:53:53 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:54:12 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:55:09 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:55:10 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:55:28 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:56:01 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:56:02 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:56:21 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:56:55 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:56:57 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:57:13 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 21:57:50 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 22:03:08 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 22:03:10 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 22:03:27 ERROR unit.test-vqhsp0cj/0.juju-log Health check failed due to unable to find keyfile for test-vqhsp0cj-0-9746b89979cd
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vqhsp0cj-0-9746b89979cd, key path: /home/runner-manager/.ssh/test-vqhsp0cj-0-9746b89979cd.key
+unit-test-vqhsp0cj-0: 22:03:29 ERROR unit.test-vqhsp0cj/0.juju-log Failed to get SSH connection while removing test-vqhsp0cj-0-9746b89979cd
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vqhsp0cj-0-9746b89979cd, key path: /home/runner-manager/.ssh/test-vqhsp0cj-0-9746b89979cd.key
+unit-test-vqhsp0cj-0: 22:03:41 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+unit-test-vqhsp0cj-0: 22:03:45 ERROR unit.test-vqhsp0cj/0.juju-log Failed to get SSH connection while removing test-vqhsp0cj-0-9746b89979cd
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 441, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-vqhsp0cj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-vqhsp0cj-0-9746b89979cd, key path: /home/runner-manager/.ssh/test-vqhsp0cj-0-9746b89979cd.key
+unit-test-vqhsp0cj-0: 22:03:58 CRITICAL unit.test-vqhsp0cj/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
