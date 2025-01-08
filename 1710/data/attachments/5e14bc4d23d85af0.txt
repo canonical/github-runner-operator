@@ -1,0 +1,51 @@
+INFO     github_runner_manager.manager.runner_manager:runner_manager.py:132 Creating 2 runners
+ERROR    github_runner_manager.manager.runner_manager:runner_manager.py:308 Failed to spawn a runner.
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 220, in create_runner
+    self._wait_runner_startup(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 657, in _wait_runner_startup
+    raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
+github_runner_manager.errors.RunnerStartError: Runner startup process not found on test-mouqdmhc-0-6b8c38fc3ad5
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 306, in _spawn_runners_using_multiprocessing
+    instance_id = next(jobs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+github_runner_manager.errors.RunnerStartError: Runner startup process not found on test-mouqdmhc-0-6b8c38fc3ad5
+ERROR    github_runner_manager.manager.runner_manager:runner_manager.py:308 Failed to spawn a runner.
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 220, in create_runner
+    self._wait_runner_startup(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 657, in _wait_runner_startup
+    raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
+github_runner_manager.errors.RunnerStartError: Runner startup process not found on test-mouqdmhc-0-61b13a9e5ed3
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 306, in _spawn_runners_using_multiprocessing
+    instance_id = next(jobs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+github_runner_manager.errors.RunnerStartError: Runner startup process not found on test-mouqdmhc-0-61b13a9e5ed3
