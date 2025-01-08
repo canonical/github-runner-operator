@@ -1,0 +1,42 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-metrics-success-7i0x on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] active: 
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [executing] maintenance: Update image for runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [executing] maintenance: Reconciling runners
+INFO     root:charm_metrics.py:127 Loop device None not found
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-g9zthh9l/0 [idle] active: 
+INFO     root:common.py:609 File content of /var/log/github-runner-metrics.log: {"timestamp": 1736274732.379237, "event": "reconciliation", "flavor": "test-g9zthh9l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 23.904525995254517}
+{"timestamp": 1736274755.1909778, "event": "reconciliation", "flavor": "test-g9zthh9l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 21.64669632911682}
+{"timestamp": 1736274794.7226985, "event": "reconciliation", "flavor": "test-g9zthh9l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.39411950111389}
+{"timestamp": 1736274818.3910365, "event": "reconciliation", "flavor": "test-g9zthh9l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.449318408966064}
