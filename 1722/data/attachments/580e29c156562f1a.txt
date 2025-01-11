@@ -1,0 +1,191 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-debug-ssh-4sme on cloud localhost
+WARNING  juju.client.connection:connection.py:893 unexpected facade AgentLifeFlag received from the controller
+WARNING  juju.client.connection:connection.py:909 unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+WARNING  juju.client.connection:connection.py:893 unexpected facade SecretsDrain received from the controller
+INFO     juju.model:model.py:1988 Deploying ch:amd64/github-runner-image-builder-2
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder (not enough units yet - 0/1)
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:model.py:1988 Deploying local:jammy/github-runner-0
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: installing charm software
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [idle] active: 
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2025-01-11 15:12:48+00:00, remaining=4989, limit=5000)
+INFO     juju.model:model.py:1988 Deploying ch:amd64/jammy/tmate-ssh-server-6
+WARNING  juju.model:model.py:1513 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+INFO     juju.model:model.py:2641 Waiting for model:
+  tmate-ssh-server/0 [executing] maintenance: Installing packages.
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+  test-zezml51i/0 [executing] maintenance: Reconciling runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] maintenance: Update image for runners
+INFO     juju.model:model.py:2641 Waiting for model:
+  test-zezml51i/0 [executing] active: 
+INFO     tests.integration.helpers.openstack:openstack.py:104 [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-zezml51i-0-37a111a4dd55
+WARNING  tests.integration.helpers.openstack:openstack.py:106 dict_values([])
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                Controller  Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-4sme  lxd         localhost/localhost  3.1.10   unsupported  14:20:16Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-zezml51i                         active      1  github-runner                               0  no       
+tmate-ssh-server                      active      1  tmate-ssh-server             edge           6  no       
+
+Unit                            Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder/0*  active    idle   0        10.113.14.219              
+test-zezml51i/0*                active    idle   1        10.113.14.238              
+tmate-ssh-server/0*             active    idle   2        10.113.14.189   10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.113.14.219  juju-d01987-0  ubuntu@22.04      Running
+1        started  10.113.14.238  juju-d01987-1  ubuntu@22.04      Running
+2        started  10.113.14.189  juju-d01987-2  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 14:09:15 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 14:09:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 14:09:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 14:09:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 14:12:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 14:12:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 14:12:23 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-zezml51i-0: 14:12:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-zezml51i-0: 14:12:36 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:38 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:41 CRITICAL unit.test-zezml51i/0.juju-log image:0: test mode is enabled
+unit-test-zezml51i-0: 14:12:42 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:43 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:44 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:46 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:12:47 CRITICAL unit.test-zezml51i/0.juju-log image:0: test mode is enabled
+unit-test-zezml51i-0: 14:12:47 CRITICAL unit.test-zezml51i/0.juju-log image:0: test mode is enabled
+unit-test-zezml51i-0: 14:13:23 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:13:24 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+machine-2: 14:14:10 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 14:14:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 14:14:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 14:14:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-zezml51i-0: 14:18:40 ERROR unit.test-zezml51i/0.juju-log Timeout creating openstack server test-zezml51i-0-37a111a4dd55
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-zezml51i-0: 14:18:44 ERROR unit.test-zezml51i/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-zezml51i-0-37a111a4dd55
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-zezml51i-0-37a111a4dd55 openstack runner
+unit-test-zezml51i-0: 14:18:50 CRITICAL unit.test-zezml51i/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-zezml51i-0: 14:18:50 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:18:52 CRITICAL unit.test-zezml51i/0.juju-log test mode is enabled
+unit-test-zezml51i-0: 14:19:05 CRITICAL unit.test-zezml51i/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-zezml51i-0: 14:19:06 CRITICAL unit.test-zezml51i/0.juju-log image:0: test mode is enabled
+unit-test-zezml51i-0: 14:19:15 ERROR unit.test-zezml51i/0.juju-log image:0: Health check failed due to unable to find keyfile for test-zezml51i-0-37a111a4dd55
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zezml51i-0-37a111a4dd55, key path: /home/runner-manager/.ssh/test-zezml51i-0-37a111a4dd55.key
+unit-test-zezml51i-0: 14:19:32 CRITICAL unit.test-zezml51i/0.juju-log debug-ssh:1: test mode is enabled
+unit-test-zezml51i-0: 14:19:40 ERROR unit.test-zezml51i/0.juju-log debug-ssh:1: Health check failed due to unable to find keyfile for test-zezml51i-0-37a111a4dd55
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-zezml51i-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zezml51i-0-37a111a4dd55, key path: /home/runner-manager/.ssh/test-zezml51i-0-37a111a4dd55.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
