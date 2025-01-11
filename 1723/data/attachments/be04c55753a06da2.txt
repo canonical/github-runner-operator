@@ -1,0 +1,180 @@
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                            Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-6uqh  lxd         localhost/localhost  3.6.1    unsupported  22:55:23Z
+
+App                          Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active       1  github-runner-image-builder  latest/edge    2  no       
+test-dtyee19h                         blocked      1  github-runner                               0  no       Invalid token.
+
+Unit                            Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder/0*  active    idle   0        10.18.128.116          
+test-dtyee19h/0*                blocked   idle   1        10.18.128.204          Invalid token.
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.18.128.116  juju-614a53-0  ubuntu@22.04      Running
+1        started  10.18.128.204  juju-614a53-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 21:23:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 21:23:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 21:23:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 21:26:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 21:26:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dtyee19h-0: 21:26:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-dtyee19h-0: 21:26:41 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:43 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:47 CRITICAL unit.test-dtyee19h/0.juju-log image:0: test mode is enabled
+unit-test-dtyee19h-0: 21:26:48 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:49 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:50 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:51 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:26:52 CRITICAL unit.test-dtyee19h/0.juju-log image:0: test mode is enabled
+unit-test-dtyee19h-0: 21:26:53 CRITICAL unit.test-dtyee19h/0.juju-log image:0: test mode is enabled
+unit-test-dtyee19h-0: 21:26:54 ERROR unit.test-dtyee19h/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-dtyee19h-0: 21:32:31 CRITICAL unit.test-dtyee19h/0.juju-log image:0: test mode is enabled
+unit-test-dtyee19h-0: 21:32:31 ERROR unit.test-dtyee19h/0.juju-log image:0: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 1282, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 147, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 248, in cleanup
+    self._github.delete_runners([GitHubRunnerState.OFFLINE])
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 93, in delete_runners
+    runner_list = self.get_runners(states)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-dtyee19h-0: 21:32:39 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:38:10 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:43:35 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:48:48 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:54:36 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 21:59:33 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:04:26 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:09:49 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:14:48 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:19:24 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:23:29 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:27:59 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:32:55 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:36:18 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:36:19 ERROR unit.test-dtyee19h/0.juju-log Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 64, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 105, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 155, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 757, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 778, in _trigger_reconciliation
+    self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/./src/charm.py", line 1009, in _reconcile_openstack_runners
+    runner_scaler.reconcile(num)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 195, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 159, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 74, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path)
+  File "/var/lib/juju/agents/unit-test-dtyee19h-0/charm/venv/github_runner_manager/github_client.py", line 71, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.errors.TokenError: Invalid token.
+unit-test-dtyee19h-0: 22:37:56 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:43:38 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:49:11 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+unit-test-dtyee19h-0: 22:54:45 CRITICAL unit.test-dtyee19h/0.juju-log test mode is enabled
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
