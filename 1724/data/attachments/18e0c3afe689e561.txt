@@ -1,0 +1,83 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-reactive-0o4y on cloud localhost
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2025-01-12 08:19:47+00:00, remaining=4488, limit=5000)
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [idle] active: 
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [executing] maintenance: Update image for runners
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/mongodb-206
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] maintenance: installing charm software
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  mongodb/0 [executing] active: 
+WARNING  juju.model:__init__.py:1683 relate is deprecated and will be removed. Use integrate instead.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [idle] active: 
+  mongodb/0 [idle] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [idle] active:
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 10
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [idle] active: 
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     tests.integration.helpers.common:common.py:525 Wait for condition not met, sleeping 60
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-kmm849lg/0 [executing] active:

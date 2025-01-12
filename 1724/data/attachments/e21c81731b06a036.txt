@@ -1,0 +1,135 @@
+INFO     pytest_operator.plugin:plugin.py:745 Adding model lxd:test-charm-fork-repo-xvig on cloud localhost
+INFO     juju.model:__init__.py:2301 Deploying ch:amd64/jammy/github-runner-image-builder-2
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [allocating] waiting: agent initialising
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  github-runner-image-builder/0 [executing] maintenance: Setting up Builder.
+INFO     juju.model:__init__.py:2301 Deploying local:jammy/github-runner-0
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [allocating] waiting: waiting for machine
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [executing] blocked: Please provide image integration.
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [idle] active: 
+INFO     root:conftest.py:589 GitHub token rate limit: Rate(reset=2025-01-12 07:19:24+00:00, remaining=4890, limit=5000)
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [executing] active: 
+INFO     juju.model:__init__.py:3254 Waiting for model:
+  test-ucct16vj/0 [executing] maintenance: Reconciling runners
+INFO     tests.integration.helpers.openstack:openstack.py:49 [TEST SETUP] Exposing port 8080 on test-ucct16vj-0-be7c4f1d7328
+WARNING  tests.integration.helpers.openstack:openstack.py:51 dict_values([])
+INFO     pytest_operator.plugin:plugin.py:929 Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-xvig  lxd         localhost/localhost  3.6.1    unsupported  06:36:41Z
+
+App                          Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder           active      1  github-runner-image-builder  latest/edge    2  no       
+test-ucct16vj                         active      1  github-runner                               0  yes      
+
+Unit                            Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder/0*  active    idle   0        10.50.217.77              
+test-ucct16vj/0*                active    idle   1        10.50.217.193   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.50.217.77   juju-83c21b-0  ubuntu@22.04      Running
+1        started  10.50.217.193  juju-83c21b-1  ubuntu@22.04      Running
+
+INFO     pytest_operator.plugin:plugin.py:935 Juju error logs:
+
+machine-0: 06:24:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-0: 06:24:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ucct16vj-0: 06:28:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-ucct16vj-0: 06:28:33 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:34 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:37 CRITICAL unit.test-ucct16vj/0.juju-log image:0: test mode is enabled
+unit-test-ucct16vj-0: 06:28:38 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:39 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:41 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:42 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:28:43 CRITICAL unit.test-ucct16vj/0.juju-log image:0: test mode is enabled
+unit-test-ucct16vj-0: 06:28:44 CRITICAL unit.test-ucct16vj/0.juju-log image:0: test mode is enabled
+unit-test-ucct16vj-0: 06:29:33 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:29:35 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:30:24 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:30:26 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:35:36 ERROR unit.test-ucct16vj/0.juju-log Timeout creating openstack server test-ucct16vj-0-be7c4f1d7328
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_compute.py", line 1159, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-ucct16vj-0: 06:35:37 ERROR unit.test-ucct16vj/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 227, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/decorator.py", line 232, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/openstack/cloud/_compute.py", line 1159, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 209, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 246, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-ucct16vj-0-be7c4f1d7328
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 276, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 404, in _create_runner
+    return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 217, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-ucct16vj-0-be7c4f1d7328 openstack runner
+unit-test-ucct16vj-0: 06:35:42 CRITICAL unit.test-ucct16vj/0.juju-log test mode is enabled
+unit-test-ucct16vj-0: 06:35:55 CRITICAL unit.test-ucct16vj/0.juju-log image:0: test mode is enabled
+unit-test-ucct16vj-0: 06:36:04 ERROR unit.test-ucct16vj/0.juju-log image:0: Health check failed due to unable to find keyfile for test-ucct16vj-0-be7c4f1d7328
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 590, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 138, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ucct16vj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 324, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ucct16vj-0-be7c4f1d7328, key path: /home/runner-manager/.ssh/test-ucct16vj-0-be7c4f1d7328.key
+
+INFO     pytest_operator.plugin:plugin.py:1017 Forgetting model main...
