@@ -41,16 +41,6 @@ that can be used for linting and formatting code when you're preparing contribut
 * `tox -e integration`: Runs the integration tests.
 
 > NOTE: Integration tests are currently intended to run on the CI and may not work locally without further argument.
-### Generating src docs for every commit
-
-Run the following command:
-
-```bash
-echo -e "set -eu" >> .git/hooks/pre-commit
-echo -e "tox -e src-docs" >> .git/hooks/pre-commit
-echo -e "git add src-docs\ngit add github-runner-manager/src-docs" >> .git/hooks/pre-commit
-chmod +x .git/hooks/pre-commit
-```
 
 ### Building the charm
 
