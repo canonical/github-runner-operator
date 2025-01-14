@@ -1,0 +1,15 @@
+on: [pull_request]
+
+jobs:
+  TICS:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: TICS GitHub Action
+        uses: tiobe/tics-github-action@v3
+        with:
+          viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
+          ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
+          installTics: true
