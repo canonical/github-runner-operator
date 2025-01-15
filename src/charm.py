@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 # TODO: 2024-03-12 The module contains too many lines which are scheduled for refactoring.
