@@ -1,8 +1,9 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
 import logging
+import os
 import random
 import secrets
 import string
@@ -131,7 +132,7 @@ def path(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
-    token = pytestconfig.getoption("--token")
+    token = pytestconfig.getoption("--token") or os.environ.get("INTEGRATION_TOKEN")
     assert token, "Please specify the --token command line option"
     tokens = {token.strip() for token in token.split(",")}
     random_token = random.choice(list(tokens))
@@ -141,7 +142,7 @@ def token(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token_alt(pytestconfig: pytest.Config, token: str) -> str:
     """Configured token_alt setting."""
-    token_alt = pytestconfig.getoption("--token-alt")
+    token_alt = pytestconfig.getoption("--token-alt") or os.environ.get("INTEGRATION_TOKEN_ALT")
     assert token_alt, (
         "Please specify the --token-alt command line option with GitHub Personal "
         "Access Token value."
@@ -203,6 +204,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     """The private endpoint configuration values."""
     auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
     password = pytestconfig.getoption("--openstack-password-amd64")
+    password = password or os.environ.get("INTEGRATION_OPENSTACK_PASSWORD_AMD64")
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
     project_name = pytestconfig.getoption("--openstack-project-name-amd64")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
@@ -570,11 +572,13 @@ async def tmate_ssh_server_unit_ip_fixture(
     tmate_ssh_server_app: Application,
 ) -> bytes | str:
     """tmate-ssh-server charm unit ip."""
-    status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
+    app_name = tmate_ssh_server_app.name
+    status: FullStatus = await model.get_status([app_name])
+    app_status = status.applications[app_name]
+    assert app_status is not None, f"Application {app_name} not found in status"
     try:
-        unit_status: UnitStatus = next(
-            iter(status.applications[tmate_ssh_server_app.name].units.values())
-        )
+        # mypy does not recognize that app_status is of type ApplicationStatus
+        unit_status: UnitStatus = next(iter(app_status.units.values()))  # type: ignore
         assert unit_status.public_address, "Invalid unit address"
         return unit_status.public_address
     except StopIteration as exc:
