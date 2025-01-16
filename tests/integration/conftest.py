@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
@@ -570,11 +570,13 @@ async def tmate_ssh_server_unit_ip_fixture(
     tmate_ssh_server_app: Application,
 ) -> bytes | str:
     """tmate-ssh-server charm unit ip."""
-    status: FullStatus = await model.get_status([tmate_ssh_server_app.name])
+    app_name = tmate_ssh_server_app.name
+    status: FullStatus = await model.get_status([app_name])
+    app_status = status.applications[app_name]
+    assert app_status is not None, f"Application {app_name} not found in status"
     try:
-        unit_status: UnitStatus = next(
-            iter(status.applications[tmate_ssh_server_app.name].units.values())
-        )
+        # mypy does not recognize that app_status is of type ApplicationStatus
+        unit_status: UnitStatus = next(iter(app_status.units.values()))  # type: ignore
         assert unit_status.public_address, "Invalid unit address"
         return unit_status.public_address
     except StopIteration as exc:
