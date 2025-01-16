@@ -3,6 +3,7 @@
 
 """Fixtures for github runner charm integration tests."""
 import logging
+import os
 import random
 import secrets
 import string
@@ -107,7 +108,7 @@ def path(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
-    token = pytestconfig.getoption("--token")
+    token = pytestconfig.getoption("--token") or os.environ.get("INTEGRATION_TOKEN")
     assert token, "Please specify the --token command line option"
     tokens = {token.strip() for token in token.split(",")}
     random_token = random.choice(list(tokens))
@@ -117,7 +118,7 @@ def token(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token_alt(pytestconfig: pytest.Config, token: str) -> str:
     """Configured token_alt setting."""
-    token_alt = pytestconfig.getoption("--token-alt")
+    token_alt = pytestconfig.getoption("--token-alt") or os.environ.get("INTEGRATION_TOKEN_ALT")
     assert token_alt, (
         "Please specify the --token-alt command line option with GitHub Personal "
         "Access Token value."
@@ -173,6 +174,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     """The private endpoint configuration values."""
     auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
     password = pytestconfig.getoption("--openstack-password-amd64")
+    password = password or os.environ.get("INTEGRATION_OPENSTACK_PASSWORD_AMD64")
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
     project_name = pytestconfig.getoption("--openstack-project-name-amd64")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
