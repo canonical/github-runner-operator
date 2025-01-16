@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 # TODO: 2024-06-26 The charm contains a lot of states and configuration. The upcoming refactor will

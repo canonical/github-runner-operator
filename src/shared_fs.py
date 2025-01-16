@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Classes and functions to operate on the shared filesystem between the charm and the runners."""
