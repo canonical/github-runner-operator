@@ -16,12 +16,9 @@ jobs:
   #   runs-on: [self-hosted, X64, staging]
   #   steps:
   #     - run: echo hello
-  self-host:
-    name: self-hosted large
-    runs-on: [self-hosted, X64, edge, jammy]
-    steps:
-      - name: tmate ssh
-        uses: canonical/action-tmate@debug
+  # self-host:
+  #   name: self-hosted edge
+  #   runs-on: [self-hosted, X64, edge, jammy]
   #   strategy:
   #     fail-fast: false
   #     matrix:
@@ -141,7 +138,11 @@ jobs:
   # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
   # - run: sh rustup.sh -y
   # - run: $HOME/.cargo/bin/cargo install ripgrep
-  # - name: Setup tmate session
-  #   uses: mxschmitt/action-tmate@v3
-  #   with:
-  #     limit-access-to-actor: true
+  github-test:
+    name: GitHub x64 test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
