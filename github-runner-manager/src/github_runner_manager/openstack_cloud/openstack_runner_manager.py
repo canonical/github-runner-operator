@@ -670,7 +670,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
         logger.info("Runner startup process found to be healthy on %s", instance.server_name)
 
-    @retry(tries=5, delay=60, local_logger=logger)
+    @retry(tries=8, delay=60, local_logger=logger)
     def _wait_runner_running(self, instance: OpenstackInstance) -> None:
         """Wait until runner is running.
 
