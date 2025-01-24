@@ -5,7 +5,7 @@ type: charm
 parts:
   charm:
     charm-python-packages:
-      - setuptools  # for jinja2
+      - setuptools>=75.8.0  # for jinja2
     build-packages:
       - git  # for installing git source of pylxd 
       - libffi-dev  # for cffi
