@@ -653,6 +653,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
             logger.warning(
                 "cloud-init status command failed on %s: %s.", instance.server_name, result.stderr
             )
+            cloud_init_log_output_result = ssh_conn.run(ssh_conn, "cat /var/log/cloud-init-output.log")
+            logger.error("/var/log/cloud-init-output.log stdout: %s", cloud_init_log_output_result.stdout)
+            cloud_init_log_result = ssh_conn.run(ssh_conn, "cat /var/log/cloud-init.log")
+            logger.error("/var/log/cloud-init.log stdout: %s", cloud_init_log_result.stdout)
             raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
         # A short running job may have already completed and exited the runner, hence check the
         # condition via cloud-init status check.
