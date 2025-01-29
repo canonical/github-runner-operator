@@ -406,9 +406,21 @@ async def app_openstack_runner_fixture(
     )
 
     # better use test-mode charm config... but let's see
-    command="find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/CREATE_SERVER_TIMEOUT.*/CREATE_SERVER_TIMEOUT = 600/gI' {} \;"
-    res = await application.run(command)
-    logging.info("JAVI res of changing CREATE_SERVER_TIMEOUT %s", res)
+    command = "find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/^CREATE_SERVER_TIMEOUT = .*/CREATE_SERVER_TIMEOUT = 600/gI' {} \\;"
+    run_actions = await application.run(command)
+    logging.info("JAVI run_actions %s", run_actions)
+    for action_result in run_actions.actions:
+        logging.info("JAVI action_result %s", action_result)
+        action = action_result.action
+        logging.info("JAVI action %s", action)
+        # no comment...
+        action_id = action.tag
+        if action_id.startswith("action-"):
+            # strip the action- part of "action-<num>" tag
+            action_id = action_id[7:]
+        action = await model._wait_for_new("action", action_id)
+        result = await action.wait()
+        logging.info("JAVI one of changing CREATE_SERVER_TIMEOUT %s", result)
 
     yield application
     try:
