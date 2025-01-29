@@ -405,6 +405,11 @@ async def app_openstack_runner_fixture(
         apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
     )
 
+    # better use test-mode charm config... but let's see
+    command="find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/CREATE_SERVER_TIMEOUT.*/CREATE_SERVER_TIMEOUT = 600/gI' {} \;"
+    res = await application.run(command)
+    logging.info("JAVI res of changing CREATE_SERVER_TIMEOUT %s", res)
+
     yield application
     try:
         logging.info("JAVI after yield in app_openstack_runner_fixture")
