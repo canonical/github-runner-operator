@@ -101,7 +101,7 @@ Rel(runnerprocess, osrunnign, "manages VMs", "")
 ```
 
 The `RunnerScaler` is the main component to reconcile the desiderd number of runners using the `RunnerManager`.
-The `RunnerManager` uses the `CloudRunnerManager` to interact with the compute infrastructureto create and manage self-hosted runner (OpenStack is currently the only implementation).
+The `RunnerManager` uses the `CloudRunnerManager` to interact with the compute infrastructure to create and manage self-hosted runner (OpenStack is currently the only implementation).
 The `RunnerManager` uses the `GithubRunnerManager` to interact with the GitHub API.
 
 In the case of reactive runners, the `RunnerManager` will also create processes that
