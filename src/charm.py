@@ -525,10 +525,7 @@ class GithubRunnerCharm(CharmBase):
             return
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush()
-        try:
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
