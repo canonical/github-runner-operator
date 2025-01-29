@@ -94,13 +94,13 @@ Container_Boundary(c2, "Reactive Processes"){
 Rel(githubrunnermanager, github, "manages VMs", "")
 Rel(openstackrunnermanager, osrunnign, "manages VMs", "")
 
-Rel(runnermanager, runnerprocess, "creates/deleted proccesses", "")
+Rel(runnermanager, runnerprocess, "creates/deleted procceses", "")
 
 Rel(runnerprocess, github, "manages VMs", "")
 Rel(runnerprocess, osrunnign, "manages VMs", "")
 ```
 
-The `RunnerScaler` is the main component to reconcile the desiderd number of runners using the `RunnerManager`.
+The `RunnerScaler` is the main component to reconcile the desided number of runners using the `RunnerManager`.
 The `RunnerManager` uses the `CloudRunnerManager` to interact with the compute infrastructure to create and manage self-hosted runner (OpenStack is currently the only implementation).
 The `RunnerManager` uses the `GithubRunnerManager` to interact with the GitHub API.
 
