@@ -401,7 +401,9 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=90 * 60
+    )
 
     return application
 
