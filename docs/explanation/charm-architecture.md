@@ -56,6 +56,35 @@ Container_Boundary(c4, "tmate-ssh-server"){
     Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
 ```
 
+```mermaid
+
+
+C4Container
+title Container diagram for the github-runner Charm System
+
+System_Ext(osrunnign, "OpenStack", "OpenStack deployment used for runners")
+
+Container_Boundary(c2, "GitHub Runner Charm"){
+    Component(runnerscaler, "RunnerScaler", "", "")
+
+
+    Component(runnermanager, "RunnerManager", "", "")
+    Component(githubrunnermanager, "GitHubRunnerManager", "", "")
+
+    Component(cloudrunnermanager, "CloudRunnerManager", "", "")
+    Component(openstackrunnermanager, "OpenstackRunnerManager", "", "")
+
+    Rel(runnerscaler, runnermanager, "uses", "")
+    Rel(runnermanager, cloudrunnermanager, "uses", "")
+    Rel(runnermanager, githubrunnermanager, "uses", "")
+    Rel(openstackrunnermanager, cloudrunnermanager, "implements", "")
+}
+
+
+
+Rel(openstackrunnermanager, osrunnign, "manages VMs", "")
+```
+
 ## Virtual machines
 
 To ensure a clean and isolated environment for every runner, self-hosted runners use OpenStack virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. Virtual machines will not be reused between jobs, this is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
