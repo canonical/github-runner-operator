@@ -45,7 +45,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 20 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -405,7 +405,12 @@ async def app_openstack_runner_fixture(
         apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
     )
 
-    return application
+    yield application
+    try:
+        logging.info("JAVI after yield in app_openstack_runner_fixture")
+        # get_file_content(unit, filename)
+    except Exception:
+        logging.exception("JAVI something failed after yield")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
