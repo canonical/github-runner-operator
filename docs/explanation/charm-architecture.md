@@ -45,8 +45,13 @@ Container_Boundary(c4, "tmate-ssh-server"){
     UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
 
     System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
+
+    System_Ext(github, "GitHub", "GitHub API")
+
     Rel(githubrunner, osgithubrunner, "spawns VMs")
     UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
+
+    Rel(githubrunner, github, "Manage runners")
 
     Rel(githubrunner, imagebuilder, "OpenStack credentials")
     UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
@@ -56,15 +61,17 @@ Container_Boundary(c4, "tmate-ssh-server"){
     Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
 ```
 
-```mermaid
+# Description of the main components github-runner charm
 
+```mermaid
 
 C4Container
 title Container diagram for the github-runner Charm System
 
 System_Ext(osrunnign, "OpenStack", "OpenStack deployment used for runners")
+    System_Ext(github, "GitHub", "GitHub API")
 
-Container_Boundary(c2, "GitHub Runner Charm"){
+Container_Boundary(c1, "GitHub Runner Charm"){
     Component(runnerscaler, "RunnerScaler", "", "")
 
 
@@ -80,10 +87,27 @@ Container_Boundary(c2, "GitHub Runner Charm"){
     Rel(openstackrunnermanager, cloudrunnermanager, "implements", "")
 }
 
+Container_Boundary(c2, "Reactive Processes"){
+        Component(runnerprocess, "Reactive Spawner", "", "")
+}
 
-
+Rel(githubrunnermanager, github, "manages VMs", "")
 Rel(openstackrunnermanager, osrunnign, "manages VMs", "")
+
+Rel(runnermanager, runnerprocess, "creates/deleted proccesses", "")
+
+Rel(runnerprocess, github, "manages VMs", "")
+Rel(runnerprocess, osrunnign, "manages VMs", "")
 ```
+
+The `RunnerScaler` is the main component to reconcile the desiderd number of runners using the `RunnerManager`.
+The `RunnerManager` uses the `CloudRunnerManager` to interact with the compute infrastructureto create and manage self-hosted runner (OpenStack is currently the only implementation).
+The `RunnerManager` uses the `GithubRunnerManager` to interact with the GitHub API.
+
+In the case of reactive runners, the `RunnerManager` will also create processes that
+will be in charge of consuming events that were created from Github webhooks, and starting GitHub runners in a
+reactive manner. Those events are stored in `mongodb` and were enqueued by
+the application [github-runner-webhook-router](https://github.com/canonical/github-runner-webhook-router).
 
 ## Virtual machines
 
