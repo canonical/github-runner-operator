@@ -11,6 +11,51 @@ Conceptually, the charm can be divided into the following:
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
+
+```mermaid
+
+C4Container
+title Container diagram for the github-runner Charm System
+
+
+ Container_Boundary(c1, "Image Builder") {
+    Container(imagebuilder, "Image Builder", "", "Provides images to all related charms")
+ }
+    System_Ext(osbuilding, "OpenStack", "OpenStack deployment used for building images")
+
+Container_Boundary(c2, "GitHub Runner"){
+
+    Container(githubrunner, "GitHub Runner Charm", "", "Manages self-hosted runners")
+}
+Container_Boundary(c3, "monbodb"){
+
+    Container(mongodb, "MongoDB", "", "Used as a message queue for reactive runner requests")
+}
+Container_Boundary(c4, "tmate-ssh-server"){
+
+    Container(tmate_ssh, "tmate-ssh-server", "", "Terminal sharing capabilities to debug GitHub runners")
+}
+
+    Rel(imagebuilder, osbuilding, "builds images")
+    UpdateRelStyle(imagebuilder, osbuilding, $offsetY="-30", $offsetX="10")
+    Rel(imagebuilder, osgithubrunner, "uploads images")
+    UpdateRelStyle(imagebuilder, osgithubrunner, $offsetY="-30", $offsetX="-90")
+
+    Rel(imagebuilder, githubrunner, "image ids")
+    UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
+
+    System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
+    Rel(githubrunner, osgithubrunner, "spawns VMs")
+    UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
+
+    Rel(githubrunner, imagebuilder, "OpenStack credentials")
+    UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
+
+    Rel(mongodb, githubrunner, "database credentials")
+
+    Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
+```
+
 ## Virtual machines
 
 To ensure a clean and isolated environment for every runner, self-hosted runners use OpenStack virtual machines. The charm spawns virtual machines, setting resources based on charm configurations. Virtual machines will not be reused between jobs, this is [similar to how GitHub hosts their runners due to security concerns](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
