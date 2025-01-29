@@ -519,6 +519,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         state = self._setup_state()
+        self.unit.status = MaintenanceStatus("Reconciling runners - added debug-ssh")
 
         if not self._get_set_image_ready_status():
             return
