@@ -317,7 +317,7 @@ async def app_no_runner(
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
     await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=20 * 60)
     yield basic_app
 
 
@@ -405,7 +405,7 @@ async def app_openstack_runner_fixture(
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=90 * 60
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
     )
 
     return application
@@ -420,7 +420,7 @@ async def app_scheduled_events_fixture(
     application = app_openstack_runner
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
     await reconcile(app=application, model=model)
     return application
 
