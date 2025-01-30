@@ -66,7 +66,7 @@ async def test_path_config_change(
     runner_names = await instance_helper.get_runner_names(unit)
     logger.info("runners: %s", runner_names)
     assert len(runner_names) == 1
-    #this will crash if there is not exactly one
+    # this will crash if there is not exactly one
     logger.info("runner info: %s", instance_helper._get_single_runner(unit))
 
     runner_name = runner_names[0]
