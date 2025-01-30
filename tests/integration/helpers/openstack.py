@@ -32,13 +32,20 @@ async def javi_wait_for_idle(openstack_connection, model, *args, **kwargs) -> No
 
     def _log_openstack():
         """TODO."""
-        while not e.wait(10):
+        end_loop = False
+        while True:
+            end_loop = e.wait(20)
             # probably not thread safe, but...
-            servers = openstack_connection.list_servers()
+            try:
+                servers = openstack_connection.list_servers()
+            except Exception:
+                logger.exception("JAVI in log openstack thread")
+                raise
             logger.info(" [ runner list ]")
             for runner in servers:
                 logger.info(" [ runner %s ] %s", runner.name, runner)
-
+            if end_loop:
+                break
     try:
         t = threading.Thread(target=_log_openstack)
         t.start()
