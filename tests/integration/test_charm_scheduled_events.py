@@ -15,7 +15,7 @@ from juju.application import Application
 from juju.model import Model
 
 from tests.integration.helpers.common import wait_for
-from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, javi_wait_for_idle
 from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,7 @@ async def test_update_interval(
     model: Model,
     app_scheduled_events: Application,
     instance_helper: OpenStackInstanceHelper,
+    openstack_connection,
 ) -> None:
     """
     arrange: A working application with one runner.
@@ -57,7 +58,7 @@ async def test_update_interval(
 
     logger.info("Wait for 10 minutes")
     await sleep(10 * 60)
-    await model.wait_for_idle(status=ACTIVE, timeout=20 * 60)
+    await javi_wait_for_idle(openstack_connection, model, status=ACTIVE, timeout=20 * 60)
 
     newnames = await instance_helper.get_runner_names(unit)
     assert len(newnames) == 1, "There should be one runner after reconciliation"

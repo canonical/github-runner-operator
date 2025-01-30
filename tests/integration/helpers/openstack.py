@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 import logging
 import secrets
+import threading
 from asyncio import sleep
 from typing import Optional, TypedDict
 
@@ -15,6 +16,50 @@ from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
+
+
+async def javi_wait_for_idle(openstack_connection, model, *args, **kwargs) -> None:
+    """TODO.
+
+    Args:
+        openstack_connection: OpenStack connection object.
+        model: model
+        args: args
+        kwargs: kwargs
+    """
+    logger.info("javi_wait_for_idle")
+    e = threading.Event()
+
+    def _log_openstack():
+        """TODO."""
+        end_loop = False
+        while True:
+            end_loop = e.wait(20)
+            # probably not thread safe, but...
+            try:
+                servers = openstack_connection.list_servers()
+            except Exception as ex:
+                logger.exception("JAVI in log openstack thread")
+                raise ex
+            logger.info(" [ runner list ]")
+            for runner in servers:
+                logger.info(
+                    " [ runner %s ] status %s created %s updated %s",
+                    runner.name,
+                    runner.status,
+                    runner.created,
+                    runner.updated,
+                )
+            if end_loop:
+                break
+
+    try:
+        t = threading.Thread(target=_log_openstack)
+        t.start()
+        await model.wait_for_idle(*args, **kwargs)
+    finally:
+        e.set()
+        t.join()
 
 
 class OpenStackInstanceHelper:
@@ -178,6 +223,20 @@ class OpenStackInstanceHelper:
         runners = self._get_runners(unit)
         assert len(runners) == 1
         return runners[0].name
+
+    def log_runners(self, unit: Unit) -> None:
+        """TODO LOG RUNNERS.
+
+        Expects only one runner to be present.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner name for.
+        """
+        runners = self._get_runners(unit)
+        logger.info("[ list of runners for unit %s]", unit)
+        for runner in runners:
+            logger.info("[ runner %s ]: %s", runner.name, runner)
+        logger.info("[ end list of runners for unit %s]")
 
     async def delete_single_runner(self, unit: Unit) -> None:
         """Delete the only runner.

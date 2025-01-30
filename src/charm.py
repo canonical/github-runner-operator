@@ -110,7 +110,7 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(
-    func: Callable[["GithubRunnerCharm", EventT], None]
+    func: Callable[["GithubRunnerCharm", EventT], None],
 ) -> Callable[["GithubRunnerCharm", EventT], None]:
     """Catch common errors in charm.
 
@@ -145,7 +145,7 @@ def catch_charm_errors(
 
 
 def catch_action_errors(
-    func: Callable[["GithubRunnerCharm", ActionEvent], None]
+    func: Callable[["GithubRunnerCharm", ActionEvent], None],
 ) -> Callable[["GithubRunnerCharm", ActionEvent], None]:
     """Catch common errors in actions.
 
@@ -519,15 +519,13 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         state = self._setup_state()
+        self.unit.status = MaintenanceStatus("Reconciling runners - added debug-ssh")
 
         if not self._get_set_image_ready_status():
             return
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush()
-        try:
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
