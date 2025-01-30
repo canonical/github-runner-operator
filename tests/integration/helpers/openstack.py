@@ -38,14 +38,21 @@ async def javi_wait_for_idle(openstack_connection, model, *args, **kwargs) -> No
             # probably not thread safe, but...
             try:
                 servers = openstack_connection.list_servers()
-            except Exception:
+            except Exception as ex:
                 logger.exception("JAVI in log openstack thread")
-                raise
+                raise ex
             logger.info(" [ runner list ]")
             for runner in servers:
-                logger.info(" [ runner %s ] %s", runner.name, runner)
+                logger.info(
+                    " [ runner %s ] status %s created %s updated %s",
+                    runner.name,
+                    runner.status,
+                    runner.created,
+                    runner.updated,
+                )
             if end_loop:
                 break
+
     try:
         t = threading.Thread(target=_log_openstack)
         t.start()
