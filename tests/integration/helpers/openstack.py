@@ -235,7 +235,13 @@ class OpenStackInstanceHelper:
         runners = self._get_runners(unit)
         logger.info("[ list of runners for unit %s]", unit)
         for runner in runners:
-            logger.info("[ runner %s ]: %s", runner.name, runner)
+            logger.info(
+                " [ runner %s ] status %s created %s updated %s",
+                runner.name,
+                runner.status,
+                runner.created_at,
+                runner.updated_at,
+            )
         logger.info("[ end list of runners for unit %s]")
 
     async def delete_single_runner(self, unit: Unit) -> None:

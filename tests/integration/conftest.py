@@ -339,7 +339,8 @@ async def image_builder_fixture(
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
-                "revision-history-limit": "5",
+                # JAVI be careful, maybe all tests use the same names for the images
+                "revision-history-limit": "15",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
