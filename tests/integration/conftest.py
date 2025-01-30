@@ -620,6 +620,7 @@ async def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
+    logging.info("JAVI forked_github_repository.full_name: %s", forked_github_repository.full_name)
     await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app
