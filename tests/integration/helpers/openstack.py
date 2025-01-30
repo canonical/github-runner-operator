@@ -47,8 +47,8 @@ async def javi_wait_for_idle(openstack_connection, model, *args, **kwargs) -> No
                     " [ runner %s ] status %s created %s updated %s",
                     runner.name,
                     runner.status,
-                    runner.created,
-                    runner.updated,
+                    runner.created_at,
+                    runner.updated_at,
                 )
             if end_loop:
                 break
