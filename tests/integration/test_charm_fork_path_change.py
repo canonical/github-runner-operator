@@ -47,7 +47,7 @@ async def test_path_config_change(
     logger.info("after ensure_charm_has_runner")
     instance_helper.log_runners(unit)
 
-    logger.info("Change Path config option")
+    logger.info("Change Path config option to %s", path)
     await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
     instance_helper.log_runners(unit)
 
