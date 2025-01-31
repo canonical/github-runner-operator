@@ -220,7 +220,13 @@ class RunnerScaler:
         """
         delete_metric_stats = None
         metric_stats = self._manager.cleanup()
-        runners = self._manager.get_runners()
+        # JAVI TODO FILTER DELETED. THIS WILL GENERATE QUOTA ISSUES :(
+        from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
+        runners = self._manager.get_runners(
+            github_states = None,
+            cloud_states = [s for s in CloudRunnerState if s != CloudRunnerState.DELETED],
+        )
+        # runners = self._manager.get_runners()
         logger.info("Reconcile runners from %s to %s", len(runners), expected_quantity)
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:

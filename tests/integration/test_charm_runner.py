@@ -2,9 +2,9 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+import logging
 from typing import AsyncIterator
 
-import logging
 import pytest
 import pytest_asyncio
 from github.Branch import Branch
@@ -22,7 +22,6 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
-
 
 logger = logging.getLogger(__name__)
 
@@ -57,6 +56,7 @@ async def test_check_runner(app: Application) -> None:
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
+    logger.info("result of check-runners: %s", action.results)
     assert action.status == "completed"
     assert action.results["online"] == "1"
     assert action.results["offline"] == "0"
@@ -105,7 +105,7 @@ async def test_flush_runner_and_resource_config(
     await action.wait()
 
     logger.info("runners flushed")
-    
+
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
@@ -159,6 +159,7 @@ async def test_repo_policy_enabled(
         token=token,
         https_proxy=https_proxy,
     )
+    logger.info("after setup_repo_policy")
 
     await dispatch_workflow(
         app=app,
@@ -167,3 +168,4 @@ async def test_repo_policy_enabled(
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
+    logger.info("after dispatch workflow")

@@ -324,7 +324,7 @@ async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
     """
     await wait_for(
         partial(_is_workflow_run_complete, run=run),
-        timeout=60 * 30,
+        timeout=60 * 20,
         check_interval=60,
     )
     # The run object is updated by _is_workflow_run_complete function above.

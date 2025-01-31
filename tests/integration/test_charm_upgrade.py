@@ -104,7 +104,7 @@ async def test_charm_upgrade(
     )
 
     logger.info("JAVI after integrating image builder and github-runner-operator")
-    
+
     origin = client.CharmOrigin(
         source="charm-hub",
         track="22.04",
@@ -129,14 +129,14 @@ async def test_charm_upgrade(
     )
 
     logger.info("JAVI after local_refresh")
-    
+
     unit = application.units[0]
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
     )
 
     logger.info("JAVI after is_upgrade_charm_event_emitter")
-    
+
     await model.wait_for_idle(
         apps=[application.name],
         raise_on_error=False,
