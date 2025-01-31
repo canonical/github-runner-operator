@@ -4,6 +4,7 @@
 """Integration tests for github-runner charm containing one runner."""
 from typing import AsyncIterator
 
+import logging
 import pytest
 import pytest_asyncio
 from github.Branch import Branch
@@ -21,6 +22,9 @@ from tests.integration.helpers.common import (
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+
+
+logger = logging.getLogger(__name__)
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -87,6 +91,7 @@ async def test_flush_runner_and_resource_config(
     action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
 
+    logger.info("result of 1.: %s", action.results)
     assert action.status == "completed"
     assert action.results["online"] == "1"
     assert action.results["offline"] == "0"
@@ -99,9 +104,12 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
+    logger.info("runners flushed")
+    
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
+    logger.info("result of 2.: %s", action.results)
     assert action.status == "completed"
     assert action.results["online"] == "1"
     assert action.results["offline"] == "0"
