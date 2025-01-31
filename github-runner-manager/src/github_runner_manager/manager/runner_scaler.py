@@ -319,8 +319,7 @@ def _issue_reconciliation_metric(
 
     try:
 
-        metric_events.issue_event(
-            metric_events.Reconciliation(
+        event = metric_events.Reconciliation(
                 timestamp=time.time(),
                 flavor=reconcile_metric_data.flavor,
                 crashed_runners=reconcile_metric_data.metric_stats.get(
@@ -333,6 +332,8 @@ def _issue_reconciliation_metric(
                 duration=reconcile_metric_data.end_timestamp
                 - reconcile_metric_data.start_timestamp,
             )
-        )
+        metric_events.issue_event(event)
+        logger.info("JAVI METRIC EVENTS: %s,", event)
+        logger.info("JAVI RUNNER LIST: %s,", reconcile_metric_data.runner_list)
     except IssueMetricEventError:
         logger.exception("Failed to issue Reconciliation metric")
