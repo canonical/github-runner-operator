@@ -110,7 +110,7 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(
-    func: Callable[["GithubRunnerCharm", EventT], None]
+    func: Callable[["GithubRunnerCharm", EventT], None],
 ) -> Callable[["GithubRunnerCharm", EventT], None]:
     """Catch common errors in charm.
 
@@ -145,7 +145,7 @@ def catch_charm_errors(
 
 
 def catch_action_errors(
-    func: Callable[["GithubRunnerCharm", ActionEvent], None]
+    func: Callable[["GithubRunnerCharm", ActionEvent], None],
 ) -> Callable[["GithubRunnerCharm", ActionEvent], None]:
     """Catch common errors in actions.
 
@@ -336,39 +336,47 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
+        logger.info("JAVI CHARM _ON_CONFIG_CHANGED")
         state = self._setup_state()
         self._set_reconcile_timer()
 
+        flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
             self._stored.token = None
+            flush_and_reconcile = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
+            flush_and_reconcile = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
+            flush_and_reconcile = True
 
         state = self._setup_state()
 
         if not self._get_set_image_ready_status():
             return
-        if state.charm_config.token != self._stored.token:
+        if flush_and_reconcile:
+            logger.info("JAVI CHARM _ON_CONFIG_CHANGED FLUSH RECONCILE")
             runner_scaler = self._get_runner_scaler(state)
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
-            # TODO: 2024-04-12: Flush on token changes.
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
         """Event handler for reconciling runners."""
+        logger.info("JAVI CHARM _on_reconcile_runners")
         self._trigger_reconciliation()
 
     @catch_charm_errors
     def _on_database_created(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB database created event."""
+        logger.info("JAVI CHARM _on_database_created")
         self._trigger_reconciliation()
 
     @catch_charm_errors
     def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB endpoints changed event."""
+        logger.info("JAVI CHARM _on_endpoints_changed")
         self._trigger_reconciliation()
 
     def _trigger_reconciliation(self) -> None:
@@ -388,6 +396,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
+        logger.info("JAVI CHARM _on_check_runners_action")
         state = self._setup_state()
 
         runner_scaler = self._get_runner_scaler(state)
@@ -410,6 +419,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        logger.info("JAVI CHARM _on_reconcile_runners_action")
         self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
@@ -437,6 +447,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of flushing all runners.
         """
+        logger.info("JAVI CHARM _on_flush_runners_action")
         state = self._setup_state()
 
         # Flushing mode not implemented for OpenStack yet.
@@ -461,6 +472,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of updating dependencies.
         """
+        logger.info("JAVI CHARM _on_update_dependencies_action")
         # No dependencies managed by the charm for OpenStack-based runners.
         event.set_results({"flush": False})
 
@@ -518,20 +530,20 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
+        logger.info("JAVI CHARM _on_debug_ssh_relation_changed")
+        self.unit.status = MaintenanceStatus("Added debug-ssh relation")
         state = self._setup_state()
 
         if not self._get_set_image_ready_status():
             return
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush()
-        try:
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
         """Handle image relation joined event."""
+        logger.info("JAVI CHARM _on_image_relation_joined")
         state = self._setup_state()
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
@@ -543,6 +555,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
+        logger.info("JAVI CHARM _on_image_relation_changed")
         state = self._setup_state()
         self.unit.status = MaintenanceStatus("Update image for runners")
 

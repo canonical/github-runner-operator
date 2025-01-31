@@ -9,6 +9,8 @@ su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
 {% if aproxy_address %}
 snap install aproxy --edge
+snap refresh --hold=2h
+snap watch --last=auto-refresh?
 snap set aproxy proxy={{ aproxy_address }} listen=:54969
 cat << EOF > /etc/nftables.conf
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')

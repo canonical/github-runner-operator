@@ -45,7 +45,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 20 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -317,7 +317,7 @@ async def app_no_runner(
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
     await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=20 * 60)
     yield basic_app
 
 
@@ -339,7 +339,8 @@ async def image_builder_fixture(
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
-                "revision-history-limit": "5",
+                # JAVI be careful, maybe all tests use the same names for the images
+                "revision-history-limit": "15",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -401,9 +402,33 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
+    )
 
-    return application
+    # better use test-mode charm config... but let's see
+    command = "find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/^CREATE_SERVER_TIMEOUT = .*/CREATE_SERVER_TIMEOUT = 900/gI' {} \\;"
+    run_actions = await application.run(command)
+    logging.info("JAVI run_actions %s", run_actions)
+    for action_result in run_actions.actions:
+        logging.info("JAVI action_result %s", action_result)
+        action = action_result.action
+        logging.info("JAVI action %s", action)
+        # no comment...
+        action_id = action.tag
+        if action_id.startswith("action-"):
+            # strip the action- part of "action-<num>" tag
+            action_id = action_id[7:]
+        action = await model._wait_for_new("action", action_id)
+        result = await action.wait()
+        logging.info("JAVI output of one unit of CREATE_SERVER_TIMEOUT %s", result.results)
+
+    yield application
+    try:
+        logging.info("JAVI after yield in app_openstack_runner_fixture")
+        # get_file_content(unit, filename)
+    except Exception:
+        logging.exception("JAVI something failed after yield")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -415,7 +440,7 @@ async def app_scheduled_events_fixture(
     application = app_openstack_runner
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
     await reconcile(app=application, model=model)
     return application
 
@@ -595,6 +620,7 @@ async def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
+    logging.info("JAVI forked_github_repository.full_name: %s", forked_github_repository.full_name)
     await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app

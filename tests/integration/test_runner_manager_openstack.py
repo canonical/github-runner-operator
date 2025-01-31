@@ -31,7 +31,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
-from github_runner_manager.openstack_cloud import health_checks
+from github_runner_manager.openstack_cloud import constants, health_checks
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
     OpenStackRunnerManager,
@@ -50,6 +50,7 @@ from tests.integration.helpers.common import (
 )
 
 logger = logging.getLogger(__name__)
+constants.CREATE_SERVER_TIMEOUT = 900
 
 
 @pytest.fixture(scope="module", name="runner_label")
