@@ -7,7 +7,7 @@ hostnamectl set-hostname github-runner
 # Write .env contents
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
-snap refresh --hold=2h
+snap refresh --hold=24h
 snap watch --last=auto-refresh?
 
 {% if aproxy_address %}
