@@ -20,6 +20,7 @@ from git import Repo
 from github import Github, GithubException
 from github.Branch import Branch
 from github.Repository import Repository
+from github_runner_manager.github_client import GithubClient
 from juju.application import Application
 from juju.client._definitions import FullStatus, UnitStatus
 from juju.model import Model
@@ -34,18 +35,13 @@ from charm_state import (
     PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    InstanceType,
 )
-from github_client import GithubClient
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
-    InstanceHelper,
     deploy_github_runner_charm,
-    inject_lxd_profile,
     reconcile,
     wait_for,
 )
-from tests.integration.helpers.lxd import LXDInstanceHelper, ensure_charm_has_runner
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
@@ -54,20 +50,6 @@ IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
-
-
-@pytest_asyncio.fixture(scope="module", name="instance_type")
-async def instance_type_fixture(
-    request: pytest.FixtureRequest, pytestconfig: pytest.Config
-) -> InstanceType:
-    # Due to scope being module we cannot use request.node.get_closes_marker as openstack
-    # mark is not available in this scope.
-    openstack_marker = pytestconfig.getoption("-m") == "openstack"
-
-    if openstack_marker:
-        return InstanceType.OPENSTACK
-    else:
-        return InstanceType.LOCAL_LXD
 
 
 @pytest.fixture(scope="module")
@@ -103,18 +85,12 @@ def openstack_clouds_yaml_fixture(pytestconfig: pytest.Config) -> str | None:
 
 
 @pytest.fixture(scope="module")
-def charm_file(
-    pytestconfig: pytest.Config, loop_device: Optional[str], openstack_clouds_yaml: Optional[str]
-) -> str:
+def charm_file(pytestconfig: pytest.Config, openstack_clouds_yaml: Optional[str]) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
     charm_path_str = f"./{charm}"
 
-    if openstack_clouds_yaml:
-        return charm_path_str
-
-    inject_lxd_profile(charm_file=Path(charm_path_str), loop_device=loop_device)
     return charm_path_str
 
 
@@ -191,12 +167,6 @@ def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
     """Configured no_proxy setting for openstack runners."""
     no_proxy = pytestconfig.getoption("--openstack-no-proxy")
     return "" if no_proxy is None else no_proxy
-
-
-@pytest.fixture(scope="module")
-def loop_device(pytestconfig: pytest.Config) -> Optional[str]:
-    """Configured loop_device setting."""
-    return pytestconfig.getoption("--loop-device")
 
 
 @pytest.fixture(scope="module", name="private_endpoint_config")
@@ -343,34 +313,12 @@ def runner_manager_github_client(token: str) -> GithubClient:
 @pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
-    charm_file: str,
-    app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
-    existing_app: Optional[str],
+    basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    if existing_app:
-        application = model.applications[existing_app]
-    else:
-        # Set the scheduled event to 1 hour to avoid interfering with the tests.
-        application = await deploy_github_runner_charm(
-            model=model,
-            charm_file=charm_file,
-            app_name=app_name,
-            path=path,
-            token=token,
-            runner_storage="memory",
-            http_proxy=http_proxy,
-            https_proxy=https_proxy,
-            no_proxy=no_proxy,
-            reconcile_interval=60,
-        )
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE)
-    return application
+    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=90 * 60)
+    yield basic_app
 
 
 @pytest_asyncio.fixture(scope="module", name="image_builder")
@@ -435,7 +383,6 @@ async def app_openstack_runner_fixture(
             app_name=app_name,
             path=path,
             token=token,
-            runner_storage="juju-storage",
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
@@ -452,24 +399,11 @@ async def app_openstack_runner_fixture(
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
-            use_local_lxd=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
 
     return application
-
-
-@pytest_asyncio.fixture(scope="module")
-async def app_one_runner(model: Model, app_no_runner: Application) -> AsyncIterator[Application]:
-    """Application with a single runner.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    await ensure_charm_has_runner(app=app_no_runner, model=model)
-
-    return app_no_runner
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -516,7 +450,6 @@ async def app_runner(
         app_name=f"{app_name}-test",
         path=path,
         token=token,
-        runner_storage="memory",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -543,7 +476,6 @@ async def app_no_wait_fixture(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="juju-storage",
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
@@ -668,34 +600,6 @@ async def app_with_forked_repo(
     return basic_app
 
 
-@pytest_asyncio.fixture(scope="module")
-async def app_juju_storage(
-    model: Model,
-    charm_file: str,
-    app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
-) -> AsyncIterator[Application]:
-    """Application with juju storage setup."""
-    # Set the scheduled event to 1 hour to avoid interfering with the tests.
-    application = await deploy_github_runner_charm(
-        model=model,
-        charm_file=charm_file,
-        app_name=app_name,
-        path=path,
-        token=token,
-        runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
-        reconcile_interval=60,
-    )
-    return application
-
-
 @pytest_asyncio.fixture(scope="module", name="test_github_branch")
 async def test_github_branch_fixture(github_repository: Repository) -> AsyncIterator[Branch]:
     """Create a new branch for testing, from latest commit in current branch."""
@@ -731,22 +635,8 @@ async def test_github_branch_fixture(github_repository: Repository) -> AsyncIter
 
 @pytest_asyncio.fixture(scope="module", name="app_for_metric")
 async def app_for_metric_fixture(
-    model: Model,
     basic_app: Application,
-    instance_type: InstanceType,
-    existing_app: Optional[str],
 ) -> AsyncIterator[Application]:
-    # OpenStack integration does not need the grafana agent to collect metric.
-    if instance_type == InstanceType.LOCAL_LXD and not existing_app:
-        grafana_agent = await model.deploy(
-            "grafana-agent",
-            application_name=f"grafana-agent-{basic_app.name}",
-            channel="latest/edge",
-        )
-        await model.relate(f"{basic_app.name}:cos-agent", f"{grafana_agent.name}:cos-agent")
-        await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE)
-        await model.wait_for_idle(apps=[grafana_agent.name])
-
     yield basic_app
 
 
@@ -778,26 +668,13 @@ async def app_for_reactive_fixture(
 
 
 @pytest_asyncio.fixture(scope="module", name="basic_app")
-async def basic_app_fixture(
-    request: pytest.FixtureRequest, instance_type: InstanceType
-) -> Application:
+async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
     """Setup the charm with the basic configuration."""
-    if instance_type == InstanceType.OPENSTACK:
-        app = request.getfixturevalue("app_openstack_runner")
-    else:
-        app = request.getfixturevalue("app_no_runner")
-    return app
+    return request.getfixturevalue("app_openstack_runner")
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
-async def instance_helper_fixture(
-    request: pytest.FixtureRequest, instance_type: InstanceType
-) -> InstanceHelper:
+async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackInstanceHelper:
     """Instance helper fixture."""
-    helper: InstanceHelper
-    if instance_type == InstanceType.OPENSTACK:
-        openstack_connection = request.getfixturevalue("openstack_connection")
-        helper = OpenStackInstanceHelper(openstack_connection=openstack_connection)
-    else:
-        helper = LXDInstanceHelper()
-    return helper
+    openstack_connection = request.getfixturevalue("openstack_connection")
+    return OpenStackInstanceHelper(openstack_connection=openstack_connection)
