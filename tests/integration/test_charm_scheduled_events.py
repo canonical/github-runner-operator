@@ -45,10 +45,12 @@ async def test_update_interval(
     unit = app_scheduled_events.units[0]
 
     oldnames = await instance_helper.get_runner_names(unit)
+    logger.info("JAVI oldnames: %s", oldnames)
     assert len(oldnames) == 1, "There should be one runner"
 
     # delete the only runner
     await instance_helper.delete_single_runner(unit)
+    logger.info("JAVI runner deleted")
 
     async def _no_runners_available() -> bool:
         """Check if there is only one runner."""
