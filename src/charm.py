@@ -543,6 +543,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
         """Handle image relation joined event."""
+        logger.info("JAVI CHARM _on_image_relation_joined")
         state = self._setup_state()
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
