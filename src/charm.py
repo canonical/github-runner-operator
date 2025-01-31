@@ -341,7 +341,7 @@ class GithubRunnerCharm(CharmBase):
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
-            self._stored.token = None
+            self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_and_reconcile = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
