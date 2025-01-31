@@ -45,7 +45,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 20 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
