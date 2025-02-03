@@ -33,7 +33,6 @@ async def test_charm_upgrade(
     model: Model,
     ops_test: OpsTest,
     charm_file: str,
-    loop_device: str | None,
     app_name: str,
     path: str,
     token: str,
@@ -53,7 +52,7 @@ async def test_charm_upgrade(
     """
     latest_stable_path = tmp_path / "github-runner.charm"
     latest_stable_revision = 302  # update this value every release to stable.
-    # download the charm and inject lxd profile for testing
+    # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
         "github-runner",
@@ -76,7 +75,6 @@ async def test_charm_upgrade(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="juju-storage",
         http_proxy=openstack_http_proxy,
         https_proxy=openstack_https_proxy,
         no_proxy=openstack_no_proxy,
@@ -90,7 +88,6 @@ async def test_charm_upgrade(
             VIRTUAL_MACHINES_CONFIG_NAME: 1,
         },
         wait_idle=False,
-        use_local_lxd=False,
     )
     await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
