@@ -145,7 +145,7 @@ def catch_charm_errors(
 
 
 def catch_action_errors(
-    func: Callable[["GithubRunnerCharm", ActionEvent], None]
+    func: Callable[["GithubRunnerCharm", ActionEvent], None],
 ) -> Callable[["GithubRunnerCharm", ActionEvent], None]:
     """Catch common errors in actions.
 
