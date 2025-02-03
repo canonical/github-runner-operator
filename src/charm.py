@@ -110,7 +110,7 @@ EventT = TypeVar("EventT")
 
 
 def catch_charm_errors(
-    func: Callable[["GithubRunnerCharm", EventT], None]
+    func: Callable[["GithubRunnerCharm", EventT], None],
 ) -> Callable[["GithubRunnerCharm", EventT], None]:
     """Catch common errors in charm.
 
