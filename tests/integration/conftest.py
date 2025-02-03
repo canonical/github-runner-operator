@@ -334,7 +334,7 @@ async def image_builder_fixture(
         app = await model.deploy(
             "github-runner-image-builder",
             channel="latest/edge",
-            revision=2,
+            revision=45,
             constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
             config={
                 "app-channel": "edge",
