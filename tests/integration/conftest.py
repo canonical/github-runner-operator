@@ -311,6 +311,23 @@ def runner_manager_github_client(token: str) -> GithubClient:
 
 
 @pytest_asyncio.fixture(scope="module")
+async def openstack_model_proxy(
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
+    model: Model,
+) -> None:
+    await model.set_config(
+        {
+            "juju-http-proxy": openstack_http_proxy,
+            "juju-https-proxy": openstack_https_proxy,
+            "juju-no-proxy": openstack_no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+
+@pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
     basic_app: Application,
@@ -326,6 +343,9 @@ async def image_builder_fixture(
     model: Model,
     private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app: Optional[str],
+    flavor_name: str,
+    network_name: str,
+    openstack_model_proxy: None,
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
@@ -334,8 +354,7 @@ async def image_builder_fixture(
         app = await model.deploy(
             "github-runner-image-builder",
             channel="latest/edge",
-            revision=2,
-            constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
+            revision=45,
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
@@ -348,10 +367,13 @@ async def image_builder_fixture(
                 "openstack-project-name": private_endpoint_config["project_name"],
                 "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
                 "openstack-user-name": private_endpoint_config["username"],
+                "experimental-external-build": "true",
+                "experimental-external-build-flavor": flavor_name,
+                "experimental-external-build-network": network_name,
             },
         )
         await model.wait_for_idle(
-            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+            apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
         app = model.applications["github-runner-image-builder"]
