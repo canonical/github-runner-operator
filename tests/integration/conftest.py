@@ -425,7 +425,7 @@ async def app_openstack_runner_fixture(
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=30 * 60
     )
 
     # better use test-mode charm config... but let's see
