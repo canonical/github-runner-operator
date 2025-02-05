@@ -37,6 +37,7 @@ async def test_ssh_debug(
     """
     await javi_wait_for_idle(openstack_connection, model, status=ACTIVE, timeout=60 * 120)
 
+
     unit = app_no_wait_tmate.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
     # as the tmate_ssh_server is not routable.

@@ -340,7 +340,9 @@ async def image_builder_fixture(
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
-                # JAVI be careful, maybe all tests use the same names for the images
+                # There are several tests running simulteously, all with the same images.
+                # Until we update the image-builder to create different names for the images,
+                # the history limit should be big enough so that tests do not interfere.
                 "revision-history-limit": "15",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password

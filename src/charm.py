@@ -342,7 +342,7 @@ class GithubRunnerCharm(CharmBase):
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
-            self._stored.token = None
+            self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_and_reconcile = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
@@ -357,6 +357,7 @@ class GithubRunnerCharm(CharmBase):
             return
         if flush_and_reconcile:
             logger.info("JAVI CHARM _ON_CONFIG_CHANGED FLUSH RECONCILE")
+            logger.info("Flush and reconcile on config-changed")
             runner_scaler = self._get_runner_scaler(state)
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)

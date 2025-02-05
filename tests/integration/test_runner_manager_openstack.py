@@ -52,6 +52,11 @@ from tests.integration.helpers.common import (
 logger = logging.getLogger(__name__)
 constants.CREATE_SERVER_TIMEOUT = 900
 
+# A higher create server timeout is reasonable for integration tests,
+# as only one machine that stays for more than the default time in BUILD,
+# will break the tests
+constants.CREATE_SERVER_TIMEOUT = 900
+
 
 @pytest.fixture(scope="module", name="runner_label")
 def runner_label():
