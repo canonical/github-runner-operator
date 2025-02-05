@@ -85,9 +85,11 @@ async def reconcile(app: Application, model: Model) -> None:
         app: The GitHub Runner Charm app to reconcile the runners for.
         model: The machine charm model.
     """
+    logger.info("JAVI calling common.reconcile")
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    # JAVI TODO put this timeout a bit bigger than the new create build timeout
+    await model.wait_for_idle(apps=[app.name], status=ACTIVE, timeout=16 * 60)
 
 
 async def deploy_github_runner_charm(
@@ -324,7 +326,7 @@ async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
     """
     await wait_for(
         partial(_is_workflow_run_complete, run=run),
-        timeout=60 * 30,
+        timeout=60 * 20,
         check_interval=60,
     )
     # The run object is updated by _is_workflow_run_complete function above.
