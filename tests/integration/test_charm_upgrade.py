@@ -91,10 +91,10 @@ async def test_charm_upgrade(
     )
     await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name],
+        apps=[application.name, image_builder.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=180 * 60,
+        timeout=20 * 60,
         check_freq=30,
     )
     origin = client.CharmOrigin(
@@ -125,6 +125,6 @@ async def test_charm_upgrade(
         apps=[application.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=180 * 60,
+        timeout=20 * 60,
         check_freq=30,
     )

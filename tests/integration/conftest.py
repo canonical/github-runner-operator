@@ -45,7 +45,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 30 * 60
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 20 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -317,7 +317,7 @@ async def app_no_runner(
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
     await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=20 * 60)
     yield basic_app
 
 
@@ -339,7 +339,10 @@ async def image_builder_fixture(
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
-                "revision-history-limit": "5",
+                # There are several tests running simulteously, all with the same images.
+                # Until we update the image-builder to create different names for the images,
+                # the history limit should be big enough so that tests do not interfere.
+                "revision-history-limit": "15",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -401,7 +404,9 @@ async def app_openstack_runner_fixture(
             wait_idle=False,
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
+    )
 
     return application
 
@@ -415,7 +420,7 @@ async def app_scheduled_events_fixture(
     application = app_openstack_runner
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
-    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=90 * 60)
+    await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
     await reconcile(app=application, model=model)
     return application
 
