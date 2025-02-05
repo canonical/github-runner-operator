@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
+import asyncio
 import logging
 import os
 import random
@@ -352,6 +353,16 @@ async def image_builder_fixture(
                 "openstack-user-name": private_endpoint_config["username"],
             },
         )
+
+        # this is to give time the image builder to build the image and
+        # sending the image_relation_changed that breaks several tests
+        logging.info(
+            "REMOVE THIS TIMEOUT ONCE THE IMAGE-BUILDER WORKS IN OPENSTACK (EXTERNAL MODE)"
+        )
+        logging.info("Start of 600s timeout")
+        await asyncio.sleep(600)
+        logging.info("End of 600s timeout")
+
         await model.wait_for_idle(
             apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
@@ -408,7 +419,29 @@ async def app_openstack_runner_fixture(
         apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
     )
 
-    return application
+    # better use test-mode charm config... but let's see
+    command = "find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/^CREATE_SERVER_TIMEOUT = .*/CREATE_SERVER_TIMEOUT = 900/gI' {} \\;"
+    run_actions = await application.run(command)
+    logging.info("JAVI run_actions %s", run_actions)
+    for action_result in run_actions.actions:
+        logging.info("JAVI action_result %s", action_result)
+        action = action_result.action
+        logging.info("JAVI action %s", action)
+        # no comment...
+        action_id = action.tag
+        if action_id.startswith("action-"):
+            # strip the action- part of "action-<num>" tag
+            action_id = action_id[7:]
+        action = await model._wait_for_new("action", action_id)
+        result = await action.wait()
+        logging.info("JAVI output of one unit of CREATE_SERVER_TIMEOUT %s", result.results)
+
+    yield application
+    try:
+        logging.info("JAVI after yield in app_openstack_runner_fixture")
+        # get_file_content(unit, filename)
+    except Exception:
+        logging.exception("JAVI something failed after yield")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -498,7 +531,7 @@ async def tmate_ssh_server_app_fixture(
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
     await app_no_wait_tmate.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
-    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 20)
 
     return tmate_app
 
@@ -600,6 +633,7 @@ async def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
+    logging.info("JAVI forked_github_repository.full_name: %s", forked_github_repository.full_name)
     await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app
