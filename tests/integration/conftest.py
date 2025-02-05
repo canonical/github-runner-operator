@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
+import asyncio
 import logging
 import os
 import random
@@ -350,6 +351,16 @@ async def image_builder_fixture(
                 "openstack-user-name": private_endpoint_config["username"],
             },
         )
+
+        # this is to give time the image builder to build the image and
+        # sending the image_relation_changed that breaks several tests
+        logging.info(
+            "REMOVE THIS TIMEOUT ONCE THE IMAGE-BUILDER WORKS IN OPENSTACK (EXTERNAL MODE)"
+        )
+        logging.info("Start of 600s timeout")
+        await asyncio.sleep(600)
+        logging.info("End of 600s timeout")
+
         await model.wait_for_idle(
             apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
