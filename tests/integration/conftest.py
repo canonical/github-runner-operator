@@ -359,7 +359,6 @@ async def image_builder_fixture(
             channel="latest/edge",
             revision=55,
             config={
-                "app-channel": "edge",
                 "build-interval": "12",
                 "revision-history-limit": "2",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
