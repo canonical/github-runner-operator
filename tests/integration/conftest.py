@@ -321,28 +321,47 @@ async def app_no_runner(
     yield basic_app
 
 
+@pytest_asyncio.fixture(scope="module")
+async def openstack_model_proxy(
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
+    model: Model,
+) -> None:
+    await model.set_config(
+        {
+            "juju-http-proxy": openstack_http_proxy,
+            "juju-https-proxy": openstack_https_proxy,
+            "juju-no-proxy": openstack_no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
     model: Model,
     private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app: Optional[str],
+    flavor_name: str,
+    network_name: str,
+    openstack_model_proxy: None,
+    openstack_connection,
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
     if not existing_app:
+        application_name = f"github-runner-image-builder-{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}"
         app = await model.deploy(
             "github-runner-image-builder",
+            application_name=application_name,
             channel="latest/edge",
-            revision=2,
-            constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
+            revision=55,
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
-                # There are several tests running simulteously, all with the same images.
-                # Until we update the image-builder to create different names for the images,
-                # the history limit should be big enough so that tests do not interfere.
-                "revision-history-limit": "15",
+                "revision-history-limit": "2",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -350,14 +369,23 @@ async def image_builder_fixture(
                 "openstack-project-name": private_endpoint_config["project_name"],
                 "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
                 "openstack-user-name": private_endpoint_config["username"],
+                "experimental-external-build": "true",
+                "experimental-external-build-flavor": flavor_name,
+                "experimental-external-build-network": network_name,
             },
         )
         await model.wait_for_idle(
-            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+            apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
         app = model.applications["github-runner-image-builder"]
-    return app
+    yield app
+    # The github-image-builder does not clean keypairs. Until it does,
+    # we clean them manually here.
+    for key in openstack_connection.list_keypairs():
+        key_name: str = key.name
+        if key_name.startswith(application_name):
+            openstack_connection.delete_keypair(key_name)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
