@@ -358,7 +358,6 @@ async def image_builder_fixture(
             channel="latest/edge",
             revision=53,
             config={
-                "app-channel": "edge",
                 "build-interval": "12",
                 # JAVI be careful, maybe all tests use the same names for the images
                 "revision-history-limit": "1",
