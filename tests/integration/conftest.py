@@ -311,6 +311,23 @@ def runner_manager_github_client(token: str) -> GithubClient:
 
 
 @pytest_asyncio.fixture(scope="module")
+async def openstack_model_proxy(
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
+    model: Model,
+) -> None:
+    await model.set_config(
+        {
+            "juju-http-proxy": openstack_http_proxy,
+            "juju-https-proxy": openstack_https_proxy,
+            "juju-no-proxy": openstack_no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+
+@pytest_asyncio.fixture(scope="module")
 async def app_no_runner(
     model: Model,
     basic_app: Application,
@@ -326,23 +343,24 @@ async def image_builder_fixture(
     model: Model,
     private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app: Optional[str],
+    flavor_name: str,
+    network_name: str,
+    openstack_model_proxy: None,
 ):
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
     if not existing_app:
+        application_name = f"github-runner-image-builder-{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}"
         app = await model.deploy(
             "github-runner-image-builder",
+            application_name=application_name,
             channel="latest/edge",
-            revision=2,
-            constraints="cores=2 mem=2G root-disk=20G virt-type=virtual-machine",
+            revision=55,
             config={
-                "app-channel": "edge",
                 "build-interval": "12",
-                # There are several tests running simulteously, all with the same images.
-                # Until we update the image-builder to create different names for the images,
-                # the history limit should be big enough so that tests do not interfere.
-                "revision-history-limit": "15",
+                # JAVI be careful, maybe all tests use the same names for the images
+                "revision-history-limit": "2",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
@@ -350,10 +368,13 @@ async def image_builder_fixture(
                 "openstack-project-name": private_endpoint_config["project_name"],
                 "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
                 "openstack-user-name": private_endpoint_config["username"],
+                "experimental-external-build": "true",
+                "experimental-external-build-flavor": flavor_name,
+                "experimental-external-build-network": network_name,
             },
         )
         await model.wait_for_idle(
-            apps=[app.name], wait_for_active=True, timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
+            apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
         app = model.applications["github-runner-image-builder"]
@@ -405,10 +426,32 @@ async def app_openstack_runner_fixture(
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=30 * 60
     )
 
-    return application
+    # better use test-mode charm config... but let's see
+    command = "find /var/lib/juju -type f -name 'constants.py' -exec sed -i 's/^CREATE_SERVER_TIMEOUT = .*/CREATE_SERVER_TIMEOUT = 900/gI' {} \\;"
+    run_actions = await application.run(command)
+    logging.info("JAVI run_actions %s", run_actions)
+    for action_result in run_actions.actions:
+        logging.info("JAVI action_result %s", action_result)
+        action = action_result.action
+        logging.info("JAVI action %s", action)
+        # no comment...
+        action_id = action.tag
+        if action_id.startswith("action-"):
+            # strip the action- part of "action-<num>" tag
+            action_id = action_id[7:]
+        action = await model._wait_for_new("action", action_id)
+        result = await action.wait()
+        logging.info("JAVI output of one unit of CREATE_SERVER_TIMEOUT %s", result.results)
+
+    yield application
+    try:
+        logging.info("JAVI after yield in app_openstack_runner_fixture")
+        # get_file_content(unit, filename)
+    except Exception:
+        logging.exception("JAVI something failed after yield")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -498,7 +541,7 @@ async def tmate_ssh_server_app_fixture(
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
     await app_no_wait_tmate.relate("debug-ssh", f"{tmate_app.name}:debug-ssh")
-    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 30)
+    await model.wait_for_idle(apps=[tmate_app.name], status=ACTIVE, timeout=60 * 20)
 
     return tmate_app
 
@@ -600,6 +643,7 @@ async def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
+    logging.info("JAVI forked_github_repository.full_name: %s", forked_github_repository.full_name)
     await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app
