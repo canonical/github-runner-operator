@@ -336,6 +336,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
+        logger.info("JAVI CHARM _ON_CONFIG_CHANGED")
         state = self._setup_state()
         self._set_reconcile_timer()
 
@@ -355,6 +356,7 @@ class GithubRunnerCharm(CharmBase):
         if not self._get_set_image_ready_status():
             return
         if flush_and_reconcile:
+            logger.info("JAVI CHARM _ON_CONFIG_CHANGED FLUSH RECONCILE")
             logger.info("Flush and reconcile on config-changed")
             runner_scaler = self._get_runner_scaler(state)
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
@@ -363,16 +365,19 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
         """Event handler for reconciling runners."""
+        logger.info("JAVI CHARM _on_reconcile_runners")
         self._trigger_reconciliation()
 
     @catch_charm_errors
     def _on_database_created(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB database created event."""
+        logger.info("JAVI CHARM _on_database_created")
         self._trigger_reconciliation()
 
     @catch_charm_errors
     def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
         """Handle the MongoDB endpoints changed event."""
+        logger.info("JAVI CHARM _on_endpoints_changed")
         self._trigger_reconciliation()
 
     def _trigger_reconciliation(self) -> None:
@@ -392,6 +397,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
+        logger.info("JAVI CHARM _on_check_runners_action")
         state = self._setup_state()
 
         runner_scaler = self._get_runner_scaler(state)
@@ -414,6 +420,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of reconciling the runner.
         """
+        logger.info("JAVI CHARM _on_reconcile_runners_action")
         self.unit.status = MaintenanceStatus("Reconciling runners")
         state = self._setup_state()
 
@@ -441,6 +448,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of flushing all runners.
         """
+        logger.info("JAVI CHARM _on_flush_runners_action")
         state = self._setup_state()
 
         # Flushing mode not implemented for OpenStack yet.
@@ -465,6 +473,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of updating dependencies.
         """
+        logger.info("JAVI CHARM _on_update_dependencies_action")
         # No dependencies managed by the charm for OpenStack-based runners.
         event.set_results({"flush": False})
 
@@ -522,6 +531,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
+        logger.info("JAVI CHARM _on_debug_ssh_relation_changed")
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
         state = self._setup_state()
 
@@ -534,6 +544,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
         """Handle image relation joined event."""
+        logger.info("JAVI CHARM _on_image_relation_joined")
         state = self._setup_state()
 
         clouds_yaml = state.charm_config.openstack_clouds_yaml
@@ -545,6 +556,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
+        logger.info("JAVI CHARM _on_image_relation_changed")
         state = self._setup_state()
         self.unit.status = MaintenanceStatus("Update image for runners")
 
