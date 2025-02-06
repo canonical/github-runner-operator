@@ -356,7 +356,7 @@ async def image_builder_fixture(
             "github-runner-image-builder",
             application_name=application_name,
             channel="latest/edge",
-            revision=54,
+            revision=55,
             config={
                 "build-interval": "12",
                 # JAVI be careful, maybe all tests use the same names for the images
