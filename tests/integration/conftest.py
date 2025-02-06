@@ -351,15 +351,17 @@ async def image_builder_fixture(
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
     if not existing_app:
+        application_name = f"github-runner-image-builder-{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}"
         app = await model.deploy(
             "github-runner-image-builder",
+            application_name=application_name,
             channel="latest/edge",
             revision=45,
             config={
                 "app-channel": "edge",
                 "build-interval": "12",
                 # JAVI be careful, maybe all tests use the same names for the images
-                "revision-history-limit": "15",
+                "revision-history-limit": "1",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
                 "openstack-password": private_endpoint_config["password"],  # nosec: B105
