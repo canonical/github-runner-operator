@@ -338,6 +338,23 @@ async def app_no_runner(
     yield basic_app
 
 
+@pytest_asyncio.fixture(scope="module")
+async def openstack_model_proxy(
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
+    model: Model,
+) -> None:
+    await model.set_config(
+        {
+            "juju-http-proxy": openstack_http_proxy,
+            "juju-https-proxy": openstack_https_proxy,
+            "juju-no-proxy": openstack_no_proxy,
+            "logging-config": "<root>=INFO;unit=DEBUG",
+        }
+    )
+
+
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
     model: Model,
@@ -360,7 +377,6 @@ async def image_builder_fixture(
             revision=55,
             config={
                 "build-interval": "12",
-                # JAVI be careful, maybe all tests use the same names for the images
                 "revision-history-limit": "2",
                 "openstack-auth-url": private_endpoint_config["auth_url"],
                 # Bandit thinks this is a hardcoded password
@@ -380,8 +396,8 @@ async def image_builder_fixture(
     else:
         app = model.applications["github-runner-image-builder"]
     yield app
-    # JAVI, github-image-builder is leaking keypairs :(
-    # github-runner-image-builder-923q03i6 github-runner-image-builder-923q03i6-image-builder-noble-x64
+    # The github-image-builder does not clean keypairs. Until it does,
+    # we clean them manually here.
     for key in openstack_connection.list_keypairs():
         key_name: str = key.name
         if key_name.startswith(application_name):
