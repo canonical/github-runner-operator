@@ -38,6 +38,7 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_runner_manager_openstack"]'
+      extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint:
