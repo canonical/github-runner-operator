@@ -82,7 +82,7 @@ together to facilitate the deployment, management, and debugging of
 self-hosted GitHub runners. Below is a high-level overview of the key
 charms and their interactions:
 
-GitHub Runner: The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
+[GitHub Runner](https://charmhub.io/github-runner-image): The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
 
 [Image Builder](https://charmhub.io/github-runner-image-builder): Responsible for generating images. It builds images on the builder OpenStack project and uploads them to the GitHub Runner OpenStack project.
 
