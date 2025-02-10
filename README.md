@@ -78,7 +78,7 @@ juju run github-runner/0 flush-runners
 ## Overview of the GitHub runner ecosystem
 
 The `github-runner` charm integrates with several other charms that work
-together to facilitate the deployment, management, and debugging of
+together to facilitate the deployment, management and debugging of
 self-hosted GitHub runners. Below is a high-level overview of the key
 charms and their interactions:
 
