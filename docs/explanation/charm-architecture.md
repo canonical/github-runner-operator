@@ -11,75 +11,26 @@ Conceptually, the charm can be divided into the following:
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
-
-```mermaid
-
-C4Container
-title Container diagram for the github-runner Charm System
-
-
- Container_Boundary(c1, "Image Builder") {
-    Container(imagebuilder, "Image Builder", "", "Provides images to all related charms")
- }
-    System_Ext(osbuilding, "OpenStack", "OpenStack deployment used for building images")
-
-Container_Boundary(c2, "GitHub Runner"){
-
-    Container(githubrunner, "GitHub Runner Charm", "", "Manages self-hosted runners")
-}
-Container_Boundary(c3, "monbodb"){
-
-    Container(mongodb, "MongoDB", "", "Used as a message queue for reactive runner requests")
-}
-Container_Boundary(c4, "tmate-ssh-server"){
-
-    Container(tmate_ssh, "tmate-ssh-server", "", "Terminal sharing capabilities to debug GitHub runners")
-}
-
-    Rel(imagebuilder, osbuilding, "builds images")
-    UpdateRelStyle(imagebuilder, osbuilding, $offsetY="-30", $offsetX="10")
-    Rel(imagebuilder, osgithubrunner, "uploads images")
-    UpdateRelStyle(imagebuilder, osgithubrunner, $offsetY="-30", $offsetX="-90")
-
-    Rel(imagebuilder, githubrunner, "image ids")
-    UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
-
-    System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
-
-    System_Ext(github, "GitHub", "GitHub API")
-
-    Rel(githubrunner, osgithubrunner, "spawns VMs")
-    UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
-
-    Rel(githubrunner, github, "Manage runners")
-
-    Rel(githubrunner, imagebuilder, "OpenStack credentials")
-    UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
-
-    Rel(mongodb, githubrunner, "database credentials")
-
-    Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
-```
-
 # Description of the main components github-runner charm
 
 ```mermaid
-
 C4Container
 title Container diagram for the github-runner Charm System
 
 System_Ext(osrunnign, "OpenStack", "OpenStack deployment used for runners")
-    System_Ext(github, "GitHub", "GitHub API")
+System_Ext(github, "GitHub", "GitHub API")
+
 
 Container_Boundary(c1, "GitHub Runner Charm"){
-    Component(runnerscaler, "RunnerScaler", "", "")
 
 
-    Component(runnermanager, "RunnerManager", "", "")
+
     Component(githubrunnermanager, "GitHubRunnerManager", "", "")
-
     Component(cloudrunnermanager, "CloudRunnerManager", "", "")
+
     Component(openstackrunnermanager, "OpenstackRunnerManager", "", "")
+    Component(runnermanager, "RunnerManager", "", "")
+    Component(runnerscaler, "RunnerScaler", "", "")
 
     Rel(runnerscaler, runnermanager, "uses", "")
     Rel(runnermanager, cloudrunnermanager, "uses", "")
@@ -88,26 +39,30 @@ Container_Boundary(c1, "GitHub Runner Charm"){
 }
 
 Container_Boundary(c2, "Reactive Processes"){
-        Component(runnerprocess, "Reactive Spawner", "", "")
+        Component(runnerprocess, "github_runner_manager.reactive.runner", "Reactive Process", "")
 }
 
 Rel(githubrunnermanager, github, "manages VMs", "")
 Rel(openstackrunnermanager, osrunnign, "manages VMs", "")
 
-Rel(runnermanager, runnerprocess, "creates/deleted processes", "")
+Rel(runnermanager, runnerprocess, "creates/deletes processes", "")
 
 Rel(runnerprocess, github, "manages VMs", "")
 Rel(runnerprocess, osrunnign, "manages VMs", "")
+
+UpdateLayoutConfig($c4ShapeInRow="3", $c4BoundaryInRow="2")
 ```
 
-The `RunnerScaler` is the main component to reconcile the desired number of runners using the `RunnerManager`.
-The `RunnerManager` uses the `CloudRunnerManager` to interact with the compute infrastructure to create and manage self-hosted runner (OpenStack is currently the only implementation).
-The `RunnerManager` uses the `GithubRunnerManager` to interact with the GitHub API.
+The `RunnerScaler` is the entry point component to reconcile the desired number of runners using the `RunnerManager`.
+The `RunnerManager` is the main component of the charm. The `RunnerManager` interacts with the other charm components in the following ways:
+* `CloudRunnerManager`: To interact with the compute infrastructure to create and manage
+  self-hosted runners. OpenStack is currently the only available cloud implementation. 
+* `GithubRunnerManager`: To interact with the GitHub API.
 
 In the case of reactive runners, the `RunnerManager` will also create processes that
-will be in charge of consuming events that were created from Github webhooks, and starting GitHub runners in a
+will be in charge of consuming events that were created from GitHub webhooks, and starting GitHub runners in a
 reactive manner. Those events are stored in `mongodb` and were enqueued by
-the application [github-runner-webhook-router](https://github.com/canonical/github-runner-webhook-router).
+the charm [github-runner-webhook-router](https://github.com/canonical/github-runner-webhook-router).
 
 ## Virtual machines
 

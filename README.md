@@ -75,6 +75,57 @@ If you need to flush and replace the runners with a new set of runners, you can 
 juju run github-runner/0 flush-runners
 ```
 
+## Overview of the GitHub runner ecosystem
+
+```mermaid
+
+C4Container
+title Container diagram for the github-runner Charm System
+
+
+ Container_Boundary(c1, "Image Builder") {
+    Container(imagebuilder, "Image Builder", "", "Provides images to all related charms")
+ }
+    System_Ext(osbuilding, "OpenStack", "OpenStack deployment used for building images")
+
+Container_Boundary(c2, "GitHub Runner"){
+
+    Container(githubrunner, "GitHub Runner Charm", "", "Manages self-hosted runners")
+}
+Container_Boundary(c3, "monbodb"){
+
+    Container(mongodb, "MongoDB", "", "Used as a message queue for reactive runner requests")
+}
+Container_Boundary(c4, "tmate-ssh-server"){
+
+    Container(tmate_ssh, "tmate-ssh-server", "", "Terminal sharing capabilities to debug GitHub runners")
+}
+
+    Rel(imagebuilder, osbuilding, "builds images")
+    UpdateRelStyle(imagebuilder, osbuilding, $offsetY="-30", $offsetX="10")
+    Rel(imagebuilder, osgithubrunner, "uploads images")
+    UpdateRelStyle(imagebuilder, osgithubrunner, $offsetY="-30", $offsetX="-90")
+
+    Rel(imagebuilder, githubrunner, "image ids")
+    UpdateRelStyle(imagebuilder, githubrunner, $offsetY="-10", $offsetX="-30")
+
+    System_Ext(osgithubrunner, "OpenStack", "OpenStack deployment used for spawning runner VMs")
+
+    System_Ext(github, "GitHub", "GitHub API")
+
+    Rel(githubrunner, osgithubrunner, "spawns VMs")
+    UpdateRelStyle(githubrunner, osgithubrunner, $offsetY="-30", $offsetX="10")
+
+    Rel(githubrunner, github, "Manage runners")
+
+    Rel(githubrunner, imagebuilder, "OpenStack credentials")
+    UpdateRelStyle(githubrunner, imagebuilder, $offsetY="10", $offsetX="-60")
+
+    Rel(mongodb, githubrunner, "database credentials")
+
+    Rel(tmate_ssh, githubrunner, "debug-ssh credentials")
+```
+
 
 ## Integrations
 The charm supports [multiple integrations](https://charmhub.io/github-runner/integrations),
