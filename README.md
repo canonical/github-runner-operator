@@ -82,15 +82,11 @@ together to facilitate the deployment, management and debugging of
 self-hosted GitHub runners. Below is a high-level overview of the key
 charms and their interactions:
 
-[GitHub Runner](https://charmhub.io/github-runner-image): The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
-
-[Image Builder](https://charmhub.io/github-runner-image-builder): Responsible for generating images. It builds images on the builder OpenStack project and uploads them to the GitHub Runner OpenStack project.
-
-[MongoDB](https://charmhub.io/mongodb): Acts as a message queue to handle reactive runner requests.
-
-[tmate-ssh-server](https://charmhub.io/tmate-ssh-server): Provides terminal-sharing capabilities to enable debugging of GitHub runners.
-
-[COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite): Provides observability to the Github runners ecosystem.
+* [GitHub Runner](https://charmhub.io/github-runner-image): The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
+* [Image Builder](https://charmhub.io/github-runner-image-builder): Responsible for generating images. It builds images on the builder OpenStack project and uploads them to the GitHub Runner OpenStack project.
+* [MongoDB](https://charmhub.io/mongodb): Acts as a message queue to handle reactive runner requests. Only for reactive runners.
+* [tmate-ssh-server](https://charmhub.io/tmate-ssh-server): Provides terminal-sharing capabilities to enable debugging of GitHub runners. Optional.
+* [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite): Provides observability to the Github runners ecosystem. Optional.
 
 Below is a diagram representing these components and their relationships, excluding the [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite):
 
