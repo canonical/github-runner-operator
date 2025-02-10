@@ -61,7 +61,7 @@ The `RunnerManager` is the main component of the charm. The `RunnerManager` inte
 
 In the case of reactive runners, the `RunnerManager` will also create processes that
 will be in charge of consuming events that were created from GitHub webhooks, and starting GitHub runners in a
-reactive manner. Those events are stored in `mongodb` and were enqueued by
+reactive manner. Those events are stored in `mongodb` and are enqueued by
 the charm [github-runner-webhook-router](https://github.com/canonical/github-runner-webhook-router).
 
 ## Virtual machines
