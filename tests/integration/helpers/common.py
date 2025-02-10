@@ -156,7 +156,7 @@ async def deploy_github_runner_charm(
     )
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 40)
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
     return application
 
