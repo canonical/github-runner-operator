@@ -4,6 +4,7 @@
 """Integration tests for charm upgrades."""
 
 import functools
+import logging
 import pathlib
 
 import pytest
@@ -24,6 +25,8 @@ from tests.integration.helpers.common import (
     is_upgrade_charm_event_emitted,
     wait_for,
 )
+
+logger = logging.getLogger(__name__)
 
 pytestmark = pytest.mark.openstack
 
@@ -68,6 +71,8 @@ async def test_charm_upgrade(
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
 
+    logger.info("JAVI after ops_test.juju download")
+
     # deploy latest stable version of the charm
     application = await deploy_github_runner_charm(
         model=model,
@@ -97,6 +102,9 @@ async def test_charm_upgrade(
         timeout=20 * 60,
         check_freq=30,
     )
+
+    logger.info("JAVI after integrating image builder and github-runner-operator")
+
     origin = client.CharmOrigin(
         source="charm-hub",
         track="22.04",
@@ -108,6 +116,8 @@ async def test_charm_upgrade(
         base=client.Base("22.04", "ubuntu"),
     )
 
+    logger.info("JAVI after client.CharmOrigin call")
+
     # upgrade the charm with current local charm
     await application.local_refresh(
         path=charm_file,
@@ -117,10 +127,16 @@ async def test_charm_upgrade(
         force_units=False,
         resources=None,
     )
+
+    logger.info("JAVI after local_refresh")
+
     unit = application.units[0]
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
     )
+
+    logger.info("JAVI after is_upgrade_charm_event_emitter")
+
     await model.wait_for_idle(
         apps=[application.name],
         raise_on_error=False,
@@ -128,3 +144,4 @@ async def test_charm_upgrade(
         timeout=20 * 60,
         check_freq=30,
     )
+    logger.info("JAVI last wait for idle")

@@ -50,6 +50,7 @@ from tests.integration.helpers.common import (
 )
 
 logger = logging.getLogger(__name__)
+constants.CREATE_SERVER_TIMEOUT = 900
 
 # A higher create server timeout is reasonable for integration tests,
 # as only one machine that stays for more than the default time in BUILD,
@@ -225,7 +226,11 @@ def workflow_is_status(workflow: Workflow, status: str) -> bool:
 
 
 async def wait_runner_amount(
-    runner_manager: RunnerManager, num: int, timeout: int = 600, check_interval: int = 60
+    # JAVI TIMEOUT AS IN CREATE STATUS TIMEOUT
+    runner_manager: RunnerManager,
+    num: int,
+    timeout: int = 60 * 16,
+    check_interval: int = 60,
 ) -> None:
     """Wait until the runner manager has the number of runners.
 
@@ -351,6 +356,7 @@ async def test_runner_flush_busy_lifecycle(
         4. No runners exists.
     """
     # 1.
+    logger.info("JAVI before dispatching workflow")
     workflow = await dispatch_workflow(
         app=None,
         branch=test_github_branch,
@@ -385,6 +391,7 @@ async def test_runner_flush_busy_lifecycle(
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
     assert busy_runner.github_state == GitHubRunnerState.BUSY
 
+    logger.info("JAVI before flushing busy")
     # 4.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
     # It takes a bit for the github agent to die, and it may not be cleaned
