@@ -104,3 +104,21 @@ options:
     description: >-
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
       runners to match this setting.
+  base-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      The number of virtual machine runners non-reactive runners spawned by the charm per each
+      combination of flavor and base.
+  max-total-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      If the github-runner charm is integrated with MongoDB, the reactive mode will not spawn
+      new virtual machines if there are max-total-virtual-machines of more virtual machines
+      managed by the charm.
+  flavor-label:
+    type: string
+    description: >-
+      List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
+      flavor and the label will be a label for the GitHub runner.
