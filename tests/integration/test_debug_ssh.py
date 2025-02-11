@@ -34,7 +34,7 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 120)
+    await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
     unit = app_no_wait_tmate.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,

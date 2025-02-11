@@ -156,7 +156,7 @@ async def deploy_github_runner_charm(
     )
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 40)
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
     return application
 
@@ -391,7 +391,9 @@ async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     """
     unit_name_without_slash = unit.name.replace("/", "-")
     juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
-    ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
+    ret_code, stdout, stderr = await run_in_unit(
+        unit=unit, command=f"cat {juju_unit_log_file} | grep 'Emitting Juju event upgrade_charm.'"
+    )
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
     return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
 
