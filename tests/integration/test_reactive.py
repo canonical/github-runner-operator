@@ -57,6 +57,7 @@ async def app_fixture(
     await reconcile(app_for_reactive, app_for_reactive.model)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_spawns_runner(
     ops_test: OpsTest,
     app: Application,
@@ -116,13 +117,14 @@ async def test_reactive_mode_spawns_runner(
         return "runner_installed" in events
 
     try:
-        await wait_for(_runner_installed_in_metrics_log, check_interval=30, timeout=600)
+        await wait_for(_runner_installed_in_metrics_log, check_interval=30, timeout=60 * 10)
     except TimeoutError:
         assert False, "runner_installed event has not been logged"
 
     await _assert_metrics_are_logged(app, github_repository)
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
     ops_test: OpsTest,
     app: Application,
@@ -160,6 +162,7 @@ async def test_reactive_mode_does_not_consume_jobs_with_unsupported_labels(
         run.cancel()  # cancel the run to avoid a queued run in GitHub actions page
 
 
+@pytest.mark.abort_on_fail
 async def test_reactive_mode_scale_down(
     ops_test: OpsTest,
     app: Application,

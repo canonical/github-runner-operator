@@ -6,10 +6,8 @@
 import inspect
 import logging
 import pathlib
-import subprocess
 import time
 import typing
-import zipfile
 from datetime import datetime, timezone
 from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
@@ -27,15 +25,12 @@ from juju.model import Model
 from juju.unit import Unit
 
 from charm_state import (
-    DENYLIST_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
-    RUNNER_STORAGE_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from runner_manager import LXDRunnerManager
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -49,143 +44,6 @@ MONGODB_APP_NAME = "mongodb"
 DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 logger = logging.getLogger(__name__)
-
-
-class InstanceHelper(typing.Protocol):
-    """Helper for running commands in instances."""
-
-    async def run_in_instance(
-        self,
-        unit: Unit,
-        command: str,
-        timeout: int | None = None,
-        assert_on_failure: bool = False,
-        assert_msg: str | None = None,
-    ) -> tuple[int, str | None, str | None]:
-        """Run command in instance.
-
-        Args:
-            unit: Juju unit to execute the command in.
-            command: Command to execute.
-            timeout: Amount of time to wait for the execution.
-            assert_on_failure: Perform assertion on non-zero exit code.
-            assert_msg: Message for the failure assertion.
-        """
-        ...
-
-    async def expose_to_instance(
-        self,
-        unit: Unit,
-        port: int,
-        host: str = "localhost",
-    ) -> None:
-        """Expose a port on the juju machine to the OpenStack instance.
-
-        Uses SSH remote port forwarding from the juju machine to the OpenStack instance containing
-        the runner.
-
-        Args:
-            unit: The juju unit of the github-runner charm.
-            port: The port on the juju machine to expose to the runner.
-            host: Host for the reverse tunnel.
-        """
-        ...
-
-    async def ensure_charm_has_runner(self, app: Application):
-        """Ensure charm has a runner.
-
-        Args:
-            app: The GitHub Runner Charm app to create the runner for.
-        """
-        ...
-
-    async def get_runner_names(self, unit: Unit) -> list[str]:
-        """Get the name of all the runners in the unit.
-
-        Args:
-            unit: The GitHub Runner Charm unit to get the runner names for.
-        """
-        ...
-
-    async def get_runner_name(self, unit: Unit) -> str:
-        """Get the name of the runner.
-
-        Args:
-            unit: The GitHub Runner Charm unit to get the runner name for.
-        """
-        ...
-
-    async def delete_single_runner(self, unit: Unit) -> None:
-        """Delete the only runner.
-
-        Args:
-            unit: The GitHub Runner Charm unit to delete the runner name for.
-        """
-        ...
-
-
-async def check_runner_binary_exists(unit: Unit) -> bool:
-    """Checks if runner binary exists in the charm.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        Whether the runner binary file exists in the charm.
-    """
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    return return_code == 0
-
-
-async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
-    """Get pip info for repo-policy-compliance.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        If repo-policy-compliance is installed, returns the pip show output, else returns none.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip show repo-policy-compliance"
-    )
-
-    if return_code == 0:
-        return stdout or stderr
-
-    return None
-
-
-async def install_repo_policy_compliance_from_git_source(unit: Unit, source: None | str) -> None:
-    """Install repo-policy-compliance pip package from the git source.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-        source: The git source to install the package. If none the package is removed.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip uninstall --yes repo-policy-compliance"
-    )
-    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout} {stderr}"
-
-    if source:
-        return_code, stdout, stderr = await run_in_unit(unit, f"python3 -m pip install {source}")
-        assert (
-            return_code == 0
-        ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
-
-
-async def remove_runner_bin(unit: Unit) -> None:
-    """Remove runner binary.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-    """
-    await run_in_unit(unit, f"rm {LXDRunnerManager.runner_bin_path}")
-
-    # No file should exists under with the filename.
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    assert return_code != 0
 
 
 async def run_in_unit(
@@ -238,7 +96,6 @@ async def deploy_github_runner_charm(
     app_name: str,
     path: str,
     token: str,
-    runner_storage: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -247,7 +104,6 @@ async def deploy_github_runner_charm(
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
-    use_local_lxd: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -257,7 +113,6 @@ async def deploy_github_runner_charm(
         app_name: Application name for the deployment.
         path: Path representing the GitHub repo/org.
         token: GitHub Personal Token for the application to use.
-        runner_storage: Runner storage to use, i.e. "memory" or "juju_storage",
         http_proxy: HTTP proxy for the application to use.
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
@@ -267,14 +122,10 @@ async def deploy_github_runner_charm(
         config: Additional custom config to use.
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
-        use_local_lxd: Whether to use local LXD or not.
 
     Returns:
         The charm application that was deployed.
     """
-    if use_local_lxd:
-        subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
     await model.set_config(
         {
             "juju-http-proxy": http_proxy,
@@ -284,20 +135,13 @@ async def deploy_github_runner_charm(
         }
     )
 
-    storage = {}
-    if runner_storage == "juju-storage":
-        storage["runner"] = {"pool": "rootfs", "size": 11}
-
     default_config = {
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
         VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
-        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
-    if use_local_lxd:
-        default_config[DENYLIST_CONFIG_NAME] = "10.10.0.0/16"
 
     if config:
         default_config.update(config)
@@ -308,12 +152,11 @@ async def deploy_github_runner_charm(
         base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        storage=storage,  # type: ignore[arg-type]
         **(deploy_kwargs or {}),
     )
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 40)
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
     return application
 
@@ -533,43 +376,6 @@ async def wait_for(
         if result := func():
             return cast(R, result)
     raise TimeoutError()
-
-
-def inject_lxd_profile(charm_file: pathlib.Path, loop_device: str | None) -> None:
-    """Injects LXD profile to charm file.
-
-    Args:
-        charm_file: Path to charm file to deploy.
-        loop_device: Loop device used to mount runner image.
-    """
-    lxd_profile_str = """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    if loop_device:
-        lxd_profile_str += f"""    loop-control:
-        path: /dev/loop-control
-        type: unix-char
-    loop14:
-        path: {loop_device}
-        type: unix-block
-"""
-
-    with zipfile.ZipFile(charm_file, mode="a") as file:
-        file.writestr(
-            "lxd-profile.yaml",
-            lxd_profile_str,
-        )
 
 
 async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:

@@ -12,24 +12,12 @@ on:
         description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
-      runner-virt-type:
-        description: The e2e test runner virtualization type. E.g. lxd, or openstack.
-        # workflow_call does not support choice type.
-        type: string
-        required: true
   workflow_dispatch:
     inputs:
       runner-tag:
         description: The e2e test runner tag to run the workflow on.
         type: string
         required: true
-      runner-virt-type:
-        description: The e2e test runner virtualization type.
-        type: choice
-        required: true
-        options:
-          - lxd
-          - openstack
 
 jobs:
   e2e-test:
@@ -37,12 +25,7 @@ jobs:
     runs-on: [self-hosted, linux, "${{ inputs.runner-tag }}"]
     steps:
       - name: Hostname is set to "github-runner"
-        if: "${{ github.event.inputs.runner-virt-type == 'openstack' }}"
         run: sudo hostnamectl hostname | grep github-runner
-      # Snapd can have some issues in privileged LXD containers without setting
-      # security.nesting=True and this.
-      - name: Fix snap issue in privileged LXD containers
-        run: ln -s /bin/true /usr/local/bin/udevadm
       # Below is a series of simple tests to assess the functionality of the newly spawned runner.
       - name: Echo hello world
         run: echo "hello world"
@@ -104,11 +87,3 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
-      - name: Test Firewall
-        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
-        run: |
-          HOST_IP=$(ip route | grep default | cut -f 3 -d" ")
-          [ $((ping $HOST_IP -c 5 || :) | grep "Destination Port Unreachable" | wc -l) -eq 5 ]
-      - name: Test sctp support
-        if: "${{ github.event.inputs.runner-virt-type == 'lxd' }}"
-        run: sudo apt-get install lksctp-tools -yq && checksctp
