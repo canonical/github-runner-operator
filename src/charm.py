@@ -339,22 +339,26 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
         self._set_reconcile_timer()
 
+        flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
-            self._stored.token = None
+            self._stored.token = self.config[TOKEN_CONFIG_NAME]
+            flush_and_reconcile = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
+            flush_and_reconcile = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
+            flush_and_reconcile = True
 
         state = self._setup_state()
 
         if not self._get_set_image_ready_status():
             return
-        if state.charm_config.token != self._stored.token:
+        if flush_and_reconcile:
+            logger.info("Flush and reconcile on config-changed")
             runner_scaler = self._get_runner_scaler(state)
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
-            # TODO: 2024-04-12: Flush on token changes.
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
@@ -518,16 +522,14 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
+        self.unit.status = MaintenanceStatus("Added debug-ssh relation")
         state = self._setup_state()
 
         if not self._get_set_image_ready_status():
             return
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush()
-        try:
-            runner_scaler.reconcile(state.runner_config.virtual_machines)
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
+        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
