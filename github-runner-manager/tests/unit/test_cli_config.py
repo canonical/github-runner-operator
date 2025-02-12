@@ -9,7 +9,7 @@ import pydantic
 import pytest
 import yaml
 
-from src.cli_config import Configuration
+from src.github_runner_manager.cli_config import Configuration
 
 ConfigValue = None | int | bool | str | tuple
 
