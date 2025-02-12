@@ -5,6 +5,7 @@
 
 import itertools
 import logging
+import logging.config
 from typing import TextIO
 
 import click
@@ -25,23 +26,18 @@ LOG_LEVELS = tuple(
 # The entry point for the CLI will be tested with integration test.
 @click.command()
 @click.option(
-    "--log-level",
-    type=click.Choice(LOG_LEVELS),
-    default="info",
-    help="The logging verbosity."
-)
-@click.option(
     "--config-file",
-    type=click.File(mode="r",encoding="utf-8"),
-    help="The file path containing the configurations."
+    type=click.File(mode="r", encoding="utf-8"),
+    help="The file path containing the configurations.",
 )
-def main(log_level: str, config_file: TextIO) -> None:  # pragma: no cover
+def main(config_file: TextIO) -> None:  # pragma: no cover
     """Start the reconcile service.
-    
+
     Args:
-        log_level: The logging level.
         config_file: The configuration file.
+
+    Raises:
+        NotImplementedError: The github runner manager logic is not yet implemented.
     """
-    logging.configure(log_level=log_level)
     _ = Configuration.from_yaml_file(config_file)
     raise NotImplementedError()
