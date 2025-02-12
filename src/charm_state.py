@@ -38,9 +38,12 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
+MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
@@ -485,18 +488,35 @@ class OpenstackImage(BaseModel):
         return OpenstackImage(id=None, tags=None)
 
 
+@dataclasses.dataclass
+class FlavorLabel:
+    """Combination of flavor and label.
+
+    Attributes:
+        flavor: Flavor for the VM.
+        label: Label associated with the flavor.
+    """
+
+    flavor: str
+    # Remove the None when several FlavorLabel combinations are supported.
+    label: str | None
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
     Attributes:
-        virtual_machines: Number of virtual machine-based runner to spawn.
-        openstack_flavor: flavor on openstack to use for virtual machines.
+        base_virtual_machines: Number of virtual machine-based runners to spawn.
+        max_total_virtual_machines: Maximum possible machine number to spawn for the unit in
+           for reactive processes.
+        flavor_label_combinations: list of FlavorLabel.
         openstack_network: Network on openstack to use for virtual machines.
         openstack_image: Openstack image to use for virtual machines.
     """
 
-    virtual_machines: int
-    openstack_flavor: str
+    base_virtual_machines: int
+    max_total_virtual_machines: int
+    flavor_label_combinations: list[FlavorLabel]
     openstack_network: str
     openstack_image: OpenstackImage | None
 
@@ -514,26 +534,33 @@ class OpenstackRunnerConfig(BaseModel):
         Returns:
             Openstack runner config of the charm.
         """
-        try:
-            virtual_machines = int(charm.config["virtual-machines"])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                "The virtual-machines configuration must be int"
-            ) from err
+        base_virtual_machines = int(charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME])
+        max_total_virtual_machines = int(charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME])
+        # Remove this condition when "virtual-machines" config option is deleted.
+        if base_virtual_machines == 0 and max_total_virtual_machines == 0:
+            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+            base_virtual_machines = virtual_machines
+            max_total_virtual_machines = virtual_machines
 
-        openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
+        flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
+        flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
+        if len(flavor_label_combinations) == 0:
+            flavor = cast(str, charm.config[OPENSTACK_FLAVOR_CONFIG_NAME])
+            if not flavor:
+                raise CharmConfigInvalidError("OpenStack flavor not specified")
+            flavor_label_combinations = [FlavorLabel(flavor, None)]
+        elif len(flavor_label_combinations) > 1:
+            raise CharmConfigInvalidError("Several flavor-label combinations not yet implemented")
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
         openstack_image = OpenstackImage.from_charm(charm)
 
         return cls(
-            virtual_machines=virtual_machines,
-            openstack_flavor=cast(str, openstack_flavor),
+            base_virtual_machines=base_virtual_machines,
+            max_total_virtual_machines=max_total_virtual_machines,
+            flavor_label_combinations=flavor_label_combinations,
             openstack_network=cast(str, openstack_network),
             openstack_image=openstack_image,
         )
-
-
-RunnerConfig = OpenstackRunnerConfig
 
 
 class ProxyConfig(BaseModel):
@@ -786,7 +813,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
-    runner_config: RunnerConfig
+    runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
@@ -865,10 +892,14 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            runner_config: RunnerConfig
             runner_config = OpenstackRunnerConfig.from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+
+        # Remove this condition when when several FlavorLabel combinations are supported.
+        if combinations := runner_config.flavor_label_combinations:
+            if combinations[0].label:
+                charm_config.labels = (combinations[0].label,) + charm_config.labels
 
         try:
             arch = _get_supported_arch()
@@ -897,3 +928,22 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         cls._store_state(state)
 
         return state
+
+
+def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
+    """Parse flavor-label config option."""
+    combinations = []
+    for flavor_label in flavor_label_config.split(","):
+        flavor_label_stripped = flavor_label.strip()
+        if not flavor_label_stripped:
+            continue
+        try:
+            flavor, label = flavor_label_stripped.split(":")
+            if not flavor:
+                raise CharmConfigInvalidError("Invalid empty flavor in flavor-label configuration")
+            if not label:
+                raise CharmConfigInvalidError("Invalid empty label in flavor-label configuration")
+            combinations.append(FlavorLabel(flavor, label))
+        except ValueError as exc:
+            raise CharmConfigInvalidError("Invalid flavor-label configuration") from exc
+    return combinations

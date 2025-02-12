@@ -97,7 +97,7 @@ def runner_scaler_fixture(runner_manager: RunnerManager) -> RunnerScaler:
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
 def runner_scaler_one_runner_fixture(runner_scaler: RunnerScaler) -> RunnerScaler:
-    runner_scaler.reconcile(1)
+    runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     assert_runner_info(runner_scaler, online=1)
     return runner_scaler
 
@@ -182,8 +182,35 @@ def test_reconcile_runner_create_one(runner_scaler: RunnerScaler):
     Act: Reconcile to no runners.
     Assert: No changes. Runner info should contain no runners.
     """
-    diff = runner_scaler.reconcile(quantity=0)
+    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=0)
     assert diff == 0
+    assert_runner_info(runner_scaler, online=0)
+
+
+def test_reconcile_runner_create_one_reactive(
+    monkeypatch: pytest.MonkeyPatch,
+    runner_manager: RunnerManager,
+):
+    """
+    Arrange: TODO.
+    Act: TODO.
+    Assert: TODO.
+    """
+    reactive_runner_config = MagicMock()
+    runner_scaler = RunnerScaler(runner_manager, reactive_runner_config)
+
+    from github_runner_manager.reactive.runner_manager import ReconcileResult
+
+    def _fake_reactive_reconcile(expected_quantity: int, runner_manager, runner_config):
+        """Reactive reconcile fake."""
+        return ReconcileResult(processes_diff=expected_quantity, metric_stats={"event": ""})
+
+    monkeypatch.setattr(
+        "github_runner_manager.reactive.runner_manager.reconcile",
+        MagicMock(side_effect=_fake_reactive_reconcile),
+    )
+    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=5)
+    assert diff == 5
     assert_runner_info(runner_scaler, online=0)
 
 
@@ -199,7 +226,7 @@ def test_reconcile_error_still_issue_metrics(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=Exception("Mock error"))
     )
     with pytest.raises(Exception):
-        runner_scaler.reconcile(1)
+        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     issue_events_mock.assert_called_once()
     issued_event = issue_events_mock.call_args[0][0]
     assert isinstance(issued_event, Reconciliation)
@@ -217,7 +244,7 @@ def test_reconcile_raises_reconcile_error(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=CloudError("Mock error"))
     )
     with pytest.raises(ReconcileError) as exc:
-        runner_scaler.reconcile(1)
+        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     assert "Failed to reconcile runners." in str(exc.value)
 
 
@@ -235,12 +262,12 @@ def test_one_runner(runner_scaler: RunnerScaler):
         3. Runner info has one runner.
     """
     # 1.
-    diff = runner_scaler.reconcile(1)
+    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 
     # 2.
-    diff = runner_scaler.reconcile(1)
+    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     assert diff == 0
     assert_runner_info(runner_scaler, online=1)
 
@@ -249,7 +276,7 @@ def test_one_runner(runner_scaler: RunnerScaler):
     assert_runner_info(runner_scaler, online=0)
 
     # 3.
-    diff = runner_scaler.reconcile(1)
+    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 
