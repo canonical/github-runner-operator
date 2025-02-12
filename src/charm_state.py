@@ -896,10 +896,11 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
-        # Remove this condition when when several FlavorLabel combinations are supported.
-        if combinations := runner_config.flavor_label_combinations:
-            if combinations[0].label:
-                charm_config.labels = (combinations[0].label,) + charm_config.labels
+        # Remove this code when when several FlavorLabel combinations are supported.
+        # There should be one.
+        flavor_label_combination = runner_config.flavor_label_combinations[0]
+        if flavor_label_combination.label:
+            charm_config.labels = (flavor_label_combination.label,) + charm_config.labels
 
         try:
             arch = _get_supported_arch()

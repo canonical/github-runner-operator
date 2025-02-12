@@ -701,7 +701,8 @@ class GithubRunnerCharm(CharmBase):
         if image and image.id:
             server_config = OpenStackServerConfig(
                 image=image.id,
-                flavor=state.runner_config.openstack_flavor,
+                # Pending to add support for more flavor label combinations
+                flavor=state.runner_config.flavor_label_combinations[0].flavor,
                 network=state.runner_config.openstack_network,
             )
         labels = self._create_labels(state)
