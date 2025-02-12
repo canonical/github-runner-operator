@@ -192,8 +192,8 @@ def test_reconcile_runner_create_one_reactive(
     runner_manager: RunnerManager,
 ):
     """
-    Arrange: Prepare one RunnerScaler in reactive mode. Fake the reconcile function in reactive
-       to return its input.
+    Arrange: Prepare one RunnerScaler in reactive mode.
+       Fake the reconcile function in reactive to return its input.
     Act: Call reconcile with base quantity 0 and max quantity 5.
     Assert: 5 processes should be returned in the result of the reconcile.
     """
