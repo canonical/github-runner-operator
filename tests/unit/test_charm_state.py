@@ -882,7 +882,7 @@ def test_parse_virtual_machine_numbers(
 ):
     """
     arrange: Mock CharmBase and necessary methods.
-    act: Call CharmState.from_charm.
+    act: Call CharmState.from_charm with the specified config options for number of machines.
     assert: There is a preference for base_virtual_machines and max_total_virtual_machines,
         but it both those config options are not set, then virtual_machines is used.
     """
@@ -892,12 +892,13 @@ def test_parse_virtual_machine_numbers(
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+    mock_database = MagicMock(spec=DatabaseRequires)
 
     mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
     mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
     mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
-    mock_database = MagicMock(spec=DatabaseRequires)
     state = CharmState.from_charm(mock_charm, mock_database)
+
     assert state.runner_config.base_virtual_machines == expected_base
     assert state.runner_config.max_total_virtual_machines == expected_max
 
@@ -933,7 +934,8 @@ def test_parse_flavor_config(
 ):
     """
     arrange: Mock CharmBase and necessary methods.
-    act: Call CharmState.from_charm.
+    act: Call CharmState.from_charm with the specified config options for the number of
+       flavors and labels.
     assert: The correct flavors and labels should be generated.
     """
     mock_charm = MockGithubRunnerCharmFactory()
@@ -974,7 +976,8 @@ def test_errror_flavor_config(
 ):
     """
     arrange: Mock CharmBase and necessary methods.
-    act: Call CharmState.from_charm.
+    act: Call CharmState.from_charm with the specified config options for the number
+       of flavors and labels.
     assert: The exception CharmConfigInvalidError should be raised with the expected message.
     """
     mock_charm = MockGithubRunnerCharmFactory()
