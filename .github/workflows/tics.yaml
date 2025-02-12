@@ -10,7 +10,7 @@ jobs:
           fetch-depth: 0
       - name: Run Unit Tests
         run: |
-          pip install tox pylint flake8
+          pip install tox pylint flake8 -r ./requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
       - name: TICS GitHub Action
