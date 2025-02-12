@@ -2,28 +2,15 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
-import functools
-import json
 import logging
-from datetime import datetime, timezone
 
 import pytest
 from juju.application import Application
 from juju.model import Model
 
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import (
-    check_runner_binary_exists,
-    get_repo_policy_compliance_pip_info,
-    install_repo_policy_compliance_from_git_source,
-    is_upgrade_charm_event_emitted,
-    reconcile,
-    remove_runner_bin,
-    run_in_unit,
-    wait_for,
-)
-from tests.integration.helpers.lxd import wait_till_num_of_runners
-from tests.status_name import ACTIVE
+from tests.integration.helpers.common import reconcile, wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
@@ -32,119 +19,7 @@ REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE = (
     "repo-policy-compliance@48b36c130b207278d20c3847ce651ac13fb9e9d7"
 )
 
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_update_dependencies_action_latest_service(
-    model: Model, app_no_runner: Application
-) -> None:
-    """
-    arrange: A working application with latest version of repo-policy-compliance service.
-    act: Run update-dependencies action.
-    assert:
-        a. Service is installed in the charm.
-        b. Action did not flushed the runners.
-    """
-    unit = app_no_runner.units[0]
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    assert action.results["flush"] == "False"
-
-    await model.wait_for_idle(status=ACTIVE)
-    assert await get_repo_policy_compliance_pip_info(unit) is not None
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_update_dependencies_action_no_service(
-    model: Model, app_no_runner: Application
-) -> None:
-    """
-    arrange: Remove repo-policy-compliance service installation.
-    act: Run update-dependencies action.
-    assert:
-        a. Service is installed in the charm.
-        b. Action flushed the runners.
-    """
-    unit = app_no_runner.units[0]
-
-    await install_repo_policy_compliance_from_git_source(unit, None)
-    assert await get_repo_policy_compliance_pip_info(unit) is None
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
-
-    assert action.results["flush"] == "True"
-    assert await get_repo_policy_compliance_pip_info(unit) is not None
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_update_dependencies_action_old_service(
-    model: Model, app_no_runner: Application
-) -> None:
-    """
-    arrange: Replace repo-policy-compliance service installation to a older version.
-    act: Run update-dependencies action.
-    assert:
-        a. Service is installed in the charm.
-        b. Action flushed the runners.
-    """
-    unit = app_no_runner.units[0]
-    latest_version_info = await get_repo_policy_compliance_pip_info(unit)
-
-    await install_repo_policy_compliance_from_git_source(
-        unit, REPO_POLICY_COMPLIANCE_VER_0_2_GIT_SOURCE
-    )
-    assert await get_repo_policy_compliance_pip_info(unit) != latest_version_info
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
-
-    assert action.results["flush"] == "True"
-    assert await get_repo_policy_compliance_pip_info(unit) is not None
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_update_dependencies_action_on_runner_binary(
-    model: Model, app_no_runner: Application
-) -> None:
-    """
-    arrange: Remove runner binary if exists.
-    act:
-        1. Run update-dependencies action.
-        2. Run update-dependencies action.
-    assert:
-        1.  a. Runner binary exists in the charm.
-            b. Action flushed the runners.
-        2.  a. Runner binary exists in the charm.
-            b. Action did not flushed the runners.
-    """
-    unit = app_no_runner.units[0]
-
-    await remove_runner_bin(unit)
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
-
-    # The runners should be flushed on update of runner binary.
-    assert action.results["flush"] == "True"
-
-    assert await check_runner_binary_exists(unit)
-
-    action = await unit.run_action("update-dependencies")
-    await action.wait()
-    await model.wait_for_idle(status=ACTIVE)
-
-    # The runners should be flushed on update of runner binary.
-    assert action.results["flush"] == "False"
-
-    assert await check_runner_binary_exists(unit)
+pytestmark = pytest.mark.openstack
 
 
 @pytest.mark.asyncio
@@ -163,12 +38,16 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
     assert action.results["online"] == "0"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
-    assert not action.results["runners"]
+    assert action.results["runners"] == "()"
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_reconcile_runners(model: Model, app_no_runner: Application) -> None:
+async def test_reconcile_runners(
+    model: Model,
+    app_no_runner: Application,
+    instance_helper: OpenStackInstanceHelper,
+) -> None:
     """
     arrange: A working application with no runners.
     act:
@@ -193,54 +72,15 @@ async def test_reconcile_runners(model: Model, app_no_runner: Application) -> No
 
     await reconcile(app=app, model=model)
 
-    await wait_till_num_of_runners(unit, 1)
+    async def _runners_number(number) -> bool:
+        """Check if there is the expected number of runners."""
+        return len(await instance_helper.get_runner_names(unit)) == number
+
+    await wait_for(lambda: _runners_number(1), timeout=10 * 60, check_interval=10)
 
     # 2.
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
 
-    await wait_till_num_of_runners(unit, 0)
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_charm_no_runner_upgrade(
-    model: Model, app_no_runner: Application, charm_file: str
-) -> None:
-    """
-    arrange: A working application with no runners.
-    act: Upgrade the charm.
-    assert: The upgrade_charm hook ran successfully and the image has not been rebuilt.
-    """
-    logger.info("Wait for idlle before test start")
-    await model.wait_for_idle(apps=[app_no_runner.name])
-    start_time = datetime.now(tz=timezone.utc)
-
-    logger.info("Refreshing runner")
-    await app_no_runner.refresh(path=charm_file)
-
-    unit = app_no_runner.units[0]
-    logger.info("Waiting for upgrade event")
-    await wait_for(
-        functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
-    )
-    await model.wait_for_idle(status=ACTIVE)
-
-    logger.info("Running 'lxd image list' in unit")
-    ret_code, stdout, stderr = await run_in_unit(
-        unit=unit, command="/snap/bin/lxc image list --format json"
-    )
-    assert ret_code == 0, f"Failed to read the image list: {stderr}"
-    assert stdout is not None, f"Failed to read the image list: {stderr}"
-    images = json.loads(stdout)
-    jammy_image = next(
-        (image for image in images if "jammy" in {alias["name"] for alias in image["aliases"]}),
-        None,
-    )
-    assert jammy_image is not None, "Jammy image not found."
-    # len("2024-04-10T00:00:00") == 19
-    assert (
-        datetime.fromisoformat(jammy_image["created_at"][:19]).replace(tzinfo=timezone.utc)
-        <= start_time
-    ), f"Image has been rebuilt after the upgrade: {jammy_image['created_at'][:19]} > {start_time}"
+    await wait_for(lambda: _runners_number(0), timeout=10 * 60, check_interval=10)

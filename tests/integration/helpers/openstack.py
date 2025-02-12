@@ -12,12 +12,12 @@ from openstack.compute.v2.server import Server
 
 from charm import RUNNER_MANAGER_USER
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
+from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
 
 
-class OpenStackInstanceHelper(InstanceHelper):
+class OpenStackInstanceHelper:
     """Helper class to interact with OpenStack instances."""
 
     def __init__(self, openstack_connection: openstack.connection.Connection):
@@ -266,7 +266,7 @@ async def _install_repo_policy(
     """Start the repo policy compliance service.
 
     Args:
-        unit: Unit instance to check for the LXD profile.
+        unit: Unit instance to check for the profile.
         github_token: GitHub token to use in the repo-policy service.
         charm_token: Charm token to use in the repo-policy service.
         https_proxy: HTTPS proxy url to use.
