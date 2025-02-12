@@ -192,9 +192,10 @@ def test_reconcile_runner_create_one_reactive(
     runner_manager: RunnerManager,
 ):
     """
-    Arrange: TODO.
-    Act: TODO.
-    Assert: TODO.
+    Arrange: Prepare one RunnerScaler in reactive mode. Fake the reconcile function in reactive
+       to return its input.
+    Act: Call reconcile with base quantity 0 and max quantity 5.
+    Assert: 5 processes should be returned in the result of the reconcile.
     """
     reactive_runner_config = MagicMock()
     runner_scaler = RunnerScaler(runner_manager, reactive_runner_config)
