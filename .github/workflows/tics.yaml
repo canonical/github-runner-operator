@@ -2,6 +2,7 @@ on: [pull_request]
 
 jobs:
   TICS:
+    name: TICS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -10,6 +11,9 @@ jobs:
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         with:
+          mode: qserver
+          project: github-runner-operator
+          branchdir: ${{ github.workspace }}
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
           installTics: true
