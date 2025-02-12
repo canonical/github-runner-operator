@@ -22,3 +22,7 @@ jobs:
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
           installTics: true
+
+concurrency:
+  group: tics
+  cancel-in-progress: false
