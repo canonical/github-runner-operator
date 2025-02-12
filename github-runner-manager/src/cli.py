@@ -3,24 +3,11 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
-import itertools
-import logging
-import logging.config
 from typing import TextIO
 
 import click
 
 from cli_config import Configuration
-
-_LOG_LEVELS = (logging.DEBUG, logging.INFO, logging.WARNING, logging.ERROR)
-LOG_LEVELS = tuple(
-    str(level)
-    for level in itertools.chain(
-        _LOG_LEVELS,
-        (logging.getLevelName(level) for level in _LOG_LEVELS),
-        (logging.getLevelName(level).lower() for level in _LOG_LEVELS),
-    )
-)
 
 
 # The entry point for the CLI will be tested with integration test.
