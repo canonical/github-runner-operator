@@ -14,7 +14,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           pip install tox
-          tox -e unit
+          tox -e unit,coverage-report
           rm -rf .tox
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
