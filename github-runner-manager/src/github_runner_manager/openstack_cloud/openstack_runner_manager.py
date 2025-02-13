@@ -101,7 +101,6 @@ class OpenStackRunnerManagerConfig:
     """Configuration for OpenStack runner manager.
 
     Attributes:
-        name: The name of the manager.
         prefix: The prefix of the runner names.
         credentials: The OpenStack authorization information.
         server_config: The configuration for OpenStack server.
@@ -110,7 +109,6 @@ class OpenStackRunnerManagerConfig:
         system_user_config: The user to use for creating metrics storage.
     """
 
-    name: str
     prefix: str
     credentials: OpenStackCredentials
     server_config: OpenStackServerConfig | None
