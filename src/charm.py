@@ -20,7 +20,15 @@ from typing import Any, Callable, Sequence, TypeVar
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
-from github_runner_manager.configuration import ApplicationConfiguration, SupportServiceConfig
+from github_runner_manager.configuration import (
+    ApplicationConfiguration,
+    Flavor,
+    Image,
+    NonReactiveCombination,
+    NonReactiveConfiguration,
+    ReactiveConfiguration,
+    SupportServiceConfig,
+)
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
@@ -41,7 +49,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
+from github_runner_manager.reactive.types_ import QueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_ import SystemUserConfig
 from ops.charm import (
@@ -615,10 +623,47 @@ class GithubRunnerCharm(CharmBase):
             ssh_debug_connections=state.ssh_debug_connections,
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
+        openstack_image = state.runner_config.openstack_image
+        image_labels = []
+        if openstack_image and openstack_image.id and openstack_image.tags:
+            image_labels = openstack_image.tags
+        image = Image(
+            image=openstack_image.id,
+            labels=image_labels,
+        )
+        flavor = Flavor(
+            name=state.runner_config.flavor_label_combinations[0].flavor,
+            labels=(
+                []
+                if not state.runner_config.flavor_label_combinations[0].label
+                else [state.runner_config.flavor_label_combinations[0].label]
+            ),
+        )
+        non_reactive_configuration = NonReactiveConfiguration(
+            combinations=[
+                NonReactiveCombination(
+                    image=Image,
+                    flavor=Flavor,
+                    base_virtual_machines=state.runner_config.base_virtual_machines,
+                )
+            ]
+        )
+        if reactive_config := state.reactive_config:
+            reactive_configuration = ReactiveConfiguration(
+                queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name),
+                max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
+                images=[image],
+                flavors=[flavor],
+            )
+        else:
+            reactive_configuration = None
+
         return ApplicationConfiguration(
             extra_labels=extra_labels,
             github_config=github_configuration,
             service_config=service_config,
+            non_reactive_configuration=non_reactive_configuration,
+            reactive_configuration=reactive_configuration,
         )
 
     def _get_openstack_configuration(self, state: CharmState) -> OpenStackConfiguration:
@@ -675,9 +720,7 @@ class GithubRunnerCharm(CharmBase):
             # so we add all architectures to the supported labels.
             supported_labels = set(self._create_labels(state)) | GITHUB_SELF_HOSTED_ARCH_LABELS
             reactive_runner_config = ReactiveRunnerConfig(
-                queue=ReactiveQueueConfig(
-                    mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name
-                ),
+                queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name),
                 runner_manager=runner_manager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=token,

@@ -6,7 +6,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, validator
+from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, validator
 
 from . import github
 
@@ -19,11 +19,15 @@ class ApplicationConfiguration:
         extra_labels: TODO
         github_config: TODO
         service_config: TODO
+        non_reactive_configuration: TODO
+        reactive_configuration: TODO
     """
 
     extra_labels: list[str]
     github_config: github.GitHubConfiguration
     service_config: "SupportServiceConfig"
+    non_reactive_configuration: "NonReactiveConfiguration"
+    reactive_configuration: "ReactiveConfiguration | None"
 
 
 @dataclass
@@ -132,3 +136,80 @@ class RepoPolicyComplianceConfig(BaseModel):
 
     token: str
     url: AnyHttpUrl
+
+
+@dataclass
+class NonReactiveConfiguration:
+    """TODO.
+
+    Attributes:
+        combinations: TODO
+    """
+
+    combinations: "list[NonReactiveCombination]"
+
+
+@dataclass
+class NonReactiveCombination:
+    """TODO.
+
+    Attributes:
+        combinations: TODO
+    """
+
+    image: "Image"
+    flavor: "Flavor"
+    base_virtual_machines: int
+
+
+@dataclass
+class ReactiveConfiguration:
+    """TODO.
+
+    Attributes:
+        queue: TODO
+        max_total_virtual_machines: TODO
+        images: TODO
+        flavors: TODO
+    """
+
+    queue: "QueueConfig"
+    max_total_virtual_machines: int
+    images: "list[Image]"
+    flavors: "list[Flavor]"
+
+
+class QueueConfig(BaseModel):
+    """The configuration for the message queue.
+
+    Attributes:
+        mongodb_uri: The URI of the MongoDB database.
+        queue_name: The name of the queue.
+    """
+
+    mongodb_uri: MongoDsn
+    queue_name: str
+
+
+class Image(BaseModel):
+    """TODO.
+
+    Attributes:
+        image: TODO
+        labels: TODO
+    """
+
+    image: str
+    labels: list[str]
+
+
+class Flavor(BaseModel):
+    """TODO.
+
+    Attributes:
+        flavor: TODO
+        labels: TODO
+    """
+
+    flavor: str
+    labels: list[str]

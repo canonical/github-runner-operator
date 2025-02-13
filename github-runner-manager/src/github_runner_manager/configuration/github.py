@@ -8,6 +8,19 @@ from typing import TypeAlias
 
 
 @dataclasses.dataclass
+class GitHubConfiguration:
+    """TODO.
+
+    Attributes:
+       token: TODO
+       path: TODO
+    """
+
+    token: str
+    path: "GitHubPath"
+
+
+@dataclasses.dataclass
 class GitHubRepo:
     """Represent GitHub repository.
 
@@ -50,19 +63,6 @@ class GitHubOrg:
 
 
 GitHubPath: TypeAlias = GitHubOrg | GitHubRepo
-
-
-@dataclasses.dataclass
-class GitHubConfiguration:
-    """TODO.
-
-    Attributes:
-       token: TODO
-       path: TODO
-    """
-
-    token: str
-    path: GitHubPath
 
 
 def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
