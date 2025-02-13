@@ -105,13 +105,15 @@ options:
     description: >-
       (Deprecated, use base-virtual-machines or max-total-virtual-machines instead)
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
-      runners to match this setting.
+      runners to match this setting. Setting virtual-machines to non-zero and any of
+      base-virtual-machines or max-total-virtual-machines will block the charm.
   base-virtual-machines:
     type: int
     default: 0
     description: >-
-      The number of virtual machine runners non-reactive runners spawned by the charm per each
-      combination of flavor and base.
+      The number of non-reactive virtual machine runners spawned by the charm per each
+      combination of flavor and base. Currently, if the charm is integrated with MongoDB
+      this config option will be ignored.
   max-total-virtual-machines:
     type: int
     default: 0
@@ -125,4 +127,4 @@ options:
     description: >-
       List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
       flavor and the label will be a label for the GitHub runner. Only one flavor-label combination
-      is supported at the moment.
+      is supported at the moment. A valid configuration looks like "m1.small:small".
