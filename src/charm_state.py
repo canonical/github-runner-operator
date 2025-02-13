@@ -541,7 +541,10 @@ class OpenstackRunnerConfig(BaseModel):
         virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
         if base_virtual_machines == 0 and max_total_virtual_machines == 0:
             if virtual_machines == 0:
-                raise CharmConfigInvalidError("Invalid configuration. No machines will be spawned")
+                raise CharmConfigInvalidError(
+                    "Invalid configuration. No machines will be spawned. "
+                    "Please, set base-virtual-machines and/or max-total-virtual-machines."
+                )
             base_virtual_machines = virtual_machines
             max_total_virtual_machines = virtual_machines
         elif virtual_machines != 0:
