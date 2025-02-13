@@ -154,7 +154,9 @@ class NonReactiveCombination:
     """TODO.
 
     Attributes:
-        combinations: TODO
+        image: TODO
+        flavor: TODO
+        base_virtual_machines: TODO
     """
 
     image: "Image"
