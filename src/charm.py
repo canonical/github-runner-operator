@@ -794,7 +794,6 @@ class GithubRunnerCharm(CharmBase):
             repo_policy_compliance=state.charm_config.repo_policy_compliance,
         )
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
-            name=self.app.name,
             # The prefix is set to f"{application_name}-{unit number}"
             prefix=self.unit.name.replace("/", "-"),
             credentials=credentials,
