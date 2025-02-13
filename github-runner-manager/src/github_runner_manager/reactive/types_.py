@@ -13,7 +13,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 from github_runner_manager.types_ import SystemUserConfig
 
 
-class RunnerConfig(BaseModel):
+class ReactiveProcessConfig(BaseModel):
     """The configuration for the reactive runner to spawn.
 
     Attributes:

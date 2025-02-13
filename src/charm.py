@@ -49,8 +49,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.reactive.types_ import QueueConfig
-from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
 from github_runner_manager.types_ import SystemUserConfig
 from ops.charm import (
     ActionEvent,
@@ -698,17 +697,17 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             An instance of RunnerScaler.
         """
-        token = state.charm_config.token
-        path = state.charm_config.path
+        application_configuration = self._get_application_configuration(state)
 
-        openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
+        openstack_runner_manager_config = self._create_openstack_runner_manager_config(
+            application_configuration.github_config.path, state
+        )
         openstack_runner_manager = OpenStackRunnerManager(
             config=openstack_runner_manager_config,
         )
         runner_manager_config = RunnerManagerConfig(
             name=self.app.name,
-            token=token,
-            path=path,
+            github_configuration=application_configuration.github_config,
         )
         runner_manager = RunnerManager(
             cloud_runner_manager=openstack_runner_manager,
@@ -719,16 +718,16 @@ class GithubRunnerCharm(CharmBase):
             # The charm is not able to determine which architecture the runner is running on,
             # so we add all architectures to the supported labels.
             supported_labels = set(self._create_labels(state)) | GITHUB_SELF_HOSTED_ARCH_LABELS
-            reactive_runner_config = ReactiveRunnerConfig(
+            reactive_runner_config = ReactiveProcessConfig(
                 queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name),
                 runner_manager=runner_manager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
-                github_token=token,
+                github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
                 system_user=SystemUserConfig(user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP),
             )
         return RunnerScaler(
-            runner_manager=runner_manager, reactive_runner_config=reactive_runner_config
+            runner_manager=runner_manager, reactive_process_config=reactive_runner_config
         )
 
     @staticmethod

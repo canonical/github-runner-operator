@@ -11,7 +11,7 @@ import signal
 import subprocess  # nosec
 from pathlib import Path
 
-from github_runner_manager.reactive.types_ import RunnerConfig
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.utilities import secure_run_subprocess
 
@@ -38,12 +38,12 @@ class ReactiveRunnerError(Exception):
     """Raised when a reactive runner error occurs."""
 
 
-def reconcile(quantity: int, runner_config: RunnerConfig) -> int:
+def reconcile(quantity: int, reactive_process_config: ReactiveProcessConfig) -> int:
     """Reconcile the number of reactive runner processes.
 
     Args:
         quantity: The number of processes to spawn.
-        runner_config: The reactive runner configuration.
+        reactive_process_config: The reactive runner configuration.
 
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
@@ -56,9 +56,9 @@ def reconcile(quantity: int, runner_config: RunnerConfig) -> int:
     delta = quantity - current_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
-        _setup_logging_for_processes(runner_config.system_user)
+        _setup_logging_for_processes(reactive_process_config.system_user)
         for _ in range(delta):
-            _spawn_runner(runner_config)
+            _spawn_runner(reactive_process_config)
     elif delta < 0:
         logger.info("Will kill %d process(es).", -delta)
         for pid in pids[:-delta]:
@@ -119,15 +119,15 @@ def _setup_logging_for_processes(system_user_config: SystemUserConfig) -> None:
     )
 
 
-def _spawn_runner(runner_config: RunnerConfig) -> None:
+def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
     """Spawn a runner.
 
     Args:
-        runner_config: The runner configuration to pass to the spawned runner process.
+        reactive_process_config: The runner configuration to pass to the spawned runner process.
     """
     env = {
         "PYTHONPATH": os.environ["PYTHONPATH"],
-        RUNNER_CONFIG_ENV_VAR: runner_config.json(),
+        RUNNER_CONFIG_ENV_VAR: reactive_process_config.json(),
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
@@ -149,8 +149,8 @@ def _spawn_runner(runner_config: RunnerConfig) -> None:
         env=env,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        user=runner_config.system_user.user,
-        group=runner_config.system_user.group,
+        user=reactive_process_config.system_user.user,
+        group=reactive_process_config.system_user.group,
     )
 
     logger.info("Spawned a new reactive runner process with pid %s", process.pid)

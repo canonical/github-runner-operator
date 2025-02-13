@@ -6,7 +6,7 @@
 from enum import Enum, auto
 from typing import Iterable
 
-from github_runner_manager.configuration.github import GitHubPath
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
@@ -49,17 +49,16 @@ class GitHubRunnerState(str, Enum):
 class GitHubRunnerManager:  # pragma: no cover
     """Manage self-hosted runner on GitHub side."""
 
-    def __init__(self, prefix: str, token: str, path: GitHubPath):
+    def __init__(self, prefix: str, github_configuration: GitHubConfiguration):
         """Construct the object.
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
-            token: The GitHub personal access token to access the GitHub API.
-            path: The GitHub repository or organization to register the runners under.
+            github_configuration: TODO
         """
         self._prefix = prefix
-        self._path = path
-        self.github = GithubClient(token)
+        self._path = github_configuration.path
+        self.github = GithubClient(github_configuration.token)
 
     def get_runners(
         self, states: Iterable[GitHubRunnerState] | None = None

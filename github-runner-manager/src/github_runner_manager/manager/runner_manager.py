@@ -9,7 +9,7 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
-from github_runner_manager.configuration.github import GitHubPath
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -85,13 +85,11 @@ class RunnerManagerConfig:
 
     Attributes:
         name: A name to identify this manager.
-        token: GitHub personal access token to query GitHub API.
-        path: Path to GitHub repository or organization to registry the runners.
+        github_configuration: TODO
     """
 
     name: str
-    token: str
-    path: GitHubPath
+    github_configuration: GitHubConfiguration
 
 
 class RunnerManager:
@@ -118,7 +116,8 @@ class RunnerManager:
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
         self._github = GitHubRunnerManager(
-            prefix=self.name_prefix, token=self._config.token, path=self._config.path
+            prefix=self.name_prefix,
+            github_configuration=self._config.github_configuration,
         )
 
     def create_runners(self, num: int) -> tuple[InstanceId, ...]:
