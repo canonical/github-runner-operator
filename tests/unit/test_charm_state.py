@@ -16,20 +16,26 @@ from pydantic.networks import IPv4Address
 
 import charm_state
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
     Arch,
     CharmConfig,
     CharmConfigInvalidError,
     CharmState,
+    FlavorLabel,
     GithubConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
@@ -853,6 +859,197 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
 
     assert CharmState.from_charm(mock_charm, mock_database)
+
+
+@pytest.mark.parametrize(
+    "virtual_machines,base_virtual_machines,max_total_virtual_machines,expected_base,expected_max",
+    [
+        (0, 0, 0, 0, 0),
+        (3, 0, 0, 3, 3),
+        (0, 1, 2, 1, 2),
+        (0, 0, 2, 0, 2),
+        (0, 2, 0, 2, 0),
+    ],
+)
+def test_parse_virtual_machine_numbers(
+    monkeypatch,
+    virtual_machines,
+    base_virtual_machines,
+    max_total_virtual_machines,
+    expected_base,
+    expected_max,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for number of machines.
+    assert: There is a preference for base_virtual_machines and max_total_virtual_machines,
+        but it both those config options are not set, then virtual_machines is used.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
+    monkeypatch.setattr(json, "loads", MagicMock())
+    monkeypatch.setattr(json, "dumps", MagicMock())
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+    mock_database = MagicMock(spec=DatabaseRequires)
+
+    mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
+    mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
+    mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
+    state = CharmState.from_charm(mock_charm, mock_database)
+
+    assert state.runner_config.base_virtual_machines == expected_base
+    assert state.runner_config.max_total_virtual_machines == expected_max
+
+
+@pytest.mark.parametrize(
+    "virtual_machines,base_virtual_machines,max_total_virtual_machines,expected_error_message",
+    [
+        (
+            1,
+            2,
+            3,
+            "deprecated and new configuration are set for the number of machines to spawn",
+        ),
+        (
+            3,
+            1,
+            0,
+            "deprecated and new configuration are set for the number of machines to spawn",
+        ),
+        (
+            3,
+            0,
+            1,
+            "deprecated and new configuration are set for the number of machines to spawn",
+        ),
+    ],
+)
+def test_error_parse_virtual_machine_numbers(
+    monkeypatch,
+    virtual_machines,
+    base_virtual_machines,
+    max_total_virtual_machines,
+    expected_error_message,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for number of machines.
+    assert: The exception CharmConfigInvalidError should be raised with the expected message
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
+    monkeypatch.setattr(json, "loads", MagicMock())
+    monkeypatch.setattr(json, "dumps", MagicMock())
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+    mock_database = MagicMock(spec=DatabaseRequires)
+
+    mock_charm.config[VIRTUAL_MACHINES_CONFIG_NAME] = virtual_machines
+    mock_charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME] = base_virtual_machines
+    mock_charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME] = max_total_virtual_machines
+    with pytest.raises(CharmConfigInvalidError) as exc_info:
+        _ = CharmState.from_charm(mock_charm, mock_database)
+    assert expected_error_message in str(exc_info.value)
+
+
+@pytest.mark.parametrize(
+    "openstack_flavor,flavor_label_combinations,labels,expected_flavor_label_combinations,expected_labels",
+    [
+        ("m1.small", "", "", [FlavorLabel(flavor="m1.small", label=None)], ()),
+        ("m1.small", "", "one,two", [FlavorLabel(flavor="m1.small", label=None)], ("one", "two")),
+        (
+            "",
+            "m1.small:small",
+            "one,two",
+            [FlavorLabel(flavor="m1.small", label="small")],
+            ("small", "one", "two"),
+        ),
+        (
+            "m1.notused",
+            "m1.small:small",
+            "one,two",
+            [FlavorLabel(flavor="m1.small", label="small")],
+            ("small", "one", "two"),
+        ),
+    ],
+)
+def test_parse_flavor_config(
+    monkeypatch,
+    openstack_flavor,
+    flavor_label_combinations,
+    labels,
+    expected_flavor_label_combinations,
+    expected_labels,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for the number of
+       flavors and labels.
+    assert: The correct flavors and labels should be generated.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
+    monkeypatch.setattr(json, "loads", MagicMock())
+    monkeypatch.setattr(json, "dumps", MagicMock())
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+    mock_charm.config[OPENSTACK_FLAVOR_CONFIG_NAME] = openstack_flavor
+    mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
+    mock_charm.config[LABELS_CONFIG_NAME] = labels
+
+    mock_database = MagicMock(spec=DatabaseRequires)
+    state = CharmState.from_charm(mock_charm, mock_database)
+    assert state.charm_config.labels == expected_labels
+    assert state.runner_config.flavor_label_combinations == expected_flavor_label_combinations
+
+
+@pytest.mark.parametrize(
+    "openstack_flavor,flavor_label_combinations,labels,expected_error_message",
+    [
+        ("", "", "", "flavor not specified"),
+        ("", ",", "", "Invalid flavor-label"),
+        ("", ",,", "", "Invalid flavor-label"),
+        ("", "a:a,", "", "Invalid flavor-label"),
+        ("", "a::a,", "", "Invalid flavor-label"),
+        ("", ",a:a", "", "Invalid flavor-label"),
+        ("", "a:a,,b:b", "", "Invalid flavor-label"),
+        ("", "a", "", "Invalid flavor-label"),
+        ("", ":zz", "", "empty flavor"),
+        ("", "zz:", "", "empty label"),
+        ("", "xx:yy,:", "", "empty flavor"),
+        ("", "xx:yy,xx:", "", "empty label"),
+        # Pending to prepare tests for multiple image labels when the functionality is implemented.
+        ("", "zz:aa,xx:yy", "", "not yet implemented"),
+    ],
+)
+def test_errror_flavor_config(
+    monkeypatch,
+    openstack_flavor,
+    flavor_label_combinations,
+    labels,
+    expected_error_message,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for the number
+       of flavors and labels.
+    assert: The exception CharmConfigInvalidError should be raised with the expected message.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    monkeypatch.setattr(OpenstackImage, "from_charm", MagicMock())
+    monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
+    monkeypatch.setattr(json, "loads", MagicMock())
+    monkeypatch.setattr(json, "dumps", MagicMock())
+    monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())
+    mock_charm.config[OPENSTACK_FLAVOR_CONFIG_NAME] = openstack_flavor
+    mock_charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME] = flavor_label_combinations
+    mock_charm.config[LABELS_CONFIG_NAME] = labels
+
+    mock_database = MagicMock(spec=DatabaseRequires)
+    with pytest.raises(CharmConfigInvalidError) as exc_info:
+        _ = CharmState.from_charm(mock_charm, mock_database)
+    assert expected_error_message in str(exc_info.value)
 
 
 def test_charm_state__log_prev_state_redacts_sensitive_information(
