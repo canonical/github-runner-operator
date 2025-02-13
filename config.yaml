@@ -124,4 +124,5 @@ options:
     default: ""
     description: >-
       List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
-      flavor and the label will be a label for the GitHub runner.
+      flavor and the label will be a label for the GitHub runner. Only one flavor-label combination
+      is supported at the moment.

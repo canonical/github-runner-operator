@@ -536,11 +536,19 @@ class OpenstackRunnerConfig(BaseModel):
         """
         base_virtual_machines = int(charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME])
         max_total_virtual_machines = int(charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME])
-        # Remove this condition when "virtual-machines" config option is deleted.
+
+        # Remove these conditions when "virtual-machines" config option is deleted.
+        virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
         if base_virtual_machines == 0 and max_total_virtual_machines == 0:
-            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+            if virtual_machines == 0:
+                raise CharmConfigInvalidError("Invalid configuration. No machines will be spawned")
             base_virtual_machines = virtual_machines
             max_total_virtual_machines = virtual_machines
+        elif virtual_machines != 0:
+            raise CharmConfigInvalidError(
+                "Invalid configuration. "
+                "Both deprecated and new configuration are set for the number of machines to spawn."
+            )
 
         flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
         flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
@@ -934,10 +942,15 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
 def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
     """Parse flavor-label config option."""
     combinations = []
+
+    split_flavor_list = flavor_label_config.split(",")
+
+    # An input like "" will get here.
+    if len(split_flavor_list) == 1 and not split_flavor_list[0]:
+        return []
+
     for flavor_label in flavor_label_config.split(","):
         flavor_label_stripped = flavor_label.strip()
-        if not flavor_label_stripped:
-            continue
         try:
             flavor, label = flavor_label_stripped.split(":")
             if not flavor:
