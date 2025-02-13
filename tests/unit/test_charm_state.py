@@ -860,6 +860,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
 @pytest.mark.parametrize(
     "virtual_machines,base_virtual_machines,max_total_virtual_machines,expected_base,expected_max",
     [
+        (0, 0, 0, 0, 0),
         (3, 0, 0, 3, 3),
         (0, 1, 2, 1, 2),
         (0, 0, 2, 0, 2),
@@ -900,7 +901,6 @@ def test_parse_virtual_machine_numbers(
 @pytest.mark.parametrize(
     "virtual_machines,base_virtual_machines,max_total_virtual_machines,expected_error_message",
     [
-        (0, 0, 0, "No machines will be spawned"),
         (
             1,
             2,

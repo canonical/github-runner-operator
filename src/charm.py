@@ -475,8 +475,8 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
             delta = runner_scaler.reconcile(
-                state.runner_config.base_virtual_machines,
-                state.runner_config.max_total_virtual_machines,
+                base_quantity=state.runner_config.base_virtual_machines,
+                max_quantity=state.runner_config.max_total_virtual_machines,
             )
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
