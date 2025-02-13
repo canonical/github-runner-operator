@@ -19,11 +19,14 @@ import yaml
 from pydantic.networks import IPvAnyAddress
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
@@ -124,9 +127,12 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
     config = factory.Dict(
         {
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
             DOCKERHUB_MIRROR_CONFIG_NAME: "",
+            FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME: "",
             GROUP_CONFIG_NAME: "default",
             LABELS_CONFIG_NAME: "",
+            MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: 0,
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
                 {
                     "clouds": {

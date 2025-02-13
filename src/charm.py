@@ -289,7 +289,11 @@ class GithubRunnerCharm(CharmBase):
         if not self._get_set_image_ready_status():
             return
         runner_scaler = self._get_runner_scaler(state)
-        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        self._reconcile_openstack_runners(
+            runner_scaler,
+            base_num=state.runner_config.base_virtual_machines,
+            max_num=state.runner_config.max_total_virtual_machines,
+        )
 
     def _set_reconcile_timer(self) -> None:
         """Set the timer for regular reconciliation checks."""
@@ -358,7 +362,11 @@ class GithubRunnerCharm(CharmBase):
             logger.info("Flush and reconcile on config-changed")
             runner_scaler = self._get_runner_scaler(state)
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-            self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+            self._reconcile_openstack_runners(
+                runner_scaler,
+                base_num=state.runner_config.base_virtual_machines,
+                max_num=state.runner_config.max_total_virtual_machines,
+            )
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
@@ -383,7 +391,11 @@ class GithubRunnerCharm(CharmBase):
         if not self._get_set_image_ready_status():
             return
         runner_scaler = self._get_runner_scaler(state)
-        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        self._reconcile_openstack_runners(
+            runner_scaler,
+            base_num=state.runner_config.base_virtual_machines,
+            max_num=state.runner_config.max_total_virtual_machines,
+        )
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -424,7 +436,10 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            delta = runner_scaler.reconcile(
+                base_quantity=state.runner_config.base_virtual_machines,
+                max_quantity=state.runner_config.max_total_virtual_machines,
+            )
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -449,7 +464,10 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Flushed %s runners", flushed)
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            delta = runner_scaler.reconcile(state.runner_config.virtual_machines)
+            delta = runner_scaler.reconcile(
+                base_quantity=state.runner_config.base_virtual_machines,
+                max_quantity=state.runner_config.max_total_virtual_machines,
+            )
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -482,16 +500,19 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush(FlushMode.FLUSH_BUSY)
 
-    def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler, num: int) -> None:
+    def _reconcile_openstack_runners(
+        self, runner_scaler: RunnerScaler, base_num: int, max_num: int
+    ) -> None:
         """Reconcile the current runners state and intended runner state for OpenStack mode.
 
         Args:
             runner_scaler: Scaler used to scale the amount of runners.
-            num: Target number of runners.
+            base_num: Target number of runners.
+            max_num: Target number of runners.
         """
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            runner_scaler.reconcile(num)
+            runner_scaler.reconcile(base_quantity=base_num, max_quantity=max_num)
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -529,7 +550,11 @@ class GithubRunnerCharm(CharmBase):
             return
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush()
-        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        self._reconcile_openstack_runners(
+            runner_scaler,
+            base_num=state.runner_config.base_virtual_machines,
+            max_num=state.runner_config.max_total_virtual_machines,
+        )
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
@@ -553,7 +578,11 @@ class GithubRunnerCharm(CharmBase):
 
         runner_scaler = self._get_runner_scaler(state)
         runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        self._reconcile_openstack_runners(runner_scaler, state.runner_config.virtual_machines)
+        self._reconcile_openstack_runners(
+            runner_scaler,
+            base_num=state.runner_config.base_virtual_machines,
+            max_num=state.runner_config.max_total_virtual_machines,
+        )
 
     def _get_set_image_ready_status(self) -> bool:
         """Check if image is ready for Openstack and charm status accordingly.
@@ -672,7 +701,8 @@ class GithubRunnerCharm(CharmBase):
         if image and image.id:
             server_config = OpenStackServerConfig(
                 image=image.id,
-                flavor=state.runner_config.openstack_flavor,
+                # Pending to add support for more flavor label combinations
+                flavor=state.runner_config.flavor_label_combinations[0].flavor,
                 network=state.runner_config.openstack_network,
             )
         labels = self._create_labels(state)

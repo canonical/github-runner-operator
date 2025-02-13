@@ -25,8 +25,10 @@ from charm import (
     catch_charm_errors,
 )
 from charm_state import (
+    FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
@@ -143,6 +145,8 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch) -> Harness:
             PATH_CONFIG_NAME: "mock/repo",
             TOKEN_CONFIG_NAME: "mocktoken",
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+            OPENSTACK_FLAVOR_CONFIG_NAME: "m1.builder",
+            FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME: "",
         }
     )
     harness.begin()
@@ -453,6 +457,7 @@ class TestCharm(unittest.TestCase):
                 PATH_CONFIG_NAME: "mockorg/repo",
                 TOKEN_CONFIG_NAME: "mocktoken",
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+                OPENSTACK_FLAVOR_CONFIG_NAME: "m1.big",
             }
         )
 
