@@ -10,12 +10,13 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Optional, TypedDict, cast
+from typing import TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from github_runner_manager.configuration import ProxyConfig
+from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -574,102 +575,30 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-class ProxyConfig(BaseModel):
-    """Proxy configuration.
+def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+    """Initialize the proxy config from charm.
 
-    Attributes:
-        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used for the runners.
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        Current proxy config of the charm.
     """
+    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+    http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
+    https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
+    no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
-    use_aproxy: bool = False
+    # there's no need for no_proxy if there's no http_proxy or https_proxy
+    if not (https_proxy or http_proxy) and no_proxy:
+        no_proxy = None
 
-    @property
-    def aproxy_address(self) -> Optional[str]:
-        """Return the aproxy address."""
-        if self.use_aproxy:
-            proxy_address = self.http or self.https
-            # assert is only used to make mypy happy
-            assert (
-                proxy_address is not None and proxy_address.host is not None
-            )  # nosec for [B101:assert_used]
-            aproxy_address = (
-                proxy_address.host
-                if not proxy_address.port
-                else f"{proxy_address.host}:{proxy_address.port}"
-            )
-        else:
-            aproxy_address = None
-        return aproxy_address
-
-    @validator("use_aproxy")
-    @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
-        """Validate the proxy configuration.
-
-        Args:
-            use_aproxy: Value of use_aproxy variable.
-            values: Values in the pydantic model.
-
-        Raises:
-            ValueError: if use_aproxy was set but no http/https was passed.
-
-        Returns:
-            Validated use_aproxy value.
-        """
-        if use_aproxy and not (values.get("http") or values.get("https")):
-            raise ValueError("aproxy requires http or https to be set")
-
-        return use_aproxy
-
-    def __bool__(self) -> bool:
-        """Return whether the proxy config is set.
-
-        Returns:
-            Whether the proxy config is set.
-        """
-        return bool(self.http or self.https)
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
-        """Initialize the proxy config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            Current proxy config of the charm.
-        """
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
-
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        if not (https_proxy or http_proxy) and no_proxy:
-            no_proxy = None
-
-        return cls(
-            http=http_proxy,
-            https=https_proxy,
-            no_proxy=no_proxy,
-            use_aproxy=use_aproxy,
-        )
-
-    class Config:  # pylint: disable=too-few-public-methods
-        """Pydantic model configuration.
-
-        Attributes:
-            allow_mutation: Whether the model is mutable.
-        """
-
-        allow_mutation = False
+    return ProxyConfig(
+        http=http_proxy,
+        https=https_proxy,
+        no_proxy=no_proxy,
+        use_aproxy=use_aproxy,
+    )
 
 
 class UnsupportedArchitectureError(Exception):
@@ -892,7 +821,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             Current state of the charm.
         """
         try:
-            proxy_config = ProxyConfig.from_charm(charm)
+            proxy_config = _build_proxy_config_from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 

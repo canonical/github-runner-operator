@@ -9,6 +9,7 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
+from github_runner_manager.configuration.github import GitHubPath
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -25,7 +26,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.types_.github import GitHubPath, SelfHostedRunner
+from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 

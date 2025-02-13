@@ -6,8 +6,9 @@
 from enum import Enum, auto
 from typing import Iterable
 
+from github_runner_manager.configuration.github import GitHubPath
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
 class GitHubRunnerState(str, Enum):

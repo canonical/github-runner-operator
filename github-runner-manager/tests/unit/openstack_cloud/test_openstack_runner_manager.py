@@ -9,8 +9,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
-from github_runner_manager.manager.cloud_runner_manager import SupportServiceConfig
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.storage import MetricsStorage, StorageManager
 from github_runner_manager.openstack_cloud import (

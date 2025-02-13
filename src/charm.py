@@ -20,10 +20,11 @@ from typing import Any, Callable, Sequence, TypeVar
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from github_runner_manager.configuration import ApplicationConfiguration, SupportServiceConfig
+from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     GitHubRunnerConfig,
-    SupportServiceConfig,
 )
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -31,8 +32,11 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManagerConfig,
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
-from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
     OpenStackCredentials,
+)
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
@@ -40,7 +44,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 from github_runner_manager.reactive.types_ import QueueConfig as ReactiveQueueConfig
 from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
 from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubPath
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -599,25 +602,59 @@ class GithubRunnerCharm(CharmBase):
             return False
         return True
 
-    def _get_runner_scaler(
-        self, state: CharmState, token: str | None = None, path: GitHubPath | None = None
-    ) -> RunnerScaler:
+    def _get_application_configuration(self, state: CharmState) -> ApplicationConfiguration:
+        """TODO."""
+        extra_labels = list(state.charm_config.labels)
+        github_configuration = GitHubConfiguration(
+            token=state.charm_config.token,
+            path=state.charm_config.path,
+        )
+        service_config = SupportServiceConfig(
+            proxy_config=state.proxy_config,
+            dockerhub_mirror=state.charm_config.dockerhub_mirror,
+            ssh_debug_connections=state.ssh_debug_connections,
+            repo_policy_compliance=state.charm_config.repo_policy_compliance,
+        )
+        return ApplicationConfiguration(
+            extra_labels=extra_labels,
+            github_config=github_configuration,
+            service_config=service_config,
+        )
+
+    def _get_openstack_configuration(self, state: CharmState) -> OpenStackConfiguration:
+        """TODO."""
+        clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
+        if len(clouds) > 1:
+            logger.warning(
+                "Multiple clouds defined in clouds.yaml. Using the first one to connect."
+            )
+        first_cloud_config = state.charm_config.openstack_clouds_yaml["clouds"][clouds[0]]
+        credentials = OpenStackCredentials(
+            auth_url=first_cloud_config["auth"]["auth_url"],
+            project_name=first_cloud_config["auth"]["project_name"],
+            username=first_cloud_config["auth"]["username"],
+            password=first_cloud_config["auth"]["password"],
+            user_domain_name=first_cloud_config["auth"]["user_domain_name"],
+            project_domain_name=first_cloud_config["auth"]["project_domain_name"],
+            region_name=first_cloud_config["region_name"],
+        )
+        return OpenStackConfiguration(
+            vm_prefix=self.unit.name.replace("/", "-"),
+            network=state.runner_config.openstack_network,
+            credentials=credentials,
+        )
+
+    def _get_runner_scaler(self, state: CharmState) -> RunnerScaler:
         """Get runner scaler instance for scaling runners.
 
         Args:
             state: Charm state.
-            token: GitHub personal access token to manage the runners with. If None the token in
-                charm state is used.
-            path: GitHub repository path in the format '<org>/<repo>', or the GitHub organization
-                name. If None the path in charm state is used.
 
         Returns:
             An instance of RunnerScaler.
         """
-        if token is None:
-            token = state.charm_config.token
-        if path is None:
-            path = state.charm_config.path
+        token = state.charm_config.token
+        path = state.charm_config.path
 
         openstack_runner_manager_config = self._create_openstack_runner_manager_config(path, state)
         openstack_runner_manager = OpenStackRunnerManager(

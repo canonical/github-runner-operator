@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration.github import GitHubPath, GitHubRepo
 from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
@@ -17,7 +18,6 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
-from github_runner_manager.types_.github import GitHubPath, GitHubRepo
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
     MockGitHubRunnerManager,

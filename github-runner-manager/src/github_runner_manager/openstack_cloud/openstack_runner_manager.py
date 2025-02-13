@@ -17,6 +17,8 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
+from github_runner_manager.configuration import SupportServiceConfig
+from github_runner_manager.configuration.github import GitHubOrg
 from github_runner_manager.errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -35,7 +37,6 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     GitHubRunnerConfig,
     InstanceId,
-    SupportServiceConfig,
 )
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
@@ -55,7 +56,6 @@ from github_runner_manager.openstack_cloud.openstack_cloud import (
 )
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubOrg
 from github_runner_manager.utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
