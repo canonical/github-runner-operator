@@ -646,7 +646,7 @@ def test_ssh_debug_connection_from_charm_no_connections():
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = []
 
-    connections = SSHDebugConnection.from_charm(mock_charm)
+    connections = charm_state._build_ssh_debug_connection_from_charm(mock_charm)
 
     assert not connections
 
@@ -664,7 +664,7 @@ def test_ssh_debug_connection_from_charm_data_not_ready():
     relation_mock.data = {unit_mock: {}}
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [relation_mock]
 
-    connections = SSHDebugConnection.from_charm(mock_charm)
+    connections = charm_state._build_ssh_debug_connection_from_charm(mock_charm)
 
     assert not connections
 
@@ -689,7 +689,7 @@ def test_ssh_debug_connection_from_charm():
     }
     mock_charm.model.relations[DEBUG_SSH_INTEGRATION_NAME] = [relation_mock]
 
-    connections = SSHDebugConnection.from_charm(mock_charm)
+    connections = charm_state._build_ssh_debug_connection_from_charm(mock_charm)
 
     assert isinstance(connections[0], SSHDebugConnection)
     assert connections[0].host == IPv4Address("192.168.0.1")
@@ -808,7 +808,7 @@ class MockModel(BaseModel):
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
-        (SSHDebugConnection, "from_charm", ValidationError([], MockModel)),
+        (charm_state, "_build_ssh_debug_connection_from_charm", ValidationError([], MockModel)),
     ],
 )
 def test_charm_state_from_charm_invalid_cases(
@@ -829,7 +829,7 @@ def test_charm_state_from_charm_invalid_cases(
     monkeypatch.setattr(CharmConfig, "from_charm", mock_charm_config_from_charm)
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
-    monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
+    monkeypatch.setattr(charm_state, "_build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
     with pytest.raises(CharmConfigInvalidError):
@@ -849,7 +849,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
-    monkeypatch.setattr(SSHDebugConnection, "from_charm", MagicMock())
+    monkeypatch.setattr("charm_state._build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
     monkeypatch.setattr(json, "dumps", MagicMock())
     monkeypatch.setattr(charm_state, "CHARM_STATE_PATH", MagicMock())

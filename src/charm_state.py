@@ -15,14 +15,12 @@ from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager.configuration import ProxyConfig
+from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
     BaseModel,
-    Field,
-    IPvAnyAddress,
     MongoDsn,
     ValidationError,
     create_model_from_typeddict,
@@ -636,58 +634,42 @@ def _get_supported_arch() -> Arch:
             raise UnsupportedArchitectureError(arch=arch)
 
 
-class SSHDebugConnection(BaseModel):
-    """SSH connection information for debug workflow.
+def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugConnection]:
+    """Initialize the SSHDebugInfo from charm relation data.
 
-    Attributes:
-        host: The SSH relay server host IP address inside the VPN.
-        port: The SSH relay server port.
-        rsa_fingerprint: The host SSH server public RSA key fingerprint.
-        ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        List of connection information for ssh debug access.
     """
-
-    host: IPvAnyAddress
-    port: int = Field(0, gt=0, le=65535)
-    rsa_fingerprint: str = Field(pattern="^SHA256:.*")
-    ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> list["SSHDebugConnection"]:
-        """Initialize the SSHDebugInfo from charm relation data.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            List of connection information for ssh debug access.
-        """
-        ssh_debug_connections: list[SSHDebugConnection] = []
-        relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
-        if not relations or not (relation := relations[0]).units:
-            return ssh_debug_connections
-        for unit in relation.units:
-            relation_data = relation.data[unit]
-            if (
-                not (host := relation_data.get("host"))
-                or not (port := relation_data.get("port"))
-                or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
-                or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
-            ):
-                logger.warning(
-                    "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
-                )
-                continue
-            ssh_debug_connections.append(
-                # pydantic allows string to be passed as IPvAnyAddress and as int,
-                # mypy complains about it
-                SSHDebugConnection(
-                    host=host,  # type: ignore
-                    port=port,  # type: ignore
-                    rsa_fingerprint=rsa_fingerprint,
-                    ed25519_fingerprint=ed25519_fingerprint,
-                )
-            )
+    ssh_debug_connections: list[SSHDebugConnection] = []
+    relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
+    if not relations or not (relation := relations[0]).units:
         return ssh_debug_connections
+    for unit in relation.units:
+        relation_data = relation.data[unit]
+        if (
+            not (host := relation_data.get("host"))
+            or not (port := relation_data.get("port"))
+            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+        ):
+            logger.warning(
+                "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
+            )
+            continue
+        ssh_debug_connections.append(
+            # pydantic allows string to be passed as IPvAnyAddress and as int,
+            # mypy complains about it
+            SSHDebugConnection(
+                host=host,  # type: ignore
+                port=port,  # type: ignore
+                rsa_fingerprint=rsa_fingerprint,
+                ed25519_fingerprint=ed25519_fingerprint,
+            )
+        )
+    return ssh_debug_connections
 
 
 class ReactiveConfig(BaseModel):
@@ -849,7 +831,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
         try:
-            ssh_debug_connections = SSHDebugConnection.from_charm(charm)
+            ssh_debug_connections = _build_ssh_debug_connection_from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
