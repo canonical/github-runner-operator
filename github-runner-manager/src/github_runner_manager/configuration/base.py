@@ -197,11 +197,11 @@ class Image(BaseModel):
     """TODO.
 
     Attributes:
-        image: TODO
+        name: TODO
         labels: TODO
     """
 
-    image: str
+    name: str
     labels: list[str]
 
 
@@ -209,9 +209,9 @@ class Flavor(BaseModel):
     """TODO.
 
     Attributes:
-        flavor: TODO
+        name: TODO
         labels: TODO
     """
 
-    flavor: str
+    name: str
     labels: list[str]

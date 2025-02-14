@@ -624,11 +624,11 @@ class GithubRunnerCharm(CharmBase):
         )
         openstack_image = state.runner_config.openstack_image
         image_labels = []
-        if openstack_image:
-            if openstack_image.id and openstack_image.tags:
+        if openstack_image and openstack_image.id:
+            if openstack_image.tags:
                 image_labels = openstack_image.tags
             image = Image(
-                image=openstack_image.id,
+                name=openstack_image.id,
                 labels=image_labels,
             )
             flavor = Flavor(
