@@ -12,7 +12,7 @@ import subprocess  # nosec
 from pathlib import Path
 
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
-from github_runner_manager.types_ import SystemUserConfig
+from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 from github_runner_manager.utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ def reconcile(quantity: int, reactive_process_config: ReactiveProcessConfig) -> 
     delta = quantity - current_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
-        _setup_logging_for_processes(reactive_process_config.system_user)
+        _setup_logging_for_processes()
         for _ in range(delta):
             _spawn_runner(reactive_process_config)
     elif delta < 0:
@@ -107,16 +107,10 @@ def _get_pids() -> list[int]:
     ]
 
 
-def _setup_logging_for_processes(system_user_config: SystemUserConfig) -> None:
-    """Set up the log dir.
-
-    Args:
-        system_user_config: The configuration to decide which user to use to create the log dir.
-    """
+def _setup_logging_for_processes() -> None:
+    """Set up the log dir."""
     REACTIVE_RUNNER_LOG_DIR.mkdir(exist_ok=True)
-    shutil.chown(
-        REACTIVE_RUNNER_LOG_DIR, user=system_user_config.user, group=system_user_config.group
-    )
+    shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP)
 
 
 def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
@@ -149,8 +143,8 @@ def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
         env=env,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        user=reactive_process_config.system_user.user,
-        group=reactive_process_config.system_user.group,
+        user=RUNNER_MANAGER_USER,
+        group=RUNNER_MANAGER_GROUP,
     )
 
     logger.info("Spawned a new reactive runner process with pid %s", process.pid)

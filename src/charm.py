@@ -50,7 +50,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackServerConfig,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
-from github_runner_manager.types_ import SystemUserConfig
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -85,6 +84,7 @@ from errors import (
     TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
+from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 
 # We assume a stuck reconcile event when it takes longer
 # than 10 times a normal interval. Currently, we are only aware of
@@ -97,10 +97,6 @@ REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
-
-ROOT_USER = "root"
-RUNNER_MANAGER_USER = "runner-manager"
-RUNNER_MANAGER_GROUP = "runner-manager"
 
 ACTIVE_STATUS_RECONCILIATION_FAILED_MSG = "Last reconciliation failed."
 FAILED_TO_RECONCILE_RUNNERS_MSG = "Failed to reconcile runners"
@@ -731,7 +727,6 @@ class GithubRunnerCharm(CharmBase):
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
-                system_user=SystemUserConfig(user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP),
             )
         return RunnerScaler(
             runner_manager=runner_manager, reactive_process_config=reactive_runner_config
@@ -806,9 +801,6 @@ class GithubRunnerCharm(CharmBase):
             server_config=server_config,
             runner_config=runner_config,
             service_config=service_config,
-            system_user_config=SystemUserConfig(
-                user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP
-            ),
         )
         return openstack_runner_manager_config
 

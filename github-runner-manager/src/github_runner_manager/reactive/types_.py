@@ -10,7 +10,6 @@ from github_runner_manager.manager.runner_manager import RunnerManagerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.types_ import SystemUserConfig
 
 
 class ReactiveProcessConfig(BaseModel):
@@ -20,7 +19,6 @@ class ReactiveProcessConfig(BaseModel):
         queue: The queue configuration.
         runner_manager: The runner manager configuration.
         cloud_runner_manager: The OpenStack runner manager configuration.
-        system_user: The configuration for the system user used to spawn processes.
         github_token: str
         supported_labels: The supported labels for the runner.
     """
@@ -28,6 +26,5 @@ class ReactiveProcessConfig(BaseModel):
     queue: QueueConfig
     runner_manager: RunnerManagerConfig
     cloud_runner_manager: OpenStackRunnerManagerConfig
-    system_user: SystemUserConfig
     github_token: str
     supported_labels: set[str]

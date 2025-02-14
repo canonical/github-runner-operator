@@ -55,7 +55,7 @@ from github_runner_manager.openstack_cloud.openstack_cloud import (
     OpenstackInstance,
 )
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
-from github_runner_manager.types_ import SystemUserConfig
+from github_runner_manager.types_ import RUNNER_MANAGER_USER
 from github_runner_manager.utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -106,7 +106,6 @@ class OpenStackRunnerManagerConfig:
         server_config: The configuration for OpenStack server.
         runner_config: The configuration for the GitHub runner.
         service_config: The configuration for supporting services.
-        system_user_config: The user to use for creating metrics storage.
     """
 
     prefix: str
@@ -114,7 +113,6 @@ class OpenStackRunnerManagerConfig:
     server_config: OpenStackServerConfig | None
     runner_config: GitHubRunnerConfig
     service_config: SupportServiceConfig
-    system_user_config: SystemUserConfig
 
 
 @dataclass
@@ -153,12 +151,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._openstack_cloud = OpenstackCloud(
             credentials=self._credentials,
             prefix=self.name_prefix,
-            system_user=config.system_user_config.user,
+            system_user=RUNNER_MANAGER_USER,
         )
-        self._system_user_config = config.system_user_config
-        self._metrics_storage_manager = metrics_storage.StorageManager(
-            system_user_config=config.system_user_config
-        )
+        self._metrics_storage_manager = metrics_storage.StorageManager()
 
         # Setting the env var to this process and any child process spawned.
         proxies = config.service_config.proxy_config

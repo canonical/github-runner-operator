@@ -19,17 +19,22 @@ from github_runner_manager.reactive.process_manager import (
     reconcile,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
-from github_runner_manager.types_ import SystemUserConfig
 from github_runner_manager.utilities import secure_run_subprocess
 
 EXAMPLE_MQ_URI = "http://example.com"
 
+
 # We assume the process running the tests is running as a user
 # that can write to the temporary directory.
-TEST_SYSTEM_USER_CONFIG = SystemUserConfig(
-    user=(passwd := getpwuid(os.getuid())).pw_name,
-    group=getgrgid(passwd.pw_gid).gr_name,
-)
+@pytest.fixture(autouse=True)
+def fix_user_group(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    monkeypatch.setattr(
+        "github_runner_manager.types_.RUNNER_MANAGER_USER",
+        (passwd := getpwuid(os.getuid())).pw_name,
+    )
+    monkeypatch.setattr(
+        "github_runner_manager.types_.RUNNER_MANAGER_GROUP", getgrgid(passwd.pw_gid).gr_name
+    )
 
 
 @pytest.fixture(name="log_dir", autouse=True)
@@ -81,7 +86,7 @@ def reactive_process_config_fixture() -> ReactiveProcessConfig:
 
     # we use construct to avoid pydantic validation as IN_MEMORY_URI is not a valid URL
     queue_config = QueueConfig.construct(mongodb_uri=EXAMPLE_MQ_URI, queue_name=queue_name)
-    return ReactiveProcessConfig.construct(queue=queue_config, system_user=TEST_SYSTEM_USER_CONFIG)
+    return ReactiveProcessConfig.construct(queue=queue_config)
 
 
 def test_reconcile_spawns_runners(

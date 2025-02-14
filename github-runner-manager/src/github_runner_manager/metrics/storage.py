@@ -18,7 +18,7 @@ from github_runner_manager.errors import (
     GetMetricsStorageError,
     QuarantineMetricsStorageError,
 )
-from github_runner_manager.types_ import SystemUserConfig
+from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 
 _FILESYSTEM_BASE_DIR_NAME = "runner-fs"
 _FILESYSTEM_QUARANTINE_DIR_NAME = "runner-fs-quarantine"
@@ -61,19 +61,11 @@ class StorageManagerProtocol(Protocol):  # pylint: disable=too-few-public-method
 class StorageManager(StorageManagerProtocol):
     """Manager for the metrics storage."""
 
-    def __init__(self, system_user_config: SystemUserConfig):
-        """Initialize the storage manager.
-
-        Args:
-            system_user_config: The configuration of the user owning the storage.
-        """
-        self._system_user_config = system_user_config
-        self._base_dir = (
-            Path(f"~{self._system_user_config.user}").expanduser() / _FILESYSTEM_BASE_DIR_NAME
-        )
+    def __init__(self) -> None:
+        """Initialize the storage manager."""
+        self._base_dir = Path(f"~{RUNNER_MANAGER_USER}").expanduser() / _FILESYSTEM_BASE_DIR_NAME
         self._quarantine_dir = (
-            Path(f"~{self._system_user_config.user}").expanduser()
-            / _FILESYSTEM_QUARANTINE_DIR_NAME
+            Path(f"~{RUNNER_MANAGER_USER}").expanduser() / _FILESYSTEM_QUARANTINE_DIR_NAME
         )
 
     def create(self, runner_name: str) -> MetricsStorage:
@@ -96,27 +88,27 @@ class StorageManager(StorageManagerProtocol):
             # this could be executed as root (e.g. during a charm hook), therefore set permissions
             shutil.chown(
                 self._base_dir,
-                user=self._system_user_config.user,
-                group=self._system_user_config.group,
+                user=RUNNER_MANAGER_USER,
+                group=RUNNER_MANAGER_GROUP,
             )
             logger.debug(
                 "Changed ownership of %s to %s:%s",
                 _FILESYSTEM_BASE_DIR_NAME,
-                self._system_user_config.user,
-                self._system_user_config.group,
+                RUNNER_MANAGER_USER,
+                RUNNER_MANAGER_GROUP,
             )
 
             self._quarantine_dir.mkdir(exist_ok=True)
             shutil.chown(
                 self._quarantine_dir,
-                user=self._system_user_config.user,
-                group=self._system_user_config.group,
+                user=RUNNER_MANAGER_USER,
+                group=RUNNER_MANAGER_GROUP,
             )
             logger.debug(
                 "Changed ownership of %s to %s:%s",
                 self._quarantine_dir,
-                self._system_user_config.user,
-                self._system_user_config.group,
+                RUNNER_MANAGER_USER,
+                RUNNER_MANAGER_GROUP,
             )
 
         except OSError as exc:
