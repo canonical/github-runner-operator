@@ -624,35 +624,42 @@ class GithubRunnerCharm(CharmBase):
         )
         openstack_image = state.runner_config.openstack_image
         image_labels = []
-        if openstack_image and openstack_image.id and openstack_image.tags:
-            image_labels = openstack_image.tags
-        image = Image(
-            image=openstack_image.id,
-            labels=image_labels,
-        )
-        flavor = Flavor(
-            name=state.runner_config.flavor_label_combinations[0].flavor,
-            labels=(
-                []
-                if not state.runner_config.flavor_label_combinations[0].label
-                else [state.runner_config.flavor_label_combinations[0].label]
-            ),
-        )
-        non_reactive_configuration = NonReactiveConfiguration(
-            combinations=[
+        if openstack_image:
+            if openstack_image.id and openstack_image.tags:
+                image_labels = openstack_image.tags
+            image = Image(
+                image=openstack_image.id,
+                labels=image_labels,
+            )
+            flavor = Flavor(
+                name=state.runner_config.flavor_label_combinations[0].flavor,
+                labels=(
+                    []
+                    if not state.runner_config.flavor_label_combinations[0].label
+                    else [state.runner_config.flavor_label_combinations[0].label]
+                ),
+            )
+            combinations = [
                 NonReactiveCombination(
                     image=Image,
                     flavor=Flavor,
                     base_virtual_machines=state.runner_config.base_virtual_machines,
                 )
             ]
-        )
+            images = [image]
+            flavors = [flavor]
+        else:
+            combinations = []
+            images = []
+            flavors = []
+
+        non_reactive_configuration = NonReactiveConfiguration(combinations=combinations)
         if reactive_config := state.reactive_config:
             reactive_configuration = ReactiveConfiguration(
                 queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=self.app.name),
                 max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
-                images=[image],
-                flavors=[flavor],
+                images=images,
+                flavors=flavors,
             )
         else:
             reactive_configuration = None
