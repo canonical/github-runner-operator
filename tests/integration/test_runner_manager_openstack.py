@@ -59,6 +59,7 @@ logger = logging.getLogger(__name__)
 constants.CREATE_SERVER_TIMEOUT = 900
 
 
+@pytest.fixture(autouse=True, scope="module", name="runner_manager_user")
 def runner_manager_user():
     """Mock the RUNNER_MANAGER_USER and RUNNER_MANAGER_GROUP constants.
 
