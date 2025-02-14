@@ -20,6 +20,7 @@ options:
     type: string
     default: ""
     description: |
+      (Deprecated, use flavor-label-list instead)
       The openstack flavor to use to spawn virtual machines. This controls the hardware resource
       of the virtual machines. See docs for details:
       (https://docs.openstack.org/nova/rocky/user/flavors.html).
@@ -102,5 +103,28 @@ options:
     type: int
     default: 1
     description: >-
+      (Deprecated, use base-virtual-machines or max-total-virtual-machines instead)
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
-      runners to match this setting.
+      runners to match this setting. Setting virtual-machines to non-zero and any of
+      base-virtual-machines or max-total-virtual-machines will block the charm.
+  base-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      The number of non-reactive virtual machine runners spawned by the charm per each
+      combination of flavor and base. Currently, if the charm is integrated with MongoDB
+      this config option will be ignored.
+  max-total-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      If the github-runner charm is integrated with MongoDB, the reactive mode will not spawn
+      new virtual machines if there are max-total-virtual-machines of more virtual machines
+      managed by the charm.
+  flavor-label-combinations:
+    type: string
+    default: ""
+    description: >-
+      List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
+      flavor and the label will be a label for the GitHub runner. Only one flavor-label combination
+      is supported at the moment. A valid configuration looks like "m1.small:small".

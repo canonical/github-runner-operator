@@ -153,11 +153,12 @@ class RunnerScaler:
         }
         return metric_stats.get(metric_events.RunnerStop, 0)
 
-    def reconcile(self, quantity: int) -> int:
+    def reconcile(self, base_quantity: int, max_quantity: int) -> int:
         """Reconcile the quantity of runners.
 
         Args:
-            quantity: The number of intended runners.
+            base_quantity: The number of intended non-reactive runners.
+            max_quantity: The number of maximum runners for reactive.
 
         Returns:
             The Change in number of runners or reactive processes.
@@ -165,12 +166,14 @@ class RunnerScaler:
         Raises:
             ReconcileError: If an expected error occurred during the reconciliation.
         """
-        logger.info("Start reconcile to %s runner", quantity)
+        logger.info(
+            "Start reconcile. base_quantity %s. max_quantity: %s.", base_quantity, max_quantity
+        )
 
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = quantity if self._reactive_config is None else None
+        expected_runner_quantity = max_quantity if self._reactive_config is None else None
 
         try:
             if self._reactive_config is not None:
@@ -178,14 +181,14 @@ class RunnerScaler:
                     "Reactive configuration detected, going into experimental reactive mode."
                 )
                 reconcile_result = reactive_runner_manager.reconcile(
-                    expected_quantity=quantity,
+                    expected_quantity=max_quantity,
                     runner_manager=self._manager,
                     runner_config=self._reactive_config,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats
             else:
-                reconcile_result = self._reconcile_non_reactive(quantity)
+                reconcile_result = self._reconcile_non_reactive(base_quantity)
                 reconcile_diff = reconcile_result.runner_diff
                 metric_stats = reconcile_result.metric_stats
         except CloudError as exc:
