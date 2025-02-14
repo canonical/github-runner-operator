@@ -21,7 +21,6 @@ jobs:
           branchdir: ${{ github.workspace }}
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
-          project: "github-runner-operator"
           installTics: true
 
 concurrency:
