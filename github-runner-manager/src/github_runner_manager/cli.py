@@ -6,7 +6,8 @@
 from typing import TextIO
 
 import click
-from cli_config import Configuration
+
+from github_runner_manager.cli_config import Configuration
 
 
 # The entry point for the CLI will be tested with integration test.
