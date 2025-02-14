@@ -20,10 +20,14 @@ from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubPath,
+    parse_github_path,
+)
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     GitHubRunnerConfig,
-
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
@@ -40,7 +44,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackServerConfig,
 )
 from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
 from tests.integration.helpers.common import (
@@ -182,7 +185,8 @@ async def runner_manager_fixture(
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    config = RunnerManagerConfig("test_runner", token, github_path)
+    github_configuration = GitHubConfiguration(token, github_path)
+    config = RunnerManagerConfig("test_runner", github_configuration)
     yield RunnerManager(openstack_runner_manager, config)
 
 
