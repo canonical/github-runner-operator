@@ -19,7 +19,6 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from github_runner_manager import constants as global_constants
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
 from github_runner_manager.configuration.github import (
     GitHubConfiguration,
@@ -59,8 +58,19 @@ logger = logging.getLogger(__name__)
 # will break the tests
 constants.CREATE_SERVER_TIMEOUT = 900
 
-global_constants.RUNNER_MANAGER_USER = "ubuntu"  # noqa: F811
-global_constants.RUNNER_MANAGER_GROUP = "ubuntu"  # noqa: F811
+
+def runner_manager_user():
+    """Mock the RUNNER_MANAGER_USER and RUNNER_MANAGER_GROUP constants.
+
+    Yields:
+        None, just to be in a scope.
+    """
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        # we assume the test runs as ubuntu user
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", "ubuntu")
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_GROUP", "ubuntu")
+        # monkeypatch is a scope function fixture, so this trick
+        yield None
 
 
 @pytest.fixture(scope="module", name="runner_label")
