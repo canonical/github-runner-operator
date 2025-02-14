@@ -19,10 +19,11 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     GitHubRunnerConfig,
-    SupportServiceConfig,
+
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
@@ -39,10 +40,9 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackServerConfig,
 )
 from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
-from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,

@@ -279,7 +279,7 @@ def openstack_connection_fixture(
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
-    clouds_yaml_path = Path.cwd() / "clouds.yaml"
+    clouds_yaml_path = Path.cwd() / "tests_clouds.yaml"
     clouds_yaml_path.write_text(data=clouds_yaml_contents, encoding="utf-8")
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
