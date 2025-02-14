@@ -84,7 +84,6 @@ from errors import (
     TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
-from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 
 # We assume a stuck reconcile event when it takes longer
 # than 10 times a normal interval. Currently, we are only aware of
