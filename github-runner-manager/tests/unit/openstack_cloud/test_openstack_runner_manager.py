@@ -49,7 +49,6 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
         server_config=MagicMock(),
         runner_config=MagicMock(),
         service_config=service_config_mock,
-        system_user_config=MagicMock(),
     )
 
     return OpenStackRunnerManager(config=config)

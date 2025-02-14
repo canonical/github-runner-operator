@@ -29,11 +29,11 @@ EXAMPLE_MQ_URI = "http://example.com"
 @pytest.fixture(autouse=True)
 def fix_user_group(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(
-        "github_runner_manager.types_.RUNNER_MANAGER_USER",
+        "github_runner_manager.constants.RUNNER_MANAGER_USER",
         (passwd := getpwuid(os.getuid())).pw_name,
     )
     monkeypatch.setattr(
-        "github_runner_manager.types_.RUNNER_MANAGER_GROUP", getgrgid(passwd.pw_gid).gr_name
+        "github_runner_manager.constants.RUNNER_MANAGER_GROUP", getgrgid(passwd.pw_gid).gr_name
     )
 
 

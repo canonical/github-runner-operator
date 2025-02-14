@@ -20,6 +20,7 @@ from typing import Any, Callable, Sequence, TypeVar
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from github_runner_manager import constants
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -50,7 +51,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackServerConfig,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
-from github_runner_manager.types_ import RUNNER_MANAGER_USER
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -808,28 +808,28 @@ class GithubRunnerCharm(CharmBase):
 def _setup_runner_manager_user() -> None:
     """Create the user and required directories for the runner manager."""
     # check if runner_manager user is already existing
-    _, retcode = execute_command(["/usr/bin/id", RUNNER_MANAGER_USER], check_exit=False)
+    _, retcode = execute_command(["/usr/bin/id", constants.RUNNER_MANAGER_USER], check_exit=False)
     if retcode != 0:
-        logger.info("Creating user %s", RUNNER_MANAGER_USER)
+        logger.info("Creating user %s", constants.RUNNER_MANAGER_USER)
         execute_command(
             [
                 "/usr/sbin/useradd",
                 "--system",
                 "--create-home",
                 "--user-group",
-                RUNNER_MANAGER_USER,
+                constants.RUNNER_MANAGER_USER,
             ],
         )
-    execute_command(["/usr/bin/mkdir", "-p", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+    execute_command(["/usr/bin/mkdir", "-p", f"/home/{constants.RUNNER_MANAGER_USER}/.ssh"])
     execute_command(
         [
             "/usr/bin/chown",
             "-R",
-            f"{RUNNER_MANAGER_USER}:{RUNNER_MANAGER_USER}",
-            f"/home/{RUNNER_MANAGER_USER}/.ssh",
+            f"{constants.RUNNER_MANAGER_USER}:{constants.RUNNER_MANAGER_USER}",
+            f"/home/{constants.RUNNER_MANAGER_USER}/.ssh",
         ]
     )
-    execute_command(["/usr/bin/chmod", "700", f"/home/{RUNNER_MANAGER_USER}/.ssh"])
+    execute_command(["/usr/bin/chmod", "700", f"/home/{constants.RUNNER_MANAGER_USER}/.ssh"])
 
 
 if __name__ == "__main__":

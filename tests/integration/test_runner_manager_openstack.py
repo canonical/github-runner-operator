@@ -19,6 +19,7 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github_runner_manager import constants as global_constants
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
 from github_runner_manager.configuration.github import (
     GitHubConfiguration,
@@ -36,7 +37,6 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
-from github_runner_manager.metrics.storage import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 from github_runner_manager.openstack_cloud import constants, health_checks
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
@@ -59,9 +59,8 @@ logger = logging.getLogger(__name__)
 # will break the tests
 constants.CREATE_SERVER_TIMEOUT = 900
 
-# we assume the test runs as ubuntu user
-RUNNER_MANAGER_USER = "ubuntu"  # noqa: F811
-RUNNER_MANAGER_GROUP = "ubuntu"  # noqa: F811
+global_constants.RUNNER_MANAGER_USER = "ubuntu"  # noqa: F811
+global_constants.RUNNER_MANAGER_GROUP = "ubuntu"  # noqa: F811
 
 
 @pytest.fixture(scope="module", name="runner_label")

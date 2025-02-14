@@ -17,6 +17,7 @@ import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
+from github_runner_manager import constants
 from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.configuration.github import GitHubOrg
 from github_runner_manager.errors import (
@@ -55,7 +56,6 @@ from github_runner_manager.openstack_cloud.openstack_cloud import (
     OpenstackInstance,
 )
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
-from github_runner_manager.types_ import RUNNER_MANAGER_USER
 from github_runner_manager.utilities import retry, set_env_var
 
 logger = logging.getLogger(__name__)
@@ -151,7 +151,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._openstack_cloud = OpenstackCloud(
             credentials=self._credentials,
             prefix=self.name_prefix,
-            system_user=RUNNER_MANAGER_USER,
+            system_user=constants.RUNNER_MANAGER_USER,
         )
         self._metrics_storage_manager = metrics_storage.StorageManager()
 

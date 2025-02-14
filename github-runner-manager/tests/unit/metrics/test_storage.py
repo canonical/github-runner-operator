@@ -29,11 +29,11 @@ from github_runner_manager.metrics.storage import (
 @pytest.fixture(autouse=True, scope="function")
 def fix_user_group(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setattr(
-        "github_runner_manager.metrics.storage.RUNNER_MANAGER_USER",
+        "github_runner_manager.constants.RUNNER_MANAGER_USER",
         (passwd := getpwuid(os.getuid())).pw_name,
     )
     monkeypatch.setattr(
-        "github_runner_manager.metrics.storage.RUNNER_MANAGER_GROUP",
+        "github_runner_manager.constants.RUNNER_MANAGER_GROUP",
         getgrgid(passwd.pw_gid).gr_name,
     )
 

@@ -11,8 +11,8 @@ import signal
 import subprocess  # nosec
 from pathlib import Path
 
+from github_runner_manager import constants
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
-from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 from github_runner_manager.utilities import secure_run_subprocess
 
 logger = logging.getLogger(__name__)
@@ -110,7 +110,11 @@ def _get_pids() -> list[int]:
 def _setup_logging_for_processes() -> None:
     """Set up the log dir."""
     REACTIVE_RUNNER_LOG_DIR.mkdir(exist_ok=True)
-    shutil.chown(REACTIVE_RUNNER_LOG_DIR, user=RUNNER_MANAGER_USER, group=RUNNER_MANAGER_GROUP)
+    shutil.chown(
+        REACTIVE_RUNNER_LOG_DIR,
+        user=constants.RUNNER_MANAGER_USER,
+        group=constants.RUNNER_MANAGER_GROUP,
+    )
 
 
 def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
@@ -143,8 +147,8 @@ def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
         env=env,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        user=RUNNER_MANAGER_USER,
-        group=RUNNER_MANAGER_GROUP,
+        user=constants.RUNNER_MANAGER_USER,
+        group=constants.RUNNER_MANAGER_GROUP,
     )
 
     logger.info("Spawned a new reactive runner process with pid %s", process.pid)
