@@ -3,7 +3,7 @@
 """Module for testing the general types."""
 import pytest
 
-from github_runner_manager.types_ import ProxyConfig
+from github_runner_manager.configuration import ProxyConfig
 
 
 def test_check_use_aproxy():

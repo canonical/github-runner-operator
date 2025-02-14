@@ -11,9 +11,10 @@ from urllib.error import HTTPError
 
 import pytest
 
+from github_runner_manager.configuration.github import GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.types_.github import GitHubRepo, JobConclusion, JobInfo, JobStatus
+from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",

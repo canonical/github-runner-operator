@@ -24,6 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
+from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
 logger = logging.getLogger(__name__)
@@ -33,29 +34,6 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
-
-
-@dataclass
-class OpenStackCredentials:
-    """OpenStack credentials.
-
-    Attributes:
-        auth_url: The auth url of the OpenStack host.
-        project_name: The project name to log in to.
-        username: The username to login with.
-        password: The password to login with.
-        region_name: The region.
-        user_domain_name: The domain name containing the user.
-        project_domain_name: The domain name containing the project.
-    """
-
-    auth_url: str
-    project_name: str
-    username: str
-    password: str
-    region_name: str
-    user_domain_name: str
-    project_domain_name: str
 
 
 @dataclass

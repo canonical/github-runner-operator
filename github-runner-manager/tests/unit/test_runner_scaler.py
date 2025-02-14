@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath, GitHubRepo
 from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
@@ -17,7 +18,6 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
-from github_runner_manager.types_.github import GitHubPath, GitHubRepo
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
     MockGitHubRunnerManager,
@@ -84,7 +84,9 @@ def runner_manager_fixture(
         "github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock()
     )
 
-    config = RunnerManagerConfig("mock_runners", "mock_token", github_path)
+    config = RunnerManagerConfig(
+        "mock_runners", GitHubConfiguration(token="mock_token", path=github_path)
+    )
     runner_manager = RunnerManager(mock_cloud, config)
     runner_manager._github = mock_github
     return runner_manager
@@ -197,12 +199,12 @@ def test_reconcile_runner_create_one_reactive(
     Act: Call reconcile with base quantity 0 and max quantity 5.
     Assert: 5 processes should be returned in the result of the reconcile.
     """
-    reactive_runner_config = MagicMock()
-    runner_scaler = RunnerScaler(runner_manager, reactive_runner_config)
+    reactive_process_config = MagicMock()
+    runner_scaler = RunnerScaler(runner_manager, reactive_process_config)
 
     from github_runner_manager.reactive.runner_manager import ReconcileResult
 
-    def _fake_reactive_reconcile(expected_quantity: int, runner_manager, runner_config):
+    def _fake_reactive_reconcile(expected_quantity: int, runner_manager, reactive_process_config):
         """Reactive reconcile fake."""
         return ReconcileResult(processes_diff=expected_quantity, metric_stats={"event": ""})
 

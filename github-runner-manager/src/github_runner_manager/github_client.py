@@ -16,11 +16,13 @@ from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
 
-from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
-from github_runner_manager.types_.github import (
+from github_runner_manager.configuration.github import (
     GitHubOrg,
     GitHubPath,
     GitHubRepo,
+)
+from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
+from github_runner_manager.types_.github import (
     JobInfo,
     RegistrationToken,
     RemoveToken,

@@ -17,10 +17,10 @@ from kombu.exceptions import KombuError
 from kombu.simple import SimpleQueue
 from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
+from github_runner_manager.configuration.github import GitHubRepo
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.reactive.types_ import QueueConfig
-from github_runner_manager.types_.github import GitHubRepo
 
 logger = logging.getLogger(__name__)
 
