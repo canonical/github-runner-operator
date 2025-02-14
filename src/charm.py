@@ -50,6 +50,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackServerConfig,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
+from github_runner_manager.types_ import RUNNER_MANAGER_USER
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -84,7 +85,6 @@ from errors import (
     TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
-from github_runner_manager.types_ import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 
 # We assume a stuck reconcile event when it takes longer
 # than 10 times a normal interval. Currently, we are only aware of

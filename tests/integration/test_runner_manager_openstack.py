@@ -36,6 +36,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
+from github_runner_manager.metrics.storage import RUNNER_MANAGER_GROUP, RUNNER_MANAGER_USER
 from github_runner_manager.openstack_cloud import constants, health_checks
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
@@ -43,7 +44,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.types_ import SystemUserConfig
 from openstack.connection import Connection as OpenstackConnection
 
 from tests.integration.helpers.common import (
@@ -58,6 +58,10 @@ logger = logging.getLogger(__name__)
 # as only one machine that stays for more than the default time in BUILD,
 # will break the tests
 constants.CREATE_SERVER_TIMEOUT = 900
+
+# we assume the test runs as ubuntu user
+RUNNER_MANAGER_USER = "ubuntu"  # noqa: F811
+RUNNER_MANAGER_GROUP = "ubuntu"  # noqa: F811
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -165,8 +169,6 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,
-        # we assume the test runs as ubuntu user
-        system_user_config=SystemUserConfig(user="ubuntu", group="ubuntu"),
     )
 
     yield OpenStackRunnerManager(
