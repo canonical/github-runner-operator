@@ -6,7 +6,6 @@
 from typing import TextIO
 
 import click
-
 from cli_config import Configuration
 
 
