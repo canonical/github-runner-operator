@@ -31,4 +31,5 @@ def main(config_file: TextIO) -> None:  # pragma: no cover
 
 
 if __name__ == "__main__":
-    main()
+    # Click modifies the function signature.
+    main()  # pylint: disable=no-value-for-parameter

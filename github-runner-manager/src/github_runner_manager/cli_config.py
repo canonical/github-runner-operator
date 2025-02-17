@@ -35,6 +35,7 @@ class Configuration(pydantic.BaseModel):
         repo_policy_compliance_token: The token to query the repo-policy-compliance. Defaults to
             None.
         http_proxy: The HTTP proxy to use. Defaults to None.
+        no_proxy: The comma separated list of host to not redirect to HTTP proxy for HTTP requests.
     """
 
     name: str = pydantic.Field(min_length=1, max_length=50)
@@ -55,6 +56,7 @@ class Configuration(pydantic.BaseModel):
     repo_policy_compliance_url: str | None = pydantic.Field(None, min_length=1)
     repo_policy_compliance_token: str | None = pydantic.Field(None, min_length=1)
     http_proxy: str | None = pydantic.Field(None, min_length=1)
+    no_proxy: str | None = pydantic.Field(None, min_length=1)
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "Configuration":
