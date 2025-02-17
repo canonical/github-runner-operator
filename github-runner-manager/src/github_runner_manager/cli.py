@@ -28,3 +28,7 @@ def main(config_file: TextIO) -> None:  # pragma: no cover
     """
     _ = Configuration.from_yaml_file(config_file)
     raise NotImplementedError()
+
+
+if __name__ == "__main__":
+    main()

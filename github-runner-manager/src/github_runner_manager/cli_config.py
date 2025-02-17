@@ -34,8 +34,7 @@ class Configuration(pydantic.BaseModel):
         repo_policy_compliance_url: The optional repo-policy-compliance address. Defaults to None.
         repo_policy_compliance_token: The token to query the repo-policy-compliance. Defaults to
             None.
-        enable_aproxy: Whether to use aproxy for automatic redirect traffic to HTTP(S) proxy.
-            Defaults to True.
+        http_proxy: The HTTP proxy to use. Defaults to None.
     """
 
     name: str = pydantic.Field(min_length=1, max_length=50)
@@ -55,7 +54,7 @@ class Configuration(pydantic.BaseModel):
     dockerhub_mirror: str | None = None
     repo_policy_compliance_url: str | None = pydantic.Field(None, min_length=1)
     repo_policy_compliance_token: str | None = pydantic.Field(None, min_length=1)
-    enable_aproxy: bool = True
+    http_proxy: str | None = pydantic.Field(None, min_length=1)
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "Configuration":

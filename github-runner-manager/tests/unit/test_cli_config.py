@@ -10,29 +10,33 @@ import pytest
 import yaml
 
 from src.github_runner_manager.cli_config import Configuration
-
+ 
 ConfigValue = None | int | bool | str | tuple
+ConfigDict = dict[str, ConfigValue]
 
-SAMPLE_CONFIG = {
-    "name": "test_org/test_repo",
-    "github_path": "test_org",
-    "github_token": "test_token",
-    "github_runner_group": None,
-    "runner_count": 1,
-    "runner_labels": ("test", "unit-test", "test-data"),
-    "openstack_auth_url": "http://www.example.com/test_url",
-    "openstack_project_name": "test-project",
-    "openstack_username": "test-username",
-    "openstack_password": "test-password",
-    "openstack_user_domain_name": "default",
-    "openstack_domain_name": "default",
-    "openstack_flavor": "test_flavor",
-    "openstack_network": "test_network",
-    "dockerhub_mirror": None,
-    "repo_policy_compliance_url": None,
-    "repo_policy_compliance_token": None,
-    "enable_aproxy": True,
-}
+
+@pytest.fixture(name="sample_config")
+def sample_config_fixture() -> ConfigDict:
+    return {
+        "name": "test_org/test_repo",
+        "github_path": "test_org",
+        "github_token": "test_token",
+        "github_runner_group": None,
+        "runner_count": 1,
+        "runner_labels": ("test", "unit-test", "test-data"),
+        "openstack_auth_url": "http://www.example.com/test_url",
+        "openstack_project_name": "test-project",
+        "openstack_username": "test-username",
+        "openstack_password": "test-password",
+        "openstack_user_domain_name": "default",
+        "openstack_domain_name": "default",
+        "openstack_flavor": "test_flavor",
+        "openstack_network": "test_network",
+        "dockerhub_mirror": None,
+        "repo_policy_compliance_url": None,
+        "repo_policy_compliance_token": None,
+        "http_proxy": None,
+    }
 
 
 def get_cli_configuration(config: dict[str, ConfigValue], file_path: Path) -> Configuration:
@@ -58,36 +62,36 @@ def tmp_yaml_file_fixture(tmp_path: Path) -> Path:
     return tmp_path / "tmp_config.yaml"
 
 
-def test_sample_config(tmp_yaml_file: Path):
+def test_sample_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: None.
     act: Create the Configuration from SAMPLE_CONFIG.
     assert: The configuration content should match.
     """
-    config = get_cli_configuration(SAMPLE_CONFIG, tmp_yaml_file)
-    diff = set(config.dict().items()) ^ set(SAMPLE_CONFIG.items())
+    config = get_cli_configuration(sample_config, tmp_yaml_file)
+    diff = set(config.dict().items()) ^ set(sample_config.items())
     assert not diff
 
 
-def test_optional_config(tmp_yaml_file: Path):
+def test_optional_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: Remove the optional entry in the SAMPLE_CONFIG.
     act: Create the configuration from config.
     assert: The configuration content should match.
     """
-    config = dict(SAMPLE_CONFIG)
-    config.pop("enable_aproxy")
+    config = dict(sample_config)
+    config.pop("http_proxy")
     config.pop("repo_policy_compliance_token")
     config.pop("repo_policy_compliance_url")
     config.pop("dockerhub_mirror")
     config.pop("github_runner_group")
 
     configuration = get_cli_configuration(config, tmp_yaml_file)
-    diff = set(configuration.dict().items()) ^ set(SAMPLE_CONFIG.items())
+    diff = set(configuration.dict().items()) ^ set(sample_config.items())
     assert not diff
 
 
-def test_missing_config(tmp_yaml_file: Path):
+def test_missing_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: Get a list of required fields.
     act: Create the Configuration without a required field.
@@ -110,7 +114,7 @@ def test_missing_config(tmp_yaml_file: Path):
     ]
 
     for field in required_field:
-        config = dict(SAMPLE_CONFIG)
+        config = dict(sample_config)
         config.pop(field)
 
         with pytest.raises(pydantic.error_wrappers.ValidationError) as err:
@@ -122,7 +126,7 @@ def test_missing_config(tmp_yaml_file: Path):
         assert errors[0]["msg"] == "field required"
 
 
-def test_string_min_length_config(tmp_yaml_file: Path):
+def test_string_min_length_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: Get a list of fields of type string with min_length restraints.
     act: Create the Configuration with empty string in the fields.
@@ -145,7 +149,7 @@ def test_string_min_length_config(tmp_yaml_file: Path):
     ]
 
     for field in min_length_field:
-        config = dict(SAMPLE_CONFIG)
+        config = dict(sample_config)
         config[field] = ""
 
         with pytest.raises(pydantic.error_wrappers.ValidationError) as err:
@@ -157,17 +161,16 @@ def test_string_min_length_config(tmp_yaml_file: Path):
         assert errors[0]["msg"] == "ensure this value has at least 1 characters"
 
 
-def test_max_length_for_name_field_config(tmp_yaml_file: Path):
+def test_max_length_for_name_field_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: None.
     act: Create the Configuration with a name over 50 characters.
     assert: Errors should be raised.
     """
-    config = dict(SAMPLE_CONFIG)
-    config["name"] = "a" * 51
+    sample_config["name"] = "a" * 51
 
     with pytest.raises(pydantic.error_wrappers.ValidationError) as err:
-        get_cli_configuration(config, tmp_yaml_file)
+        get_cli_configuration(sample_config, tmp_yaml_file)
 
     errors = err.value.errors()
     assert len(errors) == 1
@@ -175,37 +178,18 @@ def test_max_length_for_name_field_config(tmp_yaml_file: Path):
     assert errors[0]["msg"] == "ensure this value has at most 50 characters"
 
 
-def test_negative_runner_count_field_config(tmp_yaml_file: Path):
+def test_negative_runner_count_field_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     arrange: None.
     act: Create the Configuration with a runner_count under 0.
     assert: An error should be raised.
     """
-    config = dict(SAMPLE_CONFIG)
-    config["runner_count"] = -1
+    sample_config["runner_count"] = -1
 
     with pytest.raises(pydantic.error_wrappers.ValidationError) as err:
-        get_cli_configuration(config, tmp_yaml_file)
+        get_cli_configuration(sample_config, tmp_yaml_file)
 
     errors = err.value.errors()
     assert len(errors) == 1
     assert "runner_count" in errors[0]["loc"]
     assert errors[0]["msg"] == "ensure this value is greater than or equal to 0"
-
-
-def test_non_bool_enable_aproxy_field_config(tmp_yaml_file: Path):
-    """
-    arrange: None.
-    act: Create the Configuration with a non-boolean enable_aproxy config.
-    assert: An error should be raised.
-    """
-    config = dict(SAMPLE_CONFIG)
-    config["enable_aproxy"] = "value"
-
-    with pytest.raises(pydantic.error_wrappers.ValidationError) as err:
-        get_cli_configuration(config, tmp_yaml_file)
-
-    errors = err.value.errors()
-    assert len(errors) == 1
-    assert "enable_aproxy" in errors[0]["loc"]
-    assert errors[0]["msg"] == "value could not be parsed to a boolean"
