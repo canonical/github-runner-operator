@@ -458,6 +458,7 @@ class OpenstackImage(BaseModel):
     """
 
     id: str | None
+    # First arch, then base as it comes from the image-builder charm.
     tags: list[str] | None
 
     @classmethod

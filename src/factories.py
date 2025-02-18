@@ -82,8 +82,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         )
         combinations = [
             NonReactiveCombination(
-                image=Image,
-                flavor=Flavor,
+                image=image,
+                flavor=flavor,
                 base_virtual_machines=state.runner_config.base_virtual_machines,
             )
         ]
