@@ -9,8 +9,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
-from github_runner_manager.manager.cloud_runner_manager import SupportServiceConfig
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.storage import MetricsStorage, StorageManager
 from github_runner_manager.openstack_cloud import (
@@ -44,13 +44,11 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
     service_config_mock = MagicMock(spec=SupportServiceConfig)
     service_config_mock.proxy_config = None
     config = OpenStackRunnerManagerConfig(
-        name="test",
         prefix="test",
         credentials=MagicMock(),
         server_config=MagicMock(),
         runner_config=MagicMock(),
         service_config=service_config_mock,
-        system_user_config=MagicMock(),
     )
 
     return OpenStackRunnerManager(config=config)
