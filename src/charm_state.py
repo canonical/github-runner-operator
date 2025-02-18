@@ -1,10 +1,6 @@
 # Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
-# TODO: 2024-06-26 The charm contains a lot of states and configuration. The upcoming refactor will
-# split each/related class to a file.
-# pylint: disable=too-many-lines
-
 """State of the Charm."""
 
 import dataclasses
@@ -14,7 +10,7 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import NamedTuple, Optional, TypedDict, cast
+from typing import Optional, TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -33,13 +29,7 @@ from pydantic import (
 )
 
 from errors import MissingMongoDBError
-from firewall import FirewallEntry
 from utilities import get_env_var
-
-REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG = (
-    "Reactive mode not supported for local LXD instances. "
-    "Please remove the mongodb integration."
-)
 
 logger = logging.getLogger(__name__)
 
@@ -48,11 +38,12 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
-BASE_IMAGE_CONFIG_NAME = "base-image"
-DENYLIST_CONFIG_NAME = "denylist"
+BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
+MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
@@ -61,16 +52,12 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
-RUNNER_STORAGE_CONFIG_NAME = "runner-storage"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
-VM_CPU_CONFIG_NAME = "vm-cpu"
-VM_MEMORY_CONFIG_NAME = "vm-memory"
-VM_DISK_CONFIG_NAME = "vm-disk"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -134,20 +121,6 @@ class GithubConfig:
         return cls(token=cast(str, token), path=path)
 
 
-class VirtualMachineResources(NamedTuple):
-    """Virtual machine resource configuration.
-
-    Attributes:
-        cpu: Number of vCPU for the virtual machine.
-        memory: Amount of memory for the virtual machine.
-        disk: Amount of disk for the virtual machine.
-    """
-
-    cpu: int
-    memory: StorageSize
-    disk: StorageSize
-
-
 class Arch(str, Enum):
     """Supported system architectures.
 
@@ -158,30 +131,6 @@ class Arch(str, Enum):
 
     ARM64 = "arm64"
     X64 = "x64"
-
-
-class RunnerStorage(str, Enum):
-    """Supported storage as runner disk.
-
-    Attributes:
-        JUJU_STORAGE: Represents runner storage from Juju storage.
-        MEMORY: Represents tempfs storage (ramdisk).
-    """
-
-    JUJU_STORAGE = "juju-storage"
-    MEMORY = "memory"
-
-
-class InstanceType(str, Enum):
-    """Type of instance for runner.
-
-    Attributes:
-        LOCAL_LXD: LXD instance on the local juju machine.
-        OPENSTACK: OpenStack instance on a cloud.
-    """
-
-    LOCAL_LXD = "local_lxd"
-    OPENSTACK = "openstack"
 
 
 class CharmConfigInvalidError(Exception):
@@ -336,7 +285,6 @@ class CharmConfig(BaseModel):
     Some charm configurations are grouped into other configuration models.
 
     Attributes:
-        denylist: List of IPv4 to block the runners from accessing.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
@@ -347,30 +295,13 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
     """
 
-    denylist: list[FirewallEntry]
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
-    openstack_clouds_yaml: OpenStackCloudsYAML | None
+    openstack_clouds_yaml: OpenStackCloudsYAML
     path: GitHubPath
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
-
-    @classmethod
-    def _parse_denylist(cls, charm: CharmBase) -> list[FirewallEntry]:
-        """Read charm denylist configuration and parse it into firewall deny entries.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            The firewall deny entries.
-        """
-        denylist_str = cast(str, charm.config.get(DENYLIST_CONFIG_NAME, ""))
-
-        entry_list = [entry.strip() for entry in denylist_str.split(",")]
-        denylist = [FirewallEntry.decode(entry) for entry in entry_list if entry]
-        return denylist
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -405,7 +336,7 @@ class CharmConfig(BaseModel):
         return dockerhub_mirror
 
     @classmethod
-    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML | None:
+    def _parse_openstack_clouds_config(cls, charm: CharmBase) -> OpenStackCloudsYAML:
         """Parse and validate openstack clouds yaml config value.
 
         Args:
@@ -421,7 +352,7 @@ class CharmConfig(BaseModel):
             str, charm.config.get(OPENSTACK_CLOUDS_YAML_CONFIG_NAME)
         )
         if not openstack_clouds_yaml_str:
-            return None
+            raise CharmConfigInvalidError("No openstack_clouds_yaml")
 
         try:
             openstack_clouds_yaml: OpenStackCloudsYAML = yaml.safe_load(
@@ -489,7 +420,6 @@ class CharmConfig(BaseModel):
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} config must be int"
             ) from err
 
-        denylist = cls._parse_denylist(charm)
         dockerhub_mirror = cast(str, charm.config.get(DOCKERHUB_MIRROR_CONFIG_NAME, "")) or None
         openstack_clouds_yaml = cls._parse_openstack_clouds_config(charm)
 
@@ -510,7 +440,6 @@ class CharmConfig(BaseModel):
 
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
-            denylist=denylist,
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
@@ -519,44 +448,6 @@ class CharmConfig(BaseModel):
             repo_policy_compliance=repo_policy_compliance,
             token=github_config.token,
         )
-
-
-LTS_IMAGE_VERSION_TAG_MAP = {"22.04": "jammy", "24.04": "noble"}
-
-
-class BaseImage(str, Enum):
-    """The ubuntu OS base image to build and deploy runners on.
-
-    Attributes:
-        JAMMY: The jammy ubuntu LTS image.
-        NOBLE: The noble ubuntu LTS image.
-    """
-
-    JAMMY = "jammy"
-    NOBLE = "noble"
-
-    def __str__(self) -> str:
-        """Interpolate to string value.
-
-        Returns:
-            The enum string value.
-        """
-        return self.value
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "BaseImage":
-        """Retrieve the base image tag from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            The base image configuration of the charm.
-        """
-        image_name = cast(str, charm.config.get(BASE_IMAGE_CONFIG_NAME, "jammy")).lower().strip()
-        if image_name in LTS_IMAGE_VERSION_TAG_MAP:
-            return cls(LTS_IMAGE_VERSION_TAG_MAP[image_name])
-        return cls(image_name)
 
 
 class OpenstackImage(BaseModel):
@@ -597,18 +488,35 @@ class OpenstackImage(BaseModel):
         return OpenstackImage(id=None, tags=None)
 
 
+@dataclasses.dataclass
+class FlavorLabel:
+    """Combination of flavor and label.
+
+    Attributes:
+        flavor: Flavor for the VM.
+        label: Label associated with the flavor.
+    """
+
+    flavor: str
+    # Remove the None when several FlavorLabel combinations are supported.
+    label: str | None
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
     Attributes:
-        virtual_machines: Number of virtual machine-based runner to spawn.
-        openstack_flavor: flavor on openstack to use for virtual machines.
+        base_virtual_machines: Number of virtual machine-based runners to spawn.
+        max_total_virtual_machines: Maximum possible machine number to spawn for the unit in
+           for reactive processes.
+        flavor_label_combinations: list of FlavorLabel.
         openstack_network: Network on openstack to use for virtual machines.
         openstack_image: Openstack image to use for virtual machines.
     """
 
-    virtual_machines: int
-    openstack_flavor: str
+    base_virtual_machines: int
+    max_total_virtual_machines: int
+    flavor_label_combinations: list[FlavorLabel]
     openstack_network: str
     openstack_image: OpenstackImage | None
 
@@ -626,148 +534,39 @@ class OpenstackRunnerConfig(BaseModel):
         Returns:
             Openstack runner config of the charm.
         """
-        try:
-            virtual_machines = int(charm.config["virtual-machines"])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                "The virtual-machines configuration must be int"
-            ) from err
+        base_virtual_machines = int(charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME])
+        max_total_virtual_machines = int(charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME])
 
-        openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
+        # Remove these conditions when "virtual-machines" config option is deleted.
+        virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+        if base_virtual_machines == 0 and max_total_virtual_machines == 0:
+            base_virtual_machines = virtual_machines
+            max_total_virtual_machines = virtual_machines
+        elif virtual_machines != 0:
+            raise CharmConfigInvalidError(
+                "Invalid configuration. "
+                "Both deprecated and new configuration are set for the number of machines to spawn."
+            )
+
+        flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
+        flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
+        if len(flavor_label_combinations) == 0:
+            flavor = cast(str, charm.config[OPENSTACK_FLAVOR_CONFIG_NAME])
+            if not flavor:
+                raise CharmConfigInvalidError("OpenStack flavor not specified")
+            flavor_label_combinations = [FlavorLabel(flavor, None)]
+        elif len(flavor_label_combinations) > 1:
+            raise CharmConfigInvalidError("Several flavor-label combinations not yet implemented")
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
         openstack_image = OpenstackImage.from_charm(charm)
 
         return cls(
-            virtual_machines=virtual_machines,
-            openstack_flavor=cast(str, openstack_flavor),
+            base_virtual_machines=base_virtual_machines,
+            max_total_virtual_machines=max_total_virtual_machines,
+            flavor_label_combinations=flavor_label_combinations,
             openstack_network=cast(str, openstack_network),
             openstack_image=openstack_image,
         )
-
-
-class LocalLxdRunnerConfig(BaseModel):
-    """Runner configurations for local LXD instances.
-
-    Attributes:
-        base_image: The ubuntu base image to run the runner virtual machines on.
-        virtual_machines: Number of virtual machine-based runner to spawn.
-        virtual_machine_resources: Hardware resource used by one virtual machine for a runner.
-        runner_storage: Storage to be used as disk for the runner.
-    """
-
-    base_image: BaseImage
-    virtual_machines: int
-    virtual_machine_resources: VirtualMachineResources
-    runner_storage: RunnerStorage
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "LocalLxdRunnerConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: if an invalid runner charm config has been set on the charm.
-
-        Returns:
-            Local LXD runner config of the charm.
-        """
-        try:
-            base_image = BaseImage.from_charm(charm)
-        except ValueError as err:
-            raise CharmConfigInvalidError("Invalid base image") from err
-
-        try:
-            runner_storage = RunnerStorage(charm.config[RUNNER_STORAGE_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"Invalid {RUNNER_STORAGE_CONFIG_NAME} configuration"
-            ) from err
-        except CharmConfigInvalidError as exc:
-            raise CharmConfigInvalidError(f"Invalid runner storage config, {str(exc)}") from exc
-
-        try:
-            virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration must be int"
-            ) from err
-
-        try:
-            cpu = int(charm.config[VM_CPU_CONFIG_NAME])
-        except ValueError as err:
-            raise CharmConfigInvalidError(f"Invalid {VM_CPU_CONFIG_NAME} configuration") from err
-
-        virtual_machine_resources = VirtualMachineResources(
-            cpu,
-            cast(str, charm.config[VM_MEMORY_CONFIG_NAME]),
-            cast(str, charm.config[VM_DISK_CONFIG_NAME]),
-        )
-
-        return cls(
-            base_image=base_image,
-            virtual_machines=virtual_machines,
-            virtual_machine_resources=virtual_machine_resources,
-            runner_storage=runner_storage,
-        )
-
-    @validator("virtual_machines")
-    @classmethod
-    def check_virtual_machines(cls, virtual_machines: int) -> int:
-        """Validate the virtual machines configuration value.
-
-        Args:
-            virtual_machines: The virtual machines value to validate.
-
-        Raises:
-            ValueError: if a negative integer was passed.
-
-        Returns:
-            Validated virtual_machines value.
-        """
-        if virtual_machines < 0:
-            raise ValueError(
-                f"The {VIRTUAL_MACHINES_CONFIG_NAME} configuration needs to be greater or equal "
-                "to 0"
-            )
-
-        return virtual_machines
-
-    @validator("virtual_machine_resources")
-    @classmethod
-    def check_virtual_machine_resources(
-        cls, vm_resources: VirtualMachineResources
-    ) -> VirtualMachineResources:
-        """Validate the virtual_machine_resources field values.
-
-        Args:
-            vm_resources: the virtual_machine_resources value to validate.
-
-        Raises:
-            ValueError: if an invalid number of cpu was given or invalid memory/disk size was
-                given.
-
-        Returns:
-            The validated virtual_machine_resources value.
-        """
-        if vm_resources.cpu < 1:
-            raise ValueError(f"The {VM_CPU_CONFIG_NAME} configuration needs to be greater than 0")
-        if not _valid_storage_size_str(vm_resources.memory):
-            raise ValueError(
-                f"Invalid format for {VM_MEMORY_CONFIG_NAME} configuration, must be int with unit "
-                "(e.g. MiB, GiB)"
-            )
-        if not _valid_storage_size_str(vm_resources.disk):
-            raise ValueError(
-                f"Invalid format for {VM_DISK_CONFIG_NAME} configuration, must be int with unit "
-                "(e.g., MiB, GiB)"
-            )
-
-        return vm_resources
-
-
-RunnerConfig = OpenstackRunnerConfig | LocalLxdRunnerConfig
 
 
 class ProxyConfig(BaseModel):
@@ -1000,18 +799,6 @@ class ReactiveConfig(BaseModel):
         )
 
 
-class ImmutableConfigChangedError(Exception):
-    """Represents an error when changing immutable charm state."""
-
-    def __init__(self, msg: str):
-        """Initialize a new instance of the ImmutableConfigChangedError exception.
-
-        Args:
-            msg: Explanation of the error.
-        """
-        self.msg = msg
-
-
 # Charm State is a list of all the configurations and states of the charm and
 # has therefore a lot of attributes.
 @dataclasses.dataclass(frozen=True)
@@ -1023,7 +810,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
-        instance_type: The type of instances, e.g., local lxd, openstack.
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
@@ -1032,9 +818,8 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
-    instance_type: InstanceType
     charm_config: CharmConfig
-    runner_config: RunnerConfig
+    runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
@@ -1057,56 +842,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         ]
         json_data = json.dumps(state_dict, ensure_ascii=False)
         CHARM_STATE_PATH.write_text(json_data, encoding="utf-8")
-
-    @classmethod
-    def _check_immutable_config_change(
-        cls, runner_storage: RunnerStorage, base_image: BaseImage
-    ) -> None:
-        """Ensure immutable config has not changed.
-
-        Args:
-            runner_storage: The current runner_storage configuration.
-            base_image: The current base_image configuration.
-
-        Raises:
-            ImmutableConfigChangedError: If an immutable configuration has changed.
-        """
-        if not CHARM_STATE_PATH.exists():
-            return
-
-        json_data = CHARM_STATE_PATH.read_text(encoding="utf-8")
-        prev_state = json.loads(json_data)
-
-        cls._log_prev_state(prev_state)
-
-        try:
-            if prev_state["runner_config"]["runner_storage"] != runner_storage:
-                logger.error(
-                    "Storage option changed from %s to %s, blocking the charm",
-                    prev_state["runner_config"]["runner_storage"],
-                    runner_storage,
-                )
-                raise ImmutableConfigChangedError(
-                    msg=(
-                        "runner-storage config cannot be changed after deployment, "
-                        "redeploy if needed"
-                    )
-                )
-        except KeyError as exc:
-            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
-
-        try:
-            if prev_state["runner_config"]["base_image"] != base_image.value:
-                logger.error(
-                    "Base image option changed from %s to %s, blocking the charm",
-                    prev_state["runner_config"]["base_image"],
-                    runner_storage,
-                )
-                raise ImmutableConfigChangedError(
-                    msg="base-image config cannot be changed after deployment, redeploy if needed"
-                )
-        except KeyError as exc:
-            logger.info("Key %s not found, this will be updated to current config.", exc.args[0])
 
     @classmethod
     def _log_prev_state(cls, prev_state_dict: dict) -> None:
@@ -1163,21 +898,15 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            runner_config: RunnerConfig
-            if charm_config.openstack_clouds_yaml is not None:
-                instance_type = InstanceType.OPENSTACK
-                runner_config = OpenstackRunnerConfig.from_charm(charm)
-            else:
-                instance_type = InstanceType.LOCAL_LXD
-                runner_config = LocalLxdRunnerConfig.from_charm(charm)
-                cls._check_immutable_config_change(
-                    runner_storage=runner_config.runner_storage,
-                    base_image=runner_config.base_image,
-                )
+            runner_config = OpenstackRunnerConfig.from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
-        except ImmutableConfigChangedError as exc:
-            raise CharmConfigInvalidError(exc.msg) from exc
+
+        # Remove this code when when several FlavorLabel combinations are supported.
+        # There should be one.
+        flavor_label_combination = runner_config.flavor_label_combinations[0]
+        if flavor_label_combination.label:
+            charm_config.labels = (flavor_label_combination.label,) + charm_config.labels
 
         try:
             arch = _get_supported_arch()
@@ -1193,10 +922,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
 
         reactive_config = ReactiveConfig.from_database(database)
 
-        if instance_type == InstanceType.LOCAL_LXD and reactive_config:
-            logger.error(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
-            raise CharmConfigInvalidError(REACTIVE_MODE_NOT_SUPPORTED_WITH_LXD_ERR_MSG)
-
         state = cls(
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
@@ -1205,9 +930,32 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             runner_config=runner_config,
             reactive_config=reactive_config,
             ssh_debug_connections=ssh_debug_connections,
-            instance_type=instance_type,
         )
 
         cls._store_state(state)
 
         return state
+
+
+def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
+    """Parse flavor-label config option."""
+    combinations = []
+
+    split_flavor_list = flavor_label_config.split(",")
+
+    # An input like "" will get here.
+    if len(split_flavor_list) == 1 and not split_flavor_list[0]:
+        return []
+
+    for flavor_label in flavor_label_config.split(","):
+        flavor_label_stripped = flavor_label.strip()
+        try:
+            flavor, label = flavor_label_stripped.split(":")
+            if not flavor:
+                raise CharmConfigInvalidError("Invalid empty flavor in flavor-label configuration")
+            if not label:
+                raise CharmConfigInvalidError("Invalid empty label in flavor-label configuration")
+            combinations.append(FlavorLabel(flavor, label))
+        except ValueError as exc:
+            raise CharmConfigInvalidError("Invalid flavor-label configuration") from exc
+    return combinations

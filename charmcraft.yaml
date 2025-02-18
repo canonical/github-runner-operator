@@ -5,22 +5,13 @@ type: charm
 parts:
   charm:
     charm-python-packages:
-      - setuptools  # for jinja2
+      - setuptools>=75.8.0  # for jinja2
     build-packages:
       - git  # for installing git source of pylxd 
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
       - rust-all  # for cryptography
       - pkg-config # for cryptography
-  scripts:
-    plugin: dump
-    source: scripts
-    organize:
-      build-lxd-image.sh: scripts/build-lxd-image.sh
-      reactive_runner.py: scripts/reactive_runner.py
-      repo_policy_compliance_service.py: scripts/repo_policy_compliance_service.py
-    prime:
-      - scripts/
 bases:
   - build-on:
     - name: "ubuntu"
@@ -32,13 +23,3 @@ bases:
       channel: "22.04"
       architectures:
       - amd64
-  - build-on:
-    - name: "ubuntu"
-      channel: "22.04"
-      architectures:
-      - arm64
-    run-on:
-    - name: "ubuntu"
-      channel: "22.04"
-      architectures:
-      - arm64

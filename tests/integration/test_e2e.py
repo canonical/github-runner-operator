@@ -9,19 +9,18 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import InstanceType
 from tests.integration.helpers.common import (
     DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
@@ -39,24 +38,17 @@ async def test_e2e_workflow(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    instance_type: InstanceType,
 ):
     """
     arrange: An app connected to an OpenStack cloud with no runners.
     act: Run e2e test workflow.
     assert: No exception thrown.
     """
-    virt_type: str
-    if instance_type == InstanceType.OPENSTACK:
-        virt_type = "openstack"
-    else:
-        virt_type = "lxd"
-
     await dispatch_workflow(
         app=app,
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME,
-        dispatch_input={"runner-tag": app.name, "runner-virt-type": virt_type},
+        dispatch_input={"runner-tag": app.name},
     )
