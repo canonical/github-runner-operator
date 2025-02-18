@@ -102,8 +102,8 @@ def test_create_application_configuration():
         ),
         service_config=SupportServiceConfig(
             proxy_config=ProxyConfig(
-                http="http://proxy.example.com:3128",
-                https="http://proxy.example.com:3128",
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
                 use_aproxy=False,
             ),
