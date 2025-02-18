@@ -63,7 +63,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         ssh_debug_connections=state.ssh_debug_connections,
         repo_policy_compliance=state.charm_config.repo_policy_compliance,
     )
-    # Currently, only one image and flavor is supported.
+    # Currently, only one image and flavor is supported. This code
+    # will be refactore when more than one combination is suported.
     openstack_image = state.runner_config.openstack_image
     image_labels = []
     if openstack_image and openstack_image.id:
