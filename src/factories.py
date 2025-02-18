@@ -146,7 +146,7 @@ def create_openstack_configuration(state: CharmState, unit_name: str) -> OpenSta
 # This function will disappear in the next PR.
 def create_runner_scaler(  # pylint: disable=too-many-locals
     state: CharmState, app_name: str, unit_name: str
-) -> OpenStackConfiguration:
+) -> RunnerScaler:
     """Get runner scaler instance for scaling runners.
 
     Args:
