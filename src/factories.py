@@ -63,10 +63,26 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         ssh_debug_connections=state.ssh_debug_connections,
         repo_policy_compliance=state.charm_config.repo_policy_compliance,
     )
-    # Currently, only one image and flavor is supported. This code
-    # will be refactore when more than one combination is suported.
+    non_reactive_configuration = _get_non_reactive_configuration(state)
+    reactive_configuration = _get_reactive_configuration(state, app_name)
+    return ApplicationConfiguration(
+        name=app_name,
+        extra_labels=extra_labels,
+        github_config=github_configuration,
+        service_config=service_config,
+        non_reactive_configuration=non_reactive_configuration,
+        reactive_configuration=reactive_configuration,
+    )
+
+
+def _get_non_reactive_configuration(state: CharmState) -> NonReactiveConfiguration:
+    """Get NonReactiveConfiguration from CharmState.
+
+    Currently only one image and one flavor is supported.
+    """
     openstack_image = state.runner_config.openstack_image
     image_labels = []
+    combinations = []
     if openstack_image and openstack_image.id:
         if openstack_image.tags:
             image_labels = openstack_image.tags
@@ -89,29 +105,43 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
                 base_virtual_machines=state.runner_config.base_virtual_machines,
             )
         ]
+    return NonReactiveConfiguration(combinations=combinations)
+
+
+def _get_reactive_configuration(state: CharmState, app_name: str) -> ReactiveConfiguration:
+    """Get ReactiveConfiguration from CharmState and app_name.
+
+    Currently only one image and one flavor is supported.
+    """
+    if not state.reactive_config:
+        return None
+    reactive_config = state.reactive_config
+    openstack_image = state.runner_config.openstack_image
+    image_labels = []
+    images = []
+    flavors = []
+    if openstack_image and openstack_image.id:
+        if openstack_image.tags:
+            image_labels = openstack_image.tags
+        image = Image(
+            name=openstack_image.id,
+            labels=image_labels,
+        )
+        flavor = Flavor(
+            name=state.runner_config.flavor_label_combinations[0].flavor,
+            labels=(
+                []
+                if not state.runner_config.flavor_label_combinations[0].label
+                else [state.runner_config.flavor_label_combinations[0].label]
+            ),
+        )
         images = [image]
         flavors = [flavor]
-    else:
-        combinations = []
-        images = []
-        flavors = []
-    non_reactive_configuration = NonReactiveConfiguration(combinations=combinations)
-
-    reactive_configuration = None
-    if reactive_config := state.reactive_config:
-        reactive_configuration = ReactiveConfiguration(
-            queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=app_name),
-            max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
-            images=images,
-            flavors=flavors,
-        )
-    return ApplicationConfiguration(
-        name=app_name,
-        extra_labels=extra_labels,
-        github_config=github_configuration,
-        service_config=service_config,
-        non_reactive_configuration=non_reactive_configuration,
-        reactive_configuration=reactive_configuration,
+    return ReactiveConfiguration(
+        queue=QueueConfig(mongodb_uri=reactive_config.mq_uri, queue_name=app_name),
+        max_total_virtual_machines=state.runner_config.max_total_virtual_machines,
+        images=images,
+        flavors=flavors,
     )
 
 
