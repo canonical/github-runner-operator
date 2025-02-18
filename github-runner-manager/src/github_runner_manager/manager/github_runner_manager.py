@@ -54,7 +54,7 @@ class GitHubRunnerManager:  # pragma: no cover
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
-            github_configuration: TODO
+            github_configuration: GitHub configuration information.
         """
         self._prefix = prefix
         self._path = github_configuration.path

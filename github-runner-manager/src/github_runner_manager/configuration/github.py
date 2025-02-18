@@ -9,11 +9,11 @@ from typing import TypeAlias
 
 @dataclasses.dataclass
 class GitHubConfiguration:
-    """TODO.
+    """GitHub configuration for the application.
 
     Attributes:
-       token: TODO
-       path: TODO
+       token: GitHub Token.
+       path: Information of the repository or organization.
     """
 
     token: str

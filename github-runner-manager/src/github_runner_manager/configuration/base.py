@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""TODO Module containing Configuration."""
+"""Base configuration for the Application."""
 
 from dataclasses import dataclass
 from typing import Optional
@@ -13,15 +13,15 @@ from . import github
 
 @dataclass
 class ApplicationConfiguration:
-    """TODO.
+    """Main entry point for the Application Configuration.
 
     Attributes:
-        name: TODO
-        extra_labels: TODO
-        github_config: TODO
-        service_config: TODO
-        non_reactive_configuration: TODO
-        reactive_configuration: TODO
+        name: Name to identify the manager. Used for metrics.
+        extra_labels: Extra labels to add to the runner.
+        github_config: GitHub configuration.
+        service_config: The configuration for supporting services.
+        non_reactive_configuration: Configuration for non-reactive mode.
+        reactive_configuration: Configuration for reactive mode.
     """
 
     name: str
@@ -142,10 +142,10 @@ class RepoPolicyComplianceConfig(BaseModel):
 
 @dataclass
 class NonReactiveConfiguration:
-    """TODO.
+    """Configuration for non-reactive mode.
 
     Attributes:
-        combinations: TODO
+        combinations: Different combinations of flavor and image to spawn in non-reactive mode.
     """
 
     combinations: "list[NonReactiveCombination]"
@@ -153,12 +153,12 @@ class NonReactiveConfiguration:
 
 @dataclass
 class NonReactiveCombination:
-    """TODO.
+    """Combination of image and flavor that the application can spawn in non-reactive mode.
 
     Attributes:
-        image: TODO
-        flavor: TODO
-        base_virtual_machines: TODO
+        image: Information about the image to spawn.
+        flavor: Information about the flavor to spawn.
+        base_virtual_machines: Number of instances to spawn for this combination.
     """
 
     image: "Image"
@@ -168,13 +168,15 @@ class NonReactiveCombination:
 
 @dataclass
 class ReactiveConfiguration:
-    """TODO.
+    """Configuration for reactive mode.
 
     Attributes:
-        queue: TODO
-        max_total_virtual_machines: TODO
-        images: TODO
-        flavors: TODO
+        queue: Queue to listen for reactive requests to spawn runners.
+        max_total_virtual_machines: Maximum number of instances to spawn by the application.
+           This value will be only checked in reactive mode, and will include all the instances
+           (reactive and non-reactive) spawned by the application.
+        images: List of valid images to spawn in reactive mode.
+        flavors: List of valid flavors to spawn in reactive mode.
     """
 
     queue: "QueueConfig"
@@ -196,11 +198,11 @@ class QueueConfig(BaseModel):
 
 
 class Image(BaseModel):
-    """TODO.
+    """Information for an image with its associated labels.
 
     Attributes:
-        name: TODO
-        labels: TODO
+        name: Image name or id.
+        labels: List of labels associated to the image.
     """
 
     name: str
@@ -208,11 +210,11 @@ class Image(BaseModel):
 
 
 class Flavor(BaseModel):
-    """TODO.
+    """Information for a flavor with its associated labels.
 
     Attributes:
-        name: TODO
-        labels: TODO
+        name: Flavor name of id.
+        labels: List of labels associated to the flavor.
     """
 
     name: str

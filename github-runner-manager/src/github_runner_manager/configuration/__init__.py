@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""TODO Module containing Configuration."""
+"""Module containing application configuration for the github_runner_manager library."""
 
 from .base import ApplicationConfiguration  # noqa: F401
 from .base import Flavor  # noqa: F401

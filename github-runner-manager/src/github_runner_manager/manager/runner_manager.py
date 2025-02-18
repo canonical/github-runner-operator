@@ -85,7 +85,7 @@ class RunnerManagerConfig:
 
     Attributes:
         name: A name to identify this manager.
-        github_configuration: TODO
+        github_configuration: GitHub configuration information.
     """
 
     name: str
