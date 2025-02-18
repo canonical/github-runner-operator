@@ -8,12 +8,12 @@ import dataclasses
 
 @dataclasses.dataclass
 class OpenStackConfiguration:
-    """TODO.
+    """OpenStack configuration.
 
     Attributes:
-        vm_prefix: TODO
-        network: TODO
-        credentials: TODO
+        vm_prefix: Prefix to use for the instances managed by this application.
+        network: Network to use to spawn instances.
+        credentials: OpenStack credentials.
     """
 
     vm_prefix: str
@@ -23,16 +23,16 @@ class OpenStackConfiguration:
 
 @dataclasses.dataclass
 class OpenStackCredentials:
-    """TODO.
+    """OpenStack credentials.
 
     Attributes:
-       auth_url: TODO
-       project_name: TODO
-       username: TODO
-       password: TODO
-       user_domain_name: TODO
-       project_domain_name: TODO
-       region_name: TODO
+       auth_url: The auth url of the OpenStack host.
+       project_name: The project name to log in to.
+       username: The username to login with.
+       password: The password to login with.
+       user_domain_name: The domain name containing the user.
+       project_domain_name: The domain name containing the project.
+       region_name: The region.
     """
 
     auth_url: str

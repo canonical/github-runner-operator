@@ -43,14 +43,14 @@ logger = logging.getLogger(__name__)
 
 
 def create_application_configuration(state: CharmState, app_name: str) -> ApplicationConfiguration:
-    """TODO.
+    """Create the ApplicationConfiguration from the CharmState.
 
     Args:
-        state: TODO
-        app_name: TODO
+        state: The CharmState.
+        app_name: Application name to pass to ApplicationConfiguration.
 
     Returns:
-        TODO
+        The created ApplicationConfiguration
     """
     extra_labels = list(state.charm_config.labels)
     github_configuration = GitHubConfiguration(
@@ -63,6 +63,7 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         ssh_debug_connections=state.ssh_debug_connections,
         repo_policy_compliance=state.charm_config.repo_policy_compliance,
     )
+    # Currently, only one image and flavor is supported.
     openstack_image = state.runner_config.openstack_image
     image_labels = []
     if openstack_image and openstack_image.id:
@@ -114,14 +115,14 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
 
 
 def create_openstack_configuration(state: CharmState, unit_name: str) -> OpenStackConfiguration:
-    """TODO.
+    """Create the OpenStack configuration.
 
     Args:
-        state: TODO
-        unit_name: TODO
+        state: The CharmState.
+        unit_name: To set a prefix for the instances to create.
 
     Returns:
-        TODO
+        The OpenStackConfiguration.
     """
     clouds = list(state.charm_config.openstack_clouds_yaml["clouds"].keys())
     if len(clouds) > 1:
@@ -150,9 +151,9 @@ def create_runner_scaler(  # pylint: disable=too-many-locals
     """Get runner scaler instance for scaling runners.
 
     Args:
-        state: Charm state.
-        app_name: TODO.
-        unit_name: TODO.
+        state: The CharmState.
+        app_name: Name of the application.
+        unit_name: Unit name for the prefix for instances.
 
     Returns:
         An instance of RunnerScaler.

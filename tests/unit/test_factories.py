@@ -45,6 +45,7 @@ import factories
 
 @pytest.fixture
 def complete_charm_state():
+    """Returns a fixture with a fully populated CharmState."""
     return charm_state.CharmState(
         arch="arm64",
         is_metrics_logging_available=False,
@@ -111,7 +112,11 @@ def complete_charm_state():
 
 
 def test_create_application_configuration(complete_charm_state: charm_state.CharmState):
-    """TODO VERY GENERIC."""
+    """
+    arrange: Prepare a fully populated CharmState.
+    act: Call create_application_configuration.
+    assert: The ApplicationConfiguration is correctly populated.
+    """
     state = complete_charm_state
 
     app_configuration = factories.create_application_configuration(state, "app_name")
@@ -181,7 +186,11 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
 
 
 def test_create_openstack_configuration(complete_charm_state: charm_state.CharmState):
-    """TODO VERY GENERIC."""
+    """
+    arrange: Prepare a fully populated CharmState.
+    act: Call create_openstack_configuration.
+    assert: The OpenStackConfiguration is correctly populated.
+    """
     state = complete_charm_state
 
     openstack_configuration = factories.create_openstack_configuration(state, "unit_name")
@@ -202,7 +211,11 @@ def test_create_openstack_configuration(complete_charm_state: charm_state.CharmS
 
 
 def test_create_runner_scaler(complete_charm_state: charm_state.CharmState, monkeypatch):
-    """TODO VERY GENERIC. TEMPORAL UNTIL THIS GETS DELETED."""
+    """
+    arrange: Prepare a fully populated CharmState.
+    act: Call create_runner_scaller.
+    assert: The RunnerScaler was created with the expected configuration.
+    """
     state = complete_charm_state
 
     monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", getpass.getuser())
