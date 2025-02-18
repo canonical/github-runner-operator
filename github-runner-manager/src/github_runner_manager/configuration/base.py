@@ -16,6 +16,7 @@ class ApplicationConfiguration:
     """TODO.
 
     Attributes:
+        name: TODO
         extra_labels: TODO
         github_config: TODO
         service_config: TODO
@@ -23,6 +24,7 @@ class ApplicationConfiguration:
         reactive_configuration: TODO
     """
 
+    name: str
     extra_labels: list[str]
     github_config: github.GitHubConfiguration
     service_config: "SupportServiceConfig"
