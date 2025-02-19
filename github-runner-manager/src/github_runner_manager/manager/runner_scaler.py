@@ -8,21 +8,37 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
+from github_runner_manager.configuration import (
+    ApplicationConfiguration,
+)
+from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,
     IssueMetricEventError,
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import HealthState
+from github_runner_manager.manager.cloud_runner_manager import (
+    GitHubRunnerConfig,
+    HealthState,
+)
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
     RunnerInstance,
     RunnerManager,
+    RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+)
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -87,8 +103,81 @@ class _ReconcileMetricData:
 class RunnerScaler:
     """Manage the reconcile of runners."""
 
+    @classmethod
+    def build(
+        cls,
+        application_configuration: ApplicationConfiguration,
+        openstack_configuration: OpenStackConfiguration,
+    ) -> "RunnerScaler":
+        """TODO.
+
+        Args:
+            application_configuration: TODO
+            openstack_configuration: TODO
+
+        Returns:
+            TODO.
+        """
+        labels = application_configuration.extra_labels
+        server_config = None
+        if combinations := application_configuration.non_reactive_configuration.combinations:
+            combination = combinations[0]
+            if combination.image.labels:
+                labels += combination.image.labels
+            if combination.flavor.labels:
+                labels += combination.flavor.labels
+            server_config = OpenStackServerConfig(
+                image=combination.image.name,
+                # Pending to add support for more flavor label combinations
+                flavor=combination.flavor.name,
+                network=openstack_configuration.network,
+            )
+
+        runner_config = GitHubRunnerConfig(
+            github_path=application_configuration.github_config.path, labels=labels
+        )
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            # The prefix is set to f"{application_name}-{unit number}"
+            prefix=openstack_configuration.vm_prefix,
+            credentials=openstack_configuration.credentials,
+            server_config=server_config,
+            runner_config=runner_config,
+            service_config=application_configuration.service_config,
+        )
+        openstack_runner_manager = OpenStackRunnerManager(
+            config=openstack_runner_manager_config,
+        )
+        runner_manager_config = RunnerManagerConfig(
+            name=application_configuration.name,
+            github_configuration=application_configuration.github_config,
+        )
+
+        runner_manager = RunnerManager(
+            cloud_runner_manager=openstack_runner_manager,
+            config=runner_manager_config,
+        )
+
+        reactive_runner_config = None
+        if reactive_config := application_configuration.reactive_configuration:
+            # The charm is not able to determine which architecture the runner is running on,
+            # so we add all architectures to the supported labels.
+            supported_labels = set(labels) | GITHUB_SELF_HOSTED_ARCH_LABELS
+            reactive_runner_config = ReactiveProcessConfig(
+                queue=reactive_config.queue,
+                runner_manager=runner_manager_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=application_configuration.github_config.token,
+                supported_labels=supported_labels,
+            )
+        return cls(
+            runner_manager=runner_manager,
+            reactive_process_config=reactive_runner_config,
+        )
+
     def __init__(
-        self, runner_manager: RunnerManager, reactive_process_config: ReactiveProcessConfig | None
+        self,
+        runner_manager: RunnerManager,
+        reactive_process_config: ReactiveProcessConfig | None,
     ):
         """Construct the object.
 

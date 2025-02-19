@@ -2,14 +2,40 @@
 # See LICENSE file for licensing details.
 
 
+import getpass
+import grp
+import os
 from typing import Iterable
 from unittest.mock import MagicMock
 
 import pytest
+from pydantic.networks import IPv4Address
 
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath, GitHubRepo
+from github_runner_manager.configuration import (
+    ApplicationConfiguration,
+    Flavor,
+    Image,
+    NonReactiveCombination,
+    NonReactiveConfiguration,
+    ProxyConfig,
+    QueueConfig,
+    ReactiveConfiguration,
+    RepoPolicyComplianceConfig,
+    SSHDebugConnection,
+    SupportServiceConfig,
+)
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+)
 from github_runner_manager.errors import CloudError, ReconcileError
-from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerState,
+    GitHubRunnerConfig,
+    InstanceId,
+)
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -18,6 +44,15 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+    OpenStackCredentials,
+)
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
     MockGitHubRunnerManager,
@@ -92,8 +127,87 @@ def runner_manager_fixture(
     return runner_manager
 
 
+@pytest.fixture(scope="function", name="application_configuration")
+def application_configuration_fixture() -> ApplicationConfiguration:
+    """TODO."""
+    return ApplicationConfiguration(
+        name="app_name",
+        extra_labels=["label1", "label2"],
+        github_config=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ),
+        service_config=SupportServiceConfig(
+            proxy_config=ProxyConfig(
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
+                no_proxy="127.0.0.1",
+                use_aproxy=False,
+            ),
+            dockerhub_mirror="https://docker.example.com",
+            ssh_debug_connections=[
+                SSHDebugConnection(
+                    host=IPv4Address("10.10.10.10"),
+                    port=3000,
+                    rsa_fingerprint="SHA256:rsa",
+                    ed25519_fingerprint="SHA256:ed25519",
+                )
+            ],
+            repo_policy_compliance=RepoPolicyComplianceConfig(
+                token="token",
+                url="https://compliance.example.com",
+            ),
+        ),
+        non_reactive_configuration=NonReactiveConfiguration(
+            combinations=[
+                NonReactiveCombination(
+                    image=Image(
+                        name="image_id",
+                        labels=["arm64", "noble"],
+                    ),
+                    flavor=Flavor(
+                        name="flavor",
+                        labels=["flavorlabel"],
+                    ),
+                    base_virtual_machines=1,
+                )
+            ]
+        ),
+        reactive_configuration=ReactiveConfiguration(
+            queue=QueueConfig(
+                mongodb_uri="mongodb://user:password@localhost:27017",
+                queue_name="app_name",
+            ),
+            max_total_virtual_machines=2,
+            images=[
+                Image(name="image_id", labels=["arm64", "noble"]),
+            ],
+            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
+        ),
+    )
+
+
+@pytest.fixture(scope="function", name="openstack_configuration")
+def openstack_configuration_fixture() -> OpenStackConfiguration:
+    """TODO."""
+    return OpenStackConfiguration(
+        vm_prefix="unit_name",
+        network="network",
+        credentials=OpenStackCredentials(
+            auth_url="auth_url",
+            project_name="project_name",
+            username="username",
+            password="password",
+            user_domain_name="user_domain_name",
+            project_domain_name="project_domain_name",
+            region_name="region",
+        ),
+    )
+
+
 @pytest.fixture(scope="function", name="runner_scaler")
-def runner_scaler_fixture(runner_manager: RunnerManager) -> RunnerScaler:
+def runner_scaler_fixture(
+    runner_manager: RunnerManager,
+) -> RunnerScaler:
     return RunnerScaler(runner_manager, None)
 
 
@@ -146,6 +260,127 @@ def assert_runner_info(
     assert len(info.runners) == online
     assert isinstance(info.busy_runners, tuple)
     assert len(info.busy_runners) == busy
+
+
+def test_build_runner_scaler(
+    monkeypatch: pytest.MonkeyPatch,
+    application_configuration: ApplicationConfiguration,
+    openstack_configuration: OpenStackConfiguration,
+):
+    """
+    arrange: Given ApplicationConfiguration and OpenStackConfiguration.
+    act: Call RunnerScaler.build
+    assert: The RunnerScaler was created with the expected configuration.
+    """
+    monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", getpass.getuser())
+    monkeypatch.setattr(
+        "github_runner_manager.constants.RUNNER_MANAGER_GROUP", grp.getgrgid(os.getgid())
+    )
+
+    runner_scaler = RunnerScaler.build(application_configuration, openstack_configuration)
+    assert runner_scaler
+    # A few comprobations on key data
+    # TODO pending to refactor, too invasive.
+    assert runner_scaler._manager._config == RunnerManagerConfig(
+        name="app_name",
+        github_configuration=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ),
+    )
+    assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
+        prefix="unit_name",
+        credentials=OpenStackCredentials(
+            auth_url="auth_url",
+            project_name="project_name",
+            username="username",
+            password="password",
+            user_domain_name="user_domain_name",
+            project_domain_name="project_domain_name",
+            region_name="region",
+        ),
+        server_config=OpenStackServerConfig(image="image_id", flavor="flavor", network="network"),
+        runner_config=GitHubRunnerConfig(
+            github_path=GitHubOrg(org="canonical", group="group"),
+            labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
+        ),
+        service_config=SupportServiceConfig(
+            proxy_config=ProxyConfig(
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
+                no_proxy="127.0.0.1",
+                use_aproxy=False,
+            ),
+            dockerhub_mirror="https://docker.example.com",
+            ssh_debug_connections=[
+                SSHDebugConnection(
+                    host=IPv4Address("10.10.10.10"),
+                    port=3000,
+                    rsa_fingerprint="SHA256:rsa",
+                    ed25519_fingerprint="SHA256:ed25519",
+                )
+            ],
+            repo_policy_compliance=RepoPolicyComplianceConfig(
+                token="token",
+                url="https://compliance.example.com",
+            ),
+        ),
+    )
+    reactive_process_config = runner_scaler._reactive_config
+    assert reactive_process_config
+    assert reactive_process_config == ReactiveProcessConfig(
+        queue=QueueConfig(
+            mongodb_uri="mongodb://user:password@localhost:27017",
+            queue_name="app_name",
+        ),
+        runner_manager=RunnerManagerConfig(
+            name="app_name",
+            github_configuration=GitHubConfiguration(
+                token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            ),
+        ),
+        cloud_runner_manager=OpenStackRunnerManagerConfig(
+            prefix="unit_name",
+            credentials=OpenStackCredentials(
+                auth_url="auth_url",
+                project_name="project_name",
+                username="username",
+                password="password",
+                user_domain_name="user_domain_name",
+                project_domain_name="project_domain_name",
+                region_name="region",
+            ),
+            server_config=OpenStackServerConfig(
+                image="image_id", flavor="flavor", network="network"
+            ),
+            runner_config=GitHubRunnerConfig(
+                github_path=GitHubOrg(org="canonical", group="group"),
+                labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
+            ),
+            service_config=SupportServiceConfig(
+                proxy_config=ProxyConfig(
+                    http="http://httpproxy.example.com:3128",
+                    https="http://httpsproxy.example.com:3128",
+                    no_proxy="127.0.0.1",
+                    use_aproxy=False,
+                ),
+                dockerhub_mirror="https://docker.example.com",
+                ssh_debug_connections=[
+                    SSHDebugConnection(
+                        host=IPv4Address("10.10.10.10"),
+                        port=3000,
+                        rsa_fingerprint="SHA256:rsa",
+                        ed25519_fingerprint="SHA256:ed25519",
+                    )
+                ],
+                repo_policy_compliance=RepoPolicyComplianceConfig(
+                    token="token",
+                    url="https://compliance.example.com",
+                ),
+            ),
+        ),
+        github_token="githubtoken",
+        supported_labels={"label1", "arm64", "flavorlabel", "label2", "x64", "noble"},
+    )
 
 
 def test_get_no_runner(runner_scaler: RunnerScaler):
