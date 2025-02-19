@@ -6,11 +6,11 @@ from asyncio import sleep
 from typing import Optional, TypedDict
 
 import openstack.connection
+from github_runner_manager import constants
 from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
-from charm import RUNNER_MANAGER_USER
 from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 
@@ -60,7 +60,7 @@ class OpenStackInstanceHelper:
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
+        key_path = f"/home/{constants.RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
@@ -115,7 +115,7 @@ class OpenStackInstanceHelper:
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = f"/home/{RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
+        key_path = f"/home/{constants.RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
