@@ -9,13 +9,8 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
+from github_runner_manager.configuration.github import GitHubPath
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.types_ import (
-    ProxyConfig,
-    RepoPolicyComplianceConfig,
-    SSHDebugConnection,
-)
-from github_runner_manager.types_.github import GitHubPath
 
 logger = logging.getLogger(__name__)
 
@@ -146,23 +141,6 @@ class GitHubRunnerConfig:
 
     github_path: GitHubPath
     labels: list[str]
-
-
-@dataclass
-class SupportServiceConfig:
-    """Configuration for supporting services for runners.
-
-    Attributes:
-        proxy_config: The proxy configuration.
-        dockerhub_mirror: The dockerhub mirror to use for runners.
-        ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_compliance: The configuration of the repo policy compliance service.
-    """
-
-    proxy_config: ProxyConfig | None
-    dockerhub_mirror: str | None
-    ssh_debug_connections: list[SSHDebugConnection] | None
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
 
 
 @dataclass
