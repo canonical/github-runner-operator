@@ -35,7 +35,7 @@ def main(config_file: TextIO) -> None:  # pragma: no cover
     """
     lock = Lock()
     config = Configuration.from_yaml_file(config_file)
-    
+
     http_server = Thread(target=lambda: start_http_server(config, lock, "0.0.0.0", 8080))
     http_server.start()
     service = Thread(target=lambda: start_reconcile_service(config, lock))
@@ -44,11 +44,9 @@ def main(config_file: TextIO) -> None:  # pragma: no cover
     http_server.join()
     service.join()
 
+
 def start_reconcile_service(_: Configuration, lock: Lock):
     # The reconcile service is not implemented yet, current logging the lock status.
     while True:
-        print("The lock status: %s", lock.locked(), datetime.datetime.now())
+        logging.info("The lock status: %s", lock.locked())
         sleep(60)
-
-if __name__ == "__main__":
-    main()

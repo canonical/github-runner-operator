@@ -10,7 +10,7 @@ import pytest
 import yaml
 
 from src.github_runner_manager.cli_config import Configuration
- 
+
 ConfigValue = None | int | bool | str | tuple
 ConfigDict = dict[str, ConfigValue]
 
