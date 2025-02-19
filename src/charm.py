@@ -322,7 +322,7 @@ class GithubRunnerCharm(CharmBase):
         juju_charm_path = pathlib.Path(".juju-charm")
         juju_charm = None
         # .juju-charm is not part of the public interface of Juju,
-        # and could disappear in a future relase.
+        # and could disappear in a future release.
         if juju_charm_path.exists():
             juju_charm = juju_charm_path.read_text().strip()
         try:
