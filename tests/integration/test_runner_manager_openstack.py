@@ -168,7 +168,7 @@ async def openstack_runner_manager_fixture(
     service_config = SupportServiceConfig(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
-        ssh_debug_connections=None,
+        ssh_debug_connections=[],
         repo_policy_compliance=None,
     )
 
