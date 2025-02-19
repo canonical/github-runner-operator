@@ -197,7 +197,7 @@ async def runner_manager_fixture(
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    github_configuration = GitHubConfiguration(token, github_path)
+    github_configuration = GitHubConfiguration(token=token, path=github_path)
     config = RunnerManagerConfig("test_runner", github_configuration)
     yield RunnerManager(openstack_runner_manager, config)
 
