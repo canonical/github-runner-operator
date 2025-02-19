@@ -323,9 +323,9 @@ class GithubRunnerCharm(CharmBase):
         juju_charm = None
         # .juju-charm is not part of the public interface of Juju,
         # and could disappear in a future release.
-        if juju_charm_path.exists():
-            juju_charm = juju_charm_path.read_text().strip()
         try:
+            if juju_charm_path.exists():
+                juju_charm = juju_charm_path.read_text(encoding="utf-8").strip()
             log = {
                 "log_type": "update_state",
                 "juju_charm": juju_charm,
@@ -333,7 +333,7 @@ class GithubRunnerCharm(CharmBase):
             }
             logstr = json.dumps(log)
             logger.info(logstr)
-        except (AttributeError, TypeError):
+        except (AttributeError, TypeError, ValueError):
             logger.exception("Error preparing log metrics")
 
     @staticmethod
