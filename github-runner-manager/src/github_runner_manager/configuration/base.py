@@ -3,7 +3,6 @@
 
 """Base configuration for the Application."""
 
-from dataclasses import dataclass
 from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, validator
@@ -11,8 +10,7 @@ from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, vali
 from . import github
 
 
-@dataclass
-class ApplicationConfiguration:
+class ApplicationConfiguration(BaseModel):
     """Main entry point for the Application Configuration.
 
     Attributes:
@@ -32,8 +30,7 @@ class ApplicationConfiguration:
     reactive_configuration: "ReactiveConfiguration | None"
 
 
-@dataclass
-class SupportServiceConfig:
+class SupportServiceConfig(BaseModel):
     """Configuration for supporting services for runners.
 
     Attributes:
@@ -140,8 +137,7 @@ class RepoPolicyComplianceConfig(BaseModel):
     url: AnyHttpUrl
 
 
-@dataclass
-class NonReactiveConfiguration:
+class NonReactiveConfiguration(BaseModel):
     """Configuration for non-reactive mode.
 
     Attributes:
@@ -151,8 +147,7 @@ class NonReactiveConfiguration:
     combinations: "list[NonReactiveCombination]"
 
 
-@dataclass
-class NonReactiveCombination:
+class NonReactiveCombination(BaseModel):
     """Combination of image and flavor that the application can spawn in non-reactive mode.
 
     Attributes:
@@ -166,8 +161,7 @@ class NonReactiveCombination:
     base_virtual_machines: int
 
 
-@dataclass
-class ReactiveConfiguration:
+class ReactiveConfiguration(BaseModel):
     """Configuration for reactive mode.
 
     Attributes:
@@ -219,3 +213,11 @@ class Flavor(BaseModel):
 
     name: str
     labels: list[str]
+
+
+# For pydantic to work with forward references.
+ApplicationConfiguration.update_forward_refs()
+SupportServiceConfig.update_forward_refs()
+NonReactiveConfiguration.update_forward_refs()
+NonReactiveCombination.update_forward_refs()
+ReactiveConfiguration.update_forward_refs()

@@ -45,7 +45,7 @@ def mock_runner_manager_spawn_runners(
 
 @pytest.fixture(scope="function", name="github_path")
 def github_path_fixture() -> GitHubPath:
-    return GitHubRepo("mock_owner", "mock_repo")
+    return GitHubRepo(owner="mock_owner", repo="mock_repo")
 
 
 @pytest.fixture(scope="function", name="mock_runner_managers")

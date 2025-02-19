@@ -3,12 +3,12 @@
 
 """Module containing GitHub Configuration."""
 
-import dataclasses
 from typing import TypeAlias
 
+from pydantic import BaseModel
 
-@dataclasses.dataclass
-class GitHubConfiguration:
+
+class GitHubConfiguration(BaseModel):
     """GitHub configuration for the application.
 
     Attributes:
@@ -20,8 +20,7 @@ class GitHubConfiguration:
     path: "GitHubPath"
 
 
-@dataclasses.dataclass
-class GitHubRepo:
+class GitHubRepo(BaseModel):
     """Represent GitHub repository.
 
     Attributes:
@@ -41,8 +40,7 @@ class GitHubRepo:
         return f"{self.owner}/{self.repo}"
 
 
-@dataclasses.dataclass
-class GitHubOrg:
+class GitHubOrg(BaseModel):
     """Represent GitHub organization.
 
     Attributes:
@@ -88,3 +86,7 @@ def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
         owner, repo = paths
         return GitHubRepo(owner=owner, repo=repo)
     return GitHubOrg(org=path_str, group=runner_group)
+
+
+# For pydantic to work with forward references.
+GitHubConfiguration.update_forward_refs()

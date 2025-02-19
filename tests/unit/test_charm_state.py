@@ -55,7 +55,7 @@ def test_github_repo_path():
     """
     owner = "test_owner"
     repo = "test_repo"
-    github_repo = GitHubRepo(owner, repo)
+    github_repo = GitHubRepo(owner=owner, repo=repo)
 
     path = github_repo.path()
 
@@ -70,7 +70,7 @@ def test_github_org_path():
     """
     org = "test_org"
     group = "test_group"
-    github_org = GitHubOrg(org, group)
+    github_org = GitHubOrg(org=org, group=group)
 
     path = github_org.path()
 
