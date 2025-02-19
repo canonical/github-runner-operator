@@ -8,7 +8,7 @@ on:
 jobs:
   self-hosted-medium-arm64-canary:
     name: self-hosted-medium-arm64-canary
-    runs-on: [self-hosted, arm64, medium, canary]
+    runs-on: [self-hosted, arm64, medium, canary, noble]
     steps:
       - run: lscpu
       - run: df -h
@@ -22,7 +22,7 @@ jobs:
         uses: canonical/action-tmate@main
   self-hosted-large-arm64-canary:
     name: self-hosted-large-arm64-canary
-    runs-on: [self-hosted, arm64, large, canary]
+    runs-on: [self-hosted, arm64, large, canary, noble]
     steps:
       - run: lscpu
       - run: df -h
@@ -166,11 +166,11 @@ jobs:
   # - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >> rustup.sh
   # - run: sh rustup.sh -y
   # - run: $HOME/.cargo/bin/cargo install ripgrep
-  github-test:
-    name: GitHub x64 test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
+  # github-test:
+  #   name: GitHub x64 test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Setup tmate session
+  #       uses: mxschmitt/action-tmate@v3
+  #       with:
+  #         limit-access-to-actor: true
