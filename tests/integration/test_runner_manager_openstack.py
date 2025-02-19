@@ -33,7 +33,6 @@ from github_runner_manager.manager.github_runner_manager import GitHubRunnerStat
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -198,8 +197,11 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     github_configuration = GitHubConfiguration(token=token, path=github_path)
-    config = RunnerManagerConfig("test_runner", github_configuration)
-    yield RunnerManager(openstack_runner_manager, config)
+    yield RunnerManager(
+        manager_name="test_runner",
+        github_configuration=github_configuration,
+        cloud_runner_manager=openstack_runner_manager,
+    )
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")

@@ -28,7 +28,6 @@ from github_runner_manager.manager.runner_manager import (
     IssuedMetricEventsStats,
     RunnerInstance,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.openstack_cloud.configuration import (
@@ -147,14 +146,10 @@ class RunnerScaler:
         openstack_runner_manager = OpenStackRunnerManager(
             config=openstack_runner_manager_config,
         )
-        runner_manager_config = RunnerManagerConfig(
-            name=application_configuration.name,
-            github_configuration=application_configuration.github_config,
-        )
-
         runner_manager = RunnerManager(
+            manager_name=application_configuration.name,
+            github_configuration=application_configuration.github_config,
             cloud_runner_manager=openstack_runner_manager,
-            config=runner_manager_config,
         )
 
         reactive_runner_config = None
@@ -164,7 +159,8 @@ class RunnerScaler:
             supported_labels = set(labels) | GITHUB_SELF_HOSTED_ARCH_LABELS
             reactive_runner_config = ReactiveProcessConfig(
                 queue=reactive_config.queue,
-                runner_manager=runner_manager_config,
+                manager_name=application_configuration.name,
+                github_configuration=application_configuration.github_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,

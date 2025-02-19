@@ -40,7 +40,6 @@ from github_runner_manager.manager.github_runner_manager import GitHubRunnerStat
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
@@ -119,10 +118,9 @@ def runner_manager_fixture(
         "github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock()
     )
 
-    config = RunnerManagerConfig(
-        "mock_runners", GitHubConfiguration(token="mock_token", path=github_path)
+    runner_manager = RunnerManager(
+        "mock_runners", GitHubConfiguration(token="mock_token", path=github_path), mock_cloud
     )
-    runner_manager = RunnerManager(mock_cloud, config)
     runner_manager._github = mock_github
     return runner_manager
 
@@ -281,12 +279,10 @@ def test_build_runner_scaler(
     assert runner_scaler
     # A few comprobations on key data
     # TODO pending to refactor, too invasive.
-    assert runner_scaler._manager._config == RunnerManagerConfig(
-        name="app_name",
-        github_configuration=GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
-        ),
-    )
+    assert runner_scaler._manager.manager_name == "app_name"
+    assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
+    # TODO this one will be well tested in the integration tests...
+    assert runner_scaler._manager._github.github._token == "githubtoken"
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",
         credentials=OpenStackCredentials(
@@ -332,11 +328,9 @@ def test_build_runner_scaler(
             mongodb_uri="mongodb://user:password@localhost:27017",
             queue_name="app_name",
         ),
-        runner_manager=RunnerManagerConfig(
-            name="app_name",
-            github_configuration=GitHubConfiguration(
-                token="githubtoken", path=GitHubOrg(org="canonical", group="group")
-            ),
+        manager_name="app_name",
+        github_configuration=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         cloud_runner_manager=OpenStackRunnerManagerConfig(
             prefix="unit_name",
