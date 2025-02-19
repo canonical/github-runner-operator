@@ -14,7 +14,9 @@ remove_residual_venv_dirs()
 
 
 import functools
+import json
 import logging
+import pathlib
 from typing import Any, Callable, Sequence, TypeVar
 
 import ops
@@ -315,6 +317,25 @@ class GithubRunnerCharm(CharmBase):
                 logger.error("Reconciliation event timer is not activated")
                 self._set_reconcile_timer()
 
+    def _log_charm_metrics(self) -> None:
+        """Log information as a substitute for metrics."""
+        juju_charm_path = pathlib.Path(".juju-charm")
+        juju_charm = None
+        # .juju-charm is not part of the public interface of Juju,
+        # and could disappear in a future relase.
+        if juju_charm_path.exists():
+            juju_charm = juju_charm_path.read_text().strip()
+        try:
+            log = {
+                "log_type": "update_state",
+                "juju_charm": juju_charm,
+                "unit_status": self.unit.status.name,
+            }
+            logstr = json.dumps(log)
+            logger.info(logstr)
+        except (AttributeError, TypeError):
+            logger.exception("Error preparing log metrics")
+
     @staticmethod
     def _log_juju_processes() -> None:
         """Log the running Juju processes.
@@ -491,6 +512,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
+        self._log_charm_metrics()
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
