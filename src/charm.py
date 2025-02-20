@@ -459,6 +459,22 @@ class GithubRunnerCharm(CharmBase):
         self._log_juju_processes()
         self._log_charm_metrics()
 
+    @staticmethod
+    def _log_juju_processes() -> None:
+        """Log the running Juju processes.
+
+        Log all processes with 'juju' in the command line.
+        """
+        try:
+            processes, _ = execute_command(
+                ["ps", "afuwwx"],
+                check_exit=True,
+            )
+            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
+            logger.info("Juju processes: %s", juju_processes)
+        except SubprocessError:
+            logger.exception("Failed to get Juju processes")
+
     def _log_charm_metrics(self) -> None:
         """Log information as a substitute for metrics."""
         juju_charm_path = pathlib.Path(".juju-charm")
@@ -477,22 +493,6 @@ class GithubRunnerCharm(CharmBase):
             logger.info(logstr)
         except (AttributeError, TypeError, ValueError):
             logger.exception("Error preparing log metrics")
-
-    @staticmethod
-    def _log_juju_processes() -> None:
-        """Log the running Juju processes.
-
-        Log all processes with 'juju' in the command line.
-        """
-        try:
-            processes, _ = execute_command(
-                ["ps", "afuwwx"],
-                check_exit=True,
-            )
-            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
-            logger.info("Juju processes: %s", juju_processes)
-        except SubprocessError:
-            logger.exception("Failed to get Juju processes")
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
