@@ -119,6 +119,7 @@ class RunnerScaler:
         """
         labels = application_configuration.extra_labels
         server_config = None
+        base_quantity = 0
         if combinations := application_configuration.non_reactive_configuration.combinations:
             combination = combinations[0]
             labels += combination.image.labels
@@ -129,6 +130,7 @@ class RunnerScaler:
                 flavor=combination.flavor.name,
                 network=openstack_configuration.network,
             )
+            base_quantity = combination.base_virtual_machines
 
         runner_config = GitHubRunnerConfig(
             github_path=application_configuration.github_config.path, labels=labels
@@ -141,15 +143,15 @@ class RunnerScaler:
             runner_config=runner_config,
             service_config=application_configuration.service_config,
         )
-        openstack_runner_manager = OpenStackRunnerManager(
-            config=openstack_runner_manager_config,
-        )
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
             github_configuration=application_configuration.github_config,
-            cloud_runner_manager=openstack_runner_manager,
+            cloud_runner_manager=OpenStackRunnerManager(
+                config=openstack_runner_manager_config,
+            ),
         )
 
+        max_quantity = 0
         reactive_runner_config = None
         if reactive_config := application_configuration.reactive_configuration:
             # The charm is not able to determine which architecture the runner is running on,
@@ -163,24 +165,33 @@ class RunnerScaler:
                 github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
             )
+            max_quantity = reactive_config.max_total_virtual_machines
         return cls(
             runner_manager=runner_manager,
             reactive_process_config=reactive_runner_config,
+            base_quantity=base_quantity,
+            max_quantity=max_quantity,
         )
 
     def __init__(
         self,
         runner_manager: RunnerManager,
         reactive_process_config: ReactiveProcessConfig | None,
+        base_quantity: int,
+        max_quantity: int,
     ):
         """Construct the object.
 
         Args:
             runner_manager: The RunnerManager to perform runner reconcile.
             reactive_process_config: Reactive runner configuration.
+            base_quantity: The number of intended non-reactive runners.
+            max_quantity: The number of maximum runners for reactive.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
+        self._base_quantity = base_quantity
+        self._max_quantity = max_quantity
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -236,12 +247,8 @@ class RunnerScaler:
         }
         return metric_stats.get(metric_events.RunnerStop, 0)
 
-    def reconcile(self, base_quantity: int, max_quantity: int) -> int:
+    def reconcile(self) -> int:
         """Reconcile the quantity of runners.
-
-        Args:
-            base_quantity: The number of intended non-reactive runners.
-            max_quantity: The number of maximum runners for reactive.
 
         Returns:
             The Change in number of runners or reactive processes.
@@ -250,13 +257,15 @@ class RunnerScaler:
             ReconcileError: If an expected error occurred during the reconciliation.
         """
         logger.info(
-            "Start reconcile. base_quantity %s. max_quantity: %s.", base_quantity, max_quantity
+            "Start reconcile. base_quantity %s. max_quantity: %s.",
+            self._base_quantity,
+            self._max_quantity,
         )
 
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = max_quantity if self._reactive_config is None else None
+        expected_runner_quantity = self._max_quantity if self._reactive_config is None else None
 
         try:
             if self._reactive_config is not None:
@@ -264,14 +273,14 @@ class RunnerScaler:
                     "Reactive configuration detected, going into experimental reactive mode."
                 )
                 reconcile_result = reactive_runner_manager.reconcile(
-                    expected_quantity=max_quantity,
+                    expected_quantity=self._max_quantity,
                     runner_manager=self._manager,
                     reactive_process_config=self._reactive_config,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats
             else:
-                reconcile_result = self._reconcile_non_reactive(base_quantity)
+                reconcile_result = self._reconcile_non_reactive(self._base_quantity)
                 reconcile_diff = reconcile_result.runner_diff
                 metric_stats = reconcile_result.metric_stats
         except CloudError as exc:

@@ -202,16 +202,15 @@ def openstack_configuration_fixture() -> OpenStackConfiguration:
     )
 
 
-@pytest.fixture(scope="function", name="runner_scaler")
-def runner_scaler_fixture(
-    runner_manager: RunnerManager,
-) -> RunnerScaler:
-    return RunnerScaler(runner_manager, None)
-
-
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
-def runner_scaler_one_runner_fixture(runner_scaler: RunnerScaler) -> RunnerScaler:
-    runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+def runner_scaler_one_runner_fixture(runner_manager: RunnerManager) -> RunnerScaler:
+    runner_scaler = RunnerScaler(
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        base_quantity=1,
+        max_quantity=0,
+    )
+    runner_scaler.reconcile()
     assert_runner_info(runner_scaler, online=1)
     return runner_scaler
 
@@ -377,16 +376,17 @@ def test_build_runner_scaler(
     )
 
 
-def test_get_no_runner(runner_scaler: RunnerScaler):
+def test_get_no_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act: Get runner information.
     Assert: Information should contain no runners.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
     assert_runner_info(runner_scaler, online=0)
 
 
-def test_flush_no_runner(runner_scaler: RunnerScaler):
+def test_flush_no_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act:
@@ -397,6 +397,7 @@ def test_flush_no_runner(runner_scaler: RunnerScaler):
         2. No change in number of runners.
     """
     # 1.
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
     diff = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
     assert diff == 0
     assert_runner_info(runner_scaler, online=0)
@@ -407,13 +408,14 @@ def test_flush_no_runner(runner_scaler: RunnerScaler):
     assert_runner_info(runner_scaler, online=0)
 
 
-def test_reconcile_runner_create_one(runner_scaler: RunnerScaler):
+def test_reconcile_runner_create_one(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act: Reconcile to no runners.
     Assert: No changes. Runner info should contain no runners.
     """
-    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=0)
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 0
     assert_runner_info(runner_scaler, online=0)
 
@@ -429,7 +431,9 @@ def test_reconcile_runner_create_one_reactive(
     Assert: 5 processes should be returned in the result of the reconcile.
     """
     reactive_process_config = MagicMock()
-    runner_scaler = RunnerScaler(runner_manager, reactive_process_config)
+    runner_scaler = RunnerScaler(
+        runner_manager, reactive_process_config, base_quantity=0, max_quantity=5
+    )
 
     from github_runner_manager.reactive.runner_manager import ReconcileResult
 
@@ -441,46 +445,48 @@ def test_reconcile_runner_create_one_reactive(
         "github_runner_manager.reactive.runner_manager.reconcile",
         MagicMock(side_effect=_fake_reactive_reconcile),
     )
-    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=5)
+    diff = runner_scaler.reconcile()
     assert diff == 5
     assert_runner_info(runner_scaler, online=0)
 
 
 def test_reconcile_error_still_issue_metrics(
-    runner_scaler: RunnerScaler, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
+    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
 ):
     """
     Arrange: A RunnerScaler with no runners which raises an error on reconcile.
     Act: Reconcile to one runner.
     Assert: ReconciliationEvent should be issued.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
     monkeypatch.setattr(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=Exception("Mock error"))
     )
     with pytest.raises(Exception):
-        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+        runner_scaler.reconcile()
     issue_events_mock.assert_called_once()
     issued_event = issue_events_mock.call_args[0][0]
     assert isinstance(issued_event, Reconciliation)
 
 
 def test_reconcile_raises_reconcile_error(
-    runner_scaler: RunnerScaler, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
+    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
 ):
     """
     Arrange: A RunnerScaler with no runners which raises a Cloud error on reconcile.
     Act: Reconcile to one runner.
     Assert: ReconcileError should be raised.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
     monkeypatch.setattr(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=CloudError("Mock error"))
     )
     with pytest.raises(ReconcileError) as exc:
-        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+        runner_scaler.reconcile()
     assert "Failed to reconcile runners." in str(exc.value)
 
 
-def test_one_runner(runner_scaler: RunnerScaler):
+def test_one_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act:
@@ -494,12 +500,13 @@ def test_one_runner(runner_scaler: RunnerScaler):
         3. Runner info has one runner.
     """
     # 1.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 
     # 2.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 0
     assert_runner_info(runner_scaler, online=1)
 
@@ -508,7 +515,7 @@ def test_one_runner(runner_scaler: RunnerScaler):
     assert_runner_info(runner_scaler, online=0)
 
     # 3.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 
