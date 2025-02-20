@@ -23,7 +23,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
 
@@ -88,16 +88,16 @@ class RunnerScaler:
     """Manage the reconcile of runners."""
 
     def __init__(
-        self, runner_manager: RunnerManager, reactive_runner_config: ReactiveRunnerConfig | None
+        self, runner_manager: RunnerManager, reactive_process_config: ReactiveProcessConfig | None
     ):
         """Construct the object.
 
         Args:
             runner_manager: The RunnerManager to perform runner reconcile.
-            reactive_runner_config: Reactive runner configuration.
+            reactive_process_config: Reactive runner configuration.
         """
         self._manager = runner_manager
-        self._reactive_config = reactive_runner_config
+        self._reactive_config = reactive_process_config
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -183,7 +183,7 @@ class RunnerScaler:
                 reconcile_result = reactive_runner_manager.reconcile(
                     expected_quantity=max_quantity,
                     runner_manager=self._manager,
-                    runner_config=self._reactive_config,
+                    reactive_process_config=self._reactive_config,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats
