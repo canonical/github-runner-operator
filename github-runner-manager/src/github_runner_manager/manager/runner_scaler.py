@@ -136,7 +136,6 @@ class RunnerScaler:
             github_path=application_configuration.github_config.path, labels=labels
         )
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
-            # The prefix is set to f"{application_name}-{unit number}"
             prefix=openstack_configuration.vm_prefix,
             credentials=openstack_configuration.credentials,
             server_config=server_config,
