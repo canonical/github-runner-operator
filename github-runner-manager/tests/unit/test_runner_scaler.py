@@ -277,10 +277,9 @@ def test_build_runner_scaler(
     runner_scaler = RunnerScaler.build(application_configuration, openstack_configuration)
     assert runner_scaler
     # A few comprobations on key data
-    # TODO pending to refactor, too invasive.
+    # Pending to refactor, too invasive.
     assert runner_scaler._manager.manager_name == "app_name"
     assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
-    # TODO this one will be well tested in the integration tests...
     assert runner_scaler._manager._github.github._token == "githubtoken"
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",
