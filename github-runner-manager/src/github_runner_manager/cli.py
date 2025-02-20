@@ -17,6 +17,8 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
+
+# The entry point for the CLI will be tested with integration test.
 @click.command()
 @click.option(
     "--config-file",

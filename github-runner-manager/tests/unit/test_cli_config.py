@@ -36,6 +36,7 @@ def sample_config_fixture() -> ConfigDict:
         "repo_policy_compliance_url": None,
         "repo_policy_compliance_token": None,
         "http_proxy": None,
+        "no_proxy": None,
     }
 
 
@@ -81,6 +82,7 @@ def test_optional_config(tmp_yaml_file: Path, sample_config: ConfigDict):
     """
     config = dict(sample_config)
     config.pop("http_proxy")
+    config.pop("no_proxy")
     config.pop("repo_policy_compliance_token")
     config.pop("repo_policy_compliance_url")
     config.pop("dockerhub_mirror")
@@ -146,6 +148,8 @@ def test_string_min_length_config(tmp_yaml_file: Path, sample_config: ConfigDict
         "openstack_network",
         "repo_policy_compliance_url",
         "repo_policy_compliance_token",
+        "http_proxy",
+        "no_proxy",
     ]
 
     for field in min_length_field:

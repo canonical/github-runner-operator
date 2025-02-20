@@ -19,10 +19,15 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubPath,
+    parse_github_path,
+)
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     GitHubRunnerConfig,
-    SupportServiceConfig,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
@@ -38,11 +43,8 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
-from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -55,6 +57,21 @@ logger = logging.getLogger(__name__)
 # as only one machine that stays for more than the default time in BUILD,
 # will break the tests
 constants.CREATE_SERVER_TIMEOUT = 900
+
+
+@pytest.fixture(autouse=True, scope="module", name="runner_manager_user")
+def runner_manager_user():
+    """Mock the RUNNER_MANAGER_USER and RUNNER_MANAGER_GROUP constants.
+
+    Yields:
+        None, just to be in a scope.
+    """
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        # we assume the test runs as ubuntu user
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", "ubuntu")
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_GROUP", "ubuntu")
+        # monkeypatch is a scope function fixture, so this trick
+        yield None
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -162,8 +179,6 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         runner_config=runner_config,
         service_config=service_config,
-        # we assume the test runs as ubuntu user
-        system_user_config=SystemUserConfig(user="ubuntu", group="ubuntu"),
     )
 
     yield OpenStackRunnerManager(
@@ -182,7 +197,8 @@ async def runner_manager_fixture(
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    config = RunnerManagerConfig("test_runner", token, github_path)
+    github_configuration = GitHubConfiguration(token=token, path=github_path)
+    config = RunnerManagerConfig("test_runner", github_configuration)
     yield RunnerManager(openstack_runner_manager, config)
 
 
