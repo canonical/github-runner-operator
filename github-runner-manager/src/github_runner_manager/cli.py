@@ -17,7 +17,6 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
-
 # The entry point for the CLI will be tested with integration test.
 @click.command()
 @click.option(
@@ -29,13 +28,15 @@ logger = logging.getLogger(__name__)
     "--host",
     type=str,
     help="The hostname to listen on for the HTTP server.",
+    default="0.0.0.0",
 )
 @click.option(
     "--port",
     type=int,
     help="The port to listen on for the HTTP server.",
+    default=8080,
 )
-def main(config_file: TextIO, host: str, port: int) -> None:
+def main(config_file: TextIO, host: str, port: int) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
@@ -55,7 +56,8 @@ def main(config_file: TextIO, host: str, port: int) -> None:
     service.join()
 
 
-def start_reconcile_service(_: Configuration, lock: Lock) -> None:
+# The function is not yet implemented, testing is not needed.
+def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no cover
     """Start the reconcile server.
 
     Args:
