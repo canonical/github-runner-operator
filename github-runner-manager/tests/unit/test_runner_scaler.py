@@ -127,7 +127,7 @@ def runner_manager_fixture(
 
 @pytest.fixture(scope="function", name="application_configuration")
 def application_configuration_fixture() -> ApplicationConfiguration:
-    """TODO."""
+    """Returns a fixture with a fully populated ApplicationConfiguration."""
     return ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
@@ -186,7 +186,7 @@ def application_configuration_fixture() -> ApplicationConfiguration:
 
 @pytest.fixture(scope="function", name="openstack_configuration")
 def openstack_configuration_fixture() -> OpenStackConfiguration:
-    """TODO."""
+    """Returns a fixture with a fully populated OpenStackConfiguration."""
     return OpenStackConfiguration(
         vm_prefix="unit_name",
         network="network",

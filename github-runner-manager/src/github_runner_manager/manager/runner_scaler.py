@@ -108,14 +108,14 @@ class RunnerScaler:
         application_configuration: ApplicationConfiguration,
         openstack_configuration: OpenStackConfiguration,
     ) -> "RunnerScaler":
-        """TODO.
+        """Create a RunnerScaler from application and OpenStack configuration.
 
         Args:
-            application_configuration: TODO
-            openstack_configuration: TODO
+            application_configuration: Main configuration for the application.
+            openstack_configuration: OpenStack configuration.
 
         Returns:
-            TODO.
+            A new RunnerScaler.
         """
         labels = application_configuration.extra_labels
         server_config = None

@@ -96,8 +96,8 @@ class RunnerManager:
         """Construct the object.
 
         Args:
-            manager_name: TODO
-            github_configuration: TODO
+            manager_name: Name of the manager.
+            github_configuration: Configuration for GitHub.
             cloud_runner_manager: For managing the cloud instance of the runner.
         """
         self.manager_name = manager_name
