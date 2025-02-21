@@ -10,16 +10,8 @@ jobs:
     name: self-hosted-xlarge
     runs-on: [self-hosted, xlarge, jammy, X64]
     steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: echo $HTTP_PROXY
-      - run: echo $HTTPS_PROXY
-      - run: echo $NO_PROXY
-      - run: echo $DOCKERHUB_MIRROR
-      - name: tmate ssh
-        uses: canonical/action-tmate@main
+      - run: sudo apt update
+      - run: sudo apt upgrade -y
   # self-hosted-medium-arm64-canary:
   #   name: self-hosted-medium-arm64-canary
   #   runs-on: [self-hosted, arm64, medium, canary, noble]
