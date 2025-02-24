@@ -130,10 +130,9 @@ class RunnerManager:
             List of instance ID of the runners.
         """
         logger.info("Creating %s runners", num)
-        registration_token = self._github.get_registration_token()
 
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github) for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -381,13 +380,16 @@ class RunnerManager:
     class _CreateRunnerArgs:
         """Arguments for the _create_runner function.
 
+        This is dangerous, we are using managers created in the main process in forked process,
+        at some point this could bite us.
+
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
-            registration_token: The GitHub provided-token for registering runners.
+            github_runner_manager: TODO
         """
 
         cloud_runner_manager: CloudRunnerManager
-        registration_token: str
+        github_runner_manager: GitHubRunnerManager
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
@@ -401,4 +403,5 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+        registration_token = args.github_runner_manager.get_registration_token()
+        return args.cloud_runner_manager.create_runner(registration_token=registration_token)
