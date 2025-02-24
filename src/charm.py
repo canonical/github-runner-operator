@@ -457,7 +457,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
-        self._log_charm_metrics()
+        self._log_charm_status()
 
     @staticmethod
     def _log_juju_processes() -> None:
@@ -475,7 +475,7 @@ class GithubRunnerCharm(CharmBase):
         except SubprocessError:
             logger.exception("Failed to get Juju processes")
 
-    def _log_charm_metrics(self) -> None:
+    def _log_charm_status(self) -> None:
         """Log information as a substitute for metrics."""
         juju_charm_path = pathlib.Path(".juju-charm")
         juju_charm = None
