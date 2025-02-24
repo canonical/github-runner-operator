@@ -175,8 +175,6 @@ class GithubClient:
             The registration token.
         """
         token: RegistrationToken
-        instance_id  # pylint: disable=pointless-statement
-        labels  # pylint: disable=pointless-statement
         if isinstance(path, GitHubRepo):
             # JAVI not sure about this
             runner_group_id = 1
@@ -201,7 +199,7 @@ class GithubClient:
         else:
             assert_never(token)
 
-        return token["token"]
+        return token["encoded_jit_config"]
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
         """TODO. JUST TO TEST.
