@@ -54,12 +54,14 @@ def install_app_fixture() -> None:
 @pytest.fixture(name="app", scope="function")
 def cli_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
     process = subprocess.Popen(
-        [PACKAGE_NAME, "--config-file", config_file],
+        [PACKAGE_NAME, "--config-file", config_file, "--debug"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
     for line in process.stderr:
+        if b"Address already in use" in line:
+            assert False, "Test setup failure: Port used for testing taken"
         if b"Press CTRL+C to quit" in line:
             break
     else:

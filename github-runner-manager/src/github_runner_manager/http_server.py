@@ -8,7 +8,7 @@ The HTTP server for request to the github-runner-manager.
 
 from threading import Lock
 
-from flask import Flask
+from flask import Flask, abort
 
 from github_runner_manager.cli_config import Configuration
 
@@ -25,6 +25,8 @@ def lock_status() -> tuple[str, int]:
     Returns:
         Whether the lock is locked.
     """
+    if not app.debug:
+        abort(404)
     return ("locked", 200) if _get_lock().locked() else ("unlocked", 200)
 
 
@@ -37,6 +39,8 @@ def lock_acquire() -> tuple[str, int]:
     Returns:
         A 200 OK response
     """
+    if not app.debug:
+        abort(404)
     _get_lock().acquire(blocking=True)
     return ("", 200)
 
@@ -50,6 +54,8 @@ def lock_release() -> tuple[str, int]:
     Returns:
         A 200 OK response
     """
+    if not app.debug:
+        abort(404)
     _get_lock().release()
     return ("", 200)
 
@@ -63,13 +69,14 @@ def _get_lock() -> Lock:
     return app.config["lock"]
 
 
-def start_http_server(_: Configuration, lock: Lock, host: str, port: int) -> None:
+def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:
     """Start the HTTP server for interacting with the github-runner-manager service.
 
     Args:
         lock: The lock representing modification access to the managed set of runners.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on for the HTTP server.
+        debug: Start the flask HTTP server in debug mode.
     """
     app.config["lock"] = lock
-    app.run(host=host, port=port, use_reloader=False)
+    app.run(host=host, port=port, debug=debug, use_reloader=False)

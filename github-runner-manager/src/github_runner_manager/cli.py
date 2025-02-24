@@ -36,18 +36,26 @@ logger = logging.getLogger(__name__)
     help="The port to listen on for the HTTP server.",
     default=8080,
 )
-def main(config_file: TextIO, host: str, port: int) -> None:  # pragma: no cover
+@click.option(
+    "--debug",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Debug mode for testing.",
+)
+def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
         config_file: The configuration file.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
+        debug: Whether to start the application in debug mode.
     """
     lock = Lock()
     config = Configuration.from_yaml_file(config_file)
 
-    http_server = Thread(target=lambda: start_http_server(config, lock, host, port))
+    http_server = Thread(target=lambda: start_http_server(config, lock, host, port, debug))
     http_server.start()
     service = Thread(target=lambda: start_reconcile_service(config, lock))
     service.start()
@@ -67,3 +75,7 @@ def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no
     while True:
         logger.info("lock acquired: %s", lock.locked())
         sleep(10)
+
+
+# TODO: In test run in debug mode
+# In debug mode the testing endpoints returns 404.
