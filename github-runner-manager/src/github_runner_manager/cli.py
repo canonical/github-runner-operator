@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
     "--host",
     type=str,
     help="The hostname to listen on for the HTTP server.",
-    default="0.0.0.0",
+    default="127.0.0.1",
 )
 @click.option(
     "--port",
