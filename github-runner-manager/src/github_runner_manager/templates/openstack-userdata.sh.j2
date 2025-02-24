@@ -59,12 +59,12 @@ su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
     --runnergroup '{{ runner_group }}' \
     --token {{ token }} --ephemeral --unattended \
-    --labels {{ instance_labels }} --name {{ instance_name }}"
+    --labels {{ instance_labels }} --name {{ instance_id }}"
 {% else %}
 su - ubuntu -c "cd ~/actions-runner && ./config.sh \
     --url {{ github_url }} \
     --token {{ token }} --ephemeral --unattended \
-    --labels {{ instance_labels }} --name {{ instance_name }}"
+    --labels {{ instance_labels }} --name {{ instance_id }}"
 {% endif %}
 
 

@@ -102,6 +102,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         self.prefix = f"mock_{secrets.token_hex(4)}"
         self.state = state
+        # Pending to remove and refactor from here.
+        self._config = MagicMock()
+        self._config.runner_config.labels = ["label1", "label2"]
 
     @property
     def name_prefix(self) -> str:
@@ -121,20 +124,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         runner = MockRunner(name)
         self.state.runners[runner.instance_id] = runner
         return runner.instance_id
-
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
-
-        Returns:
-            The runner instance if found else None.
-        """
-        runner = self.state.runners.get(instance_id, None)
-        if runner is not None:
-            return runner.to_cloud_runner()
-        return None
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -233,8 +222,12 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_token(self) -> str:
+    def get_registration_token(self, instance_id: str, labels: list[str]) -> str:
         """Get the registration token for registering runners on GitHub.
+
+        Args:
+            instance_id: TODO
+            labels: TODO
 
         Returns:
             The registration token.

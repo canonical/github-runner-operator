@@ -12,6 +12,7 @@ from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
+import requests
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from typing_extensions import assert_never
@@ -159,27 +160,74 @@ class GithubClient:
         return token["token"]
 
     @catch_http_errors
-    def get_runner_registration_token(self, path: GitHubPath) -> str:
+    def get_runner_registration_token(
+        self, path: GitHubPath, instance_id: str, labels: list[str]
+    ) -> str:
         """Get token from GitHub used for registering runners.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            instance_id: TODO
+            labels: TODO
 
         Returns:
             The registration token.
         """
         token: RegistrationToken
+        instance_id  # pylint: disable=pointless-statement
+        labels  # pylint: disable=pointless-statement
         if isinstance(path, GitHubRepo):
-            token = self._client.actions.create_registration_token_for_repo(
-                owner=path.owner, repo=path.repo
+            # JAVI not sure about this
+            runner_group_id = 1
+            token = self._client.actions.generate_runner_jitconfig_for_repo(
+                owner=path.owner,
+                repo=path.repo,
+                name=instance_id,
+                runner_group_id=runner_group_id,
+                labels=labels,
             )
         elif isinstance(path, GitHubOrg):
-            token = self._client.actions.create_registration_token_for_org(org=path.org)
+            # JAVI we need the group id from the group in
+            # self.path.group
+            # TODO cache this.
+            runner_group_id = self._get_runner_group_id(path)
+            token = self._client.actions.generate_runner_jitconfig_for_org(
+                org=path.org,
+                name=instance_id,
+                runner_group_id=1,
+                labels=labels,
+            )
         else:
             assert_never(token)
 
         return token["token"]
+
+    def _get_runner_group_id(self, org: GitHubOrg) -> int:
+        """TODO. JUST TO TEST.
+
+        LET'S SEE GHAPI IF THEY RELEASE A NEW VERSION BEFORE IMPROVING
+        THIS
+        """
+        # Be careful, no pagination in here.
+        url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups"
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "Authorization:": "Bearer {self._token}",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        r = requests.get(url, headers=headers, timeout=30)
+        r.raise_for_status()
+        data = r.json()
+        try:
+            for group in data["runner_groups"]:
+                if group["name"] == org.group:
+                    return group["id"]
+        except TypeError as exc:
+            raise GithubApiError(
+                f"Cannot get runner_group_id for group {org.group_name}."
+            ) from exc
+        raise GithubApiError(f"Cannot get runner_group_id for group {org.group_name}")
 
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:

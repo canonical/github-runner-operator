@@ -131,8 +131,11 @@ class RunnerManager:
         """
         logger.info("Creating %s runners", num)
 
+        # This is quite ugly. labels should not be hidden inside OpenStack configuration.
+        # It will be refactor in the multiple image/flavor PRs.
+        labels = self._cloud._config.runner_config.labels  # pylint: disable=protected-access
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._github) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -386,10 +389,12 @@ class RunnerManager:
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
             github_runner_manager: TODO
+            labels: TODO
         """
 
         cloud_runner_manager: CloudRunnerManager
         github_runner_manager: GitHubRunnerManager
+        labels: list[str]
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
@@ -403,5 +408,11 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        registration_token = args.github_runner_manager.get_registration_token()
-        return args.cloud_runner_manager.create_runner(registration_token=registration_token)
+        instance_id = args.cloud_runner_manager.generate_instance_id()
+        registration_token = args.github_runner_manager.get_registration_token(
+            instance_id, args.labels
+        )
+        args.cloud_runner_manager.create_runner(
+            instance_id=instance_id, registration_token=registration_token
+        )
+        return instance_id

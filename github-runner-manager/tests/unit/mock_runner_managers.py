@@ -295,39 +295,32 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         self.prefix = f"mock_{secrets.token_hex(4)}"
         self.state = state
+        self._config = MagicMock()
+        self._config.runner_config.labels = ["label1", "label2"]
 
     @property
     def name_prefix(self) -> str:
         """Get the name prefix of the self-hosted runners."""
         return self.prefix
 
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def generate_instance_id(self) -> InstanceId:
+        """TODO.
+
+        Returns:
+            Instance ID of the runner.
+        """
+        return secrets.token_hex(6)
+
+    def create_runner(self, instance_id: InstanceId, registration_token: str) -> None:
         """Create a self-hosted runner.
 
         Args:
+            instance_id: TODO
             registration_token: The GitHub registration token for registering runners.
-
-        Returns:
-            The instance id of the runner created.
         """
-        name = f"{self.name_prefix}-{secrets.token_hex(6)}"
+        name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
-        self.state.runners[runner.instance_id] = runner
-        return runner.instance_id
-
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
-
-        Returns:
-            The runner instance if found else None.
-        """
-        runner = self.state.runners.get(instance_id, None)
-        if runner is not None:
-            return runner.to_cloud_runner()
-        return None
+        self.state.runners[instance_id] = runner
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -426,8 +419,12 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_token(self) -> str:
+    def get_registration_token(self, instance_id: str, labels: list[str]) -> str:
         """Get the registration token for registering runners on GitHub.
+
+        Args:
+            instance_id: TODO
+            labels: TODO
 
         Returns:
             The registration token.

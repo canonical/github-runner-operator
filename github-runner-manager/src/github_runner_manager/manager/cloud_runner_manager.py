@@ -173,19 +173,16 @@ class CloudRunnerManager(abc.ABC):
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def generate_instance_id(self) -> InstanceId:
+        """TODO."""
+
+    @abc.abstractmethod
+    def create_runner(self, instance_id: InstanceId, registration_token: str) -> None:
         """Create a self-hosted runner.
 
         Args:
+            instance_id: TODO
             registration_token: The GitHub registration token for registering runners.
-        """
-
-    @abc.abstractmethod
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
         """
 
     @abc.abstractmethod

@@ -209,7 +209,7 @@ def test_cleanup_ignores_runners_with_health_check_errors(
 
     assert openstack_cloud_mock.delete_instance.call_count == unhealthy_count
     for name in names:
-        instance_id = name[len(OPENSTACK_INSTANCE_PREFIX) + 1 :]
+        instance_id = name
         if instance_id.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
     assert runner_metrics_mock.extract.call_count == 1
