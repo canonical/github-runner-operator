@@ -102,8 +102,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         self.prefix = f"mock_{secrets.token_hex(4)}"
         self.state = state
-        # Pending to remove and refactor from here.
-        self._config = MagicMock()
 
     @property
     def name_prefix(self) -> str:
