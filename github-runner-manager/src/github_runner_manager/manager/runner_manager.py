@@ -376,7 +376,7 @@ class RunnerManager:
     class _CreateRunnerArgs:
         """Arguments for the _create_runner function.
 
-        This arguments are used in the forked processes and should be reviewed.
+        These arguments are used in the forked processes and should be reviewed.
 
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
