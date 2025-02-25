@@ -193,7 +193,7 @@ class GithubClient:
             token = self._client.actions.generate_runner_jitconfig_for_org(
                 org=path.org,
                 name=instance_id,
-                runner_group_id=1,
+                runner_group_id=runner_group_id,
                 labels=labels,
             )
         else:
