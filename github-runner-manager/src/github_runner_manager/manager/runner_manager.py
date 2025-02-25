@@ -79,19 +79,6 @@ class RunnerInstance:
         self.cloud_state = cloud_instance.state
 
 
-@dataclass
-class RunnerManagerConfig:
-    """Configuration for the runner manager.
-
-    Attributes:
-        name: A name to identify this manager.
-        github_configuration: GitHub configuration information.
-    """
-
-    name: str
-    github_configuration: GitHubConfiguration
-
-
 class RunnerManager:
     """Manage the runners.
 
@@ -102,22 +89,23 @@ class RunnerManager:
 
     def __init__(
         self,
+        manager_name: str,
+        github_configuration: GitHubConfiguration,
         cloud_runner_manager: CloudRunnerManager,
-        config: RunnerManagerConfig,
     ):
         """Construct the object.
 
         Args:
+            manager_name: Name of the manager.
+            github_configuration: Configuration for GitHub.
             cloud_runner_manager: For managing the cloud instance of the runner.
-            config: Configuration of this class.
         """
-        self.manager_name = config.name
-        self._config = config
+        self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
         self._github = GitHubRunnerManager(
             prefix=self.name_prefix,
-            github_configuration=self._config.github_configuration,
+            github_configuration=github_configuration,
         )
 
     def create_runners(self, num: int) -> tuple[InstanceId, ...]:

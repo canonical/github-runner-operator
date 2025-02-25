@@ -16,30 +16,35 @@ from github_runner_manager.configuration import (
     SupportServiceConfig,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.cloud_runner_manager import (
-    GitHubRunnerConfig,
-)
-from github_runner_manager.manager.runner_manager import (
-    RunnerManager,
-    RunnerManagerConfig,
-)
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )
-from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OpenStackRunnerManager,
-    OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
-)
-from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 from charm_state import CharmState
 
-GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
-
 logger = logging.getLogger(__name__)
+
+
+def create_runner_scaler(state: CharmState, app_name: str, unit_name: str) -> RunnerScaler:
+    """Get runner scaler instance for scaling runners.
+
+    Args:
+        state: The CharmState.
+        app_name: Name of the application.
+        unit_name: Unit name for the prefix for instances.
+
+    Returns:
+        An instance of RunnerScaler.
+    """
+    openstack_configuration = create_openstack_configuration(state, unit_name)
+    application_configuration = create_application_configuration(state, app_name)
+
+    return RunnerScaler.build(
+        application_configuration=application_configuration,
+        openstack_configuration=openstack_configuration,
+    )
 
 
 def create_application_configuration(state: CharmState, app_name: str) -> ApplicationConfiguration:
@@ -172,77 +177,4 @@ def create_openstack_configuration(state: CharmState, unit_name: str) -> OpenSta
         vm_prefix=unit_name.replace("/", "-"),
         network=state.runner_config.openstack_network,
         credentials=credentials,
-    )
-
-
-# This function will disappear in the next PR.
-def create_runner_scaler(  # pylint: disable=too-many-locals
-    state: CharmState, app_name: str, unit_name: str
-) -> RunnerScaler:
-    """Get runner scaler instance for scaling runners.
-
-    Args:
-        state: The CharmState.
-        app_name: Name of the application.
-        unit_name: Unit name for the prefix for instances.
-
-    Returns:
-        An instance of RunnerScaler.
-    """
-    openstack_configuration = create_openstack_configuration(state, unit_name)
-    application_configuration = create_application_configuration(state, app_name)
-
-    labels = application_configuration.extra_labels
-    server_config = None
-    if combinations := application_configuration.non_reactive_configuration.combinations:
-        combination = combinations[0]
-        if combination.image.labels:
-            labels += combination.image.labels
-        if combination.flavor.labels:
-            labels += combination.flavor.labels
-
-        server_config = OpenStackServerConfig(
-            image=combination.image.name,
-            # Pending to add support for more flavor label combinations
-            flavor=combination.flavor.name,
-            network=openstack_configuration.network,
-        )
-
-    runner_config = GitHubRunnerConfig(
-        github_path=application_configuration.github_config.path, labels=labels
-    )
-    openstack_runner_manager_config = OpenStackRunnerManagerConfig(
-        # The prefix is set to f"{application_name}-{unit number}"
-        prefix=openstack_configuration.vm_prefix,
-        credentials=openstack_configuration.credentials,
-        server_config=server_config,
-        runner_config=runner_config,
-        service_config=application_configuration.service_config,
-    )
-
-    openstack_runner_manager = OpenStackRunnerManager(
-        config=openstack_runner_manager_config,
-    )
-    runner_manager_config = RunnerManagerConfig(
-        name=application_configuration.name,
-        github_configuration=application_configuration.github_config,
-    )
-    runner_manager = RunnerManager(
-        cloud_runner_manager=openstack_runner_manager,
-        config=runner_manager_config,
-    )
-    reactive_runner_config = None
-    if reactive_config := application_configuration.reactive_configuration:
-        # The charm is not able to determine which architecture the runner is running on,
-        # so we add all architectures to the supported labels.
-        supported_labels = set(labels) | GITHUB_SELF_HOSTED_ARCH_LABELS
-        reactive_runner_config = ReactiveProcessConfig(
-            queue=reactive_config.queue,
-            runner_manager=runner_manager_config,
-            cloud_runner_manager=openstack_runner_manager_config,
-            github_token=application_configuration.github_config.token,
-            supported_labels=supported_labels,
-        )
-    return RunnerScaler(
-        runner_manager=runner_manager, reactive_process_config=reactive_runner_config
     )
