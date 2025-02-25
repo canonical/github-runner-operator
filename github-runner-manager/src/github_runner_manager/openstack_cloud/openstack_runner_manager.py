@@ -170,7 +170,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return self._config.prefix
 
     def generate_instance_id(self) -> InstanceId:
-        r"""TODO.
+        r"""Generate an intance_id to name a runner.
 
         The GitHub runner name convention is as following:
         A valid runner name is 64 characters or less in length and does not include '"', '/', ':',
@@ -189,7 +189,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """Create a self-hosted runner.
 
         Args:
-            instance_id: TODO
+            instance_id: Instance ID for the runner to create.
             registration_token: The GitHub registration token for registering runners.
 
         Raises:

@@ -160,14 +160,14 @@ class CloudRunnerManager(abc.ABC):
 
     @abc.abstractmethod
     def generate_instance_id(self) -> InstanceId:
-        """TODO."""
+        """Generate an intance_id to name a runner."""
 
     @abc.abstractmethod
     def create_runner(self, instance_id: InstanceId, registration_token: str) -> None:
         """Create a self-hosted runner.
 
         Args:
-            instance_id: TODO
+            instance_id: Instance ID for the runner.
             registration_token: The GitHub registration token for registering runners.
         """
 

@@ -303,7 +303,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         return self.prefix
 
     def generate_instance_id(self) -> InstanceId:
-        """TODO.
+        """Generate an intance_id to name a runner.
 
         Returns:
             Instance ID of the runner.
@@ -314,7 +314,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """Create a self-hosted runner.
 
         Args:
-            instance_id: TODO
+            instance_id: Instance ID for the runner to create.
             registration_token: The GitHub registration token for registering runners.
         """
         name = f"{self.name_prefix}-{instance_id}"
@@ -422,8 +422,8 @@ class MockGitHubRunnerManager:
         """Get the registration token for registering runners on GitHub.
 
         Args:
-            instance_id: TODO
-            labels: TODO
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.

@@ -160,7 +160,7 @@ class GithubClient:
         return token["token"]
 
     @catch_http_errors
-    def get_runner_registration_token(
+    def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: str, labels: list[str]
     ) -> str:
         """Get token from GitHub used for registering runners.
@@ -168,15 +168,16 @@ class GithubClient:
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
-            instance_id: TODO
-            labels: TODO
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.
         """
         token: RegistrationToken
         if isinstance(path, GitHubRepo):
-            # JAVI not sure about this
+            # The supposition is that the runner_group_id 1 is the default.
+            # If the repo does not belong to an org, there is no way to get the runner_group_id.
             runner_group_id = 1
             token = self._client.actions.generate_runner_jitconfig_for_repo(
                 owner=path.owner,
@@ -186,9 +187,8 @@ class GithubClient:
                 labels=labels,
             )
         elif isinstance(path, GitHubOrg):
-            # JAVI we need the group id from the group in
-            # self.path.group
-            # TODO cache this.
+            # We cannot cache it in here, as we are running in a forked process.
+            # Pending to review.
             runner_group_id = self._get_runner_group_id(path)
             token = self._client.actions.generate_runner_jitconfig_for_org(
                 org=path.org,
@@ -202,12 +202,14 @@ class GithubClient:
         return token["encoded_jit_config"]
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
-        """TODO. JUST TO TEST.
+        """Get runner_group_id from group name for an org.
 
-        LET'S SEE GHAPI IF THEY RELEASE A NEW VERSION BEFORE IMPROVING
-        THIS
+        Once this function is implemented in the ghapi library, we should
+        use that instead. See https://github.com/AnswerDotAI/ghapi/issues/189.
+
+        No pagination is used, so if there are more than 30 groups, this
+        function could fail.
         """
-        # Be careful, no pagination in here.
         url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups"
         headers = {
             "Accept": "application/vnd.github+json",

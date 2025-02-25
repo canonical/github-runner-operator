@@ -225,8 +225,8 @@ class MockGitHubRunnerManager:
         """Get the registration token for registering runners on GitHub.
 
         Args:
-            instance_id: TODO
-            labels: TODO
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.

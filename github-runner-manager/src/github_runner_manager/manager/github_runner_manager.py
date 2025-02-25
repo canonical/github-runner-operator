@@ -100,13 +100,13 @@ class GitHubRunnerManager:  # pragma: no cover
         This token is used for registering self-hosted runners.
 
         Args:
-            instance_id: TODO
-            labels: TODO
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.
         """
-        return self.github.get_runner_registration_token(self._path, instance_id, labels)
+        return self.github.get_runner_registration_jittoken(self._path, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.

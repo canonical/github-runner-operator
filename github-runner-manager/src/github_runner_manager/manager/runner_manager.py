@@ -9,6 +9,7 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
+from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
@@ -122,12 +123,10 @@ class RunnerManager:
         """
         logger.info("Creating %s runners", num)
 
-        # This is quite ugly. labels should not be hidden inside OpenStack configuration.
-        # It will be refactor in the multiple image/flavor PRs.
-
         labels = self._labels
-        # TODO THIS LABELS ARE INVALID, THERE IS NO self-hosted NOR linux!! ADD THEM MANUALLY
-        labels += ["self-hosted", "linux"]
+        # This labels are added by default by the github agent, but with JIT tokens
+        # we have to add them manually.
+        labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
             RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
         ]
@@ -377,13 +376,12 @@ class RunnerManager:
     class _CreateRunnerArgs:
         """Arguments for the _create_runner function.
 
-        This is dangerous, we are using managers created in the main process in forked process,
-        at some point this could bite us.
+        This arguments are used in the forked processes and should be reviewed.
 
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
-            github_runner_manager: TODO
-            labels: TODO
+            github_runner_manager: To manage self-hosted runner on the GitHub side.
+            labels: List of labels to add to the runners.
         """
 
         cloud_runner_manager: CloudRunnerManager
