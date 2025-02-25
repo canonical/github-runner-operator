@@ -104,7 +104,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         self.state = state
         # Pending to remove and refactor from here.
         self._config = MagicMock()
-        self._config.runner_config.labels = ["label1", "label2"]
 
     @property
     def name_prefix(self) -> str:
