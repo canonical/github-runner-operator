@@ -401,10 +401,10 @@ class RunnerManager:
             The instance ID of the runner created.
         """
         instance_id = args.cloud_runner_manager.generate_instance_id()
-        registration_token = args.github_runner_manager.get_registration_token(
+        registration_jittoken = args.github_runner_manager.get_registration_jittoken(
             instance_id, args.labels
         )
         args.cloud_runner_manager.create_runner(
-            instance_id=instance_id, registration_token=registration_token
+            instance_id=instance_id, registration_jittoken=registration_jittoken
         )
         return instance_id

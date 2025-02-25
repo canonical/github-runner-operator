@@ -185,12 +185,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         return f"{self.name_prefix}-{secrets.token_hex(6)}"
 
-    def create_runner(self, instance_id: InstanceId, registration_token: str) -> None:
+    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
-            registration_token: The GitHub registration token for registering runners.
+            registration_jittoken: The JIT GitHub registration token for registering runners.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -205,7 +205,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         start_timestamp = time.time()
         self._init_metrics_storage(name=instance_id, install_start_timestamp=start_timestamp)
 
-        cloud_init = self._generate_cloud_init(registration_token=registration_token)
+        cloud_init = self._generate_cloud_init(registration_jittoken=registration_jittoken)
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=instance_id,
@@ -457,13 +457,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, registration_token: str) -> str:
+    def _generate_cloud_init(self, registration_jittoken: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            registration_token: The GitHub runner registration token.
+            registration_jittoken: The JIT GitHub runner registration token.
 
         Returns:
             The cloud init userdata for openstack instance.
@@ -506,7 +506,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            token=registration_token,
+            jittoken=registration_jittoken,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),

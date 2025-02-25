@@ -94,8 +94,8 @@ class GitHubRunnerManager:  # pragma: no cover
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
-    def get_registration_token(self, instance_id: str, labels: list[str]) -> str:
-        """Get registration token from GitHub.
+    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+        """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
 

@@ -309,12 +309,12 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         return secrets.token_hex(6)
 
-    def create_runner(self, instance_id: InstanceId, registration_token: str) -> None:
+    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
-            registration_token: The GitHub registration token for registering runners.
+            registration_jittoken: The GitHub registration token for registering runners.
         """
         name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
@@ -417,8 +417,8 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_token(self, instance_id: str, labels: list[str]) -> str:
-        """Get the registration token for registering runners on GitHub.
+    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+        """Get the registration JIT token for registering runners on GitHub.
 
         Args:
             instance_id: Instance ID of the runner.
