@@ -213,7 +213,7 @@ class GithubClient:
         url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups"
         headers = {
             "Accept": "application/vnd.github+json",
-            "Authorization:": "Bearer {self._token}",
+            "Authorization": f"Bearer {self._token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
         r = requests.get(url, headers=headers, timeout=30)
@@ -224,10 +224,8 @@ class GithubClient:
                 if group["name"] == org.group:
                     return group["id"]
         except TypeError as exc:
-            raise GithubApiError(
-                f"Cannot get runner_group_id for group {org.group_name}."
-            ) from exc
-        raise GithubApiError(f"Cannot get runner_group_id for group {org.group_name}")
+            raise GithubApiError(f"Cannot get runner_group_id for group {org.group}.") from exc
+        raise GithubApiError(f"Cannot get runner_group_id for group {org.group}")
 
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
