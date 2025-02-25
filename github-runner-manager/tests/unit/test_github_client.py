@@ -332,6 +332,7 @@ def test_get_registration_jittoken_org(
     assert: The API for the jittoken is called with the correct arguments, like the runner_group_id
        and the jittoken is extracted from the returned value.
     """
+    # The code that this test executes is not covered by integration tests.
     github_repo = GitHubOrg(org="theorg", group="my group name")
 
     def _mock_get(url, headers, *args, **kwargs):
@@ -392,6 +393,7 @@ def test_get_registration_jittoken_org(
     def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
+        assert name == "test-runner-99999999"
         assert runner_group_id == 3
         assert labels == ["label1", "label2"]
         return {
