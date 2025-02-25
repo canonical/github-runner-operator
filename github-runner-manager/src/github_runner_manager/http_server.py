@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 # The path under /lock are for debugging. These routes are for setting the lock state in tests.
 @app.route("/lock/status")
-def lock_status() -> tuple[str, int]:
+def lock_status() -> tuple[str, int]:  # pragma: no cover
     """Get the status of the lock.
 
     Only enabled in debug mode, else 404 is returned.
@@ -31,7 +31,7 @@ def lock_status() -> tuple[str, int]:
 
 
 @app.route("/lock/acquire")
-def lock_acquire() -> tuple[str, int]:
+def lock_acquire() -> tuple[str, int]:  # pragma: no cover
     """Acquire the thread lock.
 
     Only enabled in debug mode, else 404 is returned.
@@ -46,7 +46,7 @@ def lock_acquire() -> tuple[str, int]:
 
 
 @app.route("/lock/release")
-def lock_release() -> tuple[str, int]:
+def lock_release() -> tuple[str, int]:  # pragma: no cover
     """Release the thread lock.
 
     Only enabled in debug mode, else 404 is returned.
