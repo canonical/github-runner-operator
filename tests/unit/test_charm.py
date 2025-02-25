@@ -632,14 +632,14 @@ def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
-    runner_manager_mock = MagicMock()
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_manager_mock))
+    runner_scaler_mock = MagicMock()
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     assert harness.charm.unit.status.name == ActiveStatus.name
-    runner_manager_mock.flush.assert_called_once()
-    runner_manager_mock.reconcile.assert_called_once()
+    runner_scaler_mock.flush.assert_called_once()
+    runner_scaler_mock.reconcile.assert_called_once()
 
 
 def test__on_image_relation_joined():
