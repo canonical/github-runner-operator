@@ -92,6 +92,7 @@ class RunnerManager:
         manager_name: str,
         github_configuration: GitHubConfiguration,
         cloud_runner_manager: CloudRunnerManager,
+        labels: list[str],
     ):
         """Construct the object.
 
@@ -99,6 +100,7 @@ class RunnerManager:
             manager_name: Name of the manager.
             github_configuration: Configuration for GitHub.
             cloud_runner_manager: For managing the cloud instance of the runner.
+            labels: Labels for the runners created.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
@@ -107,6 +109,7 @@ class RunnerManager:
             prefix=self.name_prefix,
             github_configuration=github_configuration,
         )
+        self._labels = labels
 
     def create_runners(self, num: int) -> tuple[InstanceId, ...]:
         """Create runners.

@@ -19,7 +19,6 @@ from fabric import Connection as SSHConnection
 
 from github_runner_manager import constants
 from github_runner_manager.configuration import SupportServiceConfig
-from github_runner_manager.configuration.github import GitHubOrg
 from github_runner_manager.errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -36,7 +35,6 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    GitHubRunnerConfig,
     InstanceId,
 )
 from github_runner_manager.manager.runner_manager import HealthState
@@ -104,14 +102,12 @@ class OpenStackRunnerManagerConfig:
         prefix: The prefix of the runner names.
         credentials: The OpenStack authorization information.
         server_config: The configuration for OpenStack server.
-        runner_config: The configuration for the GitHub runner.
         service_config: The configuration for supporting services.
     """
 
     prefix: str
     credentials: OpenStackCredentials
     server_config: OpenStackServerConfig | None
-    runner_config: GitHubRunnerConfig
     service_config: SupportServiceConfig
 
 
@@ -209,9 +205,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         start_timestamp = time.time()
         self._init_metrics_storage(name=instance_id, install_start_timestamp=start_timestamp)
 
-        cloud_init = self._generate_cloud_init(
-            instance_id=instance_id, registration_token=registration_token
-        )
+        cloud_init = self._generate_cloud_init(registration_token=registration_token)
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=instance_id,
@@ -463,13 +457,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, instance_id: str, registration_token: str) -> str:
+    def _generate_cloud_init(self, registration_token: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            instance_id: The name of the instance.
             registration_token: The GitHub runner registration token.
 
         Returns:
@@ -507,21 +500,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
-        runner_group = None
-        runner_config = self._config.runner_config
-        if isinstance(runner_config.github_path, GitHubOrg):
-            runner_group = runner_config.github_path.group
         aproxy_address = (
             service_config.proxy_config.aproxy_address
             if service_config.proxy_config is not None
             else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            github_url=f"https://github.com/{runner_config.github_path.path()}",
-            runner_group=runner_group,
             token=registration_token,
-            instance_labels=",".join(runner_config.labels),
-            instance_id=instance_id,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),

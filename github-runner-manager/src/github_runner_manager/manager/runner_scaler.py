@@ -19,7 +19,6 @@ from github_runner_manager.errors import (
     ReconcileError,
 )
 from github_runner_manager.manager.cloud_runner_manager import (
-    GitHubRunnerConfig,
     HealthState,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
@@ -132,14 +131,10 @@ class RunnerScaler:
             )
             base_quantity = combination.base_virtual_machines
 
-        runner_config = GitHubRunnerConfig(
-            github_path=application_configuration.github_config.path, labels=labels
-        )
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
             prefix=openstack_configuration.vm_prefix,
             credentials=openstack_configuration.credentials,
             server_config=server_config,
-            runner_config=runner_config,
             service_config=application_configuration.service_config,
         )
         runner_manager = RunnerManager(
@@ -148,6 +143,7 @@ class RunnerScaler:
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
             ),
+            labels=labels,
         )
 
         max_quantity = 0
@@ -163,6 +159,7 @@ class RunnerScaler:
                 cloud_runner_manager=openstack_runner_manager_config,
                 github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
+                labels=labels,
             )
             max_quantity = reactive_config.max_total_virtual_machines
         return cls(

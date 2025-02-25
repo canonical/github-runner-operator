@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
-from github_runner_manager.configuration.github import GitHubPath
 from github_runner_manager.metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
@@ -128,19 +127,6 @@ class CloudInitStatus(str, Enum):
     ERROR = "error"
     DEGRADED = "degraded"
     DISABLED = "disabled"
-
-
-@dataclass
-class GitHubRunnerConfig:
-    """Configuration for GitHub runner spawned.
-
-    Attributes:
-        github_path: The GitHub organization or repository for runners to connect to.
-        labels: The labels to add to runners.
-    """
-
-    github_path: GitHubPath
-    labels: list[str]
 
 
 @dataclass

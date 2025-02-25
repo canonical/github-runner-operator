@@ -33,7 +33,6 @@ from github_runner_manager.configuration.github import (
 from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
-    GitHubRunnerConfig,
     InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
@@ -119,7 +118,10 @@ def runner_manager_fixture(
     )
 
     runner_manager = RunnerManager(
-        "mock_runners", GitHubConfiguration(token="mock_token", path=github_path), mock_cloud
+        "mock_runners",
+        GitHubConfiguration(token="mock_token", path=github_path),
+        mock_cloud,
+        labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
     runner_manager._github = mock_github
     return runner_manager
@@ -281,6 +283,7 @@ def test_build_runner_scaler(
     assert runner_scaler._manager.manager_name == "app_name"
     assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
     assert runner_scaler._manager._github.github._token == "githubtoken"
+    assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",
         credentials=OpenStackCredentials(
@@ -293,10 +296,6 @@ def test_build_runner_scaler(
             region_name="region",
         ),
         server_config=OpenStackServerConfig(image="image_id", flavor="flavor", network="network"),
-        runner_config=GitHubRunnerConfig(
-            github_path=GitHubOrg(org="canonical", group="group"),
-            labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
-        ),
         service_config=SupportServiceConfig(
             proxy_config=ProxyConfig(
                 http="http://httpproxy.example.com:3128",
@@ -344,10 +343,6 @@ def test_build_runner_scaler(
             server_config=OpenStackServerConfig(
                 image="image_id", flavor="flavor", network="network"
             ),
-            runner_config=GitHubRunnerConfig(
-                github_path=GitHubOrg(org="canonical", group="group"),
-                labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
-            ),
             service_config=SupportServiceConfig(
                 proxy_config=ProxyConfig(
                     http="http://httpproxy.example.com:3128",
@@ -372,6 +367,7 @@ def test_build_runner_scaler(
         ),
         github_token="githubtoken",
         supported_labels={"label1", "arm64", "flavorlabel", "label2", "x64", "noble"},
+        labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
 
 
