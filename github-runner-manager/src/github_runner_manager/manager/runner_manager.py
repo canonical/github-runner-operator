@@ -123,7 +123,7 @@ class RunnerManager:
         """
         logger.info("Creating %s runners", num)
 
-        labels = self._labels
+        labels = list(self._labels)
         # This labels are added by default by the github agent, but with JIT tokens
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS

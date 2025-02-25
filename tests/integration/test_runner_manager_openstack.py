@@ -185,6 +185,7 @@ async def runner_manager_fixture(
     token: str,
     log_dir_base_path: dict[str, Path],
     github_path: GitHubPath,
+    runner_label: str,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
