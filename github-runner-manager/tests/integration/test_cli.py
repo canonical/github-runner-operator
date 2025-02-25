@@ -23,8 +23,8 @@ def test_lock_unchange(app: subprocess.Popen):
     wait_for_reconcile()
     app.kill()
     log = get_app_log(app)
-    assert "lock acquired: False" in log
-    assert "lock acquired: True" not in log
+    assert "lock locked: False" in log
+    assert "lock locked: True" not in log
 
 
 def test_lock_acquire_release(app: subprocess.Popen):
@@ -44,5 +44,5 @@ def test_lock_acquire_release(app: subprocess.Popen):
 
     app.kill()
     log = get_app_log(app)
-    assert "lock acquired: False" in log
-    assert "lock acquired: True" in log
+    assert "lock locked: False" in log
+    assert "lock locked: True" in log

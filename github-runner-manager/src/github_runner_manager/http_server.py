@@ -15,8 +15,7 @@ from github_runner_manager.cli_config import Configuration
 app = Flask(__name__)
 
 
-# The path under /lock are for debugging.
-# These routes are for setting the lock state in tests.
+# The path under /lock are for debugging. These routes are for setting the lock state in tests.
 @app.route("/lock/status")
 def lock_status() -> tuple[str, int]:
     """Get the status of the lock.
