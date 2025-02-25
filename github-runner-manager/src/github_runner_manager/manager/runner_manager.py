@@ -125,7 +125,7 @@ class RunnerManager:
         # This is quite ugly. labels should not be hidden inside OpenStack configuration.
         # It will be refactor in the multiple image/flavor PRs.
 
-        labels = self._cloud._config.runner_config.labels  # pylint: disable=protected-access
+        labels = self._labels
         # TODO THIS LABELS ARE INVALID, THERE IS NO self-hosted NOR linux!! ADD THEM MANUALLY
         labels += ["self-hosted", "linux"]
         create_runner_args = [
