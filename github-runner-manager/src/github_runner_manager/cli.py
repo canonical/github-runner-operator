@@ -73,9 +73,5 @@ def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no
     """
     # The reconcile service is not implemented yet, current logging the lock status.
     while True:
-        logger.info("lock acquired: %s", lock.locked())
+        logger.info("lock locked: %s", lock.locked())
         sleep(10)
-
-
-# TODO: In test run in debug mode
-# In debug mode the testing endpoints returns 404.

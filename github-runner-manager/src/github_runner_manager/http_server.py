@@ -15,12 +15,12 @@ from github_runner_manager.cli_config import Configuration
 app = Flask(__name__)
 
 
-# The path under /lock are for tests.
+# The path under /lock are for debugging.
 @app.route("/lock/status")
 def lock_status() -> tuple[str, int]:
     """Get the status of the lock.
 
-    This is for tests.
+    Only enabled in debug mode, else 404 is returned.
 
     Returns:
         Whether the lock is locked.
@@ -34,7 +34,7 @@ def lock_status() -> tuple[str, int]:
 def lock_acquire() -> tuple[str, int]:
     """Acquire the thread lock.
 
-    This is for tests.
+    Only enabled in debug mode, else 404 is returned.
 
     Returns:
         A 200 OK response
@@ -49,7 +49,7 @@ def lock_acquire() -> tuple[str, int]:
 def lock_release() -> tuple[str, int]:
     """Release the thread lock.
 
-    This is for tests.
+    Only enabled in debug mode, else 404 is returned.
 
     Returns:
         A 200 OK response
