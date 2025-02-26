@@ -178,12 +178,11 @@ class GithubClient:
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.
             # If the repo does not belong to an org, there is no way to get the runner_group_id.
-            runner_group_id = 1
             token = self._client.actions.generate_runner_jitconfig_for_repo(
                 owner=path.owner,
                 repo=path.repo,
                 name=instance_id,
-                runner_group_id=runner_group_id,
+                runner_group_id=1,
                 labels=labels,
             )
         elif isinstance(path, GitHubOrg):
@@ -216,9 +215,9 @@ class GithubClient:
             "Authorization": f"Bearer {self._token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
-        r = requests.get(url, headers=headers, timeout=30)
-        r.raise_for_status()
-        data = r.json()
+        response = requests.get(url, headers=headers, timeout=30)
+        response.raise_for_status()
+        data = response.json()
         try:
             for group in data["runner_groups"]:
                 if group["name"] == org.group:
