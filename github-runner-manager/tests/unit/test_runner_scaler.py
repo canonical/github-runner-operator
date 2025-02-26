@@ -2,22 +2,55 @@
 # See LICENSE file for licensing details.
 
 
+import getpass
+import grp
+import os
 from typing import Iterable
 from unittest.mock import MagicMock
 
 import pytest
+from pydantic.networks import IPv4Address
 
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath, GitHubRepo
+from github_runner_manager.configuration import (
+    ApplicationConfiguration,
+    Flavor,
+    Image,
+    NonReactiveCombination,
+    NonReactiveConfiguration,
+    ProxyConfig,
+    QueueConfig,
+    ReactiveConfiguration,
+    RepoPolicyComplianceConfig,
+    SSHDebugConnection,
+    SupportServiceConfig,
+)
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+)
 from github_runner_manager.errors import CloudError, ReconcileError
-from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState, InstanceId
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerState,
+    InstanceId,
+)
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+    OpenStackCredentials,
+)
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
     MockGitHubRunnerManager,
@@ -84,22 +117,102 @@ def runner_manager_fixture(
         "github_runner_manager.manager.runner_manager.runner_metrics.issue_events", MagicMock()
     )
 
-    config = RunnerManagerConfig(
-        "mock_runners", GitHubConfiguration(token="mock_token", path=github_path)
+    runner_manager = RunnerManager(
+        "mock_runners",
+        GitHubConfiguration(token="mock_token", path=github_path),
+        mock_cloud,
+        labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
-    runner_manager = RunnerManager(mock_cloud, config)
     runner_manager._github = mock_github
     return runner_manager
 
 
-@pytest.fixture(scope="function", name="runner_scaler")
-def runner_scaler_fixture(runner_manager: RunnerManager) -> RunnerScaler:
-    return RunnerScaler(runner_manager, None)
+@pytest.fixture(scope="function", name="application_configuration")
+def application_configuration_fixture() -> ApplicationConfiguration:
+    """Returns a fixture with a fully populated ApplicationConfiguration."""
+    return ApplicationConfiguration(
+        name="app_name",
+        extra_labels=["label1", "label2"],
+        github_config=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ),
+        service_config=SupportServiceConfig(
+            proxy_config=ProxyConfig(
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
+                no_proxy="127.0.0.1",
+                use_aproxy=False,
+            ),
+            dockerhub_mirror="https://docker.example.com",
+            ssh_debug_connections=[
+                SSHDebugConnection(
+                    host=IPv4Address("10.10.10.10"),
+                    port=3000,
+                    rsa_fingerprint="SHA256:rsa",
+                    ed25519_fingerprint="SHA256:ed25519",
+                )
+            ],
+            repo_policy_compliance=RepoPolicyComplianceConfig(
+                token="token",
+                url="https://compliance.example.com",
+            ),
+        ),
+        non_reactive_configuration=NonReactiveConfiguration(
+            combinations=[
+                NonReactiveCombination(
+                    image=Image(
+                        name="image_id",
+                        labels=["arm64", "noble"],
+                    ),
+                    flavor=Flavor(
+                        name="flavor",
+                        labels=["flavorlabel"],
+                    ),
+                    base_virtual_machines=1,
+                )
+            ]
+        ),
+        reactive_configuration=ReactiveConfiguration(
+            queue=QueueConfig(
+                mongodb_uri="mongodb://user:password@localhost:27017",
+                queue_name="app_name",
+            ),
+            max_total_virtual_machines=2,
+            images=[
+                Image(name="image_id", labels=["arm64", "noble"]),
+            ],
+            flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
+        ),
+    )
+
+
+@pytest.fixture(scope="function", name="openstack_configuration")
+def openstack_configuration_fixture() -> OpenStackConfiguration:
+    """Returns a fixture with a fully populated OpenStackConfiguration."""
+    return OpenStackConfiguration(
+        vm_prefix="unit_name",
+        network="network",
+        credentials=OpenStackCredentials(
+            auth_url="auth_url",
+            project_name="project_name",
+            username="username",
+            password="password",
+            user_domain_name="user_domain_name",
+            project_domain_name="project_domain_name",
+            region_name="region",
+        ),
+    )
 
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
-def runner_scaler_one_runner_fixture(runner_scaler: RunnerScaler) -> RunnerScaler:
-    runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+def runner_scaler_one_runner_fixture(runner_manager: RunnerManager) -> RunnerScaler:
+    runner_scaler = RunnerScaler(
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        base_quantity=1,
+        max_quantity=0,
+    )
+    runner_scaler.reconcile()
     assert_runner_info(runner_scaler, online=1)
     return runner_scaler
 
@@ -148,16 +261,127 @@ def assert_runner_info(
     assert len(info.busy_runners) == busy
 
 
-def test_get_no_runner(runner_scaler: RunnerScaler):
+def test_build_runner_scaler(
+    monkeypatch: pytest.MonkeyPatch,
+    application_configuration: ApplicationConfiguration,
+    openstack_configuration: OpenStackConfiguration,
+):
+    """
+    arrange: Given ApplicationConfiguration and OpenStackConfiguration.
+    act: Call RunnerScaler.build
+    assert: The RunnerScaler was created with the expected configuration.
+    """
+    monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", getpass.getuser())
+    monkeypatch.setattr(
+        "github_runner_manager.constants.RUNNER_MANAGER_GROUP", grp.getgrgid(os.getgid())
+    )
+
+    runner_scaler = RunnerScaler.build(application_configuration, openstack_configuration)
+    assert runner_scaler
+    # A few comprobations on key data
+    # Pending to refactor, too invasive.
+    assert runner_scaler._manager.manager_name == "app_name"
+    assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
+    assert runner_scaler._manager._github.github._token == "githubtoken"
+    assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
+    assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
+        prefix="unit_name",
+        credentials=OpenStackCredentials(
+            auth_url="auth_url",
+            project_name="project_name",
+            username="username",
+            password="password",
+            user_domain_name="user_domain_name",
+            project_domain_name="project_domain_name",
+            region_name="region",
+        ),
+        server_config=OpenStackServerConfig(image="image_id", flavor="flavor", network="network"),
+        service_config=SupportServiceConfig(
+            proxy_config=ProxyConfig(
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
+                no_proxy="127.0.0.1",
+                use_aproxy=False,
+            ),
+            dockerhub_mirror="https://docker.example.com",
+            ssh_debug_connections=[
+                SSHDebugConnection(
+                    host=IPv4Address("10.10.10.10"),
+                    port=3000,
+                    rsa_fingerprint="SHA256:rsa",
+                    ed25519_fingerprint="SHA256:ed25519",
+                )
+            ],
+            repo_policy_compliance=RepoPolicyComplianceConfig(
+                token="token",
+                url="https://compliance.example.com",
+            ),
+        ),
+    )
+    reactive_process_config = runner_scaler._reactive_config
+    assert reactive_process_config
+    assert reactive_process_config == ReactiveProcessConfig(
+        queue=QueueConfig(
+            mongodb_uri="mongodb://user:password@localhost:27017",
+            queue_name="app_name",
+        ),
+        manager_name="app_name",
+        github_configuration=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ),
+        cloud_runner_manager=OpenStackRunnerManagerConfig(
+            prefix="unit_name",
+            credentials=OpenStackCredentials(
+                auth_url="auth_url",
+                project_name="project_name",
+                username="username",
+                password="password",
+                user_domain_name="user_domain_name",
+                project_domain_name="project_domain_name",
+                region_name="region",
+            ),
+            server_config=OpenStackServerConfig(
+                image="image_id", flavor="flavor", network="network"
+            ),
+            service_config=SupportServiceConfig(
+                proxy_config=ProxyConfig(
+                    http="http://httpproxy.example.com:3128",
+                    https="http://httpsproxy.example.com:3128",
+                    no_proxy="127.0.0.1",
+                    use_aproxy=False,
+                ),
+                dockerhub_mirror="https://docker.example.com",
+                ssh_debug_connections=[
+                    SSHDebugConnection(
+                        host=IPv4Address("10.10.10.10"),
+                        port=3000,
+                        rsa_fingerprint="SHA256:rsa",
+                        ed25519_fingerprint="SHA256:ed25519",
+                    )
+                ],
+                repo_policy_compliance=RepoPolicyComplianceConfig(
+                    token="token",
+                    url="https://compliance.example.com",
+                ),
+            ),
+        ),
+        github_token="githubtoken",
+        supported_labels={"label1", "arm64", "flavorlabel", "label2", "x64", "noble"},
+        labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
+    )
+
+
+def test_get_no_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act: Get runner information.
     Assert: Information should contain no runners.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
     assert_runner_info(runner_scaler, online=0)
 
 
-def test_flush_no_runner(runner_scaler: RunnerScaler):
+def test_flush_no_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act:
@@ -168,6 +392,7 @@ def test_flush_no_runner(runner_scaler: RunnerScaler):
         2. No change in number of runners.
     """
     # 1.
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
     diff = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
     assert diff == 0
     assert_runner_info(runner_scaler, online=0)
@@ -178,13 +403,14 @@ def test_flush_no_runner(runner_scaler: RunnerScaler):
     assert_runner_info(runner_scaler, online=0)
 
 
-def test_reconcile_runner_create_one(runner_scaler: RunnerScaler):
+def test_reconcile_runner_create_one(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act: Reconcile to no runners.
     Assert: No changes. Runner info should contain no runners.
     """
-    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=0)
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=0, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 0
     assert_runner_info(runner_scaler, online=0)
 
@@ -200,7 +426,9 @@ def test_reconcile_runner_create_one_reactive(
     Assert: 5 processes should be returned in the result of the reconcile.
     """
     reactive_process_config = MagicMock()
-    runner_scaler = RunnerScaler(runner_manager, reactive_process_config)
+    runner_scaler = RunnerScaler(
+        runner_manager, reactive_process_config, base_quantity=0, max_quantity=5
+    )
 
     from github_runner_manager.reactive.runner_manager import ReconcileResult
 
@@ -212,46 +440,48 @@ def test_reconcile_runner_create_one_reactive(
         "github_runner_manager.reactive.runner_manager.reconcile",
         MagicMock(side_effect=_fake_reactive_reconcile),
     )
-    diff = runner_scaler.reconcile(base_quantity=0, max_quantity=5)
+    diff = runner_scaler.reconcile()
     assert diff == 5
     assert_runner_info(runner_scaler, online=0)
 
 
 def test_reconcile_error_still_issue_metrics(
-    runner_scaler: RunnerScaler, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
+    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
 ):
     """
     Arrange: A RunnerScaler with no runners which raises an error on reconcile.
     Act: Reconcile to one runner.
     Assert: ReconciliationEvent should be issued.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
     monkeypatch.setattr(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=Exception("Mock error"))
     )
     with pytest.raises(Exception):
-        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+        runner_scaler.reconcile()
     issue_events_mock.assert_called_once()
     issued_event = issue_events_mock.call_args[0][0]
     assert isinstance(issued_event, Reconciliation)
 
 
 def test_reconcile_raises_reconcile_error(
-    runner_scaler: RunnerScaler, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
+    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock
 ):
     """
     Arrange: A RunnerScaler with no runners which raises a Cloud error on reconcile.
     Act: Reconcile to one runner.
     Assert: ReconcileError should be raised.
     """
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
     monkeypatch.setattr(
         runner_scaler._manager, "cleanup", MagicMock(side_effect=CloudError("Mock error"))
     )
     with pytest.raises(ReconcileError) as exc:
-        runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+        runner_scaler.reconcile()
     assert "Failed to reconcile runners." in str(exc.value)
 
 
-def test_one_runner(runner_scaler: RunnerScaler):
+def test_one_runner(runner_manager: RunnerManager):
     """
     Arrange: A RunnerScaler with no runners.
     Act:
@@ -265,12 +495,13 @@ def test_one_runner(runner_scaler: RunnerScaler):
         3. Runner info has one runner.
     """
     # 1.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    runner_scaler = RunnerScaler(runner_manager, None, base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 
     # 2.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 0
     assert_runner_info(runner_scaler, online=1)
 
@@ -279,7 +510,7 @@ def test_one_runner(runner_scaler: RunnerScaler):
     assert_runner_info(runner_scaler, online=0)
 
     # 3.
-    diff = runner_scaler.reconcile(base_quantity=1, max_quantity=0)
+    diff = runner_scaler.reconcile()
     assert diff == 1
     assert_runner_info(runner_scaler, online=1)
 

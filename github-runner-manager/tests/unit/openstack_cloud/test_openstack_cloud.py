@@ -58,6 +58,6 @@ def test_raises_openstack_error(
             "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
             openstack_connect_mock,
         )
-        with pytest.raises(OpenStackError) as exc:
+        with pytest.raises(OpenStackError) as innerexc:
             getattr(cloud, public_method)(*args)
-        assert "Failed OpenStack API call" in str(exc.value)
+        assert "Failed OpenStack API call" in str(innerexc.value)

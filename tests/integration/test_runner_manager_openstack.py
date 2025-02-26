@@ -27,13 +27,11 @@ from github_runner_manager.configuration.github import (
 )
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
-    GitHubRunnerConfig,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -161,14 +159,10 @@ async def openstack_runner_manager_fixture(
         flavor=flavor_name,
         network=network_name,
     )
-    runner_config = GitHubRunnerConfig(
-        github_path=github_path,
-        labels=["openstack_test", runner_label],
-    )
     service_config = SupportServiceConfig(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
-        ssh_debug_connections=None,
+        ssh_debug_connections=[],
         repo_policy_compliance=None,
     )
 
@@ -177,7 +171,6 @@ async def openstack_runner_manager_fixture(
         prefix=f"{app_name}-0",
         credentials=credentials,
         server_config=server_config,
-        runner_config=runner_config,
         service_config=service_config,
     )
 
@@ -192,14 +185,19 @@ async def runner_manager_fixture(
     token: str,
     log_dir_base_path: dict[str, Path],
     github_path: GitHubPath,
+    runner_label: str,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     github_configuration = GitHubConfiguration(token=token, path=github_path)
-    config = RunnerManagerConfig("test_runner", github_configuration)
-    yield RunnerManager(openstack_runner_manager, config)
+    yield RunnerManager(
+        manager_name="test_runner",
+        github_configuration=github_configuration,
+        cloud_runner_manager=openstack_runner_manager,
+        labels=["openstack_test", runner_label],
+    )
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
