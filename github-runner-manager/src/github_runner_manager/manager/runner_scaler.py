@@ -261,7 +261,7 @@ class RunnerScaler:
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = self._max_quantity if self._reactive_config is None else None
+        expected_runner_quantity = self._base_quantity if self._reactive_config is None else None
 
         try:
             if self._reactive_config is not None:
