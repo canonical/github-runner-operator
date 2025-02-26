@@ -22,6 +22,7 @@ class ReactiveProcessConfig(BaseModel):
         cloud_runner_manager: The OpenStack runner manager configuration.
         github_token: str
         supported_labels: The supported labels for the runner.
+        labels: Labels to use for the runners.
     """
 
     queue: QueueConfig
@@ -30,3 +31,4 @@ class ReactiveProcessConfig(BaseModel):
     cloud_runner_manager: OpenStackRunnerManagerConfig
     github_token: str
     supported_labels: set[str]
+    labels: list[str]

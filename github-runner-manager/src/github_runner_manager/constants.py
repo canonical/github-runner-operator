@@ -4,6 +4,7 @@
 """Constants for the library."""
 
 GITHUB_SELF_HOSTED_ARCH_LABELS = {"x64", "arm64"}
+GITHUB_DEFAULT_LABELS = {"self-hosted", "linux"}
 
 # Pending to be removed when the application works in standalone mode.
 RUNNER_MANAGER_USER = "runner-manager"

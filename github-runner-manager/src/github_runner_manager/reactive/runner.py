@@ -48,6 +48,7 @@ def main() -> None:
         manager_name=runner_config.manager_name,
         github_configuration=runner_config.github_configuration,
         cloud_runner_manager=openstack_runner_manager,
+        labels=runner_config.labels,
     )
     github_client = GithubClient(token=runner_config.github_token)
     consume(
