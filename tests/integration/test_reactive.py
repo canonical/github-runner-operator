@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
+import asyncio
 import json
 import re
 from typing import AsyncIterator
@@ -199,6 +200,9 @@ async def test_reactive_mode_scale_down(
     )
 
     await wait_for_status(run, "in_progress")
+
+    # Give the runner manager some time to check the runners is ok and ack the message.
+    await asyncio.sleep(60)
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
