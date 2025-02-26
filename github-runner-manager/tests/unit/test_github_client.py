@@ -384,7 +384,10 @@ def test_get_registration_jittoken_org(
                 """Mocked raise_for_status."""
                 pass
 
-        assert url == f"https://api.github.com/orgs/{github_repo.org}/actions/runner-groups"
+        assert (
+            url
+            == f"https://api.github.com/orgs/{github_repo.org}/actions/runner-groups?per_page=100"
+        )
         assert headers["Authorization"] == "Bearer token"
         return _Response()
 

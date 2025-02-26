@@ -206,10 +206,10 @@ class GithubClient:
         Once this function is implemented in the ghapi library, we should
         use that instead. See https://github.com/AnswerDotAI/ghapi/issues/189.
 
-        No pagination is used, so if there are more than 30 groups, this
+        No pagination is used, so if there are more than 100 groups, this
         function could fail.
         """
-        url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups"
+        url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups?per_page=100"
         headers = {
             "Accept": "application/vnd.github+json",
             "Authorization": f"Bearer {self._token}",
@@ -224,7 +224,10 @@ class GithubClient:
                     return group["id"]
         except TypeError as exc:
             raise GithubApiError(f"Cannot get runner_group_id for group {org.group}.") from exc
-        raise GithubApiError(f"Cannot get runner_group_id for group {org.group}")
+        raise GithubApiError(
+            f"Cannot get runner_group_id for group {org.group}."
+            " The group does not exist or there are more than 100 groups."
+        )
 
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:
