@@ -11,7 +11,7 @@ from typing import Iterator
 import pytest
 import yaml
 
-PACKAGE_NAME = "github-runner-manager"
+from tests.integration.helper import start_app
 
 
 @pytest.fixture(name="config", scope="module")
@@ -52,19 +52,14 @@ def install_app_fixture() -> None:
 
 
 @pytest.fixture(name="app", scope="function")
-def cli_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
-    process = subprocess.Popen(
-        [PACKAGE_NAME, "--config-file", config_file, "--debug"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    assert process.stderr is not None, "Test setup failure: Missing stderr stream"
-    for line in process.stderr:
-        if b"Address already in use" in line:
-            assert False, "Test setup failure: Port used for testing taken"
-        if b"Press CTRL+C to quit" in line:
-            break
-    else:
-        assert False, "Test setup failure: Abnormal app exit"
+def app_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
+    process = start_app(config_file, [])
+    yield process
+    process.kill()
+
+
+@pytest.fixture(name="no_reconcile_app", scope="function")
+def no_reconcile_app_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
+    process = start_app(config_file, ["--debug-disable-reconcile"])
     yield process
     process.kill()

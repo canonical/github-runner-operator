@@ -13,7 +13,6 @@ import click
 from github_runner_manager.cli_config import Configuration
 from github_runner_manager.http_server import start_http_server
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -43,7 +42,16 @@ logger = logging.getLogger(__name__)
     default=False,
     help="Debug mode for testing.",
 )
-def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pragma: no cover
+@click.option(
+    "--debug-disable-reconcile",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="Disable reconcile thread for debugging.",
+)
+def main(
+    config_file: TextIO, host: str, port: int, debug: bool, debug_disable_reconcile: bool
+) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
@@ -51,17 +59,25 @@ def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pra
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
+        debug_disable_reconcile: Whether to not start the reconcile service for debugging.
     """
+    if debug:
+        logging.basicConfig(level=logging.DEBUG)
+
     lock = Lock()
     config = Configuration.from_yaml_file(config_file)
 
+    threads = []
+    if not debug_disable_reconcile:
+        service = Thread(target=lambda: start_reconcile_service(config, lock))
+        service.start()
+        threads.append(service)
     http_server = Thread(target=lambda: start_http_server(config, lock, host, port, debug))
     http_server.start()
-    service = Thread(target=lambda: start_reconcile_service(config, lock))
-    service.start()
+    threads.append(http_server)
 
-    http_server.join()
-    service.join()
+    for thread in threads:
+        thread.join()
 
 
 # The function is not yet implemented, testing is not needed.
@@ -73,5 +89,9 @@ def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no
     """
     # The reconcile service is not implemented yet, current logging the lock status.
     while True:
-        logger.info("lock locked: %s", lock.locked())
-        sleep(10)
+        logger.info("Lock locked: %s", lock.locked())
+        logger.info("Reconcile: Attempting to acquire the lock...")
+        with lock:
+            logger.info("Reconcile: Sleeping a while...")
+            sleep(10)
+        logger.info("Reconcile: Released the lock")

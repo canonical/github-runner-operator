@@ -7,6 +7,7 @@ import keystoneauth1.exceptions
 import openstack
 import pytest
 
+from github_runner_manager.errors import OpenStackError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
     OpenstackCloud,
     OpenStackCredentials,
@@ -57,12 +58,8 @@ def test_raises_openstack_error(
             "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
             openstack_connect_mock,
         )
-        # Issues with the pytest.raises return type.
-        with pytest.raises(  # type: ignore
-            (openstack.exceptions.SDKException, keystoneauth1.exceptions.ClientException)
-        ) as exc:
+        # Mypy typing detection issues. The type being raised is OpenStackError.
+        with pytest.raises(OpenStackError) as exc:  # type: ignore
             getattr(cloud, public_method)(*args)
-        # Force mypy type checker to know type[SDKException] | type[ClientException] can be
-        # consider as Exception (common base class of the two exceptions).
-        assert isinstance(exc, Exception)
-        assert "Failed OpenStack API call" in str(exc.value)
+        assert isinstance(exc.value, OpenStackError)  # type: ignore
+        assert "Failed OpenStack API call" in str(exc.value)  # type: ignore

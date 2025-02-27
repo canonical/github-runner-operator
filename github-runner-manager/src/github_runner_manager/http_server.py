@@ -7,12 +7,42 @@ The HTTP server for request to the github-runner-manager.
 """
 
 from threading import Lock
+from time import sleep
 
-from flask import Flask, abort
+from flask import Flask, abort, request
 
 from github_runner_manager.cli_config import Configuration
 
 app = Flask(__name__)
+
+
+# The function is not yet implemented, testing is not needed.
+@app.route("/runner/flush", methods=["POST"])
+def flush_runner() -> tuple[str, int]:
+    """Flush the runners.
+
+    The logic of this function is not implemented.
+
+    HTTP header args:
+        flush-busy(bool): Whether to flush busy runners.
+
+    Returns:
+        A empty response.
+    """
+    flush_busy = request.headers.get("flush-busy")
+    if flush_busy in ("True", "true"):
+        app.logger.info("Flushing busy runners...")
+    else:
+        app.logger.info("Flushing idle runners...")
+
+    lock = _get_lock()
+    app.logger.info("Lock locked: %s", lock.locked())
+    app.logger.info("Flush: Attempting to acquire the lock...")
+    with lock:
+        app.logger.info("Flush: Sleeping a while...")
+        sleep(10)
+    app.logger.info("Flush: Released the lock")
+    return ("", 200)
 
 
 # The path under /lock are for debugging. These routes are for setting the lock state in tests.
@@ -37,7 +67,7 @@ def lock_acquire() -> tuple[str, int]:  # pragma: no cover
     Only enabled in debug mode, else 404 is returned.
 
     Returns:
-        A 200 OK response
+        A empty response.
     """
     if not app.debug:
         abort(404)
@@ -52,7 +82,7 @@ def lock_release() -> tuple[str, int]:  # pragma: no cover
     Only enabled in debug mode, else 404 is returned.
 
     Returns:
-        A 200 OK response
+        A empty response.
     """
     if not app.debug:
         abort(404)

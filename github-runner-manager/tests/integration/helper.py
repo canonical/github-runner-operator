@@ -4,11 +4,14 @@
 """Helper functions for integration tests."""
 
 import subprocess
+from pathlib import Path
 from time import sleep
+from typing import Sequence
 
 import requests
 
 GITHUB_RUNNER_MANAGER_ADDRESS = "127.0.0.1:8080"
+PACKAGE_NAME = "github-runner-manager"
 
 
 def get_lock_status() -> str:
@@ -31,13 +34,16 @@ def release_lock():
     requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/lock/release")
 
 
-def wait_for_reconcile():
-    """Wait for reconcile service to run.
+def flush_runner(flush_busy: bool):
+    """Flush the runners.
 
-    The reconcile service is not yet implemented.
-    Sleep to let the reconcile run the logging of lock status every 10 secs.
+    Args:
+        flush_busy: Whether to flush busy runners.
     """
-    sleep(15)
+    busy = "true" if flush_busy else "false"
+    requests.post(
+        f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/runner/flush", headers={"flush-busy": busy}
+    )
 
 
 def get_app_log(app: subprocess.Popen) -> str:
@@ -53,3 +59,45 @@ def get_app_log(app: subprocess.Popen) -> str:
     """
     assert app.stderr is not None, "Test setup failure: Missing stderr stream"
     return app.stderr.read().decode("utf-8")
+
+
+def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
+    """Start the CLI application.
+
+    Args:
+        config_file: The Path to the configuration file.
+        extra_args: Any extra args to the CLI application.
+
+    Returns:
+        The process running the CLI application.
+    """
+    process = subprocess.Popen(
+        [PACKAGE_NAME, "--config-file", config_file, "--debug", *extra_args],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    assert process.stderr is not None, "Test setup failure: Missing stderr stream"
+    for line in process.stderr:
+        if b"Address already in use" in line:
+            assert False, "Test setup failure: Port used for testing taken"
+        if b"Press CTRL+C to quit" in line:
+            break
+    else:
+        assert False, "Test setup failure: Abnormal app exit"
+    return process
+
+
+def poll_lock_status(secs: int) -> list[str]:
+    """Poll the lock status every second.
+
+    Args:
+        secs: How long to poll for in seconds.
+
+    Returns:
+        The lock status.
+    """
+    lock_status = []
+    for _ in range(secs):
+        lock_status.append(get_lock_status())
+        sleep(1)
+    return lock_status
