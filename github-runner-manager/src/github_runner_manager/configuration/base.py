@@ -42,7 +42,7 @@ class SupportServiceConfig(BaseModel):
 
     proxy_config: "ProxyConfig | None"
     dockerhub_mirror: str | None
-    ssh_debug_connections: "list[SSHDebugConnection] | None"
+    ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
 
 

@@ -271,8 +271,6 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
         self._reconcile_openstack_runners(
             runner_scaler,
-            base_num=state.runner_config.base_virtual_machines,
-            max_num=state.runner_config.max_total_virtual_machines,
         )
 
     def _set_reconcile_timer(self) -> None:
@@ -344,8 +342,6 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
             self._reconcile_openstack_runners(
                 runner_scaler,
-                base_num=state.runner_config.base_virtual_machines,
-                max_num=state.runner_config.max_total_virtual_machines,
             )
 
     @catch_charm_errors
@@ -373,8 +369,6 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
         self._reconcile_openstack_runners(
             runner_scaler,
-            base_num=state.runner_config.base_virtual_machines,
-            max_num=state.runner_config.max_total_virtual_machines,
         )
 
     @catch_action_errors
@@ -416,10 +410,7 @@ class GithubRunnerCharm(CharmBase):
 
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            delta = runner_scaler.reconcile(
-                base_quantity=state.runner_config.base_virtual_machines,
-                max_quantity=state.runner_config.max_total_virtual_machines,
-            )
+            delta = runner_scaler.reconcile()
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -444,10 +435,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info("Flushed %s runners", flushed)
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            delta = runner_scaler.reconcile(
-                base_quantity=state.runner_config.base_virtual_machines,
-                max_quantity=state.runner_config.max_total_virtual_machines,
-            )
+            delta = runner_scaler.reconcile()
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -480,19 +468,15 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
         runner_scaler.flush(FlushMode.FLUSH_BUSY)
 
-    def _reconcile_openstack_runners(
-        self, runner_scaler: RunnerScaler, base_num: int, max_num: int
-    ) -> None:
+    def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler) -> None:
         """Reconcile the current runners state and intended runner state for OpenStack mode.
 
         Args:
             runner_scaler: Scaler used to scale the amount of runners.
-            base_num: Target number of runners.
-            max_num: Target number of runners.
         """
         self.unit.status = MaintenanceStatus("Reconciling runners")
         try:
-            runner_scaler.reconcile(base_quantity=base_num, max_quantity=max_num)
+            runner_scaler.reconcile()
         except ReconcileError:
             logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
             self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
@@ -532,8 +516,6 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler.flush()
         self._reconcile_openstack_runners(
             runner_scaler,
-            base_num=state.runner_config.base_virtual_machines,
-            max_num=state.runner_config.max_total_virtual_machines,
         )
 
     @catch_charm_errors
@@ -560,8 +542,6 @@ class GithubRunnerCharm(CharmBase):
         runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
         self._reconcile_openstack_runners(
             runner_scaler,
-            base_num=state.runner_config.base_virtual_machines,
-            max_num=state.runner_config.max_total_virtual_machines,
         )
 
     def _get_set_image_ready_status(self) -> bool:

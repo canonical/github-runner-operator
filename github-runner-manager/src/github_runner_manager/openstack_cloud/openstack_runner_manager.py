@@ -19,7 +19,6 @@ from fabric import Connection as SSHConnection
 
 from github_runner_manager import constants
 from github_runner_manager.configuration import SupportServiceConfig
-from github_runner_manager.configuration.github import GitHubOrg
 from github_runner_manager.errors import (
     CreateMetricsStorageError,
     GetMetricsStorageError,
@@ -36,7 +35,6 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    GitHubRunnerConfig,
     InstanceId,
 )
 from github_runner_manager.manager.runner_manager import HealthState
@@ -104,14 +102,12 @@ class OpenStackRunnerManagerConfig:
         prefix: The prefix of the runner names.
         credentials: The OpenStack authorization information.
         server_config: The configuration for OpenStack server.
-        runner_config: The configuration for the GitHub runner.
         service_config: The configuration for supporting services.
     """
 
     prefix: str
     credentials: OpenStackCredentials
     server_config: OpenStackServerConfig | None
-    runner_config: GitHubRunnerConfig
     service_config: SupportServiceConfig
 
 
@@ -173,11 +169,28 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         return self._config.prefix
 
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def generate_instance_id(self) -> InstanceId:
+        r"""Generate an intance_id to name a runner.
+
+        The GitHub runner name convention is as following:
+        A valid runner name is 64 characters or less in length and does not include '"', '/', ':',
+        '<', '>', '\', '|', '*' and '?'.
+
+        The collision rate calculation:
+        alphanumeric 12 chars long (26 alphabet + 10 digits = 36)
+        36^12 is big enough for our use-case.
+
+        Returns:
+            Instance ID of the runner.
+        """
+        return f"{self.name_prefix}-{secrets.token_hex(6)}"
+
+    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
-            registration_token: The GitHub registration token for registering runners.
+            instance_id: Instance ID for the runner to create.
+            registration_jittoken: The JIT GitHub registration token for registering runners.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -190,13 +203,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
             raise MissingServerConfigError("Missing server configuration to create runners")
 
         start_timestamp = time.time()
-        instance_id = OpenStackRunnerManager._generate_instance_id()
-        instance_name = self._openstack_cloud.get_server_name(instance_id=instance_id)
-        self._init_metrics_storage(name=instance_name, install_start_timestamp=start_timestamp)
+        self._init_metrics_storage(name=instance_id, install_start_timestamp=start_timestamp)
 
-        cloud_init = self._generate_cloud_init(
-            instance_name=instance_name, registration_token=registration_token
-        )
+        cloud_init = self._generate_cloud_init(registration_jittoken=registration_jittoken)
         try:
             instance = self._openstack_cloud.launch_instance(
                 instance_id=instance_id,
@@ -206,7 +215,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 cloud_init=cloud_init,
             )
         except OpenStackError as err:
-            raise RunnerCreateError(f"Failed to create {instance_name} openstack runner") from err
+            raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
 
         logger.debug("Waiting for runner process to startup: %s", instance.server_name)
         self._wait_runner_startup(instance)
@@ -215,40 +224,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         logger.info("Runner %s created successfully", instance.server_name)
         return instance_id
-
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
-
-        Returns:
-            Information on the runner instance.
-        """
-        logger.debug("Getting runner info %s", instance_id)
-        instance = self._openstack_cloud.get_instance(instance_id)
-        logger.debug(
-            "Runner info fetched, checking health %s %s", instance_id, instance.server_name
-        )
-
-        try:
-            healthy = health_checks.check_runner(
-                openstack_cloud=self._openstack_cloud, instance=instance
-            )
-            logger.debug("Runner health check completed %s %s", instance.server_name, healthy)
-        except OpenstackHealthCheckError:
-            logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.server_name)
-            healthy = None
-        return (
-            CloudRunnerInstance(
-                name=instance.server_name,
-                instance_id=instance_id,
-                health=HealthState.from_value(healthy),
-                state=CloudRunnerState.from_openstack_server_status(instance.status),
-            )
-            if instance is not None
-            else None
-        )
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -303,7 +278,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if instance is None:
             logger.warning(
                 "Unable to delete instance %s as it is not found",
-                self._openstack_cloud.get_server_name(instance_id),
+                instance_id,
             )
             return None
 
@@ -482,14 +457,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, instance_name: str, registration_token: str) -> str:
+    def _generate_cloud_init(self, registration_jittoken: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            instance_name: The name of the instance.
-            registration_token: The GitHub runner registration token.
+            registration_jittoken: The JIT GitHub runner registration token.
 
         Returns:
             The cloud init userdata for openstack instance.
@@ -526,21 +500,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
-        runner_group = None
-        runner_config = self._config.runner_config
-        if isinstance(runner_config.github_path, GitHubOrg):
-            runner_group = runner_config.github_path.group
         aproxy_address = (
             service_config.proxy_config.aproxy_address
             if service_config.proxy_config is not None
             else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            github_url=f"https://github.com/{runner_config.github_path.path()}",
-            runner_group=runner_group,
-            token=registration_token,
-            instance_labels=",".join(runner_config.labels),
-            instance_name=instance_name,
+            jittoken=registration_jittoken,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
@@ -696,23 +662,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         logger.info("Runner %s found to be healthy", instance.server_name)
 
-    @staticmethod
-    def _generate_instance_id() -> InstanceId:
-        r"""Generate an instance id suffix compliant to the GitHub runner naming convention.
-
-        The GitHub runner name convention is as following:
-        A valid runner name is 64 characters or less in length and does not include '"', '/', ':',
-        '<', '>', '\', '|', '*' and '?'.
-
-        The collision rate calculation:
-        alphanumeric 12 chars long (26 alphabet + 10 digits = 36)
-        36^12 is big enough for our use-case.
-
-        Return:
-            The id.
-        """
-        return secrets.token_hex(6)
-
     def _init_metrics_storage(self, name: str, install_start_timestamp: float) -> None:
         """Create metrics storage for runner.
 
@@ -848,12 +797,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     @staticmethod
     def _run_runner_removal_script(
-        instance_name: str, ssh_conn: SSHConnection, remove_token: str
+        instance_id: str, ssh_conn: SSHConnection, remove_token: str
     ) -> None:
         """Run Github runner removal script.
 
         Args:
-            instance_name: The name of the runner instance.
+            instance_id: The name of the runner instance.
             ssh_conn: The SSH connection to the runner instance.
             remove_token: The GitHub instance removal token.
 
@@ -872,17 +821,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
                     "Unable to run removal script on instance %s, "
                     "exit code: %s, stdout: %s, stderr: %s"
                 ),
-                instance_name,
+                instance_id,
                 result.return_code,
                 result.stdout,
                 result.stderr,
             )
-            raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_name} from Github.")
+            raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_id} from Github.")
         except (
             TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
             raise _GithubRunnerRemoveError(
-                f"Failed to remove runner {instance_name} from Github."
+                f"Failed to remove runner {instance_id} from Github."
             ) from exc

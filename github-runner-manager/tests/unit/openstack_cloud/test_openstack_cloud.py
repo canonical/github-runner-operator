@@ -58,8 +58,6 @@ def test_raises_openstack_error(
             "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
             openstack_connect_mock,
         )
-        # Mypy typing detection issues. The type being raised is OpenStackError.
-        with pytest.raises(OpenStackError) as exc:  # type: ignore
+        with pytest.raises(OpenStackError) as innerexc:
             getattr(cloud, public_method)(*args)
-        assert isinstance(exc.value, OpenStackError)  # type: ignore
-        assert "Failed OpenStack API call" in str(exc.value)  # type: ignore
+        assert "Failed OpenStack API call" in str(innerexc.value)

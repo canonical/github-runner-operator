@@ -10,8 +10,9 @@ from unittest.mock import MagicMock
 from urllib.error import HTTPError
 
 import pytest
+import requests
 
-from github_runner_manager.configuration.github import GitHubRepo
+from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
@@ -287,3 +288,142 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
 
     with pytest.raises(TokenError):
         github_client.get_runner_remove_token(github_repo)
+
+
+def test_get_registration_jittoken_repo(github_client: GithubClient):
+    """
+    arrange: A mocked GitHub client that replies with information about jitconfig for repo.
+    act: Call get_runner_registration_jittoken.
+    assert: The jittoken is extracted from the returned value.
+    """
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_client._client.actions.generate_runner_jitconfig_for_repo.return_value = {
+        "runner": {
+            "id": 113,
+            "name": "test-runner-99999999",
+            "os": "unknown",
+            "status": "offline",
+            "busy": False,
+            "labels": [
+                {"id": 0, "name": "label1", "type": "read-only"},
+                {"id": 0, "name": "label2", "type": "read-only"},
+            ],
+            "runner_group_id": 1,
+        },
+        "encoded_jit_config": "hugestringinhere",
+    }
+
+    instance_id = "test-runner-99999999"
+    labels = ["label1", "label2"]
+    jittoken = github_client.get_runner_registration_jittoken(
+        path=github_repo, instance_id=instance_id, labels=labels
+    )
+
+    assert jittoken == "hugestringinhere"
+
+
+def test_get_registration_jittoken_org(
+    github_client: GithubClient, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: A mocked GitHub client that replies with information about jitconfig for org.
+       The requests library is patched to return information about github runner groups.
+    act: Call get_runner_registration_jittoken for the org.
+    assert: The API for the jittoken is called with the correct arguments, like the runner_group_id
+       and the jittoken is extracted from the returned value.
+    """
+    # The code that this test executes is not covered by integration tests.
+    github_repo = GitHubOrg(org="theorg", group="my group name")
+
+    def _mock_get(url, headers, *args, **kwargs):
+        """Mock for requests.get."""
+
+        class _Response:
+            """Mocked Response for requests.get."""
+
+            @staticmethod
+            def json():
+                """Json response for requests.get mock.
+
+                Returns:
+                   The JSON response from the API.
+                """
+                return {
+                    "total_count": 2,
+                    "runner_groups": [
+                        {
+                            "id": 1,
+                            "name": "Default",
+                            "visibility": "all",
+                            "allows_public_repositories": True,
+                            "default": True,
+                            "workflow_restrictions_read_only": False,
+                            "restricted_to_workflows": False,
+                            "selected_workflows": [],
+                            "runners_url": "https://api.github.com/orgs/theorg/....",
+                            "hosted_runners_url": "https://api.github.com/orgs/theorg/....",
+                            "inherited": False,
+                        },
+                        {
+                            "id": 3,
+                            "name": "my group name",
+                            "visibility": "all",
+                            "allows_public_repositories": True,
+                            "default": False,
+                            "workflow_restrictions_read_only": False,
+                            "restricted_to_workflows": False,
+                            "selected_workflows": [],
+                            "runners_url": "https://api.github.com/orgs/theorg/....",
+                            "hosted_runners_url": "https://api.github.com/orgs/theorg/....",
+                            "inherited": False,
+                        },
+                    ],
+                }
+
+            def raise_for_status(self):
+                """Mocked raise_for_status."""
+                pass
+
+        assert (
+            url
+            == f"https://api.github.com/orgs/{github_repo.org}/actions/runner-groups?per_page=100"
+        )
+        assert headers["Authorization"] == "Bearer token"
+        return _Response()
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+
+    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
+        """Mocked generate_runner_jitconfig_for_org."""
+        assert org == "theorg"
+        assert name == "test-runner-99999999"
+        assert runner_group_id == 3
+        assert labels == ["label1", "label2"]
+        return {
+            "runner": {
+                "id": 18,
+                "name": "test-runner-3438",
+                "os": "unknown",
+                "status": "offline",
+                "busy": False,
+                "labels": [
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "X64", "type": "read-only"},
+                    {"id": 0, "name": "no-gpu", "type": "read-only"},
+                ],
+                "runner_group_id": 3,
+            },
+            "encoded_jit_config": "anotherhugetoken",
+        }
+
+    github_client._client.actions.generate_runner_jitconfig_for_org.side_effect = (
+        _mock_generate_runner_jitconfig_for_org
+    )
+
+    instance_id = "test-runner-99999999"
+    labels = ["label1", "label2"]
+    jittoken = github_client.get_runner_registration_jittoken(
+        path=github_repo, instance_id=instance_id, labels=labels
+    )
+
+    assert jittoken == "anotherhugetoken"
