@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Class for managing the GitHub self-hosted runners hosted on cloud instances."""
+"""Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
 import logging
 from dataclasses import dataclass
@@ -17,12 +17,12 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
     HealthState,
-    InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import (
     GitHubRunnerManager,
     GitHubRunnerState,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
@@ -59,7 +59,7 @@ class RunnerInstance:
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
     health: HealthState
     github_state: GitHubRunnerState | None
     cloud_state: CloudRunnerState
@@ -112,11 +112,12 @@ class RunnerManager:
         )
         self._labels = labels
 
-    def create_runners(self, num: int) -> tuple[InstanceId, ...]:
+    def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
+            reactive: TODO
 
         Returns:
             List of instance ID of the runners.
@@ -128,7 +129,8 @@ class RunnerManager:
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels, reactive)
+            for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -248,7 +250,7 @@ class RunnerManager:
     @staticmethod
     def _spawn_runners(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"],
-    ) -> tuple[InstanceId, ...]:
+    ) -> tuple[InstanceID, ...]:
         """Spawn runners in parallel using multiprocessing.
 
         Multiprocessing is only used if there are more than one runner to spawn. Otherwise,
@@ -278,7 +280,7 @@ class RunnerManager:
     @staticmethod
     def _spawn_runners_using_multiprocessing(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"], num: int
-    ) -> tuple[InstanceId, ...]:
+    ) -> tuple[InstanceID, ...]:
         """Parallel spawn of runners.
 
         The length of the create_runner_args is number _create_runner invocation, and therefore the
@@ -382,14 +384,16 @@ class RunnerManager:
             cloud_runner_manager: For managing the cloud instance of the runner.
             github_runner_manager: To manage self-hosted runner on the GitHub side.
             labels: List of labels to add to the runners.
+            reactive: TODO.
         """
 
         cloud_runner_manager: CloudRunnerManager
         github_runner_manager: GitHubRunnerManager
         labels: list[str]
+        reactive: bool
 
     @staticmethod
-    def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
+    def _create_runner(args: _CreateRunnerArgs) -> InstanceID:
         """Create a single runner.
 
         This is a staticmethod for usage with multiprocess.Pool.
@@ -400,7 +404,7 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        instance_id = args.cloud_runner_manager.generate_instance_id()
+        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
         registration_jittoken = args.github_runner_manager.get_registration_jittoken(
             instance_id, args.labels
         )

@@ -11,6 +11,7 @@ import pytest
 
 from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.storage import MetricsStorage, StorageManager
 from github_runner_manager.openstack_cloud import (
@@ -47,7 +48,6 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
         prefix="test",
         credentials=MagicMock(),
         server_config=MagicMock(),
-        runner_config=MagicMock(),
         service_config=service_config_mock,
     )
 
@@ -67,16 +67,22 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     "expected_storage_to_be_extracted",
     [
         pytest.param(
-            default_healthy := {"healthy1", "healthy2"},
-            default_unhealthy := {"unhealthy1", "unhealthy2"},
+            default_healthy := {
+                InstanceID.build(prefix := "prefix", "healthy1"),
+                InstanceID.build(prefix, "healthy2"),
+            },
+            default_unhealthy := {
+                InstanceID.build(prefix, "unhealthy1"),
+                InstanceID.build(prefix, "unhealthy2"),
+            },
             default_undecided := {
                 ("in_construction", datetime.now()),
                 (
-                    "dangling",
+                    dangling := InstanceID.build(prefix, "dangling"),
                     datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
                 ),
             },
-            default_result := default_unhealthy | {"dangling"},
+            default_result := default_unhealthy | {dangling},
             id="one dangling",
         ),
         pytest.param(
@@ -85,15 +91,15 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
             {
                 ("in_construction", datetime.now()),
                 (
-                    "dangling",
+                    dangling,
                     datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
                 ),
                 (
-                    "dangling2",
+                    dangling2 := InstanceID.build(prefix, "dangling2"),
                     datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
                 ),
             },
-            default_unhealthy | {"dangling", "dangling2"},
+            default_unhealthy | {dangling, dangling2},
             id="two dangling",
         ),
         pytest.param(
@@ -107,7 +113,7 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
             default_healthy,
             set(),
             default_undecided,
-            {"dangling"},
+            {dangling},
             id="no unhealthy",
         ),
         pytest.param(
@@ -229,7 +235,7 @@ def _create_metrics_storage(runner_name: str, mtime: datetime) -> MetricsStorage
     Returns:
         A metric storage mock object.
     """
-    metrics_storage = MetricsStorage(runner_name=runner_name, path=MagicMock(spec=Path))
+    metrics_storage = MetricsStorage(instance_id=runner_name, path=MagicMock(spec=Path))
     stat = MagicMock()
     stat_mock = MagicMock(return_value=stat)
     stat.st_mtime = mtime.timestamp()
@@ -266,9 +272,9 @@ def _create_health_checks_mock() -> MagicMock:
 
         This implements the logic mentioned in the docstring above.
         """
-        if instance.server_name.startswith("test-healthy"):
+        if instance.instance_id.name.startswith("test-healthy"):
             return True
-        if instance.server_name.startswith("test-unhealthy"):
+        if instance.instance_id.name.startswith("test-unhealthy"):
             return False
         raise OpenstackHealthCheckError("Health check failed")
 

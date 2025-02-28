@@ -24,6 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
@@ -46,15 +47,13 @@ class OpenstackInstance:
         instance_id: ID used by OpenstackCloud class to manage the instances. See docs on the
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
-        server_name: Name of the server on OpenStack.
         status: Status of the server.
     """
 
     addresses: list[str]
     created_at: datetime
-    instance_id: str
+    instance_id: InstanceID
     server_id: str
-    server_name: str
     status: str
 
     def __init__(self, server: OpenstackServer, prefix: str):
@@ -78,9 +77,8 @@ class OpenstackInstance:
             for address in network_addresses
         ]
         self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
-        self.instance_id = server.name
+        self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
-        self.server_name = server.name
         self.status = server.status
 
 
@@ -176,7 +174,7 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self, instance_id: str, image: str, flavor: str, network: str, cloud_init: str
+        self, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -201,7 +199,7 @@ class OpenstackCloud:
 
             try:
                 server = conn.create_server(
-                    name=instance_id,
+                    name=instance_id.name,
                     image=image,
                     key_name=keypair.name,
                     flavor=flavor,
@@ -228,7 +226,7 @@ class OpenstackCloud:
             return OpenstackInstance(server, self.prefix)
 
     @_catch_openstack_errors
-    def get_instance(self, instance_id: str) -> OpenstackInstance | None:
+    def get_instance(self, instance_id: InstanceID) -> OpenstackInstance | None:
         """Get OpenStack instance by instance ID.
 
         Args:
@@ -246,7 +244,7 @@ class OpenstackCloud:
         return None
 
     @_catch_openstack_errors
-    def delete_instance(self, instance_id: str) -> None:
+    def delete_instance(self, instance_id: InstanceID) -> None:
         """Delete a openstack instance.
 
         Args:
@@ -292,14 +290,14 @@ class OpenstackCloud:
         Returns:
             SSH connection object.
         """
-        key_path = self._get_key_path(instance.server_name)
+        key_path = self._get_key_path(instance.instance_id.name)
 
         if not key_path.exists():
             raise KeyfileError(
-                f"Missing keyfile for server: {instance.server_name}, key path: {key_path}"
+                f"Missing keyfile for server: {instance.instance_id.name}, key path: {key_path}"
             )
         if not instance.addresses:
-            raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+            raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
 
         for ip in instance.addresses:
             try:
@@ -313,7 +311,7 @@ class OpenstackCloud:
                 if not result.ok:
                     logger.warning(
                         "SSH test connection failed, server: %s, address: %s",
-                        instance.server_name,
+                        instance.instance_id.name,
                         ip,
                     )
                     continue
@@ -322,13 +320,13 @@ class OpenstackCloud:
             except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.warning(
                     "Unable to SSH into %s with address %s",
-                    instance.server_name,
+                    instance.instance_id.name,
                     connection.host,
                     exc_info=True,
                 )
                 continue
         raise SSHError(
-            f"No connectable SSH addresses found, server: {instance.server_name}, "
+            f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
             f"addresses: {instance.addresses}"
         )
 
@@ -468,34 +466,36 @@ class OpenstackCloud:
 
         return latest_server
 
-    def _get_key_path(self, name: str) -> Path:
+    def _get_key_path(self, instance_id: InstanceID) -> Path:
         """Get the filepath for storing private SSH of a runner.
 
         Args:
-            name: The name of the runner.
+            instance_id: The name of the runner.
 
         Returns:
             Path to reserved for the key file of the runner.
         """
-        return self._ssh_key_dir / f"{name}.key"
+        return self._ssh_key_dir / f"{instance_id}.key"
 
-    def _setup_keypair(self, conn: OpenstackConnection, name: str) -> OpenstackKeypair:
+    def _setup_keypair(
+        self, conn: OpenstackConnection, instance_id: InstanceID
+    ) -> OpenstackKeypair:
         """Create OpenStack keypair.
 
         Args:
             conn: The connection object to access OpenStack cloud.
-            name: The name of the keypair.
+            instance_id: The name of the keypair.
 
         Returns:
             The OpenStack keypair.
         """
-        key_path = self._get_key_path(name)
+        key_path = self._get_key_path(instance_id)
 
         if key_path.exists():
-            logger.warning("Existing private key file for %s found, removing it.", name)
+            logger.warning("Existing private key file for %s found, removing it.", instance_id)
             key_path.unlink(missing_ok=True)
 
-        keypair = conn.create_keypair(name=name)
+        keypair = conn.create_keypair(name=str(instance_id))
         key_path.write_text(keypair.private_key)
         # the charm executes this as root, so we need to change the ownership of the key file
         shutil.chown(key_path, user=self._system_user)
