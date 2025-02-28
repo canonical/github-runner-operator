@@ -355,7 +355,8 @@ class RunnerManager:
                     )
                 except GithubMetricsError:
                     logger.exception(
-                        "Failed to calculate job metrics for %s", extracted_metrics.instance_id,
+                        "Failed to calculate job metrics for %s",
+                        extracted_metrics.instance_id,
                     )
             else:
                 logger.debug(
