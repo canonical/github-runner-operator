@@ -47,7 +47,6 @@ class OpenstackInstance:
         instance_id: ID used by OpenstackCloud class to manage the instances. See docs on the
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
-        server_name: Name of the server on OpenStack.
         status: Status of the server.
     """
 
@@ -55,7 +54,6 @@ class OpenstackInstance:
     created_at: datetime
     instance_id: InstanceID
     server_id: str
-    server_name: str
     status: str
 
     def __init__(self, server: OpenstackServer, prefix: str):
@@ -79,9 +77,8 @@ class OpenstackInstance:
             for address in network_addresses
         ]
         self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
-        self.instance_id = server.name
+        self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
-        self.server_name = server.name
         self.status = server.status
 
 
@@ -177,7 +174,7 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self, instance_id: str, image: str, flavor: str, network: str, cloud_init: str
+        self, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -202,7 +199,7 @@ class OpenstackCloud:
 
             try:
                 server = conn.create_server(
-                    name=instance_id,
+                    name=instance_id.name,
                     image=image,
                     key_name=keypair.name,
                     flavor=flavor,
@@ -229,7 +226,7 @@ class OpenstackCloud:
             return OpenstackInstance(server, self.prefix)
 
     @_catch_openstack_errors
-    def get_instance(self, instance_id: str) -> OpenstackInstance | None:
+    def get_instance(self, instance_id: InstanceID) -> OpenstackInstance | None:
         """Get OpenStack instance by instance ID.
 
         Args:
@@ -247,7 +244,7 @@ class OpenstackCloud:
         return None
 
     @_catch_openstack_errors
-    def delete_instance(self, instance_id: str) -> None:
+    def delete_instance(self, instance_id: InstanceID) -> None:
         """Delete a openstack instance.
 
         Args:
@@ -293,14 +290,14 @@ class OpenstackCloud:
         Returns:
             SSH connection object.
         """
-        key_path = self._get_key_path(instance.server_name)
+        key_path = self._get_key_path(instance.instance_id.name)
 
         if not key_path.exists():
             raise KeyfileError(
-                f"Missing keyfile for server: {instance.server_name}, key path: {key_path}"
+                f"Missing keyfile for server: {instance.instance_id.name}, key path: {key_path}"
             )
         if not instance.addresses:
-            raise SSHError(f"No addresses found for OpenStack server {instance.server_name}")
+            raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
 
         for ip in instance.addresses:
             try:
@@ -314,7 +311,7 @@ class OpenstackCloud:
                 if not result.ok:
                     logger.warning(
                         "SSH test connection failed, server: %s, address: %s",
-                        instance.server_name,
+                        instance.instance_id.name,
                         ip,
                     )
                     continue
@@ -323,13 +320,13 @@ class OpenstackCloud:
             except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.warning(
                     "Unable to SSH into %s with address %s",
-                    instance.server_name,
+                    instance.instance_id.name,
                     connection.host,
                     exc_info=True,
                 )
                 continue
         raise SSHError(
-            f"No connectable SSH addresses found, server: {instance.server_name}, "
+            f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
             f"addresses: {instance.addresses}"
         )
 

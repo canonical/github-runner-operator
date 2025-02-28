@@ -8,6 +8,7 @@ from typing import Iterable
 
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -94,7 +95,7 @@ class GitHubRunnerManager:  # pragma: no cover
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
-    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+    def get_registration_jittoken(self, instance_id: InstanceID, labels: list[str]) -> str:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.

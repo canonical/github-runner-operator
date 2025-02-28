@@ -266,9 +266,9 @@ def _create_health_checks_mock() -> MagicMock:
 
         This implements the logic mentioned in the docstring above.
         """
-        if instance.server_name.startswith("test-healthy"):
+        if instance.instance_id.name.startswith("test-healthy"):
             return True
-        if instance.server_name.startswith("test-unhealthy"):
+        if instance.instance_id.name.startswith("test-unhealthy"):
             return False
         raise OpenstackHealthCheckError("Health check failed")
 
