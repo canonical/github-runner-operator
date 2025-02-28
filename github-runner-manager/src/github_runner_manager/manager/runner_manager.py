@@ -112,11 +112,12 @@ class RunnerManager:
         )
         self._labels = labels
 
-    def create_runners(self, num: int) -> tuple[InstanceID, ...]:
+    def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
+            reactive: TODO
 
         Returns:
             List of instance ID of the runners.
@@ -128,7 +129,8 @@ class RunnerManager:
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels, reactive)
+            for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -382,11 +384,13 @@ class RunnerManager:
             cloud_runner_manager: For managing the cloud instance of the runner.
             github_runner_manager: To manage self-hosted runner on the GitHub side.
             labels: List of labels to add to the runners.
+            reactive: TODO.
         """
 
         cloud_runner_manager: CloudRunnerManager
         github_runner_manager: GitHubRunnerManager
         labels: list[str]
+        reactive: bool
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceID:
@@ -400,7 +404,7 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix)
+        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
         registration_jittoken = args.github_runner_manager.get_registration_jittoken(
             instance_id, args.labels
         )

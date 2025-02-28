@@ -6,6 +6,8 @@
 import secrets
 from dataclasses import dataclass
 
+INSTANCE_SUFFIX_LENGTH = 12
+
 
 @dataclass(eq=True, frozen=True)
 class InstanceID:
@@ -29,7 +31,7 @@ class InstanceID:
         Returns:
            TODO
         """
-        return f"{self.prefix}-{self.suffix}"
+        return f"{self.prefix}-{self.suffix}{'R' if self.reactive else ''}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -51,9 +53,14 @@ class InstanceID:
             # TODO should we raise if invalid name?
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
+        reactive = False
+        if len(suffix) > INSTANCE_SUFFIX_LENGTH:
+            suffix = suffix[:INSTANCE_SUFFIX_LENGTH]
+            reactive = True
+
         return cls(
             prefix=prefix,
-            reactive=False,
+            reactive=reactive,
             suffix=suffix,
         )
 
@@ -78,8 +85,7 @@ class InstanceID:
         Returns:
             Instance ID of the runner.
         """
-        suffix = secrets.token_hex(6)
-
+        suffix = secrets.token_hex(INSTANCE_SUFFIX_LENGTH // 2)
         return cls(prefix=prefix, reactive=reactive, suffix=suffix)
 
     def __str__(self) -> str:
