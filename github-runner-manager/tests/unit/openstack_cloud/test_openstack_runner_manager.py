@@ -133,10 +133,10 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     ],
 )
 def test__cleanup_extract_metrics(
-    healthy_runner_names: set[str],
-    unhealthy_runner_names: set[str],
-    undecided_runner_storage: set[tuple[str, datetime]],
-    expected_storage_to_be_extracted: set[str],
+    healthy_runner_names: set[InstanceID],
+    unhealthy_runner_names: set[InstanceID],
+    undecided_runner_storage: set[tuple[InstanceID, datetime]],
+    expected_storage_to_be_extracted: set[InstanceID],
     monkeypatch: pytest.MonkeyPatch,
     runner_metrics_mock: MagicMock,
 ):
@@ -219,7 +219,8 @@ def test_cleanup_ignores_runners_with_health_check_errors(
         if instance_id.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
     assert runner_metrics_mock.extract.call_count == 1
-    assert runner_metrics_mock.extract.call_args[1]["runners"] == {
+
+    assert {r.name for r in runner_metrics_mock.extract.call_args[1]["runners"]} == {
         names for names in names if names.startswith(f"{OPENSTACK_INSTANCE_PREFIX}-unhealthy")
     }
 

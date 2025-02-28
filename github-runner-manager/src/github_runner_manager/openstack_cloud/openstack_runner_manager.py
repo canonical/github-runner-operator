@@ -320,9 +320,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Getting runner healths for cleanup.")
         runners = self._get_runners_health()
 
-        healthy_runner_names = {runner.instance_id.name for runner in runners.healthy}
-        unhealthy_runner_names = {runner.instance_id.name for runner in runners.unhealthy}
-        unknown_runner_names = {runner.instance_id.name for runner in runners.unknown}
+        healthy_runner_names = {runner.instance_id for runner in runners.healthy}
+        unhealthy_runner_names = {runner.instance_id for runner in runners.unhealthy}
+        unknown_runner_names = {runner.instance_id for runner in runners.unknown}
         logger.debug("Healthy runners: %s", healthy_runner_names)
         logger.debug("Unhealthy runners: %s", unhealthy_runner_names)
         logger.debug("Unknown health runners: %s", unknown_runner_names)
@@ -344,8 +344,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
     @staticmethod
     def _cleanup_extract_metrics(
         metrics_storage_manager: StorageManager,
-        ignore_runner_names: set[str],
-        include_runner_names: set[str],
+        ignore_runner_names: set[InstanceID],
+        include_runner_names: set[InstanceID],
     ) -> Iterator[runner_metrics.RunnerMetrics]:
         """Extract metrics for certain runners and dangling metrics storage.
 
