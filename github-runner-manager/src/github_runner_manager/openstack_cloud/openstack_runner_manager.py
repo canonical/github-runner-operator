@@ -35,8 +35,8 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    InstanceId,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import storage as metrics_storage
@@ -169,23 +169,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         return self._config.prefix
 
-    def generate_instance_id(self) -> InstanceId:
-        r"""Generate an intance_id to name a runner.
-
-        The GitHub runner name convention is as following:
-        A valid runner name is 64 characters or less in length and does not include '"', '/', ':',
-        '<', '>', '\', '|', '*' and '?'.
-
-        The collision rate calculation:
-        alphanumeric 12 chars long (26 alphabet + 10 digits = 36)
-        36^12 is big enough for our use-case.
-
-        Returns:
-            Instance ID of the runner.
-        """
-        return f"{self.name_prefix}-{secrets.token_hex(6)}"
-
-    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
+    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
@@ -195,9 +179,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
             RunnerCreateError: Unable to create runner due to OpenStack issues.
-
-        Returns:
-            Instance ID of the runner.
         """
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
@@ -223,7 +204,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.server_name)
-        return instance_id
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -262,7 +242,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return tuple(runner for runner in runners if runner.state in state_set)
 
     def delete_runner(
-        self, instance_id: InstanceId, remove_token: str
+        self, instance_id: InstanceID, remove_token: str
     ) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 

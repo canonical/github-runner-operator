@@ -24,6 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
@@ -52,7 +53,7 @@ class OpenstackInstance:
 
     addresses: list[str]
     created_at: datetime
-    instance_id: str
+    instance_id: InstanceID
     server_id: str
     server_name: str
     status: str
