@@ -151,6 +151,12 @@ class StorageManager(StorageManagerProtocol):
                 fs = self.get(instance_id=InstanceID.build_from_name(self._prefix, directory.name))
             except GetMetricsStorageError:
                 logger.error("Failed to get metrics storage for runner %s", directory.name)
+            except ValueError:
+                logger.exception(
+                    "Failed to get metrics storage for runner %s and prefix %s",
+                    directory.name,
+                    self._prefix,
+                )
             else:
                 yield fs
 
