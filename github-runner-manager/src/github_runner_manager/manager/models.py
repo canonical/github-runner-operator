@@ -33,7 +33,7 @@ class InstanceID:
         Returns:
            TODO
         """
-        return f"{self.prefix}-{self.suffix}{'R' if self.reactive else ''}"
+        return f"{self.prefix}-{self.suffix}{'r' if self.reactive else ''}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
