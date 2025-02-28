@@ -351,16 +351,16 @@ class RunnerManager:
                     job_metrics = github_metrics.job(
                         github_client=self._github.github,
                         pre_job_metrics=extracted_metrics.pre_job,
-                        runner_name=extracted_metrics.runner_name,
+                        runner_name=extracted_metrics.instance_id.name,
                     )
                 except GithubMetricsError:
                     logger.exception(
-                        "Failed to calculate job metrics for %s", extracted_metrics.runner_name
+                        "Failed to calculate job metrics for %s", extracted_metrics.instance_id,
                     )
             else:
                 logger.debug(
                     "No pre-job metrics found for %s, will not calculate job metrics.",
-                    extracted_metrics.runner_name,
+                    extracted_metrics.instance_id,
                 )
 
             issued_events = runner_metrics.issue_events(

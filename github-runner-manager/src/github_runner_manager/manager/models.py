@@ -13,6 +13,8 @@ INSTANCE_SUFFIX_LENGTH = 12
 class InstanceID:
     """TODO.
 
+    This class needs to add compatibility for all cloud providers and GitHub.
+
     Attributes:
         name: TODO
         prefix: TODO
