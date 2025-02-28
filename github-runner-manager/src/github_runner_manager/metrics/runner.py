@@ -18,6 +18,7 @@ from github_runner_manager.errors import (
     IssueMetricEventError,
     RunnerMetricsError,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.storage import MetricsStorage
 from github_runner_manager.metrics.storage import StorageManagerProtocol as MetricsStorageManager
@@ -97,14 +98,14 @@ class RunnerMetrics(BaseModel):
         installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
-        runner_name: The name of the runner.
+        instance_id: The name of the runner.
     """
 
     installation_start_timestamp: NonNegativeFloat | None
     installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
-    runner_name: str
+    instance_id: InstanceID
 
 
 def extract(
@@ -131,14 +132,14 @@ def extract(
         Extracted runner metrics of a particular runner.
     """
     for ms in metrics_storage_manager.list_all():
-        if (include and ms.runner_name in runners) or (
-            not include and ms.runner_name not in runners
+        if (include and ms.instance_id in runners) or (
+            not include and ms.instance_id not in runners
         ):
             runner_metrics = _extract_storage(
                 metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
             )
             if not runner_metrics:
-                logger.warning("Not able to issue metrics for runner %s", ms.runner_name)
+                logger.warning("Not able to issue metrics for runner %s", ms.instance_id)
             else:
                 yield runner_metrics
 
@@ -180,7 +181,7 @@ def issue_events(
         else:
             logger.debug(
                 "Pre-job metrics not found for runner %s. Will not issue RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
             )
     except (ValidationError, IssueMetricEventError):
         if runner_metrics.installation_start_timestamp and not issued_events:
@@ -188,7 +189,7 @@ def issue_events(
                 "Not able to issue RunnerInstalled metric for runner %s with"
                 " installation_start_timestamp %s."
                 "Will not issue RunnerStart and RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.installation_start_timestamp,
             )
         elif metric_events.RunnerStart not in issued_events:
@@ -196,7 +197,7 @@ def issue_events(
                 "Not able to issue RunnerStart metric for "
                 "runner %s with pre-job metrics %s and job_metrics %s."
                 "Will not issue RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.pre_job,
                 job_metrics,
             )
@@ -204,7 +205,7 @@ def issue_events(
             logger.exception(
                 "Not able to issue RunnerStop metric for "
                 "runner %s with pre-job metrics %s, post-job metrics %s and job_metrics %s.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.pre_job,
                 runner_metrics.post_job,
                 job_metrics,
@@ -234,7 +235,7 @@ def _issue_runner_installed(
         duration=runner_metrics.installed_timestamp  # type: ignore
         - runner_metrics.installation_start_timestamp,  # type: ignore
     )
-    logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
 
     return metric_events.RunnerInstalled
@@ -255,7 +256,7 @@ def _issue_runner_start(
     """
     runner_start_event = _create_runner_start(runner_metrics, flavor, job_metrics)
 
-    logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_start_event)
 
     return metric_events.RunnerStart
@@ -276,7 +277,7 @@ def _issue_runner_stop(
     """
     runner_stop_event = _create_runner_stop(runner_metrics, flavor, job_metrics)
 
-    logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_stop_event)
 
     return metric_events.RunnerStop
@@ -314,7 +315,7 @@ def _create_runner_start(
             " Setting idle_duration to zero",
             pre_job_metrics.timestamp,
             runner_metrics.installed_timestamp,
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
         )
     idle_duration = max(pre_job_metrics.timestamp - runner_metrics.installed_timestamp, 0)
 
@@ -322,7 +323,7 @@ def _create_runner_start(
     if job_metrics and job_metrics.queue_duration < 0:
         logger.warning(
             "Queue duration for runner %s is negative: %f. Setting it to zero.",
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
             job_metrics.queue_duration,
         )
     queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
@@ -378,7 +379,7 @@ def _create_runner_stop(
             " Setting job_duration to zero",
             post_job_metrics.timestamp,
             pre_job_metrics.timestamp,
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
         )
     job_duration = max(post_job_metrics.timestamp - pre_job_metrics.timestamp, 0)
 
@@ -408,16 +409,16 @@ def _extract_storage(
     Returns:
         The extracted metrics if at least the runner installed timestamp is present.
     """
-    runner_name = metrics_storage.runner_name
+    instance_id = metrics_storage.instance_id
     try:
-        logger.debug("Extracting metrics from metrics storage for runner %s", runner_name)
+        logger.debug("Extracting metrics from metrics storage for runner %s", instance_id)
         metrics_from_fs = _extract_metrics_from_storage(metrics_storage)
     except CorruptMetricDataError:
-        logger.exception("Corrupt metric data found for runner %s", runner_name)
-        metrics_storage_manager.move_to_quarantine(runner_name)
+        logger.exception("Corrupt metric data found for runner %s", instance_id)
+        metrics_storage_manager.move_to_quarantine(instance_id)
         return None
 
-    logger.debug("Cleaning metrics storage for runner %s", runner_name)
+    logger.debug("Cleaning metrics storage for runner %s", instance_id)
     _clean_up_storage(
         metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
     )
@@ -442,12 +443,12 @@ def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[R
             f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
         )
 
-    runner_name = metrics_storage.runner_name
+    instance_id = metrics_storage.instance_id
 
     installation_start_timestamp = _extract_file_from_storage(
         metrics_storage=metrics_storage, filename=RUNNER_INSTALLATION_START_TS_FILE_NAME
     )
-    logger.debug("Runner %s installation started at %s", runner_name, installation_start_timestamp)
+    logger.debug("Runner %s installation started at %s", instance_id, installation_start_timestamp)
 
     installed_timestamp = _extract_file_from_storage(
         metrics_storage=metrics_storage, filename=RUNNER_INSTALLED_TS_FILE_NAME
@@ -455,26 +456,26 @@ def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[R
     if not installed_timestamp:
         logger.error(
             "installed timestamp not found for runner %s, will not extract any metrics.",
-            runner_name,
+            instance_id,
         )
         return None
-    logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
+    logger.debug("Runner %s installed at %s", instance_id, installed_timestamp)
 
     pre_job_metrics = _extract_json_file_from_storage(
         metrics_storage=metrics_storage, filename=PRE_JOB_METRICS_FILE_NAME
     )
     if pre_job_metrics:
 
-        logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
+        logger.debug("Pre-job metrics for runner %s: %s", instance_id, pre_job_metrics)
 
         post_job_metrics = _extract_json_file_from_storage(
             metrics_storage=metrics_storage, filename=POST_JOB_METRICS_FILE_NAME
         )
-        logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
+        logger.debug("Post-job metrics for runner %s: %s", instance_id, post_job_metrics)
     else:
         logger.error(
             "Pre-job metrics for runner %s not found, stop extracting post-jobs metrics.",
-            runner_name,
+            instance_id,
         )
         post_job_metrics = None
 
@@ -486,7 +487,7 @@ def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[R
             installed_timestamp=float(installed_timestamp),
             pre_job=PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None,
             post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
-            runner_name=runner_name,
+            instance_id=instance_id,
         )
     except ValueError as exc:
         raise CorruptMetricDataError(str(exc)) from exc
@@ -538,7 +539,7 @@ def _extract_json_file_from_storage(metrics_storage: MetricsStorage, filename: s
         raise CorruptMetricDataError(str(exc)) from exc
     if not isinstance(job_metrics, dict):
         raise CorruptMetricDataError(
-            f"{filename} metrics for runner {metrics_storage.runner_name} is not a JSON object."
+            f"{filename} metrics for runner {metrics_storage.instance_id} is not a JSON object."
         )
     return job_metrics
 
@@ -556,7 +557,7 @@ def _extract_file_from_storage(metrics_storage: MetricsStorage, filename: str) -
     try:
         file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
     except FileNotFoundError:
-        logger.exception("%s not found for runner %s", filename, metrics_storage.runner_name)
+        logger.exception("%s not found for runner %s", filename, metrics_storage.instance_id)
         file_content = None
     return file_content
 
@@ -580,12 +581,12 @@ def _clean_up_storage(
         logger.exception(
             "Could not remove metric files for runner %s, "
             "this may lead to duplicate metrics issued",
-            metrics_storage.runner_name,
+            metrics_storage.instance_id,
         )
 
     try:
-        metrics_storage_manager.delete(metrics_storage.runner_name)
+        metrics_storage_manager.delete(metrics_storage.instance_id)
     except DeleteMetricsStorageError:
         logger.exception(
-            "Could not delete metrics storage for runner %s.", metrics_storage.runner_name
+            "Could not delete metrics storage for runner %s.", metrics_storage.instance_id
         )

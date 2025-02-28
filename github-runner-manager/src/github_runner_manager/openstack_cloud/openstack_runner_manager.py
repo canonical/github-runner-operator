@@ -149,7 +149,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             prefix=self.name_prefix,
             system_user=constants.RUNNER_MANAGER_USER,
         )
-        self._metrics_storage_manager = metrics_storage.StorageManager()
+        self._metrics_storage_manager = metrics_storage.StorageManager(self._config.prefix)
 
         # Setting the env var to this process and any child process spawned.
         proxies = config.service_config.proxy_config
@@ -184,7 +184,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
             raise MissingServerConfigError("Missing server configuration to create runners")
 
         start_timestamp = time.time()
-        self._init_metrics_storage(name=instance_id, install_start_timestamp=start_timestamp)
+        self._init_metrics_storage(
+            instance_id=instance_id, install_start_timestamp=start_timestamp
+        )
 
         cloud_init = self._generate_cloud_init(registration_jittoken=registration_jittoken)
         try:
@@ -363,11 +365,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
         unmatched_metrics_storage = (
             ms
             for ms in metrics_storage_manager.list_all()
-            if ms.runner_name not in all_runner_names
+            if ms.instance_id not in all_runner_names
         )
         # We assume that storage is dangling if it has not been updated for a long time.
         dangling_storage_runner_names = {
-            ms.runner_name
+            ms.instance_id
             for ms in unmatched_metrics_storage
             if ms.path.stat().st_mtime < time.time() - OUTDATED_METRICS_STORAGE_IN_SECONDS
         }
@@ -386,7 +388,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            self._pull_runner_metrics(instance.instance_id.name, ssh_conn)
+            self._pull_runner_metrics(instance.instance_id, ssh_conn)
 
             try:
                 OpenStackRunnerManager._run_runner_removal_script(
@@ -642,7 +644,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         logger.info("Runner %s found to be healthy", instance.instance_id)
 
-    def _init_metrics_storage(self, name: str, install_start_timestamp: float) -> None:
+    def _init_metrics_storage(
+        self, instance_id: InstanceID, install_start_timestamp: float
+    ) -> None:
         """Create metrics storage for runner.
 
         An error will be logged if the storage cannot be created.
@@ -650,16 +654,16 @@ class OpenStackRunnerManager(CloudRunnerManager):
         and not fail for other operations.
 
         Args:
-            name: The name of the runner.
+            instance_id: The name of the runner.
             install_start_timestamp: The timestamp of installation start.
         """
         try:
-            storage = self._metrics_storage_manager.create(runner_name=name)
+            storage = self._metrics_storage_manager.create(instance_id=instance_id)
         except CreateMetricsStorageError:
             logger.exception(
                 "Failed to create metrics storage for runner %s, "
                 "will not be able to issue all metrics.",
-                name,
+                instance_id,
             )
         else:
             try:
@@ -670,24 +674,24 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 logger.exception(
                     f"Failed to write {runner_metrics.RUNNER_INSTALLATION_START_TS_FILE_NAME}"
                     f" into metrics storage for runner %s, will not be able to issue all metrics.",
-                    name,
+                    instance_id,
                 )
 
-    def _pull_runner_metrics(self, name: str, ssh_conn: SSHConnection) -> None:
+    def _pull_runner_metrics(self, instance_id: InstanceID, ssh_conn: SSHConnection) -> None:
         """Pull metrics from runner.
 
         Args:
-            name: The name of the runner.
+            instance_id: The name of the runner.
             ssh_conn: The SSH connection to the runner.
         """
-        logger.debug("Pulling metrics for %s", name)
+        logger.debug("Pulling metrics for %s", instance_id)
         try:
-            storage = self._metrics_storage_manager.get(runner_name=name)
+            storage = self._metrics_storage_manager.get(instance_id=instance_id)
         except GetMetricsStorageError:
             logger.exception(
                 "Failed to get shared metrics storage for runner %s, "
                 "will not be able to issue all metrics.",
-                name,
+                instance_id,
             )
             return
 
@@ -713,7 +717,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         except _PullFileError as exc:
             logger.warning(
                 "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-                name,
+                instance_id,
                 exc,
             )
 

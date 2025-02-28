@@ -7,7 +7,7 @@ import secrets
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(eq=True, frozen=True)
 class InstanceID:
     """TODO.
 
