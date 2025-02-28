@@ -466,34 +466,36 @@ class OpenstackCloud:
 
         return latest_server
 
-    def _get_key_path(self, name: str) -> Path:
+    def _get_key_path(self, instance_id: InstanceID) -> Path:
         """Get the filepath for storing private SSH of a runner.
 
         Args:
-            name: The name of the runner.
+            instance_id: The name of the runner.
 
         Returns:
             Path to reserved for the key file of the runner.
         """
-        return self._ssh_key_dir / f"{name}.key"
+        return self._ssh_key_dir / f"{instance_id}.key"
 
-    def _setup_keypair(self, conn: OpenstackConnection, name: str) -> OpenstackKeypair:
+    def _setup_keypair(
+        self, conn: OpenstackConnection, instance_id: InstanceID
+    ) -> OpenstackKeypair:
         """Create OpenStack keypair.
 
         Args:
             conn: The connection object to access OpenStack cloud.
-            name: The name of the keypair.
+            instance_id: The name of the keypair.
 
         Returns:
             The OpenStack keypair.
         """
-        key_path = self._get_key_path(name)
+        key_path = self._get_key_path(instance_id)
 
         if key_path.exists():
-            logger.warning("Existing private key file for %s found, removing it.", name)
+            logger.warning("Existing private key file for %s found, removing it.", instance_id)
             key_path.unlink(missing_ok=True)
 
-        keypair = conn.create_keypair(name=name)
+        keypair = conn.create_keypair(name=str(instance_id))
         key_path.write_text(keypair.private_key)
         # the charm executes this as root, so we need to change the ownership of the key file
         shutil.chown(key_path, user=self._system_user)
