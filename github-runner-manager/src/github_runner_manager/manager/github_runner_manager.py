@@ -73,7 +73,11 @@ class GitHubRunnerManager:  # pragma: no cover
             Information on the runners.
         """
         runner_list = self.github.get_runner_github_info(self._path)
-        runner_list = [runner for runner in runner_list if runner.name.startswith(self._prefix)]
+        runner_list = [
+            runner
+            for runner in runner_list
+            if InstanceID.name_has_prefix(self._prefix, runner.name)
+        ]
 
         if states is None:
             return tuple(runner_list)
@@ -120,9 +124,7 @@ class GitHubRunnerManager:  # pragma: no cover
         return self.github.get_runner_remove_token(self._path)
 
     @staticmethod
-    def _is_runner_in_state(
-        runner: SelfHostedRunner, states: set[GitHubRunnerState] | None
-    ) -> bool:
+    def _is_runner_in_state(runner: SelfHostedRunner, states: set[GitHubRunnerState]) -> bool:
         """Check that the runner is in one of the states provided.
 
         Args:
@@ -132,6 +134,4 @@ class GitHubRunnerManager:  # pragma: no cover
         Returns:
             True if the runner is in one of the state, else false.
         """
-        if states is None:
-            return True
         return GitHubRunnerState.from_runner(runner) in states

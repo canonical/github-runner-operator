@@ -95,7 +95,7 @@ class _ReconcileMetricData:
     metric_stats: IssuedMetricEventsStats
     runner_list: tuple[RunnerInstance]
     flavor: str
-    expected_runner_quantity: int | None = None
+    expected_runner_quantity: int
 
 
 class RunnerScaler:
@@ -261,7 +261,7 @@ class RunnerScaler:
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = None if self._reactive_config else self._base_quantity
+        expected_runner_quantity = self._base_quantity
 
         # TODO THE NEW STEPS MAY BE AS FOLLOWS:
 

@@ -62,15 +62,7 @@ class OpenstackInstance:
         Args:
             server: The OpenStack server.
             prefix: The name prefix for the servers.
-
-        Raises:
-            ValueError: Provided server should not be managed under this prefix.
         """
-        if not server.name.startswith(f"{prefix}-"):
-            # Should never happen.
-            raise ValueError(
-                f"Found openstack server {server.name} managed under prefix {prefix}, contact devs"
-            )
         self.addresses = [
             address["addr"]
             for network_addresses in server.addresses.values()
@@ -374,7 +366,11 @@ class OpenstackCloud:
         deleted = 0
         for path in self._ssh_key_dir.iterdir():
             # Find key file from this application.
-            if path.is_file() and path.name.startswith(self.prefix) and path.name.endswith(".key"):
+            if (
+                path.is_file()
+                and InstanceID.name_has_prefix(self.prefix, path.name)
+                and path.name.endswith(".key")
+            ):
                 total += 1
                 if path in exclude_filename:
                     continue
@@ -396,7 +392,7 @@ class OpenstackCloud:
         keypairs = conn.list_keypairs()
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
-            if key.name and str(key.name).startswith(self.prefix):
+            if key.name and InstanceID.name_has_prefix(self.prefix, key.name):
                 if str(key.name) in exclude_instance_set:
                     continue
                 try:
@@ -419,7 +415,7 @@ class OpenstackCloud:
         return tuple(
             server
             for server in cast(list[OpenstackServer], conn.list_servers())
-            if server.name.startswith(f"{self.prefix}-")
+            if InstanceID.name_has_prefix(self.prefix, server.name)
         )
 
     @staticmethod

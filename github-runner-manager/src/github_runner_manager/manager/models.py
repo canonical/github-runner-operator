@@ -51,20 +51,17 @@ class InstanceID:
         Returns:
            TODO
         """
-        if name.startswith(prefix):
+        if InstanceID.name_has_prefix(prefix, name):
             suffix = name.removeprefix(f"{prefix}")
         else:
             # TODO should we raise if invalid name?
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
         # The separator from prefix and suffix may indicate if the runner is reactive.
+        reactive = False
         separator = suffix[:1]
         if separator == "r":
             reactive = True
-        elif separator == "-":
-            reactive = False
-        else:
-            raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
         suffix = suffix[1:]
 
         return cls(
@@ -96,6 +93,31 @@ class InstanceID:
         """
         suffix = secrets.token_hex(INSTANCE_SUFFIX_LENGTH // 2)
         return cls(prefix=prefix, reactive=reactive, suffix=suffix)
+
+    @staticmethod
+    def name_has_prefix(prefix: str, name: str) -> bool:
+        """TODO.
+
+        TODO THIS CHECKS THE DIFFERENCE BETWEEN
+        name-1-suffix
+        and
+        namd-11-suffix
+        that is a bug in many places now.
+
+        name-11 is not a name in the prefix name-11
+
+        Args:
+           prefix: TODO
+           name: TODO
+
+        Returns:
+           TODO
+        """
+        if name.startswith(prefix):
+            suffix = name.removeprefix(f"{prefix}")
+            if suffix[:1] in ("-", "r"):
+                return True
+        return False
 
     def __str__(self) -> str:
         """TODO.
