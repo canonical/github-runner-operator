@@ -255,7 +255,7 @@ class OpenstackCloud:
         with _get_openstack_connection(credentials=self._credentials) as conn:
             self._delete_instance(conn, instance_id)
 
-    def _delete_instance(self, conn: OpenstackConnection, instance_id: str) -> None:
+    def _delete_instance(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
         """Delete a openstack instance.
 
         Raises:
@@ -400,7 +400,7 @@ class OpenstackCloud:
                 if str(key.name) in exclude_instance_set:
                     continue
                 try:
-                    self._delete_keypair(conn, key.name)
+                    self._delete_keypair(conn, InstanceID.build_from_name(self.prefix, key.name))
                 except openstack.exceptions.SDKException:
                     logger.warning(
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
@@ -502,22 +502,22 @@ class OpenstackCloud:
         key_path.chmod(0o400)
         return keypair
 
-    def _delete_keypair(self, conn: OpenstackConnection, name: str) -> None:
+    def _delete_keypair(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
         """Delete OpenStack keypair.
 
         Args:
             conn: The connection object to access OpenStack cloud.
-            name: The name of the keypair.
+            instance_id: The name of the keypair.
         """
-        logger.debug("Deleting keypair for %s", name)
+        logger.debug("Deleting keypair for %s", instance_id)
         try:
             # Keypair have unique names, access by ID is not needed.
-            if not conn.delete_keypair(name):
-                logger.warning("Unable to delete keypair for %s", name)
+            if not conn.delete_keypair(instance_id.name):
+                logger.warning("Unable to delete keypair for %s", instance_id)
         except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
-            logger.warning("Unable to delete keypair for %s", name, stack_info=True)
+            logger.warning("Unable to delete keypair for %s", instance_id, stack_info=True)
 
-        key_path = self._get_key_path(name)
+        key_path = self._get_key_path(instance_id.name)
         key_path.unlink(missing_ok=True)
 
     @staticmethod
