@@ -155,7 +155,7 @@ class RunnerManager:
         logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info["name"]: info for info in github_infos}
+        github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
