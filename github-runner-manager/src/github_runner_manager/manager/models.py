@@ -33,7 +33,9 @@ class InstanceID:
         Returns:
            TODO
         """
-        return f"{self.prefix}-{self.suffix}{'r' if self.reactive else ''}"
+        # Having a not number as a separator is good, as the prefix should end
+        # with a number (it is the unit number).
+        return f"{self.prefix}{'r' if self.reactive else '-'}{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -50,15 +52,20 @@ class InstanceID:
            TODO
         """
         if name.startswith(prefix):
-            suffix = name.removeprefix(f"{prefix}-")
+            suffix = name.removeprefix(f"{prefix}")
         else:
             # TODO should we raise if invalid name?
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
-        reactive = False
-        if len(suffix) > INSTANCE_SUFFIX_LENGTH:
-            suffix = suffix[:INSTANCE_SUFFIX_LENGTH]
+        # The separator from prefix and suffix may indicate if the runner is reactive.
+        separator = suffix[:1]
+        if separator == "r":
             reactive = True
+        elif separator == "-":
+            reactive = False
+        else:
+            raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
+        suffix = suffix[1:]
 
         return cls(
             prefix=prefix,
