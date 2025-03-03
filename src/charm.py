@@ -14,7 +14,9 @@ remove_residual_venv_dirs()
 
 
 import functools
+import json
 import logging
+import pathlib
 from typing import Any, Callable, Sequence, TypeVar
 
 import ops
@@ -293,22 +295,6 @@ class GithubRunnerCharm(CharmBase):
                 logger.error("Reconciliation event timer is not activated")
                 self._set_reconcile_timer()
 
-    @staticmethod
-    def _log_juju_processes() -> None:
-        """Log the running Juju processes.
-
-        Log all processes with 'juju' in the command line.
-        """
-        try:
-            processes, _ = execute_command(
-                ["ps", "afuwwx"],
-                check_exit=True,
-            )
-            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
-            logger.info("Juju processes: %s", juju_processes)
-        except SubprocessError:
-            logger.exception("Failed to get Juju processes")
-
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
@@ -459,6 +445,42 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
+        self._log_charm_status()
+
+    @staticmethod
+    def _log_juju_processes() -> None:
+        """Log the running Juju processes.
+
+        Log all processes with 'juju' in the command line.
+        """
+        try:
+            processes, _ = execute_command(
+                ["ps", "afuwwx"],
+                check_exit=True,
+            )
+            juju_processes = "\n".join(line for line in processes.splitlines() if "juju" in line)
+            logger.info("Juju processes: %s", juju_processes)
+        except SubprocessError:
+            logger.exception("Failed to get Juju processes")
+
+    def _log_charm_status(self) -> None:
+        """Log information as a substitute for metrics."""
+        juju_charm_path = pathlib.Path(".juju-charm")
+        juju_charm = None
+        # .juju-charm is not part of the public interface of Juju,
+        # and could disappear in a future release.
+        try:
+            if juju_charm_path.exists():
+                juju_charm = juju_charm_path.read_text(encoding="utf-8").strip()
+            log = {
+                "log_type": "update_state",
+                "juju_charm": juju_charm,
+                "unit_status": self.unit.status.name,
+            }
+            logstr = json.dumps(log)
+            logger.info(logstr)
+        except (AttributeError, TypeError, ValueError):
+            logger.exception("Error preparing log metrics")
 
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
