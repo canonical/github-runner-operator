@@ -12,7 +12,7 @@ from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
 from github_runner_manager.reactive.consumer import consume
 from github_runner_manager.reactive.process_manager import RUNNER_CONFIG_ENV_VAR
-from github_runner_manager.reactive.types_ import RunnerConfig
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 
 def setup_root_logging() -> None:
@@ -39,14 +39,16 @@ def main() -> None:
             "Please set it to the message queue URI."
         )
 
-    runner_config = RunnerConfig.parse_raw(runner_config_str)
+    runner_config = ReactiveProcessConfig.parse_raw(runner_config_str)
 
     setup_root_logging()
     queue_config = runner_config.queue
     openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
     runner_manager = RunnerManager(
+        manager_name=runner_config.manager_name,
+        github_configuration=runner_config.github_configuration,
         cloud_runner_manager=openstack_runner_manager,
-        config=runner_config.runner_manager,
+        labels=runner_config.labels,
     )
     github_client = GithubClient(token=runner_config.github_token)
     consume(

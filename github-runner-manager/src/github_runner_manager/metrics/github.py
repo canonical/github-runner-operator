@@ -4,11 +4,11 @@
 """Functions to calculate metrics from data retrieved from GitHub."""
 import logging
 
+from github_runner_manager.configuration.github import GitHubRepo
 from github_runner_manager.errors import GithubMetricsError, JobNotFoundError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.metrics.runner import PreJobMetrics
 from github_runner_manager.metrics.type import GithubJobMetrics
-from github_runner_manager.types_.github import GitHubRepo
 
 logger = logging.getLogger(__name__)
 

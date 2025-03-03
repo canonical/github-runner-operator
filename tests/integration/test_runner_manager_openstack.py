@@ -19,16 +19,19 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    GitHubPath,
+    parse_github_path,
+)
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
-    GitHubRunnerConfig,
-    SupportServiceConfig,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
-    RunnerManagerConfig,
 )
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -38,11 +41,8 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.types_ import SystemUserConfig
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
 from openstack.connection import Connection as OpenstackConnection
 
-from charm_state import ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -55,6 +55,21 @@ logger = logging.getLogger(__name__)
 # as only one machine that stays for more than the default time in BUILD,
 # will break the tests
 constants.CREATE_SERVER_TIMEOUT = 900
+
+
+@pytest.fixture(autouse=True, scope="module", name="runner_manager_user")
+def runner_manager_user():
+    """Mock the RUNNER_MANAGER_USER and RUNNER_MANAGER_GROUP constants.
+
+    Yields:
+        None, just to be in a scope.
+    """
+    with pytest.MonkeyPatch.context() as monkeypatch:
+        # we assume the test runs as ubuntu user
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_USER", "ubuntu")
+        monkeypatch.setattr("github_runner_manager.constants.RUNNER_MANAGER_GROUP", "ubuntu")
+        # monkeypatch is a scope function fixture, so this trick
+        yield None
 
 
 @pytest.fixture(scope="module", name="runner_label")
@@ -144,14 +159,10 @@ async def openstack_runner_manager_fixture(
         flavor=flavor_name,
         network=network_name,
     )
-    runner_config = GitHubRunnerConfig(
-        github_path=github_path,
-        labels=["openstack_test", runner_label],
-    )
     service_config = SupportServiceConfig(
         proxy_config=proxy_config,
         dockerhub_mirror=None,
-        ssh_debug_connections=None,
+        ssh_debug_connections=[],
         repo_policy_compliance=None,
     )
 
@@ -160,10 +171,7 @@ async def openstack_runner_manager_fixture(
         prefix=f"{app_name}-0",
         credentials=credentials,
         server_config=server_config,
-        runner_config=runner_config,
         service_config=service_config,
-        # we assume the test runs as ubuntu user
-        system_user_config=SystemUserConfig(user="ubuntu", group="ubuntu"),
     )
 
     yield OpenStackRunnerManager(
@@ -177,13 +185,19 @@ async def runner_manager_fixture(
     token: str,
     log_dir_base_path: dict[str, Path],
     github_path: GitHubPath,
+    runner_label: str,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    config = RunnerManagerConfig("test_runner", token, github_path)
-    yield RunnerManager(openstack_runner_manager, config)
+    github_configuration = GitHubConfiguration(token=token, path=github_path)
+    yield RunnerManager(
+        manager_name="test_runner",
+        github_configuration=github_configuration,
+        cloud_runner_manager=openstack_runner_manager,
+        labels=["openstack_test", runner_label],
+    )
 
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")

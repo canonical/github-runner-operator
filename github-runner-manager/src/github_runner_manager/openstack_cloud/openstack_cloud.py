@@ -24,6 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
+from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
 logger = logging.getLogger(__name__)
@@ -33,29 +34,6 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
-
-
-@dataclass
-class OpenStackCredentials:
-    """OpenStack credentials.
-
-    Attributes:
-        auth_url: The auth url of the OpenStack host.
-        project_name: The project name to log in to.
-        username: The username to login with.
-        password: The password to login with.
-        region_name: The region.
-        user_domain_name: The domain name containing the user.
-        project_domain_name: The domain name containing the project.
-    """
-
-    auth_url: str
-    project_name: str
-    username: str
-    password: str
-    region_name: str
-    user_domain_name: str
-    project_domain_name: str
 
 
 @dataclass
@@ -100,7 +78,7 @@ class OpenstackInstance:
             for address in network_addresses
         ]
         self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
-        self.instance_id = server.name[len(prefix) + 1 :]
+        self.instance_id = server.name
         self.server_id = server.id
         self.server_name = server.name
         self.status = server.status
@@ -177,8 +155,7 @@ class OpenstackCloud:
     """Client to interact with OpenStack cloud.
 
     The OpenStack server name is managed by this cloud. Caller refers to the instances via
-    instance_id. If the caller needs the server name, e.g., for logging, it can be queried with
-    get_server_name.
+    instance_id. It is the same as the server name.
     """
 
     def __init__(self, credentials: OpenStackCredentials, prefix: str, system_user: str):
@@ -216,16 +193,15 @@ class OpenstackCloud:
         Returns:
             The OpenStack instance created.
         """
-        full_name = self.get_server_name(instance_id)
-        logger.info("Creating openstack server with %s", full_name)
+        logger.info("Creating openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
-            keypair = self._setup_keypair(conn, full_name)
+            keypair = self._setup_keypair(conn, instance_id)
 
             try:
                 server = conn.create_server(
-                    name=full_name,
+                    name=instance_id,
                     image=image,
                     key_name=keypair.name,
                     flavor=flavor,
@@ -237,17 +213,17 @@ class OpenstackCloud:
                     wait=True,
                 )
             except openstack.exceptions.ResourceTimeout as err:
-                logger.exception("Timeout creating openstack server %s", full_name)
+                logger.exception("Timeout creating openstack server %s", instance_id)
                 logger.info(
                     "Attempting clean up of openstack server %s that timeout during creation",
-                    full_name,
+                    instance_id,
                 )
-                self._delete_instance(conn, full_name)
-                raise OpenStackError(f"Timeout creating openstack server {full_name}") from err
+                self._delete_instance(conn, instance_id)
+                raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
             except openstack.exceptions.SDKException as err:
-                logger.exception("Failed to create openstack server %s", full_name)
+                logger.exception("Failed to create openstack server %s", instance_id)
                 self._delete_keypair(conn, instance_id)
-                raise OpenStackError(f"Failed to create openstack server {full_name}") from err
+                raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
 
             return OpenstackInstance(server, self.prefix)
 
@@ -261,11 +237,10 @@ class OpenstackCloud:
         Returns:
             The OpenStack instance if found.
         """
-        full_name = self.get_server_name(instance_id)
-        logger.info("Getting openstack server with %s", full_name)
+        logger.info("Getting openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
+            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
             if server is not None:
                 return OpenstackInstance(server, self.prefix)
         return None
@@ -277,13 +252,12 @@ class OpenstackCloud:
         Args:
             instance_id: The instance ID of the instance to delete.
         """
-        full_name = self.get_server_name(instance_id)
-        logger.info("Deleting openstack server with %s", full_name)
+        logger.info("Deleting openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            self._delete_instance(conn, full_name)
+            self._delete_instance(conn, instance_id)
 
-    def _delete_instance(self, conn: OpenstackConnection, full_name: str) -> None:
+    def _delete_instance(self, conn: OpenstackConnection, instance_id: str) -> None:
         """Delete a openstack instance.
 
         Raises:
@@ -291,18 +265,18 @@ class OpenstackCloud:
 
         Args:
             conn: The openstack connection to use.
-            full_name: The full name of the server.
+            instance_id: The full name of the server.
         """
         try:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, full_name)
+            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
             if server is not None:
                 conn.delete_server(name_or_id=server.id)
-            self._delete_keypair(conn, full_name)
+            self._delete_keypair(conn, instance_id)
         except (
             openstack.exceptions.SDKException,
             openstack.exceptions.ResourceTimeout,
         ) as err:
-            raise OpenStackError(f"Failed to remove openstack runner {full_name}") from err
+            raise OpenStackError(f"Failed to remove openstack runner {instance_id}") from err
 
     @_catch_openstack_errors
     def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
@@ -388,18 +362,6 @@ class OpenstackCloud:
             exclude_list = [server.name for server in instances]
             self._cleanup_key_files(exclude_list)
             self._cleanup_openstack_keypairs(conn, exclude_list)
-
-    @_catch_openstack_errors
-    def get_server_name(self, instance_id: str) -> str:
-        """Get server name on OpenStack.
-
-        Args:
-            instance_id: ID used to identify a instance.
-
-        Returns:
-            The OpenStack server name.
-        """
-        return f"{self.prefix}-{instance_id}"
 
     def _cleanup_key_files(self, exclude_instances: Iterable[str]) -> None:
         """Delete all SSH key files except the specified instances.

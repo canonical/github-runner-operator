@@ -9,6 +9,8 @@ from enum import Enum, auto
 from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
+from github_runner_manager import constants
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -25,7 +27,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.types_.github import GitHubPath, SelfHostedRunner
+from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -78,21 +80,6 @@ class RunnerInstance:
         self.cloud_state = cloud_instance.state
 
 
-@dataclass
-class RunnerManagerConfig:
-    """Configuration for the runner manager.
-
-    Attributes:
-        name: A name to identify this manager.
-        token: GitHub personal access token to query GitHub API.
-        path: Path to GitHub repository or organization to registry the runners.
-    """
-
-    name: str
-    token: str
-    path: GitHubPath
-
-
 class RunnerManager:
     """Manage the runners.
 
@@ -103,22 +90,27 @@ class RunnerManager:
 
     def __init__(
         self,
+        manager_name: str,
+        github_configuration: GitHubConfiguration,
         cloud_runner_manager: CloudRunnerManager,
-        config: RunnerManagerConfig,
+        labels: list[str],
     ):
         """Construct the object.
 
         Args:
+            manager_name: Name of the manager.
+            github_configuration: Configuration for GitHub.
             cloud_runner_manager: For managing the cloud instance of the runner.
-            config: Configuration of this class.
+            labels: Labels for the runners created.
         """
-        self.manager_name = config.name
-        self._config = config
+        self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
         self._github = GitHubRunnerManager(
-            prefix=self.name_prefix, token=self._config.token, path=self._config.path
+            prefix=self.name_prefix,
+            github_configuration=github_configuration,
         )
+        self._labels = labels
 
     def create_runners(self, num: int) -> tuple[InstanceId, ...]:
         """Create runners.
@@ -130,10 +122,13 @@ class RunnerManager:
             List of instance ID of the runners.
         """
         logger.info("Creating %s runners", num)
-        registration_token = self._github.get_registration_token()
 
+        labels = list(self._labels)
+        # This labels are added by default by the github agent, but with JIT tokens
+        # we have to add them manually.
+        labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, registration_token) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -381,13 +376,17 @@ class RunnerManager:
     class _CreateRunnerArgs:
         """Arguments for the _create_runner function.
 
+        These arguments are used in the forked processes and should be reviewed.
+
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
-            registration_token: The GitHub provided-token for registering runners.
+            github_runner_manager: To manage self-hosted runner on the GitHub side.
+            labels: List of labels to add to the runners.
         """
 
         cloud_runner_manager: CloudRunnerManager
-        registration_token: str
+        github_runner_manager: GitHubRunnerManager
+        labels: list[str]
 
     @staticmethod
     def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
@@ -401,4 +400,11 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        return args.cloud_runner_manager.create_runner(registration_token=args.registration_token)
+        instance_id = args.cloud_runner_manager.generate_instance_id()
+        registration_jittoken = args.github_runner_manager.get_registration_jittoken(
+            instance_id, args.labels
+        )
+        args.cloud_runner_manager.create_runner(
+            instance_id=instance_id, registration_jittoken=registration_jittoken
+        )
+        return instance_id

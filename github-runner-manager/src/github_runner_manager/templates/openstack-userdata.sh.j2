@@ -7,7 +7,7 @@ hostnamectl set-hostname github-runner
 # Write .env contents
 su - ubuntu -c 'cd ~/actions-runner && echo "{{ env_contents }}" > .env'
 
-snap refresh --hold=24h
+snap refresh --hold=48h
 snap watch --last=auto-refresh?
 
 {% if aproxy_address %}
@@ -53,20 +53,6 @@ cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
 {{ pre_job_contents | safe }}
 EOF
 
-# Create the runner and start the configuration experience
-{% if runner_group %}
-su - ubuntu -c "cd ~/actions-runner && ./config.sh \
-    --url {{ github_url }} \
-    --runnergroup '{{ runner_group }}' \
-    --token {{ token }} --ephemeral --unattended \
-    --labels {{ instance_labels }} --name {{ instance_name }}"
-{% else %}
-su - ubuntu -c "cd ~/actions-runner && ./config.sh \
-    --url {{ github_url }} \
-    --token {{ token }} --ephemeral --unattended \
-    --labels {{ instance_labels }} --name {{ instance_name }}"
-{% endif %}
-
 
 write_post_metrics(){
     # Expects the exit code of the run.sh script as the first argument.
@@ -107,6 +93,6 @@ date +%s >  {{ metrics_exchange_path}}/runner-installed.timestamp
 
 # Run runner
 # We want to capture the exit code of the run.sh script and write the post-job metrics.
-(set +e; su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh"; write_post_metrics $?)
+(set +e; su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {{ jittoken }}"; write_post_metrics $?)
 
 su - ubuntu -c "touch /home/ubuntu/run-completed"

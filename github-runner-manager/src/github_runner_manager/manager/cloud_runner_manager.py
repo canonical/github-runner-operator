@@ -10,12 +10,6 @@ from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.types_ import (
-    ProxyConfig,
-    RepoPolicyComplianceConfig,
-    SSHDebugConnection,
-)
-from github_runner_manager.types_.github import GitHubPath
 
 logger = logging.getLogger(__name__)
 
@@ -136,36 +130,6 @@ class CloudInitStatus(str, Enum):
 
 
 @dataclass
-class GitHubRunnerConfig:
-    """Configuration for GitHub runner spawned.
-
-    Attributes:
-        github_path: The GitHub organization or repository for runners to connect to.
-        labels: The labels to add to runners.
-    """
-
-    github_path: GitHubPath
-    labels: list[str]
-
-
-@dataclass
-class SupportServiceConfig:
-    """Configuration for supporting services for runners.
-
-    Attributes:
-        proxy_config: The proxy configuration.
-        dockerhub_mirror: The dockerhub mirror to use for runners.
-        ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_compliance: The configuration of the repo policy compliance service.
-    """
-
-    proxy_config: ProxyConfig | None
-    dockerhub_mirror: str | None
-    ssh_debug_connections: list[SSHDebugConnection] | None
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
-
-
-@dataclass
 class CloudRunnerInstance:
     """Information on the runner on the cloud.
 
@@ -195,19 +159,16 @@ class CloudRunnerManager(abc.ABC):
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def generate_instance_id(self) -> InstanceId:
+        """Generate an intance_id to name a runner."""
+
+    @abc.abstractmethod
+    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
-            registration_token: The GitHub registration token for registering runners.
-        """
-
-    @abc.abstractmethod
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
+            instance_id: Instance ID for the runner.
+            registration_jittoken: The JIT GitHub registration token for registering runners.
         """
 
     @abc.abstractmethod
