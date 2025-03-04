@@ -65,20 +65,23 @@ def existing_app_suffix(pytestconfig: pytest.Config) -> Optional[str]:
     """The existing application name suffix to use for the test."""
     return pytestconfig.getoption("--use-existing-app-suffix")
 
+
 @pytest.fixture(scope="module")
 def random_app_name_suffix(existing_app_suffix: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized suffix name to avoid collision when runner is connecting to GitHub.
     return (
         existing_app_suffix
-        or "{random.choice(string.ascii_lowercase)}"
-        "{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
+        or (random.choice(string.ascii_lowercase) +
+        ''.join(random.choices(string.ascii_lowercase + string.digits, k=7)))
     )
+
 
 @pytest.fixture(scope="module")
 def app_name(random_app_name_suffix: str) -> str:
     """Randomized application name."""
     return f"test-{random_app_name_suffix}"
+
 
 @pytest.fixture(scope="module")
 def image_builder_app_name(random_app_name_suffix: str) -> str:
@@ -385,7 +388,7 @@ async def image_builder_fixture(
             apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
-        app = model.applications[image_builder_app_name],
+        app = (model.applications[image_builder_app_name],)
     yield app
     # The github-image-builder does not clean keypairs. Until it does,
     # we clean them manually here.
