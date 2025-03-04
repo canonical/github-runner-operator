@@ -16,7 +16,6 @@ from github_runner_manager.http_server import start_http_server
 logger = logging.getLogger(__name__)
 
 
-# The entry point for the CLI will be tested with integration test.
 @click.command()
 @click.option(
     "--config-file",
@@ -49,6 +48,7 @@ logger = logging.getLogger(__name__)
     default=False,
     help="Disable reconcile thread for debugging.",
 )
+# The entry point for the CLI will be tested with integration test.
 def main(
     config_file: TextIO, host: str, port: int, debug: bool, debug_disable_reconcile: bool
 ) -> None:  # pragma: no cover
@@ -80,7 +80,7 @@ def main(
         thread.join()
 
 
-# The function is not yet implemented, testing is not needed.
+# The reconcile logic is not implemented, therefore not unit tested.
 def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no cover
     """Start the reconcile server.
 

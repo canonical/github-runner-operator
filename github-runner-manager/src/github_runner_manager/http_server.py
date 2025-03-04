@@ -16,7 +16,6 @@ from github_runner_manager.cli_config import Configuration
 app = Flask(__name__)
 
 
-# The function is not yet implemented, testing is not needed.
 @app.route("/runner/flush", methods=["POST"])
 def flush_runner() -> tuple[str, int]:
     """Flush the runners.
@@ -99,7 +98,9 @@ def _get_lock() -> Lock:
     return app.config["lock"]
 
 
-def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:
+# This function starts the flask server. There is no logic to unit test.
+# The integration test will start the starting of the flask server.
+def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:  # pragma: no cover
     """Start the HTTP server for interacting with the github-runner-manager service.
 
     Args:
