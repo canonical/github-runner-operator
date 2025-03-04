@@ -28,13 +28,13 @@ from openstack.connection import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
@@ -316,7 +316,7 @@ async def app_no_runner(
     basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Application with no runner."""
-    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await model.wait_for_idle(apps=[basic_app.name], status=ACTIVE, timeout=20 * 60)
     yield basic_app
 
@@ -445,7 +445,7 @@ async def app_scheduled_events_fixture(
     """Application to check scheduled events."""
     application = app_openstack_runner
     await application.set_config({"reconcile-interval": "8"})
-    await application.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
     await reconcile(app=application, model=model)
     return application
@@ -458,7 +458,9 @@ async def app_no_wait_tmate_fixture(
 ):
     """Application to check tmate ssh with openstack without waiting for active."""
     application = app_openstack_runner
-    await application.set_config({"reconcile-interval": "60", VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await application.set_config(
+        {"reconcile-interval": "60", BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}
+    )
     return application
 
 
@@ -513,7 +515,7 @@ async def app_no_wait_fixture(
         reconcile_interval=60,
         wait_idle=False,
     )
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return app
 
 
