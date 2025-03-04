@@ -117,7 +117,7 @@ class RunnerManager:
 
         Args:
             num: Number of runners to create.
-            reactive: TODO
+            reactive: If the runner is reactive.
 
         Returns:
             List of instance ID of the runners.
@@ -385,7 +385,7 @@ class RunnerManager:
             cloud_runner_manager: For managing the cloud instance of the runner.
             github_runner_manager: To manage self-hosted runner on the GitHub side.
             labels: List of labels to add to the runners.
-            reactive: TODO.
+            reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager

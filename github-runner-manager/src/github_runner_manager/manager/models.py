@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""TODO."""
+"""Module containing the main classes for business logic."""
 
 import secrets
 from dataclasses import dataclass
@@ -11,15 +11,20 @@ INSTANCE_SUFFIX_LENGTH = 12
 
 @dataclass(eq=True, frozen=True)
 class InstanceID:
-    """TODO.
+    """Main identifier for a runner instance among all clouds and GitHub.
 
-    This class needs to add compatibility for all cloud providers and GitHub.
+    The name attribute of this class must be compatible with all cloud providers and
+    also with GitHub. The InstanceID is a fundamental concept in the github-runner
+    that allows to correlate GitHub runners and the cloud runners. The InstanceID
+    also allow to identify runners that are for this manager (this application unit
+    when deployed with a charm), and also correlates metrics with runners.
+
 
     Attributes:
-        name: TODO
-        prefix: TODO
-        reactive: TODO
-        suffix: TODO
+        name: Name of the instance to use.
+        prefix: Prefix corresponding to the application (charm application unit).
+        reactive: Identifies if the runner is reactive.
+        suffix: Random suffix for the InstanceID.
     """
 
     prefix: str
@@ -28,28 +33,28 @@ class InstanceID:
 
     @property
     def name(self) -> str:
-        """TODO.
+        """Returns the name of the instance.
 
         Returns:
-           TODO
+           Name of the instance
         """
-        # Having a not number as a separator is good, as the prefix should end
+        # Having a not number as a separator is ok, as the prefix should end
         # with a number (it is the unit number).
         return f"{self.prefix}{'r' if self.reactive else '-'}{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
-        """TODO.
+        """Recreates an InstanceID from a string (name) and the application prefix.
 
         Args:
-           prefix: TODO
-           name: TODO
+           prefix: Prefix for the application (unit name in the charm).
+           name: Name of the instance.
 
         Raises:
-           ValueError: TODO
+           ValueError: If the name does not match the prefix.
 
         Returns:
-           TODO
+           The InstanceID object.
         """
         if InstanceID.name_has_prefix(prefix, name):
             suffix = name.removeprefix(f"{prefix}")
@@ -57,7 +62,7 @@ class InstanceID:
             # TODO should we raise if invalid name?
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
-        # The separator from prefix and suffix may indicate if the runner is reactive.
+        # The separator from prefix and suffix indicates whether the runner is reactive.
         reactive = False
         separator = suffix[:1]
         if separator == "r":
@@ -72,7 +77,7 @@ class InstanceID:
 
     @classmethod
     def build(cls, prefix: str, reactive: bool = False) -> "InstanceID":
-        r"""Generate an intance_id to name a runner.
+        r"""Generate an InstanceID for a runner.
 
         It should be valid for all the CloudProviders and GitHub.
 
@@ -85,8 +90,8 @@ class InstanceID:
         36^12 is big enough for our use-case.
 
         Args:
-           prefix: TODO
-           reactive: TODO
+           prefix: Prefix for the InstanceID.
+           reactive: If the instance ID to generate is a reactive runner.
 
         Returns:
             Instance ID of the runner.
@@ -96,22 +101,16 @@ class InstanceID:
 
     @staticmethod
     def name_has_prefix(prefix: str, name: str) -> bool:
-        """TODO.
+        """Check if a runner correspond to a prefix.
 
-        TODO THIS CHECKS THE DIFFERENCE BETWEEN
-        name-1-suffix
-        and
-        namd-11-suffix
-        that is a bug in many places now.
-
-        name-11 is not a name in the prefix name-11
+        The prefix must end with a number (it should be a unit name).
 
         Args:
-           prefix: TODO
-           name: TODO
+           prefix: Application prefix (unit name of the charm).
+           name: Name of the runner instance.
 
         Returns:
-           TODO
+           True if the instance name is part the applicatoin with the prefix.
         """
         if name.startswith(prefix):
             suffix = name.removeprefix(f"{prefix}")
@@ -120,17 +119,17 @@ class InstanceID:
         return False
 
     def __str__(self) -> str:
-        """TODO.
+        """Return the name of the instance.
 
         Returns:
-            TODO.
+            Name of the instance.
         """
         return self.name
 
     def __repr__(self) -> str:
-        """TODO.
+        """Representation of the InstanceID.
 
         Returns:
-            TODO.
+            String with the representation of the InstanceID.
         """
         return f"InstanceID({self.name!r})"
