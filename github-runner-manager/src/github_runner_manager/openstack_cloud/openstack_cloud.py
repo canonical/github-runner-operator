@@ -299,7 +299,9 @@ class OpenstackCloud:
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
                 )
-                result = connection.run(f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT)
+                result = connection.run(
+                    f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
+                )
                 if not result.ok:
                     logger.warning(
                         "SSH test connection failed, server: %s, address: %s",

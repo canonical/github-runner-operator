@@ -561,7 +561,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
         logger.info("Running kill process command: %s", kill_command)
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
-        result: fabric.Result = ssh_conn.run(kill_command, warn=True, timeout=30)
+        result: fabric.Result = ssh_conn.run(kill_command, warn=True, timeout=30, hide=True)
         logger.info(
             "Kill process command output, ok: %s code %s, out: %s, err: %s",
             result.ok,
@@ -600,7 +600,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if CloudInitStatus.DONE in result.stdout:
             return
         logger.debug("Running `ps aux` on instance %s.", instance.instance_id)
-        result = ssh_conn.run("ps aux", warn=True, timeout=60)
+        result = ssh_conn.run("ps aux", warn=True, timeout=60, hide=True)
         if not result.ok:
             logger.warning("SSH run of `ps aux` failed on %s", instance.instance_id)
             raise RunnerStartError(f"Unable to SSH run `ps aux` on {instance.instance_id}")
@@ -738,7 +738,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             SSHError: Issue with SSH connection.
         """
         try:
-            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True, timeout=60)
+            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True, timeout=60, hide=True)
         except (
             TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
@@ -795,7 +795,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         try:
             result = ssh_conn.run(
-                f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}", warn=True, timeout=60
+                f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
+                warn=True,
+                timeout=60,
+                hide=True,
             )
             if result.ok:
                 return

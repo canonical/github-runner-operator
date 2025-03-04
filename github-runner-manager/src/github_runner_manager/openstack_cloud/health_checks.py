@@ -282,7 +282,7 @@ def _execute_ssh_command(ssh_conn: SSHConnection, command: str) -> invoke.runner
         _SSHError: If the command execution failed.
     """
     try:
-        return ssh_conn.run(command, warn=True, timeout=30)
+        return ssh_conn.run(command, warn=True, timeout=30, hide=True)
     except invoke.exceptions.CommandTimedOut as exc:
         raise _SSHError(
             f"SSH command execution timed out for command '{command}' on {ssh_conn.host}"
