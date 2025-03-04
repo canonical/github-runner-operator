@@ -11,7 +11,7 @@ from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
@@ -149,7 +149,7 @@ class OpenStackInstanceHelper:
             app: The GitHub Runner Charm app to create the runner for.
             num_runners: The number of runners.
         """
-        await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
+        await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
         await reconcile(app=app, model=app.model)
 
     async def get_runner_names(self, unit: Unit) -> list[str]:

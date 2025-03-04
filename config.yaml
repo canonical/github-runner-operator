@@ -101,7 +101,7 @@ options:
       https://charmhub.io/github-runner/docs/how-to-change-token.
   virtual-machines:
     type: int
-    default: 1
+    default: 0
     description: >-
       (Deprecated, use base-virtual-machines or max-total-virtual-machines instead)
       The number of virtual machine runners. This charm will spawn or destroy virtual machines

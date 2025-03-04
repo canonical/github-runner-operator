@@ -23,6 +23,7 @@ from github_runner_manager.configuration.github import (
     GitHubRepo,
 )
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import (
     JobInfo,
     RegistrationToken,
@@ -161,7 +162,7 @@ class GithubClient:
 
     @catch_http_errors
     def get_runner_registration_jittoken(
-        self, path: GitHubPath, instance_id: str, labels: list[str]
+        self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
     ) -> str:
         """Get token from GitHub used for registering runners.
 
@@ -181,7 +182,7 @@ class GithubClient:
             token = self._client.actions.generate_runner_jitconfig_for_repo(
                 owner=path.owner,
                 repo=path.repo,
-                name=instance_id,
+                name=instance_id.name,
                 runner_group_id=1,
                 labels=labels,
             )
@@ -191,7 +192,7 @@ class GithubClient:
             runner_group_id = self._get_runner_group_id(path)
             token = self._client.actions.generate_runner_jitconfig_for_org(
                 org=path.org,
-                name=instance_id,
+                name=instance_id.name,
                 runner_group_id=runner_group_id,
                 labels=labels,
             )

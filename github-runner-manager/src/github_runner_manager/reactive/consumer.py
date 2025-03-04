@@ -192,7 +192,7 @@ def _spawn_runner(
     if _check_job_been_picked_up(job_url=job_url, github_client=github_client):
         msg.ack()
         return
-    instance_ids = runner_manager.create_runners(1)
+    instance_ids = runner_manager.create_runners(1, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner. Will reject the message.")
         msg.reject(requeue=True)

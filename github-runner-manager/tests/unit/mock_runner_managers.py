@@ -13,9 +13,9 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -228,7 +228,7 @@ class MockRunner:
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
     cloud_state: CloudRunnerState
     github_state: GitHubRunnerState
     health: bool
@@ -269,7 +269,7 @@ class SharedMockRunnerManagerState:
         runners: The runners.
     """
 
-    runners: dict[InstanceId, MockRunner]
+    runners: dict[InstanceID, MockRunner]
 
     def __init__(self):
         """Construct the object."""
@@ -301,15 +301,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """Get the name prefix of the self-hosted runners."""
         return self.prefix
 
-    def generate_instance_id(self) -> InstanceId:
-        """Generate an intance_id to name a runner.
-
-        Returns:
-            Instance ID of the runner.
-        """
-        return secrets.token_hex(6)
-
-    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
+    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
@@ -318,7 +310,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
-        self.state.runners[instance_id] = runner
+        self.state.runners[str(instance_id)] = runner
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -342,7 +334,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
-    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -352,7 +344,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             Any runner metrics produced during deletion.
         """
-        runner = self.state.runners.pop(instance_id, None)
+        runner = self.state.runners.pop(str(instance_id), None)
         if runner is not None:
             return iter([MagicMock()])
         return iter([])

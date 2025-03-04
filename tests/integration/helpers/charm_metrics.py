@@ -206,7 +206,7 @@ async def assert_events_after_reconciliation(
             if not reactive_mode:
                 assert metric_log.get("expected_runners") >= 0
             else:
-                assert "expected_runners" not in metric_log
+                assert metric_log.get("expected_runners") == 0
 
 
 async def wait_for_runner_to_be_marked_offline(
