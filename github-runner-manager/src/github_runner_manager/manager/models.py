@@ -59,7 +59,6 @@ class InstanceID:
         if InstanceID.name_has_prefix(prefix, name):
             suffix = name.removeprefix(f"{prefix}")
         else:
-            # TODO should we raise if invalid name?
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
         # The separator from prefix and suffix indicates whether the runner is reactive.
