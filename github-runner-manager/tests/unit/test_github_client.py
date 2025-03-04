@@ -15,6 +15,7 @@ import requests
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 JobStatsRawData = namedtuple(
@@ -313,7 +314,7 @@ def test_get_registration_jittoken_repo(github_client: GithubClient):
         "encoded_jit_config": "hugestringinhere",
     }
 
-    instance_id = "test-runner-99999999"
+    instance_id = InstanceID.build("test-runner")
     labels = ["label1", "label2"]
     jittoken = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels
@@ -393,10 +394,12 @@ def test_get_registration_jittoken_org(
 
     monkeypatch.setattr(requests, "get", _mock_get)
 
+    instance_id = InstanceID.build("test-runner")
+
     def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
-        assert name == "test-runner-99999999"
+        assert name == instance_id.name
         assert runner_group_id == 3
         assert labels == ["label1", "label2"]
         return {
@@ -420,7 +423,6 @@ def test_get_registration_jittoken_org(
         _mock_generate_runner_jitconfig_for_org
     )
 
-    instance_id = "test-runner-99999999"
     labels = ["label1", "label2"]
     jittoken = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels
