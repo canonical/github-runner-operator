@@ -66,7 +66,7 @@ class StorageManager(StorageManagerProtocol):
         """Initialize the storage manager.
 
         Args:
-            prefix: TODO
+            prefix: Prefix for the application (charm application unit name).
         """
         self._base_dir = (
             Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / _FILESYSTEM_BASE_DIR_NAME
