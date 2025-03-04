@@ -70,10 +70,9 @@ def existing_app_suffix(pytestconfig: pytest.Config) -> Optional[str]:
 def random_app_name_suffix(existing_app_suffix: Optional[str]) -> str:
     """Randomized application name."""
     # Randomized suffix name to avoid collision when runner is connecting to GitHub.
-    return (
-        existing_app_suffix
-        or (random.choice(string.ascii_lowercase) +
-        ''.join(random.choices(string.ascii_lowercase + string.digits, k=7)))
+    return existing_app_suffix or (
+        random.choice(string.ascii_lowercase)
+        + "".join(random.choices(string.ascii_lowercase + string.digits, k=7))
     )
 
 
