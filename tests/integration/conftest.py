@@ -387,7 +387,7 @@ async def image_builder_fixture(
             apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
-        app = (model.applications[image_builder_app_name],)
+        app = model.applications[image_builder_app_name]
     yield app
     # The github-image-builder does not clean keypairs. Until it does,
     # we clean them manually here.
