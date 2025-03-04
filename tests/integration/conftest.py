@@ -61,21 +61,29 @@ def metadata() -> dict[str, Any]:
 
 
 @pytest.fixture(scope="module")
-def existing_app(pytestconfig: pytest.Config) -> Optional[str]:
-    """The existing application name to use for the test."""
-    return pytestconfig.getoption("--use-existing-app")
-
+def existing_app_suffix(pytestconfig: pytest.Config) -> Optional[str]:
+    """The existing application name suffix to use for the test."""
+    return pytestconfig.getoption("--use-existing-app-suffix")
 
 @pytest.fixture(scope="module")
-def app_name(existing_app: Optional[str]) -> str:
+def random_app_name_suffix(existing_app_suffix: Optional[str]) -> str:
     """Randomized application name."""
-    # Randomized app name to avoid collision when runner is connecting to GitHub.
-    # The char after the hyphen has to be a letter.
+    # Randomized suffix name to avoid collision when runner is connecting to GitHub.
     return (
-        existing_app
-        or f"test-{random.choice(string.ascii_lowercase)}"
-        f"{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
+        existing_app_suffix
+        or "{random.choice(string.ascii_lowercase)}"
+        "{''.join(random.choices(string.ascii_lowercase + string.digits, k=7))}"
     )
+
+@pytest.fixture(scope="module")
+def app_name(random_app_name_suffix: str) -> str:
+    """Randomized application name."""
+    return f"test-{random_app_name_suffix}"
+
+@pytest.fixture(scope="module")
+def image_builder_app_name(random_app_name_suffix: str) -> str:
+    """Randomized application name."""
+    return f"github-runner-image-builder-{random_app_name_suffix}"
 
 
 @pytest.fixture(scope="module", name="openstack_clouds_yaml")
@@ -342,7 +350,8 @@ async def openstack_model_proxy(
 async def image_builder_fixture(
     model: Model,
     private_endpoint_config: PrivateEndpointConfigs | None,
-    existing_app: Optional[str],
+    existing_app_suffix: Optional[str],
+    image_builder_app_name: str,
     flavor_name: str,
     network_name: str,
     openstack_model_proxy: None,
@@ -351,8 +360,8 @@ async def image_builder_fixture(
     """The image builder application for OpenStack runners."""
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
-    if not existing_app:
-        application_name = f"github-runner-image-builder-{''.join(random.choices(string.ascii_lowercase + string.digits, k=8))}"
+    if not existing_app_suffix:
+        application_name = image_builder_app_name
         app = await model.deploy(
             "github-runner-image-builder",
             application_name=application_name,
@@ -376,7 +385,7 @@ async def image_builder_fixture(
             apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
         )
     else:
-        app = model.applications["github-runner-image-builder"]
+        app = model.applications[image_builder_app_name],
     yield app
     # The github-image-builder does not clean keypairs. Until it does,
     # we clean them manually here.
@@ -399,12 +408,12 @@ async def app_openstack_runner_fixture(
     clouds_yaml_contents: str,
     network_name: str,
     flavor_name: str,
-    existing_app: Optional[str],
+    existing_app_suffix: Optional[str],
     image_builder: Application,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
-    if existing_app:
-        application = model.applications[existing_app]
+    if existing_app_suffix:
+        application = model.applications[app_name]
     else:
         application = await deploy_github_runner_charm(
             model=model,
@@ -674,9 +683,9 @@ async def app_for_metric_fixture(
 
 
 @pytest_asyncio.fixture(scope="module", name="mongodb")
-async def mongodb_fixture(model: Model, existing_app: str | None) -> Application:
+async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Application:
     """Deploy MongoDB."""
-    if not existing_app:
+    if not existing_app_suffix:
         mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
         await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
     else:
@@ -689,10 +698,10 @@ async def app_for_reactive_fixture(
     model: Model,
     app_openstack_runner: Application,
     mongodb: Application,
-    existing_app: Optional[str],
+    existing_app_suffix: Optional[str],
 ) -> Application:
     """Application for testing reactive."""
-    if not existing_app:
+    if not existing_app_suffix:
         await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
     await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
