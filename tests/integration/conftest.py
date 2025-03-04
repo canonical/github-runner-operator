@@ -393,7 +393,7 @@ async def image_builder_fixture(
     # we clean them manually here.
     for key in openstack_connection.list_keypairs():
         key_name: str = key.name
-        if key_name.startswith(application_name):
+        if key_name.startswith(image_builder_app_name):
             openstack_connection.delete_keypair(key_name)
 
 
