@@ -8,7 +8,7 @@ import pytest
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -68,7 +68,7 @@ async def test_reconcile_runners(
     unit = app.units[0]
 
     # 1.
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
     await reconcile(app=app, model=model)
 
@@ -79,7 +79,7 @@ async def test_reconcile_runners(
     await wait_for(lambda: _runners_number(1), timeout=10 * 60, check_interval=10)
 
     # 2.
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
     await reconcile(app=app, model=model)
 

@@ -95,7 +95,7 @@ class _ReconcileMetricData:
     metric_stats: IssuedMetricEventsStats
     runner_list: tuple[RunnerInstance]
     flavor: str
-    expected_runner_quantity: int | None = None
+    expected_runner_quantity: int
 
 
 class RunnerScaler:
@@ -261,8 +261,27 @@ class RunnerScaler:
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = self._base_quantity if self._reactive_config is None else None
+        expected_runner_quantity = self._base_quantity
 
+        # TODO THE NEW STEPS MAY BE AS FOLLOWS:
+
+        # 0. Initial Cleanup:
+        # 0.1 Be careful, offline runners could be in the process of being created, because of JIT
+        # 0.2 Clean Finished things, that is, get all runners cloud + github
+        # 0.2.1 Get all runners cloud + github, and create a state for the runner
+        # 0.2.2 If it is finished or there is no way it will advance, delete it from both places.
+        # 0.2.3 Issue metrics for that.
+        # 0.2.4 TODO offline in github and nothing in cloud. Check how long it's been in github?
+
+        # 1. Non-reactive
+        # 1.1. TODO
+        # 2. reactive
+        # 2.1. TODO
+
+        # 3. Final Cleanup
+        # 3.1. TODO
+
+        # TODO What should this function return if any???
         try:
             if self._reactive_config is not None:
                 logger.info(

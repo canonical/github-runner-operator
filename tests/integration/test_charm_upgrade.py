@@ -13,11 +13,11 @@ from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
@@ -85,7 +85,7 @@ async def test_charm_upgrade(
             OPENSTACK_NETWORK_CONFIG_NAME: network_name,
             OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
             USE_APROXY_CONFIG_NAME: "true",
-            VIRTUAL_MACHINES_CONFIG_NAME: 1,
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1,
         },
         wait_idle=False,
     )
