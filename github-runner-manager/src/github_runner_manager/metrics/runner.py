@@ -89,7 +89,7 @@ class PostJobMetrics(BaseModel):
     status_info: Optional[CodeInformation]
 
 
-class RunnerMetrics(BaseModel):
+class RunnerDeletedInfo(BaseModel):
     """Metrics for a runner.
 
     Attributes:
@@ -110,7 +110,7 @@ class RunnerMetrics(BaseModel):
 
 def extract(
     metrics_storage_manager: MetricsStorageManager, runners: set[str], include: bool = False
-) -> Iterator[RunnerMetrics]:
+) -> Iterator[RunnerDeletedInfo]:
     """Extract metrics from runners.
 
     The metrics are extracted from the metrics storage of the runners.
@@ -145,7 +145,7 @@ def extract(
 
 
 def issue_events(
-    runner_metrics: RunnerMetrics,
+    runner_metrics: RunnerDeletedInfo,
     flavor: str,
     job_metrics: Optional[GithubJobMetrics],
 ) -> set[Type[metric_events.Event]]:
@@ -215,7 +215,7 @@ def issue_events(
 
 
 def _issue_runner_installed(
-    runner_metrics: RunnerMetrics, flavor: str
+    runner_metrics: RunnerDeletedInfo, flavor: str
 ) -> Type[metric_events.Event]:
     """Issue the RunnerInstalled metric for a runner.
 
@@ -242,7 +242,7 @@ def _issue_runner_installed(
 
 
 def _issue_runner_start(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: Optional[GithubJobMetrics]
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStart metric for a runner.
 
@@ -263,7 +263,7 @@ def _issue_runner_start(
 
 
 def _issue_runner_stop(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: GithubJobMetrics | None
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStop metric for a runner.
 
@@ -284,7 +284,7 @@ def _issue_runner_stop(
 
 
 def _create_runner_start(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: Optional[GithubJobMetrics]
 ) -> metric_events.RunnerStart:
     """Create the RunnerStart event.
 
@@ -340,7 +340,7 @@ def _create_runner_start(
 
 
 def _create_runner_stop(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: GithubJobMetrics | None
 ) -> metric_events.RunnerStop:
     """Create the RunnerStop event.
 
@@ -399,7 +399,7 @@ def _create_runner_stop(
 def _extract_storage(
     metrics_storage_manager: MetricsStorageManager,
     metrics_storage: MetricsStorage,
-) -> Optional[RunnerMetrics]:
+) -> Optional[RunnerDeletedInfo]:
     """Extract metrics from a metrics storage.
 
     Args:
@@ -425,7 +425,7 @@ def _extract_storage(
     return metrics_from_fs
 
 
-def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[RunnerMetrics]:
+def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[RunnerDeletedInfo]:
     """Extract metrics from metrics storage for a runner.
 
     Args:
@@ -480,7 +480,7 @@ def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[R
         post_job_metrics = None
 
     try:
-        return RunnerMetrics(
+        return RunnerDeletedInfo(
             installation_start_timestamp=(
                 float(installation_start_timestamp) if installation_start_timestamp else None
             ),

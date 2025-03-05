@@ -16,7 +16,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import RunnerDeletedInfo
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     RegistrationToken,
@@ -334,7 +334,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str
+    ) -> RunnerDeletedInfo | None:
         """Delete self-hosted runner.
 
         Args:
@@ -349,7 +351,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             return iter([MagicMock()])
         return iter([])
 
-    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
+    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerDeletedInfo]:
         """Stop all runners.
 
         Args:
@@ -370,7 +372,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             }
         return iter([MagicMock()])
 
-    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterator[RunnerDeletedInfo]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.

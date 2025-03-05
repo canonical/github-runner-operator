@@ -245,7 +245,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str
-    ) -> runner_metrics.RunnerMetrics | None:
+    ) -> runner_metrics.RunnerDeletedInfo | None:
         """Delete self-hosted runners.
 
         Args:
@@ -279,7 +279,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Remove idle and/or busy runners.
 
         Args:
@@ -308,7 +308,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -346,7 +346,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         metrics_storage_manager: StorageManager,
         ignore_runner_names: set[InstanceID],
         include_runner_names: set[InstanceID],
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Extract metrics for certain runners and dangling metrics storage.
 
         Args:
