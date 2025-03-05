@@ -9,6 +9,10 @@ from dataclasses import dataclass
 INSTANCE_SUFFIX_LENGTH = 12
 
 
+class InstanceIDInvalidError(Exception):
+    """Raised when the InstanceID naming will break the provider of GitHub."""
+
+
 @dataclass(eq=True, frozen=True)
 class InstanceID:
     """Main identifier for a runner instance among all clouds and GitHub.
@@ -38,9 +42,7 @@ class InstanceID:
         Returns:
            Name of the instance
         """
-        # Having a not number as a separator is ok, as the prefix should end
-        # with a number (it is the unit number).
-        return f"{self.prefix}{'r' if self.reactive else '-'}{self.suffix}"
+        return f"{self.prefix}-{'r' if self.reactive else 'n'}-{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -57,16 +59,21 @@ class InstanceID:
            The InstanceID object.
         """
         if InstanceID.name_has_prefix(prefix, name):
-            suffix = name.removeprefix(f"{prefix}")
+            suffix = name.removeprefix(f"{prefix}-")
         else:
             raise ValueError(f"Invalid runner name {name} for prefix {prefix}")
 
         # The separator from prefix and suffix indicates whether the runner is reactive.
+        # To maintain backwards compatibility, if there is no r- or n- (reactive or
+        # non-reactive), we assume non-reactive and keep the full suffix.
         reactive = False
-        separator = suffix[:1]
-        if separator == "r":
+        separator = suffix[:2]
+        if separator == "r-":
             reactive = True
-        suffix = suffix[1:]
+            suffix = suffix[2:]
+        elif separator == "n-":
+            reactive = False
+            suffix = suffix[2:]
 
         return cls(
             prefix=prefix,
@@ -94,9 +101,19 @@ class InstanceID:
 
         Returns:
             Instance ID of the runner.
+
+        Raises:
+            InstanceIDInvalidError: If the instance name is not valid (too long).
         """
         suffix = secrets.token_hex(INSTANCE_SUFFIX_LENGTH // 2)
-        return cls(prefix=prefix, reactive=reactive, suffix=suffix)
+        instance_id = cls(prefix=prefix, reactive=reactive, suffix=suffix)
+        # By default, for OpenStack with MySQL, the limit is 64 characters.
+        if len(instance_id.name) > 64:
+            raise InstanceIDInvalidError(
+                f"InstanceID {instance_id.name} is too over 64 characters and can break "
+                "OpenStack naming. You can try to make the application name shorter to fix it."
+            )
+        return instance_id
 
     @staticmethod
     def name_has_prefix(prefix: str, name: str) -> bool:
@@ -111,10 +128,8 @@ class InstanceID:
         Returns:
            True if the instance name is part the applicatoin with the prefix.
         """
-        if name.startswith(prefix):
-            suffix = name.removeprefix(f"{prefix}")
-            if suffix[:1] in ("-", "r"):
-                return True
+        if name.startswith(f"{prefix}-"):
+            return True
         return False
 
     def __str__(self) -> str:

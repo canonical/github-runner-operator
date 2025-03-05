@@ -195,12 +195,16 @@ def test_cleanup_ignores_runners_with_health_check_errors(
     act: When the cleanup method is called.
     assert: Only the unhealthy runners are deleted and their metrics are extracted.
     """
+    prefix = "test"
     names = [
-        f"test-{status}{i}"
+        InstanceID(prefix=prefix, reactive=False, suffix=f"{status}{i}").name
         for status, count in [
             ("healthy", healthy_count),
             ("unhealthy", unhealthy_count),
-            ("unknown", unknown_count),
+            (
+                "unknown",
+                unknown_count,
+            ),
         ]
         for i in range(count)
     ]
@@ -219,9 +223,8 @@ def test_cleanup_ignores_runners_with_health_check_errors(
         if instance_id.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
     assert runner_metrics_mock.extract.call_count == 1
-
     assert {r.name for r in runner_metrics_mock.extract.call_args[1]["runners"]} == {
-        names for names in names if names.startswith(f"{OPENSTACK_INSTANCE_PREFIX}-unhealthy")
+        InstanceID.build_from_name(prefix, name).name for name in names if "unhealthy" in name
     }
 
 
@@ -273,9 +276,13 @@ def _create_health_checks_mock() -> MagicMock:
 
         This implements the logic mentioned in the docstring above.
         """
-        if instance.instance_id.name.startswith("test-healthy"):
+        if instance.instance_id.prefix == "test" and instance.instance_id.suffix.startswith(
+            "healthy"
+        ):
             return True
-        if instance.instance_id.name.startswith("test-unhealthy"):
+        if instance.instance_id.prefix == "test" and instance.instance_id.suffix.startswith(
+            "unhealthy"
+        ):
             return False
         raise OpenstackHealthCheckError("Health check failed")
 

@@ -5,7 +5,7 @@
 
 import pytest
 
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, InstanceIDInvalidError
 
 
 def test_new_instance_id():
@@ -63,3 +63,14 @@ def test_build_instance_id_from_name_fails_with_wrong_prefix():
 
     with pytest.raises(ValueError):
         _ = InstanceID.build_from_name(prefix, name)
+
+
+def test_build_instance_id_fails_when_very_long_name():
+    """
+    arrange: -.
+    act: Create a new InstanceID with a very long prefix.
+    assert: A InstanceIDInvalidError exception should be raised.
+    """
+    prefix = "github-runner-operator-for-runners-using-openstack-amd64-with-flavor-with60-cores"
+    with pytest.raises(InstanceIDInvalidError):
+        _ = InstanceID.build(prefix)
