@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  self-hosted-xlarge:
-    name: self-hosted-xlarge
-    runs-on: [self-hosted, xlarge, jammy, X64]
+  reactive-edge:
+    name: reactive-edge
+    runs-on: [self-hosted, reactive, edge, amd64, X64]
     steps:
       - run: sudo apt update
       - run: sudo apt upgrade -y
