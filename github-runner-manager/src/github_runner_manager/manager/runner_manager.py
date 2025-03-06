@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Tuple, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
@@ -192,7 +192,9 @@ class RunnerManager:
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
-    def delete_runners(self, num: int) -> IssuedMetricEventsStats:
+    def delete_runners(
+        self, num: int
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete runners.
 
         Args:
@@ -236,7 +238,7 @@ class RunnerManager:
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
-    def cleanup(self) -> IssuedMetricEventsStats:
+    def cleanup(self) -> Tuple[IssuedMetricEventsStats, list[RunnerDeletedInfo]]:
         """Run cleanup of the runners and other resources.
 
         Returns:
@@ -244,8 +246,9 @@ class RunnerManager:
         """
         self._github.delete_runners([GitHubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
-        deleted_runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+        deleted_runners_info = self._cloud.cleanup(remove_token)
+        issued_metrics = self._issue_runner_metrics(metrics=deleted_runners_info)
+        return issued_metrics, deleted_runners_info
 
     @staticmethod
     def _spawn_runners(
@@ -311,7 +314,7 @@ class RunnerManager:
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
-    ) -> IssuedMetricEventsStats:
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete list of runners.
 
         Args:
@@ -323,12 +326,12 @@ class RunnerManager:
         """
         runner_metrics_list = []
         for runner in runners:
-            deleted_runner_metrics = self._cloud.delete_runner(
+            deleted_runner_info = self._cloud.delete_runner(
                 instance_id=runner.instance_id, remove_token=remove_token
             )
-            if deleted_runner_metrics is not None:
-                runner_metrics_list.append(deleted_runner_metrics)
-        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
+            if deleted_runner_info is not None:
+                runner_metrics_list.append(deleted_runner_info)
+        return self._issue_runner_metrics(metrics=iter(runner_metrics_list)), deleted_runner_info
 
     def _issue_runner_metrics(
         self, metrics: Iterator[RunnerDeletedInfo]

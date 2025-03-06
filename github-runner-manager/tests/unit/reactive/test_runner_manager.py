@@ -24,8 +24,10 @@ TEST_DELETE_RUNNER_METRIC_EVENTS = {RunnerStart: 1, RunnerStop: 1}
 def runner_manager_fixture() -> MagicMock:
     """Return a mock of the RunnerManager."""
     mock = MagicMock(spec=RunnerManager)
-    mock.cleanup.return_value = TEST_METRIC_EVENTS
-    mock.delete_runners.return_value = TEST_DELETE_RUNNER_METRIC_EVENTS
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    mock.cleanup.return_value = TEST_METRIC_EVENTS, []
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    mock.delete_runners.return_value = (TEST_DELETE_RUNNER_METRIC_EVENTS, [])
     return mock
 
 
@@ -275,8 +277,10 @@ def test_reconcile_returns_issued_metrics(
     runner_manager.get_runners = MagicMock(
         return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
     )
-    runner_manager.cleanup.return_value = cleanup_metric_stats
-    runner_manager.delete_runners.return_value = delete_metric_stats
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    runner_manager.cleanup.return_value = cleanup_metric_stats, []
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    runner_manager.delete_runners.return_value = delete_metric_stats, []
 
     _set_queue_non_empty(monkeypatch)
 
@@ -408,8 +412,10 @@ def test_reconcile_empty_queue_returns_issued_metrics(
     runner_manager.get_runners = MagicMock(
         return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
     )
-    runner_manager.cleanup.return_value = cleanup_metric_stats
-    runner_manager.delete_runners.return_value = delete_metric_stats
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    runner_manager.cleanup.return_value = cleanup_metric_stats, []
+    # TODO JAVI THE [] SHOULD BE RUNNERS.
+    runner_manager.delete_runners.return_value = delete_metric_stats, []
     runner_manager.flush_runners.return_value = flush_metric_stats
 
     _set_queue_empty(monkeypatch)
