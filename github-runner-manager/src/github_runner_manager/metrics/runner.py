@@ -109,7 +109,7 @@ class RunnerMetrics(BaseModel):
 
 
 def extract(
-    metrics_storage_manager: MetricsStorageManager, runners: set[str], include: bool = False
+    metrics_storage_manager: MetricsStorageManager, runners: set[InstanceID], include: bool = False
 ) -> Iterator[RunnerMetrics]:
     """Extract metrics from runners.
 
