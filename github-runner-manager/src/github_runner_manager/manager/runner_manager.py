@@ -1,13 +1,13 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Class for managing the GitHub self-hosted runners hosted on cloud instances."""
+"""Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Tuple, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
@@ -17,16 +17,16 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
     HealthState,
-    InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import (
     GitHubRunnerManager,
     GitHubRunnerState,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import RunnerDeletedInfo
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ class RunnerInstance:
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
     health: HealthState
     github_state: GitHubRunnerState | None
     cloud_state: CloudRunnerState
@@ -112,11 +112,12 @@ class RunnerManager:
         )
         self._labels = labels
 
-    def create_runners(self, num: int) -> tuple[InstanceId, ...]:
+    def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
+            reactive: If the runner is reactive.
 
         Returns:
             List of instance ID of the runners.
@@ -128,7 +129,8 @@ class RunnerManager:
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels) for _ in range(num)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels, reactive)
+            for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
 
@@ -153,7 +155,7 @@ class RunnerManager:
         logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info["name"]: info for info in github_infos}
+        github_infos_map = {info.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
@@ -190,7 +192,9 @@ class RunnerManager:
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
-    def delete_runners(self, num: int) -> IssuedMetricEventsStats:
+    def delete_runners(
+        self, num: int
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete runners.
 
         Args:
@@ -234,7 +238,7 @@ class RunnerManager:
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
-    def cleanup(self) -> IssuedMetricEventsStats:
+    def cleanup(self) -> Tuple[IssuedMetricEventsStats, list[RunnerDeletedInfo]]:
         """Run cleanup of the runners and other resources.
 
         Returns:
@@ -242,13 +246,14 @@ class RunnerManager:
         """
         self._github.delete_runners([GitHubRunnerState.OFFLINE])
         remove_token = self._github.get_removal_token()
-        deleted_runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+        deleted_runners_info = self._cloud.cleanup(remove_token)
+        issued_metrics = self._issue_runner_metrics(metrics=deleted_runners_info)
+        return issued_metrics, deleted_runners_info
 
     @staticmethod
     def _spawn_runners(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"],
-    ) -> tuple[InstanceId, ...]:
+    ) -> tuple[InstanceID, ...]:
         """Spawn runners in parallel using multiprocessing.
 
         Multiprocessing is only used if there are more than one runner to spawn. Otherwise,
@@ -278,7 +283,7 @@ class RunnerManager:
     @staticmethod
     def _spawn_runners_using_multiprocessing(
         create_runner_args_sequence: Sequence["RunnerManager._CreateRunnerArgs"], num: int
-    ) -> tuple[InstanceId, ...]:
+    ) -> tuple[InstanceID, ...]:
         """Parallel spawn of runners.
 
         The length of the create_runner_args is number _create_runner invocation, and therefore the
@@ -309,7 +314,7 @@ class RunnerManager:
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
-    ) -> IssuedMetricEventsStats:
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete list of runners.
 
         Args:
@@ -321,14 +326,16 @@ class RunnerManager:
         """
         runner_metrics_list = []
         for runner in runners:
-            deleted_runner_metrics = self._cloud.delete_runner(
+            deleted_runner_info = self._cloud.delete_runner(
                 instance_id=runner.instance_id, remove_token=remove_token
             )
-            if deleted_runner_metrics is not None:
-                runner_metrics_list.append(deleted_runner_metrics)
-        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
+            if deleted_runner_info is not None:
+                runner_metrics_list.append(deleted_runner_info)
+        return self._issue_runner_metrics(metrics=iter(runner_metrics_list)), deleted_runner_info
 
-    def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(
+        self, metrics: Iterator[RunnerDeletedInfo]
+    ) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Args:
@@ -349,16 +356,17 @@ class RunnerManager:
                     job_metrics = github_metrics.job(
                         github_client=self._github.github,
                         pre_job_metrics=extracted_metrics.pre_job,
-                        runner_name=extracted_metrics.runner_name,
+                        runner_name=extracted_metrics.instance_id.name,
                     )
                 except GithubMetricsError:
                     logger.exception(
-                        "Failed to calculate job metrics for %s", extracted_metrics.runner_name
+                        "Failed to calculate job metrics for %s",
+                        extracted_metrics.instance_id,
                     )
             else:
                 logger.debug(
                     "No pre-job metrics found for %s, will not calculate job metrics.",
-                    extracted_metrics.runner_name,
+                    extracted_metrics.instance_id,
                 )
 
             issued_events = runner_metrics.issue_events(
@@ -382,14 +390,16 @@ class RunnerManager:
             cloud_runner_manager: For managing the cloud instance of the runner.
             github_runner_manager: To manage self-hosted runner on the GitHub side.
             labels: List of labels to add to the runners.
+            reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager
         github_runner_manager: GitHubRunnerManager
         labels: list[str]
+        reactive: bool
 
     @staticmethod
-    def _create_runner(args: _CreateRunnerArgs) -> InstanceId:
+    def _create_runner(args: _CreateRunnerArgs) -> InstanceID:
         """Create a single runner.
 
         This is a staticmethod for usage with multiprocess.Pool.
@@ -400,7 +410,7 @@ class RunnerManager:
         Returns:
             The instance ID of the runner created.
         """
-        instance_id = args.cloud_runner_manager.generate_instance_id()
+        instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
         registration_jittoken = args.github_runner_manager.get_registration_jittoken(
             instance_id, args.labels
         )

@@ -25,11 +25,11 @@ from juju.model import Model
 from juju.unit import Unit
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
 )
 from tests.status_name import ACTIVE
 
@@ -138,7 +138,7 @@ async def deploy_github_runner_charm(
     default_config = {
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
-        VIRTUAL_MACHINES_CONFIG_NAME: 0,
+        BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
     }
