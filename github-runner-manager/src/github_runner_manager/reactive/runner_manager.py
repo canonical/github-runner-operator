@@ -31,6 +31,7 @@ class ReconcileResult:
     metric_stats: IssuedMetricEventsStats
 
 
+# pylint: disable=unused-variable; # JAVI remove this after the refactor
 def reconcile(
     expected_quantity: int,
     runner_manager: RunnerManager,
@@ -82,7 +83,7 @@ def reconcile(
         The number of reactive processes created. If negative, its absolute value is equal
         to the number of processes killed.
     """
-    cleanup_metric_stats = runner_manager.cleanup()
+    cleanup_metric_stats, runners_deleted_info = runner_manager.cleanup()
     flush_metric_stats = {}
     delete_metric_stats = {}
 
@@ -99,7 +100,7 @@ def reconcile(
     if runner_diff >= 0:
         process_quantity = runner_diff
     else:
-        delete_metric_stats = runner_manager.delete_runners(-runner_diff)
+        delete_metric_stats, deleted_runners_info = runner_manager.delete_runners(-runner_diff)
         process_quantity = 0
 
     metric_stats = {
