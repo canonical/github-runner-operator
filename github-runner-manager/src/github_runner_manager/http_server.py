@@ -7,13 +7,22 @@ The HTTP server for request to the github-runner-manager.
 """
 
 from threading import Lock
-from time import sleep
 
-from flask import Flask, abort, request
+from flask import Flask, request
 
 from github_runner_manager.cli_config import Configuration
 
 app = Flask(__name__)
+
+
+@app.route("/health", methods=["GET"])
+def get_health() -> tuple[str, int]:
+    """Get the health of the HTTP server.
+
+    Returns:
+        A empty response.
+    """
+    return ("", 200)
 
 
 @app.route("/runner/flush", methods=["POST"])
@@ -38,54 +47,8 @@ def flush_runner() -> tuple[str, int]:
     app.logger.info("Lock locked: %s", lock.locked())
     app.logger.info("Flush: Attempting to acquire the lock...")
     with lock:
-        app.logger.info("Flush: Sleeping a while...")
-        sleep(10)
-    app.logger.info("Flush: Released the lock")
-    return ("", 200)
-
-
-# The path under /lock are for debugging. These routes are for setting the lock state in tests.
-@app.route("/lock/status")
-def lock_status() -> tuple[str, int]:  # pragma: no cover
-    """Get the status of the lock.
-
-    Only enabled in debug mode, else 404 is returned.
-
-    Returns:
-        Whether the lock is locked.
-    """
-    if not app.debug:
-        abort(404)
-    return ("locked", 200) if _get_lock().locked() else ("unlocked", 200)
-
-
-@app.route("/lock/acquire")
-def lock_acquire() -> tuple[str, int]:  # pragma: no cover
-    """Acquire the thread lock.
-
-    Only enabled in debug mode, else 404 is returned.
-
-    Returns:
-        A empty response.
-    """
-    if not app.debug:
-        abort(404)
-    _get_lock().acquire(blocking=True)
-    return ("", 200)
-
-
-@app.route("/lock/release")
-def lock_release() -> tuple[str, int]:  # pragma: no cover
-    """Release the thread lock.
-
-    Only enabled in debug mode, else 404 is returned.
-
-    Returns:
-        A empty response.
-    """
-    if not app.debug:
-        abort(404)
-    _get_lock().release()
+        app.logger.info("Flushing the runners")
+    app.logger.info("Flushed the runners")
     return ("", 200)
 
 
@@ -98,9 +61,7 @@ def _get_lock() -> Lock:
     return app.config["lock"]
 
 
-# This function starts the flask server. There is no logic to unit test.
-# The integration test will start the starting of the flask server.
-def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:  # pragma: no cover
+def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:
     """Start the HTTP server for interacting with the github-runner-manager service.
 
     Args:

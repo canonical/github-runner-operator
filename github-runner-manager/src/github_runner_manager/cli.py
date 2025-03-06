@@ -5,13 +5,13 @@
 
 import logging
 from threading import Lock, Thread
-from time import sleep
 from typing import TextIO
 
 import click
 
 from github_runner_manager.cli_config import Configuration
 from github_runner_manager.http_server import start_http_server
+from github_runner_manager.reconcile_service import start_reconcile_service
 
 logger = logging.getLogger(__name__)
 
@@ -78,20 +78,3 @@ def main(
 
     for thread in threads:
         thread.join()
-
-
-# The reconcile logic is not implemented, therefore not unit tested.
-def start_reconcile_service(_: Configuration, lock: Lock) -> None:  # pragma: no cover
-    """Start the reconcile server.
-
-    Args:
-        lock: The lock representing modification access to the managed set of runners.
-    """
-    # The reconcile service is not implemented yet, current logging the lock status.
-    while True:
-        logger.info("Lock locked: %s", lock.locked())
-        logger.info("Reconcile: Attempting to acquire the lock...")
-        with lock:
-            logger.info("Reconcile: Sleeping a while...")
-            sleep(10)
-        logger.info("Reconcile: Released the lock")

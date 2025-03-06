@@ -56,10 +56,3 @@ def app_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Pop
     process = start_app(config_file, [])
     yield process
     process.kill()
-
-
-@pytest.fixture(name="no_reconcile_app", scope="function")
-def no_reconcile_app_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
-    process = start_app(config_file, ["--debug-disable-reconcile"])
-    yield process
-    process.kill()

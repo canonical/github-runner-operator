@@ -5,45 +5,12 @@
 
 import subprocess
 from pathlib import Path
-from time import sleep
 from typing import Sequence
 
 import requests
 
 GITHUB_RUNNER_MANAGER_ADDRESS = "127.0.0.1:8080"
 PACKAGE_NAME = "github-runner-manager"
-
-
-def get_lock_status() -> str:
-    """Get the status of the lock.
-
-    Returns:
-        str: The status of the lock.
-    """
-    response = requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/lock/status")
-    return response.content.decode("utf-8")
-
-
-def acquire_lock():
-    """Acquire the lock."""
-    requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/lock/acquire")
-
-
-def release_lock():
-    """Release the lock."""
-    requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/lock/release")
-
-
-def flush_runner(flush_busy: bool):
-    """Flush the runners.
-
-    Args:
-        flush_busy: Whether to flush busy runners.
-    """
-    busy = "true" if flush_busy else "false"
-    requests.post(
-        f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/runner/flush", headers={"flush-busy": busy}
-    )
 
 
 def get_app_log(app: subprocess.Popen) -> str:
@@ -87,17 +54,7 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
     return process
 
 
-def poll_lock_status(secs: int) -> list[str]:
-    """Poll the lock status every second.
-
-    Args:
-        secs: How long to poll for in seconds.
-
-    Returns:
-        The lock status.
-    """
-    lock_status = []
-    for _ in range(secs):
-        lock_status.append(get_lock_status())
-        sleep(1)
-    return lock_status
+def health_check() -> None:
+    """Get health check status."""
+    response = requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/health")
+    assert response.status_code == 200, "Health check failed"
