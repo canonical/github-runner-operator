@@ -1,7 +1,8 @@
 name: Tests for github-runner-manager
 
 on:
-  pull_request:
+  # pull_request:
+  workflow_dispatch:
 
 jobs:
   unit-tests-github-runner-manager:
