@@ -391,6 +391,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             self._pull_runner_metrics(instance.instance_id, ssh_conn)
 
             try:
+                logger.info("Running runner removal script for %s", instance.instance_id)
                 OpenStackRunnerManager._run_runner_removal_script(
                     instance.instance_id.name, ssh_conn, remove_token
                 )
