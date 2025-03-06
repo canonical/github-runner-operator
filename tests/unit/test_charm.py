@@ -219,7 +219,7 @@ def test_on_config_changed_failure(harness: Harness):
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
 
 
-def test_on_flush_runners_reconcile_error_fail(harness: Harness):
+def test_on_flush_runners_reconcile_error_fail(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and ReconcileError.
     act: Run flush runner action.
@@ -230,7 +230,7 @@ def test_on_flush_runners_reconcile_error_fail(harness: Harness):
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     mock_event = MagicMock()
     harness.charm._on_flush_runners_action(mock_event)
@@ -252,7 +252,7 @@ def test_on_reconcile_runners_action_reconcile_error_fail(
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     monkeypatch.setattr(
         OpenstackImage,
         "from_charm",
@@ -278,7 +278,7 @@ def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pyt
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     monkeypatch.setattr(
         OpenstackImage,
         "from_charm",
@@ -301,7 +301,7 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     mock_event = MagicMock()
 
     harness.charm._on_stop(mock_event)
@@ -620,7 +620,7 @@ def test__on_image_relation_image_not_ready():
     assert harness.charm.unit.status.name == MaintenanceStatus.name
 
 
-def test__on_image_relation_image_ready():
+def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: given a charm with OpenStack instance type and a monkeypatched \
         _get_set_image_ready_status that returns True denoting image ready.
@@ -632,14 +632,14 @@ def test__on_image_relation_image_ready():
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
-    runner_manager_mock = MagicMock()
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_manager_mock)
+    runner_scaler_mock = MagicMock()
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     assert harness.charm.unit.status.name == ActiveStatus.name
-    runner_manager_mock.flush.assert_called_once()
-    runner_manager_mock.reconcile.assert_called_once()
+    runner_scaler_mock.flush.assert_called_once()
+    runner_scaler_mock.reconcile.assert_called_once()
 
 
 def test__on_image_relation_joined():

@@ -108,11 +108,11 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """Get the name prefix of the self-hosted runners."""
         return self.prefix
 
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def create_runner(self, registration_jittoken: str) -> InstanceId:
         """Create a self-hosted runner.
 
         Args:
-            registration_token: The GitHub registration token for registering runners.
+            registration_jittoken: The GitHub registration token for registering runners.
 
         Returns:
             The instance id of the runner created.
@@ -121,20 +121,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         runner = MockRunner(name)
         self.state.runners[runner.instance_id] = runner
         return runner.instance_id
-
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
-
-        Returns:
-            The runner instance if found else None.
-        """
-        runner = self.state.runners.get(instance_id, None)
-        if runner is not None:
-            return runner.to_cloud_runner()
-        return None
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -233,8 +219,12 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_token(self) -> str:
-        """Get the registration token for registering runners on GitHub.
+    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+        """Get the registration JIT token for registering runners on GitHub.
+
+        Args:
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.

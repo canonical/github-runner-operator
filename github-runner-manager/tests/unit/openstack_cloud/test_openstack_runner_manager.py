@@ -9,8 +9,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
-from github_runner_manager.manager.cloud_runner_manager import SupportServiceConfig
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.storage import MetricsStorage, StorageManager
 from github_runner_manager.openstack_cloud import (
@@ -44,13 +44,11 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
     service_config_mock = MagicMock(spec=SupportServiceConfig)
     service_config_mock.proxy_config = None
     config = OpenStackRunnerManagerConfig(
-        name="test",
         prefix="test",
         credentials=MagicMock(),
         server_config=MagicMock(),
         runner_config=MagicMock(),
         service_config=service_config_mock,
-        system_user_config=MagicMock(),
     )
 
     return OpenStackRunnerManager(config=config)
@@ -211,7 +209,7 @@ def test_cleanup_ignores_runners_with_health_check_errors(
 
     assert openstack_cloud_mock.delete_instance.call_count == unhealthy_count
     for name in names:
-        instance_id = name[len(OPENSTACK_INSTANCE_PREFIX) + 1 :]
+        instance_id = name
         if instance_id.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
     assert runner_metrics_mock.extract.call_count == 1
