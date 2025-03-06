@@ -8,6 +8,7 @@ from unittest.mock import MagicMock, call
 import pytest
 
 from github_runner_manager.errors import DeleteMetricsStorageError, IssueMetricEventError
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
@@ -38,11 +39,11 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-def _create_metrics_data(runner_name: str) -> RunnerMetrics:
+def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
     """Create a RunnerMetrics object that is suitable for most tests.
 
     Args:
-        runner_name: The test runner name.
+        instance_id: The test runner name.
 
     Returns:
         Test metrics data.
@@ -58,7 +59,7 @@ def _create_metrics_data(runner_name: str) -> RunnerMetrics:
             event="push",
         ),
         post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
-        runner_name=runner_name,
+        instance_id=instance_id,
     )
 
 
@@ -78,7 +79,7 @@ def _create_runner_fs_base(tmp_path: Path):
 
 def _create_runner_files(
     runner_fs_base: Path,
-    runner_name: str,
+    runner_name: InstanceID,
     pre_job_data: str | bytes | None,
     post_job_data: str | bytes | None,
     installed_timestamp: str | bytes | None,
@@ -100,7 +101,7 @@ def _create_runner_files(
     Returns:
         A SharedFilesystem instance.
     """
-    runner_fs = runner_fs_base / runner_name
+    runner_fs = runner_fs_base / str(runner_name)
     runner_fs.mkdir()
     if pre_job_data:
         if isinstance(pre_job_data, bytes):
@@ -137,7 +138,7 @@ def _create_runner_files(
             runner_fs.joinpath(runner_metrics.RUNNER_INSTALLATION_START_TS_FILE_NAME).write_text(
                 installation_start_timestamp, encoding="utf-8"
             )
-    return MetricsStorage(path=runner_fs, runner_name=runner_name)
+    return MetricsStorage(path=runner_fs, instance_id=runner_name)
 
 
 def test_extract(runner_fs_base: Path):
@@ -153,22 +154,22 @@ def test_extract(runner_fs_base: Path):
         1. - 4. metrics are extracted
         5. no metrics are extracted
     """
-    runner_all_metrics_name = secrets.token_hex(16)
+    runner_all_metrics_name = InstanceID.build("prefix")
     runner_all_metrics = _create_metrics_data(runner_all_metrics_name)
-    runner_without_install_start_ts_name = secrets.token_hex(16)
+    runner_without_install_start_ts_name = InstanceID.build("prefix")
     runner_without_install_start_ts_metrics = runner_all_metrics.copy(
         update={"installation_start_timestamp": None}
     )
-    runner_without_install_start_ts_metrics.runner_name = runner_without_install_start_ts_name
-    runner_wihout_post_job_name = secrets.token_hex(16)
+    runner_without_install_start_ts_metrics.instance_id = runner_without_install_start_ts_name
+    runner_wihout_post_job_name = InstanceID.build("prefix")
     runner_without_post_job_metrics = runner_all_metrics.copy()
     runner_without_post_job_metrics.post_job = None
-    runner_without_post_job_metrics.runner_name = runner_wihout_post_job_name
-    runner_with_only_install_timestamps_name = secrets.token_hex(16)
+    runner_without_post_job_metrics.instance_id = runner_wihout_post_job_name
+    runner_with_only_install_timestamps_name = InstanceID.build("prefix")
     runner_with_only_install_timestamps_metrics = runner_without_post_job_metrics.copy(
         update={"pre_job": None}
     )
-    runner_with_only_install_timestamps_metrics.runner_name = (
+    runner_with_only_install_timestamps_metrics.instance_id = (
         runner_with_only_install_timestamps_name
     )
 
@@ -236,11 +237,11 @@ def test_extract(runner_fs_base: Path):
     ]
     metrics_storage_manager.delete.assert_has_calls(
         [
-            ((runner1_fs.runner_name,),),
-            ((runner2_fs.runner_name,),),
-            ((runner3_fs.runner_name,),),
-            ((runner4_fs.runner_name,),),
-            ((runner5_fs.runner_name,),),
+            ((runner1_fs.instance_id,),),
+            ((runner2_fs.instance_id,),),
+            ((runner3_fs.instance_id,),),
+            ((runner4_fs.instance_id,),),
+            ((runner5_fs.instance_id,),),
         ]
     )
 
@@ -255,7 +256,7 @@ def test_extract_ignores_runners(runner_fs_base: Path):
 
     runner_filesystems = []
     for i in range(5):
-        runner_name = secrets.token_hex(16)
+        runner_name = InstanceID.build("prefix")
         data = _create_metrics_data(runner_name)
         data.pre_job.workflow = f"workflow{i}"
         runner_metrics_data.append(data)
@@ -272,7 +273,7 @@ def test_extract_ignores_runners(runner_fs_base: Path):
     metrics_storage_manager = MagicMock()
     metrics_storage_manager.list_all.return_value = runner_filesystems
 
-    ignore_runners = {runner_filesystems[0].runner_name, runner_filesystems[2].runner_name}
+    ignore_runners = {runner_filesystems[0].instance_id, runner_filesystems[2].instance_id}
 
     extracted_metrics = list(
         runner_metrics.extract(
@@ -295,8 +296,8 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     act: Call extract.
     assert: No metrics are extracted is issued and shared filesystems are quarantined in all cases.
     """
-    runner_name = secrets.token_hex(16)
-    runner_metrics_data = _create_metrics_data(runner_name=runner_name)
+    runner_name = InstanceID.build("prefix")
+    runner_metrics_data = _create_metrics_data(instance_id=runner_name)
 
     # 1. Runner has noncompliant pre-job metrics inside metrics storage
     invalid_pre_job_data = runner_metrics_data.pre_job.copy(update={"timestamp": -1})
@@ -317,11 +318,11 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     )
 
     assert not extracted_metrics
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 2. Runner has non-json post-job metrics inside metrics storage.
-    runner_name = secrets.token_hex(16)
-    runner_metrics_data = _create_metrics_data(runner_name=runner_name)
+    runner_name = InstanceID.build("prefix")
+    runner_metrics_data = _create_metrics_data(instance_id=runner_name)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -336,11 +337,11 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
         runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 3. Runner has json post-job metrics but a json array (not object) inside metrics storage.
-    runner_name = secrets.token_hex(16)
-    runner_metrics_data = _create_metrics_data(runner_name=runner_name)
+    runner_name = InstanceID.build("prefix")
+    runner_metrics_data = _create_metrics_data(instance_id=runner_name)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -355,11 +356,11 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
         runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 4. Runner has not a timestamp in installed_timestamp file inside metrics storage.
-    runner_name = secrets.token_hex(16)
-    runner_metrics_data = _create_metrics_data(runner_name=runner_name)
+    runner_name = InstanceID.build("prefix")
+    runner_metrics_data = _create_metrics_data(instance_id=runner_name)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -375,11 +376,11 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     )
     assert not extracted_metrics
 
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 5. Runner has not a timestamp in installation_start_timestamp file inside metrics storage.
-    runner_name = secrets.token_hex(16)
-    runner_metrics_data = _create_metrics_data(runner_name=runner_name)
+    runner_name = InstanceID.build("prefix")
+    runner_metrics_data = _create_metrics_data(instance_id=runner_name)
 
     runner_fs = _create_runner_files(
         runner_fs_base,
@@ -396,7 +397,7 @@ def test_extract_corrupt_data(runner_fs_base: Path, monkeypatch: pytest.MonkeyPa
     )
     assert not extracted_metrics
 
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
 
 def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
@@ -405,7 +406,7 @@ def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
     act: Call extract.
     assert: No metrics are extracted and shared filesystems is quarantined.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
 
     # 1. Runner has a pre-job metrics file that is too large
@@ -432,10 +433,10 @@ def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
     )
     assert not extracted_metrics
 
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 2. Runner has a post-job metrics file that is too large
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     invalid_post_job_data = runner_metrics_data.post_job.copy(
         update={"status": "a" * runner_metrics.FILE_SIZE_BYTES_LIMIT + "b"}
@@ -455,10 +456,10 @@ def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
 
     assert not extracted_metrics
 
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 3. Runner has an installed_timestamp file that is too large
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
 
     invalid_ts = "1" * (runner_metrics.FILE_SIZE_BYTES_LIMIT + 1)
@@ -477,10 +478,10 @@ def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
     )
 
     assert not extracted_metrics
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
     # 4. Runner has an installation_start_timestamp file that is too large
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
 
     invalid_ts = "1" * (runner_metrics.FILE_SIZE_BYTES_LIMIT + 1)
@@ -500,7 +501,7 @@ def test_extract_raises_error_for_too_large_files(runner_fs_base: Path):
     )
 
     assert not extracted_metrics
-    move_to_quarantine_mock.assert_any_call(runner_fs.runner_name)
+    move_to_quarantine_mock.assert_any_call(runner_fs.instance_id)
 
 
 def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
@@ -509,7 +510,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     act: Call extract.
     assert: No metrics are extracted and shared filesystem is removed.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = RunnerMetrics.construct(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
@@ -520,7 +521,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
             event="push",
         ),
         post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
-        runner_name=runner_name,
+        instance_id=runner_name,
     )
 
     runner_fs = _create_runner_files(
@@ -537,7 +538,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
         runner_metrics.extract(metrics_storage_manager=metrics_storage_manager, runners=set())
     )
     assert not extracted_metrics
-    metrics_storage_manager.delete.assert_called_once_with(runner_fs.runner_name)
+    metrics_storage_manager.delete.assert_called_once_with(runner_fs.instance_id)
 
 
 def test_extract_ignores_failure_on_metrics_storage_cleanup(
@@ -549,11 +550,11 @@ def test_extract_ignores_failure_on_metrics_storage_cleanup(
     act: Call extract.
     assert: The metric is extracted and the exception is caught and logged.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     runner_fs = _create_runner_files(
         runner_fs_base,
-        runner_metrics_data.runner_name,
+        runner_metrics_data.instance_id,
         runner_metrics_data.pre_job.json(),
         runner_metrics_data.post_job.json(),
         str(runner_metrics_data.installed_timestamp),
@@ -581,7 +582,7 @@ def test_issue_events(issue_event_mock: MagicMock):
     act: Call issue_events.
     assert: RunnerInstalled, RunnerStart and RunnerStop metrics are issued.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
 
     flavor = secrets.token_hex(16)
@@ -641,7 +642,7 @@ def test_issue_events_pre_job_before_runner_installed(issue_event_mock: MagicMoc
     act: Call issue_events.
     assert: RunnerStart metric is issued with idle set to 0.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     runner_metrics_data.pre_job.timestamp = 0
 
@@ -676,7 +677,7 @@ def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
     act: Call issue_events.
     assert: job_duration is set to zero.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     runner_metrics_data.post_job = PostJobMetrics(
         timestamp=0, status=runner_metrics.PostJobStatus.NORMAL
@@ -734,7 +735,7 @@ def test_issue_events_partial_metrics(
     act: Call issue_events.
     assert: Only the expected metrics are issued.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     if not with_installation_start:
         runner_metrics_data.installation_start_timestamp = None
@@ -803,7 +804,7 @@ def test_issue_events_returns_empty_set_on_issue_event_failure(
     act: Call issue_events.
     assert: No metrics at all are issued. The exception is caught and logged.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
 
     issue_event_mock.side_effect = [IssueMetricEventError("Failed to issue metric"), None]
@@ -828,7 +829,7 @@ def test_issue_events_post_job_but_no_pre_job(
     act: Call issue_events.
     assert: Only RunnerInstalled is issued.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
     runner_metrics_data.pre_job = None
 
