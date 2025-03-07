@@ -199,7 +199,7 @@ class GithubClient:
         else:
             assert_never(token)
 
-        logger.info("JAVI JITTOKEN REMOVE INFO %s", token)
+        logger.info("JAVI JITTOKEN INFO %s", token)
         return token["encoded_jit_config"]
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
