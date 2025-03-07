@@ -157,6 +157,7 @@ class GithubClient:
         else:
             assert_never(token)
 
+        logger.info("JAVI TOKEN INFO %s", token)
         return token["token"]
 
     @catch_http_errors
