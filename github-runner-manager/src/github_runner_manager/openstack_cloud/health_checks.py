@@ -207,6 +207,7 @@ def _run_health_check_cloud_init(
         return False
 
     if CloudInitStatus.DONE in result.stdout:
+        logger.info("JAVI CloudInitStatus.DONE...")
         return accept_finished_job
 
     return None
