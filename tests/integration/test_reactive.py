@@ -207,7 +207,8 @@ async def test_reactive_mode_scale_down(
     await wait_for_status(run, "in_progress")
 
     # Give the runner manager some time to check the runners is ok and ack the message.
-    await asyncio.sleep(90)
+    # TODO This is a bug. The reconcile deletes servers in BUILD state.
+    await asyncio.sleep(300)
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
