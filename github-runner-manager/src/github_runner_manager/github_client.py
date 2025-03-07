@@ -175,6 +175,12 @@ class GithubClient:
         Returns:
             The registration token.
         """
+        logger.info(
+            "JAVI REQUESTING TOKEN FOR path: %s, instance_id: %s, labels: %s",
+            path,
+            instance_id,
+            labels,
+        )
         token: RegistrationToken
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.
