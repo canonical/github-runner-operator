@@ -8,6 +8,7 @@ from typing import Iterable
 
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -37,10 +38,10 @@ class GitHubRunnerState(str, Enum):
         """
         state = GitHubRunnerState.OFFLINE
         # A runner that is busy and offline is possible.
-        if runner["busy"]:
+        if runner.busy:
             state = GitHubRunnerState.BUSY
-        if runner["status"] == GitHubRunnerStatus.ONLINE:
-            if not runner["busy"]:
+        if runner.status == GitHubRunnerStatus.ONLINE:
+            if not runner.busy:
                 state = GitHubRunnerState.IDLE
         return state
 
@@ -72,7 +73,11 @@ class GitHubRunnerManager:  # pragma: no cover
             Information on the runners.
         """
         runner_list = self.github.get_runner_github_info(self._path)
-        runner_list = [runner for runner in runner_list if runner.name.startswith(self._prefix)]
+        runner_list = [
+            runner
+            for runner in runner_list
+            if InstanceID.name_has_prefix(self._prefix, runner.name)
+        ]
 
         if states is None:
             return tuple(runner_list)
@@ -94,7 +99,7 @@ class GitHubRunnerManager:  # pragma: no cover
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
-    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+    def get_registration_jittoken(self, instance_id: InstanceID, labels: list[str]) -> str:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
@@ -119,9 +124,7 @@ class GitHubRunnerManager:  # pragma: no cover
         return self.github.get_runner_remove_token(self._path)
 
     @staticmethod
-    def _is_runner_in_state(
-        runner: SelfHostedRunner, states: set[GitHubRunnerState] | None
-    ) -> bool:
+    def _is_runner_in_state(runner: SelfHostedRunner, states: set[GitHubRunnerState]) -> bool:
         """Check that the runner is in one of the states provided.
 
         Args:
@@ -131,6 +134,4 @@ class GitHubRunnerManager:  # pragma: no cover
         Returns:
             True if the runner is in one of the state, else false.
         """
-        if states is None:
-            return True
         return GitHubRunnerState.from_runner(runner) in states
