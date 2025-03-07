@@ -820,6 +820,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Raises:
             _GithubRunnerRemoveError: Unable to remove runner from GitHub.
         """
+        logger.info("JAVI trying to run removal script for %s", instance_id, stack_info=True)
         try:
             result = ssh_conn.run(
                 f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}", warn=True, timeout=60

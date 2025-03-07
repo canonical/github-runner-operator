@@ -3,12 +3,15 @@
 
 """Client for managing self-hosted runner on GitHub side."""
 
+import logging
 from enum import Enum, auto
 from typing import Iterable
 
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+
+logger = logging.getLogger(__name__)
 
 
 class GitHubRunnerState(str, Enum):
@@ -92,6 +95,7 @@ class GitHubRunnerManager:  # pragma: no cover
         """
         runner_list = self.get_runners(states)
         for runner in runner_list:
+            logger.info("JAVI trying to remove runner github for %s", runner, stack_info=True)
             self.github.delete_runner(self._path, runner.id)
 
     def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
