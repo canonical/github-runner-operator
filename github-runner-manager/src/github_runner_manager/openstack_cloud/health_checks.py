@@ -189,7 +189,15 @@ def _run_health_check_cloud_init(
     """
     result: invoke.runners.Result = _execute_ssh_command(ssh_conn, "cloud-init status")
     if not result.ok:
-        logger.warning("cloud-init status command failed on %s: %s.", server_name, result.stderr)
+        logger.error("cloud-init status command failed on %s: %s.", server_name, result.stderr)
+        cloud_init_log_output_result = _execute_ssh_command(
+            ssh_conn, "cat /var/log/cloud-init-output.log"
+        )
+        logger.error(
+            "/var/log/cloud-init-output.log stdout: %s", cloud_init_log_output_result.stdout
+        )
+        cloud_init_log_result = _execute_ssh_command(ssh_conn, "cat /var/log/cloud-init.log")
+        logger.error("/var/log/cloud-init.log stdout: %s", cloud_init_log_result.stdout)
         return False
 
     if CloudInitStatus.DONE in result.stdout:

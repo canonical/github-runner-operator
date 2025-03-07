@@ -311,7 +311,14 @@ class RunnerScaler:
         """
         delete_metric_stats = None
         metric_stats = self._manager.cleanup()
-        runners = self._manager.get_runners()
+        # JAVI TODO FILTER DELETED. THIS WILL GENERATE QUOTA ISSUES :(
+        from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
+
+        runners = self._manager.get_runners(
+            github_states=None,
+            cloud_states=[s for s in CloudRunnerState if s != CloudRunnerState.DELETED],
+        )
+        # runners = self._manager.get_runners()
         logger.info("Reconcile runners from %s to %s", len(runners), expected_quantity)
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
@@ -404,20 +411,18 @@ def _issue_reconciliation_metric(
 
     try:
 
-        metric_events.issue_event(
-            metric_events.Reconciliation(
-                timestamp=time.time(),
-                flavor=reconcile_metric_data.flavor,
-                crashed_runners=reconcile_metric_data.metric_stats.get(
-                    metric_events.RunnerStart, 0
-                )
-                - reconcile_metric_data.metric_stats.get(metric_events.RunnerStop, 0),
-                idle_runners=len(available_runners),
-                active_runners=len(active_runners),
-                expected_runners=reconcile_metric_data.expected_runner_quantity,
-                duration=reconcile_metric_data.end_timestamp
-                - reconcile_metric_data.start_timestamp,
-            )
+        event = metric_events.Reconciliation(
+            timestamp=time.time(),
+            flavor=reconcile_metric_data.flavor,
+            crashed_runners=reconcile_metric_data.metric_stats.get(metric_events.RunnerStart, 0)
+            - reconcile_metric_data.metric_stats.get(metric_events.RunnerStop, 0),
+            idle_runners=len(available_runners),
+            active_runners=len(active_runners),
+            expected_runners=reconcile_metric_data.expected_runner_quantity,
+            duration=reconcile_metric_data.end_timestamp - reconcile_metric_data.start_timestamp,
         )
+        metric_events.issue_event(event)
+        logger.info("JAVI METRIC EVENTS: %s,", event)
+        logger.info("JAVI RUNNER LIST: %s,", reconcile_metric_data.runner_list)
     except IssueMetricEventError:
         logger.exception("Failed to issue Reconciliation metric")

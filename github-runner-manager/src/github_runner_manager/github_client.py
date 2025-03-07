@@ -157,6 +157,7 @@ class GithubClient:
         else:
             assert_never(token)
 
+        logger.info("JAVI TOKEN REMOVE INFO %s", token)
         return token["token"]
 
     @catch_http_errors
@@ -174,6 +175,12 @@ class GithubClient:
         Returns:
             The registration token.
         """
+        logger.info(
+            "JAVI REQUESTING TOKEN FOR path: %s, instance_id: %s, labels: %s",
+            path,
+            instance_id,
+            labels,
+        )
         token: RegistrationToken
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.
@@ -198,6 +205,7 @@ class GithubClient:
         else:
             assert_never(token)
 
+        logger.info("JAVI JITTOKEN INFO %s", token)
         return token["encoded_jit_config"]
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
