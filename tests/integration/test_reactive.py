@@ -95,6 +95,9 @@ async def test_reactive_mode_spawns_runner(
         app.name,
     )
 
+    # TODO This is a bug. The reconcile deletes servers in BUILD state.
+    await asyncio.sleep(300)
+
     # This reconcile call is to check that we are not killing machines that are under
     # construction in a subsequent reconciliation.
     await reconcile(app, app.model)
