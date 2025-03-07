@@ -157,6 +157,8 @@ def consume(
                 )
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
+    finally:
+        logger.info("JAVI exiting consume in reactive process")
 
 
 def _validate_labels(labels: Labels, supported_labels: Labels) -> bool:
@@ -198,11 +200,14 @@ def _spawn_runner(
         msg.reject(requeue=True)
         return
     for _ in range(10):
+        logger.info("JAVI checking job picked. instance ids: %s.", instance_ids)
         if _check_job_been_picked_up(job_url=job_url, github_client=github_client):
+            logger.info("JAVI msg acked")
             msg.ack()
             break
         sleep(30)
     else:
+        logger.info("JAVI msg requeued as job still valid")
         msg.reject(requeue=True)
 
 

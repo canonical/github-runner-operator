@@ -300,6 +300,7 @@ class RunnerScaler:
 
         return reconcile_diff
 
+    # pylint: disable=import-outside-toplevel
     def _reconcile_non_reactive(self, expected_quantity: int) -> _ReconcileResult:
         """Reconcile the quantity of runners in non-reactive mode.
 
@@ -312,7 +313,10 @@ class RunnerScaler:
         delete_metric_stats = None
         metric_stats = self._manager.cleanup()
         # JAVI TODO FILTER DELETED. THIS WILL GENERATE QUOTA ISSUES :(
-        from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
+
+        from github_runner_manager.manager.cloud_runner_manager import (
+            CloudRunnerState,
+        )
 
         runners = self._manager.get_runners(
             github_states=None,

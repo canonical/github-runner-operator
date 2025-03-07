@@ -570,7 +570,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
         else:
             logger.info(
-                "Attempting to kill runner process on %s if not busy", instance.server_name
+                "JAVI Attempting to kill runner process on %s if not busy", instance.server_name
             )
             # Only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
@@ -581,7 +581,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
         result: fabric.Result = ssh_conn.run(kill_command, warn=True, timeout=30)
         logger.info(
-            "Kill process command output, ok: %s code %s, out: %s, err: %s",
+            "JAVI Kill process command output, ok: %s code %s, out: %s, err: %s",
             result.ok,
             result.return_code,
             result.stdout,
