@@ -8,7 +8,7 @@ on:
 jobs:
   reactive-edge:
     name: reactive-edge
-    runs-on: [self-hosted, reactive, edge, amd64, X64]
+    runs-on: [self-hosted, reactive]
     steps:
       - run: sudo apt update
       - run: sudo apt upgrade -y
