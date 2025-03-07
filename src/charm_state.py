@@ -10,18 +10,17 @@ import platform
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Optional, TypedDict, cast
+from typing import TypedDict, cast
 from urllib.parse import urlsplit
 
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager.types_.github import GitHubPath, parse_github_path
+from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
+from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
     BaseModel,
-    Field,
-    IPvAnyAddress,
     MongoDsn,
     ValidationError,
     create_model_from_typeddict,
@@ -38,9 +37,12 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
+MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
@@ -485,18 +487,35 @@ class OpenstackImage(BaseModel):
         return OpenstackImage(id=None, tags=None)
 
 
+@dataclasses.dataclass
+class FlavorLabel:
+    """Combination of flavor and label.
+
+    Attributes:
+        flavor: Flavor for the VM.
+        label: Label associated with the flavor.
+    """
+
+    flavor: str
+    # Remove the None when several FlavorLabel combinations are supported.
+    label: str | None
+
+
 class OpenstackRunnerConfig(BaseModel):
     """Runner configuration for OpenStack Instances.
 
     Attributes:
-        virtual_machines: Number of virtual machine-based runner to spawn.
-        openstack_flavor: flavor on openstack to use for virtual machines.
+        base_virtual_machines: Number of virtual machine-based runners to spawn.
+        max_total_virtual_machines: Maximum possible machine number to spawn for the unit in
+           for reactive processes.
+        flavor_label_combinations: list of FlavorLabel.
         openstack_network: Network on openstack to use for virtual machines.
         openstack_image: Openstack image to use for virtual machines.
     """
 
-    virtual_machines: int
-    openstack_flavor: str
+    base_virtual_machines: int
+    max_total_virtual_machines: int
+    flavor_label_combinations: list[FlavorLabel]
     openstack_network: str
     openstack_image: OpenstackImage | None
 
@@ -514,124 +533,65 @@ class OpenstackRunnerConfig(BaseModel):
         Returns:
             Openstack runner config of the charm.
         """
-        try:
-            virtual_machines = int(charm.config["virtual-machines"])
-        except ValueError as err:
-            raise CharmConfigInvalidError(
-                "The virtual-machines configuration must be int"
-            ) from err
+        base_virtual_machines = int(charm.config[BASE_VIRTUAL_MACHINES_CONFIG_NAME])
+        max_total_virtual_machines = int(charm.config[MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME])
 
-        openstack_flavor = charm.config[OPENSTACK_FLAVOR_CONFIG_NAME]
+        # Remove these conditions when "virtual-machines" config option is deleted.
+        virtual_machines = int(charm.config[VIRTUAL_MACHINES_CONFIG_NAME])
+        if base_virtual_machines == 0 and max_total_virtual_machines == 0:
+            base_virtual_machines = virtual_machines
+            max_total_virtual_machines = virtual_machines
+        elif virtual_machines != 0:
+            raise CharmConfigInvalidError(
+                "Invalid configuration. "
+                "Both deprecated and new configuration are set for the number of machines to spawn."
+            )
+
+        flavor_label_config = cast(str, charm.config[FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME])
+        flavor_label_combinations = _parse_flavor_label_list(flavor_label_config)
+        if len(flavor_label_combinations) == 0:
+            flavor = cast(str, charm.config[OPENSTACK_FLAVOR_CONFIG_NAME])
+            if not flavor:
+                raise CharmConfigInvalidError("OpenStack flavor not specified")
+            flavor_label_combinations = [FlavorLabel(flavor, None)]
+        elif len(flavor_label_combinations) > 1:
+            raise CharmConfigInvalidError("Several flavor-label combinations not yet implemented")
         openstack_network = charm.config[OPENSTACK_NETWORK_CONFIG_NAME]
         openstack_image = OpenstackImage.from_charm(charm)
 
         return cls(
-            virtual_machines=virtual_machines,
-            openstack_flavor=cast(str, openstack_flavor),
+            base_virtual_machines=base_virtual_machines,
+            max_total_virtual_machines=max_total_virtual_machines,
+            flavor_label_combinations=flavor_label_combinations,
             openstack_network=cast(str, openstack_network),
             openstack_image=openstack_image,
         )
 
 
-RunnerConfig = OpenstackRunnerConfig
+def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+    """Initialize the proxy config from charm.
 
+    Args:
+        charm: The charm instance.
 
-class ProxyConfig(BaseModel):
-    """Proxy configuration.
-
-    Attributes:
-        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used for the runners.
+    Returns:
+        Current proxy config of the charm.
     """
+    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+    http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
+    https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
+    no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
 
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
-    use_aproxy: bool = False
+    # there's no need for no_proxy if there's no http_proxy or https_proxy
+    if not (https_proxy or http_proxy) and no_proxy:
+        no_proxy = None
 
-    @property
-    def aproxy_address(self) -> Optional[str]:
-        """Return the aproxy address."""
-        if self.use_aproxy:
-            proxy_address = self.http or self.https
-            # assert is only used to make mypy happy
-            assert (
-                proxy_address is not None and proxy_address.host is not None
-            )  # nosec for [B101:assert_used]
-            aproxy_address = (
-                proxy_address.host
-                if not proxy_address.port
-                else f"{proxy_address.host}:{proxy_address.port}"
-            )
-        else:
-            aproxy_address = None
-        return aproxy_address
-
-    @validator("use_aproxy")
-    @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
-        """Validate the proxy configuration.
-
-        Args:
-            use_aproxy: Value of use_aproxy variable.
-            values: Values in the pydantic model.
-
-        Raises:
-            ValueError: if use_aproxy was set but no http/https was passed.
-
-        Returns:
-            Validated use_aproxy value.
-        """
-        if use_aproxy and not (values.get("http") or values.get("https")):
-            raise ValueError("aproxy requires http or https to be set")
-
-        return use_aproxy
-
-    def __bool__(self) -> bool:
-        """Return whether the proxy config is set.
-
-        Returns:
-            Whether the proxy config is set.
-        """
-        return bool(self.http or self.https)
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "ProxyConfig":
-        """Initialize the proxy config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            Current proxy config of the charm.
-        """
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
-        http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
-        https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
-        no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
-
-        # there's no need for no_proxy if there's no http_proxy or https_proxy
-        if not (https_proxy or http_proxy) and no_proxy:
-            no_proxy = None
-
-        return cls(
-            http=http_proxy,
-            https=https_proxy,
-            no_proxy=no_proxy,
-            use_aproxy=use_aproxy,
-        )
-
-    class Config:  # pylint: disable=too-few-public-methods
-        """Pydantic model configuration.
-
-        Attributes:
-            allow_mutation: Whether the model is mutable.
-        """
-
-        allow_mutation = False
+    return ProxyConfig(
+        http=http_proxy,
+        https=https_proxy,
+        no_proxy=no_proxy,
+        use_aproxy=use_aproxy,
+    )
 
 
 class UnsupportedArchitectureError(Exception):
@@ -669,58 +629,42 @@ def _get_supported_arch() -> Arch:
             raise UnsupportedArchitectureError(arch=arch)
 
 
-class SSHDebugConnection(BaseModel):
-    """SSH connection information for debug workflow.
+def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugConnection]:
+    """Initialize the SSHDebugInfo from charm relation data.
 
-    Attributes:
-        host: The SSH relay server host IP address inside the VPN.
-        port: The SSH relay server port.
-        rsa_fingerprint: The host SSH server public RSA key fingerprint.
-        ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+    Args:
+        charm: The charm instance.
+
+    Returns:
+        List of connection information for ssh debug access.
     """
-
-    host: IPvAnyAddress
-    port: int = Field(0, gt=0, le=65535)
-    rsa_fingerprint: str = Field(pattern="^SHA256:.*")
-    ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> list["SSHDebugConnection"]:
-        """Initialize the SSHDebugInfo from charm relation data.
-
-        Args:
-            charm: The charm instance.
-
-        Returns:
-            List of connection information for ssh debug access.
-        """
-        ssh_debug_connections: list[SSHDebugConnection] = []
-        relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
-        if not relations or not (relation := relations[0]).units:
-            return ssh_debug_connections
-        for unit in relation.units:
-            relation_data = relation.data[unit]
-            if (
-                not (host := relation_data.get("host"))
-                or not (port := relation_data.get("port"))
-                or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
-                or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
-            ):
-                logger.warning(
-                    "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
-                )
-                continue
-            ssh_debug_connections.append(
-                # pydantic allows string to be passed as IPvAnyAddress and as int,
-                # mypy complains about it
-                SSHDebugConnection(
-                    host=host,  # type: ignore
-                    port=port,  # type: ignore
-                    rsa_fingerprint=rsa_fingerprint,
-                    ed25519_fingerprint=ed25519_fingerprint,
-                )
-            )
+    ssh_debug_connections: list[SSHDebugConnection] = []
+    relations = charm.model.relations[DEBUG_SSH_INTEGRATION_NAME]
+    if not relations or not (relation := relations[0]).units:
         return ssh_debug_connections
+    for unit in relation.units:
+        relation_data = relation.data[unit]
+        if (
+            not (host := relation_data.get("host"))
+            or not (port := relation_data.get("port"))
+            or not (rsa_fingerprint := relation_data.get("rsa_fingerprint"))
+            or not (ed25519_fingerprint := relation_data.get("ed25519_fingerprint"))
+        ):
+            logger.warning(
+                "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
+            )
+            continue
+        ssh_debug_connections.append(
+            # pydantic allows string to be passed as IPvAnyAddress and as int,
+            # mypy complains about it
+            SSHDebugConnection(
+                host=host,  # type: ignore
+                port=port,  # type: ignore
+                rsa_fingerprint=rsa_fingerprint,
+                ed25519_fingerprint=ed25519_fingerprint,
+            )
+        )
+    return ssh_debug_connections
 
 
 class ReactiveConfig(BaseModel):
@@ -786,7 +730,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     charm_config: CharmConfig
-    runner_config: RunnerConfig
+    runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
     ssh_debug_connections: list[SSHDebugConnection]
 
@@ -854,7 +798,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             Current state of the charm.
         """
         try:
-            proxy_config = ProxyConfig.from_charm(charm)
+            proxy_config = _build_proxy_config_from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
@@ -865,10 +809,15 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            runner_config: RunnerConfig
             runner_config = OpenstackRunnerConfig.from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+
+        # Remove this code when when several FlavorLabel combinations are supported.
+        # There should be one.
+        flavor_label_combination = runner_config.flavor_label_combinations[0]
+        if flavor_label_combination.label:
+            charm_config.labels = (flavor_label_combination.label,) + charm_config.labels
 
         try:
             arch = _get_supported_arch()
@@ -877,7 +826,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
 
         try:
-            ssh_debug_connections = SSHDebugConnection.from_charm(charm)
+            ssh_debug_connections = _build_ssh_debug_connection_from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
             raise CharmConfigInvalidError("Invalid SSH Debug info") from exc
@@ -897,3 +846,27 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         cls._store_state(state)
 
         return state
+
+
+def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
+    """Parse flavor-label config option."""
+    combinations = []
+
+    split_flavor_list = flavor_label_config.split(",")
+
+    # An input like "" will get here.
+    if len(split_flavor_list) == 1 and not split_flavor_list[0]:
+        return []
+
+    for flavor_label in flavor_label_config.split(","):
+        flavor_label_stripped = flavor_label.strip()
+        try:
+            flavor, label = flavor_label_stripped.split(":")
+            if not flavor:
+                raise CharmConfigInvalidError("Invalid empty flavor in flavor-label configuration")
+            if not label:
+                raise CharmConfigInvalidError("Invalid empty label in flavor-label configuration")
+            combinations.append(FlavorLabel(flavor, label))
+        except ValueError as exc:
+            raise CharmConfigInvalidError("Invalid flavor-label configuration") from exc
+    return combinations

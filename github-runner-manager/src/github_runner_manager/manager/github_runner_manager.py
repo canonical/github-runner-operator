@@ -6,8 +6,9 @@
 from enum import Enum, auto
 from typing import Iterable
 
+from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.types_.github import GitHubPath, GitHubRunnerStatus, SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
 class GitHubRunnerState(str, Enum):
@@ -48,17 +49,16 @@ class GitHubRunnerState(str, Enum):
 class GitHubRunnerManager:  # pragma: no cover
     """Manage self-hosted runner on GitHub side."""
 
-    def __init__(self, prefix: str, token: str, path: GitHubPath):
+    def __init__(self, prefix: str, github_configuration: GitHubConfiguration):
         """Construct the object.
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
-            token: The GitHub personal access token to access the GitHub API.
-            path: The GitHub repository or organization to register the runners under.
+            github_configuration: GitHub configuration information.
         """
         self._prefix = prefix
-        self._path = path
-        self.github = GithubClient(token)
+        self._path = github_configuration.path
+        self.github = GithubClient(github_configuration.token)
 
     def get_runners(
         self, states: Iterable[GitHubRunnerState] | None = None
@@ -94,15 +94,19 @@ class GitHubRunnerManager:  # pragma: no cover
         for runner in runner_list:
             self.github.delete_runner(self._path, runner.id)
 
-    def get_registration_token(self) -> str:
-        """Get registration token from GitHub.
+    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+        """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
+
+        Args:
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.
         """
-        return self.github.get_runner_registration_token(self._path)
+        return self.github.get_runner_registration_jittoken(self._path, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.

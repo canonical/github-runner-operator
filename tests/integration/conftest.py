@@ -357,7 +357,7 @@ async def image_builder_fixture(
             "github-runner-image-builder",
             application_name=application_name,
             channel="latest/edge",
-            revision=55,
+            revision=60,
             config={
                 "build-interval": "12",
                 "revision-history-limit": "2",
@@ -368,9 +368,8 @@ async def image_builder_fixture(
                 "openstack-project-name": private_endpoint_config["project_name"],
                 "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
                 "openstack-user-name": private_endpoint_config["username"],
-                "experimental-external-build": "true",
-                "experimental-external-build-flavor": flavor_name,
-                "experimental-external-build-network": network_name,
+                "build-flavor": flavor_name,
+                "build-network": network_name,
             },
         )
         await model.wait_for_idle(
@@ -432,7 +431,7 @@ async def app_openstack_runner_fixture(
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=20 * 60
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=25 * 60
     )
 
     return application

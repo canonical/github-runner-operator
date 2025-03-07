@@ -8,13 +8,19 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
+from github_runner_manager.configuration import (
+    ApplicationConfiguration,
+)
+from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,
     IssueMetricEventError,
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import HealthState
+from github_runner_manager.manager.cloud_runner_manager import (
+    HealthState,
+)
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -23,7 +29,15 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.reactive.types_ import RunnerConfig as ReactiveRunnerConfig
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+)
+from github_runner_manager.openstack_cloud.openstack_runner_manager import (
+    OpenStackRunnerManager,
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
+from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
 
@@ -87,17 +101,93 @@ class _ReconcileMetricData:
 class RunnerScaler:
     """Manage the reconcile of runners."""
 
+    @classmethod
+    def build(
+        cls,
+        application_configuration: ApplicationConfiguration,
+        openstack_configuration: OpenStackConfiguration,
+    ) -> "RunnerScaler":
+        """Create a RunnerScaler from application and OpenStack configuration.
+
+        Args:
+            application_configuration: Main configuration for the application.
+            openstack_configuration: OpenStack configuration.
+
+        Returns:
+            A new RunnerScaler.
+        """
+        labels = application_configuration.extra_labels
+        server_config = None
+        base_quantity = 0
+        if combinations := application_configuration.non_reactive_configuration.combinations:
+            combination = combinations[0]
+            labels += combination.image.labels
+            labels += combination.flavor.labels
+            server_config = OpenStackServerConfig(
+                image=combination.image.name,
+                # Pending to add support for more flavor label combinations
+                flavor=combination.flavor.name,
+                network=openstack_configuration.network,
+            )
+            base_quantity = combination.base_virtual_machines
+
+        openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            prefix=openstack_configuration.vm_prefix,
+            credentials=openstack_configuration.credentials,
+            server_config=server_config,
+            service_config=application_configuration.service_config,
+        )
+        runner_manager = RunnerManager(
+            manager_name=application_configuration.name,
+            github_configuration=application_configuration.github_config,
+            cloud_runner_manager=OpenStackRunnerManager(
+                config=openstack_runner_manager_config,
+            ),
+            labels=labels,
+        )
+
+        max_quantity = 0
+        reactive_runner_config = None
+        if reactive_config := application_configuration.reactive_configuration:
+            # The charm is not able to determine which architecture the runner is running on,
+            # so we add all architectures to the supported labels.
+            supported_labels = set(labels) | GITHUB_SELF_HOSTED_ARCH_LABELS
+            reactive_runner_config = ReactiveProcessConfig(
+                queue=reactive_config.queue,
+                manager_name=application_configuration.name,
+                github_configuration=application_configuration.github_config,
+                cloud_runner_manager=openstack_runner_manager_config,
+                github_token=application_configuration.github_config.token,
+                supported_labels=supported_labels,
+                labels=labels,
+            )
+            max_quantity = reactive_config.max_total_virtual_machines
+        return cls(
+            runner_manager=runner_manager,
+            reactive_process_config=reactive_runner_config,
+            base_quantity=base_quantity,
+            max_quantity=max_quantity,
+        )
+
     def __init__(
-        self, runner_manager: RunnerManager, reactive_runner_config: ReactiveRunnerConfig | None
+        self,
+        runner_manager: RunnerManager,
+        reactive_process_config: ReactiveProcessConfig | None,
+        base_quantity: int,
+        max_quantity: int,
     ):
         """Construct the object.
 
         Args:
             runner_manager: The RunnerManager to perform runner reconcile.
-            reactive_runner_config: Reactive runner configuration.
+            reactive_process_config: Reactive runner configuration.
+            base_quantity: The number of intended non-reactive runners.
+            max_quantity: The number of maximum runners for reactive.
         """
         self._manager = runner_manager
-        self._reactive_config = reactive_runner_config
+        self._reactive_config = reactive_process_config
+        self._base_quantity = base_quantity
+        self._max_quantity = max_quantity
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -153,11 +243,8 @@ class RunnerScaler:
         }
         return metric_stats.get(metric_events.RunnerStop, 0)
 
-    def reconcile(self, quantity: int) -> int:
+    def reconcile(self) -> int:
         """Reconcile the quantity of runners.
-
-        Args:
-            quantity: The number of intended runners.
 
         Returns:
             The Change in number of runners or reactive processes.
@@ -165,12 +252,16 @@ class RunnerScaler:
         Raises:
             ReconcileError: If an expected error occurred during the reconciliation.
         """
-        logger.info("Start reconcile to %s runner", quantity)
+        logger.info(
+            "Start reconcile. base_quantity %s. max_quantity: %s.",
+            self._base_quantity,
+            self._max_quantity,
+        )
 
         metric_stats = {}
         start_timestamp = time.time()
 
-        expected_runner_quantity = quantity if self._reactive_config is None else None
+        expected_runner_quantity = self._base_quantity if self._reactive_config is None else None
 
         try:
             if self._reactive_config is not None:
@@ -178,14 +269,14 @@ class RunnerScaler:
                     "Reactive configuration detected, going into experimental reactive mode."
                 )
                 reconcile_result = reactive_runner_manager.reconcile(
-                    expected_quantity=quantity,
+                    expected_quantity=self._max_quantity,
                     runner_manager=self._manager,
-                    runner_config=self._reactive_config,
+                    reactive_process_config=self._reactive_config,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats
             else:
-                reconcile_result = self._reconcile_non_reactive(quantity)
+                reconcile_result = self._reconcile_non_reactive(self._base_quantity)
                 reconcile_diff = reconcile_result.runner_diff
                 metric_stats = reconcile_result.metric_stats
         except CloudError as exc:
