@@ -43,6 +43,7 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
         True if runner is healthy.
     """
     if (check_ok := _health_check_cloud_state(instance)) is not None:
+        logger.info("JAVI check _health_check_cloud_state not None. value: %s", check_ok)
         return check_ok
 
     try:
@@ -89,6 +90,7 @@ def check_active_runner(
     """
     try:
         if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
+            logger.info("JAVI check _run_health_check_runner_installed value: %s", check_ok)
             return check_ok
 
         if (
@@ -96,11 +98,15 @@ def check_active_runner(
                 ssh_conn, instance.server_name, accept_finished_job
             )
         ) is not None:
+            logger.info("JAVI check _run_health_check_cloud_init value: %s", check_ok)
             return check_ok
 
         if (
             check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
         ) is not None:
+            logger.info(
+                "JAVI check _run_health_check_runner_processes_running value: %s", check_ok
+            )
             return check_ok
     except _SSHError as exc:
         raise OpenstackHealthCheckError(
