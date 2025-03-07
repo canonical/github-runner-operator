@@ -570,7 +570,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
         else:
             logger.info(
-                "Attempting to kill runner process on %s if not busy", instance.server_name
+                "JAVI Attempting to kill runner process on %s if not busy", instance.server_name
             )
             # Only kill Runner.Listener if Runner.Worker does not exist.
             kill_command = (
@@ -581,7 +581,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         # Checking the result of kill command is not useful, as the exit code does not reveal much.
         result: fabric.Result = ssh_conn.run(kill_command, warn=True, timeout=30)
         logger.info(
-            "Kill process command output, ok: %s code %s, out: %s, err: %s",
+            "JAVI Kill process command output, ok: %s code %s, out: %s, err: %s",
             result.ok,
             result.return_code,
             result.stdout,
@@ -611,6 +611,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if not result.ok:
             logger.warning(
                 "cloud-init status command failed on %s: %s.", instance.server_name, result.stderr
+            )
+            cloud_init_log_output_result = ssh_conn.run(
+                "cat /var/log/cloud-init-output.log", warn=True, timeout=60
+            )
+            logger.error(
+                "/var/log/cloud-init-output.log stdout: %s", cloud_init_log_output_result.stdout
+            )
+            cloud_init_log_result = ssh_conn.run("cat /var/log/cloud-init.log")
+            logger.error(
+                "/var/log/cloud-init.log stdout: %s",
+                cloud_init_log_result.stdout,
             )
             raise RunnerStartError(f"Runner startup process not found on {instance.server_name}")
         # A short running job may have already completed and exited the runner, hence check the
@@ -809,6 +820,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Raises:
             _GithubRunnerRemoveError: Unable to remove runner from GitHub.
         """
+        logger.info("JAVI trying to run removal script for %s", instance_id, stack_info=True)
         try:
             result = ssh_conn.run(
                 f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}", warn=True, timeout=60

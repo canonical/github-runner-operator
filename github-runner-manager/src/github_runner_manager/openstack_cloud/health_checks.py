@@ -43,6 +43,7 @@ def check_runner(openstack_cloud: OpenstackCloud, instance: OpenstackInstance) -
         True if runner is healthy.
     """
     if (check_ok := _health_check_cloud_state(instance)) is not None:
+        logger.info("JAVI check _health_check_cloud_state not None. value: %s", check_ok)
         return check_ok
 
     try:
@@ -89,6 +90,7 @@ def check_active_runner(
     """
     try:
         if (check_ok := _run_health_check_runner_installed(ssh_conn, instance)) is not None:
+            logger.info("JAVI check _run_health_check_runner_installed value: %s", check_ok)
             return check_ok
 
         if (
@@ -96,11 +98,15 @@ def check_active_runner(
                 ssh_conn, instance.server_name, accept_finished_job
             )
         ) is not None:
+            logger.info("JAVI check _run_health_check_cloud_init value: %s", check_ok)
             return check_ok
 
         if (
             check_ok := _run_health_check_runner_processes_running(ssh_conn, instance.server_name)
         ) is not None:
+            logger.info(
+                "JAVI check _run_health_check_runner_processes_running value: %s", check_ok
+            )
             return check_ok
     except _SSHError as exc:
         raise OpenstackHealthCheckError(
@@ -189,10 +195,19 @@ def _run_health_check_cloud_init(
     """
     result: invoke.runners.Result = _execute_ssh_command(ssh_conn, "cloud-init status")
     if not result.ok:
-        logger.warning("cloud-init status command failed on %s: %s.", server_name, result.stderr)
+        logger.error("cloud-init status command failed on %s: %s.", server_name, result.stderr)
+        cloud_init_log_output_result = _execute_ssh_command(
+            ssh_conn, "cat /var/log/cloud-init-output.log"
+        )
+        logger.error(
+            "/var/log/cloud-init-output.log stdout: %s", cloud_init_log_output_result.stdout
+        )
+        cloud_init_log_result = _execute_ssh_command(ssh_conn, "cat /var/log/cloud-init.log")
+        logger.error("/var/log/cloud-init.log stdout: %s", cloud_init_log_result.stdout)
         return False
 
     if CloudInitStatus.DONE in result.stdout:
+        logger.info("JAVI CloudInitStatus.DONE...")
         return accept_finished_job
 
     return None
