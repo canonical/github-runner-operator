@@ -74,3 +74,19 @@ def test_build_instance_id_fails_when_very_long_name():
     prefix = "github-runner-operator-for-runners-using-openstack-amd64-with-flavor-with60-cores"
     with pytest.raises(InstanceIDInvalidError):
         _ = InstanceID.build(prefix)
+
+
+def test_backward_compatible_names():
+    """
+    arrange: A prefix and a unit name without reactive information.
+    act: Create the instance ID from the prefix and name.
+    assert: New name from the instance is the same as the original name. Also prefix and suffix.
+    """
+    prefix = "unit-0"
+    name = "unit-0-96950f351751"
+
+    instance_id = InstanceID.build_from_name(prefix, name)
+
+    assert instance_id.prefix == prefix
+    assert instance_id.suffix == "96950f351751"
+    assert instance_id.name == name
