@@ -136,7 +136,10 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        return remote_runners_list
+        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        for runner in remote_runners_list:
+            runner["labels"] = list(runner["labels"])
+        return [SelfHostedRunner.parse_obj(runner) for runner in remote_runners_list]
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:
