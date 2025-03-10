@@ -242,7 +242,16 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GitHubRunnerState.OFFLINE])
+        # get_runners only get runners in the cloud provider, which can be
+        # misleading. Pending to tackle and put the logic of this function to
+        # get_runners and the runners themselves.
+        # The cloud state ACTIVE is problematic, as it can be creating the the instance,
+        # in which case get_runners returns unhealthy unit currently. To not leave runners
+        # in an incorrect state, we just leave the units in BUILD state until a better
+        # information is obtained from get_runners.
+        # instances_created = self.get_runners(cloud_states=[CloudRunnerState.CREATED])
+        github_runner_list = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        self._github.delete_runners(github_runner_list)
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)

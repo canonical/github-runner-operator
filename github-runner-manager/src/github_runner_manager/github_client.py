@@ -13,8 +13,8 @@ from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 import requests
-from ghapi.all import GhApi, pages
-from ghapi.page import paged
+from ghapi.all import GhApi
+from ghapi.page import paged, pages
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import (
@@ -136,7 +136,10 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        return remote_runners_list
+        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        for runner in remote_runners_list:
+            runner["labels"] = list(runner["labels"])
+        return [SelfHostedRunner.parse_obj(runner) for runner in remote_runners_list]
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:
