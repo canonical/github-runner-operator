@@ -43,12 +43,12 @@ class InstanceID:
            Name of the instance
         """
         if self.reactive is True:
-            reactive_indicator = "r-"
+            runner_type = "r-"
         elif self.reactive is False:
-            reactive_indicator = "n-"
+            runner_type = "n-"
         else:
-            reactive_indicator = ""
-        return f"{self.prefix}-{reactive_indicator}{self.suffix}"
+            runner_type = ""
+        return f"{self.prefix}-{runner_type}{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
