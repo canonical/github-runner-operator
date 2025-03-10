@@ -78,7 +78,8 @@ class GitHubRunnerManager:  # pragma: no cover
             for runner in runner_list
             if InstanceID.name_has_prefix(self._prefix, runner.name)
         ]
-        # Calculate instance_id
+        # Calculate instance_id, as it is not calculated by the GithubClient as it
+        # does not have information about the prefix.
         for runner in runner_list:
             runner.calculate_instance_id(self._prefix)
 
