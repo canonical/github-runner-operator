@@ -102,16 +102,6 @@ class GitHubRunnerManager:  # pragma: no cover
         for runner in runners:
             self.github.delete_runner(self._path, runner.id)
 
-    def delete_runners_by_state(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
-        """Delete the self-hosted runners of certain states.
-
-        Args:
-            states: Filter the runners for these states. If None, all runners are deleted.
-        """
-        runner_list = self.get_runners(states)
-        for runner in runner_list:
-            self.github.delete_runner(self._path, runner.id)
-
     def get_registration_jittoken(self, instance_id: InstanceID, labels: list[str]) -> str:
         """Get registration JIT token from GitHub.
 
