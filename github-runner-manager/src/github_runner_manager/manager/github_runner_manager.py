@@ -78,6 +78,9 @@ class GitHubRunnerManager:  # pragma: no cover
             for runner in runner_list
             if InstanceID.name_has_prefix(self._prefix, runner.name)
         ]
+        # Calculate instance_id
+        for runner in runner_list:
+            runner.calculate_instance_id(self._prefix)
 
         if states is None:
             return tuple(runner_list)
@@ -89,7 +92,16 @@ class GitHubRunnerManager:  # pragma: no cover
             if GitHubRunnerManager._is_runner_in_state(runner, state_set)
         )
 
-    def delete_runners(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
+    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
+        """TODO.
+
+        Args:
+            runners: TODO
+        """
+        for runner in runners:
+            self.github.delete_runner(self._path, runner.id)
+
+    def delete_runners_by_state(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
         """Delete the self-hosted runners of certain states.
 
         Args:

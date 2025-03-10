@@ -12,6 +12,8 @@ from typing import List, Literal, Optional
 
 from pydantic import BaseModel
 
+from github_runner_manager.manager.models import InstanceID
+
 
 class GitHubRunnerStatus(str, Enum):
     """Status of runner on GitHub.
@@ -66,6 +68,7 @@ class SelfHostedRunner(BaseModel):
         os: Operation system of the runner.
         name: Name of the runner.
         status: The Github runner status.
+        instance_id: TODO
     """
 
     busy: bool
@@ -74,18 +77,15 @@ class SelfHostedRunner(BaseModel):
     os: str
     name: str
     status: GitHubRunnerStatus
+    instance_id: InstanceID | None
 
+    def calculate_instance_id(self, prefix: str) -> None:
+        """TODO.
 
-class SelfHostedRunnerList(BaseModel):
-    """Information on a collection of self-hosted runners.
-
-    Attributes:
-        total_count: Total number of runners.
-        runners: List of runners.
-    """
-
-    total_count: int
-    runners: list[SelfHostedRunner]
+        Args:
+            prefix: TODO
+        """
+        self.instance_id = InstanceID.build_from_name(prefix, self.name)
 
 
 class RegistrationToken(BaseModel):

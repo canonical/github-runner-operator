@@ -136,7 +136,7 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        return remote_runners_list
+        return [SelfHostedRunner(runner) for runner in remote_runners_list]
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:
