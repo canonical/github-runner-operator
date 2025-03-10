@@ -32,7 +32,7 @@ class InstanceID:
     """
 
     prefix: str
-    reactive: bool
+    reactive: bool | None
     suffix: str
 
     @property
@@ -42,7 +42,13 @@ class InstanceID:
         Returns:
            Name of the instance
         """
-        return f"{self.prefix}-{'r' if self.reactive else 'n'}-{self.suffix}"
+        if self.reactive is True:
+            runner_type = "r-"
+        elif self.reactive is False:
+            runner_type = "n-"
+        else:
+            runner_type = ""
+        return f"{self.prefix}-{runner_type}{self.suffix}"
 
     @classmethod
     def build_from_name(cls, prefix: str, name: str) -> "InstanceID":
@@ -66,7 +72,7 @@ class InstanceID:
         # The separator from prefix and suffix indicates whether the runner is reactive.
         # To maintain backwards compatibility, if there is no r- or n- (reactive or
         # non-reactive), we assume non-reactive and keep the full suffix.
-        reactive = False
+        reactive = None
         separator = suffix[:2]
         if separator == "r-":
             reactive = True
