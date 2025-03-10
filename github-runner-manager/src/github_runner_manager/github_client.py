@@ -13,8 +13,8 @@ from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 import requests
-from ghapi.all import GhApi
-from ghapi.page import paged, pages
+from ghapi.all import GhApi, pages
+from ghapi.page import paged
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import (

@@ -35,13 +35,14 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
         ),
     ],
 )
-def test_cleanup_removes_created_runners(
+def test_cleanup_removes_offline_expected_runners(
     cloud_state: CloudRunnerState | None, removal_called: bool, monkeypatch: pytest.MonkeyPatch
 ):
     """
-    arrange: TODO.
-    act: TODO
-    assert: TODO
+    arrange: Given a runner with offline state in GitHub.
+       Also given an optional runner in the cloud provider with an state.
+    act: Call cleanup in the RunnerManager instance.
+    assert: If appropriate, the offline runner should be deleted.
     """
     instance_id = InstanceID.build("prefix-0")
     github_runner = SelfHostedRunner(

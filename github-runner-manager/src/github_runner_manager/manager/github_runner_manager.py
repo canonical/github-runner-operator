@@ -94,10 +94,10 @@ class GitHubRunnerManager:  # pragma: no cover
         )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """TODO.
+        """Delete runners in GitHub.
 
         Args:
-            runners: TODO
+            runners: list of runners to delete.
         """
         for runner in runners:
             self.github.delete_runner(self._path, runner.id)

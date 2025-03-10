@@ -68,7 +68,7 @@ class SelfHostedRunner(BaseModel):
         os: Operation system of the runner.
         name: Name of the runner.
         status: The Github runner status.
-        instance_id: TODO
+        instance_id: InstanceID of the runner.
     """
 
     busy: bool
@@ -80,10 +80,10 @@ class SelfHostedRunner(BaseModel):
     instance_id: InstanceID | None
 
     def calculate_instance_id(self, prefix: str) -> None:
-        """TODO.
+        """Calculate the instance ID from the name.
 
         Args:
-            prefix: TODO
+            prefix: Prefix to use for the instance ID.
         """
         self.instance_id = InstanceID.build_from_name(prefix, self.name)
 
