@@ -249,9 +249,17 @@ class RunnerManager:
         # in which case get_runners returns unhealthy unit currently. To not leave runners
         # in an incorrect state, we just leave the units in BUILD state until a better
         # information is obtained from get_runners.
-        # instances_created = self.get_runners(cloud_states=[CloudRunnerState.CREATED])
-        github_runner_list = self._github.get_runners([GitHubRunnerState.OFFLINE])
-        self._github.delete_runners(github_runner_list)
+        cloud_instances_created = self.get_runners(cloud_states=[CloudRunnerState.CREATED])
+        cloud_instances_created_ids = [
+            cloud_instance.instance_id for cloud_instance in cloud_instances_created
+        ]
+        github_runners = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        runners_to_delete = [
+            github_runner
+            for github_runner in github_runners
+            if github_runner.instance_id in cloud_instances_created_ids
+        ]
+        self._github.delete_runners(runners_to_delete)
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
