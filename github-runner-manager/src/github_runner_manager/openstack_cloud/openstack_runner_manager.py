@@ -4,12 +4,15 @@
 """Manager for self-hosted runner on OpenStack."""
 
 import io
+import json
 import logging
 import secrets
 import time
 from dataclasses import dataclass
+from datetime import datetime
+from json import JSONDecodeError
 from pathlib import Path
-from typing import Iterator, Sequence
+from typing import Iterable, Iterator, Sequence
 
 import fabric
 import invoke
@@ -41,7 +44,12 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import storage as metrics_storage
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import (
+    CorruptMetricDataError,
+    PostJobMetrics,
+    PreJobMetrics,
+    RunnerMetrics,
+)
 from github_runner_manager.metrics.storage import StorageManager
 from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.constants import (
@@ -269,19 +277,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
-        self._delete_runner(instance, remove_token)
+        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        extracted_metrics = runner_metrics.extract(
+        # JAVI: extracted_metrics =
+        _ = runner_metrics.extract(
             metrics_storage_manager=self._metrics_storage_manager,
             runners={instance.instance_id},
             include=True,
         )
-        return next(extracted_metrics, None)
+        return pulled_metrics.to_runner_metrics(instance.instance_id, instance.created_at)
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterable[runner_metrics.RunnerMetrics]:
         """Remove idle and/or busy runners.
 
         Args:
@@ -310,7 +319,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[runner_metrics.RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -330,18 +339,22 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Unknown health runners: %s", unknown_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
+        extracted_runner_metrics = []
         for runner in runners.unhealthy:
-            self._delete_runner(runner, remove_token)
+            pulled_metrics = self._delete_runner(runner, remove_token)
+            extracted_runner_metrics.append(pulled_metrics)
         logger.debug("Cleaning up runner resources.")
         self._openstack_cloud.cleanup()
         logger.debug("Cleanup completed successfully.")
 
         logger.debug("Extracting metrics.")
-        return self._cleanup_extract_metrics(
+        # JAVI return _
+        _ = self._cleanup_extract_metrics(
             metrics_storage_manager=self._metrics_storage_manager,
             ignore_runner_names=healthy_runner_names | unknown_runner_names,
             include_runner_names=unhealthy_runner_names,
         )
+        return extracted_runner_metrics
 
     @staticmethod
     def _cleanup_extract_metrics(
@@ -381,9 +394,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             include=True,
         )
 
-    def _delete_runner(
-        self, instance: OpenstackInstance, remove_token: str
-    ) -> RunnerMetrics | None:
+    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> "_PulledMetrics":
         """Delete self-hosted runners by openstack instance.
 
         Args:
@@ -392,7 +403,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            self._pull_runner_metrics(instance.instance_id, ssh_conn)
+            pulled_metrics = self._pull_runner_metrics(instance.instance_id, ssh_conn)
 
             try:
                 logger.info("Running runner removal script for %s", instance.instance_id)
@@ -414,12 +425,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
 
         try:
-            return self._openstack_cloud.delete_instance(instance.instance_id)
+            self._openstack_cloud.delete_instance(instance.instance_id)
         except OpenStackError:
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.instance_id
             )
-        return None
+        return pulled_metrics
 
     def _get_runners_health(self) -> _RunnerHealth:
         """Get runners by health state.
@@ -683,7 +694,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
                     instance_id,
                 )
 
-    def _pull_runner_metrics(self, instance_id: InstanceID, ssh_conn: SSHConnection) -> None:
+    def _pull_runner_metrics(
+        self, instance_id: InstanceID, ssh_conn: SSHConnection
+    ) -> "_PulledMetrics":
         """Pull metrics from runner.
 
         Args:
@@ -691,6 +704,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
             ssh_conn: The SSH connection to the runner.
         """
         logger.debug("Pulling metrics for %s", instance_id)
+        pulled_metrics = _PulledMetrics()
+
         try:
             storage = self._metrics_storage_manager.get(instance_id=instance_id)
         except GetMetricsStorageError:
@@ -699,22 +714,22 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 "will not be able to issue all metrics.",
                 instance_id,
             )
-            return
+            return pulled_metrics
 
         try:
-            OpenStackRunnerManager._ssh_pull_file(
+            pulled_metrics.runner_installed = OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "runner-installed.timestamp"),
                 local_path=str(storage.path / runner_metrics.RUNNER_INSTALLED_TS_FILE_NAME),
                 max_size=MAX_METRICS_FILE_SIZE,
             )
-            OpenStackRunnerManager._ssh_pull_file(
+            pulled_metrics.pre_job_metrics = OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
                 local_path=str(storage.path / runner_metrics.PRE_JOB_METRICS_FILE_NAME),
                 max_size=MAX_METRICS_FILE_SIZE,
             )
-            OpenStackRunnerManager._ssh_pull_file(
+            pulled_metrics.post_job_metrics = OpenStackRunnerManager._ssh_pull_file(
                 ssh_conn=ssh_conn,
                 remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
                 local_path=str(storage.path / runner_metrics.POST_JOB_METRICS_FILE_NAME),
@@ -726,6 +741,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 instance_id,
                 exc,
             )
+        return pulled_metrics
 
     @staticmethod
     def _ssh_pull_file(
@@ -868,3 +884,64 @@ class FileLikeLimited(io.BytesIO):
         if len(self.getvalue()) + len(b) > self.max_size:
             raise FileLimitError(f"Exceeded allowed max file size {self.max_size})")
         return super().write(b)
+
+
+@dataclass
+class _PulledMetrics:
+    """TODO.
+
+    Attributes:
+        runner_installed: TODO
+        pre_job_metrics: TODO
+        post_job_metrics: TODO
+    """
+
+    runner_installed: str | None = None
+    pre_job_metrics: str | None = None
+    post_job_metrics: str | None = None
+
+    def to_runner_metrics(
+        self, instance_id: InstanceID, installation_start: datetime
+    ) -> RunnerMetrics:
+        """TODO.
+
+        Args:
+           instance_id: TODO
+           installation_start: TODO
+
+        Returns:
+           TODO
+
+        Raises:
+           CorruptMetricDataError: TODO
+        """
+        pre_job_metrics: dict | None = None
+        post_job_metrics: dict | None = None
+        try:
+            pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
+            post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
+        except JSONDecodeError as exc:
+            raise CorruptMetricDataError(str(exc)) from exc
+
+        if pre_job_metrics is not None and not isinstance(pre_job_metrics, dict):
+            raise CorruptMetricDataError(f"Pre job metrics for runner {self} are not correct.")
+
+        if not (post_job_metrics is not None and not isinstance(post_job_metrics, dict)):
+            raise CorruptMetricDataError(f"Pre job metrics for runner {self} are not correct.")
+
+        try:
+            return RunnerMetrics(
+                installation_start_timestamp=installation_start.timestamp(),
+                installed_timestamp=(
+                    float(self.runner_installed) if self.runner_installed else None
+                ),
+                pre_job=(  # pylint: disable=not-a-mapping
+                    PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
+                ),
+                post_job=(  # pylint: disable=not-a-mapping
+                    PostJobMetrics(**post_job_metrics) if post_job_metrics else None
+                ),
+                instance_id=instance_id,
+            )
+        except ValueError as exc:
+            raise CorruptMetricDataError(str(exc)) from exc
