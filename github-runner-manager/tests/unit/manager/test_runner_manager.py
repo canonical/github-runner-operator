@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
+from github_runner_manager.errors import RunnerCreateError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerState,
@@ -137,3 +138,48 @@ def test_cleanup_removes_offline_expected_runners(
         github_client.delete_runners.assert_called_with([github_runner])
     else:
         github_client.delete_runners.assert_called_with([])
+
+
+def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: Prepare a RunnerManager with a cloud manager that will fail when creating a runner.
+    act: Create a Runner.
+    assert: When there was a failure to create a runner in the cloud manager,
+            the github runner will be deleted in GitHub.
+    """
+    cloud_instances: tuple[CloudRunnerInstance, ...] = ()
+    cloud_runner_manager = MagicMock()
+    cloud_runner_manager.get_runners.return_value = cloud_instances
+    cloud_runner_manager.name_prefix = "unit-0"
+    github_org = GitHubRepo(owner="owner", repo="repo")
+    github_configuration = GitHubConfiguration(token="token", path=github_org)
+    runner_manager = RunnerManager(
+        "managername",
+        github_configuration=github_configuration,
+        cloud_runner_manager=cloud_runner_manager,
+        labels=["label1", "label2"],
+    )
+
+    github_client = MagicMock()
+    monkeypatch.setattr(runner_manager, "_github", github_client)
+
+    github_runner = SelfHostedRunner(
+        id=1,
+        labels=[],
+        status=GitHubRunnerStatus.OFFLINE,
+        busy=True,
+        os="unknown",
+        instance_id=InstanceID.build("invalid"),
+    )
+
+    def _get_reg_token(instance_id, labels):
+        nonlocal github_runner
+        github_runner.instance_id = instance_id
+        return "token"
+
+    github_client.get_registration_jittoken.side_effect = _get_reg_token
+    cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
+    github_client.get_runners.return_value = [github_runner]
+
+    _ = runner_manager.create_runners(1, True)
+    github_client.delete_runners.assert_called_once()
