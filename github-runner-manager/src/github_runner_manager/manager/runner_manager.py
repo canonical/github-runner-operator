@@ -275,13 +275,11 @@ class RunnerManager:
                 continue
 
             # reactive runners.
-            # If there is no cloud runner, we remove  the GitHub runner.
-            # There can be a small race condition, the time
-            # it takes the reactive process between getting the JIT token and
-            # launching the runner, but rather delete it than getting runners
-            # stuck in GitHub as offline.
+            # If there is no cloud runner, we do not remove  the GitHub runner.
+            # Although this could leave GitHub runners as offline forever, the
+            # other risk is to kill runners starting. Pending to analyze how to
+            # not leave runners in GitHub.
             if github_runner.instance_id not in cloud_instances_map:
-                github_runners_to_delete.append(github_runner)
                 continue
             cloud_runner = cloud_instances_map[github_runner.instance_id]
             if cloud_runner.cloud_state == CloudRunnerState.CREATED or (

@@ -21,8 +21,12 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
 @pytest.mark.parametrize(
     "cloud_state,health,reactive,removal_called",
     [
-        pytest.param(None, None, reactive, True, id="Any GitHub runner offline should be deleted.")
-        for reactive in (True, False)
+        pytest.param(
+            None, None, False, True, id="Non reactive GitHub runner offline should be deleted."
+        ),
+        pytest.param(
+            None, None, True, False, id="Reactive GitHub runner offline should be deleted."
+        ),
     ]
     + [
         pytest.param(
