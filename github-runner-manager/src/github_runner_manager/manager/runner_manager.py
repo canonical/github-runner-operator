@@ -257,9 +257,9 @@ class RunnerManager:
         ]
         github_runners = self._github.get_runners([GitHubRunnerState.OFFLINE])
         runners_to_delete = [
-            ghrunner
-            for ghrunner in github_runners
-            if ghrunner.instance_id not in cloud_instances_created_ids
+            gh_runner
+            for gh_runner in github_runners
+            if gh_runner.instance_id not in cloud_instances_created_ids
         ]
         self._github.delete_runners(runners_to_delete)
         remove_token = self._github.get_removal_token()
