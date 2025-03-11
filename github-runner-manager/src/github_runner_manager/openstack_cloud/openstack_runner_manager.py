@@ -342,7 +342,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         extracted_runner_metrics = []
         for runner in runners.unhealthy:
             pulled_metrics = self._delete_runner(runner, remove_token)
-            extracted_runner_metrics.append(pulled_metrics)
+            runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
+            extracted_runner_metrics.append(runner_metric)
         logger.debug("Cleaning up runner resources.")
         self._openstack_cloud.cleanup()
         logger.debug("Cleanup completed successfully.")
@@ -920,14 +921,16 @@ class _PulledMetrics:
         try:
             pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
             post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
-        except JSONDecodeError as exc:
-            raise CorruptMetricDataError(str(exc)) from exc
+        except JSONDecodeError:
+            logger.exception(
+                "Json Decode error. Corrupt metric data found for runner %s", instance_id
+            )
 
         if pre_job_metrics is not None and not isinstance(pre_job_metrics, dict):
-            raise CorruptMetricDataError(f"Pre job metrics for runner {self} are not correct.")
+            logger.exception(f"Pre job metrics for runner {instance_id} {self} are not correct.")
 
         if not (post_job_metrics is not None and not isinstance(post_job_metrics, dict)):
-            raise CorruptMetricDataError(f"Pre job metrics for runner {self} are not correct.")
+            logger.exception(f"Post job metrics for runner {instance_id} {self} are not correct.")
 
         try:
             return RunnerMetrics(
