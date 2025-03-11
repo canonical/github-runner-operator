@@ -54,7 +54,7 @@ juju integrate github-runner-image-builder github-runner
 You can scale the amount of virtual machines using
 
 ```bash
-juju config github-runner virtual-machines=5
+juju config github-runner base-virtual-machines=5
 ```
 
 You can change the reconciliation interval, to e.g. 5 minutes, using

@@ -70,7 +70,7 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
         supported_labels=supported_labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1)
+    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 

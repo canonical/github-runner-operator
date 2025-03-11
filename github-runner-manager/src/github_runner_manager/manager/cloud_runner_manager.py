@@ -9,11 +9,10 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterator, Sequence, Tuple
 
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
-
-InstanceId = str
 
 
 class HealthState(Enum):
@@ -141,7 +140,7 @@ class CloudRunnerInstance:
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
     health: HealthState
     state: CloudRunnerState
 
@@ -159,11 +158,7 @@ class CloudRunnerManager(abc.ABC):
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod
-    def generate_instance_id(self) -> InstanceId:
-        """Generate an intance_id to name a runner."""
-
-    @abc.abstractmethod
-    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
+    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
@@ -181,7 +176,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:

@@ -33,9 +33,9 @@ from github_runner_manager.configuration.github import (
 from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
-    InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     RunnerManager,
@@ -60,7 +60,7 @@ from tests.unit.mock_runner_managers import (
 
 def mock_runner_manager_spawn_runners(
     create_runner_args: Iterable[RunnerManager._CreateRunnerArgs],
-) -> tuple[InstanceId, ...]:
+) -> tuple[InstanceID, ...]:
     """Mock _spawn_runners method of RunnerManager.
 
     The _spawn_runners method uses multi-process, which copies the object, e.g., the mocks.
