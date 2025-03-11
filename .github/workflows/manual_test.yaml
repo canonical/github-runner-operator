@@ -8,7 +8,7 @@ on:
 jobs:
   private-ps6:
     name: private
-    runs-on: [self-hosted, jammy, private-endpoint]
+    runs-on: [self-hosted-linux-amd64-jammy-private-endpoint-medium]
     steps:
       - name: tmate ssh
         uses: canonical/action-tmate@main
