@@ -45,7 +45,6 @@ from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import storage as metrics_storage
 from github_runner_manager.metrics.runner import (
-    CorruptMetricDataError,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
@@ -912,9 +911,6 @@ class _PulledMetrics:
 
         Returns:
            TODO
-
-        Raises:
-           CorruptMetricDataError: TODO
         """
         pre_job_metrics: dict | None = None
         post_job_metrics: dict | None = None
@@ -950,5 +946,8 @@ class _PulledMetrics:
                 ),
                 instance_id=instance_id,
             )
-        except ValueError as exc:
-            raise CorruptMetricDataError(str(exc)) from exc
+        except ValueError:
+            logger.exception(
+                "Error creating RunnerMetrics %s, %s, %s", instance_id, installation_start, self
+            )
+            return None
