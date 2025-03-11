@@ -290,6 +290,10 @@ class RunnerManager:
             ):
                 continue
             github_runners_to_delete.append(github_runner)
+        logger.info(
+            "Offline github runners to delete: %s:",
+            [runner.instance_id for runner in github_runners_to_delete],
+        )
         self._github.delete_runners(github_runners_to_delete)
 
     @staticmethod
