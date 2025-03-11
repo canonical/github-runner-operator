@@ -33,10 +33,7 @@ def test_flush_runner_default_args(client: FlaskClient, lock: Lock, caplog) -> N
     """
     arrange: Start up a test flask server with client.
     act: Run flush runner with no args.
-        2. Run flush runner with flush-busy = True.
     assert: Should flush idle runners.
-        2. Should flush both idle and busy runners.
-
     """
     with caplog.at_level(logging.INFO):
         app.config["lock"] = lock
@@ -83,7 +80,7 @@ def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, caplog) -> None:
         app.config["lock"] = lock
         client = app.test_client()
 
-        response = client.post("/runner/flush")
+        response = client.post("/runner/flush", headers={"flush-runner": "false"})
 
     log_lines = [record.message for record in caplog.records]
 
