@@ -91,12 +91,13 @@ class GithubClient:
         self._client = GhApi(token=self._token)
 
     @catch_http_errors
-    def get_runner_github_info(self, path: GitHubPath) -> list[SelfHostedRunner]:
+    def get_runner_github_info(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
         """Get runner information on GitHub under a repo or org.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            prefix: Filter instances related to this prefix and build the InstanceID.
 
         Returns:
             List of runner information.
@@ -136,10 +137,15 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+
+        # Filter by prefix and create the SelfHostedRunner instances.
+        managed_runners_list = []
         for runner in remote_runners_list:
-            runner["labels"] = list(runner["labels"])
-        return [SelfHostedRunner.parse_obj(runner) for runner in remote_runners_list]
+            if InstanceID.name_has_prefix(prefix, runner["name"]):
+                instance_id = InstanceID.build_from_name(prefix, runner["name"])
+                managed_runner = SelfHostedRunner.build_from_github(runner, instance_id)
+                managed_runners_list.append(managed_runner)
+        return managed_runners_list
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:

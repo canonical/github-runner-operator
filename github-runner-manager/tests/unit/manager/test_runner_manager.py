@@ -47,7 +47,6 @@ def test_cleanup_removes_offline_expected_runners(
     instance_id = InstanceID.build("prefix-0")
     github_runner = SelfHostedRunner(
         id=1,
-        name=instance_id.name,
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,

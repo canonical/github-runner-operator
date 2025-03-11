@@ -450,7 +450,7 @@ class MockGitHubRunnerManager:
                 id=random.randint(1, 1000000),
                 labels=[],
                 os="linux",
-                name=runner.name,
+                instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
                     if runner.github_state == GitHubRunnerState.OFFLINE

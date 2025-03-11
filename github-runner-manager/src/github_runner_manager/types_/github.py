@@ -66,7 +66,6 @@ class SelfHostedRunner(BaseModel):
         id: Unique identifier of the runner.
         labels: Labels of the runner.
         os: Operation system of the runner.
-        name: Name of the runner.
         status: The Github runner status.
         instance_id: InstanceID of the runner.
     """
@@ -75,17 +74,24 @@ class SelfHostedRunner(BaseModel):
     id: int
     labels: list[SelfHostedRunnerLabel]
     os: str
-    name: str
     status: GitHubRunnerStatus
-    instance_id: InstanceID | None
+    instance_id: InstanceID
 
-    def calculate_instance_id(self, prefix: str) -> None:
-        """Calculate the instance ID from the name.
+    @classmethod
+    def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":
+        """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
 
         Args:
-            prefix: Prefix to use for the instance ID.
+            github_dict: GitHub dictionary from the list_self_hosted_runners endpoint.
+            instance_id: InstanceID for the runner.
+
+        Returns:
+            A SelfHostedRunner from the input data.
         """
-        self.instance_id = InstanceID.build_from_name(prefix, self.name)
+        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        github_dict["labels"] = list(github_dict["labels"])
+        github_dict["instance_id"] = instance_id
+        return cls.parse_obj(github_dict)
 
 
 class RegistrationToken(BaseModel):

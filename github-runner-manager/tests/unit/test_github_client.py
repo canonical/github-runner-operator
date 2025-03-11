@@ -263,12 +263,17 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
 
 
 def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A mocked Github Client that returns two runners, one for the requested prefix.
+    act: Call get_runner_github_info with the prefix.
+    assert: A correct runners is returned, the one matching the prefix.
+    """
     response = {
-        "total_count": 1,
+        "total_count": 2,
         "runners": [
             {
                 "id": 311,
-                "name": "test-ytnhlcjc-0-n-e8bc54023ae1",
+                "name": "current-unit-0-n-e8bc54023ae1",
                 "os": "linux",
                 "status": "offline",
                 "busy": True,
@@ -278,7 +283,20 @@ def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest
                     {"id": 0, "name": "self-hosted", "type": "read-only"},
                     {"id": 0, "name": "linux", "type": "read-only"},
                 ],
-            }
+            },
+            {
+                "id": 312,
+                "name": "anotherunit-0-n-e8bc54023ae1",
+                "os": "linux",
+                "status": "offline",
+                "busy": True,
+                "labels": [
+                    {"id": 0, "name": "openstack_test", "type": "read-only"},
+                    {"id": 0, "name": "test-ae7a1fbcd0c1", "type": "read-only"},
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "linux", "type": "read-only"},
+                ],
+            },
         ],
     }
 
@@ -290,12 +308,12 @@ def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest
     monkeypatch.setattr(github_runner_manager.github_client, "pages", pages)
 
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    runners = github_client.get_runner_github_info(path=github_repo)
+    runners = github_client.get_runner_github_info(path=github_repo, prefix="current-unit-0")
 
     assert len(runners) == 1
     runner0 = runners[0]
     assert runner0.id == response["runners"][0]["id"]  # type: ignore
-    assert runner0.name == response["runners"][0]["name"]  # type: ignore
+    assert runner0.instance_id.name == response["runners"][0]["name"]  # type: ignore
     assert runner0.busy == response["runners"][0]["busy"]  # type: ignore
     assert runner0.status == response["runners"][0]["status"]  # type: ignore
 

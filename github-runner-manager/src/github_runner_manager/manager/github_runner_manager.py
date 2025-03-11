@@ -72,16 +72,7 @@ class GitHubRunnerManager:  # pragma: no cover
         Returns:
             Information on the runners.
         """
-        runner_list = self.github.get_runner_github_info(self._path)
-        runner_list = [
-            runner
-            for runner in runner_list
-            if InstanceID.name_has_prefix(self._prefix, runner.name)
-        ]
-        # Calculate instance_id, as it is not calculated by the GithubClient as it
-        # does not have information about the prefix.
-        for runner in runner_list:
-            runner.calculate_instance_id(self._prefix)
+        runner_list = self.github.get_runner_github_info(self._path, self._prefix)
 
         if states is None:
             return tuple(runner_list)
