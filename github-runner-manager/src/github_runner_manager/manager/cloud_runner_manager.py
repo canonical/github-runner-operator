@@ -7,7 +7,7 @@ import abc
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Iterator, Sequence, Tuple
+from typing import Iterable, Iterator, Sequence, Tuple
 
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
@@ -195,7 +195,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.

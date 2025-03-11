@@ -102,7 +102,7 @@ class RunnerMetrics(BaseModel):
     """
 
     installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
+    installed_timestamp: NonNegativeFloat | None
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
     instance_id: InstanceID

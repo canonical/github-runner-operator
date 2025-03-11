@@ -72,12 +72,7 @@ class GitHubRunnerManager:  # pragma: no cover
         Returns:
             Information on the runners.
         """
-        runner_list = self.github.get_runner_github_info(self._path)
-        runner_list = [
-            runner
-            for runner in runner_list
-            if InstanceID.name_has_prefix(self._prefix, runner.name)
-        ]
+        runner_list = self.github.get_runner_github_info(self._path, self._prefix)
 
         if states is None:
             return tuple(runner_list)
@@ -89,14 +84,13 @@ class GitHubRunnerManager:  # pragma: no cover
             if GitHubRunnerManager._is_runner_in_state(runner, state_set)
         )
 
-    def delete_runners(self, states: Iterable[GitHubRunnerState] | None = None) -> None:
-        """Delete the self-hosted runners of certain states.
+    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
+        """Delete runners in GitHub.
 
         Args:
-            states: Filter the runners for these states. If None, all runners are deleted.
+            runners: list of runners to delete.
         """
-        runner_list = self.get_runners(states)
-        for runner in runner_list:
+        for runner in runners:
             self.github.delete_runner(self._path, runner.id)
 
     def get_registration_jittoken(self, instance_id: InstanceID, labels: list[str]) -> str:
