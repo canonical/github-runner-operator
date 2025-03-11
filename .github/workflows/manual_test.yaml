@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  reactive-edge:
-    name: reactive-edge
-    runs-on: [self-hosted, reactive]
+  large-ps6:
+    name: large-ps6
+    runs-on: [self-hosted, large, jammy]
     steps:
-      - run: sudo apt update
-      - run: sudo apt upgrade -y
+      - name: tmate ssh
+        uses: canonical/action-tmate@main
   # self-hosted-medium-arm64-canary:
   #   name: self-hosted-medium-arm64-canary
   #   runs-on: [self-hosted, arm64, medium, canary, noble]
