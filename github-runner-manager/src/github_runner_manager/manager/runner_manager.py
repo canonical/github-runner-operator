@@ -246,22 +246,42 @@ class RunnerManager:
         # misleading. Pending to tackle and put the logic of this function to get_runners
         # and the in the RunnerInstance.
 
-        # We clean ACTIVE units that are offline. This is a race condition, as it can be running
-        # cloud init before starting the runner (reactive case) or runners that are restarting.
-        # We do not treat this case until better information is obtained from get_runners.
-        # get_runners returns unhealthy if the GitHub agent is not running and cloud init
-        # is running. If the unit is ACTIVE but stuck we could leave a runner forever.
-        cloud_instances_created = self.get_runners(cloud_states=[CloudRunnerState.CREATED])
-        cloud_instances_created_ids = [
-            cloud_instance.instance_id for cloud_instance in cloud_instances_created
-        ]
+        # For non-reactive runners, delete all offline runners. There are small
+        # race conditions, as runners could be busy, for example in the case of a network restart
+        # or a reboot of the machine.
+
+        # For reactive runners, runners can be in CREATED state, meaning that the reactive process
+        # is creating them. Same situation in ACTIVE and HEALTHY state, where the
+        # reactive runner can be running the first steps of the startup (and cloud init script)
+        # before running the GitHub agent.
+        cloud_instances = self.get_runners()
+        cloud_instances_map = {
+            cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
+        }
+
         github_runners = self._github.get_runners([GitHubRunnerState.OFFLINE])
-        runners_to_delete = [
-            gh_runner
-            for gh_runner in github_runners
-            if gh_runner.instance_id not in cloud_instances_created_ids
-        ]
-        self._github.delete_runners(runners_to_delete)
+        github_runners_to_delete = []
+        for github_runner in github_runners:
+            if not github_runner.instance_id.reactive:
+                github_runners_to_delete.append(github_runner)
+                continue
+
+            # reactive runners. If there is no cloud runner, we remove
+            # the GitHub runner. There can be a small race condition, the time
+            # it takes the reactive process between getting the JIT token and
+            # launching the runner, but rather delete it than getting runners
+            # stuck in GitHub as offline.
+            if github_runner.instance_id not in cloud_instances_map:
+                github_runners_to_delete.append(github_runner)
+                continue
+            cloud_runner = cloud_instances_map[github_runner.instance_id]
+            if cloud_runner.cloud_state == CloudRunnerState.CREATED or (
+                cloud_runner.cloud_state == CloudRunnerState.ACTIVE
+                and cloud_runner.health == HealthState.UNHEALTHY
+            ):
+                continue
+            github_runners_to_delete.append(github_runner)
+        self._github.delete_runners(github_runners_to_delete)
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)

@@ -19,24 +19,71 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
 
 
 @pytest.mark.parametrize(
-    "cloud_state,removal_called",
+    "cloud_state,health,reactive,removal_called",
     [
-        pytest.param(None, True, id="GitHub runner offline without cloud runner"),
+        pytest.param(None, None, reactive, True, id="Any GitHub runner offline should be deleted.")
+        for reactive in (True, False)
+    ]
+    + [
+        pytest.param(
+            cloud_state,
+            health,
+            False,
+            True,
+            id="Non reactive Github runners with any cloud state should be DELETED.",
+        )
+        for cloud_state in CloudRunnerState
+        for health in HealthState
+    ]
+    + [
         pytest.param(
             CloudRunnerState.CREATED,
+            HealthState.UNKNOWN,
+            True,
             False,
-            id="Github runner offline with cloud runner in BUILD state.",
+            id="Reactive Github offline with CREATED state cloud should not be deleted.",
         ),
         pytest.param(
-            CloudRunnerState.ACTIVE, True, id="Github runner offline with ACTIVE cloud runner."
+            CloudRunnerState.ACTIVE,
+            HealthState.UNHEALTHY,
+            True,
+            True,
+            id="Reactive Github offline with ACTIVE and healthy cloud should be deleted.",
         ),
         pytest.param(
-            CloudRunnerState.DELETED, True, id="Github runner offline with DELETED cloud runner."
+            CloudRunnerState.ACTIVE,
+            HealthState.HEALTHY,
+            True,
+            False,
+            id="Reactive Github offline with ACTIVE and healthy cloud should not be deleted.",
         ),
+        pytest.param(
+            CloudRunnerState.ACTIVE,
+            HealthState.UNHEALTHY,
+            True,
+            True,
+            id="Reactive Github offline with ACTIVE and healthy cloud should be deleted.",
+        ),
+    ]
+    + [
+        pytest.param(
+            cloud_state,
+            health,
+            True,
+            True,
+            id=f"Reactive Github runners with cloud state {cloud_state} should be DELETED.",
+        )
+        for cloud_state in CloudRunnerState
+        for health in HealthState
+        if cloud_state not in (CloudRunnerState.ACTIVE, CloudRunnerState.CREATED)
     ],
 )
 def test_cleanup_removes_offline_expected_runners(
-    cloud_state: CloudRunnerState | None, removal_called: bool, monkeypatch: pytest.MonkeyPatch
+    cloud_state: CloudRunnerState | None,
+    health: HealthState | None,
+    reactive: bool,
+    removal_called: bool,
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Given a runner with offline state in GitHub.
@@ -44,7 +91,7 @@ def test_cleanup_removes_offline_expected_runners(
     act: Call cleanup in the RunnerManager instance.
     assert: If appropriate, the offline runner should be deleted.
     """
-    instance_id = InstanceID.build("prefix-0")
+    instance_id = InstanceID.build("prefix-0", reactive)
     github_runner = SelfHostedRunner(
         id=1,
         labels=[],
@@ -59,7 +106,7 @@ def test_cleanup_removes_offline_expected_runners(
             CloudRunnerInstance(
                 name=instance_id.name,
                 instance_id=instance_id,
-                health=HealthState.HEALTHY,
+                health=health,
                 state=cloud_state,
             ),
         )
