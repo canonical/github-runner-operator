@@ -17,7 +17,7 @@ from github_runner_manager.metrics.runner import (
     RUNNER_INSTALLED_TS_FILE_NAME,
     PostJobMetrics,
     PreJobMetrics,
-    RunnerMetrics,
+    RunnerDeletedInfo,
 )
 from github_runner_manager.metrics.storage import MetricsStorage
 from github_runner_manager.types_.github import JobConclusion
@@ -39,8 +39,8 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
-    """Create a RunnerMetrics object that is suitable for most tests.
+def _create_metrics_data(instance_id: InstanceID) -> RunnerDeletedInfo:
+    """Create a RunnerDeletedInfo object that is suitable for most tests.
 
     Args:
         instance_id: The test runner name.
@@ -48,7 +48,7 @@ def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
     Returns:
         Test metrics data.
     """
-    return RunnerMetrics(
+    return RunnerDeletedInfo(
         installation_start_timestamp=1,
         installed_timestamp=2,
         pre_job=PreJobMetrics(
@@ -511,7 +511,7 @@ def test_extract_ignores_filesystems_without_ts(runner_fs_base: Path):
     assert: No metrics are extracted and shared filesystem is removed.
     """
     runner_name = InstanceID.build("prefix")
-    runner_metrics_data = RunnerMetrics.construct(
+    runner_metrics_data = RunnerDeletedInfo.construct(
         installed_timestamp=1,
         pre_job=PreJobMetrics(
             timestamp=1,

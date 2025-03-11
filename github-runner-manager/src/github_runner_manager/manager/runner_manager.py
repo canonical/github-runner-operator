@@ -7,7 +7,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Tuple, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
@@ -26,7 +26,7 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import RunnerDeletedInfo
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -155,7 +155,7 @@ class RunnerManager:
         logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info.name: info for info in github_infos}
+        github_infos_map = {info.instance_id.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
@@ -192,7 +192,9 @@ class RunnerManager:
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
-    def delete_runners(self, num: int) -> IssuedMetricEventsStats:
+    def delete_runners(
+        self, num: int
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete runners.
 
         Args:
@@ -236,16 +238,62 @@ class RunnerManager:
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
-    def cleanup(self) -> IssuedMetricEventsStats:
+    def cleanup(self) -> Tuple[IssuedMetricEventsStats, list[RunnerDeletedInfo]]:
         """Run cleanup of the runners and other resources.
 
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GitHubRunnerState.OFFLINE])
+        self._cleanup_github_offline_runners()
         remove_token = self._github.get_removal_token()
-        deleted_runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+        deleted_runners_info = self._cloud.cleanup(remove_token)
+        issued_metrics = self._issue_runner_metrics(metrics=deleted_runners_info)
+        return issued_metrics, deleted_runners_info
+
+    def _cleanup_github_offline_runners(self) -> None:
+        """Run cleanup of github runners in offline state."""
+        # RunnerManager.get_runners only get runners in the cloud provider, which can be
+        # misleading. Pending to tackle and put the logic of this function to get_runners
+        # and in the RunnerInstance.
+
+        # For non-reactive runners, delete all offline runners. There are small
+        # race conditions, as runners could be busy, for example in the case of a network restart
+        # or a reboot of the machine.
+
+        # For reactive runners, runners can be in CREATED state, meaning that the reactive process
+        # is creating them. Same situation in ACTIVE and HEALTHY state, where the
+        # reactive runner can be running the first steps of the startup (and cloud init script)
+        # before running the GitHub agent.
+        cloud_instances = self.get_runners()
+        cloud_instances_map = {
+            cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
+        }
+
+        github_runners_offline = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        github_runners_to_delete = []
+        for github_runner in github_runners_offline:
+            # Delete all non-reactive runners
+            if not github_runner.instance_id.reactive:
+                github_runners_to_delete.append(github_runner)
+                continue
+
+            # reactive runners.
+            # If there is no cloud runner, we remove  the GitHub runner.
+            # There can be a small race condition, the time
+            # it takes the reactive process between getting the JIT token and
+            # launching the runner, but rather delete it than getting runners
+            # stuck in GitHub as offline.
+            if github_runner.instance_id not in cloud_instances_map:
+                github_runners_to_delete.append(github_runner)
+                continue
+            cloud_runner = cloud_instances_map[github_runner.instance_id]
+            if cloud_runner.cloud_state == CloudRunnerState.CREATED or (
+                cloud_runner.cloud_state == CloudRunnerState.ACTIVE
+                and cloud_runner.health == HealthState.HEALTHY
+            ):
+                continue
+            github_runners_to_delete.append(github_runner)
+        self._github.delete_runners(github_runners_to_delete)
 
     @staticmethod
     def _spawn_runners(
@@ -311,7 +359,7 @@ class RunnerManager:
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
-    ) -> IssuedMetricEventsStats:
+    ) -> Tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete list of runners.
 
         Args:
@@ -323,14 +371,16 @@ class RunnerManager:
         """
         runner_metrics_list = []
         for runner in runners:
-            deleted_runner_metrics = self._cloud.delete_runner(
+            deleted_runner_info = self._cloud.delete_runner(
                 instance_id=runner.instance_id, remove_token=remove_token
             )
-            if deleted_runner_metrics is not None:
-                runner_metrics_list.append(deleted_runner_metrics)
-        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
+            if deleted_runner_info is not None:
+                runner_metrics_list.append(deleted_runner_info)
+        return self._issue_runner_metrics(metrics=iter(runner_metrics_list)), deleted_runner_info
 
-    def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(
+        self, metrics: Iterator[RunnerDeletedInfo]
+    ) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Args:
