@@ -145,7 +145,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     arrange: Prepare a RunnerManager with a cloud manager that will fail when creating a runner.
     act: Create a Runner.
     assert: When there was a failure to create a runner in the cloud manager,
-            the github runner will be deleted in GitHub.
+            only that github runner will be deleted in GitHub.
     """
     cloud_instances: tuple[CloudRunnerInstance, ...] = ()
     cloud_runner_manager = MagicMock()
@@ -171,15 +171,27 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         os="unknown",
         instance_id=InstanceID.build("invalid"),
     )
+    github_runners = [
+        github_runner,
+        SelfHostedRunner(
+            id=1,
+            labels=[],
+            status=GitHubRunnerStatus.OFFLINE,
+            busy=True,
+            os="unknown",
+            instance_id=InstanceID.build("unit-0"),
+        ),
+    ]
 
     def _get_reg_token(instance_id, labels):
+        """Return a registration token."""
         nonlocal github_runner
         github_runner.instance_id = instance_id
         return "token"
 
     github_client.get_registration_jittoken.side_effect = _get_reg_token
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
-    github_client.get_runners.return_value = [github_runner]
+    github_client.get_runners.return_value = github_runners
 
     _ = runner_manager.create_runners(1, True)
-    github_client.delete_runners.assert_called_once()
+    github_client.delete_runners.assert_called_once_with([github_runner])
