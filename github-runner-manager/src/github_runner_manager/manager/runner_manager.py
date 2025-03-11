@@ -249,7 +249,8 @@ class RunnerManager:
         # We clean ACTIVE units that are offline. This is a race condition, as it can be running
         # cloud init before starting the runner (reactive case) or runners that are restarting.
         # We do not treat this case until better information is obtained from get_runners.
-        # If the unit is ACTIVE but stuck we could leave a runner forever.
+        # get_runners returns unhealthy if the GitHub agent is not running and cloud init
+        # is running. If the unit is ACTIVE but stuck we could leave a runner forever.
         cloud_instances_created = self.get_runners(cloud_states=[CloudRunnerState.CREATED])
         cloud_instances_created_ids = [
             cloud_instance.instance_id for cloud_instance in cloud_instances_created

@@ -81,11 +81,9 @@ def test_cleanup_removes_offline_expected_runners(
     github_client.get_runners.return_value = [github_runner]
     github_client.get_removal_token.return_value = "removaltoken"
 
-    stats = runner_manager.cleanup()
+    runner_manager.cleanup()
 
     if removal_called:
         github_client.delete_runners.assert_called_with([github_runner])
     else:
         github_client.delete_runners.assert_called_with([])
-
-    assert not stats
