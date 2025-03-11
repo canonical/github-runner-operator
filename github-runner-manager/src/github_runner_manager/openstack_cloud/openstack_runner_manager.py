@@ -927,10 +927,14 @@ class _PulledMetrics:
             )
 
         if pre_job_metrics is not None and not isinstance(pre_job_metrics, dict):
-            logger.exception(f"Pre job metrics for runner {instance_id} {self} are not correct.")
+            logger.exception(
+                "Pre job metrics for runner %s %s are not correct.", instance_id, self
+            )
 
         if not (post_job_metrics is not None and not isinstance(post_job_metrics, dict)):
-            logger.exception(f"Post job metrics for runner {instance_id} {self} are not correct.")
+            logger.exception(
+                "Post job metrics for runner %s %s are not correct.", instance_id, self
+            )
 
         try:
             return RunnerMetrics(
