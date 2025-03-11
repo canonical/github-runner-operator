@@ -242,9 +242,16 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
+        self._cleanup_github_offline_runners()
+        remove_token = self._github.get_removal_token()
+        deleted_runner_metrics = self._cloud.cleanup(remove_token)
+        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    def _cleanup_github_offline_runners(self) -> None:
+        """Run cleanup of github runners in offline state."""
         # RunnerManager.get_runners only get runners in the cloud provider, which can be
         # misleading. Pending to tackle and put the logic of this function to get_runners
-        # and the in the RunnerInstance.
+        # and in the RunnerInstance.
 
         # For non-reactive runners, delete all offline runners. There are small
         # race conditions, as runners could be busy, for example in the case of a network restart
@@ -259,15 +266,17 @@ class RunnerManager:
             cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
         }
 
-        github_runners = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        github_runners_offline = self._github.get_runners([GitHubRunnerState.OFFLINE])
         github_runners_to_delete = []
-        for github_runner in github_runners:
+        for github_runner in github_runners_offline:
+            # Delete all non-reactive runners
             if not github_runner.instance_id.reactive:
                 github_runners_to_delete.append(github_runner)
                 continue
 
-            # reactive runners. If there is no cloud runner, we remove
-            # the GitHub runner. There can be a small race condition, the time
+            # reactive runners.
+            # If there is no cloud runner, we remove  the GitHub runner.
+            # There can be a small race condition, the time
             # it takes the reactive process between getting the JIT token and
             # launching the runner, but rather delete it than getting runners
             # stuck in GitHub as offline.
@@ -277,14 +286,11 @@ class RunnerManager:
             cloud_runner = cloud_instances_map[github_runner.instance_id]
             if cloud_runner.cloud_state == CloudRunnerState.CREATED or (
                 cloud_runner.cloud_state == CloudRunnerState.ACTIVE
-                and cloud_runner.health == HealthState.UNHEALTHY
+                and cloud_runner.health == HealthState.HEALTHY
             ):
                 continue
             github_runners_to_delete.append(github_runner)
         self._github.delete_runners(github_runners_to_delete)
-        remove_token = self._github.get_removal_token()
-        deleted_runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
     @staticmethod
     def _spawn_runners(
