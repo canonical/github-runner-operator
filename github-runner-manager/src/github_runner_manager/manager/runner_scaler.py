@@ -225,6 +225,7 @@ class RunnerScaler:
             busy_runners=tuple(busy_runners),
         )
 
+    # pylint: disable=unused-variable; # JAVI remove this after the refactor
     def flush(self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE) -> int:
         """Flush the runners.
 
@@ -234,7 +235,7 @@ class RunnerScaler:
         Returns:
             Number of runners flushed.
         """
-        metric_stats = self._manager.cleanup()
+        metric_stats, deleted_runners_info = self._manager.cleanup()
         delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
         events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
@@ -243,6 +244,7 @@ class RunnerScaler:
         }
         return metric_stats.get(metric_events.RunnerStop, 0)
 
+    # pylint: disable=unused-variable; # JAVI remove this after the refactor
     def reconcile(self) -> int:
         """Reconcile the quantity of runners.
 
@@ -310,7 +312,7 @@ class RunnerScaler:
             The reconcile result.
         """
         delete_metric_stats = None
-        metric_stats = self._manager.cleanup()
+        metric_stats, runners_deleted_info = self._manager.cleanup()
         runners = self._manager.get_runners()
         logger.info("Reconcile runners from %s to %s", len(runners), expected_quantity)
         runner_diff = expected_quantity - len(runners)
@@ -323,7 +325,7 @@ class RunnerScaler:
                     "such as, image."
                 )
         elif runner_diff < 0:
-            delete_metric_stats = self._manager.delete_runners(-runner_diff)
+            delete_metric_stats, deleted_runners_info = self._manager.delete_runners(-runner_diff)
         else:
             logger.info("No changes to the number of runners.")
         # Merge the two metric stats.

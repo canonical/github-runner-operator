@@ -3,6 +3,7 @@
 
 """Manager for self-hosted runner on OpenStack."""
 
+import io
 import logging
 import secrets
 import time
@@ -245,7 +246,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str
-    ) -> runner_metrics.RunnerMetrics | None:
+    ) -> runner_metrics.RunnerDeletedInfo | None:
         """Delete self-hosted runners.
 
         Args:
@@ -279,7 +280,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Remove idle and/or busy runners.
 
         Args:
@@ -308,7 +309,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -346,7 +347,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         metrics_storage_manager: StorageManager,
         ignore_runner_names: set[InstanceID],
         include_runner_names: set[InstanceID],
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterator[runner_metrics.RunnerDeletedInfo]:
         """Extract metrics for certain runners and dangling metrics storage.
 
         Args:
@@ -725,7 +726,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
     @staticmethod
     def _ssh_pull_file(
         ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
-    ) -> None:
+    ) -> str:
         """Pull file from the runner instance.
 
         Args:
@@ -771,14 +772,19 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         try:
             ssh_conn.get(remote=remote_path, local=local_path)
+            # JAVI REPEATING CALL...
+            file_like_obj = FileLikeLimited(max_size)
+            ssh_conn.get(remote=remote_path, local=file_like_obj)
+            value = file_like_obj.getvalue().decode("utf-8")
         except (
             TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
         ) as exc:
             raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
-        except OSError as exc:
-            raise _PullFileError(f"Unable to retrieve file {remote_path}") from exc
+        except (OSError, UnicodeDecodeError, FileLimitError) as exc:
+            raise _PullFileError(f"Error retrieving file {remote_path}") from exc
+        return value
 
     @staticmethod
     def _run_runner_removal_script(
@@ -823,3 +829,39 @@ class OpenStackRunnerManager(CloudRunnerManager):
             raise _GithubRunnerRemoveError(
                 f"Failed to remove runner {instance_id} from Github."
             ) from exc
+
+
+class FileLimitError(Exception):
+    """TODO."""
+
+
+class FileLikeLimited(io.BytesIO):
+    """TODO."""
+
+    def __init__(self, max_size: int):
+        """TODO.
+
+        Args:
+            max_size: TODO
+        """
+        self.max_size = max_size
+
+    # The type of b is tricky. In Python 3.12 it is a collections.abc.Buffer,
+    # and as so it does not have len (we use Python 3.10). For our purpose this works,
+    # as Fabric sends bytes. If it ever changes, we will catch it in the
+    # integration tests.
+    def write(self, b, /) -> int:  # type: ignore[no-untyped-def]
+        """TODO.
+
+        Args:
+            b: TODO
+
+        Returns:
+            TODO
+
+        Raises:
+            FileLimitError: TODO
+        """
+        if len(self.getvalue()) + len(b) > self.max_size:
+            raise FileLimitError(f"Exceeded allowed max file size {self.max_size})")
+        return super().write(b)
