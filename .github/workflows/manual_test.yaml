@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  large-ps6:
-    name: large-ps6
-    runs-on: [self-hosted, large, jammy]
+  private-ps6:
+    name: private
+    runs-on: [self-hosted, jammy, private-endpoint]
     steps:
       - name: tmate ssh
         uses: canonical/action-tmate@main
