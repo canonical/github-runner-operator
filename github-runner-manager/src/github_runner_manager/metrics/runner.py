@@ -19,12 +19,6 @@ from github_runner_manager.metrics.type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
 
-FILE_SIZE_BYTES_LIMIT = 1024
-PRE_JOB_METRICS_FILE_NAME = "pre-job-metrics.json"
-POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
-RUNNER_INSTALLATION_START_TS_FILE_NAME = "runner-installation-start.timestamp"
-RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
-
 
 class PreJobMetrics(BaseModel):
     """Metrics for the pre-job phase of a runner.

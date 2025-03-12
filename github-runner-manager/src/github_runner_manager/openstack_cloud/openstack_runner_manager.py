@@ -49,6 +49,9 @@ from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
     METRICS_EXCHANGE_PATH,
+    POST_JOB_METRICS_FILE_NAME,
+    PRE_JOB_METRICS_FILE_NAME,
+    RUNNER_INSTALLED_TS_FILE_NAME,
     RUNNER_LISTENER_PROCESS,
     RUNNER_WORKER_PROCESS,
 )
@@ -79,7 +82,7 @@ class _GithubRunnerRemoveError(Exception):
     """Represents an error while SSH into a runner and running the remove script."""
 
 
-class _PullFileError(Exception):
+class PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
 
@@ -663,20 +666,20 @@ def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "_P
     try:
         pulled_metrics.runner_installed = ssh_pull_file(
             ssh_conn=ssh_conn,
-            remote_path=str(METRICS_EXCHANGE_PATH / "runner-installed.timestamp"),
+            remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
             max_size=MAX_METRICS_FILE_SIZE,
         )
         pulled_metrics.pre_job_metrics = ssh_pull_file(
             ssh_conn=ssh_conn,
-            remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
+            remote_path=str(PRE_JOB_METRICS_FILE_NAME),
             max_size=MAX_METRICS_FILE_SIZE,
         )
         pulled_metrics.post_job_metrics = ssh_pull_file(
             ssh_conn=ssh_conn,
-            remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
+            remote_path=str(POST_JOB_METRICS_FILE_NAME),
             max_size=MAX_METRICS_FILE_SIZE,
         )
-    except _PullFileError as exc:
+    except PullFileError as exc:
         logger.warning(
             "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
             instance_id,
@@ -697,7 +700,7 @@ def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> s
         The content of the file as a string
 
     Raises:
-        _PullFileError: Unable to pull the file from the runner instance.
+        PullFileError: Unable to pull the file from the runner instance.
         SSHError: Issue with SSH connection.
     """
     try:
@@ -720,16 +723,16 @@ def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> s
             result.stdout,
             result.stderr,
         )
-        raise _PullFileError(f"Unable to get file size of {remote_path}")
+        raise PullFileError(f"Unable to get file size of {remote_path}")
 
     stdout = result.stdout
     try:
         stdout.strip()
         size = int(stdout)
         if size > max_size:
-            raise _PullFileError(f"File size of {remote_path} too large {size} > {max_size}")
+            raise PullFileError(f"File size of {remote_path} too large {size} > {max_size}")
     except ValueError as exc:
-        raise _PullFileError(f"Invalid file size for {remote_path}: stdout") from exc
+        raise PullFileError(f"Invalid file size for {remote_path}: stdout") from exc
 
     try:
         file_like_obj = FileLikeLimited(max_size)
@@ -742,7 +745,7 @@ def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> s
     ) as exc:
         raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
     except (OSError, UnicodeDecodeError, FileLimitError) as exc:
-        raise _PullFileError(f"Error retrieving file {remote_path}") from exc
+        raise PullFileError(f"Error retrieving file {remote_path}. Error: {exc}") from exc
     return value
 
 
@@ -772,12 +775,18 @@ class _PulledMetrics:
         Returns:
            TODO
         """
+        if self.runner_installed is None:
+            logger.error(
+                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
+            )
+            return None
+
         pre_job_metrics: dict | None = None
         post_job_metrics: dict | None = None
         try:
             pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
             post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
-        except JSONDecodeError:
+        except (JSONDecodeError, TypeError):
             logger.exception(
                 "Json Decode error. Corrupt metric data found for runner %s", instance_id
             )

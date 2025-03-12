@@ -2,26 +2,40 @@
 # See LICENSE file for licensing details.
 
 """Module for unit-testing OpenStack runner manager."""
+import logging
 import secrets
+from typing import Optional, Iterable
 from unittest.mock import ANY, MagicMock
 
 import pytest
+from fabric import Connection as SSHConnection
+from invoke.runners import Result
 
 from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
+from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud import (
     health_checks,
     openstack_cloud,
     openstack_runner_manager,
 )
+from github_runner_manager.openstack_cloud.constants import (
+    POST_JOB_METRICS_FILE_NAME,
+    PRE_JOB_METRICS_FILE_NAME,
+    RUNNER_INSTALLED_TS_FILE_NAME,
+)
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
+    PullFileError,
+    ssh_pull_file,
 )
 from tests.unit.factories import openstack_factory
+
+logger = logging.getLogger(__name__)
 
 OPENSTACK_INSTANCE_PREFIX = "test"
 
@@ -29,10 +43,6 @@ OPENSTACK_INSTANCE_PREFIX = "test"
 @pytest.fixture(name="runner_manager")
 def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenStackRunnerManager:
     """Mock required dependencies/configs and return an OpenStackRunnerManager instance."""
-    monkeypatch.setattr(
-        "github_runner_manager.openstack_cloud.openstack_runner_manager.pull_runner_metrics",
-        MagicMock(),
-    )
     monkeypatch.setattr(
         "github_runner_manager.openstack_cloud.openstack_runner_manager.OpenstackCloud",
         MagicMock(),
@@ -117,6 +127,157 @@ def test_cleanup_ignores_runners_with_health_check_errors(
     assert runner_metrics_mock.call_count == len(unhealthy_ids)
     for unhealthy_id in unhealthy_ids:
         runner_metrics_mock.assert_any_call(unhealthy_id, ANY)
+
+
+@pytest.mark.parametrize(
+    "runner_installed_metrics,pre_job_metrics,post_job_metrics,result",
+    [
+        pytest.param(None, None, None, [], id="All None"),
+        pytest.param("TODO THIS ANS MORE TESTS", None, None, [
+            RunnerMetrics(
+                instance_id=InstanceID(prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"),
+                installed_timestamp=55,
+            ),
+        ], id="All None"),
+    ],
+)
+def test_cleanup_extract_metrics(
+    runner_manager: OpenStackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    runner_installed_metrics: str | None,
+    pre_job_metrics: str | None,
+    post_job_metrics: str | None,
+    result: Iterable[RunnerMetrics]
+):
+    """
+    arrange: Given different combinations of healthy, unhealthy and undecided runners.
+    act: When the cleanup method is called.
+    assert: runner_metrics.extract is called with the expected storage to be extracted.
+    """
+    # created at is hardcoded to "2024-09-12T02:48:03Z" for all openstack instances.
+
+    ssh_pull_file_mock = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_runner_manager.ssh_pull_file",
+        ssh_pull_file_mock,
+    )
+
+    def _ssh_pull_file(remote_path, *args, **kwargs):
+        """TODO."""
+        logger.info("ssh_pull_file: remote_path %s", remote_path)
+        res = None
+        if remote_path == str(PRE_JOB_METRICS_FILE_NAME):
+            res = pre_job_metrics
+        elif remote_path == str(POST_JOB_METRICS_FILE_NAME):
+            res = post_job_metrics
+        elif remote_path == str(RUNNER_INSTALLED_TS_FILE_NAME):
+            res = runner_installed_metrics
+        if res is None:
+            raise PullFileError("Nothing found or invalid file.")
+        return res
+
+    ssh_pull_file_mock.side_effect = _ssh_pull_file
+
+    names = [InstanceID(prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy").name]
+    openstack_cloud_mock = _create_openstack_cloud_mock(names)
+    runner_manager._openstack_cloud = openstack_cloud_mock
+    health_checks_mock = _create_health_checks_mock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_runner_manager.health_checks",
+        health_checks_mock,
+    )
+
+    runner_metrics = runner_manager.cleanup("remove_token")
+    assert runner_metrics == result
+
+
+def test_ssh_pull_file():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 100
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 10
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    def _ssh_get(remote, local) -> None:
+        """TODO."""
+        assert remote_path in remote
+        local.write(b"content from")
+        local.write(b" the file")
+        return None
+
+    ssh_conn.get.side_effect = _ssh_get
+
+    response = ssh_pull_file(ssh_conn, remote_path, max_size)
+    assert response == "content from the file"
+
+
+def test_ssh_pull_file_invalid_size_real():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 10
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 5
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    def _ssh_get(remote, local) -> None:
+        """TODO."""
+        assert remote_path in remote
+        local.write(b"content")
+        local.write(b"more content")
+        return None
+
+    ssh_conn.get.side_effect = _ssh_get
+
+    with pytest.raises(PullFileError) as exc:
+        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+        assert "max" in str(exc)
+
+
+def test_ssh_pull_file_invalid_size_reported():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 10
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 20
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    with pytest.raises(PullFileError) as exc:
+        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+    assert "too large" in str(exc)
 
 
 def _create_openstack_cloud_mock(server_names: list[str]) -> MagicMock:
