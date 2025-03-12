@@ -275,10 +275,9 @@ class RunnerManager:
                 continue
 
             # reactive runners.
-            # If there is no cloud runner, we do not remove  the GitHub runner.
-            # Although this could leave GitHub runners as offline forever, the
-            # other risk is to kill runners starting. Pending to analyze how to
-            # not leave runners in GitHub.
+            # If there is no cloud runner, we do not remove  the GitHub runner,
+            # as it can be a reactive runner being in the creation phase. The risk
+            # is that some offline runners could be left for a while in GitHub.
             if github_runner.instance_id not in cloud_instances_map:
                 continue
             cloud_runner = cloud_instances_map[github_runner.instance_id]
