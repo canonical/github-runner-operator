@@ -324,7 +324,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         for runner in runners.unhealthy:
             pulled_metrics = self._delete_runner(runner, remove_token)
             runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
-            if runner_metric:
+            if not runner_metric:
                 logger.error("No metrics returned after deleting %s", runner.instance_id)
             else:
                 extracted_runner_metrics.append(runner_metric)
