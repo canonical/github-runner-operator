@@ -324,7 +324,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         for runner in runners.unhealthy:
             pulled_metrics = self._delete_runner(runner, remove_token)
             runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
-            extracted_runner_metrics.append(runner_metric)
+            if runner_metric:
+                logger.error("No metrics returned after deleting %s", runner.instance_id)
+            else:
+                extracted_runner_metrics.append(runner_metric)
         logger.debug("Cleaning up runner resources.")
         self._openstack_cloud.cleanup()
         logger.debug("Cleanup completed successfully.")
@@ -759,7 +762,7 @@ class _PulledMetrics:
 
     def to_runner_metrics(
         self, instance_id: InstanceID, installation_start: datetime
-    ) -> RunnerMetrics:
+    ) -> RunnerMetrics | None:
         """TODO.
 
         Args:
@@ -780,20 +783,24 @@ class _PulledMetrics:
             )
 
         if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
-            logger.exception(
+            logger.error(
                 "Pre job metrics for runner %s %s are not correct. Value: %s",
                 instance_id,
                 self,
                 pre_job_metrics,
             )
+            # TODO JAVI WHAT TO DO IN HERE?
+            pre_job_metrics = None
 
         if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
-            logger.exception(
+            logger.error(
                 "Post job metrics for runner %s %s are not correct. Value: %s",
                 instance_id,
                 self,
                 post_job_metrics,
+            # TODO JAVI WHAT TO DO IN HERE?
             )
+            post_job_metrics = None
 
         try:
             return RunnerMetrics(
