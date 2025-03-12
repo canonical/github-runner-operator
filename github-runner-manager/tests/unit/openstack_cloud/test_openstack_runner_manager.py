@@ -3,9 +3,7 @@
 
 """Module for unit-testing OpenStack runner manager."""
 import secrets
-from datetime import datetime, timedelta
-from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import ANY, MagicMock
 
 import pytest
 
@@ -13,7 +11,6 @@ from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
-from github_runner_manager.metrics.storage import MetricsStorage, StorageManager
 from github_runner_manager.openstack_cloud import (
     health_checks,
     openstack_cloud,
@@ -21,7 +18,6 @@ from github_runner_manager.openstack_cloud import (
 )
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
-    OUTDATED_METRICS_STORAGE_IN_SECONDS,
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
@@ -34,7 +30,7 @@ OPENSTACK_INSTANCE_PREFIX = "test"
 def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenStackRunnerManager:
     """Mock required dependencies/configs and return an OpenStackRunnerManager instance."""
     monkeypatch.setattr(
-        "github_runner_manager.openstack_cloud.openstack_runner_manager.metrics_storage",
+        "github_runner_manager.openstack_cloud.openstack_runner_manager.pull_runner_metrics",
         MagicMock(),
     )
     monkeypatch.setattr(
@@ -58,115 +54,8 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
 def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the runner_metrics module."""
     runner_metrics_mock = MagicMock(spec=runner)
-    monkeypatch.setattr(openstack_runner_manager, "runner_metrics", runner_metrics_mock)
+    monkeypatch.setattr(openstack_runner_manager, "pull_runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
-
-
-@pytest.mark.parametrize(
-    "healthy_runner_names, unhealthy_runner_names, undecided_runner_storage, "
-    "expected_storage_to_be_extracted",
-    [
-        pytest.param(
-            default_healthy := {
-                InstanceID.build(prefix := "prefix", "healthy1"),
-                InstanceID.build(prefix, "healthy2"),
-            },
-            default_unhealthy := {
-                InstanceID.build(prefix, "unhealthy1"),
-                InstanceID.build(prefix, "unhealthy2"),
-            },
-            default_undecided := {
-                ("in_construction", datetime.now()),
-                (
-                    dangling := InstanceID.build(prefix, "dangling"),
-                    datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
-                ),
-            },
-            default_result := default_unhealthy | {dangling},
-            id="one dangling",
-        ),
-        pytest.param(
-            default_healthy,
-            default_unhealthy,
-            {
-                ("in_construction", datetime.now()),
-                (
-                    dangling,
-                    datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
-                ),
-                (
-                    dangling2 := InstanceID.build(prefix, "dangling2"),
-                    datetime.now() - timedelta(seconds=OUTDATED_METRICS_STORAGE_IN_SECONDS + 1),
-                ),
-            },
-            default_unhealthy | {dangling, dangling2},
-            id="two dangling",
-        ),
-        pytest.param(
-            default_healthy,
-            default_unhealthy,
-            {("in_construction", datetime.now())},
-            default_unhealthy,
-            id="no dangling",
-        ),
-        pytest.param(
-            default_healthy,
-            set(),
-            default_undecided,
-            {dangling},
-            id="no unhealthy",
-        ),
-        pytest.param(
-            default_healthy,
-            default_unhealthy,
-            set(),
-            default_unhealthy,
-            id="no undecided",
-        ),
-        pytest.param(
-            set(),
-            default_unhealthy,
-            default_undecided,
-            default_result,
-            id="no healthy",
-        ),
-    ],
-)
-def test__cleanup_extract_metrics(
-    healthy_runner_names: set[InstanceID],
-    unhealthy_runner_names: set[InstanceID],
-    undecided_runner_storage: set[tuple[InstanceID, datetime]],
-    expected_storage_to_be_extracted: set[InstanceID],
-    monkeypatch: pytest.MonkeyPatch,
-    runner_metrics_mock: MagicMock,
-):
-    """
-    arrange: Given different combinations of healthy, unhealthy and undecided runners.
-    act: When the cleanup method is called.
-    assert: runner_metrics.extract is called with the expected storage to be extracted.
-    """
-    metric_storage_manager = MagicMock(spec=StorageManager)
-    now = datetime.now()
-    all_runner_name_metrics_storage = [
-        _create_metrics_storage(runner_name, now)
-        for runner_name in (healthy_runner_names | unhealthy_runner_names)
-    ]
-    dangling_runner_metrics_storage = [
-        _create_metrics_storage(runner_name, mtime)
-        for runner_name, mtime in undecided_runner_storage
-    ]
-    metric_storage_manager.list_all = (
-        all_runner_name_metrics_storage + dangling_runner_metrics_storage
-    ).__iter__
-
-    OpenStackRunnerManager._cleanup_extract_metrics(
-        metrics_storage_manager=metric_storage_manager,
-        ignore_runner_names=healthy_runner_names,
-        include_runner_names=unhealthy_runner_names,
-    )
-
-    assert runner_metrics_mock.extract.call_count == 1
-    assert runner_metrics_mock.extract.call_args[1]["runners"] == expected_storage_to_be_extracted
 
 
 @pytest.mark.parametrize(
@@ -222,29 +111,12 @@ def test_cleanup_ignores_runners_with_health_check_errors(
         instance_id = name
         if instance_id.startswith("unhealthy"):
             openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
-    assert runner_metrics_mock.extract.call_count == 1
-    assert {r.name for r in runner_metrics_mock.extract.call_args[1]["runners"]} == {
-        InstanceID.build_from_name(prefix, name).name for name in names if "unhealthy" in name
+    unhealthy_ids = {
+        InstanceID.build_from_name(prefix, name) for name in names if "unhealthy" in name
     }
-
-
-def _create_metrics_storage(runner_name: str, mtime: datetime) -> MetricsStorage:
-    """
-    Create a metric storage object with a mocked mtime for the storage path.
-
-    Args:
-        runner_name: The name of the runner.
-        mtime: Used to mock the mtime of the storage path.
-
-    Returns:
-        A metric storage mock object.
-    """
-    metrics_storage = MetricsStorage(instance_id=runner_name, path=MagicMock(spec=Path))
-    stat = MagicMock()
-    stat_mock = MagicMock(return_value=stat)
-    stat.st_mtime = mtime.timestamp()
-    metrics_storage.path.stat = stat_mock
-    return metrics_storage
+    assert runner_metrics_mock.call_count == len(unhealthy_ids)
+    for unhealthy_id in unhealthy_ids:
+        runner_metrics_mock.assert_any_call(unhealthy_id, ANY)
 
 
 def _create_openstack_cloud_mock(server_names: list[str]) -> MagicMock:

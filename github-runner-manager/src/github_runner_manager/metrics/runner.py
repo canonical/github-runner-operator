@@ -3,25 +3,18 @@
 
 """Classes and function to extract the metrics from storage and issue runner metrics events."""
 
-import json
 import logging
 from enum import Enum
-from json import JSONDecodeError
-from pathlib import Path
-from typing import Iterator, Optional, Type
+from typing import Optional, Type
 
 from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
 
 from github_runner_manager.errors import (
-    CorruptMetricDataError,
-    DeleteMetricsStorageError,
     IssueMetricEventError,
     RunnerMetricsError,
 )
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.metrics.storage import MetricsStorage
-from github_runner_manager.metrics.storage import StorageManagerProtocol as MetricsStorageManager
 from github_runner_manager.metrics.type import GithubJobMetrics
 
 logger = logging.getLogger(__name__)
@@ -106,42 +99,6 @@ class RunnerMetrics(BaseModel):
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
     instance_id: InstanceID
-
-
-def extract(
-    metrics_storage_manager: MetricsStorageManager, runners: set[InstanceID], include: bool = False
-) -> Iterator[RunnerMetrics]:
-    """Extract metrics from runners.
-
-    The metrics are extracted from the metrics storage of the runners.
-    Orphan storages are cleaned up.
-
-    If corrupt data is found, the metrics are not processed further and the storage is moved
-    to a special quarantine directory, as this may indicate that a malicious
-    runner is trying to manipulate the files on the storage.
-
-    In order to avoid DoS attacks, the file size is also checked.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        runners: The runners to include or exclude.
-        include: If true the provided runners are included for metric extraction, else the provided
-            runners are excluded.
-
-    Yields:
-        Extracted runner metrics of a particular runner.
-    """
-    for ms in metrics_storage_manager.list_all():
-        if (include and ms.instance_id in runners) or (
-            not include and ms.instance_id not in runners
-        ):
-            runner_metrics = _extract_storage(
-                metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
-            )
-            if not runner_metrics:
-                logger.warning("Not able to issue metrics for runner %s", ms.instance_id)
-            else:
-                yield runner_metrics
 
 
 def issue_events(
@@ -394,199 +351,3 @@ def _create_runner_stop(
         job_duration=job_duration,
         job_conclusion=job_metrics.conclusion if job_metrics else None,
     )
-
-
-def _extract_storage(
-    metrics_storage_manager: MetricsStorageManager,
-    metrics_storage: MetricsStorage,
-) -> Optional[RunnerMetrics]:
-    """Extract metrics from a metrics storage.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        The extracted metrics if at least the runner installed timestamp is present.
-    """
-    instance_id = metrics_storage.instance_id
-    try:
-        logger.debug("Extracting metrics from metrics storage for runner %s", instance_id)
-        metrics_from_fs = _extract_metrics_from_storage(metrics_storage)
-    except CorruptMetricDataError:
-        logger.exception("Corrupt metric data found for runner %s", instance_id)
-        metrics_storage_manager.move_to_quarantine(instance_id)
-        return None
-
-    logger.debug("Cleaning metrics storage for runner %s", instance_id)
-    _clean_up_storage(
-        metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
-    )
-    return metrics_from_fs
-
-
-def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[RunnerMetrics]:
-    """Extract metrics from metrics storage for a runner.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        The extracted metrics if at least the installed timestamp is present.
-
-    Raises:
-        CorruptMetricDataError: Raised if one of the files is not valid or too large.
-    """
-    if too_large_files := _inspect_file_sizes(metrics_storage):
-        raise CorruptMetricDataError(
-            f"File size of {too_large_files} is too large. "
-            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
-        )
-
-    instance_id = metrics_storage.instance_id
-
-    installation_start_timestamp = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=RUNNER_INSTALLATION_START_TS_FILE_NAME
-    )
-    logger.debug("Runner %s installation started at %s", instance_id, installation_start_timestamp)
-
-    installed_timestamp = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=RUNNER_INSTALLED_TS_FILE_NAME
-    )
-    if not installed_timestamp:
-        logger.error(
-            "installed timestamp not found for runner %s, will not extract any metrics.",
-            instance_id,
-        )
-        return None
-    logger.debug("Runner %s installed at %s", instance_id, installed_timestamp)
-
-    pre_job_metrics = _extract_json_file_from_storage(
-        metrics_storage=metrics_storage, filename=PRE_JOB_METRICS_FILE_NAME
-    )
-    if pre_job_metrics:
-
-        logger.debug("Pre-job metrics for runner %s: %s", instance_id, pre_job_metrics)
-
-        post_job_metrics = _extract_json_file_from_storage(
-            metrics_storage=metrics_storage, filename=POST_JOB_METRICS_FILE_NAME
-        )
-        logger.debug("Post-job metrics for runner %s: %s", instance_id, post_job_metrics)
-    else:
-        logger.error(
-            "Pre-job metrics for runner %s not found, stop extracting post-jobs metrics.",
-            instance_id,
-        )
-        post_job_metrics = None
-
-    try:
-        return RunnerMetrics(
-            installation_start_timestamp=(
-                float(installation_start_timestamp) if installation_start_timestamp else None
-            ),
-            installed_timestamp=float(installed_timestamp),
-            pre_job=PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None,
-            post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
-            instance_id=instance_id,
-        )
-    except ValueError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-
-
-def _inspect_file_sizes(metrics_storage: MetricsStorage) -> tuple[Path, ...]:
-    """Inspect the file sizes of the metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        A tuple of files whose size is larger than the limit.
-    """
-    files: list[Path] = [
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
-        metrics_storage.path.joinpath(RUNNER_INSTALLATION_START_TS_FILE_NAME),
-    ]
-
-    return tuple(
-        filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
-    )
-
-
-def _extract_json_file_from_storage(metrics_storage: MetricsStorage, filename: str) -> dict | None:
-    """Extract a particular metric file from metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-        filename: The metrics filename.
-
-    Raises:
-        CorruptMetricDataError: If any errors have been found within the metric.
-
-    Returns:
-        Metrics for the given runner if present.
-    """
-    job_metrics_raw = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=filename
-    )
-    if not job_metrics_raw:
-        return None
-
-    try:
-        job_metrics = json.loads(job_metrics_raw)
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-    if not isinstance(job_metrics, dict):
-        raise CorruptMetricDataError(
-            f"{filename} metrics for runner {metrics_storage.instance_id} is not a JSON object."
-        )
-    return job_metrics
-
-
-def _extract_file_from_storage(metrics_storage: MetricsStorage, filename: str) -> str | None:
-    """Extract a particular file from metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-        filename: The metrics filename.
-
-    Returns:
-        Metrics for the given runner if present.
-    """
-    try:
-        file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
-    except FileNotFoundError:
-        logger.exception("%s not found for runner %s", filename, metrics_storage.instance_id)
-        file_content = None
-    return file_content
-
-
-def _clean_up_storage(
-    metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage
-) -> None:
-    """Clean up the metrics storage.
-
-    Remove all metric files and afterwards the storage.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The metrics storage for a specific runner.
-    """
-    try:
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-    except OSError:
-        logger.exception(
-            "Could not remove metric files for runner %s, "
-            "this may lead to duplicate metrics issued",
-            metrics_storage.instance_id,
-        )
-
-    try:
-        metrics_storage_manager.delete(metrics_storage.instance_id)
-    except DeleteMetricsStorageError:
-        logger.exception(
-            "Could not delete metrics storage for runner %s.", metrics_storage.instance_id
-        )

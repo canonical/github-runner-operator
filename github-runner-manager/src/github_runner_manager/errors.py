@@ -29,28 +29,12 @@ class MetricsStorageError(Exception):
     """Base class for all metrics storage errors."""
 
 
-class CreateMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be created."""
-
-
-class DeleteMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be deleted."""
-
-
-class GetMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be retrieved."""
-
-
 class QuarantineMetricsStorageError(MetricsStorageError):
     """Represents an error when the metrics storage could not be quarantined."""
 
 
 class RunnerMetricsError(Exception):
     """Base class for all runner metrics errors."""
-
-
-class CorruptMetricDataError(RunnerMetricsError):
-    """Represents an error with the data being corrupt."""
 
 
 class GithubMetricsError(Exception):
