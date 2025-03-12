@@ -25,14 +25,6 @@ class IssueMetricEventError(Exception):
     """Represents an error when issuing a metric event."""
 
 
-class MetricsStorageError(Exception):
-    """Base class for all metrics storage errors."""
-
-
-class QuarantineMetricsStorageError(MetricsStorageError):
-    """Represents an error when the metrics storage could not be quarantined."""
-
-
 class RunnerMetricsError(Exception):
     """Base class for all runner metrics errors."""
 
