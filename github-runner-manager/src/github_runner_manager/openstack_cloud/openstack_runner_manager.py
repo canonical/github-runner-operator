@@ -779,7 +779,7 @@ class _PulledMetrics:
                 "Json Decode error. Corrupt metric data found for runner %s", instance_id
             )
 
-        if pre_job_metrics is not None and not isinstance(pre_job_metrics, dict):
+        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
             logger.exception(
                 "Pre job metrics for runner %s %s are not correct. Value: %s",
                 instance_id,
@@ -787,7 +787,7 @@ class _PulledMetrics:
                 pre_job_metrics,
             )
 
-        if not (post_job_metrics is not None and not isinstance(post_job_metrics, dict)):
+        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
             logger.exception(
                 "Post job metrics for runner %s %s are not correct. Value: %s",
                 instance_id,
