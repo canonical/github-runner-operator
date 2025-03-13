@@ -216,12 +216,12 @@ def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> s
 
 @dataclass
 class PulledMetrics:
-    """TODO.
+    """Metrics pulled from a runner.
 
     Attributes:
-        runner_installed: TODO
-        pre_job_metrics: TODO
-        post_job_metrics: TODO
+        runner_installed: String with the runner-installed file.
+        pre_job_metrics: String with the pre-job-metrics file.
+        post_job_metrics: String with the post-job-metrics file.
     """
 
     runner_installed: str | None = None
@@ -231,14 +231,14 @@ class PulledMetrics:
     def to_runner_metrics(
         self, instance_id: InstanceID, installation_start: datetime
     ) -> RunnerMetrics | None:
-        """TODO.
+        """.
 
         Args:
-           instance_id: TODO
-           installation_start: TODO
+           instance_id: InstanceID of the runner.
+           installation_start: Creation time of the runner.
 
         Returns:
-           TODO
+           The RunnerMetrics object for the runner or None if it can not be built.
         """
         if self.runner_installed is None:
             logger.error(
@@ -263,7 +263,6 @@ class PulledMetrics:
                 self,
                 pre_job_metrics,
             )
-            # TODO JAVI WHAT TO DO IN HERE?
             pre_job_metrics = None
 
         if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
@@ -272,7 +271,6 @@ class PulledMetrics:
                 instance_id,
                 self,
                 post_job_metrics,
-                # TODO JAVI WHAT TO DO IN HERE?
             )
             post_job_metrics = None
 
@@ -548,17 +546,17 @@ def _create_runner_stop(
 
 
 class FileLimitError(Exception):
-    """TODO."""
+    """Error returned when a file is too large."""
 
 
 class FileLikeLimited(io.BytesIO):
-    """TODO."""
+    """file-like object with a maximum possible size."""
 
     def __init__(self, max_size: int):
-        """TODO.
+        """Create a new FileLikeLimited object.
 
         Args:
-            max_size: TODO
+            max_size: Maximum allowed size for the file-like object.
         """
         self.max_size = max_size
 
@@ -567,16 +565,16 @@ class FileLikeLimited(io.BytesIO):
     # as Fabric sends bytes. If it ever changes, we will catch it in the
     # integration tests.
     def write(self, b, /) -> int:  # type: ignore[no-untyped-def]
-        """TODO.
+        """Write to the internal buffer for the file-like object.
 
         Args:
-            b: TODO
+            b: bytes to write.
 
         Returns:
-            TODO
+            Number of bytes written.
 
         Raises:
-            FileLimitError: TODO
+            FileLimitError: Raised when what is written to the file is over the allowed size.
         """
         if len(self.getvalue()) + len(b) > self.max_size:
             raise FileLimitError(f"Exceeded allowed max file size {self.max_size})")
