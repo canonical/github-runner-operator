@@ -335,16 +335,19 @@ def test_issue_events_post_job_but_no_pre_job(
 
 def test_ssh_pull_file():
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Mock an ssh connection for run and get methods.
+       The run expects a stat command that returns a number (file size) and the
+       get sends a file through a file-like object.
+    act: Call ssh_pull_file.
+    assert: The content sent in the mocked ssh get is the same as the one returned by
+       ssh_pull_file.
     """
     remote_path = "/var/whatever"
     max_size = 100
     ssh_conn = MagicMock(spec=SSHConnection)
 
     def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
+        """Expects a stat command for the file and returns a file size."""
         assert "stat" in command
         assert remote_path in command
         file_size = 10
@@ -353,7 +356,7 @@ def test_ssh_pull_file():
     ssh_conn.run.side_effect = _ssh_run
 
     def _ssh_get(remote, local) -> None:
-        """TODO."""
+        """Mocks get in ssh to write to a file-like object."""
         assert remote_path in remote
         local.write(b"content from")
         local.write(b" the file")
@@ -362,21 +365,25 @@ def test_ssh_pull_file():
     ssh_conn.get.side_effect = _ssh_get
 
     response = ssh_pull_file(ssh_conn, remote_path, max_size)
+
     assert response == "content from the file"
 
 
 def test_ssh_pull_file_invalid_size_real():
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Mock an ssh connection for run and get methods.
+       The run expects a stat command that returns a number (file size) and the
+       get sends a file through a file-like object.
+    act: Call ssh_pull_file with a limit size smaller than what will be written
+       to the file-like object.
+    assert: A PullFileError is raised.
     """
     remote_path = "/var/whatever"
     max_size = 10
     ssh_conn = MagicMock(spec=SSHConnection)
 
     def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
+        """Expects a stat command for the file and returns a file size."""
         assert "stat" in command
         assert remote_path in command
         file_size = 5
@@ -385,7 +392,7 @@ def test_ssh_pull_file_invalid_size_real():
     ssh_conn.run.side_effect = _ssh_run
 
     def _ssh_get(remote, local) -> None:
-        """TODO."""
+        """Mocks get in ssh to write to a file-like object."""
         assert remote_path in remote
         local.write(b"content")
         local.write(b"more content")
@@ -400,16 +407,18 @@ def test_ssh_pull_file_invalid_size_real():
 
 def test_ssh_pull_file_invalid_size_reported():
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Mock an ssh connection for run. No need for the get method.
+       The run expects a stat command that returns a number (file size).
+    act: Call ssh_pull_file with a limit size smaller than what will be return
+       by the stat command.
+    assert: A PullFileError is raised.
     """
     remote_path = "/var/whatever"
     max_size = 10
     ssh_conn = MagicMock(spec=SSHConnection)
 
     def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
+        """Expects a stat command for the file and returns a file size."""
         assert "stat" in command
         assert remote_path in command
         file_size = 20

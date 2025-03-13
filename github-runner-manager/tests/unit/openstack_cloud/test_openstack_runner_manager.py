@@ -133,7 +133,7 @@ def test_cleanup_ignores_runners_with_health_check_errors(
 
 
 def _params_test_cleanup_extract_metrics():
-    """TODO."""
+    """Builds parametrized input for the test_cleanup_extract_metrics ."""
     openstack_created_at = datetime.strptime(
         openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"
     ).timestamp()
@@ -152,8 +152,10 @@ def _params_test_cleanup_extract_metrics():
     }}"""
 
     return [
-        pytest.param(None, None, None, [], id="All None. No metrics"),
-        pytest.param("", None, None, [], id="Invalid runner-installed metrics. No metrics"),
+        pytest.param(None, None, None, [], id="All None. No metrics returned."),
+        pytest.param(
+            "", None, None, [], id="Invalid runner-installed metrics. No metrics returned."
+        ),
         pytest.param(
             str(openstack_installed_at),
             None,
@@ -167,7 +169,7 @@ def _params_test_cleanup_extract_metrics():
                     installed_timestamp=openstack_installed_at,
                 ),
             ],
-            id="Only installed_timestamp.",
+            id="Only installed_timestamp. Metric returned.",
         ),
         pytest.param(
             str(openstack_installed_at),
@@ -189,7 +191,7 @@ def _params_test_cleanup_extract_metrics():
                     ),
                 ),
             ],
-            id="installed_timestamp and pre_job_metrics.",
+            id="installed_timestamp and pre_job_metrics. Metric returned.",
         ),
         pytest.param(
             str(openstack_installed_at),
@@ -216,7 +218,7 @@ def _params_test_cleanup_extract_metrics():
                     ),
                 ),
             ],
-            id="installed_timestamp, pre_job_metrics and post_job_metrics.",
+            id="installed_timestamp, pre_job_metrics and post_job_metrics. Metric returned",
         ),
     ]
 
@@ -227,16 +229,16 @@ def _params_test_cleanup_extract_metrics():
 )
 def test_cleanup_extract_metrics(
     runner_manager: OpenStackRunnerManager,
-    monkeypatch: pytest.MonkeyPatch,
     runner_installed_metrics: str | None,
     pre_job_metrics: str | None,
     post_job_metrics: str | None,
     result: Iterable[RunnerMetrics],
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
-    arrange: Given different combinations of healthy, unhealthy and undecided runners.
-    act: When the cleanup method is called.
-    assert: runner_metrics.extract is called with the expected storage to be extracted.
+    arrange: Given different values for values of metrics for a runner.
+    act: Cleanup the runner for those metrics.
+    assert: The expected RunnerMetrics object is obtained, or None if there should not be one.
     """
     ssh_pull_file_mock = MagicMock()
     monkeypatch.setattr(
@@ -245,7 +247,7 @@ def test_cleanup_extract_metrics(
     )
 
     def _ssh_pull_file(remote_path, *args, **kwargs):
-        """TODO."""
+        """Get a file from the runner."""
         logger.info("ssh_pull_file: remote_path %s", remote_path)
         res = None
         if remote_path == str(PRE_JOB_METRICS_FILE_NAME):
@@ -270,6 +272,7 @@ def test_cleanup_extract_metrics(
     )
 
     runner_metrics = runner_manager.cleanup("remove_token")
+
     assert runner_metrics == result
 
 
