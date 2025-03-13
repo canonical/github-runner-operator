@@ -14,6 +14,7 @@ jobs:
       - run: df -h
       - run: free -h
       - run: uname -a
+      - run: lsb_release -a
   tiobe-noble:
     name: tiobe noble
     runs-on: [self-hosted, reactive, amd64, tiobe, noble]
@@ -22,6 +23,7 @@ jobs:
       - run: df -h
       - run: free -h
       - run: uname -a
+      - run: lsb_release -a
   tiobe-jammy-large:
     name: tiobe jammy large
     runs-on: [self-hosted, reactive, amd64, large-tiobe, jammy]
@@ -30,6 +32,7 @@ jobs:
       - run: df -h
       - run: free -h
       - run: uname -a
+      - run: lsb_release -a
   tiobe-noble-large:
     name: tiobe noble large
     runs-on: [self-hosted, reactive, amd64, large-tiobe, noble]
@@ -38,6 +41,7 @@ jobs:
       - run: df -h
       - run: free -h
       - run: uname -a
+      - run: lsb_release -a
   # self-hosted-medium-arm64-canary:
   #   name: self-hosted-medium-arm64-canary
   #   runs-on: [self-hosted, arm64, medium, canary, noble]
