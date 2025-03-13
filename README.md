@@ -151,3 +151,34 @@ This repository contains the charm in the root directory and the Python package 
 * [Issues](https://github.com/canonical/github-runner-operator/issues)
 * [Contributing](https://charmhub.io/github-runner/docs/how-to-contribute)
 * [Matrix](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
+
+## 🤝 Contribution
+
+We welcome all suggestions and improvements! If you have ideas, bug fixes, or new features, feel free to contribute.
+
+### How to contribute:
+
+1. **Fork** the repository.  
+2. **Create a new branch** for your feature or fix:  
+  ```bash
+  git checkout -b feature/your-feature
+  ```
+3. Make changes and commit them:
+  ```bash
+  git commit -m "Added a new feature: your-feature"
+  ```
+4. Push the changes to your fork:
+  ```bash
+  git push origin feature/your-feature
+  ```
+5. Create a Pull Request and describe the changes you made.
+
+📋 Pull Request Guidelines:
+* Write clean and readable code.
+* Follow the existing code style of the project.
+* Add comments and documentation if necessary.
+* Ensure that your changes do not break existing functionality.
+
+Other important statements are described here: [Contributing](CONTRIBUTING.md)
+
+We appreciate your contribution! 🚀
