@@ -64,9 +64,6 @@ DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
 
-StorageSize = str
-"""Representation of storage size with KiB, MiB, GiB, TiB, PiB, EiB as unit."""
-
 
 class AnyHttpsUrl(AnyHttpUrl):
     """Represents an HTTPS URL.
