@@ -133,7 +133,11 @@ def test_cleanup_ignores_runners_with_health_check_errors(
 
 
 def _params_test_cleanup_extract_metrics():
-    """Builds parametrized input for the test_cleanup_extract_metrics ."""
+    """Builds parametrized input for the test_cleanup_extract_metrics.
+
+    The following values are returned:
+    runner_installed_metrics,pre_job_metrics,post_job_metrics,result
+    """
     openstack_created_at = datetime.strptime(
         openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"
     ).timestamp()
