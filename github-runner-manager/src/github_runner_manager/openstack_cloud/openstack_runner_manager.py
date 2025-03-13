@@ -329,6 +329,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             instance: The OpenStack instance.
             remove_token: The GitHub remove token.
         """
+        pulled_metrics = runner_metrics.PulledMetrics()
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
             pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
