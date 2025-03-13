@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  private-ps6:
-    name: private
-    runs-on: [self-hosted-linux-amd64-jammy-private-endpoint-medium]
+  tiobe-jammy:
+    name: tiobe
+    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
     steps:
       - name: tmate ssh
         uses: canonical/action-tmate@main
