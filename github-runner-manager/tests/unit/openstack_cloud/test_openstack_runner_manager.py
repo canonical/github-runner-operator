@@ -5,12 +5,10 @@
 import logging
 import secrets
 from datetime import datetime
-from typing import Iterable, Optional
+from typing import Iterable
 from unittest.mock import ANY, MagicMock
 
 import pytest
-from fabric import Connection as SSHConnection
-from invoke.runners import Result
 
 from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
@@ -21,12 +19,12 @@ from github_runner_manager.metrics.runner import (
     PostJobMetrics,
     PostJobStatus,
     PreJobMetrics,
+    PullFileError,
     RunnerMetrics,
 )
 from github_runner_manager.openstack_cloud import (
     health_checks,
     openstack_cloud,
-    openstack_runner_manager,
 )
 from github_runner_manager.openstack_cloud.constants import (
     POST_JOB_METRICS_FILE_NAME,
@@ -37,8 +35,6 @@ from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
-    PullFileError,
-    ssh_pull_file,
 )
 from tests.unit.factories import openstack_factory
 
@@ -71,7 +67,7 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
 def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the runner_metrics module."""
     runner_metrics_mock = MagicMock(spec=runner)
-    monkeypatch.setattr(openstack_runner_manager, "pull_runner_metrics", runner_metrics_mock)
+    monkeypatch.setattr(runner, "pull_runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
 
 
@@ -244,7 +240,7 @@ def test_cleanup_extract_metrics(
     """
     ssh_pull_file_mock = MagicMock()
     monkeypatch.setattr(
-        "github_runner_manager.openstack_cloud.openstack_runner_manager.ssh_pull_file",
+        "github_runner_manager.metrics.runner.ssh_pull_file",
         ssh_pull_file_mock,
     )
 
@@ -275,95 +271,6 @@ def test_cleanup_extract_metrics(
 
     runner_metrics = runner_manager.cleanup("remove_token")
     assert runner_metrics == result
-
-
-def test_ssh_pull_file():
-    """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
-    """
-    remote_path = "/var/whatever"
-    max_size = 100
-    ssh_conn = MagicMock(spec=SSHConnection)
-
-    def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
-        assert "stat" in command
-        assert remote_path in command
-        file_size = 10
-        return Result(stdout=str(file_size))
-
-    ssh_conn.run.side_effect = _ssh_run
-
-    def _ssh_get(remote, local) -> None:
-        """TODO."""
-        assert remote_path in remote
-        local.write(b"content from")
-        local.write(b" the file")
-        return None
-
-    ssh_conn.get.side_effect = _ssh_get
-
-    response = ssh_pull_file(ssh_conn, remote_path, max_size)
-    assert response == "content from the file"
-
-
-def test_ssh_pull_file_invalid_size_real():
-    """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
-    """
-    remote_path = "/var/whatever"
-    max_size = 10
-    ssh_conn = MagicMock(spec=SSHConnection)
-
-    def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
-        assert "stat" in command
-        assert remote_path in command
-        file_size = 5
-        return Result(stdout=str(file_size))
-
-    ssh_conn.run.side_effect = _ssh_run
-
-    def _ssh_get(remote, local) -> None:
-        """TODO."""
-        assert remote_path in remote
-        local.write(b"content")
-        local.write(b"more content")
-        return None
-
-    ssh_conn.get.side_effect = _ssh_get
-
-    with pytest.raises(PullFileError) as exc:
-        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
-        assert "max" in str(exc)
-
-
-def test_ssh_pull_file_invalid_size_reported():
-    """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
-    """
-    remote_path = "/var/whatever"
-    max_size = 10
-    ssh_conn = MagicMock(spec=SSHConnection)
-
-    def _ssh_run(command, **kwargs) -> Optional[Result]:
-        """TODO."""
-        assert "stat" in command
-        assert remote_path in command
-        file_size = 20
-        return Result(stdout=str(file_size))
-
-    ssh_conn.run.side_effect = _ssh_run
-
-    with pytest.raises(PullFileError) as exc:
-        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
-    assert "too large" in str(exc)
 
 
 def _create_openstack_cloud_mock(server_names: list[str]) -> MagicMock:

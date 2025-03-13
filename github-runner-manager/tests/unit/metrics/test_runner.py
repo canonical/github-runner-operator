@@ -2,9 +2,12 @@
 #  See LICENSE file for licensing details.
 import secrets
 from pathlib import Path
+from typing import Optional
 from unittest.mock import MagicMock, call
 
 import pytest
+from fabric import Connection as SSHConnection
+from invoke.runners import Result
 
 from github_runner_manager.errors import IssueMetricEventError
 from github_runner_manager.manager.models import InstanceID
@@ -15,7 +18,9 @@ from github_runner_manager.metrics.events import RunnerInstalled, RunnerStart, R
 from github_runner_manager.metrics.runner import (
     PostJobMetrics,
     PreJobMetrics,
+    PullFileError,
     RunnerMetrics,
+    ssh_pull_file,
 )
 from github_runner_manager.types_.github import JobConclusion
 
@@ -326,3 +331,92 @@ def test_issue_events_post_job_but_no_pre_job(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
     assert issued_metrics == {metric_events.RunnerInstalled}
+
+
+def test_ssh_pull_file():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 100
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 10
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    def _ssh_get(remote, local) -> None:
+        """TODO."""
+        assert remote_path in remote
+        local.write(b"content from")
+        local.write(b" the file")
+        return None
+
+    ssh_conn.get.side_effect = _ssh_get
+
+    response = ssh_pull_file(ssh_conn, remote_path, max_size)
+    assert response == "content from the file"
+
+
+def test_ssh_pull_file_invalid_size_real():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 10
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 5
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    def _ssh_get(remote, local) -> None:
+        """TODO."""
+        assert remote_path in remote
+        local.write(b"content")
+        local.write(b"more content")
+        return None
+
+    ssh_conn.get.side_effect = _ssh_get
+
+    with pytest.raises(PullFileError) as exc:
+        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+        assert "max" in str(exc)
+
+
+def test_ssh_pull_file_invalid_size_reported():
+    """
+    arrange: TODO.
+    act: TODO.
+    assert: TODO.
+    """
+    remote_path = "/var/whatever"
+    max_size = 10
+    ssh_conn = MagicMock(spec=SSHConnection)
+
+    def _ssh_run(command, **kwargs) -> Optional[Result]:
+        """TODO."""
+        assert "stat" in command
+        assert remote_path in command
+        file_size = 20
+        return Result(stdout=str(file_size))
+
+    ssh_conn.run.side_effect = _ssh_run
+
+    with pytest.raises(PullFileError) as exc:
+        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+    assert "too large" in str(exc)

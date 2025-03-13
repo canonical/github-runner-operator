@@ -3,13 +3,9 @@
 
 """Manager for self-hosted runner on OpenStack."""
 
-import io
-import json
 import logging
 import secrets
 from dataclasses import dataclass
-from datetime import datetime
-from json import JSONDecodeError
 from pathlib import Path
 from typing import Iterable, Sequence
 
@@ -17,7 +13,6 @@ import fabric
 import invoke
 import jinja2
 import paramiko
-import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
 from github_runner_manager import constants
@@ -40,18 +35,10 @@ from github_runner_manager.manager.cloud_runner_manager import (
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.metrics.runner import (
-    PostJobMetrics,
-    PreJobMetrics,
-    RunnerMetrics,
-)
 from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
     METRICS_EXCHANGE_PATH,
-    POST_JOB_METRICS_FILE_NAME,
-    PRE_JOB_METRICS_FILE_NAME,
-    RUNNER_INSTALLED_TS_FILE_NAME,
     RUNNER_LISTENER_PROCESS,
     RUNNER_WORKER_PROCESS,
 )
@@ -69,7 +56,6 @@ _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
 RUNNER_APPLICATION = Path("/home/ubuntu/actions-runner")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
-MAX_METRICS_FILE_SIZE = 1024
 
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
@@ -80,10 +66,6 @@ HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
 
 class _GithubRunnerRemoveError(Exception):
     """Represents an error while SSH into a runner and running the remove script."""
-
-
-class PullFileError(Exception):
-    """Represents an error while pulling a file from the runner instance."""
 
 
 @dataclass
@@ -338,7 +320,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return extracted_runner_metrics
 
-    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> "_PulledMetrics":
+    def _delete_runner(
+        self, instance: OpenstackInstance, remove_token: str
+    ) -> runner_metrics.PulledMetrics:
         """Delete self-hosted runners by openstack instance.
 
         Args:
@@ -347,7 +331,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            pulled_metrics = pull_runner_metrics(instance.instance_id, ssh_conn)
+            pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
 
             try:
                 logger.info("Running runner removal script for %s", instance.instance_id)
@@ -641,228 +625,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_id} from Github.")
         except (
-            TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
+            TimeoutError,
         ) as exc:
             raise _GithubRunnerRemoveError(
                 f"Failed to remove runner {instance_id} from Github."
             ) from exc
-
-
-def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "_PulledMetrics":
-    """Pull metrics from runner.
-
-    Args:
-        instance_id: The name of the runner.
-        ssh_conn: The SSH connection to the runner.
-
-    Returns:
-        Metrics pulled from the instance.
-    """
-    logger.debug("Pulling metrics for %s", instance_id)
-    pulled_metrics = _PulledMetrics()
-
-    try:
-        pulled_metrics.runner_installed = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-        pulled_metrics.pre_job_metrics = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(PRE_JOB_METRICS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-        pulled_metrics.post_job_metrics = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(POST_JOB_METRICS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-    except PullFileError as exc:
-        logger.warning(
-            "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-            instance_id,
-            exc,
-        )
-    return pulled_metrics
-
-
-def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
-    """Pull file from the runner instance.
-
-    Args:
-        ssh_conn: The SSH connection instance.
-        remote_path: The file path on the runner instance.
-        max_size: If the file is larger than this, it will not be pulled.
-
-    Returns:
-        The content of the file as a string
-
-    Raises:
-        PullFileError: Unable to pull the file from the runner instance.
-        SSHError: Issue with SSH connection.
-    """
-    try:
-        result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True, timeout=60, hide=True)
-    except (
-        TimeoutError,
-        paramiko.ssh_exception.NoValidConnectionsError,
-        paramiko.ssh_exception.SSHException,
-    ) as exc:
-        raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
-    if not result.ok:
-        logger.warning(
-            (
-                "Unable to get file size of %s on instance %s, "
-                "exit code: %s, stdout: %s, stderr: %s"
-            ),
-            remote_path,
-            ssh_conn.host,
-            result.return_code,
-            result.stdout,
-            result.stderr,
-        )
-        raise PullFileError(f"Unable to get file size of {remote_path}")
-
-    stdout = result.stdout
-    try:
-        stdout.strip()
-        size = int(stdout)
-        if size > max_size:
-            raise PullFileError(f"File size of {remote_path} too large {size} > {max_size}")
-    except ValueError as exc:
-        raise PullFileError(f"Invalid file size for {remote_path}: stdout") from exc
-
-    try:
-        file_like_obj = FileLikeLimited(max_size)
-        ssh_conn.get(remote=remote_path, local=file_like_obj)
-        value = file_like_obj.getvalue().decode("utf-8")
-    except (
-        TimeoutError,
-        paramiko.ssh_exception.NoValidConnectionsError,
-        paramiko.ssh_exception.SSHException,
-    ) as exc:
-        raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
-    except (OSError, UnicodeDecodeError, FileLimitError) as exc:
-        raise PullFileError(f"Error retrieving file {remote_path}. Error: {exc}") from exc
-    return value
-
-
-@dataclass
-class _PulledMetrics:
-    """TODO.
-
-    Attributes:
-        runner_installed: TODO
-        pre_job_metrics: TODO
-        post_job_metrics: TODO
-    """
-
-    runner_installed: str | None = None
-    pre_job_metrics: str | None = None
-    post_job_metrics: str | None = None
-
-    def to_runner_metrics(
-        self, instance_id: InstanceID, installation_start: datetime
-    ) -> RunnerMetrics | None:
-        """TODO.
-
-        Args:
-           instance_id: TODO
-           installation_start: TODO
-
-        Returns:
-           TODO
-        """
-        if self.runner_installed is None:
-            logger.error(
-                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
-            )
-            return None
-
-        pre_job_metrics: dict | None = None
-        post_job_metrics: dict | None = None
-        try:
-            pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
-            post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
-        except (JSONDecodeError, TypeError):
-            logger.exception(
-                "Json Decode error. Corrupt metric data found for runner %s", instance_id
-            )
-
-        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
-            logger.error(
-                "Pre job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                pre_job_metrics,
-            )
-            # TODO JAVI WHAT TO DO IN HERE?
-            pre_job_metrics = None
-
-        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
-            logger.error(
-                "Post job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                post_job_metrics,
-                # TODO JAVI WHAT TO DO IN HERE?
-            )
-            post_job_metrics = None
-
-        try:
-            return RunnerMetrics(
-                installation_start_timestamp=installation_start.timestamp(),
-                installed_timestamp=(
-                    float(self.runner_installed) if self.runner_installed else None
-                ),
-                pre_job=(  # pylint: disable=not-a-mapping
-                    PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
-                ),
-                post_job=(  # pylint: disable=not-a-mapping
-                    PostJobMetrics(**post_job_metrics) if post_job_metrics else None
-                ),
-                instance_id=instance_id,
-            )
-        except ValueError:
-            logger.exception(
-                "Error creating RunnerMetrics %s, %s, %s", instance_id, installation_start, self
-            )
-            return None
-
-
-class FileLimitError(Exception):
-    """TODO."""
-
-
-class FileLikeLimited(io.BytesIO):
-    """TODO."""
-
-    def __init__(self, max_size: int):
-        """TODO.
-
-        Args:
-            max_size: TODO
-        """
-        self.max_size = max_size
-
-    # The type of b is tricky. In Python 3.12 it is a collections.abc.Buffer,
-    # and as so it does not have len (we use Python 3.10). For our purpose this works,
-    # as Fabric sends bytes. If it ever changes, we will catch it in the
-    # integration tests.
-    def write(self, b, /) -> int:  # type: ignore[no-untyped-def]
-        """TODO.
-
-        Args:
-            b: TODO
-
-        Returns:
-            TODO
-
-        Raises:
-            FileLimitError: TODO
-        """
-        if len(self.getvalue()) + len(b) > self.max_size:
-            raise FileLimitError(f"Exceeded allowed max file size {self.max_size})")
-        return super().write(b)
