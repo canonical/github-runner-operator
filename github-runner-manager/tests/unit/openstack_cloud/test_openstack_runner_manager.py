@@ -4,7 +4,8 @@
 """Module for unit-testing OpenStack runner manager."""
 import logging
 import secrets
-from typing import Optional, Iterable
+from datetime import datetime
+from typing import Iterable, Optional
 from unittest.mock import ANY, MagicMock
 
 import pytest
@@ -15,7 +16,13 @@ from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import (
+    CodeInformation,
+    PostJobMetrics,
+    PostJobStatus,
+    PreJobMetrics,
+    RunnerMetrics,
+)
 from github_runner_manager.openstack_cloud import (
     health_checks,
     openstack_cloud,
@@ -129,17 +136,95 @@ def test_cleanup_ignores_runners_with_health_check_errors(
         runner_metrics_mock.assert_any_call(unhealthy_id, ANY)
 
 
+def _params_test_cleanup_extract_metrics():
+    """TODO."""
+    openstack_created_at = datetime.strptime(
+        openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"
+    ).timestamp()
+    openstack_installed_at = openstack_created_at + 20
+    pre_job_timestamp = openstack_installed_at + 20
+    post_job_timestamp = openstack_installed_at + 20
+    pre_job_metrics_str = f"""{{
+    "timestamp": {pre_job_timestamp},
+    "workflow": "TODO", "workflow_run_id": "TODO", "repository": "TODO/TODO", "event": "TODO"
+    }}"""
+    post_job_metrics_str = (
+        f"""{{"timestamp": {post_job_timestamp}, "status": "normal", "status_info": {{"code" : "200"}}}}"""
+    )
+
+    return [
+        pytest.param(None, None, None, [], id="All None. No metrics"),
+        pytest.param("", None, None, [], id="Invalid runner-installed metrics. No metrics"),
+        pytest.param(
+            str(openstack_installed_at),
+            None,
+            None,
+            [
+                RunnerMetrics(
+                    instance_id=InstanceID(
+                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+                    ),
+                    installation_start_timestamp=openstack_created_at,
+                    installed_timestamp=openstack_installed_at,
+                ),
+            ],
+            id="Only installed_timestamp.",
+        ),
+        pytest.param(
+            str(openstack_installed_at),
+            pre_job_metrics_str,
+            None,
+            [
+                RunnerMetrics(
+                    instance_id=InstanceID(
+                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+                    ),
+                    installation_start_timestamp=openstack_created_at,
+                    installed_timestamp=openstack_installed_at,
+                    pre_job=PreJobMetrics(
+                        timestamp=pre_job_timestamp,
+                        workflow="TODO",
+                        workflow_run_id="TODO",
+                        repository="TODO/TODO",
+                        event="TODO",
+                    ),
+                ),
+            ],
+            id="TODO pre_job_metrics.",
+        ),
+        pytest.param(
+            str(openstack_installed_at),
+            pre_job_metrics_str,
+            post_job_metrics_str,
+            [
+                RunnerMetrics(
+                    instance_id=InstanceID(
+                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+                    ),
+                    installation_start_timestamp=openstack_created_at,
+                    installed_timestamp=openstack_installed_at,
+                    pre_job=PreJobMetrics(
+                        timestamp=pre_job_timestamp,
+                        workflow="TODO",
+                        workflow_run_id="TODO",
+                        repository="TODO/TODO",
+                        event="TODO",
+                    ),
+                    post_job=PostJobMetrics(
+                        timestamp=post_job_timestamp,
+                        status=PostJobStatus.NORMAL,
+                        status_info=CodeInformation(code=200),
+                    ),
+                ),
+            ],
+            id="TODO post_job_metrics.",
+        ),
+    ]
+
+
 @pytest.mark.parametrize(
     "runner_installed_metrics,pre_job_metrics,post_job_metrics,result",
-    [
-        pytest.param(None, None, None, [], id="All None"),
-        pytest.param("TODO THIS ANS MORE TESTS", None, None, [
-            RunnerMetrics(
-                instance_id=InstanceID(prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"),
-                installed_timestamp=55,
-            ),
-        ], id="All None"),
-    ],
+    _params_test_cleanup_extract_metrics(),
 )
 def test_cleanup_extract_metrics(
     runner_manager: OpenStackRunnerManager,
@@ -147,15 +232,13 @@ def test_cleanup_extract_metrics(
     runner_installed_metrics: str | None,
     pre_job_metrics: str | None,
     post_job_metrics: str | None,
-    result: Iterable[RunnerMetrics]
+    result: Iterable[RunnerMetrics],
 ):
     """
     arrange: Given different combinations of healthy, unhealthy and undecided runners.
     act: When the cleanup method is called.
     assert: runner_metrics.extract is called with the expected storage to be extracted.
     """
-    # created at is hardcoded to "2024-09-12T02:48:03Z" for all openstack instances.
-
     ssh_pull_file_mock = MagicMock()
     monkeypatch.setattr(
         "github_runner_manager.openstack_cloud.openstack_runner_manager.ssh_pull_file",
