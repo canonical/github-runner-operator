@@ -146,11 +146,14 @@ def _params_test_cleanup_extract_metrics():
     post_job_timestamp = openstack_installed_at + 20
     pre_job_metrics_str = f"""{{
     "timestamp": {pre_job_timestamp},
-    "workflow": "TODO", "workflow_run_id": "TODO", "repository": "TODO/TODO", "event": "TODO"
+    "workflow": "Workflow Dispatch Tests",
+    "workflow_run_id": "13831611664",
+    "repository": "canonical/github-runner-operator",
+    "event": "workflow_dispatch"
     }}"""
-    post_job_metrics_str = (
-        f"""{{"timestamp": {post_job_timestamp}, "status": "normal", "status_info": {{"code" : "200"}}}}"""
-    )
+    post_job_metrics_str = f"""{{
+    "timestamp": {post_job_timestamp}, "status": "normal", "status_info": {{"code" : "200"}}
+    }}"""
 
     return [
         pytest.param(None, None, None, [], id="All None. No metrics"),
@@ -183,14 +186,14 @@ def _params_test_cleanup_extract_metrics():
                     installed_timestamp=openstack_installed_at,
                     pre_job=PreJobMetrics(
                         timestamp=pre_job_timestamp,
-                        workflow="TODO",
-                        workflow_run_id="TODO",
-                        repository="TODO/TODO",
-                        event="TODO",
+                        workflow="Workflow Dispatch Tests",
+                        workflow_run_id="13831611664",
+                        repository="canonical/github-runner-operator",
+                        event="workflow_dispatch",
                     ),
                 ),
             ],
-            id="TODO pre_job_metrics.",
+            id="installed_timestamp and pre_job_metrics.",
         ),
         pytest.param(
             str(openstack_installed_at),
@@ -205,10 +208,10 @@ def _params_test_cleanup_extract_metrics():
                     installed_timestamp=openstack_installed_at,
                     pre_job=PreJobMetrics(
                         timestamp=pre_job_timestamp,
-                        workflow="TODO",
-                        workflow_run_id="TODO",
-                        repository="TODO/TODO",
-                        event="TODO",
+                        workflow="Workflow Dispatch Tests",
+                        workflow_run_id="13831611664",
+                        repository="canonical/github-runner-operator",
+                        event="workflow_dispatch",
                     ),
                     post_job=PostJobMetrics(
                         timestamp=post_job_timestamp,
@@ -217,7 +220,7 @@ def _params_test_cleanup_extract_metrics():
                     ),
                 ),
             ],
-            id="TODO post_job_metrics.",
+            id="installed_timestamp, pre_job_metrics and post_job_metrics.",
         ),
     ]
 
