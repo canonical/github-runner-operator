@@ -7,11 +7,37 @@ on:
 
 jobs:
   tiobe-jammy:
-    name: tiobe
-    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
+    name: tiobe jammy
+    runs-on: [self-hosted, reactive, amd64, tiobe, jammy]
     steps:
-      - name: tmate ssh
-        uses: canonical/action-tmate@main
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+  tiobe-noble:
+    name: tiobe noble
+    runs-on: [self-hosted, reactive, amd64, tiobe, noble]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+  tiobe-jammy-large:
+    name: tiobe jammy large
+    runs-on: [self-hosted, reactive, amd64, large-tiobe, jammy]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+  tiobe-noble-large:
+    name: tiobe noble large
+    runs-on: [self-hosted, reactive, amd64, large-tiobe, noble]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
   # self-hosted-medium-arm64-canary:
   #   name: self-hosted-medium-arm64-canary
   #   runs-on: [self-hosted, arm64, medium, canary, noble]
