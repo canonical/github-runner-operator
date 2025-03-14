@@ -12,9 +12,11 @@ from urllib.error import HTTPError
 import pytest
 import requests
 
+import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 JobStatsRawData = namedtuple(
@@ -260,6 +262,62 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
+def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A mocked Github Client that returns two runners, one for the requested prefix.
+    act: Call get_runner_github_info with the prefix.
+    assert: A correct runners is returned, the one matching the prefix.
+    """
+    response = {
+        "total_count": 2,
+        "runners": [
+            {
+                "id": 311,
+                "name": "current-unit-0-n-e8bc54023ae1",
+                "os": "linux",
+                "status": "offline",
+                "busy": True,
+                "labels": [
+                    {"id": 0, "name": "openstack_test", "type": "read-only"},
+                    {"id": 0, "name": "test-ae7a1fbcd0c1", "type": "read-only"},
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "linux", "type": "read-only"},
+                ],
+            },
+            {
+                "id": 312,
+                "name": "anotherunit-0-n-e8bc54023ae1",
+                "os": "linux",
+                "status": "offline",
+                "busy": True,
+                "labels": [
+                    {"id": 0, "name": "openstack_test", "type": "read-only"},
+                    {"id": 0, "name": "test-ae7a1fbcd0c1", "type": "read-only"},
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "linux", "type": "read-only"},
+                ],
+            },
+        ],
+    }
+
+    github_client._client.last_page.return_value = 1
+    github_client._client.actions.list_self_hosted_runners_for_repo.side_effect = response
+
+    pages = MagicMock()
+    pages.return_value = [response]
+    monkeypatch.setattr(github_runner_manager.github_client, "pages", pages)
+
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    runners = github_client.get_runner_github_info(path=github_repo, prefix="current-unit-0")
+
+    assert len(runners) == 1
+    runner0 = runners[0]
+    assert runner0.id == response["runners"][0]["id"]  # type: ignore
+    assert runner0.instance_id.name == response["runners"][0]["name"]  # type: ignore
+    assert runner0.busy == response["runners"][0]["busy"]  # type: ignore
+    assert runner0.status == response["runners"][0]["status"]  # type: ignore
+
+
 def test_catch_http_errors(github_client: GithubClient):
     """
     arrange: A mocked Github Client that raises a 500 HTTPError.
@@ -313,7 +371,7 @@ def test_get_registration_jittoken_repo(github_client: GithubClient):
         "encoded_jit_config": "hugestringinhere",
     }
 
-    instance_id = "test-runner-99999999"
+    instance_id = InstanceID.build("test-runner")
     labels = ["label1", "label2"]
     jittoken = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels
@@ -393,10 +451,12 @@ def test_get_registration_jittoken_org(
 
     monkeypatch.setattr(requests, "get", _mock_get)
 
+    instance_id = InstanceID.build("test-runner")
+
     def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
-        assert name == "test-runner-99999999"
+        assert name == instance_id.name
         assert runner_group_id == 3
         assert labels == ["label1", "label2"]
         return {
@@ -420,7 +480,6 @@ def test_get_registration_jittoken_org(
         _mock_generate_runner_jitconfig_for_org
     )
 
-    instance_id = "test-runner-99999999"
     labels = ["label1", "label2"]
     jittoken = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels

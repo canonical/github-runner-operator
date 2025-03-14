@@ -13,9 +13,9 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    InstanceId,
 )
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -228,7 +228,7 @@ class MockRunner:
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
     cloud_state: CloudRunnerState
     github_state: GitHubRunnerState
     health: bool
@@ -269,7 +269,7 @@ class SharedMockRunnerManagerState:
         runners: The runners.
     """
 
-    runners: dict[InstanceId, MockRunner]
+    runners: dict[InstanceID, MockRunner]
 
     def __init__(self):
         """Construct the object."""
@@ -301,15 +301,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """Get the name prefix of the self-hosted runners."""
         return self.prefix
 
-    def generate_instance_id(self) -> InstanceId:
-        """Generate an intance_id to name a runner.
-
-        Returns:
-            Instance ID of the runner.
-        """
-        return secrets.token_hex(6)
-
-    def create_runner(self, instance_id: InstanceId, registration_jittoken: str) -> None:
+    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
         """Create a self-hosted runner.
 
         Args:
@@ -342,7 +334,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
-    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -438,27 +430,27 @@ class MockGitHubRunnerManager:
         return "mock_remove_token"
 
     def get_runners(
-        self, github_states: Iterable[GitHubRunnerState] | None = None
+        self, states: Iterable[GitHubRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
         """Get the runners.
 
         Args:
-            github_states: The states to filter for.
+            states: The states to filter for.
 
         Returns:
             List of runners.
         """
-        if github_states is None:
-            github_states = [member.value for member in GitHubRunnerState]
+        if states is None:
+            states = [member.value for member in GitHubRunnerState]
 
-        github_state_set = set(github_states)
+        github_state_set = set(states)
         return tuple(
             SelfHostedRunner(
                 busy=runner.github_state == GitHubRunnerState.BUSY,
                 id=random.randint(1, 1000000),
                 labels=[],
                 os="linux",
-                name=runner.name,
+                instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
                     if runner.github_state == GitHubRunnerState.OFFLINE
@@ -469,15 +461,15 @@ class MockGitHubRunnerManager:
             if runner.github_state in github_state_set
         )
 
-    def delete_runners(self, states: Iterable[GitHubRunnerState]) -> None:
+    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete the runners.
 
         Args:
-            states: The states to filter the runners to delete.
+            runners: Runners to delete
         """
-        github_states = set(states)
+        runners_names_to_delete = {runner.name for runner in runners}
         self.state.runners = {
             instance_id: runner
             for instance_id, runner in self.state.runners.items()
-            if runner.github_state not in github_states
+            if instance_id.name not in runners_names_to_delete
         }

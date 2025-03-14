@@ -1,7 +1,6 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import os
-import secrets
 import tarfile
 from grp import getgrgid
 from pathlib import Path
@@ -15,6 +14,7 @@ from github_runner_manager.errors import (
     GetMetricsStorageError,
     QuarantineMetricsStorageError,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import storage
 from github_runner_manager.metrics.storage import (
     _FILESYSTEM_BASE_DIR_NAME,
@@ -54,9 +54,9 @@ def test_create_creates_directory():
     act: Call create.
     assert: The directory is created.
     """
-    runner_name = secrets.token_hex(16)
+    runner_name = InstanceID.build("prefix")
 
-    fs = StorageManager().create(runner_name)
+    fs = StorageManager("prefix").create(runner_name)
 
     assert fs.path.exists()
     assert fs.path.is_dir()
@@ -68,8 +68,8 @@ def test_create_raises_exception_if_already_exists():
     act: Call create.
     assert: The expected exception is raised.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
     storage_manager.create(runner_name)
 
     with pytest.raises(CreateMetricsStorageError):
@@ -82,8 +82,8 @@ def test_list_all():
     act: Call list_all.
     assert: A generator listing all the shared filesystems is returned.
     """
-    runner_names = [secrets.token_hex(16) for _ in range(3)]
-    storage_manager = StorageManager()
+    runner_names = [InstanceID.build("prefix") for _ in range(3)]
+    storage_manager = StorageManager("prefix")
     for runner_name in runner_names:
         storage_manager.create(runner_name)
 
@@ -92,7 +92,7 @@ def test_list_all():
     assert len(fs_list) == 3
     for fs in fs_list:
         assert isinstance(fs, storage.MetricsStorage)
-        assert fs.runner_name in runner_names
+        assert fs.instance_id in runner_names
 
 
 def test_list_all_empty():
@@ -101,7 +101,7 @@ def test_list_all_empty():
     act: Call list_all.
     assert: An empty iterator is returned.
     """
-    fs_list = list(StorageManager().list_all())
+    fs_list = list(StorageManager("prefix").list_all())
 
     assert len(fs_list) == 0
 
@@ -112,8 +112,8 @@ def test_delete():
     act: Call delete
     assert: The storage is deleted.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
     storage_manager.create(runner_name)
 
     storage_manager.delete(runner_name)
@@ -128,8 +128,8 @@ def test_delete_raises_error():
     act: Call delete.
     assert: A DeleteMetricsStorageError is raised.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
 
     with pytest.raises(DeleteMetricsStorageError):
         storage_manager.delete(runner_name)
@@ -141,14 +141,14 @@ def test_get():
     act: Call create and get.
     assert: A metrics storage object for this runner is returned.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
 
     storage_manager.create(runner_name)
     ms = storage_manager.get(runner_name)
 
     assert isinstance(ms, MetricsStorage)
-    assert ms.runner_name == runner_name
+    assert ms.instance_id == runner_name
 
 
 def test_get_raises_error_if_not_found():
@@ -157,8 +157,8 @@ def test_get_raises_error_if_not_found():
     act: Call get.
     assert: A GetMetricsStorageError is raised.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
 
     with pytest.raises(GetMetricsStorageError):
         storage_manager.get(runner_name)
@@ -170,14 +170,14 @@ def test_quarantine(filesystem_paths: dict[str, Path], tmp_path: Path):
     act: Call quarantine.
     assert: The storage is moved to the quarantine.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
     ms = storage_manager.create(runner_name)
     ms.path.joinpath("test.txt").write_text("foo bar")
 
     storage_manager.move_to_quarantine(runner_name)
 
-    tarfile_path = filesystem_paths["quarantine"].joinpath(runner_name).with_suffix(".tar.gz")
+    tarfile_path = filesystem_paths["quarantine"].joinpath(str(runner_name)).with_suffix(".tar.gz")
     assert tarfile_path.exists()
     tarfile.open(tarfile_path).extractall(path=tmp_path)
     assert tmp_path.joinpath(f"{runner_name}/test.txt").exists()
@@ -191,8 +191,8 @@ def test_quarantine_raises_error():
     act: Call quarantine.
     assert: A QuarantineMetricsStorageError is raised.
     """
-    runner_name = secrets.token_hex(16)
-    storage_manager = StorageManager()
+    runner_name = InstanceID.build("prefix")
+    storage_manager = StorageManager("prefix")
 
     with pytest.raises(QuarantineMetricsStorageError):
         storage_manager.move_to_quarantine(runner_name)

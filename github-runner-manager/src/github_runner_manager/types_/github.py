@@ -8,10 +8,11 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, Literal, Optional, TypedDict
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel
-from typing_extensions import NotRequired
+
+from github_runner_manager.manager.models import InstanceID
 
 
 class GitHubRunnerStatus(str, Enum):
@@ -28,7 +29,7 @@ class GitHubRunnerStatus(str, Enum):
 
 # See response schema for
 # https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#list-runner-applications-for-an-organization
-class RunnerApplication(TypedDict, total=False):
+class RunnerApplication(BaseModel):
     """Information on the runner application.
 
     Attributes:
@@ -36,38 +37,28 @@ class RunnerApplication(TypedDict, total=False):
         architecture: Computer Architecture to run the runner application on.
         download_url: URL to download the runner application.
         filename: Filename of the runner application.
-        temp_download_token: A short lived bearer token used to download the
-            runner, if needed.
-        sha256_checksum: SHA256 Checksum of the runner application.
     """
 
     os: Literal["linux", "win", "osx"]
     architecture: Literal["arm", "arm64", "x64"]
     download_url: str
     filename: str
-    temp_download_token: NotRequired[str]
-    sha256_checksum: NotRequired[str]
 
 
 RunnerApplicationList = List[RunnerApplication]
 
 
-class SelfHostedRunnerLabel(TypedDict, total=False):
+class SelfHostedRunnerLabel(BaseModel):
     """A single label of self-hosted runners.
 
     Attributes:
-        id: Unique identifier of the label.
         name: Name of the label.
-        type: Type of label. Read-only labels are applied automatically when
-            the runner is configured.
     """
 
-    id: NotRequired[int]
     name: str
-    type: NotRequired[str]
 
 
-class SelfHostedRunner(TypedDict):
+class SelfHostedRunner(BaseModel):
     """Information on a single self-hosted runner.
 
     Attributes:
@@ -75,31 +66,35 @@ class SelfHostedRunner(TypedDict):
         id: Unique identifier of the runner.
         labels: Labels of the runner.
         os: Operation system of the runner.
-        name: Name of the runner.
         status: The Github runner status.
+        instance_id: InstanceID of the runner.
     """
 
     busy: bool
     id: int
     labels: list[SelfHostedRunnerLabel]
     os: str
-    name: str
     status: GitHubRunnerStatus
+    instance_id: InstanceID
+
+    @classmethod
+    def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":
+        """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
+
+        Args:
+            github_dict: GitHub dictionary from the list_self_hosted_runners endpoint.
+            instance_id: InstanceID for the runner.
+
+        Returns:
+            A SelfHostedRunner from the input data.
+        """
+        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        github_dict["labels"] = list(github_dict["labels"])
+        github_dict["instance_id"] = instance_id
+        return cls.parse_obj(github_dict)
 
 
-class SelfHostedRunnerList(TypedDict):
-    """Information on a collection of self-hosted runners.
-
-    Attributes:
-        total_count: Total number of runners.
-        runners: List of runners.
-    """
-
-    total_count: int
-    runners: list[SelfHostedRunner]
-
-
-class RegistrationToken(TypedDict):
+class RegistrationToken(BaseModel):
     """Token used for registering GitHub runners.
 
     Attributes:
@@ -111,7 +106,7 @@ class RegistrationToken(TypedDict):
     expires_at: str
 
 
-class RemoveToken(TypedDict):
+class RemoveToken(BaseModel):
     """Token used for removing GitHub runners.
 
     Attributes:

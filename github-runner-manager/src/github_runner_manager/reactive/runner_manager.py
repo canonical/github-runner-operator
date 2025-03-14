@@ -87,6 +87,7 @@ def reconcile(
     delete_metric_stats = {}
 
     if get_queue_size(reactive_process_config.queue) == 0:
+        logger.info("Reactive reconcile. Flushing on empty queue")
         flush_metric_stats = runner_manager.flush_runners(FlushMode.FLUSH_IDLE)
 
     # Only count runners which are online on GitHub to prevent machines to be just in
