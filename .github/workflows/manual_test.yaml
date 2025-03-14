@@ -6,6 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
+  stg-reactive:
+    name: staging reactive
+    runs-on: [self-hosted, stg-reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
   tiobe-jammy:
     name: tiobe jammy
     runs-on: [self-hosted, reactive, amd64, tiobe, jammy]
