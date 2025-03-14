@@ -454,8 +454,8 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        registration_jittoken = args.github_runner_manager.get_registration_jittoken(
-            instance_id, args.labels
+        registration_jittoken, github_runner = (
+            args.github_runner_manager.get_registration_jittoken(instance_id, args.labels)
         )
         try:
             args.cloud_runner_manager.create_runner(
@@ -465,11 +465,6 @@ class RunnerManager:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or
             # because it is being created.
-            github_runners_offline = args.github_runner_manager.get_runners(
-                [GitHubRunnerState.OFFLINE]
-            )
-            for github_runner in github_runners_offline:
-                if github_runner.instance_id == instance_id:
-                    args.github_runner_manager.delete_runners([github_runner])
+            args.github_runner_manager.delete_runners([github_runner])
             raise
         return instance_id

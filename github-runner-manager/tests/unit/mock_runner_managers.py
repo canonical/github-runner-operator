@@ -19,7 +19,7 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
-    RegistrationToken,
+    JITConfig,
     RemoveToken,
     RunnerApplication,
     SelfHostedRunner,
@@ -122,7 +122,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
@@ -135,7 +135,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
@@ -409,7 +409,9 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_jittoken(self, instance_id: str, labels: list[str]) -> str:
+    def get_registration_jittoken(
+        self, instance_id: str, labels: list[str]
+    ) -> tuple[str, SelfHostedRunner]:
         """Get the registration JIT token for registering runners on GitHub.
 
         Args:
@@ -417,9 +419,9 @@ class MockGitHubRunnerManager:
             labels: Labels for the runner.
 
         Returns:
-            The registration token.
+            The registration token and the SelfHostedRunner
         """
-        return "mock_registration_token"
+        return "mock_registration_token", MagicMock(spec=SelfHostedRunner)
 
     def get_removal_token(self) -> str:
         """Get the remove token for removing runners on GitHub.
