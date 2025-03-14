@@ -3,6 +3,7 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
+from functools import partial
 import logging
 from threading import Lock, Thread
 from typing import TextIO
@@ -69,10 +70,10 @@ def main(
 
     threads = []
     if not debug_disable_reconcile:
-        service = Thread(target=lambda: start_reconcile_service(config, lock))
+        service = Thread(target=partial(start_reconcile_service, config, lock))
         service.start()
         threads.append(service)
-    http_server = Thread(target=lambda: start_http_server(config, lock, host, port, debug))
+    http_server = Thread(target=partial(start_http_server, config, lock, host, port, debug))
     http_server.start()
     threads.append(http_server)
 
