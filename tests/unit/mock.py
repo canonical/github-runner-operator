@@ -9,7 +9,7 @@ import hashlib
 import logging
 import secrets
 
-from github_runner_manager.types_.github import RegistrationToken, RemoveToken, RunnerApplication
+from github_runner_manager.types_.github import JITConfig, RemoveToken, RunnerApplication
 
 from errors import RunnerError
 
@@ -141,7 +141,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
@@ -154,7 +154,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
