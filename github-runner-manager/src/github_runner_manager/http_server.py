@@ -22,7 +22,7 @@ def get_health() -> tuple[str, int]:
     Returns:
         A empty response.
     """
-    return ("", 200)
+    return ("", 204)
 
 
 @app.route("/runner/flush", methods=["POST"])
