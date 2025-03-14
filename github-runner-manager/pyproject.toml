@@ -27,6 +27,8 @@ dependencies = { file = ["requirements.txt"] }
 Homepage = "https://github.com/canonical/github-runner-manager"
 Issues = "https://github.com/canonical/github-runner-manager/issues"
 
+[project.scripts]
+github-runner-manager = "github_runner_manager.cli:main"
 
 [tool.bandit]
 exclude_dirs = ["/venv/"]
