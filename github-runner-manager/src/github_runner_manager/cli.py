@@ -3,8 +3,8 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
-from functools import partial
 import logging
+from functools import partial
 from threading import Lock, Thread
 from typing import TextIO
 

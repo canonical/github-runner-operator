@@ -20,11 +20,11 @@ def lock_fixture() -> Lock:
 
 
 @pytest.fixture(name="client", scope="function")
-def client_fixture(lock: Lock) -> Iterator[FlaskClient]:
+def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
     app.debug = True
     app.config["TESTING"] = True
 
-    app.config["lock"] = lock
+    monkeypatch.setattr("src.github_runner_manager.http_server._lock", lock)
     with app.test_client() as client:
         yield client
 
@@ -43,7 +43,7 @@ def test_flush_runner_default_args(client: FlaskClient, lock: Lock, caplog) -> N
 
     log_lines = [record.message for record in caplog.records]
 
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert not lock.locked()
     assert "Flushing idle runners..." in log_lines
     assert "Flushed the runners" in log_lines
@@ -64,7 +64,7 @@ def test_flush_runner_flush_busy(client: FlaskClient, lock: Lock, caplog) -> Non
 
     log_lines = [record.message for record in caplog.records]
 
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert not lock.locked()
     assert "Flushing idle runners..." in log_lines
     assert "Flushed the runners" in log_lines
@@ -84,7 +84,7 @@ def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, caplog) -> None:
 
     log_lines = [record.message for record in caplog.records]
 
-    assert response.status_code == 200
+    assert response.status_code == 204
     assert not lock.locked()
     assert "Flushed the runners" in log_lines
 
