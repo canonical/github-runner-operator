@@ -409,7 +409,6 @@ class RunnerManager:
                     "No pre-job metrics found for %s, will not calculate job metrics.",
                     extracted_metrics.instance_id,
                 )
-
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,

@@ -370,7 +370,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             }
         return iter([MagicMock()])
 
-    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.
@@ -382,7 +382,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             Any runner metrics produced during cleanup.
         """
         # Do nothing in mocks.
-        return iter([MagicMock()])
+        return [MagicMock()]
 
 
 class MockGitHubRunnerManager:

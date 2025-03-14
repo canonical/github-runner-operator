@@ -75,6 +75,7 @@ async def wait_for_workflow_to_start(
                 job: WorkflowJob = jobs[0]
                 logs = requests.get(job.logs_url()).content.decode("utf-8")
             except GithubException as exc:
+                logger.warning("Github error, %s", exc)
                 if exc.status == 410:
                     logger.warning("Transient github error, %s", exc)
                     return False
