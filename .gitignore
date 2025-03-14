@@ -4,12 +4,15 @@ __pycache__/
 placeholders/
 *.charm
 build/
+coverage
 .coverage
-
-# testing artifacts
-lxd-profile.*
-tinyproxy.conf
 
 # development artifacts
 clouds.yaml
 .vscode/
+.idea
+
+venv/
+*.py[cod]
+.mypy_cache
+*.egg-info/

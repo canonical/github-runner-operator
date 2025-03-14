@@ -1,4 +1,4 @@
-#  Copyright 2024 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
 from pathlib import Path
@@ -111,8 +111,8 @@ def test__write_config(
 {frequency}
 rotate {rotate}
 missingok
-{"notifempty" if notifempty else ""}
-{"create" if create else ""}
+{"notifempty" if notifempty else "ifempty"}
+{"create" if create else "nocreate"}
 }}
 """
     assert (

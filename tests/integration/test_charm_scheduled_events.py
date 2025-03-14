@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with scheduled events.
@@ -7,55 +7,58 @@ Scheduled events can interfere with most tests. Therefore, an application with
 scheduled events are in its own module.
 """
 
+import logging
 from asyncio import sleep
 
 import pytest
 from juju.application import Application
 from juju.model import Model
 
-from runner_manager import LXDRunnerManager
-from tests.integration.helpers.common import check_runner_binary_exists
-from tests.integration.helpers.lxd import get_runner_names, run_in_unit, wait_till_num_of_runners
+from tests.integration.helpers.common import wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
+
+logger = logging.getLogger(__name__)
+pytestmark = pytest.mark.openstack
 
 
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_update_interval(model: Model, app_scheduled_events: Application) -> None:
+async def test_update_interval(
+    model: Model,
+    app_scheduled_events: Application,
+    instance_helper: OpenStackInstanceHelper,
+) -> None:
     """
     arrange: A working application with one runner.
     act:
-        1.  a. Remove runner binary.
-            b. Crash the one runner
+        1.  a. Crash/delete the one runner
         2.  Wait for 6 minutes, and then wait for ActiveStatus.
     assert:
-        1. a. No runner binary exists.
-           b. No runner exists.
-        2.  a. Runner binary exists.
-            b. One runner exists. The runner name should not be the same as the starting one.
+        1. a. No runner exists.
+        2. a. One runner exists. The runner name should not be the same as the starting one.
 
     This tests whether the reconcile-runner event is triggered, and updates the dependencies.
     The reconciliation logic is tested with the reconcile-runners action.
     """
     unit = app_scheduled_events.units[0]
-    assert await check_runner_binary_exists(unit)
 
-    ret_code, stdout, stderr = await run_in_unit(unit, f"rm -f {LXDRunnerManager.runner_bin_path}")
-    assert ret_code == 0, f"Failed to remove runner binary {stdout} {stderr}"
-    assert not await check_runner_binary_exists(unit)
+    oldnames = await instance_helper.get_runner_names(unit)
+    assert len(oldnames) == 1, "There should be one runner"
 
-    runner_names = await get_runner_names(unit)
-    assert len(runner_names) == 1
-    runner_name = runner_names[0]
-    ret_code, stdout, stderr = await run_in_unit(unit, f"lxc stop --force {runner_name}")
-    assert ret_code == 0, f"Failed to stop lxd instance, {stdout} {stderr}"
-    await wait_till_num_of_runners(unit, 0)
+    # delete the only runner
+    await instance_helper.delete_single_runner(unit)
 
+    async def _no_runners_available() -> bool:
+        """Check if there is only one runner."""
+        return len(await instance_helper.get_runner_names(unit)) == 0
+
+    await wait_for(_no_runners_available, timeout=30, check_interval=3)
+
+    logger.info("Wait for 10 minutes")
     await sleep(10 * 60)
     await model.wait_for_idle(status=ACTIVE, timeout=20 * 60)
 
-    assert await check_runner_binary_exists(unit)
-
-    runner_names = await get_runner_names(unit)
-    assert len(runner_names) == 1
-    assert runner_name != runner_names[0]
+    newnames = await instance_helper.get_runner_names(unit)
+    assert len(newnames) == 1, "There should be one runner after reconciliation"
+    assert newnames[0] != oldnames[0]

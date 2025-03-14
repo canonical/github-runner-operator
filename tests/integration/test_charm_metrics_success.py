@@ -1,4 +1,4 @@
-#  Copyright 2024 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming no Github workflow failures."""
@@ -14,34 +14,28 @@ from github_runner_manager.metrics.runner import PostJobStatus
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import PATH_CONFIG_NAME, VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
     get_metrics_log,
-    print_loop_device_info,
 )
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
     reconcile,
-    run_in_unit,
 )
-from tests.integration.helpers.lxd import ensure_charm_has_runner, get_runner_name
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(
-    model: Model, app_for_metric: Application, loop_device: str
-) -> AsyncIterator[Application]:
+async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
     """
     unit = app_for_metric.units[0]
     await clear_metrics_log(unit)
-    await print_loop_device_info(unit, loop_device)
 
     yield app_for_metric
 
@@ -50,7 +44,7 @@ async def app_fixture(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_runner_installed_metric(
-    app: Application, model: Model, instance_helper: InstanceHelper
+    app: Application, model: Model, instance_helper: OpenStackInstanceHelper
 ):
     """
     arrange: A charm integrated with grafana-agent using the cos-agent integration.
@@ -58,6 +52,10 @@ async def test_charm_issues_runner_installed_metric(
     assert: The RunnerInstalled metric is logged.
     """
     await instance_helper.ensure_charm_has_runner(app)
+
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await reconcile(app=app, model=model)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -79,7 +77,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: A properly integrated charm with a runner registered on the fork repo.
@@ -101,49 +99,9 @@ async def test_charm_issues_metrics_after_reconciliation(
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
         app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL
-    )
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_charm_remounts_shared_fs(
-    model: Model,
-    app: Application,
-    forked_github_repository: Repository,
-    forked_github_branch: Branch,
-):
-    """
-    arrange: A properly integrated charm with a runner registered on the fork repo.
-    act: Dispatch a test workflow and afterwards unmount the shared fs. After that, reconcile.
-    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
-    """
-    await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-    await ensure_charm_has_runner(app=app, model=model)
-
-    # Clear metrics log to make reconciliation event more predictable
-    unit = app.units[0]
-    runner_name = await get_runner_name(unit)
-    await clear_metrics_log(unit)
-    await dispatch_workflow(
-        app=app,
-        branch=forked_github_branch,
-        github_repository=forked_github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-    )
-
-    # unmount shared fs
-    await run_in_unit(unit, f"sudo umount /home/ubuntu/runner-fs/{runner_name}")
-
-    # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app=app, model=model)
-
-    await assert_events_after_reconciliation(
-        app=app, github_repository=forked_github_repository, post_job_status=PostJobStatus.NORMAL
     )

@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Utilities for integration test."""
@@ -6,16 +6,13 @@
 import inspect
 import logging
 import pathlib
-import subprocess
 import time
 import typing
-import zipfile
 from datetime import datetime, timezone
 from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
 
 import github
-import juju.version
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
@@ -28,15 +25,12 @@ from juju.model import Model
 from juju.unit import Unit
 
 from charm_state import (
-    DENYLIST_CONFIG_NAME,
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
-    RUNNER_STORAGE_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
-    VIRTUAL_MACHINES_CONFIG_NAME,
 )
-from runner_manager import LXDRunnerManager
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -52,119 +46,10 @@ DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 logger = logging.getLogger(__name__)
 
 
-class InstanceHelper(typing.Protocol):
-    """Helper for running commands in instances."""
-
-    async def run_in_instance(
-        self, unit: Unit, command: str, timeout: int | None = None
-    ) -> tuple[int, str | None, str | None]:
-        """Run command in instance.
-
-        Args:
-            unit: Juju unit to execute the command in.
-            command: Command to execute.
-            timeout: Amount of time to wait for the execution.
-        """
-        ...
-
-    async def ensure_charm_has_runner(self, app: Application):
-        """Ensure charm has a runner.
-
-        Args:
-            app: The GitHub Runner Charm app to create the runner for.
-        """
-        ...
-
-    async def get_runner_name(self, unit: Unit) -> str:
-        """Get the name of the runner.
-
-        Args:
-            unit: The GitHub Runner Charm unit to get the runner name for.
-        """
-        ...
-
-
-async def check_runner_binary_exists(unit: Unit) -> bool:
-    """Checks if runner binary exists in the charm.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        Whether the runner binary file exists in the charm.
-    """
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    return return_code == 0
-
-
-async def get_repo_policy_compliance_pip_info(unit: Unit) -> None | str:
-    """Get pip info for repo-policy-compliance.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-
-    Returns:
-        If repo-policy-compliance is installed, returns the pip show output, else returns none.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip show repo-policy-compliance"
-    )
-
-    if return_code == 0:
-        return stdout or stderr
-
-    return None
-
-
-async def install_repo_policy_compliance_from_git_source(unit: Unit, source: None | str) -> None:
-    """Install repo-policy-compliance pip package from the git source.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-        source: The git source to install the package. If none the package is removed.
-    """
-    return_code, stdout, stderr = await run_in_unit(
-        unit, "python3 -m pip uninstall --yes repo-policy-compliance"
-    )
-    assert return_code == 0, f"Failed to uninstall repo-policy-compliance: {stdout} {stderr}"
-
-    if source:
-        return_code, stdout, stderr = await run_in_unit(unit, f"python3 -m pip install {source}")
-        assert (
-            return_code == 0
-        ), f"Failed to install repo-policy-compliance from source, {stdout} {stderr}"
-
-
-async def remove_runner_bin(unit: Unit) -> None:
-    """Remove runner binary.
-
-    Args:
-        unit: Unit instance to check for the LXD profile.
-    """
-    await run_in_unit(unit, f"rm {LXDRunnerManager.runner_bin_path}")
-
-    # No file should exists under with the filename.
-    return_code, _, _ = await run_in_unit(unit, f"test -f {LXDRunnerManager.runner_bin_path}")
-    assert return_code != 0
-
-
-def on_juju_2() -> bool:
-    """Check if juju 2 is used.
-
-    Returns:
-        Whether juju 2 is used.
-    """
-    # The juju library does not support `__version__`.
-    # Prior to juju 3, the SUPPORTED_MAJOR_VERSION was not defined.
-    return not hasattr(juju.version, "SUPPORTED_MAJOR_VERSION")
-
-
 async def run_in_unit(
     unit: Unit, command: str, timeout=None, assert_on_failure=False, assert_msg=""
 ) -> tuple[int, str | None, str | None]:
     """Run command in juju unit.
-
-    Compatible with juju 3 and juju 2.
 
     Args:
         unit: Juju unit to execute the command in.
@@ -178,20 +63,12 @@ async def run_in_unit(
     """
     action: Action = await unit.run(command, timeout)
 
-    # For compatibility with juju 2.
-    if on_juju_2():
-        code, stdout, stderr = (
-            int(action.results["Code"]),
-            action.results.get("Stdout", None),
-            action.results.get("Stderr", None),
-        )
-    else:
-        await action.wait()
-        code, stdout, stderr = (
-            action.results["return-code"],
-            action.results.get("stdout", None),
-            action.results.get("stderr", None),
-        )
+    await action.wait()
+    code, stdout, stderr = (
+        action.results["return-code"],
+        action.results.get("stdout", None),
+        action.results.get("stderr", None),
+    )
 
     if assert_on_failure:
         assert code == 0, f"{assert_msg}: {stderr}"
@@ -219,7 +96,6 @@ async def deploy_github_runner_charm(
     app_name: str,
     path: str,
     token: str,
-    runner_storage: str,
     http_proxy: str,
     https_proxy: str,
     no_proxy: str,
@@ -228,7 +104,6 @@ async def deploy_github_runner_charm(
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
     wait_idle: bool = True,
-    use_local_lxd: bool = True,
 ) -> Application:
     """Deploy github-runner charm.
 
@@ -238,7 +113,6 @@ async def deploy_github_runner_charm(
         app_name: Application name for the deployment.
         path: Path representing the GitHub repo/org.
         token: GitHub Personal Token for the application to use.
-        runner_storage: Runner storage to use, i.e. "memory" or "juju_storage",
         http_proxy: HTTP proxy for the application to use.
         https_proxy: HTTPS proxy for the application to use.
         no_proxy: No proxy configuration for the application.
@@ -248,14 +122,10 @@ async def deploy_github_runner_charm(
         config: Additional custom config to use.
         deploy_kwargs: Additional model deploy arguments.
         wait_idle: wait for model to become idle.
-        use_local_lxd: Whether to use local LXD or not.
 
     Returns:
         The charm application that was deployed.
     """
-    if use_local_lxd:
-        subprocess.run(["sudo", "modprobe", "br_netfilter"])
-
     await model.set_config(
         {
             "juju-http-proxy": http_proxy,
@@ -265,20 +135,13 @@ async def deploy_github_runner_charm(
         }
     )
 
-    storage = {}
-    if runner_storage == "juju-storage":
-        storage["runner"] = {"pool": "rootfs", "size": 11}
-
     default_config = {
         PATH_CONFIG_NAME: path,
         TOKEN_CONFIG_NAME: token,
-        VIRTUAL_MACHINES_CONFIG_NAME: 0,
+        BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
         TEST_MODE_CONFIG_NAME: "insecure",
         RECONCILE_INTERVAL_CONFIG_NAME: reconcile_interval,
-        RUNNER_STORAGE_CONFIG_NAME: runner_storage,
     }
-    if use_local_lxd:
-        default_config[DENYLIST_CONFIG_NAME] = "10.10.0.0/16"
 
     if config:
         default_config.update(config)
@@ -289,12 +152,11 @@ async def deploy_github_runner_charm(
         base="ubuntu@22.04",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
-        storage=storage,
         **(deploy_kwargs or {}),
     )
 
     if wait_idle:
-        await model.wait_for_idle(status=ACTIVE, timeout=60 * 40)
+        await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
     return application
 
@@ -369,8 +231,21 @@ def _is_workflow_run_complete(run: WorkflowRun) -> bool:
         Whether the run status is "completed".
 
     """
+    return _has_workflow_run_status(run=run, status="completed")
+
+
+def _has_workflow_run_status(run: WorkflowRun, status: str) -> bool:
+    """Check if the workflow run has a specific status.
+
+    Args:
+        run: The workflow run to check status for.
+        status: The status to check for.
+
+    Returns:
+        Whether the run status is the expected status.
+    """
     if run.update():
-        return run.status == "completed"
+        return run.status == status
     return False
 
 
@@ -392,6 +267,7 @@ async def dispatch_workflow(
         branch: The branch to dispatch the workflow on.
         github_repository: The github repository to dispatch the workflow on.
         conclusion: The expected workflow run conclusion.
+            This argument is ignored if wait is False.
         workflow_id_or_name: The workflow filename in .github/workflows in main branch to run or
             its id.
         dispatch_input: Workflow input values.
@@ -420,13 +296,41 @@ async def dispatch_workflow(
 
     if not wait:
         return run
-    await wait_for(partial(_is_workflow_run_complete, run=run), timeout=60 * 30, check_interval=60)
+    await wait_for_completion(run=run, conclusion=conclusion)
+
+    return run
+
+
+async def wait_for_status(run: WorkflowRun, status: str) -> None:
+    """Wait for the workflow run to start.
+
+    Args:
+        run: The workflow run to wait for.
+        status: The expected status of the run.
+    """
+    await wait_for(
+        partial(_has_workflow_run_status, run=run, status=status),
+        timeout=60 * 5,
+        check_interval=10,
+    )
+
+
+async def wait_for_completion(run: WorkflowRun, conclusion: str) -> None:
+    """Wait for the workflow run to complete.
+
+    Args:
+        run: The workflow run to wait for.
+        conclusion: The expected conclusion of the run.
+    """
+    await wait_for(
+        partial(_is_workflow_run_complete, run=run),
+        timeout=60 * 30,
+        check_interval=60,
+    )
     # The run object is updated by _is_workflow_run_complete function above.
     assert (
         run.conclusion == conclusion
     ), f"Unexpected run conclusion, expected: {conclusion}, got: {run.conclusion}"
-
-    return run
 
 
 P = ParamSpec("P")
@@ -474,43 +378,6 @@ async def wait_for(
     raise TimeoutError()
 
 
-def inject_lxd_profile(charm_file: pathlib.Path, loop_device: str | None) -> None:
-    """Injects LXD profile to charm file.
-
-    Args:
-        charm_file: Path to charm file to deploy.
-        loop_device: Loop device used to mount runner image.
-    """
-    lxd_profile_str = """config:
-    security.nesting: true
-    security.privileged: true
-    raw.lxc: |
-        lxc.apparmor.profile=unconfined
-        lxc.mount.auto=proc:rw sys:rw cgroup:rw
-        lxc.cgroup.devices.allow=a
-        lxc.cap.drop=
-devices:
-    kmsg:
-        path: /dev/kmsg
-        source: /dev/kmsg
-        type: unix-char
-"""
-    if loop_device:
-        lxd_profile_str += f"""    loop-control:
-        path: /dev/loop-control
-        type: unix-char
-    loop14:
-        path: {loop_device}
-        type: unix-block
-"""
-
-    with zipfile.ZipFile(charm_file, mode="a") as file:
-        file.writestr(
-            "lxd-profile.yaml",
-            lxd_profile_str,
-        )
-
-
 async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     """Check if the upgrade_charm event is emitted.
 
@@ -524,7 +391,9 @@ async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     """
     unit_name_without_slash = unit.name.replace("/", "-")
     juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
-    ret_code, stdout, stderr = await run_in_unit(unit=unit, command=f"cat {juju_unit_log_file}")
+    ret_code, stdout, stderr = await run_in_unit(
+        unit=unit, command=f"cat {juju_unit_log_file} | grep 'Emitting Juju event upgrade_charm.'"
+    )
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
     return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
 

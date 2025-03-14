@@ -1,4 +1,4 @@
-#  Copyright 2024 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Utilities for charm metrics integration tests."""
@@ -20,12 +20,8 @@ from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
 from juju.unit import Unit
 
-from tests.integration.helpers.common import (
-    InstanceHelper,
-    get_file_content,
-    run_in_unit,
-    wait_for,
-)
+from tests.integration.helpers.common import get_file_content, run_in_unit, wait_for
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +35,7 @@ TEST_WORKFLOW_NAMES = [
 async def wait_for_workflow_to_start(
     unit: Unit,
     workflow: Workflow,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
     branch: Branch | None = None,
     started_time: float | None = None,
     timeout: int = 20 * 60,
@@ -79,6 +75,7 @@ async def wait_for_workflow_to_start(
                 job: WorkflowJob = jobs[0]
                 logs = requests.get(job.logs_url()).content.decode("utf-8")
             except GithubException as exc:
+                logger.warning("Github error, %s", exc)
                 if exc.status == 410:
                     logger.warning("Transient github error, %s", exc)
                     return False
@@ -105,28 +102,6 @@ async def clear_metrics_log(unit: Unit) -> None:
     assert retcode == 0, f"Failed to clear metrics log, {stderr}"
 
 
-async def print_loop_device_info(unit: Unit, loop_device: str) -> None:
-    """Print loop device info on the unit.
-
-    Args:
-        unit: The unit to print the loop device info on.
-        loop_device: The loop device to print the info for.
-    """
-    retcode, stdout, stderr = await run_in_unit(
-        unit=unit,
-        command="sudo losetup -lJ",
-    )
-    assert retcode == 0, f"Failed to get loop devices: {stdout} {stderr}"
-    assert stdout is not None, "Failed to get loop devices, no stdout message"
-    loop_devices_info = json.loads(stdout)
-    for loop_device_info in loop_devices_info["loopdevices"]:
-        if loop_device_info["name"] == loop_device:
-            logging.info("Loop device %s info: %s", loop_device, loop_device_info)
-            break
-    else:
-        logging.info("Loop device %s not found", loop_device)
-
-
 async def get_metrics_log(unit: Unit) -> str:
     """Retrieve the metrics log from the unit.
 
@@ -140,7 +115,10 @@ async def get_metrics_log(unit: Unit) -> str:
 
 
 async def cancel_workflow_run(
-    unit: Unit, workflow: Workflow, instance_helper: InstanceHelper, branch: Branch | None = None
+    unit: Unit,
+    workflow: Workflow,
+    instance_helper: OpenStackInstanceHelper,
+    branch: Branch | None = None,
 ):
     """Cancel the workflow run.
 
@@ -168,7 +146,10 @@ async def cancel_workflow_run(
 
 
 async def assert_events_after_reconciliation(
-    app: Application, github_repository: Repository, post_job_status: PostJobStatus
+    app: Application,
+    github_repository: Repository,
+    post_job_status: PostJobStatus,
+    reactive_mode: bool = False,
 ):
     """Assert that the RunnerStart, RunnerStop and Reconciliation metric is logged.
 
@@ -176,6 +157,8 @@ async def assert_events_after_reconciliation(
         app: The charm to assert the events for.
         github_repository: The github repository to assert the events for.
         post_job_status: The expected post job status of the reconciliation event.
+        reactive_mode: Whether the charm manages reactive runners,
+         this changes the expected events.
     """
     unit = app.units[0]
 
@@ -220,6 +203,11 @@ async def assert_events_after_reconciliation(
             assert metric_log.get("duration") >= 0
             assert metric_log.get("crashed_runners") == 0
             assert metric_log.get("idle_runners") >= 0
+            assert metric_log.get("active_runners") >= 0
+            if not reactive_mode:
+                assert metric_log.get("expected_runners") >= 0
+            else:
+                assert metric_log.get("expected_runners") == 0
 
 
 async def wait_for_runner_to_be_marked_offline(

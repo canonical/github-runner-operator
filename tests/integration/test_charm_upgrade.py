@@ -1,4 +1,4 @@
-#  Copyright 2024 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Integration tests for charm upgrades."""
@@ -7,17 +7,26 @@ import functools
 import pathlib
 
 import pytest
+from juju.application import Application
 from juju.client import client
 from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
+    OPENSTACK_NETWORK_CONFIG_NAME,
+    USE_APROXY_CONFIG_NAME,
+    VIRTUAL_MACHINES_CONFIG_NAME,
+)
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
-    inject_lxd_profile,
     is_upgrade_charm_event_emitted,
     wait_for,
 )
+
+pytestmark = pytest.mark.openstack
 
 
 @pytest.mark.asyncio
@@ -25,23 +34,26 @@ async def test_charm_upgrade(
     model: Model,
     ops_test: OpsTest,
     charm_file: str,
-    loop_device: str | None,
     app_name: str,
     path: str,
     token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    openstack_http_proxy: str,
+    openstack_https_proxy: str,
+    openstack_no_proxy: str,
     tmp_path: pathlib.Path,
+    clouds_yaml_contents: str,
+    network_name: str,
+    flavor_name: str,
+    image_builder: Application,
 ):
     """
-    arrange: given latest stable version of the charm (current 161).
+    arrange: given latest stable version of the charm.
     act: charm upgrade is called.
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 161  # update this value every release to stable.
-    # download the charm and inject lxd profile for testing
+    latest_stable_revision = 302  # update this value every release to stable.
+    # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
         "github-runner",
@@ -56,7 +68,6 @@ async def test_charm_upgrade(
         "--no-progress",
     )
     assert retcode == 0, f"failed to download charm, {stdout} {stderr}"
-    inject_lxd_profile(pathlib.Path(latest_stable_path), loop_device=loop_device)
 
     # deploy latest stable version of the charm
     application = await deploy_github_runner_charm(
@@ -65,19 +76,27 @@ async def test_charm_upgrade(
         app_name=app_name,
         path=path,
         token=token,
-        runner_storage="juju-storage",
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
+        http_proxy=openstack_http_proxy,
+        https_proxy=openstack_https_proxy,
+        no_proxy=openstack_no_proxy,
         reconcile_interval=5,
         # override default virtual_machines=0 config.
-        config={VIRTUAL_MACHINES_CONFIG_NAME: 1},
+        config={
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
+            OPENSTACK_NETWORK_CONFIG_NAME: network_name,
+            OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
+            USE_APROXY_CONFIG_NAME: "true",
+            VIRTUAL_MACHINES_CONFIG_NAME: 0,
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1,
+        },
+        wait_idle=False,
     )
+    await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name],
+        apps=[application.name, image_builder.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=180 * 60,
+        timeout=20 * 60,
         check_freq=30,
     )
     origin = client.CharmOrigin(
@@ -92,7 +111,14 @@ async def test_charm_upgrade(
     )
 
     # upgrade the charm with current local charm
-    await application.local_refresh(path=charm_file, charm_origin=origin)
+    await application.local_refresh(
+        path=charm_file,
+        charm_origin=origin,
+        force=False,
+        force_series=False,
+        force_units=False,
+        resources=None,
+    )
     unit = application.units[0]
     await wait_for(
         functools.partial(is_upgrade_charm_event_emitted, unit), timeout=360, check_interval=60
@@ -101,6 +127,6 @@ async def test_charm_upgrade(
         apps=[application.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=180 * 60,
+        timeout=20 * 60,
         check_freq=30,
     )

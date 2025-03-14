@@ -1,23 +1,23 @@
-#  Copyright 2024 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import logging
 import secrets
 from asyncio import sleep
-from typing import Optional, TypedDict, cast
+from typing import Optional, TypedDict
 
 import openstack.connection
-from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
+from github_runner_manager import constants
 from juju.application import Application
 from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import InstanceHelper, reconcile, run_in_unit, wait_for
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
+from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 
 logger = logging.getLogger(__name__)
 
 
-class OpenStackInstanceHelper(InstanceHelper):
+class OpenStackInstanceHelper:
     """Helper class to interact with OpenStack instances."""
 
     def __init__(self, openstack_connection: openstack.connection.Connection):
@@ -32,6 +32,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         self,
         unit: Unit,
         port: int,
+        host: str = "localhost",
     ) -> None:
         """Expose a port on the juju machine to the OpenStack instance.
 
@@ -41,6 +42,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         Args:
             unit: The juju unit of the github-runner charm.
             port: The port on the juju machine to expose to the runner.
+            host: Host for the reverse tunnel.
         """
         runner = self._get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
@@ -58,10 +60,10 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = OpenstackCloud._get_key_path(runner.name)
+        key_path = f"/home/{constants.RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
-        ssh_cmd = f'ssh -fNT -R {port}:localhost:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
         exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
         assert (
             exit_code == 0
@@ -113,7 +115,7 @@ class OpenStackInstanceHelper(InstanceHelper):
                 break
         assert ip, f"Failed to get IP address for OpenStack server {runner.name}"
 
-        key_path = OpenstackCloud._get_key_path(runner.name)
+        key_path = f"/home/{constants.RUNNER_MANAGER_USER}/.ssh/{runner.name}.key"
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -i {key_path} -o "StrictHostKeyChecking no" ubuntu@{ip} {command}'
@@ -147,8 +149,20 @@ class OpenStackInstanceHelper(InstanceHelper):
             app: The GitHub Runner Charm app to create the runner for.
             num_runners: The number of runners.
         """
-        await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
+        await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
         await reconcile(app=app, model=app.model)
+
+    async def get_runner_names(self, unit: Unit) -> list[str]:
+        """Get the name of all the runners in the unit.
+
+        Args:
+            unit: The GitHub Runner Charm unit to get the runner names for.
+
+        Returns:
+            List of names for the runners.
+        """
+        runners = self._get_runners(unit)
+        return [runner.name for runner in runners]
 
     async def get_runner_name(self, unit: Unit) -> str:
         """Get the name of the runner.
@@ -161,24 +175,27 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             The Github runner name deployed in the given unit.
         """
-        runners = await self._get_runner_names(unit)
+        runners = self._get_runners(unit)
         assert len(runners) == 1
-        return runners[0]
+        return runners[0].name
 
-    async def _get_runner_names(self, unit: Unit) -> tuple[str, ...]:
-        """Get names of the runners in LXD.
+    async def delete_single_runner(self, unit: Unit) -> None:
+        """Delete the only runner.
 
         Args:
-            unit: Unit instance to check for the LXD profile.
-
-        Returns:
-            Tuple of runner names.
+            unit: The GitHub Runner Charm unit to delete the runner name for.
         """
         runner = self._get_single_runner(unit)
-        assert runner, "Failed to find runner server"
-        return (cast(str, runner.name),)
+        self.openstack_connection.delete_server(name_or_id=runner.id)
 
-    def _get_single_runner(self, unit: Unit) -> Server | None:
+    def _get_runners(self, unit: Unit) -> list[Server]:
+        """Get all runners for the unit."""
+        servers: list[Server] = self.openstack_connection.list_servers()
+        unit_name_without_slash = unit.name.replace("/", "-")
+        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        return runners
+
+    def _get_single_runner(self, unit: Unit) -> Server:
         """Get the only runner for the unit.
 
         This method asserts for exactly one runner for the unit.
@@ -189,9 +206,7 @@ class OpenStackInstanceHelper(InstanceHelper):
         Returns:
             The runner server.
         """
-        servers: list[Server] = self.openstack_connection.list_servers()
-        unit_name_without_slash = unit.name.replace("/", "-")
-        runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
+        runners = self._get_runners(unit)
         assert (
             len(runners) == 1
         ), f"In {unit.name} found more than one runners or no runners: {runners}"
@@ -251,7 +266,7 @@ async def _install_repo_policy(
     """Start the repo policy compliance service.
 
     Args:
-        unit: Unit instance to check for the LXD profile.
+        unit: Unit instance to check for the profile.
         github_token: GitHub token to use in the repo-policy service.
         charm_token: Charm token to use in the repo-policy service.
         https_proxy: HTTPS proxy url to use.

@@ -1,0 +1,3 @@
+rules:
+  # Ignore whitelist - we are using it to ignore pydantic in pyproject.toml
+  - name: whitelist

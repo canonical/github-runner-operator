@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Factories for generating test data."""
@@ -7,6 +7,7 @@
 # pylint: disable=too-few-public-methods
 
 import random
+import secrets
 from typing import Generic, TypeVar
 from unittest.mock import MagicMock
 
@@ -14,29 +15,28 @@ import factory
 import factory.fuzzy
 import invoke.runners
 import openstack.compute.v2.server
+import yaml
 from pydantic.networks import IPvAnyAddress
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     COS_AGENT_INTEGRATION_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
-    DENYLIST_CONFIG_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     LABELS_CONFIG_NAME,
+    MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
-    RUNNER_STORAGE_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    VM_CPU_CONFIG_NAME,
-    VM_DISK_CONFIG_NAME,
-    VM_MEMORY_CONFIG_NAME,
     SSHDebugConnection,
 )
 
@@ -127,23 +127,37 @@ class MockGithubRunnerCharmFactory(factory.Factory):
     model = factory.SubFactory(MockGithubRunnerCharmModelFactory)
     config = factory.Dict(
         {
-            DENYLIST_CONFIG_NAME: "",
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: 0,
             DOCKERHUB_MIRROR_CONFIG_NAME: "",
+            FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME: "",
             GROUP_CONFIG_NAME: "default",
             LABELS_CONFIG_NAME: "",
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: "",
+            MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: 0,
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(
+                {
+                    "clouds": {
+                        "openstack": {
+                            "auth": {
+                                "auth_url": "https://project-keystone.url/",
+                                "password": secrets.token_hex(16),
+                                "project_domain_name": "Default",
+                                "project_name": "test-project-name",
+                                "user_domain_name": "Default",
+                                "username": "test-user-name",
+                            },
+                            "region_name": secrets.token_hex(16),
+                        }
+                    }
+                }
+            ),
             OPENSTACK_NETWORK_CONFIG_NAME: "external",
             OPENSTACK_FLAVOR_CONFIG_NAME: "m1.small",
             PATH_CONFIG_NAME: factory.Sequence(lambda n: f"mock_path_{n}"),
             RECONCILE_INTERVAL_CONFIG_NAME: 10,
-            RUNNER_STORAGE_CONFIG_NAME: "juju-storage",
             TEST_MODE_CONFIG_NAME: "",
             TOKEN_CONFIG_NAME: factory.Sequence(lambda n: f"mock_token_{n}"),
             USE_APROXY_CONFIG_NAME: False,
             VIRTUAL_MACHINES_CONFIG_NAME: 1,
-            VM_CPU_CONFIG_NAME: 2,
-            VM_MEMORY_CONFIG_NAME: "7GiB",
-            VM_DISK_CONFIG_NAME: "10GiB",
         }
     )
 

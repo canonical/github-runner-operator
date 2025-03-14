@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm."""
@@ -48,20 +48,15 @@ def pytest_addoption(parser: Parser):
         help="No proxy configuration value for juju model proxy configuration.",
     )
     parser.addoption(
-        "--loop-device",
-        action="store",
-        help="The loop device to create shared FS for metrics logging",
-    )
-    parser.addoption(
         "--openstack-clouds-yaml",
         action="store",
         help="The OpenStack clouds yaml file for the charm to use.",
         default="",
     )
     parser.addoption(
-        "--use-existing-app",
+        "--use-existing-app-suffix",
         action="store",
-        help="The existing app to use."
+        help="The existing app suffix to use."
         "This will skip deployment of the charm and use the existing app."
         "This option is useful for local testing."
         "It is expected that the existing app is already integrated with other apps "

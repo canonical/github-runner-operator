@@ -3,6 +3,11 @@ name: integration-tests
 on:
   pull_request:
 
+  # Disabled until we get more resources for the actions
+  # schedule:
+  #   # Trigger at 6:00 AM and 6:00 PM UTC
+  #   - cron: "0 6,18 * * *"
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -16,37 +21,44 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.1/stable
-      pre-run-script: scripts/pre-integration-test.sh
+      pre-run-script: scripts/setup-lxd.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      # These important local LXD test has no OpenStack integration versions.
-      # test_charm_scheduled_events ensures reconcile events are fired on a schedule.
-      # test_debug_ssh ensures tmate SSH actions works.
-      # TODO: Add OpenStack integration versions of these tests.
-      modules: '["test_charm_scheduled_events", "test_debug_ssh"]'
+      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
+      extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
+      self-hosted-runner: true
+      self-hosted-runner-label: stg-private-endpoint
+      test-timeout: 90
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.6/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
+      test-tox-env: integration-juju3.6
       modules: '["test_runner_manager_openstack"]'
+      extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    needs: openstack-interface-tests-private-endpoint
     secrets: inherit
     with:
-      juju-channel: 3.2/stable
+      juju-channel: 3.6/stable
       pre-run-script: scripts/setup-lxd.sh
       provider: lxd
-      test-tox-env: integration-juju3.2
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_runner", "test_reactive"]'
-      extra-arguments: "-m openstack"
+      test-tox-env: integration-juju3.6
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive"]'
+      extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
+  allure-report:
+    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
+    needs:
+      - integration-tests
+      - openstack-interface-tests-private-endpoint
+      - openstack-integration-tests-private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main

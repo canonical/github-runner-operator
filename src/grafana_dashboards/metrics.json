@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 567,
+  "id": 1085,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -176,7 +176,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Shows the number of available runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.",
+      "description": "Shows the number of available (and max expected) runners per application. Note: Available equals idle after reconciliation and is not a real-time metric as it is only updated after each reconciliation interval for each unit.\n\nNote that there is no maximum expected number of reactive runners.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -202,7 +202,6 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -216,10 +215,42 @@
                 "value": 80
               }
             ]
-          },
-          "unit": "short"
+          }
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #A"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Available"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value #B"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Max possible"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "left"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -237,11 +268,11 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "right",
-          "showLegend": false
+          "showLegend": true
         },
         "orientation": "horizontal",
         "showValue": "always",
-        "stacking": "none",
+        "stacking": "normal",
         "tooltip": {
           "mode": "single",
           "sort": "none"
@@ -261,9 +292,30 @@
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(flavor)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | unwrap expected_runners[$__range]))",
+          "hide": false,
+          "legendFormat": "",
+          "queryType": "instant",
+          "refId": "B"
         }
       ],
       "title": "Available Runners",
+      "transformations": [
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "flavor",
+            "mode": "outer"
+          }
+        }
+      ],
       "type": "barchart"
     },
     {
@@ -635,7 +687,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "This panel totals the number of idle runners reported by the charm units after a reconciliation event. Note that there may be active runners in the time between reconciliations which will not be shown in this panel.",
+      "description": "This panel totals the number of active/idle/total expected runners reported by charm units after reconciliation.  Note that this is not a real-time metric and should only be used to identify trends or to investigate problems. A given point in time shows the aggregation of the last reported values from the reconciliation. This means, for example, that if the graph shows 10 idle runners at a particular time, it doesn't mean that there are 10 idle runners at that time, just that this is the most recently reported value. Also note that runners who are reported as idle at the time of reconciliation may become active immediately afterwards. And active runners may become offline/inactive.\n\nThere is no expected number of runners for runners in reactive mode, which means that the total number of idle + active runners could be greater than expected if reactive applications are not filtered out in this view.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -702,7 +754,7 @@
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single",
@@ -721,9 +773,45 @@
           "legendFormat": "Idle",
           "queryType": "range",
           "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap active_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Active",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Expected",
+          "queryType": "range",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m])) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap idle_runners[60m])) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap active_runners[60m]))",
+          "hide": false,
+          "legendFormat": "Unknown",
+          "queryType": "range",
+          "refId": "C"
         }
       ],
-      "title": "Idle Runners after Reconciliation",
+      "title": "Runners after Reconciliation",
       "transformations": [],
       "type": "timeseries"
     },
@@ -958,7 +1046,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "1 / sum by (flavor) (rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", flavor=\"flavor\" | event=\"reconciliation\" [$__range]))",
+          "expr": "(1 / sum by(flavor)(rate({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"reconciliation\"[$__range])))",
           "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
           "legendFormat": "",
           "queryType": "instant",
@@ -1117,7 +1205,7 @@
       "type": "timeseries"
     },
     {
-      "collapsed": true,
+      "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1125,676 +1213,683 @@
         "y": 41
       },
       "id": 12,
-      "panels": [
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the result from the runner's perspective.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "percent"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 34
-          },
-          "id": 14,
-          "interval": "1h",
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(status)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
-              "legendFormat": "{{status}}",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Completion Status",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the result from the GitHub Actions workflow perspective.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "percent"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 34
-          },
-          "id": 20,
-          "interval": "1h",
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(job_conclusion)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json job_conclusion=\"job_conclusion\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
-              "legendFormat": "{{job_conclusion}}",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Job Conclusion",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the proportion of applications in use.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "percent"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 42
-          },
-          "id": 18,
-          "interval": "1h",
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json flavor=\"flavor\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
-              "legendFormat": "{{flavor}}",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Application proportion",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the http codes for repo policy check failures.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "percent"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 42
-          },
-          "id": 15,
-          "interval": "1h",
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(http_code)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | status=\"repo-policy-check-failure\" | repo=~\"$repository\" | flavor=~\"$flavor\" | json http_code=\"status_info.code\"[1h]))",
-              "legendFormat": "{{http_code}}",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "Repo Policy Check Failures",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the GitHub events that triggered a workflow run.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 25,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "percent"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 50
-          },
-          "id": 19,
-          "interval": "1h",
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(github_event)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json github_event=\"github_event\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
-              "legendFormat": "{{github_event}}",
-              "queryType": "range",
-              "refId": "A"
-            }
-          ],
-          "title": "GitHub Event",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "All aggregations are based on a 1-hour time period.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              },
-              "unit": "s"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 50
-          },
-          "id": 17,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "builder",
-              "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
-              "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-              "legendFormat": "50%",
-              "queryType": "range",
-              "refId": "A"
-            },
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "builder",
-              "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
-              "hide": false,
-              "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-              "legendFormat": "95%",
-              "queryType": "range",
-              "refId": "D"
-            },
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "builder",
-              "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
-              "hide": false,
-              "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-              "legendFormat": "99%",
-              "queryType": "range",
-              "refId": "E"
-            },
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "builder",
-              "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
-              "hide": false,
-              "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
-              "legendFormat": "Max",
-              "queryType": "range",
-              "refId": "C"
-            }
-          ],
-          "title": "Job Duration (Percentile)",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "description": "Visualises the number of jobs per repository.",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "continuous-GrYlRd"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 58
-          },
-          "id": 21,
-          "options": {
-            "displayMode": "gradient",
-            "minVizHeight": 10,
-            "minVizWidth": 0,
-            "orientation": "horizontal",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": true
-            },
-            "showUnfilled": true
-          },
-          "pluginVersion": "9.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "loki",
-                "uid": "${lokids}"
-              },
-              "editorMode": "code",
-              "expr": "sum by(repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[$__range]))",
-              "legendFormat": "",
-              "queryType": "instant",
-              "refId": "A"
-            }
-          ],
-          "title": "Repositories",
-          "type": "bargauge"
-        }
-      ],
+      "panels": [],
       "title": "Jobs",
       "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the result from the runner's perspective.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 42
+      },
+      "id": 14,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(status)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
+          "legendFormat": "{{status}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Completion Status",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the result from the GitHub Actions workflow perspective.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 42
+      },
+      "id": 20,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(job_conclusion)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json job_conclusion=\"job_conclusion\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
+          "legendFormat": "{{job_conclusion}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Job Conclusion",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the proportion of applications in use.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 50
+      },
+      "id": 18,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(flavor)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json flavor=\"flavor\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
+          "legendFormat": "{{flavor}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Application proportion",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the http codes for repo policy check failures.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 50
+      },
+      "id": 15,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(http_code)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_stop\" | json status=\"status\",repo=\"repo\" | status=\"repo-policy-check-failure\" | repo=~\"$repository\" | flavor=~\"$flavor\" | json http_code=\"status_info.code\"[1h]))",
+          "legendFormat": "{{http_code}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Repo Policy Check Failures",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the GitHub events that triggered a workflow run.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 25,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "percent"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 58
+      },
+      "id": 19,
+      "interval": "1h",
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(github_event)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json github_event=\"github_event\",repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[1h]))",
+          "legendFormat": "{{github_event}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "GitHub Event",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "All aggregations are based on a 1-hour time period.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 58
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.5,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "50%",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.95,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "95%",
+          "queryType": "range",
+          "refId": "D"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "quantile_over_time(0.99,{filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "99%",
+          "queryType": "range",
+          "refId": "E"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "max_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",job_duration=\"job_duration\",status=\"status\",flavor=\"flavor\" | event=\"runner_stop\" | status=\"normal\" | flavor=~\"$flavor\" | unwrap job_duration[1h]) by(filename)",
+          "hide": false,
+          "key": "Q-9302bc4d-cce0-4674-bad5-353257fdd2f4-0",
+          "legendFormat": "Max",
+          "queryType": "range",
+          "refId": "C"
+        }
+      ],
+      "title": "Job Duration (Percentile)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "description": "Visualises the number of jobs per repository.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 66
+      },
+      "id": 21,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "9.5.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[$__range]))",
+          "legendFormat": "",
+          "queryType": "instant",
+          "refId": "A"
+        }
+      ],
+      "title": "Repositories",
+      "type": "bargauge"
     }
   ],
-  "refresh": "",
+  "refresh": "1m",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2039,12 +2134,12 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-24h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 15,
+  "version": 19,
   "weekStart": ""
 }

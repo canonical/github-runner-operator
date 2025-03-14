@@ -1,4 +1,4 @@
-# Copyright 2024 Canonical Ltd.
+# Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
@@ -12,18 +12,12 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import (
-    VM_CPU_CONFIG_NAME,
-    VM_DISK_CONFIG_NAME,
-    VM_MEMORY_CONFIG_NAME,
-    InstanceType,
-)
-from tests.integration.helpers import lxd
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-    InstanceHelper,
     dispatch_workflow,
+    reconcile,
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
@@ -33,14 +27,18 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Ensure the charm has one runner before starting a test.
     """
     await instance_helper.ensure_charm_has_runner(basic_app)
+
     yield basic_app
+
+    await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await reconcile(basic_app, basic_app.model)
 
 
 @pytest.mark.openstack
@@ -66,7 +64,6 @@ async def test_check_runner(app: Application) -> None:
 @pytest.mark.abort_on_fail
 async def test_flush_runner_and_resource_config(
     app: Application,
-    instance_type: InstanceType,
     github_repository: Repository,
     test_github_branch: Branch,
 ) -> None:
@@ -82,16 +79,10 @@ async def test_flush_runner_and_resource_config(
     assert:
         1. One runner exists.
         2. Check the resource matches the configuration.
-        3. Nothing.
-        4.  a. The runner name should be different to the runner prior running
-                the action.
-            b. LXD profile matching virtual machine resources of step 2 exists.
-        5. The runner is not flushed since by default it flushes idle.
+        3. The runner is not flushed since by default it flushes idle.
 
     Test are combined to reduce number of runner spawned.
     """
-    unit = app.units[0]
-
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -105,25 +96,8 @@ async def test_flush_runner_and_resource_config(
     assert len(runner_names) == 1
 
     # 2.
-    # Check if the LXD profile is checked by the charm. Only for local LXD.
-    configs = await app.get_config()
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.assert_resource_lxd_profile(unit, configs)
-    # OpenStack flavor is not managed by the charm. The charm takes it as a config option.
-    # Therefore no need to check it.
-
-    # 3.
-    await app.set_config(
-        {VM_CPU_CONFIG_NAME: "1", VM_MEMORY_CONFIG_NAME: "3GiB", VM_DISK_CONFIG_NAME: "8GiB"}
-    )
-
-    # 4.
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
-
-    configs = await app.get_config()
-    if instance_type == InstanceType.LOCAL_LXD:
-        await lxd.assert_resource_lxd_profile(unit, configs)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -137,7 +111,7 @@ async def test_flush_runner_and_resource_config(
     assert len(new_runner_names) == 1
     assert new_runner_names[0] != runner_names[0]
 
-    # 5.
+    # 3.
     workflow = await dispatch_workflow(
         app=app,
         branch=test_github_branch,
@@ -154,13 +128,6 @@ async def test_flush_runner_and_resource_config(
     assert action.status == "completed"
     assert action.results["delta"]["virtual-machines"] == "0"
 
-    await wait_for(lambda: workflow.update() or workflow.status == "completed")
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["delta"]["virtual-machines"] == "1"
-
 
 @pytest.mark.openstack
 @pytest.mark.asyncio
@@ -171,20 +138,19 @@ async def test_repo_policy_enabled(
     test_github_branch: Branch,
     token: str,
     https_proxy: str,
-    instance_helper: InstanceHelper,
+    instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
     arrange: A working application with one runner with repo policy enabled.
     act: Dispatch a workflow.
     assert: Workflow run successfully passed.
     """
-    if isinstance(instance_helper, OpenStackInstanceHelper):
-        await setup_repo_policy(
-            app=app,
-            openstack_connection=instance_helper.openstack_connection,
-            token=token,
-            https_proxy=https_proxy,
-        )
+    await setup_repo_policy(
+        app=app,
+        openstack_connection=instance_helper.openstack_connection,
+        token=token,
+        https_proxy=https_proxy,
+    )
 
     await dispatch_workflow(
         app=app,
