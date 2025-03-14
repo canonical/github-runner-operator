@@ -14,6 +14,7 @@ from github_runner_manager.cli_config import Configuration
 
 app = Flask(__name__)
 
+_lock: Lock
 
 @app.route("/health", methods=["GET"])
 def get_health() -> tuple[str, int]:
@@ -29,7 +30,7 @@ def get_health() -> tuple[str, int]:
 def flush_runner() -> tuple[str, int]:
     """Flush the runners.
 
-    The logic of this function is not implemented.
+    The logic of this function will be implemented in a future PR.
 
     HTTP header args:
         flush-busy(bool): Whether to flush busy runners.
@@ -43,22 +44,12 @@ def flush_runner() -> tuple[str, int]:
     else:
         app.logger.info("Flushing idle runners...")
 
-    lock = _get_lock()
-    app.logger.info("Lock locked: %s", lock.locked())
+    app.logger.info("Lock locked: %s", _lock.locked())
     app.logger.info("Flush: Attempting to acquire the lock...")
-    with lock:
+    with _lock:
         app.logger.info("Flushing the runners")
     app.logger.info("Flushed the runners")
-    return ("", 200)
-
-
-def _get_lock() -> Lock:
-    """Get the thread lock.
-
-    Returns:
-        The thread lock.
-    """
-    return app.config["lock"]
+    return ("", 204)
 
 
 def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:
@@ -70,5 +61,6 @@ def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug:
         port: The port to listen on for the HTTP server.
         debug: Start the flask HTTP server in debug mode.
     """
-    app.config["lock"] = lock
+    global _lock
+    _lock = lock
     app.run(host=host, port=port, debug=debug, use_reloader=False)
