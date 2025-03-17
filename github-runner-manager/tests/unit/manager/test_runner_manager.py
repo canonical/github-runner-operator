@@ -187,7 +187,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         """Return a registration token."""
         nonlocal github_runner
         github_runner.instance_id = instance_id
-        return "token"
+        return "token", github_runner
 
     github_client.get_registration_jittoken.side_effect = _get_reg_token
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")

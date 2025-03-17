@@ -311,7 +311,15 @@ class OpenstackCloud:
                     continue
                 if _TEST_STRING in result.stdout:
                     return connection
-            except (NoValidConnectionsError, TimeoutError, paramiko.ssh_exception.SSHException):
+            except NoValidConnectionsError as exc:
+                logger.warning(
+                    "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
+                    instance.instance_id.name,
+                    connection.host,
+                    str(exc),
+                )
+                continue
+            except (TimeoutError, paramiko.ssh_exception.SSHException):
                 logger.warning(
                     "Unable to SSH into %s with address %s",
                     instance.instance_id.name,

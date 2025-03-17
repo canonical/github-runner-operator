@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from enum import Enum
-from typing import List, Literal, Optional
+from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
 
@@ -87,23 +87,11 @@ class SelfHostedRunner(BaseModel):
 
         Returns:
             A SelfHostedRunner from the input data.
-        """
         # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        """
         github_dict["labels"] = list(github_dict["labels"])
         github_dict["instance_id"] = instance_id
         return cls.parse_obj(github_dict)
-
-
-class RegistrationToken(BaseModel):
-    """Token used for registering GitHub runners.
-
-    Attributes:
-        token: Token for registering GitHub runners.
-        expires_at: Time the token expires at.
-    """
-
-    token: str
-    expires_at: str
 
 
 class RemoveToken(BaseModel):
@@ -179,3 +167,49 @@ class JobInfo(BaseModel):
     started_at: datetime
     conclusion: Optional[JobConclusion]
     status: JobStatus
+
+
+class JITConfig(TypedDict, total=True):
+    """JIT Config Token reply from GitHub API.
+
+    Attributes:
+        encoded_jit_config: The Token that identifies the runner.
+        runner: Information about the runner associated with the JIT token.
+    """
+
+    encoded_jit_config: str
+    runner: "JITConfigRunner"
+
+
+class JITConfigRunner(TypedDict, total=True):
+    """Runner Information returned when requesting a JIT token.
+
+    Attributes:
+        id: Id of the runner.
+        status: Status of the runner.
+        name: Name of the runner.
+        os: OS of the runner.
+        busy: Whether the runner is busy.
+        labels: Labels of the runner.
+    """
+
+    id: int
+    status: GitHubRunnerStatus
+    name: str
+    os: str
+    busy: bool
+    labels: "list[JITConfigRunnerLabel]"
+
+
+class JITConfigRunnerLabel(TypedDict, total=True):
+    """Labels for a runner returned when requesting a JIT token.
+
+    Attributes:
+        id: ID of the label.
+        name: Name of the label.
+        type: Type of label.
+    """
+
+    id: int
+    name: str
+    type: str
