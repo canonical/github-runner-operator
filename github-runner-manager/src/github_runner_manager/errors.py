@@ -75,3 +75,7 @@ class ReconcileError(Exception):
 
 class OpenstackHealthCheckError(Exception):
     """Base class for all health check errors."""
+
+
+class LockError(Exception):
+    """Base class for lock errors."""
