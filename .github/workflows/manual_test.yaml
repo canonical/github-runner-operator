@@ -6,36 +6,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  stg-reactive:
-    name: staging reactive
-    runs-on: [self-hosted, stg-reactive]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  tiobe-jammy:
-    name: tiobe jammy
-    runs-on: [self-hosted, reactive, amd64, tiobe, jammy]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
   tiobe-noble:
-    name: tiobe noble
-    runs-on: [self-hosted, reactive, amd64, tiobe, noble]
+    name: tiobe noble 
+    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-tiobe]
     steps:
       - run: lscpu
       - run: df -h
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
-  tiobe-jammy-large:
-    name: tiobe jammy large
-    runs-on: [self-hosted, reactive, amd64, large-tiobe, jammy]
+  tiobe:
+    name: tiobe
+    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-tiobe]
     steps:
       - run: lscpu
       - run: df -h
@@ -44,7 +26,16 @@ jobs:
       - run: lsb_release -a
   tiobe-noble-large:
     name: tiobe noble large
-    runs-on: [self-hosted, reactive, amd64, large-tiobe, noble]
+    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-large-tiobe]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  tiobe-large:
+    name: tiobe large
+    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-large-tiobe]
     steps:
       - run: lscpu
       - run: df -h
