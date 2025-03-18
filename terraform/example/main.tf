@@ -32,7 +32,6 @@ module "github_runner" {
   source                            = "../product"
   model                             = local.juju_model_name
   github_runner_image_builder_model = local.juju_image_builder_model_name
-  github_runner                     = {}
   github_runner_image_builder = {
     config = {
       architecture                  = "amd64"
@@ -62,6 +61,7 @@ module "github_runner" {
         path                  = local.path
         token                 = var.github_token
         openstack-flavor      = local.openstack_flavor
+        openstack-network     = local.openstack_network
       }
     },
     {
@@ -72,8 +72,55 @@ module "github_runner" {
         path                       = local.path
         token                      = var.github_token
         openstack-flavor           = local.openstack_flavor
+        openstack-network          = local.openstack_network
       }
     }
   ]
-
 }
+
+resource "juju_application" "mongodb" {
+  name  = "mongodb"
+  model = local.juju_model_name
+  units = 1
+
+  charm {
+    name     = "mongodb"
+    revision = 198
+    channel  = "6/edge"
+    base     = "ubuntu@22.04"
+  }
+
+  expose {}
+}
+
+resource "juju_offer" "mongodb_database" {
+  model            = local.juju_model_name
+  application_name = juju_application.mongodb.name
+  endpoint         = "database"
+  name             = "mongodb"
+}
+
+resource "juju_integration" "reactive_github_runner_mongodb" {
+  model = local.juju_model_name
+
+  for_each = toset(module.github_runner.reactive_runners_names)
+
+  application {
+    name = each.key
+  }
+
+  application {
+    name = juju_application.mongodb.name
+  }
+}
+
+# module "subordinates" {
+#   # tflint-ignore: terraform_module_pinned_source
+#   source                   = "git::ssh://git.launchpad.net/canonical-terraform-modules//subordinates?depth=1&ref=v3.0"
+#   juju_model               = local.juju_model_name
+#   applications_to_relate   = toset(concat(module.github_runner.all_runners_names, [module.github_runner.github_runner_image_builder_model_app_name]))
+#   subordinate_series       = "jammy"
+#   include_telegraf         = false
+#   ubuntu_pro_charm_channel = "latest/stable"
+#   landscape_charm_channel  = "latest/stable"
+# }

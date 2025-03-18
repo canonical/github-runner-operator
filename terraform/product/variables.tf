@@ -11,18 +11,6 @@ variable "github_runner_image_builder_model" {
   type        = string
 }
 
-variable "github_runner" {
-  type = object({
-    app_name    = optional(string, "github-runner")
-    channel     = optional(string, "latest/edge")
-    config      = optional(map(string), {})
-    constraints = optional(string, "arch=amd64")
-    revision    = optional(number)
-    base        = optional(string, "ubuntu@22.04")
-    units       = optional(number, 1)
-  })
-}
-
 variable "github_runner_image_builder" {
   type = object({
     app_name    = optional(string, "github-runner-image-builder")
