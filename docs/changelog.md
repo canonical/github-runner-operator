@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-03-19
+
+- Add documentation explaining security design of the charm.
+
 ### 2024-12-13
 
 - Add the difference between expected and actual runners to the "Runners after reconciliation" dashboard panel.
