@@ -40,18 +40,18 @@ resource "juju_integration" "ghib-gh" {
   model = juju_model.my_model.name
   application {
     name     = module.github_runner.app_name
-    endpoint = module.github_runner.provides.github_runner_image_v0
+    endpoint = module.github_runner.requires.github_runner_image_v0
   }
   application {
-    name     = "github-runner"
+    name     = "github-runner-image-builder"
     endpoint = "image"
   }
 }
 ```
 
-The complete list of available integrations can be found [in the Integrations tab][github-runner-image-builder-integrations].
+The complete list of available integrations can be found [in the Integrations tab][github-runner-integrations].
 
 [Terraform]: https://www.terraform.io/
 [Terraform Juju provider]: https://registry.terraform.io/providers/juju/juju/latest
 [Juju]: https://juju.is
-[github-runner-image-builder-integrations]: https://charmhub.io/github-runner-image-builder/integrations
+[github-runner-integrations]: https://charmhub.io/github-runner/integrations
