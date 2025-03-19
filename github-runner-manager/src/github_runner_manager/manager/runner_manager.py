@@ -347,7 +347,7 @@ class RunnerManager:
             for _ in range(num):
                 try:
                     instance_id = next(jobs)
-                except RunnerError:
+                except (RunnerError, GithubApiError):
                     logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
