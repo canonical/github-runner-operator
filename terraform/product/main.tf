@@ -26,7 +26,7 @@ module "github_runner_image_builder" {
   channel     = var.github_runner_image_builder.channel
   config      = var.github_runner_image_builder.config
   constraints = var.github_runner_image_builder.constraints
-  model       = data.juju_model.github.name
+  model       = data.juju_model.github_runner.name
   revision    = var.github_runner_image_builder.revision
   base        = var.github_runner_image_builder.base
   units       = var.github_runner_image_builder.units
