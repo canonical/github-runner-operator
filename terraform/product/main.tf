@@ -5,12 +5,6 @@ data "juju_model" "github_runner" {
   name = var.model
 }
 
-data "juju_model" "github_runner_image_builder" {
-  name = var.github_runner_image_builder_model
-
-  provider = juju.github_runner_image_builder
-}
-
 module "github_runner" {
   for_each = { for gh in var.github_runners : gh.app_name => gh }
 
@@ -26,7 +20,8 @@ module "github_runner" {
 }
 
 module "github_runner_image_builder" {
-  source      = "../../../github-runner-image-builder-operator/terraform/charm"
+  # TODO pending to create a tag for the github-runner-image-builder
+  source      = "git::https://github.com/canonical/github-runner-image-builder-operator//terraform/charm?ref=ISD-3060-terraform"
   app_name    = var.github_runner_image_builder.app_name
   channel     = var.github_runner_image_builder.channel
   config      = var.github_runner_image_builder.config
@@ -35,10 +30,6 @@ module "github_runner_image_builder" {
   revision    = var.github_runner_image_builder.revision
   base        = var.github_runner_image_builder.base
   units       = var.github_runner_image_builder.units
-
-  providers = {
-    juju = juju.github_runner_image_builder
-  }
 }
 
 resource "juju_integration" "image_builder" {

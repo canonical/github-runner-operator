@@ -4,9 +4,8 @@
 terraform {
   required_providers {
     juju = {
-      source                = "juju/juju"
-      version               = ">= 0.17.0"
-      configuration_aliases = [juju.github_runner_image_builder]
+      source  = "juju/juju"
+      version = ">= 0.11.0"
     }
   }
 }

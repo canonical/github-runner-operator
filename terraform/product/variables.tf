@@ -2,12 +2,7 @@
 # See LICENSE file for licensing details.
 
 variable "model" {
-  description = "Reference to the Juju model to deploy the github-runner operator."
-  type        = string
-}
-
-variable "github_runner_image_builder_model" {
-  description = "Reference to the Juju model to deploy the github-runner-image-builder operator."
+  description = "Reference to the Juju model to deploy the github-runner and github-runner-image-builder operators."
   type        = string
 }
 
@@ -16,7 +11,9 @@ variable "github_runner_image_builder" {
     app_name    = optional(string, "github-runner-image-builder")
     channel     = optional(string, "latest/edge")
     config      = optional(map(string), {})
-    constraints = optional(string, "arch=amd64")
+    # TODO what is a reasonable constraint?
+    # constraints = optional(string, "arch=amd64")
+    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=28672M")
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)
@@ -28,7 +25,9 @@ variable "github_runners" {
     app_name    = optional(string, "github-runner")
     channel     = optional(string, "latest/edge")
     config      = optional(map(string), {})
-    constraints = optional(string, "arch=amd64")
+    # TODO what is a reasonable constraint?
+    # constraints = optional(string, "arch=amd64")
+    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=28672M")
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)
