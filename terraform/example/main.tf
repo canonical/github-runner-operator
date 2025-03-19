@@ -1,6 +1,5 @@
 locals {
-  juju_model_name               = "stg-ps6-github-runner"
-  juju_image_builder_model_name = local.juju_model_name
+  juju_model_name = "stg-ps6-github-runner"
 
   path = "javierdelapuente/github-runner-operator"
 
@@ -29,9 +28,8 @@ locals {
 }
 
 module "github_runner" {
-  source                            = "../product"
-  model                             = local.juju_model_name
-  github_runner_image_builder_model = local.juju_image_builder_model_name
+  source = "../product"
+  model  = local.juju_model_name
   github_runner_image_builder = {
     config = {
       architecture                  = "amd64"
@@ -45,11 +43,6 @@ module "github_runner" {
       build-flavor                  = local.openstack_flavor
       build-network                 = local.openstack_network
     }
-  }
-
-  providers = {
-    juju                             = juju
-    juju.github_runner_image_builder = juju.github_runner_image_builder
   }
 
   github_runners = [
