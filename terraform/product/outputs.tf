@@ -1,3 +1,6 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 output "github_runner_image_builder_app_name" {
   description = "TODO"
   value       = module.github_runner_image_builder.app_name

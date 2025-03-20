@@ -1,3 +1,6 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 variable "juju_model_name" {
   description = "Juju model name"
   type        = string

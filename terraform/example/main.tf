@@ -1,3 +1,6 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 locals {
   juju_model_name = "stg-ps6-github-runner"
 

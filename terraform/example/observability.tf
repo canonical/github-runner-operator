@@ -1,3 +1,6 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 # Avoid race conditions with duplicate dashboards and
 # log pollution on grafana in case of duplicate dashboards
 # by using a separate grafana-agent charm for the edge flavor to transmit the dashboard.
