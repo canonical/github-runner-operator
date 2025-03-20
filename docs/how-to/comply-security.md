@@ -2,7 +2,7 @@
 
 According to GitHub, running code inside the GitHub self-hosted runner [poses a significant security risk of arbitrary code execution](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). The self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addition, the charm enforces some repository settings to ensure all code running on the self-hosted runners is reviewed by someone trusted.
 
-The charm can be integrated with [Repo Policy Compliance charm](https://charmhub.io/repo-policy-compliance) to enforce a set of good practice GitHub repository settings. Self-hosted runners managed by the charm will not run jobs on repositories not compliant with the practices.
+The charm can be integrated with the [Repo Policy Compliance charm](https://charmhub.io/repo-policy-compliance) to enforce a set of good practices around GitHub repository settings. Self-hosted runners managed by the charm will not run jobs on repositories unless they are compliant with the practices.
 
 In this guide, a recommended set of policies will be presented.
 
