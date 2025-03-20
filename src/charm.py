@@ -170,6 +170,8 @@ class GithubRunnerCharm(CharmBase):
                 class.
         """
         super().__init__(*args, **kwargs)
+        self._log_charm_status()
+
         self._grafana_agent = COSAgentProvider(self)
 
         self._event_timer = EventTimer(self.unit.name)
@@ -445,7 +447,6 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
-        self._log_charm_status()
 
     @staticmethod
     def _log_juju_processes() -> None:
