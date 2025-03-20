@@ -15,6 +15,7 @@ from urllib.error import HTTPError
 import requests
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from requests import RequestException
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import (
@@ -73,6 +74,8 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
+            raise GithubApiError from exc
+        except RequestException as exc:
             raise GithubApiError from exc
 
     return wrapper
