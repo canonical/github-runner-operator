@@ -1,3 +1,4 @@
 -r base_requirements.txt
 -r ./github-runner-manager/requirements.txt
 ./github-runner-manager
+psycopg == 3.2.6
