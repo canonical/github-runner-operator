@@ -20,8 +20,7 @@ module "github_runner" {
 }
 
 module "github_runner_image_builder" {
-  # TODO pending to create a tag for the github-runner-image-builder
-  source      = "git::https://github.com/canonical/github-runner-image-builder-operator//terraform/charm?ref=main"
+  source      = "git::https://github.com/canonical/github-runner-image-builder-operator//terraform/charm?ref=rev67"
   app_name    = var.github_runner_image_builder.app_name
   channel     = var.github_runner_image_builder.channel
   config      = var.github_runner_image_builder.config
