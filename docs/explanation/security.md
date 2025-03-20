@@ -50,4 +50,4 @@ The charm spawns OpenStack servers to host the GitHub self-hosted runner applica
 - Receive traffic on port 22: Needed for the charm to manage the OpenStack server.
 - Send traffic on port 10022: Needed for the integration with [tmate-ssh-server charm](https://charmhub.io/tmate-ssh-server).
 
-Other OpenStack security rules can be enforced by the OpenStack host. Enabling all port for egress is a common default OpenStack security rule. The above is what the charm manages.
+Other OpenStack security rules can be enforced by the OpenStack host. Enabling all port for egress is a common default OpenStack security rule. The above network traffic rules are what the charm manages.
