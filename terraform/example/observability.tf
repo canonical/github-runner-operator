@@ -29,3 +29,4 @@ module "cos_integration_without_dashboard" {
   prometheus_write_offer_url = local.prometheus_write_offer_url
   applications_to_relate     = slice(module.github_runner.all_runners_names, 1, length(module.github_runner.all_runners_names))
 }
+
