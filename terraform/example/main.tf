@@ -45,12 +45,14 @@ module "github_runner" {
       openstack-user-name           = local.openstack_username
       build-flavor                  = local.openstack_flavor
       build-network                 = local.openstack_network
+      revision-history-limit        = 2
     }
   }
 
   github_runners = [
     {
       app_name = "github-runner"
+      revision = 346
       config = {
         openstack-clouds-yaml = local.openstack_clouds_yaml
         base-virtual-machines = 1
@@ -62,6 +64,7 @@ module "github_runner" {
     },
     {
       app_name = "github-runner-reactive"
+      revision = 346
       config = {
         openstack-clouds-yaml      = local.openstack_clouds_yaml
         max-total-virtual-machines = 1
