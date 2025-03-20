@@ -1,0 +1,130 @@
+18:31:22 INFO Creating 1 runners
+18:31:23 INFO Creating openstack server with test-dvbd9bcm-0-n-f282ace7414f
+18:31:47 WARNING NoValidConnectionsError. Unable to SSH into test-dvbd9bcm-0-n-f282ace7414f with address 10.145.193.229. Error: [Errno None] Unable to connect to port 22 on 10.145.193.229
+18:31:47 WARNING Retrying error in 60 seconds: Failed to SSH to test-dvbd9bcm-0-n-f282ace7414f during creation possible due to setup not completed
+18:32:47 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:47 INFO Authentication (publickey) successful!
+18:32:48 INFO Runner startup process found to be healthy on test-dvbd9bcm-0-n-f282ace7414f
+18:32:48 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:48 INFO Authentication (publickey) successful!
+18:32:49 INFO Runner test-dvbd9bcm-0-n-f282ace7414f found to be healthy
+18:32:49 INFO Runner test-dvbd9bcm-0-n-f282ace7414f created successfully
+18:32:49 INFO Getting runners...
+18:32:50 INFO Getting all openstack servers managed by the charm
+18:32:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:52 INFO Authentication (publickey) successful!
+18:32:53 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:32:53 INFO Getting runners...
+18:32:54 INFO Getting all openstack servers managed by the charm
+18:32:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:56 INFO Authentication (publickey) successful!
+18:32:56 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:32:56 INFO Getting runners...
+18:32:57 INFO Getting all openstack servers managed by the charm
+18:33:01 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:01 INFO Authentication (publickey) successful!
+18:33:02 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:04 INFO Wait for condition not met, sleeping 10
+18:33:15 INFO Getting runners...
+18:33:16 INFO Getting all openstack servers managed by the charm
+18:33:18 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/floatingips: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+18:33:19 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:19 INFO Authentication (publickey) successful!
+18:33:20 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:20 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:20 INFO Getting runners...
+18:33:21 INFO Getting all openstack servers managed by the charm
+18:33:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:24 INFO Authentication (publickey) successful!
+18:33:24 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:24 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:25 INFO Offline github runners to delete: []:
+18:33:26 INFO Getting all openstack servers managed by the charm
+18:33:30 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:30 INFO Authentication (publickey) successful!
+18:33:30 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:30 INFO Authentication (publickey) successful!
+18:33:31 INFO [chan 2] Opened sftp connection (server version 3)
+18:33:31 INFO Running runner removal script for test-dvbd9bcm-0-n-f282ace7414f
+18:33:31 INFO Deleting openstack server with test-dvbd9bcm-0-n-f282ace7414f
+18:33:37 INFO Cleaning up SSH key files
+18:33:37 INFO Found 0 key files, clean up 0 key files
+18:33:37 INFO Cleaning up openstack keypairs
+18:33:37 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+18:33:37 INFO Getting runners...
+18:33:38 INFO Getting all openstack servers managed by the charm
+18:33:43 ERROR Unable to get SSH connection for instance test-dvbd9bcm-0-n-f282ace7414f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dvbd9bcm-0-n-f282ace7414f, key path: /home/ubuntu/.ssh/test-dvbd9bcm-0-n-f282ace7414f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dvbd9bcm-0-n-f282ace7414f
+18:33:43 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:43 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:43 INFO Getting runners...
+18:33:44 INFO Getting all openstack servers managed by the charm
+18:33:47 ERROR Unable to get SSH connection for instance test-dvbd9bcm-0-n-f282ace7414f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dvbd9bcm-0-n-f282ace7414f, key path: /home/ubuntu/.ssh/test-dvbd9bcm-0-n-f282ace7414f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dvbd9bcm-0-n-f282ace7414f
+18:33:47 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:47 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:33:47 INFO Wait for condition not met, sleeping 60
+18:34:47 INFO Getting runners...
+18:34:48 INFO Getting all openstack servers managed by the charm
+18:34:51 ERROR Unable to get SSH connection for instance test-dvbd9bcm-0-n-f282ace7414f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dvbd9bcm-0-n-f282ace7414f, key path: /home/ubuntu/.ssh/test-dvbd9bcm-0-n-f282ace7414f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dvbd9bcm-0-n-f282ace7414f
+18:34:51 INFO Found following runners: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:34:51 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dvbd9bcm-0-n-f282ace7414f'}
+18:34:51 INFO Wait for condition not met, sleeping 60
+18:35:51 INFO Getting runners...
+18:35:52 INFO Getting all openstack servers managed by the charm
+18:35:54 INFO Found following runners: set()
