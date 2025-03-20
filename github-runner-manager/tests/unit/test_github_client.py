@@ -11,6 +11,7 @@ from urllib.error import HTTPError
 
 import pytest
 import requests
+from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
@@ -393,6 +394,42 @@ def test_get_registration_jittoken_repo(github_client: GithubClient):
         status=GitHubRunnerStatus.OFFLINE,
         instance_id=instance_id,
     )
+
+
+def test_catch_http_errors_from_getting_runner_group_id(
+    github_client: GithubClient, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: A mocked Github Client that raises a 500 HTTPError when getting the runner group id.
+    act: Call
+    assert: A GithubApiError is raised.
+    """
+    github_repo = GitHubOrg(org="theorg", group="my group name")
+    instance_id = InstanceID.build("test-runner")
+    labels = ["label1", "label2"]
+
+    def _mock_get(url, headers, *args, **kwargs):
+        """Mock for requests.get."""
+
+        class _Response:
+            """Mocked Response for requests.get."""
+
+            def raise_for_status(self):
+                """Mocked raise_for_status.
+
+                Raises:
+                   RequestsHTTPError: HTTPError from requests. This is a fake response.
+                """
+                self.status_code = 500
+                raise RequestsHTTPError("500 Server Error", response=self)  # type: ignore
+
+        return _Response()
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+    with pytest.raises(GithubApiError):
+        _, _ = github_client.get_runner_registration_jittoken(
+            path=github_repo, instance_id=instance_id, labels=labels
+        )
 
 
 def test_get_registration_jittoken_org(
