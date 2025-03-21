@@ -602,6 +602,22 @@ def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
     )
 
 
+def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+    """TODO."""
+    runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
+    runner_https_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
+    runner_no_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
+    if runner_https_proxy or runner_http_proxy or runner_no_proxy:
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+        return ProxyConfig(
+            http=runner_http_proxy,
+            https=runner_https_proxy,
+            no_proxy=runner_no_proxy,
+            use_aproxy=use_aproxy,
+        )
+    return _build_proxy_config_from_charm(charm)
+
+
 class UnsupportedArchitectureError(Exception):
     """Raised when given machine charm architecture is unsupported.
 
@@ -812,7 +828,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         """
         try:
             proxy_config = _build_proxy_config_from_charm(charm)
-            runner_proxy_config = _build_proxy_config_from_charm(charm)
+            runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
