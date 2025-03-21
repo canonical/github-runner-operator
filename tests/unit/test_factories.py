@@ -39,6 +39,12 @@ def complete_charm_state():
             no_proxy="127.0.0.1",
             use_aproxy=False,
         ),
+        runner_proxy_config=charm_state.ProxyConfig(
+            http="http://runnerhttpproxy.example.com:3128",
+            https="http://runnerhttpsproxy.example.com:3128",
+            no_proxy="10.0.0.1",
+            use_aproxy=True,
+        ),
         charm_config=charm_state.CharmConfig(
             dockerhub_mirror="https://docker.example.com",
             labels=("label1", "label2"),
@@ -117,6 +123,18 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
                 https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
                 use_aproxy=False,
+            ),
+            runnerproxy_config=ProxyConfig(
+                http="http://httpproxy.example.com:3128",
+                https="http://httpsproxy.example.com:3128",
+                no_proxy="127.0.0.1",
+                use_aproxy=False,
+            ),
+            runner_proxy_config=charm_state.ProxyConfig(
+                http="http://runnerhttpproxy.example.com:3128",
+                https="http://runnerhttpsproxy.example.com:3128",
+                no_proxy="10.0.0.1",
+                use_aproxy=True,
             ),
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[

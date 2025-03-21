@@ -148,7 +148,13 @@ class OpenstackCloud:
     instance_id. It is the same as the server name.
     """
 
-    def __init__(self, credentials: OpenStackCredentials, prefix: str, system_user: str):
+    def __init__(
+        self,
+        credentials: OpenStackCredentials,
+        prefix: str,
+        system_user: str,
+        proxy_command: str | None = None,
+    ):
         """Create the object.
 
         Args:
@@ -156,11 +162,14 @@ class OpenstackCloud:
             prefix: Prefix attached to names of resource managed by this instance. Used for
                 identifying which resource belongs to this instance.
             system_user: The system user to own the key files.
+            proxy_command: gateway argument for fabric Connection. Similar to ProxyCommand in
+                ssh-config.
         """
         self._credentials = credentials
         self.prefix = prefix
         self._system_user = system_user
         self._ssh_key_dir = Path(f"~{system_user}").expanduser() / ".ssh"
+        self._proxy_command = proxy_command
 
     @_catch_openstack_errors
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
@@ -298,6 +307,7 @@ class OpenstackCloud:
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
+                    gateway=self._proxy_command,
                 )
                 result = connection.run(
                     f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True

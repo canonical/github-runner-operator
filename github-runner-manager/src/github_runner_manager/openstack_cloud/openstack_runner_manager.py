@@ -137,6 +137,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             credentials=self._credentials,
             prefix=self.name_prefix,
             system_user=constants.RUNNER_MANAGER_USER,
+            proxy_command=config.service_config.manager_proxy_command,
         )
         # Setting the env var to this process and any child process spawned.
         proxies = config.service_config.proxy_config
@@ -429,8 +430,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         aproxy_address = (
-            service_config.proxy_config.aproxy_address
-            if service_config.proxy_config is not None
+            service_config.runner_proxy_config.aproxy_address
+            if service_config.runner_proxy_config is not None
             else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(

@@ -51,7 +51,7 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
         MagicMock(),
     )
 
-    service_config_mock = MagicMock(spec=SupportServiceConfig)
+    service_config_mock = MagicMock(list(SupportServiceConfig.__fields__.keys()))
     service_config_mock.proxy_config = None
     config = OpenStackRunnerManagerConfig(
         prefix="test",
