@@ -6,42 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  tiobe-noble:
-    name: tiobe noble 
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-tiobe]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  tiobe:
-    name: tiobe
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-tiobe]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  tiobe-noble-large:
-    name: tiobe noble large
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-large-tiobe]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  tiobe-large:
-    name: tiobe large
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-large-tiobe]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
+  # tiobe-noble:
+  #   name: tiobe noble 
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-tiobe]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # tiobe:
+  #   name: tiobe
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-tiobe]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # tiobe-noble-large:
+  #   name: tiobe noble large
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-large-tiobe]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # tiobe-large:
+  #   name: tiobe large
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-jammy-large-tiobe]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
   # self-hosted-medium-arm64-canary:
   #   name: self-hosted-medium-arm64-canary
   #   runs-on: [self-hosted, arm64, medium, canary, noble]
@@ -56,14 +56,11 @@ jobs:
   #     - run: echo $DOCKERHUB_MIRROR
   #     - name: tmate ssh
   #       uses: canonical/action-tmate@main
-  # self-hosted-large-arm64-canary:
-  #   name: self-hosted-large-arm64-canary
-  #   runs-on: [self-hosted, arm64, large, canary, noble]
-  #   steps:
-  #     - run: lscpu
-  #     - run: df -h
-  #     - run: free -h
-  #     - run: uname -a
+  self-hosted-large:
+    name: self-hosted-large
+    runs-on: [self-hosted, amd64, large, jammy]
+    steps:
+      - run: sudo snap install --classic lxd
   #     - run: echo $HTTP_PROXY
   #     - run: echo $HTTPS_PROXY
   #     - run: echo $NO_PROXY
