@@ -20,7 +20,7 @@ juju consume sunbeam-controller:openstack.delapuente.es/observability.loki-loggi
 juju integrate grafana-agent-with-dashboard loki-logging
 terraform import -var-file=secrets.tfvars "module.cos_integration_with_dashboard.juju_integration.loki_logging[0]" "stg-ps6-github-runner:loki-logging:logging:grafana-agent-with-dashboard:logging-consumer"
 juju integrate grafana-agent-without-dashboard loki-logging
-terraform import -var-file=secrets.tfvars "module.cos_integration_without_dashboard.juju_integration.loki_logging[0]" "stg-ps6-github-runner:loki-logging:logging:grafana-agent-without-dashboard:logging-consume
+terraform import -var-file=secrets.tfvars "module.cos_integration_without_dashboard.juju_integration.loki_logging[0]" "stg-ps6-github-runner:loki-logging:logging:grafana-agent-without-dashboard:logging-consumer"
 
 juju consume sunbeam-controller:openstack.delapuente.es/observability.prometheus-receive-remote-write
 juju integrate grafana-agent-with-dashboard prometheus-receive-remote-write
