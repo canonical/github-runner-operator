@@ -15,7 +15,7 @@ Just like GitHub's runners, the self-hosted runners managed by the charm are iso
 
 Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
 
-The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with security requirements](https://charmhub.io/github-runner/docs/how-to-comply-security).
 
 ## In this documentation
 
@@ -54,7 +54,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Debug with SSH](how-to/debug-with-ssh.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
-  1. [Comply with repository policies](how-to/repo-policy.md)
   1. [Set up reactive spawning](how-to/reactive.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
@@ -80,6 +79,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Debug with SSH](local-lxd/how-to/debug-with-ssh.md)
     1. [Deploy on ARM64](local-lxd/how-to/deploy-on-arm64.md)
     1. [Integrate with COS](local-lxd/how-to/integrate-with-cos.md)
+    1. [Comply with repository policies](local-lxd/how-to/repo-policy.md)
     1. [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md)
     1. [Set base image](local-lxd/how-to/set-base-image.md)
   1. [Reference](local-lxd/reference)
