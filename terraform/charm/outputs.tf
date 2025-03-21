@@ -10,7 +10,7 @@ output "requires" {
   value = {
     debug_ssh              = "debug-ssh"
     github_runner_image_v0 = "image"
-    mongodb_client         = "mondobd"
+    mongodb_client         = "mongodb"
   }
 }
 
