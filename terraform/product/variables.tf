@@ -9,9 +9,9 @@ variable "model" {
 variable "github_runner_image_builder" {
   type = object({
     app_name    = optional(string, "github-runner-image-builder")
-    channel     = optional(string, "latest/edge")
+    channel     = optional(string, "latest/stable")
     config      = optional(map(string), {})
-    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=28672M")
+    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=20000M")
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)
@@ -21,9 +21,9 @@ variable "github_runner_image_builder" {
 variable "github_runners" {
   type = list(object({
     app_name    = optional(string, "github-runner")
-    channel     = optional(string, "latest/edge")
+    channel     = optional(string, "latest/stable")
     config      = optional(map(string), {})
-    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=28672M")
+    constraints = optional(string, "arch=amd64 cores=2 mem=8192M root-disk=20000M")
     revision    = optional(number)
     base        = optional(string, "ubuntu@22.04")
     units       = optional(number, 1)

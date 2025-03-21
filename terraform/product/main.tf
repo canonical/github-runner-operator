@@ -34,7 +34,7 @@ module "github_runner_image_builder" {
 resource "juju_integration" "image_builder" {
   model = data.juju_model.github_runner.name
 
-  for_each = { for mgh in module.github_runner : mgh.app_name => mgh }
+  for_each = { for github_runner in module.github_runner : github_runner.app_name => github_runner }
 
   application {
     name     = each.key
