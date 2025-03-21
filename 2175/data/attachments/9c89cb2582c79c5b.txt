@@ -1,0 +1,157 @@
+18:28:10 INFO Adding model lxd:test-charm-scheduled-events-zj9o on cloud localhost
+18:28:11 WARNING unexpected facade AgentLifeFlag received from the controller
+18:28:11 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:28:11 WARNING unexpected facade SecretsDrain received from the controller
+18:28:13 INFO Deploying ch:amd64/github-runner-image-builder-61
+18:28:13 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go (not enough units yet - 0/1)
+18:28:43 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [allocating] waiting: waiting for machine
+18:29:13 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [allocating] waiting: waiting for machine
+18:29:43 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [allocating] waiting: agent initialising
+18:30:13 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:30:43 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:31:13 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:31:44 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:32:14 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:32:44 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [executing] maintenance: Setting up Builder.
+18:33:39 INFO Deploying local:jammy/github-runner-0
+18:33:39 INFO Waiting for model:
+  test-y56dj2go/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y56dj2go/0 [idle] blocked: image integration required.
+18:34:10 INFO Waiting for model:
+  test-y56dj2go/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y56dj2go/0 [idle] blocked: image integration required.
+18:34:40 INFO Waiting for model:
+  test-y56dj2go/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y56dj2go/0 [idle] blocked: image integration required.
+18:35:10 INFO Waiting for model:
+  test-y56dj2go/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-y56dj2go/0 [idle] blocked: image integration required.
+18:35:40 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-y56dj2go/0 [idle] blocked: image integration required.
+18:36:10 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:36:40 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:37:10 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:37:40 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:38:10 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:38:40 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:39:11 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:39:41 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:40:11 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:40:41 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:41:11 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:41:41 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:42:11 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:42:41 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:43:11 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:43:41 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:44:12 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-y56dj2go/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: Building image.
+18:45:12 INFO Waiting for model:
+  test-y56dj2go/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-y56dj2go/0 [executing] active: 
+18:45:42 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:46:05 INFO Waiting for model:
+  test-y56dj2go/0 [idle] active: 
+18:46:35 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:47:05 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:47:35 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:48:05 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:48:35 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+18:49:31 INFO Waiting for model:
+  test-y56dj2go/0 [idle] active:
+18:49:52 INFO Wait for condition not met, sleeping 3
+18:49:56 INFO Wait for 10 minutes
+18:59:56 INFO Waiting for model:
+  github-runner-image-builder-y56dj2go/0 [idle] active: 
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+19:00:26 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+19:00:56 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+19:01:26 INFO Waiting for model:
+  test-y56dj2go/0 [executing] maintenance: Reconciling runners
+19:01:56 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-zj9o  lxd         localhost/localhost  3.1.10   unsupported  19:01:56Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-y56dj2go           active      1  github-runner-image-builder  latest/edge   61  no       
+test-y56dj2go                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-y56dj2go/0*  active    idle   0        10.84.35.125           
+test-y56dj2go/0*                         active    idle   1        10.84.35.100           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.84.35.125  juju-5d1ea2-0  ubuntu@22.04      Running
+1        started  10.84.35.100  juju-5d1ea2-1  ubuntu@22.04      Running
+
+19:01:56 INFO Juju error logs:
+
+machine-0: 18:29:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:29:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:29:37 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-y56dj2go-0: 18:29:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-y56dj2go-0: 18:30:51 ERROR unit.github-runner-image-builder-y56dj2go/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:35:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:35:05 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:35:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-y56dj2go-0: 18:35:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+19:01:57 INFO Forgetting model main...

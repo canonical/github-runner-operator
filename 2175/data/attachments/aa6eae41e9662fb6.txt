@@ -1,0 +1,169 @@
+18:30:02 INFO GitHub token rate limit: Rate(reset=2025-03-21 19:04:49+00:00, remaining=4808, limit=5000)
+18:30:04 INFO Creating 1 runners
+18:30:05 INFO Creating openstack server with test-vwqdnc34-0-n-c6b1e7861018
+18:30:58 WARNING NoValidConnectionsError. Unable to SSH into test-vwqdnc34-0-n-c6b1e7861018 with address 10.145.193.167. Error: [Errno None] Unable to connect to port 22 on 10.145.193.167
+18:30:58 WARNING Retrying error in 60 seconds: Failed to SSH to test-vwqdnc34-0-n-c6b1e7861018 during creation possible due to setup not completed
+18:31:58 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:59 INFO Authentication (publickey) successful!
+18:32:00 INFO Runner startup process found to be healthy on test-vwqdnc34-0-n-c6b1e7861018
+18:32:00 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:00 INFO Authentication (publickey) successful!
+18:32:01 INFO Runner test-vwqdnc34-0-n-c6b1e7861018 found to be healthy
+18:32:01 INFO Runner test-vwqdnc34-0-n-c6b1e7861018 created successfully
+18:32:01 INFO Getting runners...
+18:32:02 INFO Getting all openstack servers managed by the charm
+18:32:03 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:03 INFO Authentication (publickey) successful!
+18:32:04 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:04 INFO Getting runners...
+18:32:05 INFO Getting all openstack servers managed by the charm
+18:32:07 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:07 INFO Authentication (publickey) successful!
+18:32:08 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:08 INFO Getting runners...
+18:32:09 INFO Getting all openstack servers managed by the charm
+18:32:11 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:11 INFO Authentication (publickey) successful!
+18:32:12 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:14 INFO Wait for condition not met, sleeping 10
+18:32:25 INFO Getting runners...
+18:32:26 INFO Getting all openstack servers managed by the charm
+18:32:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:28 INFO Authentication (publickey) successful!
+18:32:29 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:29 INFO Getting runners...
+18:32:30 INFO Getting all openstack servers managed by the charm
+18:32:32 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:32 INFO Authentication (publickey) successful!
+18:32:33 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:34 INFO Offline github runners to delete: []:
+18:32:35 INFO Getting all openstack servers managed by the charm
+18:32:37 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:37 INFO Authentication (publickey) successful!
+18:32:39 INFO Cleaning up SSH key files
+18:32:39 INFO Found 1 key files, clean up 0 key files
+18:32:39 INFO Cleaning up openstack keypairs
+18:32:39 INFO Getting runners...
+18:32:41 INFO Getting all openstack servers managed by the charm
+18:32:42 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:42 INFO Authentication (publickey) successful!
+18:32:43 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:43 INFO Flushing idle runners...
+18:32:43 INFO Getting all openstack servers managed by the charm
+18:32:45 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:45 INFO Authentication (publickey) successful!
+18:32:45 INFO Attempting to kill runner process on test-vwqdnc34-0-n-c6b1e7861018 if not busy
+18:32:45 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:32:45 INFO Kill process command output, ok: False code 1, out: 1995
+, err: 
+18:32:45 INFO Getting all openstack servers managed by the charm
+18:32:47 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:47 INFO Authentication (publickey) successful!
+18:32:49 INFO Cleaning up SSH key files
+18:32:49 INFO Found 1 key files, clean up 0 key files
+18:32:49 INFO Cleaning up openstack keypairs
+18:32:49 INFO Getting runners...
+18:32:50 INFO Getting all openstack servers managed by the charm
+18:32:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:52 INFO Authentication (publickey) successful!
+18:32:53 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:32:53 INFO Flushing idle and busy runners...
+18:32:53 INFO Getting all openstack servers managed by the charm
+18:32:55 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:55 INFO Authentication (publickey) successful!
+18:32:55 INFO Attempting to kill all runner process on test-vwqdnc34-0-n-c6b1e7861018
+18:32:55 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:32:55 INFO Kill process command output, ok: True code 0, out: 1654
+1995
+, err: 
+18:32:55 INFO Getting all openstack servers managed by the charm
+18:32:57 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:32:57 INFO Authentication (publickey) successful!
+18:32:59 INFO Cleaning up SSH key files
+18:32:59 INFO Found 1 key files, clean up 0 key files
+18:32:59 INFO Cleaning up openstack keypairs
+18:33:09 INFO Flushing idle and busy runners...
+18:33:09 INFO Getting all openstack servers managed by the charm
+18:33:11 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:11 INFO Authentication (publickey) successful!
+18:33:12 INFO Attempting to kill all runner process on test-vwqdnc34-0-n-c6b1e7861018
+18:33:12 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:33:12 INFO Kill process command output, ok: True code 0, out: 1654
+1995
+, err: 
+18:33:12 INFO Getting all openstack servers managed by the charm
+18:33:14 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:14 INFO Authentication (publickey) successful!
+18:33:16 INFO Cleaning up SSH key files
+18:33:16 INFO Found 1 key files, clean up 0 key files
+18:33:16 INFO Cleaning up openstack keypairs
+18:33:16 INFO Getting runners...
+18:33:17 INFO Getting all openstack servers managed by the charm
+18:33:19 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:19 INFO Authentication (publickey) successful!
+18:33:20 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:33:20 INFO Getting runners...
+18:33:21 INFO Getting all openstack servers managed by the charm
+18:33:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:33:24 INFO Authentication (publickey) successful!
+18:33:24 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:33:24 INFO Wait for condition not met, sleeping 60
+18:34:24 INFO Getting runners...
+18:34:26 INFO Getting all openstack servers managed by the charm
+18:34:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:34:28 INFO Authentication (publickey) successful!
+18:34:29 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:34:29 INFO Wait for condition not met, sleeping 60
+18:35:29 INFO Getting runners...
+18:35:31 INFO Getting all openstack servers managed by the charm
+18:35:34 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:34 INFO Authentication (publickey) successful!
+18:35:35 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:35:35 INFO Wait for condition not met, sleeping 60
+18:36:35 INFO Getting runners...
+18:36:37 INFO Getting all openstack servers managed by the charm
+18:36:40 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:36:40 INFO Authentication (publickey) successful!
+18:36:41 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:36:41 INFO Wait for condition not met, sleeping 60
+18:37:41 INFO Getting runners...
+18:37:42 INFO Getting all openstack servers managed by the charm
+18:37:45 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:37:45 INFO Authentication (publickey) successful!
+18:37:46 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:37:46 INFO Wait for condition not met, sleeping 60
+18:38:46 INFO Getting runners...
+18:38:47 INFO Getting all openstack servers managed by the charm
+18:38:51 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:38:51 INFO Authentication (publickey) successful!
+18:38:52 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:38:52 INFO Wait for condition not met, sleeping 60
+18:39:52 INFO Getting runners...
+18:39:53 INFO Getting all openstack servers managed by the charm
+18:39:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:39:57 INFO Authentication (publickey) successful!
+18:39:58 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:39:58 INFO Wait for condition not met, sleeping 60
+18:40:58 INFO Getting runners...
+18:40:59 INFO Getting all openstack servers managed by the charm
+18:41:01 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:41:01 INFO Authentication (publickey) successful!
+18:41:02 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:41:02 INFO Wait for condition not met, sleeping 60
+18:42:02 INFO Getting runners...
+18:42:04 INFO Getting all openstack servers managed by the charm
+18:42:06 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:42:06 INFO Authentication (publickey) successful!
+18:42:07 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:42:07 INFO Wait for condition not met, sleeping 60
+18:43:07 INFO Getting runners...
+18:43:08 INFO Getting all openstack servers managed by the charm
+18:43:10 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:43:10 INFO Authentication (publickey) successful!
+18:43:11 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
+18:43:11 INFO Wait for condition not met, sleeping 60
+18:44:11 INFO Getting runners...
+18:44:12 INFO Getting all openstack servers managed by the charm
+18:44:14 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:44:14 INFO Authentication (publickey) successful!
+18:44:15 INFO Found following runners: {'test-vwqdnc34-0-n-c6b1e7861018'}
