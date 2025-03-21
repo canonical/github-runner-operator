@@ -19,11 +19,6 @@ jobs:
           pip install tox pylint flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
-      - name: Install dependencies of test code for TiCS
-        run: |
-          pip install -r ./tests/unit/requirements.txt
-          pip install -r ./tests/integration/requirements.txt
-          pip install -r ./github-runner-manager/tests/unit/requirements.txt
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         env:
