@@ -34,13 +34,17 @@ class SupportServiceConfig(BaseModel):
     """Configuration for supporting services for runners.
 
     Attributes:
+        manager_proxy_command: TODO.
         proxy_config: The proxy configuration.
+        runner_proxy_config: TODO.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
     """
 
+    manager_proxy_command: str | None = None
     proxy_config: "ProxyConfig | None"
+    runner_proxy_config: "ProxyConfig | None"
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
@@ -117,12 +121,14 @@ class SSHDebugConnection(BaseModel):
         port: The SSH relay server port.
         rsa_fingerprint: The host SSH server public RSA key fingerprint.
         ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+        use_runner_http_proxy: TODO
     """
 
     host: IPvAnyAddress
     port: int = Field(0, gt=0, le=65535)
     rsa_fingerprint: str = Field(pattern="^SHA256:.*")
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
+    use_runner_http_proxy: bool = False
 
 
 class RepoPolicyComplianceConfig(BaseModel):
