@@ -80,7 +80,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Debug with SSH](local-lxd/how-to/debug-with-ssh.md)
     1. [Deploy on ARM64](local-lxd/how-to/deploy-on-arm64.md)
     1. [Integrate with COS](local-lxd/how-to/integrate-with-cos.md)
-    1. [Comply with repository policies](local-lxd/how-to/repo-policy.md)
     1. [Run on LXD cloud](local-lxd/how-to/run-on-lxd.md)
     1. [Set base image](local-lxd/how-to/set-base-image.md)
   1. [Reference](local-lxd/reference)
