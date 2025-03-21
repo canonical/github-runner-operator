@@ -5,23 +5,19 @@
 
 import logging
 import secrets
-import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterator, Sequence
+from typing import Iterable, Sequence
 
 import fabric
 import invoke
 import jinja2
 import paramiko
-import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 
 from github_runner_manager import constants
 from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import (
-    CreateMetricsStorageError,
-    GetMetricsStorageError,
     KeyfileError,
     MissingServerConfigError,
     OpenStackError,
@@ -39,8 +35,6 @@ from github_runner_manager.manager.cloud_runner_manager import (
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.metrics import storage as metrics_storage
-from github_runner_manager.metrics.storage import StorageManager
 from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
@@ -62,7 +56,6 @@ _CONFIG_SCRIPT_PATH = Path("/home/ubuntu/actions-runner/config.sh")
 
 RUNNER_APPLICATION = Path("/home/ubuntu/actions-runner")
 PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
-MAX_METRICS_FILE_SIZE = 1024
 
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
@@ -73,10 +66,6 @@ HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
 
 class _GithubRunnerRemoveError(Exception):
     """Represents an error while SSH into a runner and running the remove script."""
-
-
-class _PullFileError(Exception):
-    """Represents an error while pulling a file from the runner instance."""
 
 
 @dataclass
@@ -149,8 +138,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             prefix=self.name_prefix,
             system_user=constants.RUNNER_MANAGER_USER,
         )
-        self._metrics_storage_manager = metrics_storage.StorageManager(self._config.prefix)
-
         # Setting the env var to this process and any child process spawned.
         proxies = config.service_config.proxy_config
         if proxies and (no_proxy := proxies.no_proxy):
@@ -182,11 +169,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
-
-        start_timestamp = time.time()
-        self._init_metrics_storage(
-            instance_id=instance_id, install_start_timestamp=start_timestamp
-        )
 
         cloud_init = self._generate_cloud_init(registration_jittoken=registration_jittoken)
         try:
@@ -267,19 +249,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
-        self._delete_runner(instance, remove_token)
+        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        extracted_metrics = runner_metrics.extract(
-            metrics_storage_manager=self._metrics_storage_manager,
-            runners={instance.instance_id},
-            include=True,
-        )
-        return next(extracted_metrics, None)
+        return pulled_metrics.to_runner_metrics(instance.instance_id, instance.created_at)
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
+    ) -> Iterable[runner_metrics.RunnerMetrics]:
         """Remove idle and/or busy runners.
 
         Args:
@@ -308,7 +285,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterator[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[runner_metrics.RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -328,67 +305,34 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Unknown health runners: %s", unknown_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
+        extracted_runner_metrics = []
         for runner in runners.unhealthy:
-            self._delete_runner(runner, remove_token)
+            pulled_metrics = self._delete_runner(runner, remove_token)
+            runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
+            if not runner_metric:
+                logger.error("No metrics returned after deleting %s", runner.instance_id)
+            else:
+                extracted_runner_metrics.append(runner_metric)
         logger.debug("Cleaning up runner resources.")
         self._openstack_cloud.cleanup()
         logger.debug("Cleanup completed successfully.")
 
         logger.debug("Extracting metrics.")
-        return self._cleanup_extract_metrics(
-            metrics_storage_manager=self._metrics_storage_manager,
-            ignore_runner_names=healthy_runner_names | unknown_runner_names,
-            include_runner_names=unhealthy_runner_names,
-        )
+        return extracted_runner_metrics
 
-    @staticmethod
-    def _cleanup_extract_metrics(
-        metrics_storage_manager: StorageManager,
-        ignore_runner_names: set[InstanceID],
-        include_runner_names: set[InstanceID],
-    ) -> Iterator[runner_metrics.RunnerMetrics]:
-        """Extract metrics for certain runners and dangling metrics storage.
-
-        Args:
-            metrics_storage_manager: The metrics storage manager.
-            ignore_runner_names: The names of the runners whose metrics should not be extracted.
-            include_runner_names: The names of the runners whose metrics should be extracted.
-
-        Returns:
-            Any metrics retrieved from the include_runner_names and dangling storage.
-        """
-        # There may be runners under construction that are not included in the runner_names sets
-        # because they do not yet exist in OpenStack and that should not be cleaned up.
-        # On the other hand, there could be storage for runners from the past that
-        # should be cleaned up.
-        all_runner_names = ignore_runner_names | include_runner_names
-        unmatched_metrics_storage = (
-            ms
-            for ms in metrics_storage_manager.list_all()
-            if ms.instance_id not in all_runner_names
-        )
-        # We assume that storage is dangling if it has not been updated for a long time.
-        dangling_storage_runner_names = {
-            ms.instance_id
-            for ms in unmatched_metrics_storage
-            if ms.path.stat().st_mtime < time.time() - OUTDATED_METRICS_STORAGE_IN_SECONDS
-        }
-        return runner_metrics.extract(
-            metrics_storage_manager=metrics_storage_manager,
-            runners=include_runner_names | dangling_storage_runner_names,
-            include=True,
-        )
-
-    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
+    def _delete_runner(
+        self, instance: OpenstackInstance, remove_token: str
+    ) -> runner_metrics.PulledMetrics:
         """Delete self-hosted runners by openstack instance.
 
         Args:
             instance: The OpenStack instance.
             remove_token: The GitHub remove token.
         """
+        pulled_metrics = runner_metrics.PulledMetrics()
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            self._pull_runner_metrics(instance.instance_id, ssh_conn)
+            pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
 
             try:
                 logger.info("Running runner removal script for %s", instance.instance_id)
@@ -415,6 +359,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.instance_id
             )
+        return pulled_metrics
 
     def _get_runners_health(self) -> _RunnerHealth:
         """Get runners by health state.
@@ -645,141 +590,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         logger.info("Runner %s found to be healthy", instance.instance_id)
 
-    def _init_metrics_storage(
-        self, instance_id: InstanceID, install_start_timestamp: float
-    ) -> None:
-        """Create metrics storage for runner.
-
-        An error will be logged if the storage cannot be created.
-        It is assumed that the code will not be able to issue metrics for this runner
-        and not fail for other operations.
-
-        Args:
-            instance_id: The name of the runner.
-            install_start_timestamp: The timestamp of installation start.
-        """
-        try:
-            storage = self._metrics_storage_manager.create(instance_id=instance_id)
-        except CreateMetricsStorageError:
-            logger.exception(
-                "Failed to create metrics storage for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_id,
-            )
-        else:
-            try:
-                (storage.path / runner_metrics.RUNNER_INSTALLATION_START_TS_FILE_NAME).write_text(
-                    str(install_start_timestamp), encoding="utf-8"
-                )
-            except FileNotFoundError:
-                logger.exception(
-                    f"Failed to write {runner_metrics.RUNNER_INSTALLATION_START_TS_FILE_NAME}"
-                    f" into metrics storage for runner %s, will not be able to issue all metrics.",
-                    instance_id,
-                )
-
-    def _pull_runner_metrics(self, instance_id: InstanceID, ssh_conn: SSHConnection) -> None:
-        """Pull metrics from runner.
-
-        Args:
-            instance_id: The name of the runner.
-            ssh_conn: The SSH connection to the runner.
-        """
-        logger.debug("Pulling metrics for %s", instance_id)
-        try:
-            storage = self._metrics_storage_manager.get(instance_id=instance_id)
-        except GetMetricsStorageError:
-            logger.exception(
-                "Failed to get shared metrics storage for runner %s, "
-                "will not be able to issue all metrics.",
-                instance_id,
-            )
-            return
-
-        try:
-            OpenStackRunnerManager._ssh_pull_file(
-                ssh_conn=ssh_conn,
-                remote_path=str(METRICS_EXCHANGE_PATH / "runner-installed.timestamp"),
-                local_path=str(storage.path / runner_metrics.RUNNER_INSTALLED_TS_FILE_NAME),
-                max_size=MAX_METRICS_FILE_SIZE,
-            )
-            OpenStackRunnerManager._ssh_pull_file(
-                ssh_conn=ssh_conn,
-                remote_path=str(METRICS_EXCHANGE_PATH / "pre-job-metrics.json"),
-                local_path=str(storage.path / runner_metrics.PRE_JOB_METRICS_FILE_NAME),
-                max_size=MAX_METRICS_FILE_SIZE,
-            )
-            OpenStackRunnerManager._ssh_pull_file(
-                ssh_conn=ssh_conn,
-                remote_path=str(METRICS_EXCHANGE_PATH / "post-job-metrics.json"),
-                local_path=str(storage.path / runner_metrics.POST_JOB_METRICS_FILE_NAME),
-                max_size=MAX_METRICS_FILE_SIZE,
-            )
-        except _PullFileError as exc:
-            logger.warning(
-                "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-                instance_id,
-                exc,
-            )
-
-    @staticmethod
-    def _ssh_pull_file(
-        ssh_conn: SSHConnection, remote_path: str, local_path: str, max_size: int
-    ) -> None:
-        """Pull file from the runner instance.
-
-        Args:
-            ssh_conn: The SSH connection instance.
-            remote_path: The file path on the runner instance.
-            local_path: The local path to store the file.
-            max_size: If the file is larger than this, it will not be pulled.
-
-        Raises:
-            _PullFileError: Unable to pull the file from the runner instance.
-            SSHError: Issue with SSH connection.
-        """
-        try:
-            result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True, timeout=60, hide=True)
-        except (
-            TimeoutError,
-            paramiko.ssh_exception.NoValidConnectionsError,
-            paramiko.ssh_exception.SSHException,
-        ) as exc:
-            raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
-        if not result.ok:
-            logger.warning(
-                (
-                    "Unable to get file size of %s on instance %s, "
-                    "exit code: %s, stdout: %s, stderr: %s"
-                ),
-                remote_path,
-                ssh_conn.host,
-                result.return_code,
-                result.stdout,
-                result.stderr,
-            )
-            raise _PullFileError(f"Unable to get file size of {remote_path}")
-
-        stdout = result.stdout
-        try:
-            stdout.strip()
-            size = int(stdout)
-            if size > max_size:
-                raise _PullFileError(f"File size of {remote_path} too large {size} > {max_size}")
-        except ValueError as exc:
-            raise _PullFileError(f"Invalid file size for {remote_path}: stdout") from exc
-
-        try:
-            ssh_conn.get(remote=remote_path, local=local_path)
-        except (
-            TimeoutError,
-            paramiko.ssh_exception.NoValidConnectionsError,
-            paramiko.ssh_exception.SSHException,
-        ) as exc:
-            raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
-        except OSError as exc:
-            raise _PullFileError(f"Unable to retrieve file {remote_path}") from exc
-
     @staticmethod
     def _run_runner_removal_script(
         instance_id: InstanceID, ssh_conn: SSHConnection, remove_token: str
@@ -816,9 +626,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_id} from Github.")
         except (
-            TimeoutError,
             paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.SSHException,
+            TimeoutError,
         ) as exc:
             raise _GithubRunnerRemoveError(
                 f"Failed to remove runner {instance_id} from Github."

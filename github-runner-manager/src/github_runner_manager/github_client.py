@@ -15,6 +15,7 @@ from urllib.error import HTTPError
 import requests
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from requests import RequestException
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import (
@@ -25,8 +26,8 @@ from github_runner_manager.configuration.github import (
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import (
+    JITConfig,
     JobInfo,
-    RegistrationToken,
     RemoveToken,
     SelfHostedRunner,
 )
@@ -74,6 +75,8 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
             raise GithubApiError from exc
+        except RequestException as exc:
+            raise GithubApiError from exc
 
     return wrapper
 
@@ -91,12 +94,13 @@ class GithubClient:
         self._client = GhApi(token=self._token)
 
     @catch_http_errors
-    def get_runner_github_info(self, path: GitHubPath) -> list[SelfHostedRunner]:
+    def get_runner_github_info(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
         """Get runner information on GitHub under a repo or org.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            prefix: Filter instances related to this prefix and build the InstanceID.
 
         Returns:
             List of runner information.
@@ -136,7 +140,15 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        return remote_runners_list
+
+        # Filter by prefix and create the SelfHostedRunner instances.
+        managed_runners_list = []
+        for runner in remote_runners_list:
+            if InstanceID.name_has_prefix(prefix, runner["name"]):
+                instance_id = InstanceID.build_from_name(prefix, runner["name"])
+                managed_runner = SelfHostedRunner.build_from_github(runner, instance_id)
+                managed_runners_list.append(managed_runner)
+        return managed_runners_list
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:
@@ -163,7 +175,7 @@ class GithubClient:
     @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
-    ) -> str:
+    ) -> tuple[str, SelfHostedRunner]:
         """Get token from GitHub used for registering runners.
 
         Args:
@@ -175,7 +187,7 @@ class GithubClient:
         Returns:
             The registration token.
         """
-        token: RegistrationToken
+        token: JITConfig
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.
             # If the repo does not belong to an org, there is no way to get the runner_group_id.
@@ -199,7 +211,8 @@ class GithubClient:
         else:
             assert_never(token)
 
-        return token["encoded_jit_config"]
+        runner = SelfHostedRunner.build_from_github(token["runner"], instance_id)
+        return token["encoded_jit_config"], runner
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
         """Get runner_group_id from group name for an org.

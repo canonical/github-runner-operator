@@ -6,6 +6,8 @@
 import factory
 import openstack.compute.v2.server
 
+SERVER_CREATED_AT = "2024-09-12T02:48:03Z"
+
 
 class ServerFactory(factory.Factory):
     """Factory class for OpenStack server.
@@ -36,6 +38,6 @@ class ServerFactory(factory.Factory):
             }
         ]
     }
-    created_at = "2024-09-12T02:48:03Z"
+    created_at = SERVER_CREATED_AT
     id = "e6117e39-fbb4-47bc-9461-3933f5ab6f56"
     status = "ACTIVE"

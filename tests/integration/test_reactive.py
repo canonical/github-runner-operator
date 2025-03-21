@@ -2,7 +2,6 @@
 #  See LICENSE file for licensing details.
 
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
-import asyncio
 import json
 import re
 from typing import AsyncIterator
@@ -94,9 +93,6 @@ async def test_reactive_mode_spawns_runner(
         mongodb_uri,
         app.name,
     )
-
-    # TODO This is a bug. The reconcile deletes servers in BUILD state.
-    await asyncio.sleep(300)
 
     # This reconcile call is to check that we are not killing machines that are under
     # construction in a subsequent reconciliation.
@@ -208,10 +204,6 @@ async def test_reactive_mode_scale_down(
     )
 
     await wait_for_status(run, "in_progress")
-
-    # Give the runner manager some time to check the runners is ok and ack the message.
-    # TODO This is a bug. The reconcile deletes servers in BUILD state.
-    await asyncio.sleep(300)
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})

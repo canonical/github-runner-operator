@@ -11,7 +11,7 @@ from typing import Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.errors import GithubMetricsError, RunnerError
+from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -155,7 +155,7 @@ class RunnerManager:
         logger.info("Getting runners...")
         github_infos = self._github.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
-        github_infos_map = {info.name: info for info in github_infos}
+        github_infos_map = {info.instance_id.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
         logger.info(
             "Found following runners: %s", cloud_infos_map.keys() | github_infos_map.keys()
@@ -242,10 +242,56 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        self._github.delete_runners([GitHubRunnerState.OFFLINE])
+        self._cleanup_github_offline_runners()
         remove_token = self._github.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    def _cleanup_github_offline_runners(self) -> None:
+        """Run cleanup of github runners in offline state."""
+        # RunnerManager.get_runners only get runners in the cloud provider, which can be
+        # misleading. Pending to tackle and put the logic of this function to get_runners
+        # and in the RunnerInstance.
+
+        # For non-reactive runners, delete all offline runners. There are small
+        # race conditions, as runners could be busy, for example in the case of a network restart
+        # or a reboot of the machine.
+
+        # For reactive runners, runners can be in CREATED state, meaning that the reactive process
+        # is creating them. Same situation in ACTIVE and HEALTHY state, where the
+        # reactive runner can be running the first steps of the startup (and cloud init script)
+        # before running the GitHub agent.
+        cloud_instances = self.get_runners()
+        cloud_instances_map = {
+            cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
+        }
+
+        github_runners_offline = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        github_runners_to_delete = []
+        for github_runner in github_runners_offline:
+            # Delete all non-reactive runners
+            if not github_runner.instance_id.reactive:
+                github_runners_to_delete.append(github_runner)
+                continue
+
+            # reactive runners.
+            # If there is no cloud runner, we do not remove  the GitHub runner,
+            # as it can be a reactive runner being in the creation phase. The risk
+            # is that some offline runners could be left for a while in GitHub.
+            if github_runner.instance_id not in cloud_instances_map:
+                continue
+            cloud_runner = cloud_instances_map[github_runner.instance_id]
+            if cloud_runner.cloud_state == CloudRunnerState.CREATED or (
+                cloud_runner.cloud_state == CloudRunnerState.ACTIVE
+                and cloud_runner.health == HealthState.HEALTHY
+            ):
+                continue
+            github_runners_to_delete.append(github_runner)
+        logger.info(
+            "Offline github runners to delete: %s:",
+            [runner.instance_id for runner in github_runners_to_delete],
+        )
+        self._github.delete_runners(github_runners_to_delete)
 
     @staticmethod
     def _spawn_runners(
@@ -271,7 +317,7 @@ class RunnerManager:
         if num == 1:
             try:
                 return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
-            except RunnerError:
+            except (RunnerError, GithubApiError):
                 logger.exception("Failed to spawn a runner.")
                 return tuple()
 
@@ -301,7 +347,7 @@ class RunnerManager:
             for _ in range(num):
                 try:
                     instance_id = next(jobs)
-                except RunnerError:
+                except (RunnerError, GithubApiError):
                     logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
@@ -363,7 +409,6 @@ class RunnerManager:
                     "No pre-job metrics found for %s, will not calculate job metrics.",
                     extracted_metrics.instance_id,
                 )
-
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
@@ -404,12 +449,22 @@ class RunnerManager:
 
         Returns:
             The instance ID of the runner created.
+
+        Raises:
+            RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        registration_jittoken = args.github_runner_manager.get_registration_jittoken(
-            instance_id, args.labels
+        registration_jittoken, github_runner = (
+            args.github_runner_manager.get_registration_jittoken(instance_id, args.labels)
         )
-        args.cloud_runner_manager.create_runner(
-            instance_id=instance_id, registration_jittoken=registration_jittoken
-        )
+        try:
+            args.cloud_runner_manager.create_runner(
+                instance_id=instance_id, registration_jittoken=registration_jittoken
+            )
+        except RunnerError:
+            # try to clean the runner in GitHub. This is necessary, as for reactive runners
+            # we do not know in the clean up if the runner is offline because if failed or
+            # because it is being created.
+            args.github_runner_manager.delete_runners([github_runner])
+            raise
         return instance_id
