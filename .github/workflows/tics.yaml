@@ -19,9 +19,9 @@ jobs:
           pip install tox pylint flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
-      - name: Add to PYTHONPATH
+      - name: Install github-runner-manager
         run: |
-          PYTHONPATH="$PYTHONPATH:$PWD/github-runner-manager/src/"
+          pip install ./github-runner-manager
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         with:
