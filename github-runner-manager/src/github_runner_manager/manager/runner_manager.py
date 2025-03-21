@@ -11,7 +11,7 @@ from typing import Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.errors import GithubMetricsError, RunnerError
+from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -317,7 +317,7 @@ class RunnerManager:
         if num == 1:
             try:
                 return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
-            except RunnerError:
+            except (RunnerError, GithubApiError):
                 logger.exception("Failed to spawn a runner.")
                 return tuple()
 
@@ -347,7 +347,7 @@ class RunnerManager:
             for _ in range(num):
                 try:
                     instance_id = next(jobs)
-                except RunnerError:
+                except (RunnerError, GithubApiError):
                     logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
@@ -409,7 +409,6 @@ class RunnerManager:
                     "No pre-job metrics found for %s, will not calculate job metrics.",
                     extracted_metrics.instance_id,
                 )
-
             issued_events = runner_metrics.issue_events(
                 runner_metrics=extracted_metrics,
                 job_metrics=job_metrics,
@@ -455,8 +454,8 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        registration_jittoken = args.github_runner_manager.get_registration_jittoken(
-            instance_id, args.labels
+        registration_jittoken, github_runner = (
+            args.github_runner_manager.get_registration_jittoken(instance_id, args.labels)
         )
         try:
             args.cloud_runner_manager.create_runner(
@@ -466,11 +465,6 @@ class RunnerManager:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or
             # because it is being created.
-            github_runners_offline = args.github_runner_manager.get_runners(
-                [GitHubRunnerState.OFFLINE]
-            )
-            for github_runner in github_runners_offline:
-                if github_runner.instance_id == instance_id:
-                    args.github_runner_manager.delete_runners([github_runner])
+            args.github_runner_manager.delete_runners([github_runner])
             raise
         return instance_id

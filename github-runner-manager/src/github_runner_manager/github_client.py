@@ -15,6 +15,7 @@ from urllib.error import HTTPError
 import requests
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from requests import RequestException
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import (
@@ -25,8 +26,8 @@ from github_runner_manager.configuration.github import (
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import (
+    JITConfig,
     JobInfo,
-    RegistrationToken,
     RemoveToken,
     SelfHostedRunner,
 )
@@ -73,6 +74,8 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
+            raise GithubApiError from exc
+        except RequestException as exc:
             raise GithubApiError from exc
 
     return wrapper
@@ -172,7 +175,7 @@ class GithubClient:
     @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
-    ) -> str:
+    ) -> tuple[str, SelfHostedRunner]:
         """Get token from GitHub used for registering runners.
 
         Args:
@@ -184,7 +187,7 @@ class GithubClient:
         Returns:
             The registration token.
         """
-        token: RegistrationToken
+        token: JITConfig
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.
             # If the repo does not belong to an org, there is no way to get the runner_group_id.
@@ -208,7 +211,8 @@ class GithubClient:
         else:
             assert_never(token)
 
-        return token["encoded_jit_config"]
+        runner = SelfHostedRunner.build_from_github(token["runner"], instance_id)
+        return token["encoded_jit_config"], runner
 
     def _get_runner_group_id(self, org: GitHubOrg) -> int:
         """Get runner_group_id from group name for an org.

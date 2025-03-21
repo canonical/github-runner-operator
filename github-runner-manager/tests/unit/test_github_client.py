@@ -11,13 +11,21 @@ from urllib.error import HTTPError
 
 import pytest
 import requests
+from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
+from github_runner_manager.types_.github import (
+    GitHubRunnerStatus,
+    JobConclusion,
+    JobInfo,
+    JobStatus,
+    SelfHostedRunner,
+    SelfHostedRunnerLabel,
+)
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
@@ -354,11 +362,12 @@ def test_get_registration_jittoken_repo(github_client: GithubClient):
     act: Call get_runner_registration_jittoken.
     assert: The jittoken is extracted from the returned value.
     """
+    instance_id = InstanceID.build("test-runner")
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     github_client._client.actions.generate_runner_jitconfig_for_repo.return_value = {
         "runner": {
             "id": 113,
-            "name": "test-runner-99999999",
+            "name": instance_id.name,
             "os": "unknown",
             "status": "offline",
             "busy": False,
@@ -371,13 +380,56 @@ def test_get_registration_jittoken_repo(github_client: GithubClient):
         "encoded_jit_config": "hugestringinhere",
     }
 
-    instance_id = InstanceID.build("test-runner")
     labels = ["label1", "label2"]
-    jittoken = github_client.get_runner_registration_jittoken(
+    jittoken, runner = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels
     )
 
     assert jittoken == "hugestringinhere"
+    assert runner == SelfHostedRunner(
+        busy=False,
+        id=113,
+        labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
+        os="unknown",
+        status=GitHubRunnerStatus.OFFLINE,
+        instance_id=instance_id,
+    )
+
+
+def test_catch_http_errors_from_getting_runner_group_id(
+    github_client: GithubClient, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: A mocked Github Client that raises a 500 HTTPError when getting the runner group id.
+    act: Call
+    assert: A GithubApiError is raised.
+    """
+    github_repo = GitHubOrg(org="theorg", group="my group name")
+    instance_id = InstanceID.build("test-runner")
+    labels = ["label1", "label2"]
+
+    def _mock_get(url, headers, *args, **kwargs):
+        """Mock for requests.get."""
+
+        class _Response:
+            """Mocked Response for requests.get."""
+
+            def raise_for_status(self):
+                """Mocked raise_for_status.
+
+                Raises:
+                   RequestsHTTPError: HTTPError from requests. This is a fake response.
+                """
+                self.status_code = 500
+                raise RequestsHTTPError("500 Server Error", response=self)  # type: ignore
+
+        return _Response()
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+    with pytest.raises(GithubApiError):
+        _, _ = github_client.get_runner_registration_jittoken(
+            path=github_repo, instance_id=instance_id, labels=labels
+        )
 
 
 def test_get_registration_jittoken_org(
@@ -462,14 +514,13 @@ def test_get_registration_jittoken_org(
         return {
             "runner": {
                 "id": 18,
-                "name": "test-runner-3438",
+                "name": instance_id.name,
                 "os": "unknown",
                 "status": "offline",
                 "busy": False,
                 "labels": [
                     {"id": 0, "name": "self-hosted", "type": "read-only"},
                     {"id": 0, "name": "X64", "type": "read-only"},
-                    {"id": 0, "name": "no-gpu", "type": "read-only"},
                 ],
                 "runner_group_id": 3,
             },
@@ -481,8 +532,16 @@ def test_get_registration_jittoken_org(
     )
 
     labels = ["label1", "label2"]
-    jittoken = github_client.get_runner_registration_jittoken(
+    jittoken, github_runner = github_client.get_runner_registration_jittoken(
         path=github_repo, instance_id=instance_id, labels=labels
     )
 
     assert jittoken == "anotherhugetoken"
+    assert github_runner == SelfHostedRunner(
+        busy=False,
+        id=18,
+        labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
+        os="unknown",
+        status=GitHubRunnerStatus.OFFLINE,
+        instance_id=instance_id,
+    )
