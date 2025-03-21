@@ -76,7 +76,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Change repository or organization](local-lxd/how-to/change-path.md)
     1. [Change GitHub personal access token](local-lxd/how-to/change-token.md)
     1. [Comply with security requirements](local-lxd/how-to/comply-security.md)
-    1. [Restrict self-hosted runner network access](local-lxd/how-to/configure-denylist.md)
     1. [Configure runner storage](local-lxd/how-to/configure-runner-storage.md)
     1. [Debug with SSH](local-lxd/how-to/debug-with-ssh.md)
     1. [Deploy on ARM64](local-lxd/how-to/deploy-on-arm64.md)
