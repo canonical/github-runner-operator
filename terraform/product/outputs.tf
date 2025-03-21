@@ -8,10 +8,10 @@ output "github_runner_image_builder_app_name" {
 
 output "reactive_runners_names" {
   description = "Names of the all the deployed github-runner applications that are reactive."
-  value       = [for gh_runner in var.github_runners : gh_runner.app_name if lookup(gh_runner.config, "max-total-virtual-machines", 0) > 0]
+  value       = [for github_runner in var.github_runners : github_runner.app_name if lookup(github_runner.config, "max-total-virtual-machines", 0) > 0]
 }
 
 output "all_runners_names" {
   description = "Names of the all the deployed github-runner applications."
-  value       = [for gh_runner in values(module.github_runner) : gh_runner.app_name]
+  value       = [for github_runner in values(module.github_runner) : github_runner.app_name]
 }

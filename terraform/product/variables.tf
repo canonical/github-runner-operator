@@ -34,7 +34,7 @@ variable "github_runners" {
     error_message = "At least one github-runner should be defined"
   }
   validation {
-    condition     = length(var.github_runners) == length(toset([for gh_runner in var.github_runners : gh_runner.app_name]))
+    condition     = length(var.github_runners) == length(toset([for github_runner in var.github_runners : github_runner.app_name]))
     error_message = "Each github-runner app_name must be unique."
   }
 
