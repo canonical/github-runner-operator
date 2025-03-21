@@ -1,0 +1,95 @@
+07:25:03 INFO Adding model lxd:test-charm-metrics-success-2t61 on cloud localhost
+07:25:03 WARNING unexpected facade SSHServer received from the controller
+07:25:05 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:25:06 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [allocating] waiting: waiting for machine
+07:25:36 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [allocating] waiting: waiting for machine
+07:26:06 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [allocating] waiting: waiting for machine
+07:26:37 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [executing] maintenance: Setting up Builder.
+07:27:07 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [executing] maintenance: Setting up Builder.
+07:27:38 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [executing] maintenance: Setting up Builder.
+07:28:08 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [executing] maintenance: Setting up Builder.
+07:28:38 INFO Waiting for model:
+  github-runner-image-builder-o2492e2j/0 [idle] blocked: image integration required.
+07:29:08 INFO Deploying local:jammy/github-runner-0
+07:29:09 INFO Waiting for model:
+  test-o2492e2j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-o2492e2j/0 [idle] blocked: image integration required.
+07:29:39 INFO Waiting for model:
+  test-o2492e2j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-o2492e2j/0 [idle] blocked: image integration required.
+07:30:09 INFO Waiting for model:
+  test-o2492e2j/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-o2492e2j/0 [idle] blocked: image integration required.
+07:30:39 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:31:09 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:31:40 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:32:10 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:32:40 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:33:10 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:33:41 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:34:11 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:34:41 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:35:12 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:35:42 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:36:12 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:36:43 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:37:13 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:37:43 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:38:14 INFO Waiting for model:
+  test-o2492e2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-o2492e2j/0 [executing] active: Building image.
+07:38:44 INFO Waiting for model:
+  test-o2492e2j/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-o2492e2j/0 [idle] active: 
+07:39:14 INFO Waiting for model:
+  test-o2492e2j/0 [executing] maintenance: Reconciling runners
+07:44:55 INFO Waiting for model:
+  test-o2492e2j/0 [executing] active: 
+07:45:25 INFO Waiting for model:
+  test-o2492e2j/0 [executing] maintenance: Reconciling runners
+07:46:47 INFO Waiting for model:
+  test-o2492e2j/0 [executing] active: 
+07:47:18 INFO Waiting for model:
+  test-o2492e2j/0 [idle] active: 
+07:47:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1742543095.0744166, "event": "reconciliation", "flavor": "test-o2492e2j", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 315.13262701034546}
+{"timestamp": 1742543132.824545, "event": "reconciliation", "flavor": "test-o2492e2j", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 36.28887915611267}
+{"timestamp": 1742543034.0, "event": "runner_installed", "flavor": "test-o2492e2j", "duration": 236.0}
+{"timestamp": 1742543206.7390969, "event": "reconciliation", "flavor": "test-o2492e2j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 54.37357974052429}
+{"timestamp": 1742543228.1755607, "event": "reconciliation", "flavor": "test-o2492e2j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.057105779647827}

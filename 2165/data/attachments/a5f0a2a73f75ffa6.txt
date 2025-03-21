@@ -1,0 +1,62 @@
+08:08:55 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+08:09:25 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+08:11:06 INFO Waiting for model:
+  test-objlc718/0 [executing] active: 
+08:11:37 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+08:11:59 INFO [TEST SETUP] Exposing port 8080 on test-objlc718-0-n-53c36da223af
+08:11:59 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.150', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:52:66'}]])
+08:12:03 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-objlc718-0-n-53c36da223af
+08:12:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.150', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:52:66'}]])
+08:12:04 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-objlc718-0-n-53c36da223af.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.150 nc -z localhost 8080'
+08:12:06 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-objlc718-0-n-53c36da223af
+08:12:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.150', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:52:66'}]])
+08:12:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-objlc718-0-n-53c36da223af.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.150 curl http://localhost:8080'
+08:12:10 INFO Wait for condition not met, sleeping 10
+08:12:55 INFO Waiting for model:
+  test-objlc718/0 [executing] active: 
+08:13:25 INFO Waiting for model:
+  test-objlc718/0 [idle] active: 
+08:13:31 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-ya0n  lxd         localhost/localhost  3.6.4    unsupported  08:13:31Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-objlc718           active      1  github-runner-image-builder  latest/edge   61  no       
+test-objlc718                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-objlc718/0*  active    idle   0        10.155.135.142            
+test-objlc718/0*                         active    idle   1        10.155.135.117  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.155.135.142  juju-6623ea-0  ubuntu@22.04      Running
+1        started  10.155.135.117  juju-6623ea-1  ubuntu@22.04      Running
+
+08:13:32 INFO Juju error logs:
+
+unit-test-objlc718-0: 07:59:56 ERROR unit.test-objlc718/0.juju-log Unable to get SSH connection for instance test-objlc718-0-n-cd21dc9317a8, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-objlc718-0-n-cd21dc9317a8, key path: /home/runner-manager/.ssh/test-objlc718-0-n-cd21dc9317a8.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-objlc718-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-objlc718-0-n-cd21dc9317a8
+
+08:13:32 INFO Forgetting model main...

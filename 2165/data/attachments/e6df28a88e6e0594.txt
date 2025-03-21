@@ -1,0 +1,98 @@
+07:35:08 INFO Adding model lxd:test-charm-runner-ya0n on cloud localhost
+07:35:08 WARNING unexpected facade SSHServer received from the controller
+07:35:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:35:11 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [allocating] waiting: waiting for machine
+07:35:41 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [allocating] waiting: waiting for machine
+07:36:11 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [allocating] waiting: waiting for machine
+07:36:41 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [allocating] waiting: agent initialising
+07:37:11 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [executing] maintenance: Setting up Builder.
+07:37:41 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [executing] maintenance: Setting up Builder.
+07:38:11 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [executing] maintenance: Setting up Builder.
+07:38:41 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [executing] maintenance: Setting up Builder.
+07:39:12 INFO Waiting for model:
+  github-runner-image-builder-objlc718/0 [idle] blocked: image integration required.
+07:39:42 INFO Deploying local:jammy/github-runner-0
+07:39:42 INFO Waiting for model:
+  test-objlc718/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-objlc718/0 [idle] blocked: image integration required.
+07:40:12 INFO Waiting for model:
+  test-objlc718/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-objlc718/0 [idle] blocked: image integration required.
+07:40:43 INFO Waiting for model:
+  test-objlc718/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-objlc718/0 [idle] blocked: image integration required.
+07:41:13 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-objlc718/0 [idle] blocked: image integration required.
+07:41:43 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:42:13 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:42:43 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:43:14 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:43:44 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:44:14 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:44:44 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:45:14 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:45:44 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:46:15 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:46:45 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:47:15 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:47:45 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:48:15 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:48:46 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:49:16 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:49:46 INFO Waiting for model:
+  test-objlc718/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-objlc718/0 [executing] active: Building image.
+07:50:16 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-objlc718/0 [idle] active: 
+07:50:46 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+07:53:49 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+07:54:20 INFO Waiting for model:
+  test-objlc718/0 [executing] maintenance: Reconciling runners
+07:55:44 INFO Waiting for model:
+  test-objlc718/0 [executing] active: 
+07:56:14 INFO Waiting for model:
+  test-objlc718/0 [idle] active:

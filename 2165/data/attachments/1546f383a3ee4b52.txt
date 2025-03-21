@@ -1,0 +1,90 @@
+07:35:11 INFO Adding model lxd:test-charm-no-runner-1xn6 on cloud localhost
+07:35:11 WARNING unexpected facade SSHServer received from the controller
+07:35:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:35:13 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [allocating] waiting: waiting for machine
+07:35:43 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [allocating] waiting: waiting for machine
+07:36:14 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [allocating] waiting: waiting for machine
+07:36:44 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [executing] maintenance: Setting up Builder.
+07:37:14 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [executing] maintenance: Setting up Builder.
+07:37:45 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [executing] maintenance: Setting up Builder.
+07:38:15 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [executing] maintenance: Setting up Builder.
+07:38:45 INFO Waiting for model:
+  github-runner-image-builder-jcknryld/0 [executing] blocked: image integration required.
+07:39:19 INFO Deploying local:jammy/github-runner-0
+07:39:19 INFO Waiting for model:
+  test-jcknryld/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jcknryld/0 [idle] blocked: image integration required.
+07:39:49 INFO Waiting for model:
+  test-jcknryld/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jcknryld/0 [idle] blocked: image integration required.
+07:40:19 INFO Waiting for model:
+  test-jcknryld/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-jcknryld/0 [idle] blocked: image integration required.
+07:40:49 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:41:20 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:41:50 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:42:20 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:42:50 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:43:21 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:43:51 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:44:21 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:44:52 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:45:22 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:45:52 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:46:23 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:46:53 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:47:24 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:47:54 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:48:24 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:48:55 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:49:25 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:49:56 INFO Waiting for model:
+  test-jcknryld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jcknryld/0 [executing] active: Building image.
+07:50:26 INFO Waiting for model:
+  test-jcknryld/0 [executing] maintenance: Reconciling runners
+07:50:53 INFO Waiting for model:
+  test-jcknryld/0 [idle] active:

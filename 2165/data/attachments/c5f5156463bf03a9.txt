@@ -1,0 +1,135 @@
+07:46:16 INFO Adding model lxd:test-reactive-fdzg on cloud localhost
+07:46:17 WARNING unexpected facade SSHServer received from the controller
+07:46:17 INFO GitHub token rate limit: Rate(reset=2025-03-21 07:51:12+00:00, remaining=4392, limit=5000)
+07:46:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:46:22 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [allocating] waiting: waiting for machine
+07:46:53 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [allocating] waiting: waiting for machine
+07:47:23 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [allocating] waiting: waiting for machine
+07:47:54 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [executing] maintenance: Setting up Builder.
+07:48:24 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [executing] maintenance: Setting up Builder.
+07:48:55 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [executing] maintenance: Setting up Builder.
+07:49:25 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [executing] maintenance: Setting up Builder.
+07:49:56 INFO Waiting for model:
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Waiting for first image.
+07:50:30 INFO Deploying local:jammy/github-runner-0
+07:50:30 INFO Waiting for model:
+  test-amkx6nxl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-amkx6nxl/0 [idle] blocked: image integration required.
+07:51:00 INFO Waiting for model:
+  test-amkx6nxl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-amkx6nxl/0 [idle] blocked: image integration required.
+07:51:31 INFO Waiting for model:
+  test-amkx6nxl/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-amkx6nxl/0 [idle] blocked: image integration required.
+07:52:02 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:52:32 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:53:03 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:53:33 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:54:03 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:54:34 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:55:04 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:55:35 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:56:05 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:56:36 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:57:06 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:57:36 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:58:07 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:58:37 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:59:07 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+07:59:37 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+08:00:07 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-amkx6nxl/0 [executing] active: Building image.
+08:00:37 INFO Waiting for model:
+  test-amkx6nxl/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-amkx6nxl/0 [idle] active: 
+08:01:08 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active: 
+08:01:20 INFO Deploying ch:amd64/jammy/mongodb-212
+08:01:21 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+08:01:51 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+08:02:22 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+08:02:52 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+08:03:22 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+08:03:45 WARNING relate is deprecated and will be removed. Use integrate instead.
+08:03:45 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active: 
+  mongodb/0 [idle] active: 
+08:04:16 INFO Waiting for model:
+  test-amkx6nxl/0 [executing] maintenance: Reconciling runners
+08:05:06 INFO Waiting for model:
+  test-amkx6nxl/0 [executing] active: 
+08:05:36 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active:
+08:05:49 INFO Wait for condition not met, sleeping 10
+08:06:50 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active: 
+08:07:06 INFO Wait for condition not met, sleeping 60
+08:08:06 INFO Wait for condition not met, sleeping 60
+08:09:50 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active: 
+08:10:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1742544408.9469712, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 46.880247831344604}
+{"timestamp": 1742544497.0, "event": "runner_installed", "flavor": "test-amkx6nxl", "duration": 133.0}
+{"timestamp": 1742544501.0, "event": "runner_start", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 151.0}
+{"timestamp": 1742544504.0, "event": "runner_stop", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1742544589.8689623, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 41.705698013305664}
+
+08:10:07 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1742544408.9469712, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 46.880247831344604}
+{"timestamp": 1742544497.0, "event": "runner_installed", "flavor": "test-amkx6nxl", "duration": 133.0}
+{"timestamp": 1742544501.0, "event": "runner_start", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 151.0}
+{"timestamp": 1742544504.0, "event": "runner_stop", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1742544589.8689623, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 41.705698013305664}
+
+08:10:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1742544408.9469712, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 46.880247831344604}
+{"timestamp": 1742544497.0, "event": "runner_installed", "flavor": "test-amkx6nxl", "duration": 133.0}
+{"timestamp": 1742544501.0, "event": "runner_start", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 151.0}
+{"timestamp": 1742544504.0, "event": "runner_stop", "flavor": "test-amkx6nxl", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1742544589.8689623, "event": "reconciliation", "flavor": "test-amkx6nxl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 41.705698013305664}
+08:10:44 INFO Waiting for model:
+  test-amkx6nxl/0 [executing] maintenance: Reconciling runners
+08:11:14 INFO Waiting for model:
+  test-amkx6nxl/0 [idle] active:

@@ -1,0 +1,136 @@
+07:24:01 INFO Adding model lxd:test-charm-fork-path-change-ug5f on cloud localhost
+07:24:01 WARNING unexpected facade SSHServer received from the controller
+07:24:03 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:24:04 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [allocating] waiting: waiting for machine
+07:24:34 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [allocating] waiting: waiting for machine
+07:25:04 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [allocating] waiting: waiting for machine
+07:25:35 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [executing] maintenance: Setting up Builder.
+07:26:05 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [executing] maintenance: Setting up Builder.
+07:26:36 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [executing] maintenance: Setting up Builder.
+07:27:06 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [executing] maintenance: Setting up Builder.
+07:27:36 INFO Waiting for model:
+  github-runner-image-builder-qhq4bhen/0 [idle] blocked: image integration required.
+07:27:58 INFO Deploying local:jammy/github-runner-0
+07:27:58 INFO Waiting for model:
+  test-qhq4bhen/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qhq4bhen/0 [idle] blocked: image integration required.
+07:28:28 INFO Waiting for model:
+  test-qhq4bhen/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qhq4bhen/0 [idle] blocked: image integration required.
+07:28:59 INFO Waiting for model:
+  test-qhq4bhen/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-qhq4bhen/0 [idle] blocked: image integration required.
+07:29:29 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:30:00 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:30:30 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:31:00 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:31:31 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:32:01 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:32:31 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:33:02 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:33:32 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:34:02 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:34:33 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:35:03 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:35:34 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:36:04 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:36:34 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:37:04 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:37:34 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:38:05 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qhq4bhen/0 [executing] active: Building image.
+07:38:35 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-qhq4bhen/0 [idle] active: 
+07:39:05 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] active: 
+07:39:23 INFO GitHub token rate limit: Rate(reset=2025-03-21 08:20:08+00:00, remaining=4934, limit=5000)
+07:39:34 INFO test_path_config_change
+07:39:34 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] active: 
+07:40:05 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] maintenance: Reconciling runners
+07:40:35 INFO Waiting for model:
+  test-qhq4bhen/0 [idle] active: 
+07:41:01 INFO Ensure there is a runner (this calls reconcile)
+07:43:36 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] active: 
+07:44:06 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] active: 
+07:44:23 INFO Reconciling (again)
+07:48:22 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] maintenance: Reconciling runners
+07:48:52 INFO Waiting for model:
+  test-qhq4bhen/0 [executing] active: 
+07:49:12 INFO runners: ['test-qhq4bhen-0-n-af06b4865696']
+07:49:13 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-02a38bc0dcb4"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-16dac3ea4355"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-617e239257ac"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-6599ce572a4a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-9a6ee2142354"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-ad4bcad1fde5"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-b740e58fb264"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-fcd5db8a0f94"), SelfHostedActionsRunner(name="test-a2wd21pr-0-n-eac3e28b1b36"), SelfHostedActionsRunner(name="test-bkfl0c8a-0-n-ef079112e47a"), SelfHostedActionsRunner(name="test-c8a36nv4-0-n-b7f8e5d6a075"), SelfHostedActionsRunner(name="test-cbv0ko3t-0-n-7b1462025e65"), SelfHostedActionsRunner(name="test-ci4q3las-0-n-a611162eab99"), SelfHostedActionsRunner(name="test-d0jrv16d-0-n-e1020a5828da"), SelfHostedActionsRunner(name="test-dco1a9oj-0-n-fe83ce95c620"), SelfHostedActionsRunner(name="test-dsfg01wc-0-n-e7194d194e9d"), SelfHostedActionsRunner(name="test-e9wboa19-0-n-855f11a52a70"), SelfHostedActionsRunner(name="test-ef77yric-0-n-70f722be617a"), SelfHostedActionsRunner(name="test-etq2v8yu-0-n-958952a12eab"), SelfHostedActionsRunner(name="test-eub8im8q-0-n-a916990efe19"), SelfHostedActionsRunner(name="test-ezlw93dk-0-n-f2ab6023604a"), SelfHostedActionsRunner(name="test-gp9ff802-0-n-67a15ca15526"), SelfHostedActionsRunner(name="test-gwac8rjm-0-n-3f1427adbb2d"), SelfHostedActionsRunner(name="test-hz4oem44-0-n-cbcd758ced8a"), SelfHostedActionsRunner(name="test-ihp6go7y-0-n-d6f9603e5fb4"), SelfHostedActionsRunner(name="test-ilfweoqi-0-n-084f245eab7b"), SelfHostedActionsRunner(name="test-itpj200h-0-n-fff8e2c1379b"), SelfHostedActionsRunner(name="test-iwg3trjb-0-n-61ffcf5d40cf"), SelfHostedActionsRunner(name="test-j3cjzk9u-0-n-4d6bf5c48c6e"), SelfHostedActionsRunner(name="test-j7ilkw1q-0-n-2f2bdbe734ce"), SelfHostedActionsRunner(name="test-j9anodvt-0-n-aa7992c5a3c5"), SelfHostedActionsRunner(name="test-kmqo768j-0-n-28f8cd0dd08a"), SelfHostedActionsRunner(name="test-ktry6a1v-0-n-9537868ff930"), SelfHostedActionsRunner(name="test-lz9v3pbu-0-n-e84bc939f23d"), SelfHostedActionsRunner(name="test-m5cjbnyw-0-n-31e3eca90e49"), SelfHostedActionsRunner(name="test-m9k3wavs-0-n-f413142774fa"), SelfHostedActionsRunner(name="test-mkld5014-0-n-6f2886620cea"), SelfHostedActionsRunner(name="test-n9qpmuwh-0-n-db63e547559b"), SelfHostedActionsRunner(name="test-o2492e2j-0-n-e9dcfd5e8001"), SelfHostedActionsRunner(name="test-pmh0nils-0-n-6c7c35e53fe7"), SelfHostedActionsRunner(name="test-pvac7kzc-0-n-764fb39d49c7"), SelfHostedActionsRunner(name="test-qhq4bhen-0-n-af06b4865696"), SelfHostedActionsRunner(name="test-qr8ycf90-0-n-4e887ee63ebd"), SelfHostedActionsRunner(name="test-qxc1sjvi-0-n-449a9dab9b5b"), SelfHostedActionsRunner(name="test-sp7qqiei-0-n-6bfa18b9befb"), SelfHostedActionsRunner(name="test-tgomtsy3-0-n-dbe2571f6262"), SelfHostedActionsRunner(name="test-txa7iu07-0-n-8794007315fd"), SelfHostedActionsRunner(name="test-txa7iu07-0-n-d9ede4b43cc8"), SelfHostedActionsRunner(name="test-u7b24vtv-0-n-cf89dd604ba6"), SelfHostedActionsRunner(name="test-uh6g4pxb-0-n-038993e7244f"), SelfHostedActionsRunner(name="test-uhge2y05-0-n-2ace75e77fbb"), SelfHostedActionsRunner(name="test-uic16emf-0-n-4dbfa230c86d"), SelfHostedActionsRunner(name="test-ulm5lp0n-0-n-a7ebd55156c9"), SelfHostedActionsRunner(name="test-unf92agf-0-n-33c37ebee5bd"), SelfHostedActionsRunner(name="test-uvu1sdun-0-n-48fc955dd915"), SelfHostedActionsRunner(name="test-w72mdkp3-0-n-c1412a5901ea"), SelfHostedActionsRunner(name="test-wkr9b9sn-0-n-63e1319a1e21"), SelfHostedActionsRunner(name="test-wuairs1r-0-n-dcbc776420dc"), SelfHostedActionsRunner(name="test-x627xk4f-0-n-6a8281801d75"), SelfHostedActionsRunner(name="test-xmd0y3xj-0-n-838daefa3cdc"), SelfHostedActionsRunner(name="test-xnecbtr4-0-n-4220088faf3b"), SelfHostedActionsRunner(name="test-xpn7ra3e-0-n-d095cafd5d98"), SelfHostedActionsRunner(name="test-xu8tl103-0-n-85f95e0d2aea"), SelfHostedActionsRunner(name="test-xwc3lun5-0-n-0047b9c2c2d6"), SelfHostedActionsRunner(name="test-y1ycfg53-0-n-f404ecfcf0fc"), SelfHostedActionsRunner(name="test-yx3g1o57-0-n-3031783d8cc9"), SelfHostedActionsRunner(name="test-z9i9s6s2-0-n-773973744e0f"), SelfHostedActionsRunner(name="test-zh290p41-0-n-7c1b03177299"), SelfHostedActionsRunner(name="test-zhwwmaub-0-n-93aa571e51c6")]
+07:49:15 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-ug5f  lxd         localhost/localhost  3.6.4    unsupported  07:49:15Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qhq4bhen           active      1  github-runner-image-builder  latest/edge   61  no       
+test-qhq4bhen                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-qhq4bhen/0*  active    idle   0        10.191.43.169          
+test-qhq4bhen/0*                         active    idle   1        10.191.43.72           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.191.43.169  juju-23694d-0  ubuntu@22.04      Running
+1        started  10.191.43.72   juju-23694d-1  ubuntu@22.04      Running
+
+07:49:15 INFO Juju error logs:
+
+machine-0: 07:25:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:25:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qhq4bhen-0: 07:25:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-qhq4bhen-0: 07:25:54 ERROR unit.github-runner-image-builder-qhq4bhen/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 07:28:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:28:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qhq4bhen-0: 07:28:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:49:15 INFO Forgetting model main...

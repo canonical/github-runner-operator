@@ -1,0 +1,71 @@
+07:46:18 INFO Creating 1 runners
+07:46:18 INFO Creating openstack server with test-y1ycfg53-0-n-b67254872806
+07:46:38 WARNING NoValidConnectionsError. Unable to SSH into test-y1ycfg53-0-n-b67254872806 with address 10.145.193.119. Error: [Errno None] Unable to connect to port 22 on 10.145.193.119
+07:46:38 WARNING Retrying error in 60 seconds: Failed to SSH to test-y1ycfg53-0-n-b67254872806 during creation possible due to setup not completed
+07:47:38 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:47:38 INFO Authentication (publickey) successful!
+07:47:39 INFO Runner startup process found to be healthy on test-y1ycfg53-0-n-b67254872806
+07:47:39 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:47:39 INFO Authentication (publickey) successful!
+07:47:40 INFO Runner test-y1ycfg53-0-n-b67254872806 found to be healthy
+07:47:40 INFO Runner test-y1ycfg53-0-n-b67254872806 created successfully
+07:47:40 INFO Getting runners...
+07:47:41 INFO Getting all openstack servers managed by the charm
+07:47:44 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:47:44 INFO Authentication (publickey) successful!
+07:47:45 INFO Found following runners: {'test-y1ycfg53-0-n-b67254872806'}
+07:47:45 INFO Getting runners...
+07:47:46 INFO Getting all openstack servers managed by the charm
+07:47:49 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:47:49 INFO Authentication (publickey) successful!
+07:47:50 INFO Found following runners: {'test-y1ycfg53-0-n-b67254872806'}
+07:47:50 INFO Getting runners...
+07:47:51 INFO Getting all openstack servers managed by the charm
+07:47:55 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:47:56 INFO Authentication (publickey) successful!
+07:47:56 INFO Found following runners: {'test-y1ycfg53-0-n-b67254872806'}
+07:47:56 INFO Getting all openstack servers managed by the charm
+07:48:00 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:00 INFO Authentication (publickey) successful!
+07:48:00 INFO Getting runners...
+07:48:02 INFO Getting all openstack servers managed by the charm
+07:48:04 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:04 INFO Authentication (publickey) successful!
+07:48:05 INFO Found following runners: {'test-y1ycfg53-0-n-b67254872806'}
+07:48:06 INFO Offline github runners to delete: []:
+07:48:06 INFO Getting all openstack servers managed by the charm
+07:48:09 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:10 INFO Authentication (publickey) successful!
+07:48:12 INFO Cleaning up SSH key files
+07:48:12 INFO Found 1 key files, clean up 0 key files
+07:48:12 INFO Cleaning up openstack keypairs
+07:48:12 INFO Getting runners...
+07:48:13 INFO Getting all openstack servers managed by the charm
+07:48:16 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:16 INFO Authentication (publickey) successful!
+07:48:16 INFO Found following runners: {'test-y1ycfg53-0-n-b67254872806'}
+07:48:16 INFO Flushing idle runners...
+07:48:17 INFO Getting all openstack servers managed by the charm
+07:48:19 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:19 INFO Authentication (publickey) successful!
+07:48:20 INFO Attempting to kill runner process on test-y1ycfg53-0-n-b67254872806 if not busy
+07:48:20 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:48:20 INFO Kill process command output, ok: True code 0, out: 2477
+, err: 
+07:48:20 INFO Getting all openstack servers managed by the charm
+07:48:23 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:23 INFO Authentication (publickey) successful!
+07:48:23 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:48:23 INFO Authentication (publickey) successful!
+07:48:24 INFO [chan 2] Opened sftp connection (server version 3)
+07:48:24 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.119, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:48:24 WARNING Failed to pull metrics for test-y1ycfg53-0-n-b67254872806: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:48:24 INFO Running runner removal script for test-y1ycfg53-0-n-b67254872806
+07:48:25 INFO Deleting openstack server with test-y1ycfg53-0-n-b67254872806
+07:48:31 INFO Cleaning up SSH key files
+07:48:31 INFO Found 0 key files, clean up 0 key files
+07:48:31 INFO Cleaning up openstack keypairs
+07:48:31 INFO Getting runners...
+07:48:33 INFO Getting all openstack servers managed by the charm
+07:48:35 INFO Found following runners: set()
