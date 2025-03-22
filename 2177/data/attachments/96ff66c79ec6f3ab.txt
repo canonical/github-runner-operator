@@ -1,0 +1,141 @@
+18:24:03 INFO Adding model lxd:test-reactive-qopr on cloud localhost
+18:24:03 WARNING unexpected facade SSHServer received from the controller
+18:24:03 INFO GitHub token rate limit: Rate(reset=2025-03-22 18:55:51+00:00, remaining=4982, limit=5000)
+18:24:08 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+18:24:08 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [allocating] waiting: waiting for machine
+18:24:38 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [allocating] waiting: waiting for machine
+18:25:09 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [allocating] waiting: waiting for machine
+18:25:39 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [executing] maintenance: Setting up Builder.
+18:26:09 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [executing] maintenance: Setting up Builder.
+18:26:40 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [executing] maintenance: Setting up Builder.
+18:27:10 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [executing] maintenance: Setting up Builder.
+18:27:41 INFO Waiting for model:
+  github-runner-image-builder-xf87spq5/0 [executing] maintenance: Setting up Builder.
+18:28:19 INFO Deploying local:jammy/github-runner-0
+18:28:19 INFO Waiting for model:
+  test-xf87spq5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xf87spq5/0 [idle] blocked: image integration required.
+18:28:49 INFO Waiting for model:
+  test-xf87spq5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xf87spq5/0 [idle] blocked: image integration required.
+18:29:19 INFO Waiting for model:
+  test-xf87spq5/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-xf87spq5/0 [idle] blocked: image integration required.
+18:29:49 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:30:20 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:30:50 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:31:20 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:32:21 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:32:51 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:33:21 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:33:51 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:34:22 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:34:52 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:35:22 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:35:52 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:36:22 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:36:52 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:37:22 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:37:53 INFO Waiting for model:
+  test-xf87spq5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xf87spq5/0 [executing] active: Building image.
+18:38:23 INFO Waiting for model:
+  test-xf87spq5/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-xf87spq5/0 [idle] active: 
+18:38:53 INFO Deploying ch:amd64/jammy/mongodb-212
+18:38:53 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+18:39:23 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+18:39:54 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: agent initialising
+18:40:24 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+18:40:54 INFO Waiting for model:
+  mongodb/0 [idle] active: 
+18:41:08 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:41:08 INFO Waiting for model:
+  test-xf87spq5/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:41:39 INFO Waiting for model:
+  test-xf87spq5/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:42:15 INFO Waiting for model:
+  test-xf87spq5/0 [executing] active: 
+18:42:45 INFO Waiting for model:
+  test-xf87spq5/0 [idle] active:
+18:42:58 INFO Wait for condition not met, sleeping 10
+18:43:52 INFO Waiting for model:
+  test-xf87spq5/0 [idle] active: 
+18:44:07 INFO Wait for condition not met, sleeping 60
+18:45:08 INFO Wait for condition not met, sleeping 60
+18:46:08 INFO Wait for condition not met, sleeping 60
+18:47:09 INFO Wait for condition not met, sleeping 60
+18:48:09 INFO Wait for condition not met, sleeping 60
+18:49:10 INFO Wait for condition not met, sleeping 60
+18:50:10 INFO Wait for condition not met, sleeping 60
+18:51:11 INFO Wait for condition not met, sleeping 60
+18:52:11 INFO Wait for condition not met, sleeping 60
+18:53:12 INFO Wait for condition not met, sleeping 60
+18:54:12 INFO Wait for condition not met, sleeping 60
+18:55:13 INFO Wait for condition not met, sleeping 60
+18:56:13 INFO Wait for condition not met, sleeping 60
+18:57:14 INFO Wait for condition not met, sleeping 60
+18:58:14 INFO Wait for condition not met, sleeping 60
+18:59:15 INFO Wait for condition not met, sleeping 60
+19:00:15 INFO Wait for condition not met, sleeping 60
+19:01:16 INFO Wait for condition not met, sleeping 60
+19:02:16 INFO Wait for condition not met, sleeping 60
+19:03:17 INFO Wait for condition not met, sleeping 60
+19:04:18 INFO Wait for condition not met, sleeping 60
+19:05:18 INFO Wait for condition not met, sleeping 60
+19:06:24 INFO Wait for condition not met, sleeping 60
+19:07:24 INFO Wait for condition not met, sleeping 60
+19:08:25 INFO Wait for condition not met, sleeping 60
+19:09:25 INFO Wait for condition not met, sleeping 60
+19:10:26 INFO Wait for condition not met, sleeping 60
+19:11:26 INFO Wait for condition not met, sleeping 60
+19:12:27 INFO Wait for condition not met, sleeping 60
+19:13:27 INFO Wait for condition not met, sleeping 60
+19:14:47 INFO Waiting for model:
+  test-xf87spq5/0 [executing] maintenance: Reconciling runners

@@ -1,0 +1,75 @@
+18:24:34 INFO Creating 1 runners
+18:24:34 INFO Creating openstack server with test-j7watpto-0-n-b3521bad5e2c
+18:24:58 WARNING NoValidConnectionsError. Unable to SSH into test-j7watpto-0-n-b3521bad5e2c with address 10.145.193.172. Error: [Errno None] Unable to connect to port 22 on 10.145.193.172
+18:24:58 WARNING Retrying error in 60 seconds: Failed to SSH to test-j7watpto-0-n-b3521bad5e2c during creation possible due to setup not completed
+18:25:58 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:25:59 INFO Authentication (publickey) successful!
+18:26:00 INFO Runner startup process found to be healthy on test-j7watpto-0-n-b3521bad5e2c
+18:26:00 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:00 INFO Authentication (publickey) successful!
+18:26:00 INFO Runner test-j7watpto-0-n-b3521bad5e2c found to be healthy
+18:26:00 INFO Runner test-j7watpto-0-n-b3521bad5e2c created successfully
+18:26:00 INFO Getting runners...
+18:26:01 INFO Getting all openstack servers managed by the charm
+18:26:03 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:03 INFO Authentication (publickey) successful!
+18:26:03 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:03 INFO Getting runners...
+18:26:04 INFO Getting all openstack servers managed by the charm
+18:26:06 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:06 INFO Authentication (publickey) successful!
+18:26:06 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:06 INFO Getting runners...
+18:26:07 INFO Getting all openstack servers managed by the charm
+18:26:11 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:11 INFO Authentication (publickey) successful!
+18:26:11 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:11 INFO Getting all openstack servers managed by the charm
+18:26:13 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:13 INFO Authentication (publickey) successful!
+18:26:13 INFO Getting runners...
+18:26:14 INFO Getting all openstack servers managed by the charm
+18:26:16 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:16 INFO Authentication (publickey) successful!
+18:26:17 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:18 INFO Offline github runners to delete: []:
+18:26:18 INFO Getting all openstack servers managed by the charm
+18:26:20 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:20 INFO Authentication (publickey) successful!
+18:26:21 INFO Cleaning up SSH key files
+18:26:21 INFO Found 1 key files, clean up 0 key files
+18:26:21 INFO Cleaning up openstack keypairs
+18:26:21 INFO Getting runners...
+18:26:22 INFO Getting all openstack servers managed by the charm
+18:26:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:24 INFO Authentication (publickey) successful!
+18:26:25 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:25 INFO Flushing idle runners...
+18:26:25 INFO Getting all openstack servers managed by the charm
+18:26:26 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:26 INFO Authentication (publickey) successful!
+18:26:27 INFO Attempting to kill runner process on test-j7watpto-0-n-b3521bad5e2c if not busy
+18:26:27 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:26:27 INFO Kill process command output, ok: True code 0, out: 1665
+, err: 
+18:26:27 INFO Getting all openstack servers managed by the charm
+18:26:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:28 INFO Authentication (publickey) successful!
+18:26:29 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:26:29 INFO Authentication (publickey) successful!
+18:26:29 INFO [chan 2] Opened sftp connection (server version 3)
+18:26:29 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.172, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:26:29 WARNING Failed to pull metrics for test-j7watpto-0-n-b3521bad5e2c: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:26:29 INFO Running runner removal script for test-j7watpto-0-n-b3521bad5e2c
+18:26:31 INFO Deleting openstack server with test-j7watpto-0-n-b3521bad5e2c
+18:26:34 INFO Cleaning up SSH key files
+18:26:34 INFO Found 0 key files, clean up 0 key files
+18:26:34 INFO Cleaning up openstack keypairs
+18:26:34 INFO Getting runners...
+18:26:35 INFO Getting all openstack servers managed by the charm
+18:26:36 INFO Found following runners: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:36 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-b3521bad5e2c'}
+18:26:36 INFO Getting runners...
+18:26:37 INFO Getting all openstack servers managed by the charm
+18:26:38 INFO Found following runners: set()

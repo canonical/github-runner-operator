@@ -1,0 +1,56 @@
+18:34:14 INFO Creating 2 runners
+18:35:38 INFO Getting runners...
+18:35:39 INFO Getting all openstack servers managed by the charm
+18:35:42 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:42 INFO Authentication (publickey) successful!
+18:35:43 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:43 INFO Authentication (publickey) successful!
+18:35:43 INFO Found following runners: {'test-j7watpto-0-n-015ad32d0648', 'test-j7watpto-0-n-bb19b13b27ba'}
+18:35:43 INFO Getting runners...
+18:35:44 INFO Getting all openstack servers managed by the charm
+18:35:47 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:47 INFO Authentication (publickey) successful!
+18:35:47 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:47 INFO Authentication (publickey) successful!
+18:35:48 INFO Found following runners: {'test-j7watpto-0-n-015ad32d0648', 'test-j7watpto-0-n-bb19b13b27ba'}
+18:35:48 INFO Flushing idle runners...
+18:35:48 INFO Getting all openstack servers managed by the charm
+18:35:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:52 INFO Authentication (publickey) successful!
+18:35:52 INFO Attempting to kill runner process on test-j7watpto-0-n-015ad32d0648 if not busy
+18:35:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:35:52 INFO Kill process command output, ok: True code 0, out: 1667
+, err: 
+18:35:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:52 INFO Authentication (publickey) successful!
+18:35:53 INFO Attempting to kill runner process on test-j7watpto-0-n-bb19b13b27ba if not busy
+18:35:53 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:35:53 INFO Kill process command output, ok: True code 0, out: 2477
+, err: 
+18:35:53 INFO Getting all openstack servers managed by the charm
+18:35:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:56 INFO Authentication (publickey) successful!
+18:35:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:56 INFO Authentication (publickey) successful!
+18:35:57 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:35:57 INFO Authentication (publickey) successful!
+18:35:57 INFO [chan 2] Opened sftp connection (server version 3)
+18:35:57 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.46, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:35:57 WARNING Failed to pull metrics for test-j7watpto-0-n-015ad32d0648: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:35:57 INFO Running runner removal script for test-j7watpto-0-n-015ad32d0648
+18:35:59 INFO Deleting openstack server with test-j7watpto-0-n-015ad32d0648
+18:36:01 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:36:01 INFO Authentication (publickey) successful!
+18:36:01 INFO [chan 2] Opened sftp connection (server version 3)
+18:36:01 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.114, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:36:01 WARNING Failed to pull metrics for test-j7watpto-0-n-bb19b13b27ba: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:36:01 INFO Running runner removal script for test-j7watpto-0-n-bb19b13b27ba
+18:36:03 INFO Deleting openstack server with test-j7watpto-0-n-bb19b13b27ba
+18:36:05 INFO Cleaning up SSH key files
+18:36:05 INFO Found 0 key files, clean up 0 key files
+18:36:05 INFO Cleaning up openstack keypairs
+18:36:05 INFO Getting runners...
+18:36:07 INFO Getting all openstack servers managed by the charm
+18:36:07 INFO Found following runners: set()

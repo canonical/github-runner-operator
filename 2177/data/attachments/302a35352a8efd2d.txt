@@ -1,0 +1,40 @@
+18:55:58 INFO Waiting for model:
+  test-xco2hcpz/0 [executing] active: 
+18:56:28 INFO Waiting for model:
+  test-xco2hcpz/0 [idle] active:
+18:57:45 INFO Waiting for model:
+  test-xco2hcpz/0 [executing] maintenance: Reconciling runners
+18:58:15 INFO Waiting for model:
+  test-xco2hcpz/0 [idle] active: 
+18:58:25 INFO [TEST SETUP] Exposing port 8080 on test-xco2hcpz-0-n-12c80c8d729e
+18:58:25 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.238', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:07:6b:fe'}]])
+18:58:29 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-xco2hcpz-0-n-12c80c8d729e
+18:58:29 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.238', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:07:6b:fe'}]])
+18:58:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xco2hcpz-0-n-12c80c8d729e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.238 nc -z localhost 8080'
+18:58:31 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-xco2hcpz-0-n-12c80c8d729e
+18:58:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.238', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:07:6b:fe'}]])
+18:58:32 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-xco2hcpz-0-n-12c80c8d729e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.238 curl http://localhost:8080'
+18:58:35 INFO Wait for condition not met, sleeping 10
+18:59:11 INFO Waiting for model:
+  test-xco2hcpz/0 [executing] maintenance: Reconciling runners
+18:59:38 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-kaev  lxd         localhost/localhost  3.6.4    unsupported  18:59:38Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-xco2hcpz           active      1  github-runner-image-builder  latest/edge   61  no       
+test-xco2hcpz                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-xco2hcpz/0*  active    idle   0        10.41.225.37              
+test-xco2hcpz/0*                         active    idle   1        10.41.225.207   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.41.225.37   juju-2deb0e-0  ubuntu@22.04      Running
+1        started  10.41.225.207  juju-2deb0e-1  ubuntu@22.04      Running
+
+18:59:39 INFO Juju error logs:
+
+
+18:59:39 INFO Forgetting model main...

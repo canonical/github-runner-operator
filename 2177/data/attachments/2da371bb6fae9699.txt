@@ -1,0 +1,129 @@
+18:29:23 INFO Creating 1 runners
+18:29:24 INFO Creating openstack server with test-j7watpto-0-n-60e456254ccb
+18:29:54 WARNING NoValidConnectionsError. Unable to SSH into test-j7watpto-0-n-60e456254ccb with address 10.145.193.81. Error: [Errno None] Unable to connect to port 22 on 10.145.193.81
+18:29:54 WARNING Retrying error in 60 seconds: Failed to SSH to test-j7watpto-0-n-60e456254ccb during creation possible due to setup not completed
+18:30:54 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:30:54 INFO Authentication (publickey) successful!
+18:30:55 INFO Runner startup process found to be healthy on test-j7watpto-0-n-60e456254ccb
+18:30:55 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:30:55 INFO Authentication (publickey) successful!
+18:30:55 INFO Runner test-j7watpto-0-n-60e456254ccb found to be healthy
+18:30:55 INFO Runner test-j7watpto-0-n-60e456254ccb created successfully
+18:30:55 INFO Getting runners...
+18:30:56 INFO Getting all openstack servers managed by the charm
+18:31:00 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:00 INFO Authentication (publickey) successful!
+18:31:00 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:00 INFO Getting runners...
+18:31:02 INFO Getting all openstack servers managed by the charm
+18:31:05 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:05 INFO Authentication (publickey) successful!
+18:31:05 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:05 INFO Getting runners...
+18:31:07 INFO Getting all openstack servers managed by the charm
+18:31:12 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:12 INFO Authentication (publickey) successful!
+18:31:12 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:14 INFO Wait for condition not met, sleeping 10
+18:31:25 INFO Getting runners...
+18:31:26 INFO Getting all openstack servers managed by the charm
+18:31:32 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:33 INFO Authentication (publickey) successful!
+18:31:33 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:33 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:33 INFO Getting runners...
+18:31:34 INFO Getting all openstack servers managed by the charm
+18:31:43 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:43 INFO Authentication (publickey) successful!
+18:31:44 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:44 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-60e456254ccb'}
+18:31:45 INFO Offline github runners to delete: []:
+18:31:46 INFO Getting all openstack servers managed by the charm
+18:31:48 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:48 INFO Authentication (publickey) successful!
+18:31:49 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+18:31:49 INFO Authentication (publickey) successful!
+18:31:49 INFO [chan 2] Opened sftp connection (server version 3)
+18:31:49 INFO Running runner removal script for test-j7watpto-0-n-60e456254ccb
+18:31:50 INFO Deleting openstack server with test-j7watpto-0-n-60e456254ccb
+18:31:54 INFO Cleaning up SSH key files
+18:31:54 INFO Found 0 key files, clean up 0 key files
+18:31:54 INFO Cleaning up openstack keypairs
+18:31:54 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+18:31:54 INFO Getting runners...
+18:31:55 INFO Getting all openstack servers managed by the charm
+18:32:01 ERROR Unable to get SSH connection for instance test-j7watpto-0-n-60e456254ccb, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-j7watpto-0-n-60e456254ccb, key path: /home/ubuntu/.ssh/test-j7watpto-0-n-60e456254ccb.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-j7watpto-0-n-60e456254ccb
+18:32:01 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:32:01 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-60e456254ccb'}
+18:32:01 INFO Getting runners...
+18:32:02 INFO Getting all openstack servers managed by the charm
+18:32:05 ERROR Unable to get SSH connection for instance test-j7watpto-0-n-60e456254ccb, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-j7watpto-0-n-60e456254ccb, key path: /home/ubuntu/.ssh/test-j7watpto-0-n-60e456254ccb.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-j7watpto-0-n-60e456254ccb
+18:32:05 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:32:05 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-60e456254ccb'}
+18:32:05 INFO Wait for condition not met, sleeping 60
+18:33:05 INFO Getting runners...
+18:33:06 INFO Getting all openstack servers managed by the charm
+18:33:09 ERROR Unable to get SSH connection for instance test-j7watpto-0-n-60e456254ccb, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-j7watpto-0-n-60e456254ccb, key path: /home/ubuntu/.ssh/test-j7watpto-0-n-60e456254ccb.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-j7watpto-0-n-60e456254ccb
+18:33:09 INFO Found following runners: {'test-j7watpto-0-n-60e456254ccb'}
+18:33:09 WARNING Found runner instance on cloud but not registered on GitHub: {'test-j7watpto-0-n-60e456254ccb'}
+18:33:09 INFO Wait for condition not met, sleeping 60
+18:34:10 INFO Getting runners...
+18:34:11 INFO Getting all openstack servers managed by the charm
+18:34:14 INFO Found following runners: set()
