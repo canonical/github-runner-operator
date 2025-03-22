@@ -1,0 +1,71 @@
+06:25:00 INFO Creating 1 runners
+06:25:01 INFO Creating openstack server with test-t3c18da1-0-n-dbe1f4f9c6a5
+06:25:24 WARNING NoValidConnectionsError. Unable to SSH into test-t3c18da1-0-n-dbe1f4f9c6a5 with address 10.145.193.113. Error: [Errno None] Unable to connect to port 22 on 10.145.193.113
+06:25:24 WARNING Retrying error in 60 seconds: Failed to SSH to test-t3c18da1-0-n-dbe1f4f9c6a5 during creation possible due to setup not completed
+06:26:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:24 INFO Authentication (publickey) successful!
+06:26:25 INFO Runner startup process found to be healthy on test-t3c18da1-0-n-dbe1f4f9c6a5
+06:26:25 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:25 INFO Authentication (publickey) successful!
+06:26:25 INFO Runner test-t3c18da1-0-n-dbe1f4f9c6a5 found to be healthy
+06:26:25 INFO Runner test-t3c18da1-0-n-dbe1f4f9c6a5 created successfully
+06:26:25 INFO Getting runners...
+06:26:27 INFO Getting all openstack servers managed by the charm
+06:26:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:28 INFO Authentication (publickey) successful!
+06:26:29 INFO Found following runners: {'test-t3c18da1-0-n-dbe1f4f9c6a5'}
+06:26:29 INFO Getting runners...
+06:26:30 INFO Getting all openstack servers managed by the charm
+06:26:31 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:31 INFO Authentication (publickey) successful!
+06:26:32 INFO Found following runners: {'test-t3c18da1-0-n-dbe1f4f9c6a5'}
+06:26:32 INFO Getting runners...
+06:26:33 INFO Getting all openstack servers managed by the charm
+06:26:35 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:35 INFO Authentication (publickey) successful!
+06:26:35 INFO Found following runners: {'test-t3c18da1-0-n-dbe1f4f9c6a5'}
+06:26:35 INFO Getting all openstack servers managed by the charm
+06:26:37 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:37 INFO Authentication (publickey) successful!
+06:26:37 INFO Getting runners...
+06:26:39 INFO Getting all openstack servers managed by the charm
+06:26:40 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:40 INFO Authentication (publickey) successful!
+06:26:41 INFO Found following runners: {'test-t3c18da1-0-n-dbe1f4f9c6a5'}
+06:26:42 INFO Offline github runners to delete: []:
+06:26:42 INFO Getting all openstack servers managed by the charm
+06:26:44 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:44 INFO Authentication (publickey) successful!
+06:26:46 INFO Cleaning up SSH key files
+06:26:46 INFO Found 1 key files, clean up 0 key files
+06:26:46 INFO Cleaning up openstack keypairs
+06:26:46 INFO Getting runners...
+06:26:47 INFO Getting all openstack servers managed by the charm
+06:26:49 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:49 INFO Authentication (publickey) successful!
+06:26:50 INFO Found following runners: {'test-t3c18da1-0-n-dbe1f4f9c6a5'}
+06:26:50 INFO Flushing idle runners...
+06:26:50 INFO Getting all openstack servers managed by the charm
+06:26:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:52 INFO Authentication (publickey) successful!
+06:26:52 INFO Attempting to kill runner process on test-t3c18da1-0-n-dbe1f4f9c6a5 if not busy
+06:26:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:26:52 INFO Kill process command output, ok: True code 0, out: 2387
+, err: 
+06:26:52 INFO Getting all openstack servers managed by the charm
+06:26:54 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:54 INFO Authentication (publickey) successful!
+06:26:54 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:26:54 INFO Authentication (publickey) successful!
+06:26:55 INFO [chan 2] Opened sftp connection (server version 3)
+06:26:55 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.113, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:26:55 WARNING Failed to pull metrics for test-t3c18da1-0-n-dbe1f4f9c6a5: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:26:55 INFO Running runner removal script for test-t3c18da1-0-n-dbe1f4f9c6a5
+06:26:56 INFO Deleting openstack server with test-t3c18da1-0-n-dbe1f4f9c6a5
+06:26:59 INFO Cleaning up SSH key files
+06:26:59 INFO Found 0 key files, clean up 0 key files
+06:26:59 INFO Cleaning up openstack keypairs
+06:26:59 INFO Getting runners...
+06:27:00 INFO Getting all openstack servers managed by the charm
+06:27:01 INFO Found following runners: set()

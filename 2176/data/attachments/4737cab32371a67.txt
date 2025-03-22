@@ -1,0 +1,56 @@
+06:31:59 INFO Creating 1 runners
+06:32:00 INFO Creating openstack server with test-t3c18da1-0-n-199c82fc44ea
+06:32:25 WARNING NoValidConnectionsError. Unable to SSH into test-t3c18da1-0-n-199c82fc44ea with address 10.145.193.47. Error: [Errno None] Unable to connect to port 22 on 10.145.193.47
+06:32:25 WARNING Retrying error in 60 seconds: Failed to SSH to test-t3c18da1-0-n-199c82fc44ea during creation possible due to setup not completed
+06:32:48 ERROR Socket exception: Connection reset by peer (104)
+06:33:25 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:25 INFO Authentication (publickey) successful!
+06:33:26 INFO Runner startup process found to be healthy on test-t3c18da1-0-n-199c82fc44ea
+06:33:26 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:26 INFO Authentication (publickey) successful!
+06:33:27 INFO Runner test-t3c18da1-0-n-199c82fc44ea found to be healthy
+06:33:27 INFO Runner test-t3c18da1-0-n-199c82fc44ea created successfully
+06:33:27 INFO Getting runners...
+06:33:28 INFO Getting all openstack servers managed by the charm
+06:33:31 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:31 INFO Authentication (publickey) successful!
+06:33:32 INFO Found following runners: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:33:32 INFO Getting runners...
+06:33:33 INFO Getting all openstack servers managed by the charm
+06:33:35 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:35 INFO Authentication (publickey) successful!
+06:33:36 INFO Found following runners: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:33:36 INFO Getting runners...
+06:33:37 INFO Getting all openstack servers managed by the charm
+06:33:40 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:40 INFO Authentication (publickey) successful!
+06:33:41 INFO Found following runners: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:33:42 INFO Wait for condition not met, sleeping 10
+06:33:54 INFO Getting runners...
+06:33:55 INFO Getting all openstack servers managed by the charm
+06:33:57 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:33:57 INFO Authentication (publickey) successful!
+06:33:58 INFO Found following runners: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:33:58 WARNING Found runner instance on cloud but not registered on GitHub: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:33:58 INFO Getting runners...
+06:33:59 INFO Getting all openstack servers managed by the charm
+06:34:03 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:34:04 INFO Authentication (publickey) successful!
+06:34:04 INFO Found following runners: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:34:04 WARNING Found runner instance on cloud but not registered on GitHub: {'test-t3c18da1-0-n-199c82fc44ea'}
+06:34:05 INFO Offline github runners to delete: []:
+06:34:06 INFO Getting all openstack servers managed by the charm
+06:34:10 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:34:10 INFO Authentication (publickey) successful!
+06:34:10 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:34:10 INFO Authentication (publickey) successful!
+06:34:11 INFO [chan 2] Opened sftp connection (server version 3)
+06:34:11 INFO Running runner removal script for test-t3c18da1-0-n-199c82fc44ea
+06:34:11 INFO Deleting openstack server with test-t3c18da1-0-n-199c82fc44ea
+06:34:15 INFO Cleaning up SSH key files
+06:34:15 INFO Found 0 key files, clean up 0 key files
+06:34:15 INFO Cleaning up openstack keypairs
+06:34:15 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+06:34:15 INFO Getting runners...
+06:34:16 INFO Getting all openstack servers managed by the charm
+06:34:19 INFO Found following runners: set()

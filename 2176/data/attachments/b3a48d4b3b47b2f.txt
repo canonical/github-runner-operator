@@ -1,0 +1,65 @@
+06:34:19 INFO Creating 2 runners
+06:35:50 INFO Getting runners...
+06:35:52 INFO Getting all openstack servers managed by the charm
+06:35:54 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:35:54 INFO Authentication (publickey) successful!
+06:35:55 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:35:55 INFO Authentication (publickey) successful!
+06:35:55 INFO Found following runners: {'test-t3c18da1-0-n-162d81b0ef8a', 'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:35:55 INFO Getting runners...
+06:35:57 INFO Getting all openstack servers managed by the charm
+06:35:59 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:35:59 INFO Authentication (publickey) successful!
+06:36:00 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:00 INFO Authentication (publickey) successful!
+06:36:00 INFO Found following runners: {'test-t3c18da1-0-n-162d81b0ef8a', 'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:36:00 INFO Flushing idle runners...
+06:36:01 INFO Getting all openstack servers managed by the charm
+06:36:04 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:04 INFO Authentication (publickey) successful!
+06:36:04 INFO Attempting to kill runner process on test-t3c18da1-0-n-162d81b0ef8a if not busy
+06:36:04 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:36:04 INFO Kill process command output, ok: True code 0, out: 2410
+, err: 
+06:36:04 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:04 INFO Authentication (publickey) successful!
+06:36:04 INFO Attempting to kill runner process on test-t3c18da1-0-n-ad5f46ec2a60 if not busy
+06:36:04 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:36:04 INFO Kill process command output, ok: True code 0, out: 2475
+, err: 
+06:36:04 INFO Getting all openstack servers managed by the charm
+06:36:07 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:07 INFO Authentication (publickey) successful!
+06:36:08 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:08 INFO Authentication (publickey) successful!
+06:36:08 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:08 INFO Authentication (publickey) successful!
+06:36:09 INFO [chan 2] Opened sftp connection (server version 3)
+06:36:09 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.126, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:36:09 WARNING Failed to pull metrics for test-t3c18da1-0-n-162d81b0ef8a: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:36:09 INFO Running runner removal script for test-t3c18da1-0-n-162d81b0ef8a
+06:36:10 INFO Deleting openstack server with test-t3c18da1-0-n-162d81b0ef8a
+06:36:12 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+06:36:12 INFO Authentication (publickey) successful!
+06:36:12 INFO [chan 2] Opened sftp connection (server version 3)
+06:36:12 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.216, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:36:12 WARNING Failed to pull metrics for test-t3c18da1-0-n-ad5f46ec2a60: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:36:12 INFO Running runner removal script for test-t3c18da1-0-n-ad5f46ec2a60
+06:36:14 INFO Deleting openstack server with test-t3c18da1-0-n-ad5f46ec2a60
+06:36:17 INFO Cleaning up SSH key files
+06:36:17 INFO Found 0 key files, clean up 0 key files
+06:36:17 INFO Cleaning up openstack keypairs
+06:36:17 INFO Getting runners...
+06:36:18 INFO Getting all openstack servers managed by the charm
+06:36:20 INFO Found following runners: {'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:36:20 WARNING Found runner instance on cloud but not registered on GitHub: {'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:36:20 INFO Getting runners...
+06:36:21 INFO Getting all openstack servers managed by the charm
+06:36:23 INFO Found following runners: {'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:36:23 WARNING Found runner instance on cloud but not registered on GitHub: {'test-t3c18da1-0-n-ad5f46ec2a60'}
+06:36:23 INFO Wait for condition not met, sleeping 60
+06:37:23 INFO Getting runners...
+06:37:24 INFO Getting all openstack servers managed by the charm
+06:37:25 INFO Found following runners: set()
