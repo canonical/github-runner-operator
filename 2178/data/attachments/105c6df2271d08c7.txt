@@ -1,0 +1,81 @@
+06:56:07 INFO Adding model lxd:test-charm-no-runner-llkw on cloud localhost
+06:56:07 WARNING unexpected facade SSHServer received from the controller
+06:56:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+06:56:09 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [allocating] waiting: waiting for machine
+06:56:40 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [allocating] waiting: waiting for machine
+06:57:10 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [allocating] waiting: waiting for machine
+06:57:40 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [executing] maintenance: Setting up Builder.
+06:58:11 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [executing] maintenance: Setting up Builder.
+06:58:41 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [executing] maintenance: Setting up Builder.
+06:59:12 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [executing] maintenance: Setting up Builder.
+06:59:42 INFO Waiting for model:
+  github-runner-image-builder-mf1p7lgr/0 [idle] blocked: image integration required.
+06:59:59 INFO Deploying local:jammy/github-runner-0
+06:59:59 INFO Waiting for model:
+  test-mf1p7lgr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mf1p7lgr/0 [idle] blocked: image integration required.
+07:00:30 INFO Waiting for model:
+  test-mf1p7lgr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mf1p7lgr/0 [idle] blocked: image integration required.
+07:01:00 INFO Waiting for model:
+  test-mf1p7lgr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-mf1p7lgr/0 [idle] blocked: image integration required.
+07:01:30 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:02:00 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:02:31 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:03:01 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:03:32 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:04:02 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:04:32 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:05:02 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:05:33 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:06:03 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:06:33 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:07:03 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:07:33 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:08:04 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:08:34 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mf1p7lgr/0 [executing] active: Building image.
+07:09:04 INFO Waiting for model:
+  test-mf1p7lgr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-mf1p7lgr/0 [idle] active: 
+07:09:35 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] active: 
+07:09:42 INFO Waiting for model:
+  test-mf1p7lgr/0 [idle] active:

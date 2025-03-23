@@ -1,0 +1,85 @@
+06:46:02 INFO Adding model lxd:test-charm-runner-sn77 on cloud localhost
+06:46:02 WARNING unexpected facade SSHServer received from the controller
+06:46:04 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+06:46:04 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [allocating] waiting: waiting for machine
+06:46:34 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [allocating] waiting: waiting for machine
+06:47:05 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [allocating] waiting: waiting for machine
+06:47:35 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [executing] maintenance: Setting up Builder.
+06:48:05 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [executing] maintenance: Setting up Builder.
+06:48:36 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [executing] maintenance: Setting up Builder.
+06:49:06 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [executing] maintenance: Setting up Builder.
+06:49:36 INFO Waiting for model:
+  github-runner-image-builder-pqlkmjcb/0 [idle] blocked: image integration required.
+06:50:06 INFO Deploying local:jammy/github-runner-0
+06:50:06 INFO Waiting for model:
+  test-pqlkmjcb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pqlkmjcb/0 [idle] blocked: image integration required.
+06:50:36 INFO Waiting for model:
+  test-pqlkmjcb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pqlkmjcb/0 [idle] blocked: image integration required.
+06:51:06 INFO Waiting for model:
+  test-pqlkmjcb/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pqlkmjcb/0 [idle] blocked: image integration required.
+06:51:37 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:52:07 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:52:37 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:53:08 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:53:38 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:54:08 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:54:39 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:55:09 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:55:40 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:56:10 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:56:40 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:57:11 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:57:41 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:58:11 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:58:41 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:59:12 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqlkmjcb/0 [executing] active: Building image.
+06:59:42 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] active: 
+07:02:29 INFO Waiting for model:
+  test-pqlkmjcb/0 [executing] maintenance: Reconciling runners
+07:03:00 INFO Waiting for model:
+  test-pqlkmjcb/0 [idle] active:
+07:03:48 INFO Waiting for model:
+  test-pqlkmjcb/0 [executing] active:
