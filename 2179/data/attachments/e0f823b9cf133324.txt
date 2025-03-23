@@ -1,0 +1,96 @@
+18:25:12 INFO Adding model lxd:test-charm-no-runner-2maw on cloud localhost
+18:25:12 WARNING unexpected facade SSHServer received from the controller
+18:25:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+18:25:14 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [allocating] waiting: waiting for machine
+18:25:44 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [allocating] waiting: waiting for machine
+18:26:14 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [allocating] waiting: waiting for machine
+18:26:45 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [executing] maintenance: Setting up Builder.
+18:27:15 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [executing] maintenance: Setting up Builder.
+18:27:46 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [executing] maintenance: Setting up Builder.
+18:28:16 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [executing] maintenance: Setting up Builder.
+18:28:47 INFO Waiting for model:
+  github-runner-image-builder-s9keft65/0 [executing] active: Waiting for first image.
+18:29:25 INFO Deploying local:jammy/github-runner-0
+18:29:25 INFO Waiting for model:
+  test-s9keft65/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s9keft65/0 [idle] blocked: image integration required.
+18:29:56 INFO Waiting for model:
+  test-s9keft65/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s9keft65/0 [idle] blocked: image integration required.
+18:30:26 INFO Waiting for model:
+  test-s9keft65/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-s9keft65/0 [idle] blocked: image integration required.
+18:30:56 INFO Waiting for model:
+  test-s9keft65/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-s9keft65/0 [idle] blocked: image integration required.
+18:31:26 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:31:57 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:32:27 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:32:58 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:33:28 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:33:59 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:34:29 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:34:59 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:35:30 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:36:00 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:36:31 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:37:01 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:37:31 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:38:01 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:38:31 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:39:02 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:39:32 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:40:03 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:40:33 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:41:04 INFO Waiting for model:
+  test-s9keft65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s9keft65/0 [executing] active: Building image.
+18:41:34 INFO Waiting for model:
+  test-s9keft65/0 [idle] active: 
+18:41:45 INFO Waiting for model:
+  test-s9keft65/0 [idle] active:

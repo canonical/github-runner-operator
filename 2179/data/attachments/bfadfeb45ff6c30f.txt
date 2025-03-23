@@ -1,0 +1,40 @@
+18:57:24 INFO Waiting for model:
+  test-wdct2cfd/0 [executing] active: 
+18:57:54 INFO Waiting for model:
+  test-wdct2cfd/0 [idle] active:
+18:59:08 INFO Waiting for model:
+  test-wdct2cfd/0 [executing] active: 
+18:59:38 INFO Waiting for model:
+  test-wdct2cfd/0 [idle] active: 
+18:59:47 INFO [TEST SETUP] Exposing port 8080 on test-wdct2cfd-0-n-a7dfc9494ba5
+18:59:47 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.105', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c0:7d:6d'}]])
+18:59:50 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-wdct2cfd-0-n-a7dfc9494ba5
+18:59:50 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.105', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c0:7d:6d'}]])
+18:59:51 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wdct2cfd-0-n-a7dfc9494ba5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.105 nc -z localhost 8080'
+18:59:53 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-wdct2cfd-0-n-a7dfc9494ba5
+18:59:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.105', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c0:7d:6d'}]])
+18:59:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wdct2cfd-0-n-a7dfc9494ba5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.105 curl http://localhost:8080'
+18:59:56 INFO Wait for condition not met, sleeping 10
+19:00:37 INFO Waiting for model:
+  test-wdct2cfd/0 [executing] active: 
+19:01:05 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-d44u  lxd         localhost/localhost  3.6.4    unsupported  19:01:05Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-wdct2cfd           active      1  github-runner-image-builder  latest/edge   61  no       
+test-wdct2cfd                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-wdct2cfd/0*  active    idle   0        10.9.181.16               
+test-wdct2cfd/0*                         active    idle   1        10.9.181.187    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.9.181.16   juju-150bf7-0  ubuntu@22.04      Running
+1        started  10.9.181.187  juju-150bf7-1  ubuntu@22.04      Running
+
+19:01:05 INFO Juju error logs:
+
+
+19:01:05 INFO Forgetting model main...
