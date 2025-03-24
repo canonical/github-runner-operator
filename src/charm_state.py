@@ -576,16 +576,15 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+def _build_proxy_config_from_charm(use_aproxy: bool = False) -> "ProxyConfig":
     """Initialize the proxy config from charm.
 
     Args:
-        charm: The charm instance.
+        use_aproxy: TODO.
 
     Returns:
         Current proxy config of the charm.
     """
-    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
     http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
     https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
     no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
@@ -607,15 +606,15 @@ def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
     runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
     runner_https_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
     runner_no_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
+    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
     if runner_https_proxy or runner_http_proxy or runner_no_proxy:
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
         return ProxyConfig(
             http=runner_http_proxy,
             https=runner_https_proxy,
             no_proxy=runner_no_proxy,
             use_aproxy=use_aproxy,
         )
-    return _build_proxy_config_from_charm(charm)
+    return _build_proxy_config_from_charm(use_aproxy)
 
 
 class UnsupportedArchitectureError(Exception):
@@ -678,7 +677,9 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
                 "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
             )
             continue
-        use_runner_http_proxy = cast(bool, charm.config.get(USER_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False))
+        use_runner_http_proxy = cast(
+            bool, charm.config.get(USER_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False)
+        )
         ssh_debug_connections.append(
             # pydantic allows string to be passed as IPvAnyAddress and as int,
             # mypy complains about it
@@ -827,7 +828,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             Current state of the charm.
         """
         try:
-            proxy_config = _build_proxy_config_from_charm(charm)
+            proxy_config = _build_proxy_config_from_charm()
             runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc

@@ -33,8 +33,11 @@ systemctl enable nftables.service
 nft -f /etc/nftables.conf
 {% endif %}
 
+apt-get update
 
 {% if ssh_debug_info and runner_proxy_config.proxy_address %}
+# TODO PUT THIS IN THE IMAGE-BUILDER
+DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -y --no-install-recommends socat
 cat << EOF > /etc/systemd/system/tmate-proxy.service
 [Unit]
 Description=tmate http proxy
@@ -53,17 +56,19 @@ Restart=always
 [Install]
 WantedBy=multi-user.target
 EOF
+systemctl daemon-reload
+# TODO. PENDING TO PUT THIS MAYBE IN action-tmate someway?
+systemctl start tmate-proxy
+systemctl enable tmate-proxy
 {% endif %}
-
-sudo apt-get update
 
 adduser ubuntu lxd
 adduser ubuntu adm
 
 {% if dockerhub_mirror %}
 echo "{\"registry-mirrors\": [\"{{ dockerhub_mirror }}\"]}" > /etc/docker/daemon.json
-sudo systemctl daemon-reload
-sudo systemctl restart docker
+systemctl daemon-reload
+systemctl restart docker
 {% endif %}
 
 # Prepare metrics
