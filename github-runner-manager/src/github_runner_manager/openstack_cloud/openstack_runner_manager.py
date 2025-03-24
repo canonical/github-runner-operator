@@ -402,16 +402,19 @@ class OpenStackRunnerManager(CloudRunnerManager):
         )
 
         service_config = self._config.service_config
+        # TODO THIS IS WRONG, JUST TO TEST, AS IT USES aproxy_address for everything.
+        runner_http_proxy = service_config.runner_proxy_config.proxy_address
+        ssh_debug_info = (
+            secrets.choice(service_config.ssh_debug_connections)
+            if service_config.ssh_debug_connections
+            else None
+        )
         env_contents = jinja.get_template("env.j2").render(
             pre_job_script=str(PRE_JOB_SCRIPT),
             dockerhub_mirror=service_config.dockerhub_mirror or "",
-            ssh_debug_info=(
-                secrets.choice(service_config.ssh_debug_connections)
-                if service_config.ssh_debug_connections
-                else None
-            ),
+            ssh_debug_info=ssh_debug_info,
+            tmate_server_proxy=runner_http_proxy,
         )
-
         pre_job_contents_dict = {
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
@@ -441,6 +444,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
             aproxy_address=aproxy_address,
             dockerhub_mirror=service_config.dockerhub_mirror,
+            ssh_debug_info=ssh_debug_info,
+            runner_proxy_config=service_config.runner_proxy_config,
         )
 
     def _get_repo_policy_compliance_client(self) -> RepoPolicyComplianceClient | None:

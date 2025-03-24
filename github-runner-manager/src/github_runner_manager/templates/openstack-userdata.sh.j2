@@ -11,7 +11,6 @@ snap refresh --hold=48h
 snap watch --last=auto-refresh?
 
 {% if aproxy_address %}
-snap install aproxy --edge
 snap set aproxy proxy={{ aproxy_address }} listen=:54969
 cat << EOF > /etc/nftables.conf
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
@@ -32,6 +31,28 @@ table ip aproxy {
 EOF
 systemctl enable nftables.service
 nft -f /etc/nftables.conf
+{% endif %}
+
+
+{% if ssh_debug_info and runner_proxy_config.proxy_address %}
+cat << EOF > /etc/systemd/system/tmate-proxy.service
+[Unit]
+Description=tmate http proxy
+After=network.target
+
+[Service]
+Type=simple
+StandardOutput=syslog
+StandardError=syslog
+RestartSec=1
+SyslogIdentifier=tmate-http-proxy
+
+ExecStart=socat -v TCP-LISTEN:3129,fork PROXY:{{runner_proxy_config.proxy_host}}:{{ssh_debug_info['host']}}:{{ssh_debug_info['port']}}{% if runner_proxy_config.proxy_port %},proxyport={{runner_proxy_config.proxy_port}}{% endif %}
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+EOF
 {% endif %}
 
 sudo apt-get update

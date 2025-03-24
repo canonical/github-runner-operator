@@ -59,12 +59,37 @@ class ProxyConfig(BaseModel):
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
         use_aproxy: Whether aproxy should be used for the runners.
+        proxy_address: TODO
+        proxy_host: TODO
+        proxy_port: TODO
     """
 
     http: Optional[AnyHttpUrl]
     https: Optional[AnyHttpUrl]
     no_proxy: Optional[str]
     use_aproxy: bool = False
+
+    @property
+    def proxy_address(self) -> Optional[str]:
+        """TODO."""
+        proxy = self.http or self.https
+        if proxy:
+            proxy_address = proxy.host if not proxy.port else f"{proxy.host}:{proxy.port}"
+            return proxy_address
+        return None
+
+    @property
+    def proxy_host(self) -> Optional[str]:
+        """TODO."""
+        proxy_address = self.http or self.https
+        return proxy_address.host if proxy_address else None
+
+    @property
+    def proxy_port(self) -> Optional[str]:
+        """TODO."""
+        proxy_address = self.http or self.https
+        # TODO Be careful, can be None even with a proxy address.
+        return proxy_address.port if proxy_address else None
 
     @property
     def aproxy_address(self) -> Optional[str]:
