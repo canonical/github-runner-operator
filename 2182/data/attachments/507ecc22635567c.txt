@@ -1,0 +1,40 @@
+06:55:38 INFO Waiting for model:
+  test-gxmen5lg/0 [executing] maintenance: Reconciling runners
+06:56:08 INFO Waiting for model:
+  test-gxmen5lg/0 [idle] active:
+06:57:10 INFO Waiting for model:
+  test-gxmen5lg/0 [executing] maintenance: Reconciling runners
+06:57:40 INFO Waiting for model:
+  test-gxmen5lg/0 [idle] active: 
+06:57:48 INFO [TEST SETUP] Exposing port 8080 on test-gxmen5lg-0-n-3fe6eaeb1c47
+06:57:48 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.16', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a9:15:05'}]])
+06:57:52 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-gxmen5lg-0-n-3fe6eaeb1c47
+06:57:52 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.16', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a9:15:05'}]])
+06:57:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-gxmen5lg-0-n-3fe6eaeb1c47.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.16 nc -z localhost 8080'
+06:57:54 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-gxmen5lg-0-n-3fe6eaeb1c47
+06:57:54 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.16', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a9:15:05'}]])
+06:57:55 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-gxmen5lg-0-n-3fe6eaeb1c47.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.16 curl http://localhost:8080'
+06:57:58 INFO Wait for condition not met, sleeping 10
+06:58:34 INFO Waiting for model:
+  test-gxmen5lg/0 [executing] maintenance: Reconciling runners
+06:59:04 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-5au7  lxd         localhost/localhost  3.6.4    unsupported  06:59:04Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-gxmen5lg           active      1  github-runner-image-builder  latest/edge   61  no       
+test-gxmen5lg                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-gxmen5lg/0*  active    idle   0        10.13.153.236             
+test-gxmen5lg/0*                         active    idle   1        10.13.153.213   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.13.153.236  juju-3412c3-0  ubuntu@22.04      Running
+1        started  10.13.153.213  juju-3412c3-1  ubuntu@22.04      Running
+
+06:59:04 INFO Juju error logs:
+
+
+06:59:04 INFO Forgetting model main...
