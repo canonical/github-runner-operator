@@ -403,7 +403,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         service_config = self._config.service_config
         # TODO THIS IS WRONG, JUST TO TEST, AS IT USES aproxy_address for everything.
-        runner_http_proxy = service_config.runner_proxy_config.proxy_address
+        runner_http_proxy = (
+            service_config.runner_proxy_config.proxy_address
+            if service_config.runner_proxy_config
+            else None
+        )
         ssh_debug_info = (
             secrets.choice(service_config.ssh_debug_connections)
             if service_config.ssh_debug_connections

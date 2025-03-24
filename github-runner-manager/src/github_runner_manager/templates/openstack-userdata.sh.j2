@@ -11,6 +11,7 @@ snap refresh --hold=48h
 snap watch --last=auto-refresh?
 
 {% if aproxy_address %}
+snap install aproxy --edge
 snap set aproxy proxy={{ aproxy_address }} listen=:54969
 cat << EOF > /etc/nftables.conf
 define default-ip = $(ip route get $(ip route show 0.0.0.0/0 | grep -oP 'via \K\S+') | grep -oP 'src \K\S+')
@@ -35,7 +36,7 @@ nft -f /etc/nftables.conf
 
 apt-get update
 
-{% if ssh_debug_info and runner_proxy_config.proxy_address %}
+{% if ssh_debug_info and runner_proxy_config and runner_proxy_config.proxy_address %}
 # TODO PUT THIS IN THE IMAGE-BUILDER
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -y --no-install-recommends socat
 cat << EOF > /etc/systemd/system/tmate-proxy.service
