@@ -678,7 +678,7 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
                 "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
             )
             continue
-        use_runner_http_proxy = cast(bool, charm.config.get(USE_APROXY_CONFIG_NAME, False))
+        use_runner_http_proxy = cast(bool, charm.config.get(USER_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False))
         ssh_debug_connections.append(
             # pydantic allows string to be passed as IPvAnyAddress and as int,
             # mypy complains about it
