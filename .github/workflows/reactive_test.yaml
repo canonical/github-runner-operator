@@ -2,7 +2,8 @@ name: Reactive Test
 on: push
 jobs:
   build:
-    runs-on: ["self-hosted", "stg-reactive"]
+    # runs-on: ["self-hosted", "stg-reactive"]
+    runs-on: ["self-hosted", "ps7"]
     steps:
         - name: sleep for 6 minutes
           run: |
