@@ -2,6 +2,9 @@ name: CI
 on: [push]
 jobs:
   build:
+    env:
+      DISCOURSE_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+      DISCOURSE_API_USERNAME: ${{ secrets.DISCOURSE_API_USERNAME }}
     runs-on: [self-hosted, stg-private-endpoint]
     steps:
     - uses: actions/checkout@v3
