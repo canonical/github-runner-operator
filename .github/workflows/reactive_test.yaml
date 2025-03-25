@@ -8,7 +8,8 @@ jobs:
     steps:
         - name: sleep for 6 minutes
           run: |
-            eccho "starting running"
+            echo "starting running"
+            ip a
             exit 1
             sleep 360
         - name: Setup tmate session
