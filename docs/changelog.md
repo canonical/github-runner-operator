@@ -1,10 +1,5 @@
 # Changelog
 
-### 2025-03-24
-
-- New terraform product module. This module is composed of one github-runner-image-builder application and the related
-github-runner applications.
-
 ### 2024-12-13
 
 - Add the difference between expected and actual runners to the "Runners after reconciliation" dashboard panel.

@@ -14,7 +14,7 @@ Conceptually, the charm can be divided into the following:
 # Description of the main components github-runner charm
 
 ```mermaid
-C4Context
+C4Container
 title Container diagram for the github-runner Charm System
 
 System_Ext(osrunnign, "OpenStack", "OpenStack deployment used for runners")
