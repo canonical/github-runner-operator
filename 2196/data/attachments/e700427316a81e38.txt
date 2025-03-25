@@ -1,0 +1,127 @@
+07:06:22 INFO Adding model lxd:test-charm-upgrade-9a0n on cloud localhost
+07:06:22 WARNING unexpected facade AgentLifeFlag received from the controller
+07:06:22 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+07:06:22 WARNING unexpected facade SecretsDrain received from the controller
+07:06:24 INFO Deploying ch:amd64/github-runner-image-builder-61
+07:06:24 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2 (not enough units yet - 0/1)
+07:06:54 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [allocating] waiting: waiting for machine
+07:07:25 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [allocating] waiting: agent initialising
+07:07:55 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [executing] maintenance: Setting up Builder.
+07:08:25 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [executing] maintenance: Setting up Builder.
+07:08:55 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [executing] maintenance: Setting up Builder.
+07:09:25 INFO Waiting for model:
+  github-runner-image-builder-kmiympz2/0 [executing] maintenance: Setting up Builder.
+07:10:10 INFO Deploying local:jammy/github-runner-0
+07:10:10 INFO Waiting for model:
+  test-kmiympz2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmiympz2/0 [idle] blocked: image integration required.
+07:10:40 INFO Waiting for model:
+  test-kmiympz2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmiympz2/0 [idle] blocked: image integration required.
+07:11:10 INFO Waiting for model:
+  test-kmiympz2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmiympz2/0 [idle] blocked: image integration required.
+07:11:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:12:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:12:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:13:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:13:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:14:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:14:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:15:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:15:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:16:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:16:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:17:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:17:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:18:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:18:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:19:10 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:19:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmiympz2/0 [executing] active: Building image.
+07:20:10 INFO Waiting for model:
+  test-kmiympz2/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-kmiympz2/0 [idle] active: 
+07:20:40 INFO Waiting for model:
+  test-kmiympz2/0 [executing] maintenance: Reconciling runners
+07:21:10 INFO Waiting for model:
+  test-kmiympz2/0 [executing] maintenance: Reconciling runners
+07:21:40 INFO Waiting for model:
+  test-kmiympz2/0 [executing] maintenance: Reconciling runners
+07:22:10 INFO Waiting for model:
+  test-kmiympz2/0 [executing] maintenance: Reconciling runners
+07:22:40 INFO Waiting for model:
+  test-kmiympz2/0 [idle] active: 
+07:23:43 INFO Waiting for model:
+  test-kmiympz2/0 [idle] active:
+07:24:16 INFO Model status:
+
+Model                    Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-9a0n  lxd         localhost/localhost  3.1.10   unsupported  07:24:16Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kmiympz2           active      1  github-runner-image-builder  latest/edge   61  no       
+test-kmiympz2                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kmiympz2/0*  active    idle   0        10.104.229.17          
+test-kmiympz2/0*                         active    idle   1        10.104.229.92          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.104.229.17  juju-edfe38-0  ubuntu@22.04      Running
+1        started  10.104.229.92  juju-edfe38-1  ubuntu@22.04      Running
+
+07:24:16 INFO Juju error logs:
+
+machine-0: 07:07:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:07:24 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 07:07:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kmiympz2-0: 07:07:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kmiympz2-0: 07:08:03 ERROR unit.github-runner-image-builder-kmiympz2/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 07:11:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:11:13 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 07:11:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kmiympz2-0: 07:11:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:24:17 INFO Forgetting model main...

@@ -1,0 +1,55 @@
+07:05:56 INFO Creating 1 runners
+07:05:56 INFO Creating openstack server with test-pcp0bcm5-0-n-70a9f6905d57
+07:06:23 WARNING NoValidConnectionsError. Unable to SSH into test-pcp0bcm5-0-n-70a9f6905d57 with address 10.145.193.14. Error: [Errno None] Unable to connect to port 22 on 10.145.193.14
+07:06:23 WARNING Retrying error in 60 seconds: Failed to SSH to test-pcp0bcm5-0-n-70a9f6905d57 during creation possible due to setup not completed
+07:07:23 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:23 INFO Authentication (publickey) successful!
+07:07:24 INFO Runner startup process found to be healthy on test-pcp0bcm5-0-n-70a9f6905d57
+07:07:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:24 INFO Authentication (publickey) successful!
+07:07:25 INFO Runner test-pcp0bcm5-0-n-70a9f6905d57 found to be healthy
+07:07:25 INFO Runner test-pcp0bcm5-0-n-70a9f6905d57 created successfully
+07:07:25 INFO Getting runners...
+07:07:26 INFO Getting all openstack servers managed by the charm
+07:07:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:28 INFO Authentication (publickey) successful!
+07:07:29 INFO Found following runners: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:07:29 INFO Getting runners...
+07:07:30 INFO Getting all openstack servers managed by the charm
+07:07:33 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:33 INFO Authentication (publickey) successful!
+07:07:34 INFO Found following runners: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:07:34 INFO Getting runners...
+07:07:35 INFO Getting all openstack servers managed by the charm
+07:07:37 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:37 INFO Authentication (publickey) successful!
+07:07:38 INFO Found following runners: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:07:40 INFO Wait for condition not met, sleeping 10
+07:07:51 INFO Getting runners...
+07:07:52 INFO Getting all openstack servers managed by the charm
+07:07:55 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:55 INFO Authentication (publickey) successful!
+07:07:56 INFO Found following runners: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:07:56 WARNING Found runner instance on cloud but not registered on GitHub: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:07:56 INFO Getting runners...
+07:07:57 INFO Getting all openstack servers managed by the charm
+07:07:59 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:07:59 INFO Authentication (publickey) successful!
+07:08:00 INFO Found following runners: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:08:00 WARNING Found runner instance on cloud but not registered on GitHub: {'test-pcp0bcm5-0-n-70a9f6905d57'}
+07:08:01 INFO Offline github runners to delete: []:
+07:08:02 INFO Getting all openstack servers managed by the charm
+07:08:04 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:08:04 INFO Authentication (publickey) successful!
+07:08:05 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:08:05 INFO Authentication (publickey) successful!
+07:08:05 INFO [chan 2] Opened sftp connection (server version 3)
+07:08:05 INFO Running runner removal script for test-pcp0bcm5-0-n-70a9f6905d57
+07:08:06 INFO Deleting openstack server with test-pcp0bcm5-0-n-70a9f6905d57
+07:08:09 INFO Cleaning up SSH key files
+07:08:09 INFO Found 0 key files, clean up 0 key files
+07:08:09 INFO Cleaning up openstack keypairs
+07:08:10 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+07:08:10 INFO Getting runners...
+07:08:11 INFO Getting all openstack servers managed by the charm
+07:08:12 INFO Found following runners: set()

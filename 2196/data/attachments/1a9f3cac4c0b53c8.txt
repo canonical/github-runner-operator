@@ -1,0 +1,71 @@
+07:00:57 INFO Creating 1 runners
+07:00:57 INFO Creating openstack server with test-pcp0bcm5-0-n-2c233229846a
+07:01:24 WARNING NoValidConnectionsError. Unable to SSH into test-pcp0bcm5-0-n-2c233229846a with address 10.145.193.91. Error: [Errno None] Unable to connect to port 22 on 10.145.193.91
+07:01:24 WARNING Retrying error in 60 seconds: Failed to SSH to test-pcp0bcm5-0-n-2c233229846a during creation possible due to setup not completed
+07:02:24 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:24 INFO Authentication (publickey) successful!
+07:02:25 INFO Runner startup process found to be healthy on test-pcp0bcm5-0-n-2c233229846a
+07:02:25 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:25 INFO Authentication (publickey) successful!
+07:02:26 INFO Runner test-pcp0bcm5-0-n-2c233229846a found to be healthy
+07:02:26 INFO Runner test-pcp0bcm5-0-n-2c233229846a created successfully
+07:02:26 INFO Getting runners...
+07:02:27 INFO Getting all openstack servers managed by the charm
+07:02:28 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:28 INFO Authentication (publickey) successful!
+07:02:29 INFO Found following runners: {'test-pcp0bcm5-0-n-2c233229846a'}
+07:02:29 INFO Getting runners...
+07:02:30 INFO Getting all openstack servers managed by the charm
+07:02:33 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:33 INFO Authentication (publickey) successful!
+07:02:34 INFO Found following runners: {'test-pcp0bcm5-0-n-2c233229846a'}
+07:02:34 INFO Getting runners...
+07:02:35 INFO Getting all openstack servers managed by the charm
+07:02:37 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:37 INFO Authentication (publickey) successful!
+07:02:38 INFO Found following runners: {'test-pcp0bcm5-0-n-2c233229846a'}
+07:02:38 INFO Getting all openstack servers managed by the charm
+07:02:40 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:40 INFO Authentication (publickey) successful!
+07:02:40 INFO Getting runners...
+07:02:42 INFO Getting all openstack servers managed by the charm
+07:02:43 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:43 INFO Authentication (publickey) successful!
+07:02:44 INFO Found following runners: {'test-pcp0bcm5-0-n-2c233229846a'}
+07:02:45 INFO Offline github runners to delete: []:
+07:02:45 INFO Getting all openstack servers managed by the charm
+07:02:47 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:47 INFO Authentication (publickey) successful!
+07:02:49 INFO Cleaning up SSH key files
+07:02:49 INFO Found 1 key files, clean up 0 key files
+07:02:49 INFO Cleaning up openstack keypairs
+07:02:49 INFO Getting runners...
+07:02:50 INFO Getting all openstack servers managed by the charm
+07:02:52 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:52 INFO Authentication (publickey) successful!
+07:02:52 INFO Found following runners: {'test-pcp0bcm5-0-n-2c233229846a'}
+07:02:52 INFO Flushing idle runners...
+07:02:53 INFO Getting all openstack servers managed by the charm
+07:02:54 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:54 INFO Authentication (publickey) successful!
+07:02:54 INFO Attempting to kill runner process on test-pcp0bcm5-0-n-2c233229846a if not busy
+07:02:54 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:02:54 INFO Kill process command output, ok: True code 0, out: 2488
+, err: 
+07:02:54 INFO Getting all openstack servers managed by the charm
+07:02:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:56 INFO Authentication (publickey) successful!
+07:02:56 INFO Connected (version 2.0, client OpenSSH_8.9p1)
+07:02:57 INFO Authentication (publickey) successful!
+07:02:57 INFO [chan 2] Opened sftp connection (server version 3)
+07:02:57 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.91, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:02:57 WARNING Failed to pull metrics for test-pcp0bcm5-0-n-2c233229846a: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:02:57 INFO Running runner removal script for test-pcp0bcm5-0-n-2c233229846a
+07:02:58 INFO Deleting openstack server with test-pcp0bcm5-0-n-2c233229846a
+07:03:01 INFO Cleaning up SSH key files
+07:03:01 INFO Found 0 key files, clean up 0 key files
+07:03:01 INFO Cleaning up openstack keypairs
+07:03:01 INFO Getting runners...
+07:03:02 INFO Getting all openstack servers managed by the charm
+07:03:04 INFO Found following runners: set()
