@@ -1,14 +1,9 @@
-name: Push Event Tests
-
-on:
-  push:
-    branches:
-      - push-e2e-*
-
+name: CI
+on: [push]
 jobs:
-  push-event-tests:
-    runs-on: [self-hosted, linux, "${{ github.ref_name }}"]
+  build:
+    runs-on: [self-hosted, stg-private-endpoint]
     steps:
-      - name: Echo runner name
-        run: |
-          echo "Hello, runner: ${{ github.ref_name }}"
+    - uses: actions/checkout@v3
+    - name: Setup tmate session
+      uses: canonical/action-tmate@main
