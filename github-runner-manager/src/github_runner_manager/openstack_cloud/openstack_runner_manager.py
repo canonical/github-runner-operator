@@ -564,7 +564,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         # starts up much faster.
         if RUNNER_STARTUP_PROCESS not in result.stdout:
             logger.warning("Runner startup process not found on %s", instance.instance_id)
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_sid}")
+            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
         logger.info("Runner startup process found to be healthy on %s", instance.instance_id)
 
     @retry(tries=5, delay=60, local_logger=logger)
