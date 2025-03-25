@@ -67,6 +67,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 1. [Explanation](explanation)
   1. [Charm architecture](explanation/charm-architecture.md)
   1. [SSH Debug](explanation/ssh-debug.md)
+1. [Changelog](changelog.md)
 1. [Track local-lxd](local-lxd)
   1. [Tutorial](local-lxd/tutorial)
     1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
