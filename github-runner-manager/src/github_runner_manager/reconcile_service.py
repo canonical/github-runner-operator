@@ -7,12 +7,12 @@ import logging
 from threading import Lock
 from time import sleep
 
-from github_runner_manager.cli_config import Configuration
+from github_runner_manager.configuration import ApplicationConfiguration
 
 logger = logging.getLogger(__name__)
 
 
-def start_reconcile_service(_: Configuration, lock: Lock) -> None:
+def start_reconcile_service(_: ApplicationConfiguration, lock: Lock) -> None:
     """Start the reconcile server.
 
     Args:
