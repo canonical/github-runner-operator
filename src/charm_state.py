@@ -294,8 +294,8 @@ class CharmConfig(BaseModel):
         reconcile_interval: Time between each reconciliation of runners in minutes.
         repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
-        manager_proxy_command: TODO
-        use_aproxy: TODO
+        manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
+        use_aproxy: Whether to use aproxy in the runner.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -603,7 +603,7 @@ def _build_proxy_config_from_charm() -> "ProxyConfig":
 
 
 def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
-    """TODO."""
+    """Initialize the proxy configuration for the runner."""
     runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
     runner_https_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
     runner_no_proxy = cast(str, charm.config.get(RUNNER_NO_PROXY_CONFIG_NAME, "")) or None
@@ -747,7 +747,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
-        runner_proxy_config: TODO.
+        runner_proxy_config: Proxy-related configuration for the runner.
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.

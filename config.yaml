@@ -141,19 +141,23 @@ options:
     type: string
     default: ""
     description: >-
-      TODO. IF EMPTY, MODEL-CONFIG
+      The HTTP proxy value to use for the runners. If not specified, the model configuration option
+      juju-http-proxy will be used instead.
   runner-https-proxy:
     type: string
     default: ""
     description: >-
-      TODO. IF EMPTY, MODEL-CONFIG
+      The HTTPS proxy value to use for the runners. If not specified, the model configuration option
+      juju-https-proxy will be used instead.
   runner-no-proxy:
     type: string
     default: ""
     description: >-
-      TODO. IF EMPTY, MODEL-CONFIG
+      List of domain addresses not to be proxied. If not specified, the model configuration option
+      juju-no-proxy will be used instead.
   use-runner-proxy-for-tmate:
     type: boolean
     default: false
     description: >-
-      TODO
+      When set to true, the ssh connection from the runner to the tmate-ssh-server will be done
+      using the proxy for the runner.

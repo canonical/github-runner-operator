@@ -37,10 +37,10 @@ class SupportServiceConfig(BaseModel):
     """Configuration for supporting services for runners.
 
     Attributes:
-        manager_proxy_command: TODO.
+        manager_proxy_command: ProxyCommand to use for the ssh connection to the runner.
         proxy_config: The proxy configuration.
-        runner_proxy_config: TODO.
-        use_aproxy: TODO
+        runner_proxy_config: The proxy configuration for the runner.
+        use_aproxy: Whether aproxy should be used for the runners.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
@@ -57,16 +57,16 @@ class SupportServiceConfig(BaseModel):
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod
     def check_use_aproxy(cls, values: dict) -> dict:
-        """Validate the proxy configuration.
+        """Validate the proxy configuration required if aproxy is enabled.
 
         Args:
-            values: TODO
+            values: Values in the pydantic model.
 
         Raises:
             ValueError: if use_aproxy was set but no http/https was passed.
 
         Returns:
-            Validated use_aproxy value.
+            Values in the pydantic model.
         """
         runner_proxy_enabled = False
         runner_proxy_config = values.get("runner_proxy_config")
@@ -84,9 +84,9 @@ class ProxyConfig(BaseModel):
         http: HTTP proxy address.
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
-        proxy_address: TODO
-        proxy_host: TODO
-        proxy_port: TODO
+        proxy_address: The address of the proxy.
+        proxy_host: The host of the proxy.
+        proxy_port: The port of the proxy.
     """
 
     http: Optional[AnyHttpUrl]
@@ -95,7 +95,7 @@ class ProxyConfig(BaseModel):
 
     @property
     def proxy_address(self) -> Optional[str]:
-        """TODO."""
+        """Return the address of the proxy."""
         proxy = self.http or self.https
         if proxy:
             proxy_address = proxy.host if not proxy.port else f"{proxy.host}:{proxy.port}"
@@ -104,15 +104,14 @@ class ProxyConfig(BaseModel):
 
     @property
     def proxy_host(self) -> Optional[str]:
-        """TODO."""
+        """Return the host of the proxy."""
         proxy_address = self.http or self.https
         return proxy_address.host if proxy_address else None
 
     @property
     def proxy_port(self) -> Optional[str]:
-        """TODO."""
+        """Return the port of the proxy."""
         proxy_address = self.http or self.https
-        # TODO Be careful, can be None even with a proxy address.
         return proxy_address.port if proxy_address else None
 
     def __bool__(self) -> bool:
@@ -132,9 +131,9 @@ class SSHDebugConnection(BaseModel):
         port: The SSH relay server port.
         rsa_fingerprint: The host SSH server public RSA key fingerprint.
         ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
-        use_runner_http_proxy: TODO
-        local_http_proxy_address: TODO
-        local_http_proxy_port: TODO
+        use_runner_http_proxy: Whether to use runner proxy for the SSH connection.
+        local_http_proxy_host: Local host to use for proxying.
+        local_http_proxy_port: Local port to use for proxying.
     """
 
     host: IPvAnyAddress
@@ -142,7 +141,7 @@ class SSHDebugConnection(BaseModel):
     rsa_fingerprint: str = Field(pattern="^SHA256:.*")
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
     use_runner_http_proxy: bool = False
-    local_http_proxy_address: str = "127.0.0.1"
+    local_http_proxy_host: str = "127.0.0.1"
     local_http_proxy_port: int = 3129
 
 
