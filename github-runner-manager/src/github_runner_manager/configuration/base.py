@@ -3,11 +3,14 @@
 
 """Base configuration for the Application."""
 
+import logging
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, validator
+from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
 from . import github
+
+logger = logging.getLogger(__name__)
 
 
 class ApplicationConfiguration(BaseModel):
@@ -34,60 +37,30 @@ class SupportServiceConfig(BaseModel):
     """Configuration for supporting services for runners.
 
     Attributes:
+        manager_proxy_command: TODO.
         proxy_config: The proxy configuration.
+        runner_proxy_config: TODO.
+        use_aproxy: TODO
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
     """
 
+    manager_proxy_command: str | None = None
     proxy_config: "ProxyConfig | None"
+    runner_proxy_config: "ProxyConfig | None"
+    use_aproxy: bool
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
 
-
-class ProxyConfig(BaseModel):
-    """Proxy configuration.
-
-    Attributes:
-        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
-        http: HTTP proxy address.
-        https: HTTPS proxy address.
-        no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used for the runners.
-    """
-
-    http: Optional[AnyHttpUrl]
-    https: Optional[AnyHttpUrl]
-    no_proxy: Optional[str]
-    use_aproxy: bool = False
-
-    @property
-    def aproxy_address(self) -> Optional[str]:
-        """Return the aproxy address."""
-        if self.use_aproxy:
-            proxy_address = self.http or self.https
-            # assert is only used to make mypy happy
-            assert (
-                proxy_address is not None and proxy_address.host is not None
-            )  # nosec for [B101:assert_used]
-            aproxy_address = (
-                proxy_address.host
-                if not proxy_address.port
-                else f"{proxy_address.host}:{proxy_address.port}"
-            )
-        else:
-            aproxy_address = None
-        return aproxy_address
-
-    @validator("use_aproxy")
+    @root_validator(pre=False, skip_on_failure=True)
     @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
+    def check_use_aproxy(cls, values: dict) -> dict:
         """Validate the proxy configuration.
 
         Args:
-            use_aproxy: Value of use_aproxy variable.
-            values: Values in the pydantic model.
+            values: TODO
 
         Raises:
             ValueError: if use_aproxy was set but no http/https was passed.
@@ -95,10 +68,52 @@ class ProxyConfig(BaseModel):
         Returns:
             Validated use_aproxy value.
         """
-        if use_aproxy and not (values.get("http") or values.get("https")):
-            raise ValueError("aproxy requires http or https to be set")
+        runner_proxy_enabled = False
+        runner_proxy_config = values.get("runner_proxy_config")
+        if runner_proxy_config and runner_proxy_config.proxy_address:
+            runner_proxy_enabled = True
+        if values.get("use_aproxy") and not runner_proxy_enabled:
+            raise ValueError("aproxy requires the runner http or https to be set")
+        return values
 
-        return use_aproxy
+
+class ProxyConfig(BaseModel):
+    """Proxy configuration.
+
+    Attributes:
+        http: HTTP proxy address.
+        https: HTTPS proxy address.
+        no_proxy: Comma-separated list of hosts that should not be proxied.
+        proxy_address: TODO
+        proxy_host: TODO
+        proxy_port: TODO
+    """
+
+    http: Optional[AnyHttpUrl]
+    https: Optional[AnyHttpUrl]
+    no_proxy: Optional[str]
+
+    @property
+    def proxy_address(self) -> Optional[str]:
+        """TODO."""
+        proxy = self.http or self.https
+        if proxy:
+            proxy_address = proxy.host if not proxy.port else f"{proxy.host}:{proxy.port}"
+            return proxy_address
+        return None
+
+    @property
+    def proxy_host(self) -> Optional[str]:
+        """TODO."""
+        proxy_address = self.http or self.https
+        return proxy_address.host if proxy_address else None
+
+    @property
+    def proxy_port(self) -> Optional[str]:
+        """TODO."""
+        proxy_address = self.http or self.https
+        # TODO Be careful, can be None even with a proxy address.
+        return proxy_address.port if proxy_address else None
 
     def __bool__(self) -> bool:
         """Return whether the proxy config is set.
@@ -117,12 +132,18 @@ class SSHDebugConnection(BaseModel):
         port: The SSH relay server port.
         rsa_fingerprint: The host SSH server public RSA key fingerprint.
         ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+        use_runner_http_proxy: TODO
+        local_http_proxy_address: TODO
+        local_http_proxy_port: TODO
     """
 
     host: IPvAnyAddress
     port: int = Field(0, gt=0, le=65535)
     rsa_fingerprint: str = Field(pattern="^SHA256:.*")
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
+    use_runner_http_proxy: bool = False
+    local_http_proxy_address: str = "127.0.0.1"
+    local_http_proxy_port: int = 3129
 
 
 class RepoPolicyComplianceConfig(BaseModel):

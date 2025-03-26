@@ -39,16 +39,13 @@ skips = ["*/*test.py", "*/test_*.py", "*tests/*.py"]
 [tool.coverage.run]
 branch = true
 omit = [
-    # These are covered by `tests/integration/test_runner_manager_openstack.py` in the github-runner-operator.
-    "src/github_runner_manager/openstack_cloud/openstack_cloud.py",
-    "src/github_runner_manager/openstack_cloud/openstack_runner_manager.py",
     # Contains interface for calling repo policy compliance service. Tested in integration test
     # and end to end tests.
     "src/github_runner_manager/repo_policy_compliance_client.py",
 ]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 73
 show_missing = true
 
 
