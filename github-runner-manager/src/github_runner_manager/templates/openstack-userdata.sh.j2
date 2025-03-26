@@ -37,7 +37,7 @@ nft -f /etc/nftables.conf
 apt-get update
 
 {% if ssh_debug_info and runner_proxy_config and runner_proxy_config.proxy_address %}
-# TODO PUT THIS IN THE IMAGE-BUILDER
+# The tmate-proxy service will be started by the canonical/action-tmate if necessary.
 DEBIAN_FRONTEND=noninteractive /usr/bin/apt-get install -y --no-install-recommends socat
 cat << EOF > /etc/systemd/system/tmate-proxy.service
 [Unit]
@@ -51,16 +51,12 @@ StandardError=syslog
 RestartSec=1
 SyslogIdentifier=tmate-http-proxy
 
-ExecStart=socat -v TCP-LISTEN:3129,fork PROXY:{{runner_proxy_config.proxy_host}}:{{ssh_debug_info['host']}}:{{ssh_debug_info['port']}}{% if runner_proxy_config.proxy_port %},proxyport={{runner_proxy_config.proxy_port}}{% endif %}
+ExecStart=socat -v TCP-LISTEN:{{ssh_debug_info.local_http_proxy_port}},fork,bind={{ssh_debug_info.local_http_proxy_address}} PROXY:{{runner_proxy_config.proxy_host}}:{{ssh_debug_info['host']}}:{{ssh_debug_info['port']}}{% if runner_proxy_config.proxy_port %},proxyport={{runner_proxy_config.proxy_port}}{% endif %}
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
 EOF
-systemctl daemon-reload
-# TODO. PENDING TO PUT THIS MAYBE IN action-tmate someway?
-systemctl start tmate-proxy
-systemctl enable tmate-proxy
 {% endif %}
 
 adduser ubuntu lxd
