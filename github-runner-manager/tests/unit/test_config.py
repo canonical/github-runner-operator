@@ -10,7 +10,7 @@ from ipaddress import IPv4Address
 
 import pytest
 import yaml
-from pydantic import MongoDsn
+from pydantic import AnyHttpUrl, MongoDsn
 
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
@@ -92,15 +92,16 @@ def app_config_fixture() -> ApplicationConfiguration:
         ),
         service_config=SupportServiceConfig(
             proxy_config=ProxyConfig(
-                http="http://httpproxy.example.com:3128",
-                https="http://httpsproxy.example.com:3128",
+                http=AnyHttpUrl("http://httpproxy.example.com:3128"),
+                https=AnyHttpUrl("http://httpsproxy.example.com:3128"),
                 no_proxy="127.0.0.1",
                 use_aproxy=False,
             ),
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
-                    host=IPv4Address("10.10.10.10"),
+                    # IPv4Address is a type of IPvAnyAddress.
+                    host=IPv4Address("10.10.10.10"),  # type: ignore
                     port=3000,
                     rsa_fingerprint="SHA256:rsa",
                     ed25519_fingerprint="SHA256:ed25519",
@@ -108,7 +109,7 @@ def app_config_fixture() -> ApplicationConfiguration:
             ],
             repo_policy_compliance=RepoPolicyComplianceConfig(
                 token="token",
-                url="https://compliance.example.com",
+                url=AnyHttpUrl("https://compliance.example.com"),
             ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
