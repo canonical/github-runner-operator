@@ -1,5 +1,14 @@
 # Changelog
 
+### 2025-03-27
+
+- Add several proxy configurations options for the manager and the runners:
+  - manager-ssh-proxy-command
+  - runner-http-proxy
+  - runner-https-proxy
+  - runner-no-proxy
+  - use-runner-proxy-for-tmate
+
 ### 2025-03-25
 
 - Add documentation explaining security design of the charm.

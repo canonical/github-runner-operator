@@ -10,7 +10,7 @@ from unittest.mock import ANY, MagicMock
 
 import pytest
 
-from github_runner_manager.configuration import SupportServiceConfig
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
@@ -51,8 +51,12 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
         MagicMock(),
     )
 
-    service_config_mock = MagicMock(spec=SupportServiceConfig)
+    service_config_mock = MagicMock(list(SupportServiceConfig.__fields__.keys()))
     service_config_mock.proxy_config = None
+    service_config_mock.runner_proxy_config = None
+    service_config_mock.use_aproxy = False
+    service_config_mock.ssh_debug_connections = []
+    service_config_mock.repo_policy_compliance = None
     config = OpenStackRunnerManagerConfig(
         prefix="test",
         credentials=MagicMock(),
@@ -69,6 +73,63 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     runner_metrics_mock = MagicMock(spec=runner)
     monkeypatch.setattr(runner, "pull_runner_metrics", runner_metrics_mock)
     return runner_metrics_mock
+
+
+def test_create_runner_with_aproxy(
+    runner_manager: OpenStackRunnerManager, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Prepare service config with aproxy enabled and a runner proxy config.
+    act: Create a runner.
+    assert: The cloud init in the runner should enable the aproxy with the proxy.
+    """
+    # Pending to pass service_config as a dependency instead of mocking it this way.
+    service_config = runner_manager._config.service_config
+    service_config.use_aproxy = True
+    service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
+
+    prefix = "test"
+    registration_jittoken = "jittoken"
+    instance_id = InstanceID.build(prefix=prefix)
+    monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
+    monkeypatch.setattr(runner_manager, "_wait_runner_running", MagicMock(return_value=None))
+
+    openstack_cloud = MagicMock()
+    monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
+
+    runner_manager.create_runner(instance_id, registration_jittoken)
+    openstack_cloud.launch_instance.assert_called_once()
+    assert (
+        "snap set aproxy proxy=proxy.example.com:3128"
+        in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
+    )
+
+
+def test_create_runner_without_aproxy(
+    runner_manager: OpenStackRunnerManager, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Prepare service config with aproxy disables and a runner proxy config.
+    act: Create a runner.
+    assert: The cloud init in the runner should not reference aproxy.
+    """
+    # Pending to pass service_config as a dependency instead of mocking it this way.
+    service_config = runner_manager._config.service_config
+    service_config.use_aproxy = False
+    service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
+
+    prefix = "test"
+    registration_jittoken = "jittoken"
+    instance_id = InstanceID.build(prefix=prefix)
+    monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
+    monkeypatch.setattr(runner_manager, "_wait_runner_running", MagicMock(return_value=None))
+
+    openstack_cloud = MagicMock()
+    monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
+
+    runner_manager.create_runner(instance_id, registration_jittoken)
+    openstack_cloud.launch_instance.assert_called_once()
+    assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 
 
 @pytest.mark.parametrize(
