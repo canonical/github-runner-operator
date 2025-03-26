@@ -3,11 +3,14 @@
 
 """Base configuration for the Application."""
 
+import logging
 from typing import Optional
 
-from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, validator
+from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
 from . import github
+
+logger = logging.getLogger(__name__)
 
 
 class ApplicationConfiguration(BaseModel):
@@ -37,6 +40,7 @@ class SupportServiceConfig(BaseModel):
         manager_proxy_command: TODO.
         proxy_config: The proxy configuration.
         runner_proxy_config: TODO.
+        use_aproxy: TODO
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
@@ -45,20 +49,41 @@ class SupportServiceConfig(BaseModel):
     manager_proxy_command: str | None = None
     proxy_config: "ProxyConfig | None"
     runner_proxy_config: "ProxyConfig | None"
+    use_aproxy: bool
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
+
+    @root_validator(pre=False, skip_on_failure=True)
+    @classmethod
+    def check_use_aproxy(cls, values: dict) -> dict:
+        """Validate the proxy configuration.
+
+        Args:
+            values: TODO
+
+        Raises:
+            ValueError: if use_aproxy was set but no http/https was passed.
+
+        Returns:
+            Validated use_aproxy value.
+        """
+        runner_proxy_enabled = False
+        runner_proxy_config = values.get("runner_proxy_config")
+        if runner_proxy_config and runner_proxy_config.proxy_address:
+            runner_proxy_enabled = True
+        if values.get("use_aproxy") and not runner_proxy_enabled:
+            raise ValueError("aproxy requires the runner http or https to be set")
+        return values
 
 
 class ProxyConfig(BaseModel):
     """Proxy configuration.
 
     Attributes:
-        aproxy_address: The address of aproxy snap instance if use_aproxy is enabled.
         http: HTTP proxy address.
         https: HTTPS proxy address.
         no_proxy: Comma-separated list of hosts that should not be proxied.
-        use_aproxy: Whether aproxy should be used for the runners.
         proxy_address: TODO
         proxy_host: TODO
         proxy_port: TODO
@@ -67,7 +92,6 @@ class ProxyConfig(BaseModel):
     http: Optional[AnyHttpUrl]
     https: Optional[AnyHttpUrl]
     no_proxy: Optional[str]
-    use_aproxy: bool = False
 
     @property
     def proxy_address(self) -> Optional[str]:
@@ -90,44 +114,6 @@ class ProxyConfig(BaseModel):
         proxy_address = self.http or self.https
         # TODO Be careful, can be None even with a proxy address.
         return proxy_address.port if proxy_address else None
-
-    @property
-    def aproxy_address(self) -> Optional[str]:
-        """Return the aproxy address."""
-        if self.use_aproxy:
-            proxy_address = self.http or self.https
-            # assert is only used to make mypy happy
-            assert (
-                proxy_address is not None and proxy_address.host is not None
-            )  # nosec for [B101:assert_used]
-            aproxy_address = (
-                proxy_address.host
-                if not proxy_address.port
-                else f"{proxy_address.host}:{proxy_address.port}"
-            )
-        else:
-            aproxy_address = None
-        return aproxy_address
-
-    @validator("use_aproxy")
-    @classmethod
-    def check_use_aproxy(cls, use_aproxy: bool, values: dict) -> bool:
-        """Validate the proxy configuration.
-
-        Args:
-            use_aproxy: Value of use_aproxy variable.
-            values: Values in the pydantic model.
-
-        Raises:
-            ValueError: if use_aproxy was set but no http/https was passed.
-
-        Returns:
-            Validated use_aproxy value.
-        """
-        if use_aproxy and not (values.get("http") or values.get("https")):
-            raise ValueError("aproxy requires http or https to be set")
-
-        return use_aproxy
 
     def __bool__(self) -> bool:
         """Return whether the proxy config is set.

@@ -437,9 +437,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         aproxy_address = (
-            service_config.runner_proxy_config.aproxy_address
-            if service_config.runner_proxy_config is not None
-            else None
+            service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
             jittoken=registration_jittoken,

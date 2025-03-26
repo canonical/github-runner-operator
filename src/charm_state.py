@@ -60,7 +60,7 @@ TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
-USER_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
+USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 
 # Integration names
@@ -295,6 +295,7 @@ class CharmConfig(BaseModel):
         repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: TODO
+        use_aproxy: TODO
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -305,6 +306,7 @@ class CharmConfig(BaseModel):
     repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
     manager_proxy_command: str | None
+    use_aproxy: bool
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -444,6 +446,8 @@ class CharmConfig(BaseModel):
         manager_proxy_command = (
             cast(str, charm.config.get(MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME, "")) or None
         )
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
@@ -454,6 +458,7 @@ class CharmConfig(BaseModel):
             repo_policy_compliance=repo_policy_compliance,
             token=github_config.token,
             manager_proxy_command=manager_proxy_command,
+            use_aproxy=use_aproxy,
         )
 
 
@@ -576,11 +581,8 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-def _build_proxy_config_from_charm(use_aproxy: bool = False) -> "ProxyConfig":
+def _build_proxy_config_from_charm() -> "ProxyConfig":
     """Initialize the proxy config from charm.
-
-    Args:
-        use_aproxy: TODO.
 
     Returns:
         Current proxy config of the charm.
@@ -597,7 +599,6 @@ def _build_proxy_config_from_charm(use_aproxy: bool = False) -> "ProxyConfig":
         http=http_proxy,
         https=https_proxy,
         no_proxy=no_proxy,
-        use_aproxy=use_aproxy,
     )
 
 
@@ -605,16 +606,14 @@ def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
     """TODO."""
     runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
     runner_https_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
-    runner_no_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
-    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+    runner_no_proxy = cast(str, charm.config.get(RUNNER_NO_PROXY_CONFIG_NAME, "")) or None
     if runner_https_proxy or runner_http_proxy or runner_no_proxy:
         return ProxyConfig(
             http=runner_http_proxy,
             https=runner_https_proxy,
             no_proxy=runner_no_proxy,
-            use_aproxy=use_aproxy,
         )
-    return _build_proxy_config_from_charm(use_aproxy)
+    return _build_proxy_config_from_charm()
 
 
 class UnsupportedArchitectureError(Exception):
@@ -678,7 +677,7 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
             )
             continue
         use_runner_http_proxy = cast(
-            bool, charm.config.get(USER_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False)
+            bool, charm.config.get(USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False)
         )
         ssh_debug_connections.append(
             # pydantic allows string to be passed as IPvAnyAddress and as int,
@@ -828,16 +827,21 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             Current state of the charm.
         """
         try:
-            proxy_config = _build_proxy_config_from_charm()
-            runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
-        except ValueError as exc:
-            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
-
-        try:
             charm_config = CharmConfig.from_charm(charm)
         except ValueError as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+
+        try:
+            proxy_config = _build_proxy_config_from_charm()
+            runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
+            if charm_config.use_aproxy and not runner_proxy_config.proxy_address:
+                raise CharmConfigInvalidError(
+                    "Invalid proxy configuration: aproxy requires a runner proxy to be set"
+                )
+
+        except ValueError as exc:
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             runner_config = OpenstackRunnerConfig.from_charm(charm)

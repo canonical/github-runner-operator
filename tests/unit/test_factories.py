@@ -37,13 +37,11 @@ def complete_charm_state():
             http="http://httpproxy.example.com:3128",
             https="http://httpsproxy.example.com:3128",
             no_proxy="127.0.0.1",
-            use_aproxy=False,
         ),
         runner_proxy_config=charm_state.ProxyConfig(
             http="http://runnerhttpproxy.example.com:3128",
             https="http://runnerhttpsproxy.example.com:3128",
             no_proxy="10.0.0.1",
-            use_aproxy=True,
         ),
         charm_config=charm_state.CharmConfig(
             dockerhub_mirror="https://docker.example.com",
@@ -70,6 +68,8 @@ def complete_charm_state():
                 url="https://compliance.example.com",
             ),
             token="githubtoken",
+            manager_proxy_command="ssh -W %h:%p example.com",
+            use_aproxy=True,
         ),
         runner_config=charm_state.OpenstackRunnerConfig(
             base_virtual_machines=1,
@@ -122,20 +122,13 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
                 http="http://httpproxy.example.com:3128",
                 https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
-                use_aproxy=False,
-            ),
-            runnerproxy_config=ProxyConfig(
-                http="http://httpproxy.example.com:3128",
-                https="http://httpsproxy.example.com:3128",
-                no_proxy="127.0.0.1",
-                use_aproxy=False,
             ),
             runner_proxy_config=charm_state.ProxyConfig(
                 http="http://runnerhttpproxy.example.com:3128",
                 https="http://runnerhttpsproxy.example.com:3128",
                 no_proxy="10.0.0.1",
-                use_aproxy=True,
             ),
+            use_aproxy=True,
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
@@ -149,6 +142,7 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
                 token="token",
                 url="https://compliance.example.com",
             ),
+            manager_proxy_command="ssh -W %h:%p example.com",
         ),
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[
