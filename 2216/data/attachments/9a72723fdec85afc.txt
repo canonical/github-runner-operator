@@ -1,0 +1,42 @@
+20:34:59 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] active: 
+20:35:30 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] active:
+20:36:52 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] maintenance: Reconciling runners
+20:37:22 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] active: 
+20:37:35 INFO [TEST SETUP] Exposing port 8080 on test-pc89ix6c-0-n-a0d8e6179a1b
+20:37:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.88', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:70:90'}]])
+20:37:39 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-pc89ix6c-0-n-a0d8e6179a1b
+20:37:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.88', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:70:90'}]])
+20:37:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pc89ix6c-0-n-a0d8e6179a1b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.88 nc -z localhost 8080'
+20:37:41 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-pc89ix6c-0-n-a0d8e6179a1b
+20:37:41 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.88', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:70:90'}]])
+20:37:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pc89ix6c-0-n-a0d8e6179a1b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.88 curl http://localhost:8080'
+20:37:45 INFO Wait for condition not met, sleeping 10
+20:38:25 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] active: 
+20:38:56 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] active: 
+20:39:00 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-upct  lxd         localhost/localhost  3.6.4    unsupported  20:39:00Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pc89ix6c           active      1  github-runner-image-builder  latest/edge   61  no       
+test-pc89ix6c                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-pc89ix6c/0*  active    idle   0        10.93.235.239             
+test-pc89ix6c/0*                         active    idle   1        10.93.235.206   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.93.235.239  juju-e5c2b9-0  ubuntu@22.04      Running
+1        started  10.93.235.206  juju-e5c2b9-1  ubuntu@22.04      Running
+
+20:39:01 INFO Juju error logs:
+
+
+20:39:01 INFO Forgetting model main...

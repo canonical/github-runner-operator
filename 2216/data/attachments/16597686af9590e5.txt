@@ -1,0 +1,132 @@
+19:24:02 INFO Adding model lxd:test-charm-fork-path-change-b36d on cloud localhost
+19:24:02 WARNING unexpected facade SSHServer received from the controller
+19:24:04 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+19:24:05 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [allocating] waiting: waiting for machine
+19:24:35 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [allocating] waiting: waiting for machine
+19:25:06 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [allocating] waiting: waiting for machine
+19:25:36 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [executing] maintenance: Setting up Builder.
+19:26:07 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [executing] maintenance: Setting up Builder.
+19:26:37 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [executing] maintenance: Setting up Builder.
+19:27:08 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [executing] maintenance: Setting up Builder.
+19:27:38 INFO Waiting for model:
+  github-runner-image-builder-fi50hxkh/0 [idle] blocked: image integration required.
+19:28:07 INFO Deploying local:jammy/github-runner-0
+19:28:07 INFO Waiting for model:
+  test-fi50hxkh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fi50hxkh/0 [idle] blocked: image integration required.
+19:28:37 INFO Waiting for model:
+  test-fi50hxkh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fi50hxkh/0 [idle] blocked: image integration required.
+19:29:07 INFO Waiting for model:
+  test-fi50hxkh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fi50hxkh/0 [idle] blocked: image integration required.
+19:29:37 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] blocked: image integration required.
+19:30:07 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:30:38 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:31:08 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:31:38 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:32:09 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:32:39 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:33:10 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:33:40 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:34:10 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:34:41 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:35:11 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:35:42 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:36:12 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:36:42 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:37:13 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:37:44 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:38:14 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:38:44 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: Building image.
+19:39:14 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-fi50hxkh/0 [executing] active: 
+19:39:45 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] maintenance: Reconciling runners
+19:40:05 INFO GitHub token rate limit: Rate(reset=2025-03-26 20:38:38+00:00, remaining=4893, limit=5000)
+19:40:17 INFO test_path_config_change
+19:40:17 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] active: 
+19:40:47 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] maintenance: Reconciling runners
+19:41:17 INFO Waiting for model:
+  test-fi50hxkh/0 [idle] active: 
+19:41:32 INFO Ensure there is a runner (this calls reconcile)
+19:45:34 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] maintenance: Reconciling runners
+19:46:04 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] maintenance: Reconciling runners
+19:46:21 INFO Reconciling (again)
+19:51:14 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] active: 
+19:51:44 INFO Waiting for model:
+  test-fi50hxkh/0 [executing] maintenance: Reconciling runners
+19:52:03 INFO runners: ['test-fi50hxkh-0-n-02af895d1eb1']
+19:52:06 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-050a5e1353b1"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-0882774990e3"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-21b1e993bf10"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-4f83aa3f9de6"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-a6fabf1783d8"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-f89fd3fd1554"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-8a03f8752d32"), SelfHostedActionsRunner(name="test-a7x0ahlv-0-n-9b07af3259a8"), SelfHostedActionsRunner(name="test-axjplopo-0-n-0f3a00e69734"), SelfHostedActionsRunner(name="test-axjplopo-0-n-51696aa5bfc0"), SelfHostedActionsRunner(name="test-axjplopo-0-n-8f984ae9d1fe"), SelfHostedActionsRunner(name="test-axjplopo-0-n-be9605e8044d"), SelfHostedActionsRunner(name="test-axjplopo-0-n-d49eb79255a4"), SelfHostedActionsRunner(name="test-d35lk3c0-0-n-0de609c6efd4"), SelfHostedActionsRunner(name="test-diq746ng-0-n-b6acc8f18167"), SelfHostedActionsRunner(name="test-ebkcy8qg-0-n-ff0852210d6e"), SelfHostedActionsRunner(name="test-fi50hxkh-0-n-02af895d1eb1"), SelfHostedActionsRunner(name="test-fm0z179w-0-n-8a1ebb36589c"), SelfHostedActionsRunner(name="test-fvsecdp1-0-n-eb6b1383799f"), SelfHostedActionsRunner(name="test-g923t4x4-0-n-0beeb7342a66"), SelfHostedActionsRunner(name="test-hjqjy1c9-0-n-d035ebef098c"), SelfHostedActionsRunner(name="test-hpjr8ybl-0-n-01ddab5d0bc2"), SelfHostedActionsRunner(name="test-hvkc74j0-0-n-2a845ee5d461"), SelfHostedActionsRunner(name="test-i96gw6vk-0-n-679af453dfb4"), SelfHostedActionsRunner(name="test-iob3fxnv-0-n-0dbd75729f88"), SelfHostedActionsRunner(name="test-jk0mmz6b-0-n-b3fb13391cbb"), SelfHostedActionsRunner(name="test-jpepccvr-0-n-387bbc54519e"), SelfHostedActionsRunner(name="test-kb5wrfl4-0-n-686a90c62ca1"), SelfHostedActionsRunner(name="test-kpax2srz-0-n-4f03088a493b"), SelfHostedActionsRunner(name="test-kuskz66a-0-n-267c9f7cef86"), SelfHostedActionsRunner(name="test-kuskz66a-0-n-2fb57bc9de29"), SelfHostedActionsRunner(name="test-kuskz66a-0-n-768d52c0b0e6"), SelfHostedActionsRunner(name="test-kuskz66a-0-n-88cd0de158e1"), SelfHostedActionsRunner(name="test-kuskz66a-0-n-dd6845446f10"), SelfHostedActionsRunner(name="test-kyrlxfqo-0-n-070e462d6ebf"), SelfHostedActionsRunner(name="test-kyrlxfqo-0-n-92342f93b9be"), SelfHostedActionsRunner(name="test-kyrlxfqo-0-n-9f3ad9e14c7b"), SelfHostedActionsRunner(name="test-kyrlxfqo-0-n-c5ed4b98c4ac"), SelfHostedActionsRunner(name="test-kyrlxfqo-0-n-ecd0743e24ae"), SelfHostedActionsRunner(name="test-lse2z1l2-0-n-cfa3398fdf70"), SelfHostedActionsRunner(name="test-nhul9h5b-0-n-18dd0b0fbb90"), SelfHostedActionsRunner(name="test-nja9zlwx-0-n-34e8c240475b"), SelfHostedActionsRunner(name="test-nlcldps0-0-n-1f9a2245b2a0"), SelfHostedActionsRunner(name="test-oi98jk5f-0-n-5fcb0135269b"), SelfHostedActionsRunner(name="test-oi98jk5f-0-n-62b56d45e2fd"), SelfHostedActionsRunner(name="test-oi98jk5f-0-n-67e8cfcef61b"), SelfHostedActionsRunner(name="test-oi98jk5f-0-n-e808caf29392"), SelfHostedActionsRunner(name="test-oi98jk5f-0-n-fcb68b089f02"), SelfHostedActionsRunner(name="test-okmkqzts-0-n-0d98915faaaa"), SelfHostedActionsRunner(name="test-ps3dw0pa-0-n-4933aa650fa4"), SelfHostedActionsRunner(name="test-q8r6owav-0-n-0fa2c01765b7"), SelfHostedActionsRunner(name="test-q8r6owav-0-n-73edef590c52"), SelfHostedActionsRunner(name="test-q8r6owav-0-n-7f22c526b839"), SelfHostedActionsRunner(name="test-q8r6owav-0-n-c88930192ee5"), SelfHostedActionsRunner(name="test-q8r6owav-0-n-e98ab5e734f8"), SelfHostedActionsRunner(name="test-qkss4us9-0-n-00be4a3d2c5c"), SelfHostedActionsRunner(name="test-qkss4us9-0-n-10a7a65813bc"), SelfHostedActionsRunner(name="test-qkss4us9-0-n-403ec94e87cb"), SelfHostedActionsRunner(name="test-qkss4us9-0-n-6a8c6bc88399"), SelfHostedActionsRunner(name="test-qkss4us9-0-n-d00e3bf2caab"), SelfHostedActionsRunner(name="test-qnrx69dk-0-n-cdb39f733ed8"), SelfHostedActionsRunner(name="test-qnrx69dk-0-n-d02644ce31f2"), SelfHostedActionsRunner(name="test-qnrx69dk-0-n-dd49cf43a172"), SelfHostedActionsRunner(name="test-r4yjs7no-0-n-a36ab7147ad0"), SelfHostedActionsRunner(name="test-rtm0jaxv-0-n-dfbe7b3317f3"), SelfHostedActionsRunner(name="test-s09h6izt-0-n-8f1e6ad54e69"), SelfHostedActionsRunner(name="test-s3ugp1mo-0-n-fee6ab4de698"), SelfHostedActionsRunner(name="test-sgfkr0p2-0-n-be153d7462c7"), SelfHostedActionsRunner(name="test-stvohtc3-0-n-22d6d01ebee0"), SelfHostedActionsRunner(name="test-stvohtc3-0-n-532c2b046c01"), SelfHostedActionsRunner(name="test-stvohtc3-0-n-5d4b9ab3df2f"), SelfHostedActionsRunner(name="test-stvohtc3-0-n-64ebdd27a3d2"), SelfHostedActionsRunner(name="test-stvohtc3-0-n-e05eb363106b"), SelfHostedActionsRunner(name="test-t35kdxeh-0-n-229375ee3337"), SelfHostedActionsRunner(name="test-t5yijdlj-0-n-f36457deee7d"), SelfHostedActionsRunner(name="test-tjdgyu2r-0-n-7cba4b269068"), SelfHostedActionsRunner(name="test-tu9fnmjp-0-n-62d4e5dae195"), SelfHostedActionsRunner(name="test-u3o3suyn-0-n-de1d3cbd7a87"), SelfHostedActionsRunner(name="test-u5z5dens-0-n-276bab473808"), SelfHostedActionsRunner(name="test-u9df6bbj-0-n-211fc3df4495"), SelfHostedActionsRunner(name="test-u9df6bbj-0-n-eaeb6b704a65"), SelfHostedActionsRunner(name="test-ua29qn2v-0-n-91fd0ffa12b1"), SelfHostedActionsRunner(name="test-um6pwzf7-0-n-0516a13b69af"), SelfHostedActionsRunner(name="test-um6pwzf7-0-n-0d0f8e96eb69"), SelfHostedActionsRunner(name="test-um6pwzf7-0-n-687271c9bf30"), SelfHostedActionsRunner(name="test-um6pwzf7-0-n-c49ae644bafa"), SelfHostedActionsRunner(name="test-uxr8vo04-0-n-dcc3b17acd93"), SelfHostedActionsRunner(name="test-uzbcv6u7-0-n-33eb05440ae6"), SelfHostedActionsRunner(name="test-v5zme56r-0-n-2ae32deda1cd"), SelfHostedActionsRunner(name="test-v5zme56r-0-n-5b2024b59ce3"), SelfHostedActionsRunner(name="test-v5zme56r-0-n-8da37d265b11"), SelfHostedActionsRunner(name="test-v5zme56r-0-n-bc701fc4c9f3"), SelfHostedActionsRunner(name="test-v5zme56r-0-n-cae79561a8f5"), SelfHostedActionsRunner(name="test-v7kuhhmj-0-n-2fa7414363d8"), SelfHostedActionsRunner(name="test-wcntwely-0-n-726ae74ed8b8"), SelfHostedActionsRunner(name="test-wduhrpbp-0-n-4bbaf39bf583"), SelfHostedActionsRunner(name="test-wjenul7t-0-n-7fe9924f803c"), SelfHostedActionsRunner(name="test-x5g0n6yq-0-n-26f93b28ec8d"), SelfHostedActionsRunner(name="test-xlgu4e6i-0-n-01f7ce0b6dea"), SelfHostedActionsRunner(name="test-xnbpjezd-0-n-1c12e2f2a60f"), SelfHostedActionsRunner(name="test-xnbpjezd-0-n-480f2f6746a6"), SelfHostedActionsRunner(name="test-xnbpjezd-0-n-52dc4bf6c5a0"), SelfHostedActionsRunner(name="test-xnbpjezd-0-n-6b2cc95989d1"), SelfHostedActionsRunner(name="test-xnbpjezd-0-n-f43c270ac986"), SelfHostedActionsRunner(name="test-xq7td57j-0-n-2781947831a2"), SelfHostedActionsRunner(name="test-xq7td57j-0-n-3552ceefb65c"), SelfHostedActionsRunner(name="test-xq7td57j-0-n-7ab1b0d02ac8"), SelfHostedActionsRunner(name="test-xq7td57j-0-n-c9b4d57a49b1"), SelfHostedActionsRunner(name="test-xywvaymt-0-n-9b0828d5024d"), SelfHostedActionsRunner(name="test-zst6ghn8-0-n-608cca63e7e8"), SelfHostedActionsRunner(name="test-zx67h1ic-0-n-85404f639aa4")]
+19:52:07 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-b36d  lxd         localhost/localhost  3.6.4    unsupported  19:52:07Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fi50hxkh           active      1  github-runner-image-builder  latest/edge   61  no       
+test-fi50hxkh                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-fi50hxkh/0*  active    idle   0        10.184.223.97          
+test-fi50hxkh/0*                         active    idle   1        10.184.223.120         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.184.223.97   juju-1aa6db-0  ubuntu@22.04      Running
+1        started  10.184.223.120  juju-1aa6db-1  ubuntu@22.04      Running
+
+19:52:07 INFO Juju error logs:
+
+
+19:52:07 INFO Forgetting model main...

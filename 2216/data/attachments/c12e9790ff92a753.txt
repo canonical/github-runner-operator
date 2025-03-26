@@ -1,0 +1,87 @@
+20:02:03 INFO Adding model lxd:test-charm-no-runner-5mt6 on cloud localhost
+20:02:03 WARNING unexpected facade SSHServer received from the controller
+20:02:05 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+20:02:06 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [allocating] waiting: waiting for machine
+20:02:36 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [allocating] waiting: waiting for machine
+20:03:06 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [allocating] waiting: waiting for machine
+20:03:36 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [allocating] waiting: agent initialising
+20:04:07 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [executing] maintenance: Setting up Builder.
+20:04:37 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [executing] maintenance: Setting up Builder.
+20:05:07 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [executing] maintenance: Setting up Builder.
+20:05:37 INFO Waiting for model:
+  github-runner-image-builder-ykwt9u1e/0 [executing] maintenance: Setting up Builder.
+20:06:27 INFO Deploying local:jammy/github-runner-0
+20:06:27 INFO Waiting for model:
+  test-ykwt9u1e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ykwt9u1e/0 [idle] blocked: image integration required.
+20:06:57 INFO Waiting for model:
+  test-ykwt9u1e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ykwt9u1e/0 [idle] blocked: image integration required.
+20:07:28 INFO Waiting for model:
+  test-ykwt9u1e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ykwt9u1e/0 [idle] blocked: image integration required.
+20:07:58 INFO Waiting for model:
+  test-ykwt9u1e/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ykwt9u1e/0 [idle] blocked: image integration required.
+20:08:28 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:08:59 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:09:29 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:09:59 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:10:29 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:10:59 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:11:30 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:12:00 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:12:30 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:13:00 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:13:31 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:14:01 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:14:31 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:15:02 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:15:32 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:16:02 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:16:33 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ykwt9u1e/0 [executing] active: Building image.
+20:17:03 INFO Waiting for model:
+  test-ykwt9u1e/0 [executing] maintenance: Reconciling runners
+20:17:32 INFO Waiting for model:
+  test-ykwt9u1e/0 [idle] active:

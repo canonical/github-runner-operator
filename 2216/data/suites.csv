@@ -1,0 +1,169 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    Arrange: RunnerManager with one runner. Clean metric logs.
+    Act:
+        1. Start a test workflow for the runner.
+        2. Run cleanup.
+    Assert:
+        1. The workflow complete successfully.
+        2. The runner should be deleted. The metrics should be recorded.
+    ","33926","test_runner_normal_lifecycle","tests.integration","Wed Mar 26 20:21:09 UTC 2025","passed","Wed Mar 26 20:21:43 UTC 2025","","test_runner_manager_openstack","",""
+"
+    arrange: A working application with one runner.
+    act:
+        1. Run Check_runner action. Record the runner name for later.
+        2. Nothing.
+        3. Change the virtual machine resource configuration.
+        4. Run flush_runner action.
+        5. Dispatch a workflow to make runner busy and call flush_runner action.
+
+    assert:
+        1. One runner exists.
+        2. Check the resource matches the configuration.
+        3. The runner is not flushed since by default it flushes idle.
+
+    Test are combined to reduce number of runner spawned.
+    ","254571","test_flush_runner_and_resource_config","tests.integration","Wed Mar 26 20:26:53 UTC 2025","passed","Wed Mar 26 20:31:08 UTC 2025","","test_charm_runner","",""
+"
+    arrange: A working application with one runner.
+    act:
+        1.  a. Crash/delete the one runner
+        2.  Wait for 6 minutes, and then wait for ActiveStatus.
+    assert:
+        1. a. No runner exists.
+        2. a. One runner exists. The runner name should not be the same as the starting one.
+
+    This tests whether the reconcile-runner event is triggered, and updates the dependencies.
+    The reconciliation logic is tested with the reconcile-runners action.
+    ","629196","test_update_interval","tests.integration","Wed Mar 26 19:41:47 UTC 2025","passed","Wed Mar 26 19:52:16 UTC 2025","","test_charm_scheduled_events","",""
+"
+    arrange: A working application with one runner.
+    act: Run check_runner action.
+    assert: Action returns result with one runner.
+    ","9074","test_check_runner","tests.integration","Wed Mar 26 20:21:53 UTC 2025","passed","Wed Mar 26 20:22:02 UTC 2025","","test_charm_runner","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 1.
+            b. Run reconcile_runners action.
+        2.  a. Set virtual-machines config to 0.
+            b. Run reconcile_runners action.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    ","309545","test_reconcile_runners","tests.integration","Wed Mar 26 20:17:53 UTC 2025","passed","Wed Mar 26 20:23:03 UTC 2025","","test_charm_no_runner","",""
+"
+    arrange: Place a message in the queue and dispatch a workflow.
+    act: Call reconcile.
+    assert: A runner is spawned to process the job and the message is removed from the queue.
+        The metrics are logged.
+    ","192229","test_reactive_mode_spawns_runner","tests.integration","Wed Mar 26 20:21:59 UTC 2025","passed","Wed Mar 26 20:25:12 UTC 2025","","test_reactive","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act:
+        1. Create one runner.
+        2. Run health check on the runner.
+        3. Run cleanup.
+        4. Delete all idle runner.
+    Assert:
+        1. An active idle runner.
+        2. Health check passes.
+        3. One idle runner remains.
+        4. No runners.
+    ","143557","test_runner_normal_idle_lifecycle","tests.integration","Wed Mar 26 20:13:05 UTC 2025","passed","Wed Mar 26 20:15:28 UTC 2025","","test_runner_manager_openstack","",""
+"
+    arrange: Scale down the number of virtual machines to 2 and spawn a job.
+    act:
+        1. Scale down the number of virtual machines to 0 and call reconcile.
+        2. Spawn a job.
+    assert:
+        1. The job fails.
+        2. The job is queued and there is a message in the queue.
+    ","885062","test_reactive_mode_scale_down","tests.integration","Wed Mar 26 20:29:50 UTC 2025","passed","Wed Mar 26 20:44:35 UTC 2025","","test_reactive","",""
+"
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm.
+    act: when canonical/action-tmate is triggered.
+    assert: the ssh connection info from action-log and tmate-ssh-server matches.
+    ","646411","test_ssh_debug","tests.integration","Wed Mar 26 19:43:36 UTC 2025","passed","Wed Mar 26 19:54:23 UTC 2025","","test_debug_ssh","",""
+"
+    arrange: A charm integrated with grafana-agent using the cos-agent integration.
+    act: Config the charm to contain one runner.
+    assert: The RunnerInstalled metric is logged.
+    ","270879","test_charm_issues_runner_installed_metric","tests.integration","Wed Mar 26 20:14:57 UTC 2025","passed","Wed Mar 26 20:19:27 UTC 2025","","test_charm_metrics_success","",""
+"
+    arrange: given latest stable version of the charm.
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","1240337","test_charm_upgrade","tests.integration","Wed Mar 26 19:27:30 UTC 2025","passed","Wed Mar 26 19:48:10 UTC 2025","","test_charm_upgrade","",""
+"
+    arrange: Place a message with an unsupported label in the queue and dispatch a workflow.
+    act: Call reconcile.
+    assert: No runner is spawned and the message is not requeued.
+    ","24557","test_reactive_mode_does_not_consume_jobs_with_unsupported_labels","tests.integration","Wed Mar 26 20:27:19 UTC 2025","passed","Wed Mar 26 20:27:44 UTC 2025","","test_reactive","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act:
+        1. Create two runner.
+        2. Delete all idle runner.
+    Assert:
+        1. Two active idle runner.
+        2. No runners.
+    ","139309","test_runner_spawn_two","tests.integration","Wed Mar 26 20:21:43 UTC 2025","passed","Wed Mar 26 20:24:02 UTC 2025","","test_runner_manager_openstack","",""
+"
+    arrange: A working application with one runner in a forked repository.
+    act: Change the path configuration to the main repository and reconcile runners.
+    assert: No runners connected to the forked repository and one runner in the main repository.
+    ","708775","test_path_config_change","tests.integration","Wed Mar 26 19:40:17 UTC 2025","passed","Wed Mar 26 19:52:06 UTC 2025","","test_charm_fork_path_change","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards kill run.sh. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to Abnormal.
+    ","422386","test_charm_issues_metrics_for_abnormal_termination","tests.integration","Wed Mar 26 20:25:31 UTC 2025","passed","Wed Mar 26 20:32:34 UTC 2025","","test_charm_metrics_failure","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to normal.
+    ","313529","test_charm_issues_metrics_after_reconciliation","tests.integration","Wed Mar 26 20:19:32 UTC 2025","passed","Wed Mar 26 20:24:45 UTC 2025","","test_charm_metrics_success","",""
+"
+    Arrange: RunnerManager instance with no runners.
+    Act: Get runners.
+    Assert: Empty tuple returned.
+    ","2812","test_get_no_runner","tests.integration","Wed Mar 26 20:13:02 UTC 2025","passed","Wed Mar 26 20:13:05 UTC 2025","","test_runner_manager_openstack","",""
+"
+    Arrange: RunnerManager with one idle runner.
+    Act:
+        1. Run a long workflow.
+        3. Run flush idle runner.
+        4. Run flush busy runner.
+    Assert:
+        1. Runner takes the job and become busy.
+        3. Busy runner still exists.
+        4. No runners exists.
+    ","77371","test_runner_flush_busy_lifecycle","tests.integration","Wed Mar 26 20:17:12 UTC 2025","passed","Wed Mar 26 20:18:30 UTC 2025","","test_runner_manager_openstack","",""
+"
+    arrange: A working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    ","6055","test_check_runners_no_runners","tests.integration","Wed Mar 26 20:17:47 UTC 2025","passed","Wed Mar 26 20:17:53 UTC 2025","","test_charm_no_runner","",""
+"
+    arrange: A working application with one runner with repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed.
+    ","136101","test_repo_policy_enabled","tests.integration","Wed Mar 26 20:35:40 UTC 2025","passed","Wed Mar 26 20:37:56 UTC 2025","","test_charm_runner","",""
+"
+    arrange:         1. A forked repository.         2. A working application using repo-policy checks with one runner on the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
+    assert: The workflow that was dispatched failed and the reason is logged.
+    ","349834","test_dispatch_workflow_failure","tests.integration","Wed Mar 26 19:39:42 UTC 2025","passed","Wed Mar 26 19:45:32 UTC 2025","","test_charm_fork_repo","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow that fails the repo-policy check. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to failure.
+    ","437344","test_charm_issues_metrics_for_failed_repo_policy","tests.integration","Wed Mar 26 20:17:25 UTC 2025","passed","Wed Mar 26 20:24:43 UTC 2025","","test_charm_metrics_failure","",""

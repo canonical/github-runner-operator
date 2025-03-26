@@ -1,0 +1,59 @@
+20:21:43 INFO Creating 2 runners
+20:23:24 INFO Getting runners...
+20:23:25 INFO Getting all openstack servers managed by the charm
+20:23:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:29 INFO Authentication (publickey) successful!
+20:23:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:30 INFO Authentication (publickey) successful!
+20:23:30 INFO Found following runners: {'test-dwsk2q9i-0-n-90efd0fb5059', 'test-dwsk2q9i-0-n-9321dc802451', 'test-dwsk2q9i-0-n-a2d916faa0ad'}
+20:23:30 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dwsk2q9i-0-n-9321dc802451'}
+20:23:30 INFO Getting runners...
+20:23:32 INFO Getting all openstack servers managed by the charm
+20:23:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:37 INFO Authentication (publickey) successful!
+20:23:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:38 INFO Authentication (publickey) successful!
+20:23:38 INFO Found following runners: {'test-dwsk2q9i-0-n-90efd0fb5059', 'test-dwsk2q9i-0-n-9321dc802451', 'test-dwsk2q9i-0-n-a2d916faa0ad'}
+20:23:38 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dwsk2q9i-0-n-9321dc802451'}
+20:23:38 INFO Flushing idle runners...
+20:23:39 INFO Getting all openstack servers managed by the charm
+20:23:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:44 INFO Authentication (publickey) successful!
+20:23:44 INFO Attempting to kill runner process on test-dwsk2q9i-0-n-90efd0fb5059 if not busy
+20:23:44 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+20:23:44 INFO Kill process command output, ok: True code 0, out: 1765
+, err: 
+20:23:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:44 INFO Authentication (publickey) successful!
+20:23:44 INFO Attempting to kill runner process on test-dwsk2q9i-0-n-a2d916faa0ad if not busy
+20:23:44 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+20:23:44 INFO Kill process command output, ok: True code 0, out: 1766
+, err: 
+20:23:44 INFO Getting all openstack servers managed by the charm
+20:23:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:48 INFO Authentication (publickey) successful!
+20:23:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:48 INFO Authentication (publickey) successful!
+20:23:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:49 INFO Authentication (publickey) successful!
+20:23:49 INFO [chan 2] Opened sftp connection (server version 3)
+20:23:49 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.201, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+20:23:49 WARNING Failed to pull metrics for test-dwsk2q9i-0-n-90efd0fb5059: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+20:23:49 INFO Running runner removal script for test-dwsk2q9i-0-n-90efd0fb5059
+20:23:51 INFO Deleting openstack server with test-dwsk2q9i-0-n-90efd0fb5059
+20:23:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:23:54 INFO Authentication (publickey) successful!
+20:23:54 INFO [chan 2] Opened sftp connection (server version 3)
+20:23:54 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.123, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+20:23:54 WARNING Failed to pull metrics for test-dwsk2q9i-0-n-a2d916faa0ad: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+20:23:54 INFO Running runner removal script for test-dwsk2q9i-0-n-a2d916faa0ad
+20:23:56 INFO Deleting openstack server with test-dwsk2q9i-0-n-a2d916faa0ad
+20:23:59 INFO Cleaning up SSH key files
+20:23:59 INFO Found 0 key files, clean up 0 key files
+20:23:59 INFO Cleaning up openstack keypairs
+20:23:59 INFO Getting runners...
+20:24:01 INFO Getting all openstack servers managed by the charm
+20:24:02 INFO Found following runners: {'test-dwsk2q9i-0-n-9321dc802451'}
+20:24:02 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dwsk2q9i-0-n-9321dc802451'}

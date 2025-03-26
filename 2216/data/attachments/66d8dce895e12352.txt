@@ -1,0 +1,71 @@
+20:13:05 INFO Creating 1 runners
+20:13:05 INFO Creating openstack server with test-dwsk2q9i-0-n-a6c4cb5b5094
+20:13:38 WARNING NoValidConnectionsError. Unable to SSH into test-dwsk2q9i-0-n-a6c4cb5b5094 with address 10.145.193.33. Error: [Errno None] Unable to connect to port 22 on 10.145.193.33
+20:13:38 WARNING Retrying error in 60 seconds: Failed to SSH to test-dwsk2q9i-0-n-a6c4cb5b5094 during creation possible due to setup not completed
+20:14:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:38 INFO Authentication (publickey) successful!
+20:14:40 INFO Runner startup process found to be healthy on test-dwsk2q9i-0-n-a6c4cb5b5094
+20:14:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:40 INFO Authentication (publickey) successful!
+20:14:40 INFO Runner test-dwsk2q9i-0-n-a6c4cb5b5094 found to be healthy
+20:14:40 INFO Runner test-dwsk2q9i-0-n-a6c4cb5b5094 created successfully
+20:14:40 INFO Getting runners...
+20:14:42 INFO Getting all openstack servers managed by the charm
+20:14:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:45 INFO Authentication (publickey) successful!
+20:14:45 INFO Found following runners: {'test-dwsk2q9i-0-n-a6c4cb5b5094'}
+20:14:45 INFO Getting runners...
+20:14:47 INFO Getting all openstack servers managed by the charm
+20:14:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:49 INFO Authentication (publickey) successful!
+20:14:50 INFO Found following runners: {'test-dwsk2q9i-0-n-a6c4cb5b5094'}
+20:14:50 INFO Getting runners...
+20:14:51 INFO Getting all openstack servers managed by the charm
+20:14:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:54 INFO Authentication (publickey) successful!
+20:14:55 INFO Found following runners: {'test-dwsk2q9i-0-n-a6c4cb5b5094'}
+20:14:55 INFO Getting all openstack servers managed by the charm
+20:14:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:14:57 INFO Authentication (publickey) successful!
+20:14:58 INFO Getting runners...
+20:14:59 INFO Getting all openstack servers managed by the charm
+20:15:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:02 INFO Authentication (publickey) successful!
+20:15:03 INFO Found following runners: {'test-dwsk2q9i-0-n-a6c4cb5b5094'}
+20:15:04 INFO Offline github runners to delete: []:
+20:15:05 INFO Getting all openstack servers managed by the charm
+20:15:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:07 INFO Authentication (publickey) successful!
+20:15:09 INFO Cleaning up SSH key files
+20:15:09 INFO Found 1 key files, clean up 0 key files
+20:15:09 INFO Cleaning up openstack keypairs
+20:15:09 INFO Getting runners...
+20:15:11 INFO Getting all openstack servers managed by the charm
+20:15:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:13 INFO Authentication (publickey) successful!
+20:15:14 INFO Found following runners: {'test-dwsk2q9i-0-n-a6c4cb5b5094'}
+20:15:14 INFO Flushing idle runners...
+20:15:14 INFO Getting all openstack servers managed by the charm
+20:15:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:16 INFO Authentication (publickey) successful!
+20:15:17 INFO Attempting to kill runner process on test-dwsk2q9i-0-n-a6c4cb5b5094 if not busy
+20:15:17 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+20:15:17 INFO Kill process command output, ok: True code 0, out: 1773
+, err: 
+20:15:17 INFO Getting all openstack servers managed by the charm
+20:15:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:19 INFO Authentication (publickey) successful!
+20:15:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:15:20 INFO Authentication (publickey) successful!
+20:15:20 INFO [chan 2] Opened sftp connection (server version 3)
+20:15:20 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.33, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+20:15:20 WARNING Failed to pull metrics for test-dwsk2q9i-0-n-a6c4cb5b5094: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+20:15:20 INFO Running runner removal script for test-dwsk2q9i-0-n-a6c4cb5b5094
+20:15:22 INFO Deleting openstack server with test-dwsk2q9i-0-n-a6c4cb5b5094
+20:15:25 INFO Cleaning up SSH key files
+20:15:25 INFO Found 0 key files, clean up 0 key files
+20:15:25 INFO Cleaning up openstack keypairs
+20:15:25 INFO Getting runners...
+20:15:27 INFO Getting all openstack servers managed by the charm
+20:15:28 INFO Found following runners: set()

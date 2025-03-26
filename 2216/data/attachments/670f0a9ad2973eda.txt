@@ -1,0 +1,95 @@
+20:02:19 INFO Adding model lxd:test-charm-runner-upct on cloud localhost
+20:02:20 WARNING unexpected facade SSHServer received from the controller
+20:02:21 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+20:02:22 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [allocating] waiting: waiting for machine
+20:02:52 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [allocating] waiting: waiting for machine
+20:03:22 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [allocating] waiting: waiting for machine
+20:03:53 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [allocating] waiting: waiting for machine
+20:04:23 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [executing] maintenance: Setting up Builder.
+20:04:53 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [executing] maintenance: Setting up Builder.
+20:05:23 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [executing] maintenance: Setting up Builder.
+20:05:53 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [executing] maintenance: Setting up Builder.
+20:06:23 INFO Waiting for model:
+  github-runner-image-builder-pc89ix6c/0 [idle] blocked: image integration required.
+20:06:59 INFO Deploying local:jammy/github-runner-0
+20:06:59 INFO Waiting for model:
+  test-pc89ix6c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pc89ix6c/0 [idle] blocked: image integration required.
+20:07:29 INFO Waiting for model:
+  test-pc89ix6c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pc89ix6c/0 [idle] blocked: image integration required.
+20:08:00 INFO Waiting for model:
+  test-pc89ix6c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pc89ix6c/0 [idle] blocked: image integration required.
+20:08:30 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-pc89ix6c/0 [idle] blocked: image integration required.
+20:09:00 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:09:30 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:10:00 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:10:31 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:11:01 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:11:31 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:12:01 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:12:32 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:13:02 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:13:32 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:14:02 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:14:32 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:15:02 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:15:32 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:16:03 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:16:33 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pc89ix6c/0 [executing] active: Building image.
+20:17:03 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pc89ix6c/0 [idle] active: 
+20:17:33 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] maintenance: Reconciling runners
+20:21:09 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] active: 
+20:21:40 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] active:
+20:22:48 INFO Waiting for model:
+  test-pc89ix6c/0 [executing] active: 
+20:23:18 INFO Waiting for model:
+  test-pc89ix6c/0 [idle] active:

@@ -1,0 +1,138 @@
+19:23:46 INFO Adding model lxd:test-charm-scheduled-events-22gq on cloud localhost
+19:23:46 WARNING unexpected facade AgentLifeFlag received from the controller
+19:23:46 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+19:23:46 WARNING unexpected facade SecretsDrain received from the controller
+19:23:48 INFO Deploying ch:amd64/github-runner-image-builder-61
+19:23:49 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz (not enough units yet - 0/1)
+19:24:19 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [allocating] waiting: waiting for machine
+19:24:49 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [allocating] waiting: waiting for machine
+19:25:19 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [executing] maintenance: Setting up Builder.
+19:25:49 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [executing] maintenance: Setting up Builder.
+19:26:19 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [executing] maintenance: Setting up Builder.
+19:26:49 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [executing] maintenance: Setting up Builder.
+19:27:19 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [idle] blocked: image integration required.
+19:27:42 INFO Deploying local:jammy/github-runner-0
+19:27:42 INFO Waiting for model:
+  test-kpax2srz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpax2srz/0 [idle] blocked: image integration required.
+19:28:12 INFO Waiting for model:
+  test-kpax2srz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpax2srz/0 [idle] blocked: image integration required.
+19:28:42 INFO Waiting for model:
+  test-kpax2srz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpax2srz/0 [idle] blocked: image integration required.
+19:29:12 INFO Waiting for model:
+  test-kpax2srz/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-kpax2srz/0 [idle] blocked: image integration required.
+19:29:42 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:30:12 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:30:42 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:31:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:31:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:32:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:32:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:33:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:33:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:34:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:34:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:35:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:35:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:36:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:36:43 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:37:13 INFO Waiting for model:
+  test-kpax2srz/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpax2srz/0 [executing] active: Building image.
+19:37:43 INFO Waiting for model:
+  test-kpax2srz/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kpax2srz/0 [idle] active: 
+19:38:14 INFO Waiting for model:
+  test-kpax2srz/0 [idle] active: 
+19:38:23 INFO Waiting for model:
+  test-kpax2srz/0 [idle] active: 
+19:38:53 INFO Waiting for model:
+  test-kpax2srz/0 [executing] maintenance: Reconciling runners
+19:39:23 INFO Waiting for model:
+  test-kpax2srz/0 [executing] maintenance: Reconciling runners
+19:39:53 INFO Waiting for model:
+  test-kpax2srz/0 [executing] maintenance: Reconciling runners
+19:40:23 INFO Waiting for model:
+  test-kpax2srz/0 [executing] maintenance: Reconciling runners
+19:40:53 INFO Waiting for model:
+  test-kpax2srz/0 [executing] active: 
+19:41:32 INFO Waiting for model:
+  test-kpax2srz/0 [idle] active:
+19:41:50 INFO Wait for condition not met, sleeping 3
+19:41:54 INFO Wait for 10 minutes
+19:51:54 INFO Waiting for model:
+  github-runner-image-builder-kpax2srz/0 [idle] active: 
+  test-kpax2srz/0 [executing] maintenance: Reconciling runners
+19:52:18 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-22gq  lxd         localhost/localhost  3.1.10   unsupported  19:52:18Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kpax2srz           active      1  github-runner-image-builder  latest/edge   61  no       
+test-kpax2srz                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kpax2srz/0*  active    idle   0        10.61.147.78           
+test-kpax2srz/0*                         active    idle   1        10.61.147.191          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.61.147.78   juju-56b95b-0  ubuntu@22.04      Running
+1        started  10.61.147.191  juju-56b95b-1  ubuntu@22.04      Running
+
+19:52:18 INFO Juju error logs:
+
+machine-0: 19:24:51 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 19:24:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:24:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kpax2srz-0: 19:24:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kpax2srz-0: 19:25:35 ERROR unit.github-runner-image-builder-kpax2srz/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 19:28:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:28:44 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 19:28:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kpax2srz-0: 19:28:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+19:52:19 INFO Forgetting model main...
