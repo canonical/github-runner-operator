@@ -42,16 +42,9 @@ logger = logging.getLogger(__name__)
     default=False,
     help="Debug mode for testing.",
 )
-@click.option(
-    "--debug-disable-reconcile",
-    is_flag=True,
-    show_default=True,
-    default=False,
-    help="Disable reconcile thread for debugging.",
-)
 # The entry point for the CLI will be tested with integration test.
 def main(
-    config_file: TextIO, host: str, port: int, debug: bool, debug_disable_reconcile: bool
+    config_file: TextIO, host: str, port: int, debug: bool
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -69,10 +62,9 @@ def main(
     config = Configuration.from_yaml_file(config_file)
 
     threads = []
-    if not debug_disable_reconcile:
-        service = Thread(target=partial(start_reconcile_service, config, lock))
-        service.start()
-        threads.append(service)
+    service = Thread(target=partial(start_reconcile_service, config, lock))
+    service.start()
+    threads.append(service)
     http_server = Thread(target=partial(start_http_server, config, lock, host, port, debug))
     http_server.start()
     threads.append(http_server)
