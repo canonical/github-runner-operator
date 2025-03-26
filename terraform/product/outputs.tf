@@ -6,12 +6,18 @@ output "github_runner_image_builder_app_name" {
   value       = module.github_runner_image_builder.app_name
 }
 
-output "reactive_runners_names" {
+output "reactive_runner_names" {
   description = "Names of the all the deployed github-runner applications that are reactive."
   value       = [for github_runner in var.github_runners : github_runner.app_name if lookup(github_runner.config, "max-total-virtual-machines", 0) > 0]
 }
 
-output "all_runners_names" {
+output "all_runner_names" {
   description = "Names of the all the deployed github-runner applications."
   value       = [for github_runner in values(module.github_runner) : github_runner.app_name]
+}
+
+
+output "all_app_names" {
+  description = "Names of the all the deployed apps, github-runner plus github-runner-image-builder."
+  value       = concat([for github_runner in values(module.github_runner) : github_runner.app_name], [module.github_runner_image_builder.app_name])
 }
