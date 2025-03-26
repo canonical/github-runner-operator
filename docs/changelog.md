@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-03-25
+
+- Add documentation explaining security design of the charm.
+
 ### 2025-03-24
 
 - New terraform product module. This module is composed of one github-runner-image-builder application and the related
