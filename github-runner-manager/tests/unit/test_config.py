@@ -10,7 +10,7 @@ from ipaddress import IPv4Address
 
 import pytest
 import yaml
-from pydantic import AnyHttpUrl, MongoDsn
+from pydantic import MongoDsn
 
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
@@ -84,6 +84,7 @@ service_config:
 
 @pytest.fixture(name="app_config", scope="module")
 def app_config_fixture() -> ApplicationConfiguration:
+    # The type ignore is due type coercion from pydantic with convert the types.
     return ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
@@ -92,15 +93,14 @@ def app_config_fixture() -> ApplicationConfiguration:
         ),
         service_config=SupportServiceConfig(
             proxy_config=ProxyConfig(
-                http=AnyHttpUrl("http://httpproxy.example.com:3128"),
-                https=AnyHttpUrl("http://httpsproxy.example.com:3128"),
+                http="http://httpproxy.example.com:3128",  # type: ignore
+                https="http://httpsproxy.example.com:3128",  # type: ignore
                 no_proxy="127.0.0.1",
                 use_aproxy=False,
             ),
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
-                    # IPv4Address is a type of IPvAnyAddress.
                     host=IPv4Address("10.10.10.10"),  # type: ignore
                     port=3000,
                     rsa_fingerprint="SHA256:rsa",
@@ -109,7 +109,7 @@ def app_config_fixture() -> ApplicationConfiguration:
             ],
             repo_policy_compliance=RepoPolicyComplianceConfig(
                 token="token",
-                url=AnyHttpUrl("https://compliance.example.com"),
+                url="https://compliance.example.com",  # type: ignore
             ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
