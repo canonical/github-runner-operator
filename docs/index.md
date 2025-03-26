@@ -15,7 +15,7 @@ Just like GitHub's runners, the self-hosted runners managed by the charm are iso
 
 Metrics and logs about the runners and the charm itself are collected and sent to the [Canonical Observability Stack](https://charmhub.io/topics/canonical-observability-stack) for analysis and visualisation.
 
-The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/how-to-repo-policy).
+The charm enforces a set of GitHub repository settings as best practice. This is planned to be opt-in in the future. See [How to comply with security requirements](https://charmhub.io/github-runner/docs/how-to-comply-security).
 
 ## In this documentation
 
@@ -54,18 +54,19 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Debug with SSH](how-to/debug-with-ssh.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
-  1. [Comply with repository policies](how-to/repo-policy.md)
   1. [Set up reactive spawning](how-to/reactive.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
   1. [Configurations](reference/configurations.md)
   1. [COS Integration](reference/cos.md)
+  1. [GitHub runner cryptographic overview](reference/cryptographic-overview.md)
   1. [External Access](reference/external-access.md)
   1. [Integrations](reference/integrations.md)
   1. [Token scopes](reference/token-scopes.md)
 1. [Explanation](explanation)
   1. [Charm architecture](explanation/charm-architecture.md)
   1. [SSH Debug](explanation/ssh-debug.md)
+1. [Changelog](changelog.md)
 1. [Track local-lxd](local-lxd)
   1. [Tutorial](local-lxd/tutorial)
     1. [Managing resource usage](local-lxd/tutorial/managing-resource-usage.md)
@@ -75,7 +76,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Change repository or organization](local-lxd/how-to/change-path.md)
     1. [Change GitHub personal access token](local-lxd/how-to/change-token.md)
     1. [Comply with security requirements](local-lxd/how-to/comply-security.md)
-    1. [Restrict self-hosted runner network access](local-lxd/how-to/configure-denylist.md)
     1. [Configure runner storage](local-lxd/how-to/configure-runner-storage.md)
     1. [Debug with SSH](local-lxd/how-to/debug-with-ssh.md)
     1. [Deploy on ARM64](local-lxd/how-to/deploy-on-arm64.md)
@@ -88,6 +88,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [ARM64](local-lxd/reference/arm64.md)
     1. [Configurations](local-lxd/reference/configurations.md)
     1. [COS Integration](local-lxd/reference/cos.md)
+    1. [GitHub runner cryptographic overview](local-lxd/reference/cryptographic-overview.md)
     1. [External Access](local-lxd/reference/external-access.md)
     1. [Integrations](local-lxd/reference/integrations.md)
     1. [Token scopes](local-lxd/reference/token-scopes.md)
