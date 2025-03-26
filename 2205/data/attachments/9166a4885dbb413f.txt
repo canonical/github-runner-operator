@@ -1,0 +1,89 @@
+06:42:35 INFO Adding model lxd:test-charm-no-runner-spwn on cloud localhost
+06:42:36 WARNING unexpected facade SSHServer received from the controller
+06:42:38 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+06:42:38 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [allocating] waiting: waiting for machine
+06:43:08 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [allocating] waiting: waiting for machine
+06:43:38 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [allocating] waiting: waiting for machine
+06:44:09 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [allocating] waiting: agent initialising
+06:44:39 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [executing] maintenance: Setting up Builder.
+06:45:09 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [executing] maintenance: Setting up Builder.
+06:45:39 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [executing] maintenance: Setting up Builder.
+06:46:09 INFO Waiting for model:
+  github-runner-image-builder-eczrcotk/0 [executing] maintenance: Setting up Builder.
+06:46:52 INFO Deploying local:jammy/github-runner-0
+06:46:52 INFO Waiting for model:
+  test-eczrcotk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eczrcotk/0 [idle] blocked: image integration required.
+06:47:22 INFO Waiting for model:
+  test-eczrcotk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eczrcotk/0 [idle] blocked: image integration required.
+06:47:52 INFO Waiting for model:
+  test-eczrcotk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eczrcotk/0 [idle] blocked: image integration required.
+06:48:23 INFO Waiting for model:
+  test-eczrcotk/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-eczrcotk/0 [idle] blocked: image integration required.
+06:48:53 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:49:23 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:49:53 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:50:23 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:50:53 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:51:23 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:51:54 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:52:24 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:52:54 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:53:24 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:53:54 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:54:24 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:54:54 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:55:25 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:55:55 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:56:25 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:56:55 INFO Waiting for model:
+  test-eczrcotk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eczrcotk/0 [executing] active: Building image.
+06:57:25 INFO Waiting for model:
+  test-eczrcotk/0 [executing] maintenance: Update image for runners
+06:57:55 INFO Waiting for model:
+  test-eczrcotk/0 [idle] active: 
+06:58:01 INFO Waiting for model:
+  test-eczrcotk/0 [idle] active:

@@ -1,0 +1,62 @@
+07:17:58 INFO Waiting for model:
+  test-dz41nl8v/0 [executing] maintenance: Reconciling runners
+07:18:28 INFO Waiting for model:
+  test-dz41nl8v/0 [idle] active:
+07:19:45 INFO Waiting for model:
+  test-dz41nl8v/0 [executing] maintenance: Reconciling runners
+07:20:15 INFO Waiting for model:
+  test-dz41nl8v/0 [idle] active: 
+07:20:27 INFO [TEST SETUP] Exposing port 8080 on test-dz41nl8v-0-n-3b14e54a8fb5
+07:20:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.75', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:13:b1:28'}]])
+07:20:32 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-dz41nl8v-0-n-3b14e54a8fb5
+07:20:32 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.75', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:13:b1:28'}]])
+07:20:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dz41nl8v-0-n-3b14e54a8fb5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.75 nc -z localhost 8080'
+07:20:35 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-dz41nl8v-0-n-3b14e54a8fb5
+07:20:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.75', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:13:b1:28'}]])
+07:20:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dz41nl8v-0-n-3b14e54a8fb5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.75 curl http://localhost:8080'
+07:20:39 INFO Wait for condition not met, sleeping 10
+07:21:23 INFO Waiting for model:
+  test-dz41nl8v/0 [executing] maintenance: Reconciling runners
+07:21:54 INFO Waiting for model:
+  test-dz41nl8v/0 [idle] active: 
+07:21:57 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-oosg  lxd         localhost/localhost  3.6.4    unsupported  07:21:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-dz41nl8v           active      1  github-runner-image-builder  latest/edge   61  no       
+test-dz41nl8v                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-dz41nl8v/0*  active    idle   0        10.245.42.16              
+test-dz41nl8v/0*                         active    idle   1        10.245.42.147   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.245.42.16   juju-3d4d18-0  ubuntu@22.04      Running
+1        started  10.245.42.147  juju-3d4d18-1  ubuntu@22.04      Running
+
+07:21:58 INFO Juju error logs:
+
+unit-test-dz41nl8v-0: 07:07:14 ERROR unit.test-dz41nl8v/0.juju-log Unable to get SSH connection for instance test-dz41nl8v-0-n-cf66e5fd60b6, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dz41nl8v-0-n-cf66e5fd60b6, key path: /home/runner-manager/.ssh/test-dz41nl8v-0-n-cf66e5fd60b6.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dz41nl8v-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dz41nl8v-0-n-cf66e5fd60b6
+
+07:21:58 INFO Forgetting model main...

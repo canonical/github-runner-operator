@@ -1,0 +1,65 @@
+07:29:32 INFO Waiting for model:
+  test-e5pnvhmx/0 [executing] active: 
+07:30:02 INFO Waiting for model:
+  test-e5pnvhmx/0 [idle] active:
+07:30:46 INFO Waiting for model:
+  test-e5pnvhmx/0 [executing] active: 
+07:31:16 INFO Waiting for model:
+  test-e5pnvhmx/0 [idle] active: 
+07:31:31 INFO Wait for condition not met, sleeping 10
+07:31:43 INFO Wait for condition not met, sleeping 10
+07:31:54 INFO Wait for condition not met, sleeping 10
+07:32:04 INFO Wait for condition not met, sleeping 10
+07:32:15 INFO Wait for condition not met, sleeping 10
+07:32:25 INFO Wait for condition not met, sleeping 10
+07:32:36 INFO Wait for condition not met, sleeping 10
+07:32:46 INFO Wait for condition not met, sleeping 10
+07:32:56 INFO Wait for condition not met, sleeping 10
+07:33:07 INFO Wait for condition not met, sleeping 10
+07:34:16 INFO Waiting for model:
+  test-e5pnvhmx/0 [executing] maintenance: Reconciling runners
+07:34:46 INFO Waiting for model:
+  test-e5pnvhmx/0 [idle] active: 
+07:34:57 INFO Wait for condition not met, sleeping 60
+07:35:58 INFO Wait for condition not met, sleeping 60
+07:36:59 INFO Wait for condition not met, sleeping 60
+07:37:59 INFO Wait for condition not met, sleeping 60
+07:39:00 INFO Wait for condition not met, sleeping 60
+07:40:00 INFO Wait for condition not met, sleeping 60
+07:41:01 INFO Wait for condition not met, sleeping 60
+07:42:01 INFO Wait for condition not met, sleeping 60
+07:43:02 INFO Wait for condition not met, sleeping 60
+07:44:02 INFO Wait for condition not met, sleeping 60
+07:45:03 INFO Wait for condition not met, sleeping 60
+07:46:03 INFO Wait for condition not met, sleeping 60
+07:47:04 INFO Wait for condition not met, sleeping 60
+07:48:04 INFO Wait for condition not met, sleeping 60
+07:49:12 INFO Wait for condition not met, sleeping 10
+07:49:41 INFO Waiting for model:
+  test-e5pnvhmx/0 [idle] active:
+07:50:19 INFO Waiting for model:
+  test-e5pnvhmx/0 [idle] active: 
+07:50:37 INFO Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-pt2w  lxd         localhost/localhost  3.6.4    unsupported  07:50:37Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-e5pnvhmx           active      1  github-runner-image-builder  latest/edge   61  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-e5pnvhmx                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-e5pnvhmx/0*  active    idle   0        10.169.226.109             
+mongodb/0*                               active    idle   2        10.169.226.10   27017/tcp  Primary
+test-e5pnvhmx/0*                         active    idle   1        10.169.226.199             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.169.226.109  juju-79221a-0  ubuntu@22.04      Running
+1        started  10.169.226.199  juju-79221a-1  ubuntu@22.04      Running
+2        started  10.169.226.10   juju-79221a-2  ubuntu@22.04      Running
+
+07:50:37 INFO Juju error logs:
+
+
+07:50:37 INFO Forgetting model main...
