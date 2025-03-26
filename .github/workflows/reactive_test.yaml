@@ -15,4 +15,4 @@ jobs:
             sleep 360
         - name: Setup tmate session
           if: ${{ failure() }}
-          uses: canonical/action-tmate@main
+          uses: canonical/action-tmate@enable-optional-proxy
