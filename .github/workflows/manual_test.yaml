@@ -94,11 +94,11 @@ jobs:
   #     - run: echo $DOCKERHUB_MIRROR
   #     - name: tmate ssh
   #       uses: canonical/action-tmate@main
-  self-hosted-large:
-    name: self-hosted-large
-    runs-on: [self-hosted, amd64, large, jammy]
-    steps:
-      - run: sudo snap install --classic lxd
+  # self-hosted-large:
+  #   name: self-hosted-large
+  #   runs-on: [self-hosted, amd64, large, jammy]
+  #   steps:
+  #     - run: sudo snap install --classic lxd
   #     - run: echo $HTTP_PROXY
   #     - run: echo $HTTPS_PROXY
   #     - run: echo $NO_PROXY
