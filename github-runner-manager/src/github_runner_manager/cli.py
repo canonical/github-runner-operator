@@ -13,6 +13,7 @@ import click
 from github_runner_manager.cli_config import Configuration
 from github_runner_manager.http_server import start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
+from github_runner_manager.thread_manager import ThreadManager
 
 logger = logging.getLogger(__name__)
 
@@ -61,13 +62,9 @@ def main(
     lock = Lock()
     config = Configuration.from_yaml_file(config_file)
 
-    threads = []
-    service = Thread(target=partial(start_reconcile_service, config, lock))
-    service.start()
-    threads.append(service)
-    http_server = Thread(target=partial(start_http_server, config, lock, host, port, debug))
-    http_server.start()
-    threads.append(http_server)
+    thread_manager = ThreadManager()
+    thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
+    thread_manager.add_thread(target=partial(start_http_server, config, lock, host, port, debug))
+    thread_manager.start()
 
-    for thread in threads:
-        thread.join()
+    thread_manager.raise_on_error()

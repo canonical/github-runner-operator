@@ -7,7 +7,7 @@ import logging
 from queue import Queue
 from threading import Thread
 
-logger = logging.GetLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def _add_err_queue(function: callable, err_queue: Queue):
@@ -15,7 +15,7 @@ def _add_err_queue(function: callable, err_queue: Queue):
         try:
             function()
         except Exception as err:
-            logger.info("Caught exception in thread: %s", err.msg)
+            logger.exception("Caught exception in thread")
             err_queue.put(err, block=True, timeout=None)
     return func_with_err_queue
 
@@ -25,15 +25,15 @@ class ThreadManager:
         self.err_queue = Queue()
         self.threads = []
     
-    def add_thread(self, function: callable):
-        func_with_err_handling = _add_err_queue(function, self.err_queue)
-        thread = Thread(target=func_with_err_handling)
+    def add_thread(self, target: callable, **kwargs):
+        func_with_err_handling = _add_err_queue(target, self.err_queue)
+        thread = Thread(target=func_with_err_handling, **kwargs)
         self.threads.append(thread)
         
     def start(self):
         for thread in self.threads:
             thread.start()
     
-    def wait_on_error(self):
-        return self.err_queue.get(block=True, timeout=None)
-        
+    def raise_on_error(self):
+        err: Exception =  self.err_queue.get(block=True, timeout=None)
+        raise err.with_traceback(err.__traceback__)
