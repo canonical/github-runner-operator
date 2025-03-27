@@ -1,0 +1,156 @@
+18:57:58 INFO Adding model lxd:test-reactive-bpew on cloud localhost
+18:57:58 WARNING unexpected facade SSHServer received from the controller
+18:57:59 INFO GitHub token rate limit: Rate(reset=2025-03-27 19:00:09+00:00, remaining=4748, limit=5000)
+18:58:03 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+18:58:04 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [allocating] waiting: waiting for machine
+18:58:34 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [allocating] waiting: waiting for machine
+18:59:05 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [allocating] waiting: waiting for machine
+18:59:35 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [allocating] waiting: waiting for machine
+19:00:05 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: installing charm software
+19:00:36 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: Setting up Builder.
+19:01:06 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: Setting up Builder.
+19:01:37 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: Setting up Builder.
+19:02:07 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: Setting up Builder.
+19:02:37 INFO Waiting for model:
+  github-runner-image-builder-vsg77olx/0 [executing] maintenance: Setting up Builder.
+19:03:35 INFO Deploying local:jammy/github-runner-0
+19:03:35 INFO Waiting for model:
+  test-vsg77olx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vsg77olx/0 [idle] blocked: image integration required.
+19:04:05 INFO Waiting for model:
+  test-vsg77olx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vsg77olx/0 [idle] blocked: image integration required.
+19:04:36 INFO Waiting for model:
+  test-vsg77olx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vsg77olx/0 [idle] blocked: image integration required.
+19:05:06 INFO Waiting for model:
+  test-vsg77olx/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vsg77olx/0 [idle] blocked: image integration required.
+19:05:37 INFO Waiting for model:
+  test-vsg77olx/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vsg77olx/0 [idle] blocked: image integration required.
+19:06:07 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:06:37 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:07:08 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:07:38 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:08:08 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:08:39 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:09:09 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:09:39 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:10:09 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:10:40 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:11:10 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:11:40 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:12:10 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:12:40 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:13:10 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:13:40 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:14:10 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:14:41 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:15:11 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:15:41 INFO Waiting for model:
+  test-vsg77olx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vsg77olx/0 [executing] active: Building image.
+19:16:11 INFO Waiting for model:
+  test-vsg77olx/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-vsg77olx/0 [idle] active: 
+19:16:41 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active: 
+19:16:49 INFO Deploying ch:amd64/jammy/mongodb-212
+19:16:49 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:17:20 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:17:50 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:18:21 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+19:18:51 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+19:19:22 INFO Waiting for model:
+  mongodb/0 [idle] active: 
+19:19:23 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:19:23 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:19:53 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:20:28 INFO Waiting for model:
+  test-vsg77olx/0 [executing] active: 
+19:20:59 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active:
+19:21:08 INFO Wait for condition not met, sleeping 10
+19:21:56 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active: 
+19:22:12 INFO Wait for condition not met, sleeping 60
+19:23:46 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active: 
+19:24:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743103315.3837738, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 34.680591344833374}
+{"timestamp": 1743103358.0, "event": "runner_installed", "flavor": "test-vsg77olx", "duration": 75.0}
+{"timestamp": 1743103362.0, "event": "runner_start", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 93.0}
+{"timestamp": 1743103366.0, "event": "runner_stop", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1743103425.5310552, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.45848774909973}
+
+19:24:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743103315.3837738, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 34.680591344833374}
+{"timestamp": 1743103358.0, "event": "runner_installed", "flavor": "test-vsg77olx", "duration": 75.0}
+{"timestamp": 1743103362.0, "event": "runner_start", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 93.0}
+{"timestamp": 1743103366.0, "event": "runner_stop", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1743103425.5310552, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.45848774909973}
+
+19:24:04 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743103315.3837738, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 34.680591344833374}
+{"timestamp": 1743103358.0, "event": "runner_installed", "flavor": "test-vsg77olx", "duration": 75.0}
+{"timestamp": 1743103362.0, "event": "runner_start", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 93.0}
+{"timestamp": 1743103366.0, "event": "runner_stop", "flavor": "test-vsg77olx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1743103425.5310552, "event": "reconciliation", "flavor": "test-vsg77olx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.45848774909973}
+19:24:27 INFO Waiting for model:
+  test-vsg77olx/0 [executing] active: 
+19:24:58 INFO Waiting for model:
+  test-vsg77olx/0 [idle] active:

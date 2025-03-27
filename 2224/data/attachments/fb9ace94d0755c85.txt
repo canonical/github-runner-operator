@@ -1,0 +1,113 @@
+18:56:18 INFO Adding model lxd:test-charm-runner-vv1e on cloud localhost
+18:56:19 WARNING unexpected facade SSHServer received from the controller
+18:56:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+18:56:21 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [allocating] waiting: waiting for machine
+18:56:51 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [allocating] waiting: waiting for machine
+18:57:21 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [allocating] waiting: waiting for machine
+18:57:51 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [allocating] waiting: agent initialising
+18:58:21 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [executing] maintenance: Setting up Builder.
+18:58:52 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [executing] maintenance: Setting up Builder.
+18:59:22 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [executing] maintenance: Setting up Builder.
+18:59:52 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [executing] maintenance: Setting up Builder.
+19:00:23 INFO Waiting for model:
+  github-runner-image-builder-vau5g3u3/0 [executing] maintenance: Setting up Builder.
+19:01:13 INFO Deploying local:jammy/github-runner-0
+19:01:13 INFO Waiting for model:
+  test-vau5g3u3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vau5g3u3/0 [idle] blocked: image integration required.
+19:01:44 INFO Waiting for model:
+  test-vau5g3u3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vau5g3u3/0 [idle] blocked: image integration required.
+19:02:14 INFO Waiting for model:
+  test-vau5g3u3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vau5g3u3/0 [idle] blocked: image integration required.
+19:02:44 INFO Waiting for model:
+  test-vau5g3u3/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vau5g3u3/0 [idle] blocked: image integration required.
+19:03:14 INFO Waiting for model:
+  test-vau5g3u3/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-vau5g3u3/0 [idle] blocked: image integration required.
+19:03:44 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:04:15 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:04:45 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:05:16 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:05:46 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:06:16 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:06:46 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:07:16 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:07:47 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:08:17 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:08:48 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:09:18 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:09:48 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:10:18 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:10:48 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:11:19 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:11:49 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:12:19 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:12:49 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:13:20 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:13:50 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vau5g3u3/0 [executing] active: Building image.
+19:14:20 INFO Waiting for model:
+  test-vau5g3u3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-vau5g3u3/0 [idle] active: 
+19:14:51 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] active: 
+19:17:28 INFO Waiting for model:
+  test-vau5g3u3/0 [executing] active: 
+19:17:58 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] active:
+19:18:42 INFO Waiting for model:
+  test-vau5g3u3/0 [executing] active: 
+19:19:12 INFO Waiting for model:
+  test-vau5g3u3/0 [idle] active:
