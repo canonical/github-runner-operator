@@ -4,8 +4,9 @@
 """Base configuration for the Application."""
 
 import logging
-from typing import Optional
+from typing import Optional, TextIO
 
+import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
 from . import github
@@ -31,6 +32,19 @@ class ApplicationConfiguration(BaseModel):
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
+
+    @staticmethod
+    def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":
+        """Initialize configuration from a YAML formatted file.
+
+        Args:
+            file: The file object to parse the configuration from.
+
+        Returns:
+            The configuration.
+        """
+        config = yaml.safe_load(file)
+        return ApplicationConfiguration.validate(config)
 
 
 class SupportServiceConfig(BaseModel):

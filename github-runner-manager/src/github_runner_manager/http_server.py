@@ -10,7 +10,7 @@ from threading import Lock
 
 from flask import Flask, request
 
-from github_runner_manager.cli_config import Configuration
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import LockError
 
 app = Flask(__name__)
@@ -70,7 +70,9 @@ def get_lock() -> Lock:
     raise LockError("Lock not configured")
 
 
-def start_http_server(_: Configuration, lock: Lock, host: str, port: int, debug: bool) -> None:
+def start_http_server(
+    _: ApplicationConfiguration, lock: Lock, host: str, port: int, debug: bool
+) -> None:
     """Start the HTTP server for interacting with the github-runner-manager service.
 
     Args:
