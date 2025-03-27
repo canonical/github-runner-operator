@@ -1,0 +1,40 @@
+09:00:05 INFO Waiting for model:
+  test-ws57pb16/0 [executing] active: 
+09:00:36 INFO Waiting for model:
+  test-ws57pb16/0 [idle] active:
+09:01:53 INFO Waiting for model:
+  test-ws57pb16/0 [executing] active: 
+09:02:23 INFO Waiting for model:
+  test-ws57pb16/0 [idle] active: 
+09:02:31 INFO [TEST SETUP] Exposing port 8080 on test-ws57pb16-0-n-07a9fcc428ef
+09:02:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.12', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:bf:70'}]])
+09:02:35 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ws57pb16-0-n-07a9fcc428ef
+09:02:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.12', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:bf:70'}]])
+09:02:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ws57pb16-0-n-07a9fcc428ef.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.12 nc -z localhost 8080'
+09:02:37 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ws57pb16-0-n-07a9fcc428ef
+09:02:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.12', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:15:bf:70'}]])
+09:02:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ws57pb16-0-n-07a9fcc428ef.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.12 curl http://localhost:8080'
+09:02:42 INFO Wait for condition not met, sleeping 10
+09:03:18 INFO Waiting for model:
+  test-ws57pb16/0 [executing] active: 
+09:03:50 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-5xwq  lxd         localhost/localhost  3.6.4    unsupported  09:03:50Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ws57pb16           active      1  github-runner-image-builder  latest/edge   61  no       
+test-ws57pb16                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ws57pb16/0*  active    idle   0        10.69.165.139             
+test-ws57pb16/0*                         active    idle   1        10.69.165.50    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.69.165.139  juju-7fe396-0  ubuntu@22.04      Running
+1        started  10.69.165.50   juju-7fe396-1  ubuntu@22.04      Running
+
+09:03:50 INFO Juju error logs:
+
+
+09:03:50 INFO Forgetting model main...

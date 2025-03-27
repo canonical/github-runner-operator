@@ -1,0 +1,102 @@
+08:25:39 INFO Adding model lxd:test-charm-runner-5xwq on cloud localhost
+08:25:39 WARNING unexpected facade SSHServer received from the controller
+08:25:40 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+08:25:41 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [allocating] waiting: waiting for machine
+08:26:11 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [allocating] waiting: waiting for machine
+08:26:42 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [allocating] waiting: waiting for machine
+08:27:12 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [executing] maintenance: Setting up Builder.
+08:27:43 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [executing] maintenance: Setting up Builder.
+08:28:13 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [executing] maintenance: Setting up Builder.
+08:28:43 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [executing] maintenance: Setting up Builder.
+08:29:14 INFO Waiting for model:
+  github-runner-image-builder-ws57pb16/0 [idle] blocked: image integration required.
+08:29:47 INFO Deploying local:jammy/github-runner-0
+08:29:47 INFO Waiting for model:
+  test-ws57pb16/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ws57pb16/0 [idle] blocked: image integration required.
+08:30:18 INFO Waiting for model:
+  test-ws57pb16/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ws57pb16/0 [idle] blocked: image integration required.
+08:30:48 INFO Waiting for model:
+  test-ws57pb16/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ws57pb16/0 [idle] blocked: image integration required.
+08:31:18 INFO Waiting for model:
+  test-ws57pb16/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ws57pb16/0 [idle] blocked: image integration required.
+08:31:48 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:32:18 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:32:49 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:33:20 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:33:50 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:34:20 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:34:51 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:35:21 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:35:51 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:36:21 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:36:51 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:37:21 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:37:51 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:38:22 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:38:52 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:39:22 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:39:52 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:40:23 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:40:53 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:41:23 INFO Waiting for model:
+  test-ws57pb16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ws57pb16/0 [executing] active: Building image.
+08:41:53 INFO Waiting for model:
+  test-ws57pb16/0 [idle] active: 
+08:44:31 INFO Waiting for model:
+  test-ws57pb16/0 [executing] maintenance: Reconciling runners
+08:45:01 INFO Waiting for model:
+  test-ws57pb16/0 [idle] active:
+08:45:49 INFO Waiting for model:
+  test-ws57pb16/0 [executing] active: 
+08:46:19 INFO Waiting for model:
+  test-ws57pb16/0 [idle] active:

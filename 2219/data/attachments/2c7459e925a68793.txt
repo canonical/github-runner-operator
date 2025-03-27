@@ -1,0 +1,160 @@
+09:06:05 INFO Adding model lxd:test-charm-scheduled-events-jwgz on cloud localhost
+09:06:06 WARNING unexpected facade AgentLifeFlag received from the controller
+09:06:06 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+09:06:06 WARNING unexpected facade SecretsDrain received from the controller
+09:06:08 INFO Deploying ch:amd64/github-runner-image-builder-61
+09:06:09 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi (not enough units yet - 0/1)
+09:06:39 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [allocating] waiting: waiting for machine
+09:07:09 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [allocating] waiting: waiting for machine
+09:07:39 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [executing] maintenance: Setting up Builder.
+09:08:09 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [executing] maintenance: Setting up Builder.
+09:08:39 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [executing] maintenance: Setting up Builder.
+09:09:09 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [executing] maintenance: Setting up Builder.
+09:09:39 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [executing] maintenance: Setting up Builder.
+09:10:09 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [idle] blocked: image integration required.
+09:10:36 INFO Deploying local:jammy/github-runner-0
+09:10:36 INFO Waiting for model:
+  test-sf9eqzoi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sf9eqzoi/0 [idle] blocked: image integration required.
+09:11:06 INFO Waiting for model:
+  test-sf9eqzoi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sf9eqzoi/0 [idle] blocked: image integration required.
+09:11:36 INFO Waiting for model:
+  test-sf9eqzoi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sf9eqzoi/0 [idle] blocked: image integration required.
+09:12:06 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-sf9eqzoi/0 [idle] blocked: image integration required.
+09:12:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:13:07 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:13:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:14:07 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:14:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:15:07 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:15:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:16:07 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:16:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:17:07 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:17:37 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:18:08 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:18:38 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:19:08 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:19:38 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:20:08 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:20:38 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:21:08 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:21:39 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:22:09 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:22:39 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sf9eqzoi/0 [executing] active: Building image.
+09:23:09 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Update image for runners
+09:23:39 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] active: 
+09:23:48 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] active: 
+09:24:18 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:24:48 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:25:18 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:25:48 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:26:19 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:26:49 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] active: 
+09:27:32 INFO Waiting for model:
+  test-sf9eqzoi/0 [idle] active:
+09:27:50 INFO Wait for condition not met, sleeping 3
+09:27:54 INFO Wait for 10 minutes
+09:37:54 INFO Waiting for model:
+  github-runner-image-builder-sf9eqzoi/0 [idle] active: 
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:38:24 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:38:54 INFO Waiting for model:
+  test-sf9eqzoi/0 [executing] maintenance: Reconciling runners
+09:39:24 INFO Model status:
+
+Model                             Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-jwgz  lxd         localhost/localhost  3.1.10   unsupported  09:39:24Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sf9eqzoi           active      1  github-runner-image-builder  latest/edge   61  no       
+test-sf9eqzoi                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-sf9eqzoi/0*  active    idle   0        10.95.190.46           
+test-sf9eqzoi/0*                         active    idle   1        10.95.190.53           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.95.190.46  juju-09c146-0  ubuntu@22.04      Running
+1        started  10.95.190.53  juju-09c146-1  ubuntu@22.04      Running
+
+09:39:25 INFO Juju error logs:
+
+machine-0: 09:07:23 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 09:07:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:07:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-sf9eqzoi-0: 09:07:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-sf9eqzoi-0: 09:08:13 ERROR unit.github-runner-image-builder-sf9eqzoi/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 09:11:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:11:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:11:40 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-sf9eqzoi-0: 09:11:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+09:39:26 INFO Forgetting model main...

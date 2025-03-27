@@ -1,0 +1,105 @@
+09:08:07 INFO GitHub token rate limit: Rate(reset=2025-03-27 09:25:20+00:00, remaining=3532, limit=5000)
+09:08:10 INFO Creating 1 runners
+09:08:10 INFO Creating openstack server with test-ou70asvf-0-n-dfce8a76ecbe
+09:08:35 WARNING NoValidConnectionsError. Unable to SSH into test-ou70asvf-0-n-dfce8a76ecbe with address 10.145.193.133. Error: [Errno None] Unable to connect to port 22 on 10.145.193.133
+09:08:35 WARNING Retrying error in 60 seconds: Failed to SSH to test-ou70asvf-0-n-dfce8a76ecbe during creation possible due to setup not completed
+09:09:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:09:35 INFO Authentication (publickey) successful!
+09:09:36 INFO Runner startup process found to be healthy on test-ou70asvf-0-n-dfce8a76ecbe
+09:09:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:09:37 INFO Authentication (publickey) successful!
+09:09:37 INFO Runner test-ou70asvf-0-n-dfce8a76ecbe found to be healthy
+09:09:37 INFO Runner test-ou70asvf-0-n-dfce8a76ecbe created successfully
+09:09:37 INFO Getting runners...
+09:09:38 INFO Getting all openstack servers managed by the charm
+09:09:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:09:40 INFO Authentication (publickey) successful!
+09:09:41 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:09:41 INFO Getting runners...
+09:09:42 INFO Getting all openstack servers managed by the charm
+09:09:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:09:44 INFO Authentication (publickey) successful!
+09:09:45 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:09:45 INFO Getting runners...
+09:09:46 INFO Getting all openstack servers managed by the charm
+09:09:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:09:47 INFO Authentication (publickey) successful!
+09:09:48 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:09:50 INFO Wait for condition not met, sleeping 10
+09:10:01 INFO Getting runners...
+09:10:02 INFO Getting all openstack servers managed by the charm
+09:10:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:04 INFO Authentication (publickey) successful!
+09:10:05 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:10:05 INFO Getting runners...
+09:10:06 INFO Getting all openstack servers managed by the charm
+09:10:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:10 INFO Authentication (publickey) successful!
+09:10:11 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:10:12 INFO Offline github runners to delete: []:
+09:10:12 INFO Getting all openstack servers managed by the charm
+09:10:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:14 INFO Authentication (publickey) successful!
+09:10:16 INFO Cleaning up SSH key files
+09:10:16 INFO Found 1 key files, clean up 0 key files
+09:10:16 INFO Cleaning up openstack keypairs
+09:10:16 INFO Getting runners...
+09:10:17 INFO Getting all openstack servers managed by the charm
+09:10:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:18 INFO Authentication (publickey) successful!
+09:10:19 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:10:19 INFO Flushing idle runners...
+09:10:19 INFO Getting all openstack servers managed by the charm
+09:10:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:21 INFO Authentication (publickey) successful!
+09:10:21 INFO Attempting to kill runner process on test-ou70asvf-0-n-dfce8a76ecbe if not busy
+09:10:21 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+09:10:21 INFO Kill process command output, ok: False code 1, out: 2185
+, err: 
+09:10:21 INFO Getting all openstack servers managed by the charm
+09:10:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:23 INFO Authentication (publickey) successful!
+09:10:25 INFO Cleaning up SSH key files
+09:10:25 INFO Found 1 key files, clean up 0 key files
+09:10:25 INFO Cleaning up openstack keypairs
+09:10:25 INFO Getting runners...
+09:10:26 INFO Getting all openstack servers managed by the charm
+09:10:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:28 INFO Authentication (publickey) successful!
+09:10:28 INFO Found following runners: {'test-ou70asvf-0-n-dfce8a76ecbe'}
+09:10:28 INFO Flushing idle and busy runners...
+09:10:29 INFO Getting all openstack servers managed by the charm
+09:10:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:31 INFO Authentication (publickey) successful!
+09:10:31 INFO Attempting to kill all runner process on test-ou70asvf-0-n-dfce8a76ecbe
+09:10:31 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+09:10:31 INFO Kill process command output, ok: True code 0, out: 1823
+2185
+, err: 
+09:10:31 INFO Getting all openstack servers managed by the charm
+09:10:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:33 INFO Authentication (publickey) successful!
+09:10:35 INFO Cleaning up SSH key files
+09:10:35 INFO Found 1 key files, clean up 0 key files
+09:10:35 INFO Cleaning up openstack keypairs
+09:10:45 INFO Flushing idle and busy runners...
+09:10:45 INFO Getting all openstack servers managed by the charm
+09:10:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:47 INFO Authentication (publickey) successful!
+09:10:48 INFO Attempting to kill all runner process on test-ou70asvf-0-n-dfce8a76ecbe
+09:10:48 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+09:10:48 INFO Kill process command output, ok: False code 1, out: , err: 
+09:10:48 INFO Getting all openstack servers managed by the charm
+09:10:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:50 INFO Authentication (publickey) successful!
+09:10:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:10:50 INFO Authentication (publickey) successful!
+09:10:51 INFO [chan 2] Opened sftp connection (server version 3)
+09:10:51 INFO Running runner removal script for test-ou70asvf-0-n-dfce8a76ecbe
+09:10:52 INFO Deleting openstack server with test-ou70asvf-0-n-dfce8a76ecbe
+09:10:55 INFO Cleaning up SSH key files
+09:10:55 INFO Found 0 key files, clean up 0 key files
+09:10:55 INFO Cleaning up openstack keypairs
+09:10:56 INFO Getting runners...
+09:10:57 INFO Getting all openstack servers managed by the charm
+09:10:58 INFO Found following runners: set()

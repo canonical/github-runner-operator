@@ -1,0 +1,55 @@
+09:10:58 INFO Creating 1 runners
+09:10:58 INFO Creating openstack server with test-ou70asvf-0-n-987d81108767
+09:11:23 WARNING NoValidConnectionsError. Unable to SSH into test-ou70asvf-0-n-987d81108767 with address 10.145.193.38. Error: [Errno None] Unable to connect to port 22 on 10.145.193.38
+09:11:23 WARNING Retrying error in 60 seconds: Failed to SSH to test-ou70asvf-0-n-987d81108767 during creation possible due to setup not completed
+09:12:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:23 INFO Authentication (publickey) successful!
+09:12:24 INFO Runner startup process found to be healthy on test-ou70asvf-0-n-987d81108767
+09:12:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:24 INFO Authentication (publickey) successful!
+09:12:25 INFO Runner test-ou70asvf-0-n-987d81108767 found to be healthy
+09:12:25 INFO Runner test-ou70asvf-0-n-987d81108767 created successfully
+09:12:25 INFO Getting runners...
+09:12:31 INFO Getting all openstack servers managed by the charm
+09:12:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:33 INFO Authentication (publickey) successful!
+09:12:33 INFO Found following runners: {'test-ou70asvf-0-n-987d81108767'}
+09:12:33 INFO Getting runners...
+09:12:34 INFO Getting all openstack servers managed by the charm
+09:12:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:36 INFO Authentication (publickey) successful!
+09:12:37 INFO Found following runners: {'test-ou70asvf-0-n-987d81108767'}
+09:12:37 INFO Getting runners...
+09:12:38 INFO Getting all openstack servers managed by the charm
+09:12:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:40 INFO Authentication (publickey) successful!
+09:12:41 INFO Found following runners: {'test-ou70asvf-0-n-987d81108767'}
+09:12:43 INFO Wait for condition not met, sleeping 10
+09:12:54 INFO Getting runners...
+09:12:55 INFO Getting all openstack servers managed by the charm
+09:12:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:12:58 INFO Authentication (publickey) successful!
+09:12:58 INFO Found following runners: {'test-ou70asvf-0-n-987d81108767'}
+09:12:58 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ou70asvf-0-n-987d81108767'}
+09:12:58 INFO Getting runners...
+09:12:59 INFO Getting all openstack servers managed by the charm
+09:13:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:13:02 INFO Authentication (publickey) successful!
+09:13:03 INFO Found following runners: {'test-ou70asvf-0-n-987d81108767'}
+09:13:03 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ou70asvf-0-n-987d81108767'}
+09:13:05 INFO Offline github runners to delete: []:
+09:13:05 INFO Getting all openstack servers managed by the charm
+09:13:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:13:07 INFO Authentication (publickey) successful!
+09:13:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+09:13:08 INFO Authentication (publickey) successful!
+09:13:08 INFO [chan 2] Opened sftp connection (server version 3)
+09:13:09 INFO Running runner removal script for test-ou70asvf-0-n-987d81108767
+09:13:09 INFO Deleting openstack server with test-ou70asvf-0-n-987d81108767
+09:13:13 INFO Cleaning up SSH key files
+09:13:13 INFO Found 0 key files, clean up 0 key files
+09:13:13 INFO Cleaning up openstack keypairs
+09:13:13 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+09:13:13 INFO Getting runners...
+09:13:14 INFO Getting all openstack servers managed by the charm
+09:13:15 INFO Found following runners: set()
