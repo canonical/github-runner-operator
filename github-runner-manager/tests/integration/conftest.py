@@ -17,24 +17,45 @@ from tests.integration.helper import start_app
 @pytest.fixture(name="config", scope="module")
 def config_fixture() -> dict:
     return {
-        "name": "test_org/test_repo",
-        "github_path": "test_org",
-        "github_token": "test_token",
-        "github_runner_group": None,
-        "runner_count": 1,
-        "runner_labels": ("test", "unit-test", "test-data"),
-        "openstack_auth_url": "http://www.example.com/test_url",
-        "openstack_project_name": "test-project",
-        "openstack_username": "test-username",
-        "openstack_password": "test-password",
-        "openstack_user_domain_name": "default",
-        "openstack_domain_name": "default",
-        "openstack_flavor": "test_flavor",
-        "openstack_network": "test_network",
-        "dockerhub_mirror": None,
-        "repo_policy_compliance_url": None,
-        "repo_policy_compliance_token": None,
-        "http_proxy": None,
+        "name": "app_name",
+        "extra_labels": ["label1", "label2"],
+        "github_config": {"path": {"group": "group", "org": "canonical"}, "token": "githubtoken"},
+        "non_reactive_configuration": {
+            "combinations": [
+                {
+                    "base_virtual_machines": 1,
+                    "flavor": {"labels": ["flavorlabel"], "name": "flavor"},
+                    "image": {"labels": ["arm64", "noble"], "name": "image_id"},
+                }
+            ]
+        },
+        "reactive_configuration": {
+            "flavors": [{"labels": ["flavorlabel"], "name": "flavor"}],
+            "images": [{"labels": ["arm64", "noble"], "name": "image_id"}],
+            "max_total_virtual_machines": 2,
+            "queue": {
+                "mongodb_uri": "mongodb://user:password@localhost:27017",
+                "queue_name": "app_name",
+            },
+        },
+        "service_config": {
+            "dockerhub_mirror": "https://docker.example.com",
+            "proxy_config": {
+                "http": "http://httpproxy.example.com:3128",
+                "https": "http://httpsproxy.example.com:3128",
+                "no_proxy": "127.0.0.1",
+                "use_aproxy": False,
+            },
+            "repo_policy_compliance": {"token": "token", "url": "https://compliance.example.com"},
+            "ssh_debug_connections": [
+                {
+                    "ed25519_fingerprint": "SHA256:ed25519",
+                    "host": "10.10.10.10",
+                    "port": 3000,
+                    "rsa_fingerprint": "SHA256:rsa",
+                }
+            ],
+        },
     }
 
 

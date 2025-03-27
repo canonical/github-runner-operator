@@ -10,7 +10,7 @@ from typing import TextIO
 
 import click
 
-from github_runner_manager.cli_config import Configuration
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
@@ -57,7 +57,7 @@ def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pra
         logging.basicConfig(level=logging.DEBUG)
 
     lock = Lock()
-    config = Configuration.from_yaml_file(config_file)
+    config = ApplicationConfiguration.from_yaml_file(config_file)
 
     thread_manager = ThreadManager()
     thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
