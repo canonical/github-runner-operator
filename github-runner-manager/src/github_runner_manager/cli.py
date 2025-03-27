@@ -5,7 +5,7 @@
 
 import logging
 from functools import partial
-from threading import Lock, Thread
+from threading import Lock
 from typing import TextIO
 
 import click
@@ -44,9 +44,7 @@ logger = logging.getLogger(__name__)
     help="Debug mode for testing.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(
-    config_file: TextIO, host: str, port: int, debug: bool
-) -> None:  # pragma: no cover
+def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
@@ -54,7 +52,6 @@ def main(
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
-        debug_disable_reconcile: Whether to not start the reconcile service for debugging.
     """
     if debug:
         logging.basicConfig(level=logging.DEBUG)
