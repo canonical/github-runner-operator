@@ -10,7 +10,7 @@ from typing import TextIO
 
 import click
 
-from github_runner_manager.cli_config import Configuration
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 
@@ -66,7 +66,7 @@ def main(
         logging.basicConfig(level=logging.DEBUG)
 
     lock = Lock()
-    config = Configuration.from_yaml_file(config_file)
+    config = ApplicationConfiguration.from_yaml_file(config_file)
 
     threads = []
     if not debug_disable_reconcile:
