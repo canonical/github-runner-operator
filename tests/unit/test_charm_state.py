@@ -30,8 +30,6 @@ from charm_state import (
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
-    RUNNER_HTTPS_PROXY_CONFIG_NAME,
-    RUNNER_NO_PROXY_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
@@ -1034,15 +1032,13 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
 
 
 @pytest.mark.parametrize(
-    "juju_http, juju_https, juju_no_proxy, runner_http, runner_https, runner_no_proxy, use_aproxy,"
+    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy,"
     "expected_proxy, expected_runner_proxy",
     [
-        ("", "", "", "", "", "", False, ProxyConfig(), ProxyConfig()),
-        ("", "", "localhost", "", "", "", False, ProxyConfig(), ProxyConfig()),
+        ("", "", "", "", False, ProxyConfig(), ProxyConfig()),
+        ("", "", "localhost", "", False, ProxyConfig(), ProxyConfig()),
         (
             "http://example.com:3128",
-            "",
-            "",
             "",
             "",
             "",
@@ -1055,8 +1051,6 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "",
             "http://runner.example.com:3128",
-            "",
-            "",
             False,
             ProxyConfig(http="http://manager.example.com:3128"),
             ProxyConfig(http="http://runner.example.com:3128"),
@@ -1066,8 +1060,6 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "",
             "http://runner.example.com:3128",
-            "",
-            "",
             True,
             ProxyConfig(),
             ProxyConfig(http="http://runner.example.com:3128"),
@@ -1077,8 +1069,6 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "http://securemanager.example.com:3128",
             "127.0.0.1",
             "http://runner.example.com:3128",
-            "http://securerunner.example.com:3128",
-            "127.0.0.2",
             True,
             ProxyConfig(
                 http="http://manager.example.com:3128",
@@ -1087,8 +1077,6 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             ),
             ProxyConfig(
                 http="http://runner.example.com:3128",
-                https="http://securerunner.example.com:3128",
-                no_proxy="127.0.0.2",
             ),
         ),
     ],
@@ -1099,8 +1087,6 @@ def test_proxy_config(
     juju_https: str,
     juju_no_proxy: str,
     runner_http: str,
-    runner_https: str,
-    runner_no_proxy: str,
     use_aproxy: bool,
     expected_proxy: ProxyConfig,
     expected_runner_proxy: ProxyConfig,
@@ -1118,8 +1104,6 @@ def test_proxy_config(
     monkeypatch.setenv("JUJU_CHARM_NO_PROXY", juju_no_proxy)
     mock_charm.config[USE_APROXY_CONFIG_NAME] = use_aproxy
     mock_charm.config[RUNNER_HTTP_PROXY_CONFIG_NAME] = runner_http
-    mock_charm.config[RUNNER_HTTPS_PROXY_CONFIG_NAME] = runner_https
-    mock_charm.config[RUNNER_NO_PROXY_CONFIG_NAME] = runner_no_proxy
 
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
     mock_database = MagicMock(spec=DatabaseRequires)

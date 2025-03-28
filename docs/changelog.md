@@ -2,12 +2,12 @@
 
 ### 2025-03-27
 
-- Add several proxy configurations options for the manager and the runners:
-  - manager-ssh-proxy-command
-  - runner-http-proxy
-  - runner-https-proxy
-  - runner-no-proxy
-  - use-runner-proxy-for-tmate
+- Add proxy configuration options for charm to facilitate its use in corporate environments.
+  - manager-ssh-proxy-command: ProxyCommand ssh-config option used to ssh from the manager to the runners.
+  - runner-http-proxy: Allows the proxy in the runner to be different to the proxy in the
+    juju model config for the manager.
+  - use-runner-proxy-for-tmate: Whether to proxy the ssh connection from the runner to the tmate-server
+    using the runner http proxy.
 
 ### 2025-03-25
 

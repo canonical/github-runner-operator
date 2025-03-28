@@ -53,8 +53,6 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
-RUNNER_HTTPS_PROXY_CONFIG_NAME = "runner-https-proxy"
-RUNNER_NO_PROXY_CONFIG_NAME = "runner-no-proxy"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
@@ -605,13 +603,9 @@ def _build_proxy_config_from_charm() -> "ProxyConfig":
 def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
     """Initialize the proxy configuration for the runner."""
     runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
-    runner_https_proxy = cast(str, charm.config.get(RUNNER_HTTPS_PROXY_CONFIG_NAME, "")) or None
-    runner_no_proxy = cast(str, charm.config.get(RUNNER_NO_PROXY_CONFIG_NAME, "")) or None
-    if runner_https_proxy or runner_http_proxy or runner_no_proxy:
+    if runner_http_proxy:
         return ProxyConfig(
             http=runner_http_proxy,
-            https=runner_https_proxy,
-            no_proxy=runner_no_proxy,
         )
     return _build_proxy_config_from_charm()
 

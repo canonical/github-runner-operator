@@ -132,29 +132,16 @@ options:
     type: string
     default: ""
     description: >-
-      Optional ProxyCommand for the github-runner charm to connect to the runners.
-      It will be passed as the gateway argument in the fabric Connection fabric.connection.Connection:
-      https://docs.fabfile.org/en/latest/api/connection.html#module-fabric.connection. It is equivalent
-      to ProxyCommand in ssh-config, but without a shell. For example, a value could be something like:
-      `sh -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
+      Optional ProxyCommand used by the ssh connection which is used to access the virtual
+      machine runners from the runner manager. It is equivalent to ProxyCommand in ssh-config,
+      but without a shell. For example, a value could be something like:
+      `bash -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
   runner-http-proxy:
     type: string
     default: ""
     description: >-
       The HTTP proxy value to use for the runners. If not specified, the model configuration option
       juju-http-proxy will be used instead.
-  runner-https-proxy:
-    type: string
-    default: ""
-    description: >-
-      The HTTPS proxy value to use for the runners. If not specified, the model configuration option
-      juju-https-proxy will be used instead.
-  runner-no-proxy:
-    type: string
-    default: ""
-    description: >-
-      List of domain addresses not to be proxied. If not specified, the model configuration option
-      juju-no-proxy will be used instead.
   use-runner-proxy-for-tmate:
     type: boolean
     default: false
