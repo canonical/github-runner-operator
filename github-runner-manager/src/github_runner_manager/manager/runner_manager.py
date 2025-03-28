@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
 
-class FlushMode(Enum):
+class FlushMode(int, Enum):
     """Strategy for flushing runners.
 
     Attributes:
@@ -42,8 +42,8 @@ class FlushMode(Enum):
         FLUSH_BUSY: Flush busy runners.
     """
 
-    FLUSH_IDLE = auto()
-    FLUSH_BUSY = auto()
+    FLUSH_IDLE = 0
+    FLUSH_BUSY = 1
 
 
 @dataclass

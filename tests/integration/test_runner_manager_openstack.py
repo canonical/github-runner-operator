@@ -25,14 +25,9 @@ from github_runner_manager.configuration.github import (
     GitHubPath,
     parse_github_path,
 )
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerState,
-)
+from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
-from github_runner_manager.manager.runner_manager import (
-    FlushMode,
-    RunnerManager,
-)
+from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
