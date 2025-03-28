@@ -73,7 +73,7 @@ def test_flush_runner_flush_busy(
     app.config["lock"] = lock
     client = app.test_client()
 
-    response = client.post("/runner/flush", headers={"flush-runner": "true"})
+    response = client.post("/runner/flush", headers={"flush-busy": "true"})
 
     assert response.status_code == 204
     assert not lock.locked()
@@ -91,11 +91,11 @@ def test_flush_runner_unlocked(
     app.config["lock"] = lock
     client = app.test_client()
 
-    response = client.post("/runner/flush", headers={"flush-runner": "false"})
+    response = client.post("/runner/flush", headers={"flush-busy": "false"})
 
     assert response.status_code == 204
     assert not lock.locked()
-    mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
+    mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_IDLE)
 
 
 def test_flush_runner_locked(client: FlaskClient, lock: Lock) -> None:
