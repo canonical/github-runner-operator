@@ -146,8 +146,8 @@ class SSHDebugConnection(BaseModel):
         rsa_fingerprint: The host SSH server public RSA key fingerprint.
         ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
         use_runner_http_proxy: Whether to use runner proxy for the SSH connection.
-        local_http_host: Local host to use for proxying.
-        local_http_port: Local port to use for proxying.
+        local_proxy_host: Local host to use for proxying.
+        local_proxy_port: Local port to use for proxying.
     """
 
     host: IPvAnyAddress
@@ -155,8 +155,8 @@ class SSHDebugConnection(BaseModel):
     rsa_fingerprint: str = Field(pattern="^SHA256:.*")
     ed25519_fingerprint: str = Field(pattern="^SHA256:.*")
     use_runner_http_proxy: bool = False
-    local_http_host: str = "127.0.0.1"
-    local_http_port: int = 3129
+    local_proxy_host: str = "127.0.0.1"
+    local_proxy_port: int = 3129
 
 
 class RepoPolicyComplianceConfig(BaseModel):
