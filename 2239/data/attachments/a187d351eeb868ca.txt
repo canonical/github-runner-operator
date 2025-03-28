@@ -1,0 +1,61 @@
+18:30:23 INFO Creating 1 runners
+18:30:24 INFO Creating openstack server with test-yqmfgi17-0-n-cde73bfbdfb8
+18:30:48 WARNING NoValidConnectionsError. Unable to SSH into test-yqmfgi17-0-n-cde73bfbdfb8 with address 10.145.193.196. Error: [Errno None] Unable to connect to port 22 on 10.145.193.196
+18:30:48 WARNING Retrying error in 60 seconds: Failed to SSH to test-yqmfgi17-0-n-cde73bfbdfb8 during creation possible due to setup not completed
+18:31:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:48 INFO Authentication (publickey) successful!
+18:31:49 INFO Runner startup process found to be healthy on test-yqmfgi17-0-n-cde73bfbdfb8
+18:31:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:49 INFO Authentication (publickey) successful!
+18:31:50 INFO Runner test-yqmfgi17-0-n-cde73bfbdfb8 found to be healthy
+18:31:50 INFO Runner test-yqmfgi17-0-n-cde73bfbdfb8 created successfully
+18:31:50 INFO Getting runners...
+18:31:51 INFO Getting all openstack servers managed by the charm
+18:31:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:54 INFO Authentication (publickey) successful!
+18:31:54 INFO Found following runners: {'test-yqmfgi17-0-n-cde73bfbdfb8', 'test-yqmfgi17-0-n-5633755268ee'}
+18:31:54 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}
+18:31:54 INFO Getting runners...
+18:31:55 INFO Getting all openstack servers managed by the charm
+18:31:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:58 INFO Authentication (publickey) successful!
+18:31:58 INFO Found following runners: {'test-yqmfgi17-0-n-cde73bfbdfb8', 'test-yqmfgi17-0-n-5633755268ee'}
+18:31:58 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}
+18:31:58 INFO Getting runners...
+18:31:59 INFO Getting all openstack servers managed by the charm
+18:32:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:02 INFO Authentication (publickey) successful!
+18:32:02 INFO Found following runners: {'test-yqmfgi17-0-n-cde73bfbdfb8', 'test-yqmfgi17-0-n-5633755268ee'}
+18:32:02 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}
+18:32:04 INFO Wait for condition not met, sleeping 10
+18:32:15 INFO Getting runners...
+18:32:17 INFO Getting all openstack servers managed by the charm
+18:32:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:19 INFO Authentication (publickey) successful!
+18:32:19 INFO Found following runners: {'test-yqmfgi17-0-n-cde73bfbdfb8', 'test-yqmfgi17-0-n-5633755268ee'}
+18:32:19 WARNING Found runner instance on cloud but not registered on GitHub: {'test-yqmfgi17-0-n-cde73bfbdfb8'}
+18:32:19 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}
+18:32:19 INFO Getting runners...
+18:32:21 INFO Getting all openstack servers managed by the charm
+18:32:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:24 INFO Authentication (publickey) successful!
+18:32:24 INFO Found following runners: {'test-yqmfgi17-0-n-cde73bfbdfb8', 'test-yqmfgi17-0-n-5633755268ee'}
+18:32:24 WARNING Found runner instance on cloud but not registered on GitHub: {'test-yqmfgi17-0-n-cde73bfbdfb8'}
+18:32:24 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}
+18:32:25 INFO Offline github runners to delete: []:
+18:32:26 INFO Getting all openstack servers managed by the charm
+18:32:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:28 INFO Authentication (publickey) successful!
+18:32:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:28 INFO Authentication (publickey) successful!
+18:32:29 INFO [chan 2] Opened sftp connection (server version 3)
+18:32:29 INFO Running runner removal script for test-yqmfgi17-0-n-cde73bfbdfb8
+18:32:29 INFO Deleting openstack server with test-yqmfgi17-0-n-cde73bfbdfb8
+18:32:32 INFO Cleaning up SSH key files
+18:32:32 INFO Found 0 key files, clean up 0 key files
+18:32:32 INFO Cleaning up openstack keypairs
+18:32:33 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+18:32:33 INFO Getting runners...
+18:32:34 INFO Getting all openstack servers managed by the charm
+18:32:36 INFO Found following runners: {'test-yqmfgi17-0-n-5633755268ee'}
+18:32:36 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yqmfgi17-0-n-5633755268ee'}

@@ -1,0 +1,433 @@
+18:25:18 INFO Adding model github-pr-479f2-lxd:test-charm-fork-path-change-sujm on cloud localhost
+18:25:19 WARNING unexpected facade SSHServer received from the controller
+18:25:21 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:22 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [allocating] waiting: waiting for machine
+18:25:52 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [allocating] waiting: waiting for machine
+18:26:22 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [allocating] waiting: agent initialising
+18:26:52 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [executing] maintenance: Setting up Builder.
+18:27:22 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [executing] maintenance: Setting up Builder.
+18:27:52 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [executing] maintenance: Setting up Builder.
+18:28:23 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [executing] maintenance: Setting up Builder.
+18:28:53 INFO Waiting for model:
+  github-runner-image-builder-kxdmfdvj/0 [executing] maintenance: Setting up Builder.
+18:29:37 INFO Deploying local:jammy/github-runner-0
+18:29:37 INFO Waiting for model:
+  test-kxdmfdvj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kxdmfdvj/0 [idle] blocked: image integration required.
+18:30:07 INFO Waiting for model:
+  test-kxdmfdvj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kxdmfdvj/0 [idle] blocked: image integration required.
+18:30:38 INFO Waiting for model:
+  test-kxdmfdvj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kxdmfdvj/0 [idle] blocked: image integration required.
+18:31:08 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:31:38 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:32:08 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:32:39 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:33:09 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:33:39 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:34:09 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:34:39 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:35:09 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:35:40 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:36:10 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:36:40 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:37:10 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:37:41 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:38:11 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:38:41 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:39:12 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:39:42 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:40:12 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:40:43 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:41:13 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:41:44 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:42:14 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:42:44 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:43:15 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:43:45 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kxdmfdvj/0 [executing] active: Building image.
+18:44:15 INFO Waiting for model:
+  test-kxdmfdvj/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kxdmfdvj/0 [idle] active: 
+18:44:46 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] active: 
+18:44:57 INFO GitHub token rate limit: Rate(reset=2025-03-28 18:58:48+00:00, remaining=4846, limit=5000)
+18:45:09 INFO test_path_config_change
+18:45:09 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] active: 
+18:45:39 INFO Waiting for model:
+  test-kxdmfdvj/0 [executing] maintenance: Reconciling runners
+18:46:10 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] active: 
+18:46:27 INFO Ensure there is a runner (this calls reconcile)
+18:49:25 INFO Waiting for model:
+  test-kxdmfdvj/0 [executing] active: 
+18:49:55 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] active: 
+18:50:01 INFO Reconciling (again)
+18:51:10 INFO Waiting for model:
+  test-kxdmfdvj/0 [executing] active: 
+18:51:40 INFO Waiting for model:
+  test-kxdmfdvj/0 [idle] active: 
+18:51:45 INFO runners: ['test-kxdmfdvj-0-n-7ed7c66d2078']
+18:51:47 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-11b6983f9d17"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-2b03ea4ba6ee"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-32bbd4a26d46"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-35a4cff3ee47"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-47050c61aa04"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-6020e2367ba3"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-8443aeea3aa8"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-8daa0e3f2ad4"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-e05b9d71559b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-341fb551bc01"), SelfHostedActionsRunner(name="test-bhuhusyj-0-n-cd890e9184c9"), SelfHostedActionsRunner(name="test-cggscme3-0-n-b68c68364c68"), SelfHostedActionsRunner(name="test-ch241mol-0-n-2fa578e1401d"), SelfHostedActionsRunner(name="test-ch241mol-0-n-f54332609064"), SelfHostedActionsRunner(name="test-d5mqwa7j-0-n-75cb971445bc"), SelfHostedActionsRunner(name="test-dcwya0az-0-n-ed75528d2c3b"), SelfHostedActionsRunner(name="test-dm7n5ve8-0-n-60f757db29ad"), SelfHostedActionsRunner(name="test-dnhqwzx1-0-n-8610fd43034f"), SelfHostedActionsRunner(name="test-edi1lbvs-0-n-0eaa3c39495b"), SelfHostedActionsRunner(name="test-etdv03vg-0-n-54d213f64e40"), SelfHostedActionsRunner(name="test-fmic41ws-0-n-c09462cf3df8"), SelfHostedActionsRunner(name="test-g13n1z1d-0-n-f49fa2012dad"), SelfHostedActionsRunner(name="test-gw2zqouu-0-n-48e304b63246"), SelfHostedActionsRunner(name="test-h0o3z0o0-0-n-2177695f9c8f"), SelfHostedActionsRunner(name="test-hcqlv4gi-0-n-e88ffb2b9e21"), SelfHostedActionsRunner(name="test-hy0lt2yg-0-n-215b9e80ec10"), SelfHostedActionsRunner(name="test-irqfxd1c-0-n-ad67df24cccb"), SelfHostedActionsRunner(name="test-irqfxd1c-0-n-ad8558313b3a"), SelfHostedActionsRunner(name="test-isa12k87-0-n-b8483e22e6c3"), SelfHostedActionsRunner(name="test-jqcbez96-0-n-eba1bb814bc6"), SelfHostedActionsRunner(name="test-mhkmn5ah-0-n-0f1903395b68"), SelfHostedActionsRunner(name="test-moe5pm4b-0-n-df8df2fe6ec1"), SelfHostedActionsRunner(name="test-nikswvu2-0-n-afa4763b9e3a"), SelfHostedActionsRunner(name="test-nj5mt920-0-n-258727e19e8b"), SelfHostedActionsRunner(name="test-nsvh34b0-0-n-fddd5e78b12e"), SelfHostedActionsRunner(name="test-oayye4t2-0-n-d1b36a4fa133"), SelfHostedActionsRunner(name="test-og9q5han-0-n-c5a3455d6589"), SelfHostedActionsRunner(name="test-ojj6mcv4-0-n-d3381f776332"), SelfHostedActionsRunner(name="test-ok04y3p1-0-n-b81d8941d73d"), SelfHostedActionsRunner(name="test-owbsc3kz-0-n-48560d120db8"), SelfHostedActionsRunner(name="test-pa261lvr-0-n-844fcf3d289d"), SelfHostedActionsRunner(name="test-po55nttr-0-n-e3403097fa86"), SelfHostedActionsRunner(name="test-ppdgdumi-0-n-c29651d77bb9"), SelfHostedActionsRunner(name="test-pyeu0yqq-0-n-c90c847fa0d8"), SelfHostedActionsRunner(name="test-pyl9abay-0-n-09522d6f0e79"), SelfHostedActionsRunner(name="test-q1yl5lsf-0-n-188ba7a36c69"), SelfHostedActionsRunner(name="test-qdj2xfe7-0-n-8cf0cde9563c"), SelfHostedActionsRunner(name="test-r5f50new-0-n-15b42fab8a08"), SelfHostedActionsRunner(name="test-sf9eqzoi-0-n-d2ef8d41a0f0"), SelfHostedActionsRunner(name="test-sfli63ec-0-n-287af7049614"), SelfHostedActionsRunner(name="test-srzha6f8-0-n-ebe6703d7c8c"), SelfHostedActionsRunner(name="test-t96ta33a-0-n-b1d8e79a36dd"), SelfHostedActionsRunner(name="test-tc4ul2v4-0-n-4cdaf74edb9e"), SelfHostedActionsRunner(name="test-tcui5k4s-0-n-1abaae13a1a4"), SelfHostedActionsRunner(name="test-tgonctas-0-n-c4b8206b6966"), SelfHostedActionsRunner(name="test-u531alkq-0-n-54fa4bd9c091"), SelfHostedActionsRunner(name="test-u531alkq-0-n-602a292f02ec"), SelfHostedActionsRunner(name="test-ue7ogd63-0-n-f072b29f59d1"), SelfHostedActionsRunner(name="test-v6vi46sj-0-n-80b48e541101"), SelfHostedActionsRunner(name="test-vxxfp7w0-0-n-5deafd6fbe34"), SelfHostedActionsRunner(name="test-wqpy9oo4-0-n-86dd13e2afa1"), SelfHostedActionsRunner(name="test-xe1mihj6-0-n-da2d7d9053f1"), SelfHostedActionsRunner(name="test-xnmc30hx-0-n-f6bd52492443"), SelfHostedActionsRunner(name="test-ym33t32j-0-n-5a73c46c40be"), SelfHostedActionsRunner(name="test-ymsy957a-0-n-c8c2ffd46784"), SelfHostedActionsRunner(name="test-zt1m1xfx-0-n-7bb38faf275a")]
+18:51:49 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-sujm  github-pr-479f2-lxd  localhost/localhost  3.6.4    unsupported  18:51:49Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kxdmfdvj           active      1  github-runner-image-builder  latest/edge   68  no       
+test-kxdmfdvj                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kxdmfdvj/0*  active    idle   0        10.112.114.99          
+test-kxdmfdvj/0*                         active    idle   1        10.112.114.152         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.112.114.99   juju-2b7712-0  ubuntu@22.04      Running
+1        started  10.112.114.152  juju-2b7712-1  ubuntu@22.04      Running
+
+18:51:49 INFO Juju error logs:
+
+machine-0: 18:26:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kxdmfdvj-0: 18:26:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kxdmfdvj-0: 18:26:54 ERROR unit.github-runner-image-builder-kxdmfdvj/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:30:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kxdmfdvj-0: 18:30:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-kxdmfdvj-0: 18:50:34 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:38 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:38 ERROR unit.test-kxdmfdvj/0.juju-log Failed to get SSH connection while removing test-kxdmfdvj-0-n-7ed7c66d2078
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+unit-test-kxdmfdvj-0: 18:50:40 ERROR unit.test-kxdmfdvj/0.juju-log Invalid pulled metrics. No runner_installed information for test-kxdmfdvj-0-n-7ed7c66d2078.
+unit-test-kxdmfdvj-0: 18:50:40 ERROR unit.test-kxdmfdvj/0.juju-log No metrics returned after deleting test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:46 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:50 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:54 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:58 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:50:58 ERROR unit.test-kxdmfdvj/0.juju-log Failed to get SSH connection while removing test-kxdmfdvj-0-n-7ed7c66d2078
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+unit-test-kxdmfdvj-0: 18:51:00 ERROR unit.test-kxdmfdvj/0.juju-log Invalid pulled metrics. No runner_installed information for test-kxdmfdvj-0-n-7ed7c66d2078.
+unit-test-kxdmfdvj-0: 18:51:00 ERROR unit.test-kxdmfdvj/0.juju-log No metrics returned after deleting test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:05 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:09 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:14 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:18 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:18 ERROR unit.test-kxdmfdvj/0.juju-log Failed to get SSH connection while removing test-kxdmfdvj-0-n-7ed7c66d2078
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+unit-test-kxdmfdvj-0: 18:51:20 ERROR unit.test-kxdmfdvj/0.juju-log Invalid pulled metrics. No runner_installed information for test-kxdmfdvj-0-n-7ed7c66d2078.
+unit-test-kxdmfdvj-0: 18:51:20 ERROR unit.test-kxdmfdvj/0.juju-log No metrics returned after deleting test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:25 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+unit-test-kxdmfdvj-0: 18:51:29 ERROR unit.test-kxdmfdvj/0.juju-log Unable to get SSH connection for instance test-kxdmfdvj-0-n-7ed7c66d2078, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-kxdmfdvj-0-n-7ed7c66d2078, key path: /home/runner-manager/.ssh/test-kxdmfdvj-0-n-7ed7c66d2078.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-kxdmfdvj-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-kxdmfdvj-0-n-7ed7c66d2078
+
+18:51:49 INFO Forgetting model main...

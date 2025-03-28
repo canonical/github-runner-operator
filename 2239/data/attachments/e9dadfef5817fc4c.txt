@@ -1,0 +1,80 @@
+18:50:05 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-dvl3  github-pr-479f2-lxd  localhost/localhost  3.6.4    unsupported  18:50:05Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yqe6q7az           active      1  github-runner-image-builder  latest/edge   68  no       
+test-yqe6q7az                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-yqe6q7az/0*  active    idle   0        10.149.27.161          
+test-yqe6q7az/0*                         active    idle   1        10.149.27.200          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.149.27.161  juju-b38709-0  ubuntu@22.04      Running
+1        started  10.149.27.200  juju-b38709-1  ubuntu@22.04      Running
+
+18:50:05 INFO Juju error logs:
+
+machine-0: 18:26:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yqe6q7az-0: 18:26:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yqe6q7az-0: 18:27:13 ERROR unit.github-runner-image-builder-yqe6q7az/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:30:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yqe6q7az-0: 18:30:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-yqe6q7az-0: 18:48:15 ERROR unit.test-yqe6q7az/0.juju-log Timeout creating openstack server test-yqe6q7az-0-n-b08f122a5931
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 202, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-yqe6q7az-0: 18:48:17 ERROR unit.test-yqe6q7az/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 202, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 176, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 221, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-yqe6q7az-0-n-b08f122a5931
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 319, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 461, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/var/lib/juju/agents/unit-test-yqe6q7az-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 184, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-yqe6q7az-0-n-b08f122a5931 openstack runner
+
+18:50:05 INFO Forgetting model main...

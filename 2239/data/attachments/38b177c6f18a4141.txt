@@ -1,0 +1,106 @@
+18:25:50 INFO Adding model github-pr-479f2-lxd:test-charm-metrics-success-fjtf on cloud localhost
+18:25:50 WARNING unexpected facade SSHServer received from the controller
+18:25:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:53 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [allocating] waiting: waiting for machine
+18:26:23 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [allocating] waiting: waiting for machine
+18:26:53 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [allocating] waiting: agent initialising
+18:27:23 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [executing] maintenance: Setting up Builder.
+18:27:53 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [executing] maintenance: Setting up Builder.
+18:28:24 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [executing] maintenance: Setting up Builder.
+18:28:54 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [executing] maintenance: Setting up Builder.
+18:29:24 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [executing] maintenance: Setting up Builder.
+18:29:54 INFO Waiting for model:
+  github-runner-image-builder-cggscme3/0 [idle] blocked: image integration required.
+18:30:28 INFO Deploying local:jammy/github-runner-0
+18:30:28 INFO Waiting for model:
+  test-cggscme3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cggscme3/0 [idle] blocked: image integration required.
+18:30:58 INFO Waiting for model:
+  test-cggscme3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cggscme3/0 [idle] blocked: image integration required.
+18:31:29 INFO Waiting for model:
+  test-cggscme3/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cggscme3/0 [idle] blocked: image integration required.
+18:31:59 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:32:29 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:32:59 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:33:30 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:34:00 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:34:30 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:35:01 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:35:31 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:36:02 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:36:32 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:37:02 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:37:32 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:38:03 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:38:33 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:39:03 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:39:34 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:40:04 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:40:34 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:41:05 INFO Waiting for model:
+  test-cggscme3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cggscme3/0 [executing] active: Building image.
+18:41:35 INFO Waiting for model:
+  test-cggscme3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cggscme3/0 [idle] active: 
+18:42:05 INFO Waiting for model:
+  test-cggscme3/0 [idle] active:
+18:45:34 INFO Waiting for model:
+  test-cggscme3/0 [executing] active: 
+18:46:05 INFO Waiting for model:
+  test-cggscme3/0 [executing] active: 
+18:47:07 INFO Waiting for model:
+  test-cggscme3/0 [executing] active: 
+18:47:37 INFO Waiting for model:
+  test-cggscme3/0 [idle] active: 
+18:47:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743187533.7060752, "event": "reconciliation", "flavor": "test-cggscme3", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 191.7263994216919}
+{"timestamp": 1743187564.1296659, "event": "reconciliation", "flavor": "test-cggscme3", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 28.100027799606323}
+{"timestamp": 1743187468.0, "event": "runner_installed", "flavor": "test-cggscme3", "duration": 109.0}
+{"timestamp": 1743187625.9015453, "event": "reconciliation", "flavor": "test-cggscme3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 40.39632534980774}
+{"timestamp": 1743187644.0722666, "event": "reconciliation", "flavor": "test-cggscme3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.986197710037231}
