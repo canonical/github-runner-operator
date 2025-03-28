@@ -162,7 +162,7 @@ class OpenstackCloud:
             prefix: Prefix attached to names of resource managed by this instance. Used for
                 identifying which resource belongs to this instance.
             system_user: The system user to own the key files.
-            proxy_command: gateway argument for fabric Connection. Similar to ProxyCommand in
+            proxy_command: The gateway argument for fabric Connection. Similar to ProxyCommand in
                 ssh-config.
         """
         self._credentials = credentials
