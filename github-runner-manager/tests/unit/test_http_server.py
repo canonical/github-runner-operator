@@ -7,11 +7,14 @@ import logging
 from multiprocessing import Process
 from threading import Lock
 from typing import Iterator
+from unittest.mock import MagicMock
 
 import pytest
 from flask.testing import FlaskClient
 
-from src.github_runner_manager.http_server import app
+from src.github_runner_manager.http_server import app, APP_CONFIG_NAME, OPENSTACK_CONFIG_NAME
+from src.github_runner_manager.manager.runner_scaler import RunnerScaler
+from src.github_runner_manager.manager.runner_manager import FlushMode
 
 
 @pytest.fixture(name="lock", scope="function")
@@ -23,71 +26,70 @@ def lock_fixture() -> Lock:
 def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
     app.debug = True
     app.config["TESTING"] = True
+    app.config[APP_CONFIG_NAME] = MagicMock()
+    app.config[OPENSTACK_CONFIG_NAME] = MagicMock()
 
     monkeypatch.setattr("src.github_runner_manager.http_server._lock", lock)
     with app.test_client() as client:
         yield client
 
 
-def test_flush_runner_default_args(client: FlaskClient, lock: Lock, caplog) -> None:
+@pytest.fixture(name="mock_runner_scaler", scope="function")
+def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
+    mock = MagicMock(spec=RunnerScaler)
+    monkeypatch.setattr("src.github_runner_manager.http_server.RunnerScaler.build",lambda x, y: mock)
+    return mock
+
+
+def test_flush_runner_default_args(
+    client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
     """
     arrange: Start up a test flask server with client.
     act: Run flush runner with no args.
     assert: Should flush idle runners.
     """
-    with caplog.at_level(logging.INFO):
-        app.config["lock"] = lock
-        client = app.test_client()
+    app.config["lock"] = lock
+    client = app.test_client()
 
-        response = client.post("/runner/flush")
-
-    log_lines = [record.message for record in caplog.records]
+    response = client.post("/runner/flush")
 
     assert response.status_code == 204
     assert not lock.locked()
-    assert "Flushing idle runners..." in log_lines
-    assert "Flushed the runners" in log_lines
+    mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_IDLE)
 
 
-def test_flush_runner_flush_busy(client: FlaskClient, lock: Lock, caplog) -> None:
+def test_flush_runner_flush_busy(client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
     """
     arrange: Start up a test flask server with client.
     act: Run flush runner with flush-busy = True.
     assert: Should flush both idle and busy runners.
 
     """
-    with caplog.at_level(logging.INFO):
-        app.config["lock"] = lock
-        client = app.test_client()
+    app.config["lock"] = lock
+    client = app.test_client()
 
-        response = client.post("/runner/flush", headers={"flush-runner": "true"})
+    response = client.post("/runner/flush", headers={"flush-runner": "true"})
 
-    log_lines = [record.message for record in caplog.records]
 
     assert response.status_code == 204
     assert not lock.locked()
-    assert "Flushing idle runners..." in log_lines
-    assert "Flushed the runners" in log_lines
+    mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
 
 
-def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, caplog) -> None:
+def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
     """
     arrange: Start up a test flask server with client. The lock is unlocked.
     act: Run flush runner.
     assert: The flush runner should run.
     """
-    with caplog.at_level(logging.INFO):
-        app.config["lock"] = lock
-        client = app.test_client()
+    app.config["lock"] = lock
+    client = app.test_client()
 
-        response = client.post("/runner/flush", headers={"flush-runner": "false"})
-
-    log_lines = [record.message for record in caplog.records]
+    response = client.post("/runner/flush", headers={"flush-runner": "false"})
 
     assert response.status_code == 204
     assert not lock.locked()
-    assert "Flushed the runners" in log_lines
-
+    mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
 
 def test_flush_runner_locked(client: FlaskClient, lock: Lock) -> None:
     """

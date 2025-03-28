@@ -12,6 +12,7 @@ import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import start_http_server
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
 
 logger = logging.getLogger(__name__)
@@ -22,6 +23,11 @@ logger = logging.getLogger(__name__)
     "--config-file",
     type=click.File(mode="r", encoding="utf-8"),
     help="The file path containing the configurations.",
+)
+@click.option(
+    "--openstack-config",
+    type=click.File(mode="r", encoding="utf-8"),
+    help="The file path containing the OpenStack configurations.",
 )
 @click.option(
     "--host",
@@ -51,12 +57,18 @@ logger = logging.getLogger(__name__)
 )
 # The entry point for the CLI will be tested with integration test.
 def main(
-    config_file: TextIO, host: str, port: int, debug: bool, debug_disable_reconcile: bool
+    config_file: TextIO,
+    openstack_config: TextIO,
+    host: str,
+    port: int,
+    debug: bool,
+    debug_disable_reconcile: bool,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
         config_file: The configuration file.
+        openstack_config: The OpenStack configuration file.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
@@ -67,13 +79,16 @@ def main(
 
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
+    openstack_config = OpenStackConfiguration.from_yaml_file()
 
     threads = []
     if not debug_disable_reconcile:
-        service = Thread(target=partial(start_reconcile_service, config, lock))
+        service = Thread(target=partial(start_reconcile_service, config, openstack_config, lock))
         service.start()
         threads.append(service)
-    http_server = Thread(target=partial(start_http_server, config, lock, host, port, debug))
+    http_server = Thread(
+        target=partial(start_http_server, config, openstack_config, lock, host, port, debug)
+    )
     http_server.start()
     threads.append(http_server)
 
