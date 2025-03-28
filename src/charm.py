@@ -24,9 +24,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
-from github_runner_manager.manager.runner_manager import (
-    FlushMode,
-)
+from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from ops.charm import (
     ActionEvent,

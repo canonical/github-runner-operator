@@ -41,11 +41,11 @@ def test_thread_manager_crash():
     error_message = f"error: {secrets.token_hex(12)}"
 
     # No need for docstring in a test function.
-    def raise_custom_error():  # noqa: DC050,DCO010
+    def _raise_custom_error():
         raise CustomError(error_message)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(target=raise_custom_error)
+    thread_manager.add_thread(target=_raise_custom_error)
 
     thread_manager.start()
 
