@@ -8,8 +8,8 @@ from threading import Lock
 from time import sleep
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
 logger = logging.getLogger(__name__)
 

@@ -12,9 +12,9 @@ from unittest.mock import MagicMock
 import pytest
 from flask.testing import FlaskClient
 
-from src.github_runner_manager.http_server import app, APP_CONFIG_NAME, OPENSTACK_CONFIG_NAME
-from src.github_runner_manager.manager.runner_scaler import RunnerScaler
+from src.github_runner_manager.http_server import APP_CONFIG_NAME, OPENSTACK_CONFIG_NAME, app
 from src.github_runner_manager.manager.runner_manager import FlushMode
+from src.github_runner_manager.manager.runner_scaler import RunnerScaler
 
 
 @pytest.fixture(name="lock", scope="function")
@@ -37,12 +37,15 @@ def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
 @pytest.fixture(name="mock_runner_scaler", scope="function")
 def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
     mock = MagicMock(spec=RunnerScaler)
-    monkeypatch.setattr("src.github_runner_manager.http_server.RunnerScaler.build",lambda x, y: mock)
+    monkeypatch.setattr(
+        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, y: mock
+    )
     return mock
 
 
 def test_flush_runner_default_args(
-    client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
+    client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock
+) -> None:
     """
     arrange: Start up a test flask server with client.
     act: Run flush runner with no args.
@@ -58,7 +61,9 @@ def test_flush_runner_default_args(
     mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_IDLE)
 
 
-def test_flush_runner_flush_busy(client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
+def test_flush_runner_flush_busy(
+    client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock
+) -> None:
     """
     arrange: Start up a test flask server with client.
     act: Run flush runner with flush-busy = True.
@@ -70,13 +75,14 @@ def test_flush_runner_flush_busy(client: FlaskClient, lock: Lock, mock_runner_sc
 
     response = client.post("/runner/flush", headers={"flush-runner": "true"})
 
-
     assert response.status_code == 204
     assert not lock.locked()
     mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
 
 
-def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
+def test_flush_runner_unlocked(
+    client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock
+) -> None:
     """
     arrange: Start up a test flask server with client. The lock is unlocked.
     act: Run flush runner.
@@ -90,6 +96,7 @@ def test_flush_runner_unlocked(client: FlaskClient, lock: Lock, mock_runner_scal
     assert response.status_code == 204
     assert not lock.locked()
     mock_runner_scaler.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
+
 
 def test_flush_runner_locked(client: FlaskClient, lock: Lock) -> None:
     """
