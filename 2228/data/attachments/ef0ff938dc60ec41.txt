@@ -1,0 +1,101 @@
+07:38:45 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:39:15 INFO Waiting for model:
+  test-cy506ass/0 [idle] active:
+07:39:50 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:40:20 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:40:29 INFO Wait for condition not met, sleeping 10
+07:40:41 INFO Wait for condition not met, sleeping 10
+07:40:52 INFO Wait for condition not met, sleeping 10
+07:41:02 INFO Wait for condition not met, sleeping 10
+07:41:13 INFO Wait for condition not met, sleeping 10
+07:41:23 INFO Wait for condition not met, sleeping 10
+07:41:34 INFO Wait for condition not met, sleeping 10
+07:41:44 INFO Wait for condition not met, sleeping 10
+07:41:54 INFO Wait for condition not met, sleeping 10
+07:42:05 INFO Wait for condition not met, sleeping 10
+07:43:09 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:43:39 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:43:48 INFO Wait for condition not met, sleeping 60
+07:44:48 INFO Wait for condition not met, sleeping 60
+07:45:49 INFO Wait for condition not met, sleeping 60
+07:46:49 INFO Wait for condition not met, sleeping 60
+07:47:50 INFO Wait for condition not met, sleeping 60
+07:48:50 INFO Wait for condition not met, sleeping 60
+07:49:50 INFO Wait for condition not met, sleeping 60
+07:50:51 INFO Wait for condition not met, sleeping 60
+07:51:51 INFO Wait for condition not met, sleeping 60
+07:52:52 INFO Wait for condition not met, sleeping 60
+07:53:52 INFO Wait for condition not met, sleeping 60
+07:54:53 INFO Wait for condition not met, sleeping 60
+07:55:55 INFO Wait for condition not met, sleeping 10
+07:56:29 INFO Waiting for model:
+  test-cy506ass/0 [idle] active:
+07:57:07 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:57:24 INFO Model status:
+
+Model               Controller  Cloud/Region         Version  SLA          Timestamp
+test-reactive-3g08  lxd         localhost/localhost  3.6.4    unsupported  07:57:24Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cy506ass           active      1  github-runner-image-builder  latest/edge   61  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-cy506ass                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-cy506ass/0*  active    idle   0        10.52.18.143               
+mongodb/0*                               active    idle   2        10.52.18.159    27017/tcp  Primary
+test-cy506ass/0*                         active    idle   1        10.52.18.7                 
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.52.18.143  juju-8588c3-0  ubuntu@22.04      Running
+1        started  10.52.18.7    juju-8588c3-1  ubuntu@22.04      Running
+2        started  10.52.18.159  juju-8588c3-2  ubuntu@22.04      Running
+
+07:57:25 INFO Juju error logs:
+
+unit-test-cy506ass-0: 07:31:57 ERROR unit.test-cy506ass/0.juju-log SSH connection failure with test-cy506ass-0-r-5589cefde415 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 476, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 292, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-cy506ass-0-r-5589cefde415
+unit-test-cy506ass-0: 07:32:02 ERROR unit.test-cy506ass/0.juju-log SSH connection failure with test-cy506ass-0-r-5589cefde415 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 476, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 292, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-cy506ass-0-r-5589cefde415
+unit-test-cy506ass-0: 07:32:12 ERROR unit.test-cy506ass/0.juju-log SSH connection failure with test-cy506ass-0-r-5589cefde415 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 476, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 292, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-cy506ass-0-r-5589cefde415
+unit-test-cy506ass-0: 07:32:12 ERROR unit.test-cy506ass/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-cy506ass-0-r-5589cefde415
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 476, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cy506ass-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 292, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-cy506ass-0-r-5589cefde415
+
+07:57:25 INFO Forgetting model main...

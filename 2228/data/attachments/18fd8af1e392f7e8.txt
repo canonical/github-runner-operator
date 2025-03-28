@@ -1,0 +1,34 @@
+07:30:36 INFO Waiting for model:
+  test-kubejkld/0 [executing] active: 
+07:31:06 INFO Waiting for model:
+  test-kubejkld/0 [executing] maintenance: Reconciling runners
+07:32:01 INFO Waiting for model:
+  test-kubejkld/0 [executing] maintenance: Reconciling runners
+07:32:32 INFO Model status:
+
+Model                      Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-d2z5  lxd         localhost/localhost  3.6.4    unsupported  07:32:32Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kubejkld           active      1  github-runner-image-builder  latest/edge   61  no       
+test-kubejkld                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kubejkld/0*  active    idle   0        10.157.242.47          
+test-kubejkld/0*                         active    idle   1        10.157.242.254         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.157.242.47   juju-069a3e-0  ubuntu@22.04      Running
+1        started  10.157.242.254  juju-069a3e-1  ubuntu@22.04      Running
+
+07:32:32 INFO Juju error logs:
+
+machine-0: 07:14:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:14:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kubejkld-0: 07:14:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kubejkld-0: 07:14:38 ERROR unit.github-runner-image-builder-kubejkld/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 07:17:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:17:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kubejkld-0: 07:17:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:32:32 INFO Forgetting model main...

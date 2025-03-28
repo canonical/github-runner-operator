@@ -1,0 +1,62 @@
+07:42:48 INFO Waiting for model:
+  test-eqgyp193/0 [executing] active: 
+07:43:18 INFO Waiting for model:
+  test-eqgyp193/0 [idle] active:
+07:44:40 INFO Waiting for model:
+  test-eqgyp193/0 [executing] active: 
+07:45:10 INFO Waiting for model:
+  test-eqgyp193/0 [idle] active: 
+07:45:20 INFO [TEST SETUP] Exposing port 8080 on test-eqgyp193-0-n-f2ac031ab741
+07:45:20 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8a:cf:2c'}]])
+07:45:24 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-eqgyp193-0-n-f2ac031ab741
+07:45:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8a:cf:2c'}]])
+07:45:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eqgyp193-0-n-f2ac031ab741.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 nc -z localhost 8080'
+07:45:27 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-eqgyp193-0-n-f2ac031ab741
+07:45:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8a:cf:2c'}]])
+07:45:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eqgyp193-0-n-f2ac031ab741.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 curl http://localhost:8080'
+07:45:30 INFO Wait for condition not met, sleeping 10
+07:46:17 INFO Waiting for model:
+  test-eqgyp193/0 [executing] active: 
+07:46:47 INFO Waiting for model:
+  test-eqgyp193/0 [idle] active: 
+07:46:48 INFO Model status:
+
+Model                   Controller  Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-b1jg  lxd         localhost/localhost  3.6.4    unsupported  07:46:48Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-eqgyp193           active      1  github-runner-image-builder  latest/edge   61  no       
+test-eqgyp193                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-eqgyp193/0*  active    idle   0        10.42.43.196              
+test-eqgyp193/0*                         active    idle   1        10.42.43.56     8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.42.43.196  juju-a2c599-0  ubuntu@22.04      Running
+1        started  10.42.43.56   juju-a2c599-1  ubuntu@22.04      Running
+
+07:46:49 INFO Juju error logs:
+
+unit-test-eqgyp193-0: 07:46:09 ERROR unit.test-eqgyp193/0.juju-log Unable to get SSH connection for instance test-eqgyp193-0-n-f2ac031ab741, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 288, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-eqgyp193-0-n-f2ac031ab741, key path: /home/runner-manager/.ssh/test-eqgyp193-0-n-f2ac031ab741.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-eqgyp193-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-eqgyp193-0-n-f2ac031ab741
+
+07:46:49 INFO Forgetting model main...

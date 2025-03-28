@@ -1,0 +1,90 @@
+07:03:25 INFO Adding model lxd:test-charm-metrics-success-coil on cloud localhost
+07:03:25 WARNING unexpected facade SSHServer received from the controller
+07:03:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:03:27 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [allocating] waiting: waiting for machine
+07:03:57 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [allocating] waiting: waiting for machine
+07:04:28 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [executing] maintenance: Setting up Builder.
+07:04:58 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [executing] maintenance: Setting up Builder.
+07:05:28 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [executing] maintenance: Setting up Builder.
+07:05:58 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [executing] maintenance: Setting up Builder.
+07:06:28 INFO Waiting for model:
+  github-runner-image-builder-rwyaz3fv/0 [executing] maintenance: Setting up Builder.
+07:07:02 INFO Deploying local:jammy/github-runner-0
+07:07:03 INFO Waiting for model:
+  test-rwyaz3fv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rwyaz3fv/0 [idle] blocked: image integration required.
+07:07:33 INFO Waiting for model:
+  test-rwyaz3fv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rwyaz3fv/0 [idle] blocked: image integration required.
+07:08:03 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:08:33 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:09:03 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:09:34 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:10:04 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:10:34 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:11:05 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:11:35 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:12:05 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:12:36 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:13:06 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:13:36 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:14:06 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:14:36 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:15:06 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:15:37 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:16:07 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rwyaz3fv/0 [executing] active: Building image.
+07:16:38 INFO Waiting for model:
+  test-rwyaz3fv/0 [executing] maintenance: Reconciling runners
+07:19:31 INFO Waiting for model:
+  test-rwyaz3fv/0 [executing] maintenance: Reconciling runners
+07:20:01 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] active: 
+07:21:03 INFO Waiting for model:
+  test-rwyaz3fv/0 [executing] active: 
+07:21:33 INFO Waiting for model:
+  test-rwyaz3fv/0 [idle] active: 
+07:21:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743146370.0648603, "event": "reconciliation", "flavor": "test-rwyaz3fv", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 142.60151076316833}
+{"timestamp": 1743146400.0311532, "event": "reconciliation", "flavor": "test-rwyaz3fv", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 28.96102285385132}
+{"timestamp": 1743146326.0, "event": "runner_installed", "flavor": "test-rwyaz3fv", "duration": 86.0}
+{"timestamp": 1743146462.6452038, "event": "reconciliation", "flavor": "test-rwyaz3fv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 43.82799482345581}
+{"timestamp": 1743146480.7964907, "event": "reconciliation", "flavor": "test-rwyaz3fv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.12494421005249}

@@ -1,0 +1,85 @@
+07:13:10 INFO Adding model lxd:test-charm-no-runner-d2z5 on cloud localhost
+07:13:10 WARNING unexpected facade SSHServer received from the controller
+07:13:12 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:13:12 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [allocating] waiting: waiting for machine
+07:13:43 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [allocating] waiting: waiting for machine
+07:14:13 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [executing] maintenance: Setting up Builder.
+07:14:43 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [executing] maintenance: Setting up Builder.
+07:15:14 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [executing] maintenance: Setting up Builder.
+07:15:44 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [executing] maintenance: Setting up Builder.
+07:16:15 INFO Waiting for model:
+  github-runner-image-builder-kubejkld/0 [idle] blocked: image integration required.
+07:16:45 INFO Deploying local:jammy/github-runner-0
+07:16:45 INFO Waiting for model:
+  test-kubejkld/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kubejkld/0 [idle] blocked: image integration required.
+07:17:15 INFO Waiting for model:
+  test-kubejkld/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kubejkld/0 [idle] blocked: image integration required.
+07:17:45 INFO Waiting for model:
+  test-kubejkld/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kubejkld/0 [executing] blocked: image integration required.
+07:18:16 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:18:46 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:19:17 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:19:47 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:20:17 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:20:48 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:21:18 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:21:48 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:22:19 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:22:49 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:23:19 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:23:50 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:24:20 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:24:50 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:25:21 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:25:51 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:26:22 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:26:52 INFO Waiting for model:
+  test-kubejkld/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kubejkld/0 [executing] active: Building image.
+07:27:23 INFO Waiting for model:
+  test-kubejkld/0 [executing] maintenance: Reconciling runners
+07:27:43 INFO Waiting for model:
+  test-kubejkld/0 [idle] active:

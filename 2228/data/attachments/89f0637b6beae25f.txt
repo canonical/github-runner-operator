@@ -1,0 +1,95 @@
+07:12:46 INFO Adding model lxd:test-charm-runner-b1jg on cloud localhost
+07:12:46 WARNING unexpected facade SSHServer received from the controller
+07:12:48 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:12:48 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [allocating] waiting: waiting for machine
+07:13:19 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [allocating] waiting: waiting for machine
+07:13:49 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [executing] maintenance: Setting up Builder.
+07:14:20 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [executing] maintenance: Setting up Builder.
+07:14:50 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [executing] maintenance: Setting up Builder.
+07:15:21 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [executing] maintenance: Setting up Builder.
+07:15:51 INFO Waiting for model:
+  github-runner-image-builder-eqgyp193/0 [idle] blocked: image integration required.
+07:16:18 INFO Deploying local:jammy/github-runner-0
+07:16:18 INFO Waiting for model:
+  test-eqgyp193/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eqgyp193/0 [idle] blocked: image integration required.
+07:16:49 INFO Waiting for model:
+  test-eqgyp193/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eqgyp193/0 [idle] blocked: image integration required.
+07:17:19 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:17:49 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:18:19 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:18:50 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:19:20 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:19:50 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:20:21 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:20:51 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:21:22 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:21:52 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:22:22 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:22:53 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:23:23 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:23:54 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:24:24 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:24:54 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:25:25 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:25:55 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:26:26 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:26:56 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:27:27 INFO Waiting for model:
+  test-eqgyp193/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eqgyp193/0 [executing] active: Building image.
+07:27:57 INFO Waiting for model:
+  test-eqgyp193/0 [executing] maintenance: Reconciling runners
+07:30:51 INFO Waiting for model:
+  test-eqgyp193/0 [executing] active: 
+07:31:21 INFO Waiting for model:
+  test-eqgyp193/0 [idle] active:
+07:32:22 INFO Waiting for model:
+  test-eqgyp193/0 [executing] active:

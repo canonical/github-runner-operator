@@ -1,0 +1,130 @@
+07:13:05 INFO Adding model lxd:test-reactive-3g08 on cloud localhost
+07:13:06 WARNING unexpected facade SSHServer received from the controller
+07:13:06 INFO GitHub token rate limit: Rate(reset=2025-03-28 08:00:10+00:00, remaining=4881, limit=5000)
+07:13:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-61
+07:13:11 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [allocating] waiting: waiting for machine
+07:13:42 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [allocating] waiting: waiting for machine
+07:14:12 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [executing] maintenance: Setting up Builder.
+07:14:42 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [executing] maintenance: Setting up Builder.
+07:15:13 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [executing] maintenance: Setting up Builder.
+07:15:43 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [executing] maintenance: Setting up Builder.
+07:16:13 INFO Waiting for model:
+  github-runner-image-builder-cy506ass/0 [executing] active: Waiting for first image.
+07:16:49 INFO Deploying local:jammy/github-runner-0
+07:16:50 INFO Waiting for model:
+  test-cy506ass/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cy506ass/0 [idle] blocked: image integration required.
+07:17:20 INFO Waiting for model:
+  test-cy506ass/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cy506ass/0 [idle] blocked: image integration required.
+07:17:50 INFO Waiting for model:
+  test-cy506ass/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-cy506ass/0 [idle] blocked: image integration required.
+07:18:20 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:18:50 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:19:21 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:19:51 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:20:22 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:20:52 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:21:22 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:21:52 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:22:23 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:22:53 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:23:24 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:23:54 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:24:24 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:24:54 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:25:24 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:25:55 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:26:25 INFO Waiting for model:
+  test-cy506ass/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cy506ass/0 [executing] active: Building image.
+07:26:55 INFO Waiting for model:
+  test-cy506ass/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cy506ass/0 [idle] active: 
+07:27:25 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:27:34 INFO Deploying ch:amd64/jammy/mongodb-212
+07:27:34 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:28:05 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:28:35 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+07:29:05 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+07:29:22 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:29:23 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:29:53 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:30:44 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:31:14 INFO Waiting for model:
+  test-cy506ass/0 [idle] active:
+07:31:27 INFO Wait for condition not met, sleeping 10
+07:32:25 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:32:40 INFO Wait for condition not met, sleeping 60
+07:34:13 INFO Waiting for model:
+  test-cy506ass/0 [idle] active: 
+07:34:29 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743147144.3640678, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 45.2637825012207}
+{"timestamp": 1743147191.0, "event": "runner_installed", "flavor": "test-cy506ass", "duration": 91.0}
+{"timestamp": 1743147195.0, "event": "runner_start", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 108.0}
+{"timestamp": 1743147198.0, "event": "runner_stop", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743147252.8009531, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.57938814163208}
+
+07:34:30 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743147144.3640678, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 45.2637825012207}
+{"timestamp": 1743147191.0, "event": "runner_installed", "flavor": "test-cy506ass", "duration": 91.0}
+{"timestamp": 1743147195.0, "event": "runner_start", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 108.0}
+{"timestamp": 1743147198.0, "event": "runner_stop", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743147252.8009531, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.57938814163208}
+
+07:34:31 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743147144.3640678, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 45.2637825012207}
+{"timestamp": 1743147191.0, "event": "runner_installed", "flavor": "test-cy506ass", "duration": 91.0}
+{"timestamp": 1743147195.0, "event": "runner_start", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 108.0}
+{"timestamp": 1743147198.0, "event": "runner_stop", "flavor": "test-cy506ass", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743147252.8009531, "event": "reconciliation", "flavor": "test-cy506ass", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.57938814163208}
+07:35:00 INFO Waiting for model:
+  test-cy506ass/0 [executing] active: 
+07:35:30 INFO Waiting for model:
+  test-cy506ass/0 [idle] active:
