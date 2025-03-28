@@ -1035,9 +1035,20 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
     "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy,"
     "expected_proxy, expected_runner_proxy",
     [
-        ("", "", "", "", False, ProxyConfig(), ProxyConfig()),
-        ("", "", "localhost", "", False, ProxyConfig(), ProxyConfig()),
-        (
+        pytest.param(
+            "", "", "", "", False, ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
+        ),
+        pytest.param(
+            "",
+            "",
+            "localhost",
+            "",
+            False,
+            ProxyConfig(),
+            ProxyConfig(),
+            id="No proxy with only no_proxy. No aproxy",
+        ),
+        pytest.param(
             "http://example.com:3128",
             "",
             "",
@@ -1045,8 +1056,9 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             False,
             ProxyConfig(http="http://example.com:3128"),
             ProxyConfig(http="http://example.com:3128"),
+            id="Only proxy from juju. No aproxy.",
         ),
-        (
+        pytest.param(
             "http://manager.example.com:3128",
             "",
             "",
@@ -1054,8 +1066,9 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             False,
             ProxyConfig(http="http://manager.example.com:3128"),
             ProxyConfig(http="http://runner.example.com:3128"),
+            id="Both juju and runner proxy. No aproxy.",
         ),
-        (
+        pytest.param(
             "",
             "",
             "",
@@ -1063,8 +1076,9 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             True,
             ProxyConfig(),
             ProxyConfig(http="http://runner.example.com:3128"),
+            id="Only proxy in runner. aproxy configured.",
         ),
-        (
+        pytest.param(
             "http://manager.example.com:3128",
             "http://securemanager.example.com:3128",
             "127.0.0.1",
@@ -1078,6 +1092,7 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             ProxyConfig(
                 http="http://runner.example.com:3128",
             ),
+            id="Proxy in juju and the runner. aproxy configured.",
         ),
     ],
 )
