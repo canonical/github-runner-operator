@@ -94,6 +94,8 @@ def start_http_server(
     """Start the HTTP server for interacting with the github-runner-manager service.
 
     Args:
+        app_config: The application configuration.
+        openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on for the HTTP server.

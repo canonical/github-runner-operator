@@ -20,6 +20,8 @@ def start_reconcile_service(
     """Start the reconcile server.
 
     Args:
+        app_config: The application configuration.
+        openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
     """
     _ = RunnerScaler.build(app_config, openstack_config)

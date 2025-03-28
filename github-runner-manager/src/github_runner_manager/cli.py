@@ -58,7 +58,7 @@ logger = logging.getLogger(__name__)
 # The entry point for the CLI will be tested with integration test.
 def main(
     config_file: TextIO,
-    openstack_config: TextIO,
+    openstack_config_file: TextIO,
     host: str,
     port: int,
     debug: bool,
@@ -68,7 +68,7 @@ def main(
 
     Args:
         config_file: The configuration file.
-        openstack_config: The OpenStack configuration file.
+        openstack_config_file: The OpenStack configuration file.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
@@ -79,7 +79,7 @@ def main(
 
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
-    openstack_config = OpenStackConfiguration.from_yaml_file()
+    openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
 
     threads = []
     if not debug_disable_reconcile:

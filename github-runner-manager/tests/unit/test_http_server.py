@@ -3,7 +3,6 @@
 
 """Test for HTTP server."""
 
-import logging
 from multiprocessing import Process
 from threading import Lock
 from typing import Iterator
@@ -12,8 +11,8 @@ from unittest.mock import MagicMock
 import pytest
 from flask.testing import FlaskClient
 
+from github_runner_manager.manager.runner_manager import FlushMode
 from src.github_runner_manager.http_server import APP_CONFIG_NAME, OPENSTACK_CONFIG_NAME, app
-from src.github_runner_manager.manager.runner_manager import FlushMode
 from src.github_runner_manager.manager.runner_scaler import RunnerScaler
 
 
