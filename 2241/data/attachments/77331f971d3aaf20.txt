@@ -1,0 +1,181 @@
+18:57:03 INFO Waiting for model:
+  test-ctgolte2/0 [executing] active: 
+18:57:33 INFO Waiting for model:
+  test-ctgolte2/0 [idle] active:
+18:58:40 INFO Waiting for model:
+  test-ctgolte2/0 [executing] maintenance: Reconciling runners
+18:59:10 INFO Waiting for model:
+  test-ctgolte2/0 [idle] active: 
+18:59:16 INFO [TEST SETUP] Exposing port 8080 on test-ctgolte2-0-n-c33444781ff1
+18:59:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.158', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2d:5a:b5'}]])
+18:59:21 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ctgolte2-0-n-c33444781ff1
+18:59:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.158', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2d:5a:b5'}]])
+18:59:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ctgolte2-0-n-c33444781ff1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.158 nc -z localhost 8080'
+18:59:23 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ctgolte2-0-n-c33444781ff1
+18:59:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.158', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2d:5a:b5'}]])
+18:59:24 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ctgolte2-0-n-c33444781ff1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.158 curl http://localhost:8080'
+18:59:27 INFO Wait for condition not met, sleeping 10
+19:00:02 INFO Waiting for model:
+  test-ctgolte2/0 [executing] maintenance: Reconciling runners
+19:00:30 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-wh38  github-pr-479f2-lxd  localhost/localhost  3.6.4    unsupported  19:00:30Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ctgolte2           active      1  github-runner-image-builder  latest/edge   68  no       
+test-ctgolte2                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ctgolte2/0*  active    idle   0        10.99.212.69              
+test-ctgolte2/0*                         active    idle   1        10.99.212.130   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.99.212.69   juju-3b3b12-0  ubuntu@22.04      Running
+1        started  10.99.212.130  juju-3b3b12-1  ubuntu@22.04      Running
+
+19:00:31 INFO Juju error logs:
+
+unit-test-ctgolte2-0: 18:54:33 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:38 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:42 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:42 ERROR unit.test-ctgolte2/0.juju-log Failed to get SSH connection while removing test-ctgolte2-0-n-99c566104c76
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+unit-test-ctgolte2-0: 18:54:44 ERROR unit.test-ctgolte2/0.juju-log Invalid pulled metrics. No runner_installed information for test-ctgolte2-0-n-99c566104c76.
+unit-test-ctgolte2-0: 18:54:44 ERROR unit.test-ctgolte2/0.juju-log No metrics returned after deleting test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:49 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:53 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+unit-test-ctgolte2-0: 18:54:55 ERROR unit.test-ctgolte2/0.juju-log Failed to get SSH connection while removing test-ctgolte2-0-n-99c566104c76
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+unit-test-ctgolte2-0: 18:54:57 ERROR unit.test-ctgolte2/0.juju-log Invalid pulled metrics. No runner_installed information for test-ctgolte2-0-n-99c566104c76.
+unit-test-ctgolte2-0: 18:55:01 ERROR unit.test-ctgolte2/0.juju-log Unable to get SSH connection for instance test-ctgolte2-0-n-99c566104c76, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ctgolte2-0-n-99c566104c76, key path: /home/runner-manager/.ssh/test-ctgolte2-0-n-99c566104c76.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ctgolte2-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ctgolte2-0-n-99c566104c76
+
+19:00:31 INFO Forgetting model main...

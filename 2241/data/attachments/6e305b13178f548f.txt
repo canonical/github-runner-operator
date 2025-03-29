@@ -1,0 +1,90 @@
+18:23:09 INFO Adding model github-pr-479f2-lxd:test-charm-metrics-success-aavo on cloud localhost
+18:23:09 WARNING unexpected facade SSHServer received from the controller
+18:23:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:23:12 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [allocating] waiting: waiting for machine
+18:23:42 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [allocating] waiting: waiting for machine
+18:24:12 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:24:42 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:25:13 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:25:43 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:26:13 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:26:43 INFO Waiting for model:
+  github-runner-image-builder-zf4l4x0l/0 [executing] maintenance: Setting up Builder.
+18:27:17 INFO Deploying local:jammy/github-runner-0
+18:27:17 INFO Waiting for model:
+  test-zf4l4x0l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zf4l4x0l/0 [idle] blocked: image integration required.
+18:27:47 INFO Waiting for model:
+  test-zf4l4x0l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zf4l4x0l/0 [idle] blocked: image integration required.
+18:28:17 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:28:48 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:29:18 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:29:49 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:30:19 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:30:50 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:31:20 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:32:21 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:32:51 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:33:22 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:33:52 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:34:22 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:34:53 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:35:23 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:35:53 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:36:24 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zf4l4x0l/0 [executing] active: Building image.
+18:36:54 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] active:
+18:40:04 INFO Waiting for model:
+  test-zf4l4x0l/0 [executing] active: 
+18:40:34 INFO Waiting for model:
+  test-zf4l4x0l/0 [idle] active: 
+18:41:12 INFO Waiting for model:
+  test-zf4l4x0l/0 [executing] active: 
+18:41:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743273603.154276, "event": "reconciliation", "flavor": "test-zf4l4x0l", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 171.15773916244507}
+{"timestamp": 1743273623.759324, "event": "reconciliation", "flavor": "test-zf4l4x0l", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 19.340580940246582}
+{"timestamp": 1743273535.0, "event": "runner_installed", "flavor": "test-zf4l4x0l", "duration": 90.0}
+{"timestamp": 1743273672.0070138, "event": "reconciliation", "flavor": "test-zf4l4x0l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 28.72519850730896}
+{"timestamp": 1743273684.6691058, "event": "reconciliation", "flavor": "test-zf4l4x0l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.328432559967041}

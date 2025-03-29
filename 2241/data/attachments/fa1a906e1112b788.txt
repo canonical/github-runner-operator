@@ -1,0 +1,134 @@
+18:23:25 INFO Adding model github-pr-479f2-lxd:test-charm-metrics-failure-t818 on cloud localhost
+18:23:26 WARNING unexpected facade SSHServer received from the controller
+18:23:26 INFO GitHub token rate limit: Rate(reset=2025-03-29 19:23:06+00:00, remaining=4993, limit=5000)
+18:23:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:23:42 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [allocating] waiting: waiting for machine
+18:24:12 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [allocating] waiting: waiting for machine
+18:24:42 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [allocating] waiting: agent initialising
+18:25:12 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [executing] maintenance: Setting up Builder.
+18:25:43 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [executing] maintenance: Setting up Builder.
+18:26:13 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [executing] maintenance: Setting up Builder.
+18:26:43 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [executing] maintenance: Setting up Builder.
+18:27:14 INFO Waiting for model:
+  github-runner-image-builder-urzsrmos/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Deploying local:jammy/github-runner-0
+18:27:55 INFO Waiting for model:
+  test-urzsrmos/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-urzsrmos/0 [idle] blocked: image integration required.
+18:28:25 INFO Waiting for model:
+  test-urzsrmos/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-urzsrmos/0 [idle] blocked: image integration required.
+18:28:56 INFO Waiting for model:
+  test-urzsrmos/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-urzsrmos/0 [idle] blocked: image integration required.
+18:29:26 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:29:56 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:30:27 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:30:57 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:31:28 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:31:58 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:32:29 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:32:59 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:33:30 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:34:00 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:34:30 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:35:01 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:35:31 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:36:02 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:36:32 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:37:02 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:37:32 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:38:02 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:38:33 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:39:03 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:39:33 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:40:03 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:40:33 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:41:03 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:41:34 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:42:04 INFO Waiting for model:
+  test-urzsrmos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-urzsrmos/0 [executing] active: Building image.
+18:42:34 INFO Waiting for model:
+  test-urzsrmos/0 [executing] maintenance: Reconciling runners
+18:43:21 INFO Waiting for model:
+  test-urzsrmos/0 [executing] maintenance: Reconciling runners
+18:43:51 INFO Waiting for model:
+  test-urzsrmos/0 [idle] active:
+18:48:08 INFO Waiting for model:
+  test-urzsrmos/0 [executing] active: 
+18:48:38 INFO Waiting for model:
+  test-urzsrmos/0 [idle] active: 
+18:48:46 INFO [TEST SETUP] Exposing port 8080 on test-urzsrmos-0-n-7e34892d159a
+18:48:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.72', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:28:e1'}]])
+18:48:49 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-urzsrmos-0-n-7e34892d159a
+18:48:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.72', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:28:e1'}]])
+18:48:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-urzsrmos-0-n-7e34892d159a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.72 nc -z localhost 8080'
+18:48:52 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-urzsrmos-0-n-7e34892d159a
+18:48:52 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.72', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:28:e1'}]])
+18:48:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-urzsrmos-0-n-7e34892d159a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.72 curl http://localhost:8080'
+18:48:57 INFO Wait for condition not met, sleeping 10
+18:49:33 INFO Waiting for model:
+  test-urzsrmos/0 [executing] active: 
+18:50:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743274027.0, "event": "runner_installed", "flavor": "test-urzsrmos", "duration": 80.0}
+{"timestamp": 1743274140.0, "event": "runner_start", "flavor": "test-urzsrmos", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 113.0, "queue_duration": 1.0}
+{"timestamp": 1743274140.0, "event": "runner_stop", "flavor": "test-urzsrmos", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1743274172.9317532, "event": "reconciliation", "flavor": "test-urzsrmos", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.18136501312256}
+{"timestamp": 1743274185.5030131, "event": "reconciliation", "flavor": "test-urzsrmos", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.361829996109009}
