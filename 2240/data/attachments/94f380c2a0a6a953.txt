@@ -1,0 +1,102 @@
+06:23:30 INFO Adding model github-pr-479f2-lxd:test-charm-runner-qd2b on cloud localhost
+06:23:30 WARNING unexpected facade SSHServer received from the controller
+06:23:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:23:33 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [allocating] waiting: waiting for machine
+06:24:03 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [allocating] waiting: waiting for machine
+06:24:34 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [executing] maintenance: Setting up Builder.
+06:25:04 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [executing] maintenance: Setting up Builder.
+06:25:35 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [executing] maintenance: Setting up Builder.
+06:26:05 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [executing] maintenance: Setting up Builder.
+06:26:35 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [executing] maintenance: Setting up Builder.
+06:27:06 INFO Waiting for model:
+  github-runner-image-builder-two94bs3/0 [idle] blocked: image integration required.
+06:27:22 INFO Deploying local:jammy/github-runner-0
+06:27:22 INFO Waiting for model:
+  test-two94bs3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-two94bs3/0 [idle] blocked: image integration required.
+06:27:52 INFO Waiting for model:
+  test-two94bs3/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-two94bs3/0 [idle] blocked: image integration required.
+06:28:22 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:28:53 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:29:23 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:29:54 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:30:24 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:30:55 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:31:25 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:31:55 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:32:25 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:32:56 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:33:26 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:33:57 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:34:27 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:34:57 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:35:28 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:35:58 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:36:28 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:36:58 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:37:28 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:37:59 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:38:29 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:38:59 INFO Waiting for model:
+  test-two94bs3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-two94bs3/0 [executing] active: Building image.
+06:39:30 INFO Waiting for model:
+  test-two94bs3/0 [idle] active: 
+06:42:11 INFO Waiting for model:
+  test-two94bs3/0 [executing] maintenance: Reconciling runners
+06:42:42 INFO Waiting for model:
+  test-two94bs3/0 [idle] active:
+06:43:32 INFO Waiting for model:
+  test-two94bs3/0 [executing] maintenance: Reconciling runners
+06:44:02 INFO Waiting for model:
+  test-two94bs3/0 [idle] active:

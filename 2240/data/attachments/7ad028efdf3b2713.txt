@@ -1,0 +1,95 @@
+06:23:23 INFO Creating 1 runners
+06:23:23 INFO Creating openstack server with test-y4q8b6tc-0-n-17358b1e7c98
+06:23:53 WARNING NoValidConnectionsError. Unable to SSH into test-y4q8b6tc-0-n-17358b1e7c98 with address 10.145.193.138. Error: [Errno None] Unable to connect to port 22 on 10.145.193.138
+06:23:53 WARNING Retrying error in 60 seconds: Failed to SSH to test-y4q8b6tc-0-n-17358b1e7c98 during creation possible due to setup not completed
+06:24:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:24:53 INFO Authentication (publickey) successful!
+06:24:55 INFO Runner startup process found to be healthy on test-y4q8b6tc-0-n-17358b1e7c98
+06:24:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:24:55 INFO Authentication (publickey) successful!
+06:24:56 INFO Runner test-y4q8b6tc-0-n-17358b1e7c98 found to be healthy
+06:24:56 INFO Runner test-y4q8b6tc-0-n-17358b1e7c98 created successfully
+06:24:56 INFO Getting runners...
+06:24:57 INFO Getting all openstack servers managed by the charm
+06:24:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:24:58 INFO Authentication (publickey) successful!
+06:24:59 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:24:59 INFO Getting runners...
+06:25:00 INFO Getting all openstack servers managed by the charm
+06:25:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:02 INFO Authentication (publickey) successful!
+06:25:03 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:03 INFO Getting runners...
+06:25:04 INFO Getting all openstack servers managed by the charm
+06:25:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:05 INFO Authentication (publickey) successful!
+06:25:06 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:06 INFO Getting all openstack servers managed by the charm
+06:25:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:07 INFO Authentication (publickey) successful!
+06:25:08 INFO Getting runners...
+06:25:09 INFO Getting all openstack servers managed by the charm
+06:25:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:11 INFO Authentication (publickey) successful!
+06:25:12 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:13 INFO Offline github runners to delete: []:
+06:25:13 INFO Getting all openstack servers managed by the charm
+06:25:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:14 INFO Authentication (publickey) successful!
+06:25:16 INFO Cleaning up SSH key files
+06:25:16 INFO Found 1 key files, clean up 0 key files
+06:25:16 INFO Cleaning up openstack keypairs
+06:25:16 INFO Getting runners...
+06:25:17 INFO Getting all openstack servers managed by the charm
+06:25:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:20 INFO Authentication (publickey) successful!
+06:25:21 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:21 INFO Flushing idle runners...
+06:25:21 INFO Getting all openstack servers managed by the charm
+06:25:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:23 INFO Authentication (publickey) successful!
+06:25:23 INFO Attempting to kill runner process on test-y4q8b6tc-0-n-17358b1e7c98 if not busy
+06:25:23 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:25:23 INFO Kill process command output, ok: True code 0, out: 1821
+, err: 
+06:25:23 INFO Getting all openstack servers managed by the charm
+06:25:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:25 INFO Authentication (publickey) successful!
+06:25:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:25 INFO Authentication (publickey) successful!
+06:25:26 INFO [chan 2] Opened sftp connection (server version 3)
+06:25:26 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.138, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:25:26 WARNING Failed to pull metrics for test-y4q8b6tc-0-n-17358b1e7c98: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:25:26 INFO Running runner removal script for test-y4q8b6tc-0-n-17358b1e7c98
+06:25:28 INFO Deleting openstack server with test-y4q8b6tc-0-n-17358b1e7c98
+06:25:30 INFO Cleaning up SSH key files
+06:25:30 INFO Found 0 key files, clean up 0 key files
+06:25:30 INFO Cleaning up openstack keypairs
+06:25:30 INFO Getting runners...
+06:25:32 INFO Getting all openstack servers managed by the charm
+06:25:33 ERROR Unable to get SSH connection for instance test-y4q8b6tc-0-n-17358b1e7c98, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-y4q8b6tc-0-n-17358b1e7c98, key path: /home/ubuntu/.ssh/test-y4q8b6tc-0-n-17358b1e7c98.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-y4q8b6tc-0-n-17358b1e7c98
+06:25:33 INFO Found following runners: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:33 WARNING Found runner instance on cloud but not registered on GitHub: {'test-y4q8b6tc-0-n-17358b1e7c98'}
+06:25:33 INFO Getting runners...
+06:25:34 INFO Getting all openstack servers managed by the charm
+06:25:35 INFO Found following runners: set()

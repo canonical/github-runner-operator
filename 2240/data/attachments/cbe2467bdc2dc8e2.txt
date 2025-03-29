@@ -1,0 +1,40 @@
+06:54:40 INFO Waiting for model:
+  test-two94bs3/0 [executing] maintenance: Reconciling runners
+06:55:10 INFO Waiting for model:
+  test-two94bs3/0 [idle] active:
+06:56:10 INFO Waiting for model:
+  test-two94bs3/0 [executing] active: 
+06:56:40 INFO Waiting for model:
+  test-two94bs3/0 [idle] active: 
+06:56:45 INFO [TEST SETUP] Exposing port 8080 on test-two94bs3-0-n-71ec1d15ec62
+06:56:45 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6d:33:23'}]])
+06:56:49 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-two94bs3-0-n-71ec1d15ec62
+06:56:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6d:33:23'}]])
+06:56:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-two94bs3-0-n-71ec1d15ec62.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.63 nc -z localhost 8080'
+06:56:51 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-two94bs3-0-n-71ec1d15ec62
+06:56:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6d:33:23'}]])
+06:56:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-two94bs3-0-n-71ec1d15ec62.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.63 curl http://localhost:8080'
+06:56:55 INFO Wait for condition not met, sleeping 10
+06:57:28 INFO Waiting for model:
+  test-two94bs3/0 [executing] active: 
+06:57:59 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-qd2b  github-pr-479f2-lxd  localhost/localhost  3.6.4    unsupported  06:57:59Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-two94bs3           active      1  github-runner-image-builder  latest/edge   68  no       
+test-two94bs3                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-two94bs3/0*  active    idle   0        10.190.153.180            
+test-two94bs3/0*                         active    idle   1        10.190.153.161  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.190.153.180  juju-9844df-0  ubuntu@22.04      Running
+1        started  10.190.153.161  juju-9844df-1  ubuntu@22.04      Running
+
+06:57:59 INFO Juju error logs:
+
+
+06:57:59 INFO Forgetting model main...
