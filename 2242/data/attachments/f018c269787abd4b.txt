@@ -1,0 +1,91 @@
+06:25:15 INFO Adding model github-pr-479f2-lxd:test-charm-no-runner-hw14 on cloud localhost
+06:25:15 WARNING unexpected facade SSHServer received from the controller
+06:25:17 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:17 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [allocating] waiting: waiting for machine
+06:25:48 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [allocating] waiting: waiting for machine
+06:26:18 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [executing] maintenance: Setting up Builder.
+06:26:48 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [executing] maintenance: Setting up Builder.
+06:27:18 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [executing] maintenance: Setting up Builder.
+06:27:48 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [executing] maintenance: Setting up Builder.
+06:28:18 INFO Waiting for model:
+  github-runner-image-builder-rjj1civp/0 [executing] maintenance: Setting up Builder.
+06:29:05 INFO Deploying local:jammy/github-runner-0
+06:29:05 INFO Waiting for model:
+  test-rjj1civp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rjj1civp/0 [idle] blocked: image integration required.
+06:29:35 INFO Waiting for model:
+  test-rjj1civp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rjj1civp/0 [idle] blocked: image integration required.
+06:30:05 INFO Waiting for model:
+  test-rjj1civp/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-rjj1civp/0 [idle] blocked: image integration required.
+06:30:36 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:31:06 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:31:36 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:32:07 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:32:37 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:33:07 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:33:37 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:34:08 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:34:38 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:35:09 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:35:39 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:37:10 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:37:40 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:38:10 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:38:41 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:39:11 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:39:41 INFO Waiting for model:
+  test-rjj1civp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rjj1civp/0 [executing] active: Building image.
+06:40:12 INFO Waiting for model:
+  test-rjj1civp/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-rjj1civp/0 [idle] active: 
+06:40:42 INFO Waiting for model:
+  test-rjj1civp/0 [idle] active: 
+06:40:49 INFO Waiting for model:
+  test-rjj1civp/0 [idle] active:

@@ -1,0 +1,56 @@
+06:29:34 INFO Creating 1 runners
+06:29:35 INFO Creating openstack server with test-w9ai282q-0-n-72841028692d
+06:29:57 WARNING NoValidConnectionsError. Unable to SSH into test-w9ai282q-0-n-72841028692d with address 10.145.193.105. Error: [Errno None] Unable to connect to port 22 on 10.145.193.105
+06:29:57 WARNING Retrying error in 60 seconds: Failed to SSH to test-w9ai282q-0-n-72841028692d during creation possible due to setup not completed
+06:30:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:30:58 INFO Authentication (publickey) successful!
+06:30:59 INFO Runner startup process found to be healthy on test-w9ai282q-0-n-72841028692d
+06:30:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:30:59 INFO Authentication (publickey) successful!
+06:30:59 INFO Runner test-w9ai282q-0-n-72841028692d found to be healthy
+06:30:59 INFO Runner test-w9ai282q-0-n-72841028692d created successfully
+06:30:59 INFO Getting runners...
+06:31:00 INFO Getting all openstack servers managed by the charm
+06:31:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:04 INFO Authentication (publickey) successful!
+06:31:04 INFO Found following runners: {'test-w9ai282q-0-n-72841028692d'}
+06:31:04 INFO Getting runners...
+06:31:05 INFO Getting all openstack servers managed by the charm
+06:31:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:08 INFO Authentication (publickey) successful!
+06:31:09 INFO Found following runners: {'test-w9ai282q-0-n-72841028692d'}
+06:31:09 INFO Getting runners...
+06:31:10 INFO Getting all openstack servers managed by the charm
+06:31:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:13 INFO Authentication (publickey) successful!
+06:31:14 INFO Found following runners: {'test-w9ai282q-0-n-72841028692d'}
+06:31:16 INFO Wait for condition not met, sleeping 10
+06:31:27 INFO Getting runners...
+06:31:28 INFO Getting all openstack servers managed by the charm
+06:31:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:30 INFO Authentication (publickey) successful!
+06:31:31 INFO Found following runners: {'test-w9ai282q-0-n-72841028692d'}
+06:31:31 WARNING Found runner instance on cloud but not registered on GitHub: {'test-w9ai282q-0-n-72841028692d'}
+06:31:31 INFO Getting runners...
+06:31:32 INFO Getting all openstack servers managed by the charm
+06:31:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:35 INFO Authentication (publickey) successful!
+06:31:35 INFO Found following runners: {'test-w9ai282q-0-n-72841028692d'}
+06:31:35 WARNING Found runner instance on cloud but not registered on GitHub: {'test-w9ai282q-0-n-72841028692d'}
+06:31:36 INFO Offline github runners to delete: []:
+06:31:37 INFO Getting all openstack servers managed by the charm
+06:31:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:41 INFO Authentication (publickey) successful!
+06:31:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:42 INFO Authentication (publickey) successful!
+06:31:42 INFO [chan 2] Opened sftp connection (server version 3)
+06:31:42 INFO Running runner removal script for test-w9ai282q-0-n-72841028692d
+06:31:43 INFO Deleting openstack server with test-w9ai282q-0-n-72841028692d
+06:31:47 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/ports: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+06:31:47 INFO Cleaning up SSH key files
+06:31:47 INFO Found 0 key files, clean up 0 key files
+06:31:47 INFO Cleaning up openstack keypairs
+06:31:48 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+06:31:48 INFO Getting runners...
+06:31:49 INFO Getting all openstack servers managed by the charm
+06:31:51 INFO Found following runners: set()

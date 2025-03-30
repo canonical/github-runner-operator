@@ -1,0 +1,127 @@
+06:58:21 INFO Adding model github-pr-479f2-lxd:test-reactive-kywq on cloud localhost
+06:58:22 WARNING unexpected facade SSHServer received from the controller
+06:58:22 INFO GitHub token rate limit: Rate(reset=2025-03-30 07:23:47+00:00, remaining=4729, limit=5000)
+06:58:26 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:58:27 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [allocating] waiting: waiting for machine
+06:58:57 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [allocating] waiting: waiting for machine
+06:59:27 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [executing] maintenance: Setting up Builder.
+06:59:58 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [executing] maintenance: Setting up Builder.
+07:00:28 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [executing] maintenance: Setting up Builder.
+07:00:59 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [executing] maintenance: Setting up Builder.
+07:01:29 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [executing] maintenance: Setting up Builder.
+07:02:00 INFO Waiting for model:
+  github-runner-image-builder-rk2i4282/0 [idle] blocked: image integration required.
+07:02:27 INFO Deploying local:jammy/github-runner-0
+07:02:27 INFO Waiting for model:
+  test-rk2i4282/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rk2i4282/0 [idle] blocked: image integration required.
+07:02:57 INFO Waiting for model:
+  test-rk2i4282/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rk2i4282/0 [idle] blocked: image integration required.
+07:03:28 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:03:58 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:04:28 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:04:59 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:05:29 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:06:00 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:06:30 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:07:01 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:07:31 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:08:02 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:08:32 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:09:03 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:09:33 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:10:04 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:10:34 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:11:04 INFO Waiting for model:
+  test-rk2i4282/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rk2i4282/0 [executing] active: Building image.
+07:11:34 INFO Waiting for model:
+  test-rk2i4282/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-rk2i4282/0 [idle] active: 
+07:12:05 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active: 
+07:12:13 INFO Deploying ch:amd64/jammy/mongodb-212
+07:12:13 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:12:44 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:13:14 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+07:13:45 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+07:14:04 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:14:04 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:14:35 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:15:10 INFO Waiting for model:
+  test-rk2i4282/0 [executing] active: 
+07:15:41 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active:
+07:15:48 INFO Wait for condition not met, sleeping 10
+07:16:38 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active: 
+07:16:53 INFO Wait for condition not met, sleeping 60
+07:18:23 INFO Waiting for model:
+  test-rk2i4282/0 [executing] active: 
+07:18:39 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743318997.2566848, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.495399475097656}
+{"timestamp": 1743319041.0, "event": "runner_installed", "flavor": "test-rk2i4282", "duration": 77.0}
+{"timestamp": 1743319046.0, "event": "runner_start", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1743319048.0, "event": "runner_stop", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1743319102.2634878, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.26918053627014}
+
+07:18:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743318997.2566848, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.495399475097656}
+{"timestamp": 1743319041.0, "event": "runner_installed", "flavor": "test-rk2i4282", "duration": 77.0}
+{"timestamp": 1743319046.0, "event": "runner_start", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1743319048.0, "event": "runner_stop", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1743319102.2634878, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.26918053627014}
+
+07:18:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743318997.2566848, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.495399475097656}
+{"timestamp": 1743319041.0, "event": "runner_installed", "flavor": "test-rk2i4282", "duration": 77.0}
+{"timestamp": 1743319046.0, "event": "runner_start", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1743319048.0, "event": "runner_stop", "flavor": "test-rk2i4282", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1743319102.2634878, "event": "reconciliation", "flavor": "test-rk2i4282", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.26918053627014}
+07:19:03 INFO Waiting for model:
+  test-rk2i4282/0 [executing] active: 
+07:19:33 INFO Waiting for model:
+  test-rk2i4282/0 [idle] active:
