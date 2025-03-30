@@ -1,0 +1,61 @@
+18:27:40 INFO Creating 1 runners
+18:27:41 INFO Creating openstack server with test-lptlqmfd-0-n-31b4cd29b499
+18:28:00 WARNING NoValidConnectionsError. Unable to SSH into test-lptlqmfd-0-n-31b4cd29b499 with address 10.145.193.224. Error: [Errno None] Unable to connect to port 22 on 10.145.193.224
+18:28:00 WARNING Retrying error in 60 seconds: Failed to SSH to test-lptlqmfd-0-n-31b4cd29b499 during creation possible due to setup not completed
+18:29:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:01 INFO Authentication (publickey) successful!
+18:29:02 INFO Runner startup process found to be healthy on test-lptlqmfd-0-n-31b4cd29b499
+18:29:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:02 INFO Authentication (publickey) successful!
+18:29:02 INFO Runner test-lptlqmfd-0-n-31b4cd29b499 found to be healthy
+18:29:02 INFO Runner test-lptlqmfd-0-n-31b4cd29b499 created successfully
+18:29:02 INFO Getting runners...
+18:29:03 INFO Getting all openstack servers managed by the charm
+18:29:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:06 INFO Authentication (publickey) successful!
+18:29:07 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f', 'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:07 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:07 INFO Getting runners...
+18:29:08 INFO Getting all openstack servers managed by the charm
+18:29:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:13 INFO Authentication (publickey) successful!
+18:29:14 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f', 'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:14 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:14 INFO Getting runners...
+18:29:15 INFO Getting all openstack servers managed by the charm
+18:29:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:18 INFO Authentication (publickey) successful!
+18:29:18 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f', 'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:18 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:20 INFO Wait for condition not met, sleeping 10
+18:29:31 INFO Getting runners...
+18:29:32 INFO Getting all openstack servers managed by the charm
+18:29:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:35 INFO Authentication (publickey) successful!
+18:29:36 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f', 'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:36 WARNING Found runner instance on cloud but not registered on GitHub: {'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:36 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:36 INFO Getting runners...
+18:29:37 INFO Getting all openstack servers managed by the charm
+18:29:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:40 INFO Authentication (publickey) successful!
+18:29:40 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f', 'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:40 WARNING Found runner instance on cloud but not registered on GitHub: {'test-lptlqmfd-0-n-31b4cd29b499'}
+18:29:40 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:41 INFO Offline github runners to delete: []:
+18:29:42 INFO Getting all openstack servers managed by the charm
+18:29:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:44 INFO Authentication (publickey) successful!
+18:29:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:45 INFO Authentication (publickey) successful!
+18:29:45 INFO [chan 2] Opened sftp connection (server version 3)
+18:29:45 INFO Running runner removal script for test-lptlqmfd-0-n-31b4cd29b499
+18:29:46 INFO Deleting openstack server with test-lptlqmfd-0-n-31b4cd29b499
+18:29:50 INFO Cleaning up SSH key files
+18:29:50 INFO Found 0 key files, clean up 0 key files
+18:29:50 INFO Cleaning up openstack keypairs
+18:29:51 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+18:29:51 INFO Getting runners...
+18:29:52 INFO Getting all openstack servers managed by the charm
+18:29:54 INFO Found following runners: {'test-lptlqmfd-0-n-5ac19dc7420f'}
+18:29:54 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-lptlqmfd-0-n-5ac19dc7420f'}

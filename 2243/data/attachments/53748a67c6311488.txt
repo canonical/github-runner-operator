@@ -1,0 +1,337 @@
+18:53:16 INFO Adding model github-pr-479f2-lxd:test-debug-ssh-dmep on cloud localhost
+18:53:16 WARNING unexpected facade AgentLifeFlag received from the controller
+18:53:16 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:53:16 WARNING unexpected facade SecretsDrain received from the controller
+18:53:18 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:53:18 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0 (not enough units yet - 0/1)
+18:53:48 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [allocating] waiting: agent initialising
+18:54:18 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [executing] maintenance: Setting up Builder.
+18:54:48 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [executing] maintenance: Setting up Builder.
+18:55:18 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [executing] maintenance: Setting up Builder.
+18:55:48 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [executing] maintenance: Setting up Builder.
+18:56:18 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [idle] blocked: image integration required.
+18:56:47 INFO Deploying local:jammy/github-runner-0
+18:56:47 INFO Waiting for model:
+  test-c8fuqsw0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c8fuqsw0/0 [idle] blocked: image integration required.
+18:57:17 INFO Waiting for model:
+  test-c8fuqsw0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-c8fuqsw0/0 [idle] blocked: image integration required.
+18:57:47 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+18:58:17 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+18:58:47 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+18:59:17 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+18:59:47 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:00:17 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:00:47 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:01:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:01:48 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:02:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:02:48 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:03:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:03:48 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:04:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:04:48 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:05:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: Building image.
+19:05:48 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-c8fuqsw0/0 [executing] active: 
+19:06:18 INFO Waiting for model:
+  test-c8fuqsw0/0 [idle] active: 
+19:06:27 INFO GitHub token rate limit: Rate(reset=2025-03-30 19:22:56+00:00, remaining=4413, limit=5000)
+19:06:31 INFO Deploying ch:amd64/jammy/tmate-ssh-server-10
+19:06:31 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:06:31 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+19:07:02 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+19:07:32 INFO Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+19:07:36 INFO Waiting for model:
+  github-runner-image-builder-c8fuqsw0/0 [idle] active: 
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+19:08:06 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:08:36 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:09:06 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Added debug-ssh relation
+19:09:37 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:10:07 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:10:37 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:11:07 INFO Waiting for model:
+  test-c8fuqsw0/0 [executing] maintenance: Reconciling runners
+19:11:34 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.223.177.79 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-c8fuqsw0-0-n-579294e44189
+19:11:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.33', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b2:a3:0c'}]])
+19:11:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-c8fuqsw0-0-n-579294e44189.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.33 sudo iptables -t nat -A OUTPUT -p tcp -d 10.223.177.79 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+19:11:37 INFO [TEST SETUP] Exposing port 10022 on test-c8fuqsw0-0-n-579294e44189
+19:11:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.33', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b2:a3:0c'}]])
+19:11:40 INFO [TEST SETUP] Run command nc -z localhost 10022 on test-c8fuqsw0-0-n-579294e44189
+19:11:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.33', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b2:a3:0c'}]])
+19:11:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-c8fuqsw0-0-n-579294e44189.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.33 nc -z localhost 10022'
+19:11:42 INFO Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+19:11:44 INFO Wait for condition not met, sleeping 10
+19:11:55 INFO Wait for condition not met, sleeping 60
+19:12:56 INFO Wait for condition not met, sleeping 60
+19:13:56 INFO Wait for condition not met, sleeping 60
+19:14:57 INFO Wait for condition not met, sleeping 60
+19:15:57 INFO Wait for condition not met, sleeping 60
+19:16:59 INFO Logs: ﻿2025-03-30T19:11:48.4013859Z Current runner version: '2.323.0'
+2025-03-30T19:11:48.4020130Z Runner name: 'test-c8fuqsw0-0-n-579294e44189'
+2025-03-30T19:11:48.4020923Z Runner group name: 'Default'
+2025-03-30T19:11:48.4021942Z Machine name: 'github-runner'
+2025-03-30T19:11:48.4025873Z ##[group]GITHUB_TOKEN Permissions
+2025-03-30T19:11:48.4028400Z Actions: write
+2025-03-30T19:11:48.4028946Z Attestations: write
+2025-03-30T19:11:48.4029588Z Checks: write
+2025-03-30T19:11:48.4030051Z Contents: write
+2025-03-30T19:11:48.4030528Z Deployments: write
+2025-03-30T19:11:48.4031062Z Discussions: write
+2025-03-30T19:11:48.4031626Z Issues: write
+2025-03-30T19:11:48.4032625Z Metadata: read
+2025-03-30T19:11:48.4033267Z Models: read
+2025-03-30T19:11:48.4033990Z Packages: write
+2025-03-30T19:11:48.4034665Z Pages: write
+2025-03-30T19:11:48.4035138Z PullRequests: write
+2025-03-30T19:11:48.4035640Z RepositoryProjects: write
+2025-03-30T19:11:48.4036179Z SecurityEvents: write
+2025-03-30T19:11:48.4036794Z Statuses: write
+2025-03-30T19:11:48.4037458Z ##[endgroup]
+2025-03-30T19:11:48.4039597Z Secret source: Actions
+2025-03-30T19:11:48.4040251Z Prepare workflow directory
+2025-03-30T19:11:48.4430306Z Prepare all required actions
+2025-03-30T19:11:48.4472794Z Getting action download info
+2025-03-30T19:11:48.6315014Z Download action repository 'canonical/action-tmate@main' (SHA:90eab9c01031165cdd6450f1ab97369a72c4d24d)
+2025-03-30T19:11:49.9550957Z Complete job name: workflow-dispatch-tests
+2025-03-30T19:11:50.0123948Z A job started hook has been configured by the self-hosted runner administrator
+2025-03-30T19:11:50.0342664Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2025-03-30T19:11:50.0371423Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-03-30T19:11:50.0373754Z ##[endgroup]
+2025-03-30T19:11:50.1001049Z ##[group]Run canonical/action-tmate@main
+2025-03-30T19:11:50.1002974Z with:
+2025-03-30T19:11:50.1003994Z   sudo: auto
+2025-03-30T19:11:50.1005113Z   install-dependencies: true
+2025-03-30T19:11:50.1006479Z   limit-access-to-actor: auto
+2025-03-30T19:11:50.1007818Z   detached: false
+2025-03-30T19:11:50.1009336Z   github-token: ***
+2025-03-30T19:11:50.1010472Z ##[endgroup]
+2025-03-30T19:11:50.5110734Z Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+2025-03-30T19:11:50.5507941Z Hit:2 http://availability-zone-3.clouds.archive.ubuntu.com/ubuntu noble InRelease
+2025-03-30T19:11:50.5609963Z Hit:3 http://availability-zone-3.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-03-30T19:11:50.5716379Z Hit:4 http://availability-zone-3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+2025-03-30T19:11:51.8348506Z Reading package lists...
+2025-03-30T19:11:51.8854085Z Reading package lists...
+2025-03-30T19:11:52.0600892Z Building dependency tree...
+2025-03-30T19:11:52.0625494Z Reading state information...
+2025-03-30T19:11:52.2606281Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.9).
+2025-03-30T19:11:52.2608145Z openssh-client set to manually installed.
+2025-03-30T19:11:52.2608863Z xz-utils is already the newest version (5.6.1+really5.4.5-1build0.1).
+2025-03-30T19:11:52.2612703Z xz-utils set to manually installed.
+2025-03-30T19:11:52.2613300Z 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2025-03-30T19:11:56.6827105Z ssh -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:11:56.6874775Z 
+2025-03-30T19:11:56.6888931Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:11:56.6892860Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:01.6919787Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:01.6921526Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:06.6976243Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:06.6979697Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:11.6986562Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:11.6987946Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:16.7040253Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:16.7041115Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:21.7071405Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:21.7077447Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:26.7125710Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:26.7126483Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:31.7179315Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:31.7180124Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:36.7234204Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:36.7235587Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:41.7288579Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:41.7289386Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:46.7342798Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:46.7343619Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:51.7399266Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:51.7417054Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:56.7453381Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:12:56.7454274Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:01.7504892Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:01.7505815Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:06.7560539Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:06.7574877Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:11.7611426Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:11.7615226Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:16.7669837Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:16.7702548Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:21.7727454Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:21.7732624Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:26.7790476Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:26.7795635Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:31.7811005Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:31.7815911Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:36.7874319Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:36.7877099Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:41.7905126Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:41.7907427Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:46.7963664Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:46.7966579Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:51.8022742Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:51.8025311Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:56.8082273Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:13:56.8084433Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:01.8140821Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:01.8142079Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:06.8196270Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:06.8198944Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:11.8259371Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:11.8265947Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:16.8321352Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:16.8328550Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:21.8380078Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:21.8380881Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:26.8436559Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:26.8444276Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:31.8493557Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:31.8494320Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:36.8502311Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:36.8504771Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:41.8559199Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:41.8560127Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:46.8602516Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:46.8603365Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:51.8654442Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:51.8656835Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:56.8702598Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:14:56.8703533Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:01.8755464Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:01.8756441Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:06.8807465Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:06.8809277Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:11.8863257Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:11.8864847Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:16.8915412Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:16.8916086Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:21.8972746Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:21.8973891Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:26.9025495Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:26.9028575Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:31.9080112Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:31.9083661Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:36.9136301Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:36.9137797Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:41.9190164Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:41.9191127Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:46.9235478Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:46.9237014Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:51.9259196Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:51.9260574Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:56.9268848Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:15:56.9270430Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:01.9318135Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:01.9321436Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:06.9373270Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:06.9376435Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:11.9428615Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:11.9430704Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:16.9477710Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:16.9481295Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:21.9533850Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:21.9534808Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:26.9589634Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:26.9590738Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:31.9642486Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:31.9643386Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:36.9695612Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:36.9696963Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:41.9747038Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:41.9747875Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:46.9802437Z SSH: ssh -p 10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:46.9806638Z or: ssh -i <path-to-private-SSH-key> -p10022 ZUFzYe3UMKnTTztcfeeSnbuYr@10.223.177.79
+2025-03-30T19:16:50.0975083Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2025-03-30T19:16:50.1065360Z Post job cleanup.
+2025-03-30T19:16:50.2133840Z Cleaning up orphan processes
+2025-03-30T19:16:50.2549644Z Terminate orphan process: pid (2464) (tmate)
+2025-03-30T19:16:50.2610316Z Terminate orphan process: pid (2465) (bash)
+19:17:01 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-dmep  github-pr-479f2-lxd  localhost/localhost  3.1.10   unsupported  19:17:01Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-c8fuqsw0           active      1  github-runner-image-builder  latest/edge   68  no       
+test-c8fuqsw0                                  active      1  github-runner                               0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server             edge          10  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-c8fuqsw0/0*  active    idle   0        10.223.177.154             
+test-c8fuqsw0/0*                         active    idle   1        10.223.177.191             
+tmate-ssh-server/0*                      active    idle   2        10.223.177.79   10022/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.223.177.154  juju-77265f-0  ubuntu@22.04      Running
+1        started  10.223.177.191  juju-77265f-1  ubuntu@22.04      Running
+2        started  10.223.177.79   juju-77265f-2  ubuntu@22.04      Running
+
+19:17:01 INFO Juju error logs:
+
+machine-0: 18:53:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:53:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:53:46 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-c8fuqsw0-0: 18:53:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-c8fuqsw0-0: 18:54:22 ERROR unit.github-runner-image-builder-c8fuqsw0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:57:15 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:57:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:57:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-c8fuqsw0-0: 18:57:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 19:07:02 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 19:07:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 19:07:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 19:07:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+19:17:02 INFO Forgetting model main...

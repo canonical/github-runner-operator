@@ -1,0 +1,71 @@
+18:22:58 INFO Creating 1 runners
+18:22:59 INFO Creating openstack server with test-lptlqmfd-0-n-68bdd2717b6d
+18:23:24 WARNING NoValidConnectionsError. Unable to SSH into test-lptlqmfd-0-n-68bdd2717b6d with address 10.145.193.221. Error: [Errno None] Unable to connect to port 22 on 10.145.193.221
+18:23:24 WARNING Retrying error in 60 seconds: Failed to SSH to test-lptlqmfd-0-n-68bdd2717b6d during creation possible due to setup not completed
+18:24:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:24 INFO Authentication (publickey) successful!
+18:24:25 INFO Runner startup process found to be healthy on test-lptlqmfd-0-n-68bdd2717b6d
+18:24:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:25 INFO Authentication (publickey) successful!
+18:24:26 INFO Runner test-lptlqmfd-0-n-68bdd2717b6d found to be healthy
+18:24:26 INFO Runner test-lptlqmfd-0-n-68bdd2717b6d created successfully
+18:24:26 INFO Getting runners...
+18:24:27 INFO Getting all openstack servers managed by the charm
+18:24:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:28 INFO Authentication (publickey) successful!
+18:24:29 INFO Found following runners: {'test-lptlqmfd-0-n-68bdd2717b6d'}
+18:24:29 INFO Getting runners...
+18:24:30 INFO Getting all openstack servers managed by the charm
+18:24:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:31 INFO Authentication (publickey) successful!
+18:24:32 INFO Found following runners: {'test-lptlqmfd-0-n-68bdd2717b6d'}
+18:24:32 INFO Getting runners...
+18:24:33 INFO Getting all openstack servers managed by the charm
+18:24:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:34 INFO Authentication (publickey) successful!
+18:24:35 INFO Found following runners: {'test-lptlqmfd-0-n-68bdd2717b6d'}
+18:24:35 INFO Getting all openstack servers managed by the charm
+18:24:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:36 INFO Authentication (publickey) successful!
+18:24:37 INFO Getting runners...
+18:24:38 INFO Getting all openstack servers managed by the charm
+18:24:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:39 INFO Authentication (publickey) successful!
+18:24:40 INFO Found following runners: {'test-lptlqmfd-0-n-68bdd2717b6d'}
+18:24:41 INFO Offline github runners to delete: []:
+18:24:41 INFO Getting all openstack servers managed by the charm
+18:24:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:42 INFO Authentication (publickey) successful!
+18:24:44 INFO Cleaning up SSH key files
+18:24:44 INFO Found 1 key files, clean up 0 key files
+18:24:44 INFO Cleaning up openstack keypairs
+18:24:44 INFO Getting runners...
+18:24:45 INFO Getting all openstack servers managed by the charm
+18:24:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:46 INFO Authentication (publickey) successful!
+18:24:47 INFO Found following runners: {'test-lptlqmfd-0-n-68bdd2717b6d'}
+18:24:47 INFO Flushing idle runners...
+18:24:47 INFO Getting all openstack servers managed by the charm
+18:24:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:49 INFO Authentication (publickey) successful!
+18:24:49 INFO Attempting to kill runner process on test-lptlqmfd-0-n-68bdd2717b6d if not busy
+18:24:49 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:24:49 INFO Kill process command output, ok: True code 0, out: 1822
+, err: 
+18:24:49 INFO Getting all openstack servers managed by the charm
+18:24:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:51 INFO Authentication (publickey) successful!
+18:24:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:24:52 INFO Authentication (publickey) successful!
+18:24:52 INFO [chan 2] Opened sftp connection (server version 3)
+18:24:52 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.221, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:24:52 WARNING Failed to pull metrics for test-lptlqmfd-0-n-68bdd2717b6d: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:24:52 INFO Running runner removal script for test-lptlqmfd-0-n-68bdd2717b6d
+18:24:54 INFO Deleting openstack server with test-lptlqmfd-0-n-68bdd2717b6d
+18:24:56 INFO Cleaning up SSH key files
+18:24:56 INFO Found 0 key files, clean up 0 key files
+18:24:56 INFO Cleaning up openstack keypairs
+18:24:56 INFO Getting runners...
+18:24:57 INFO Getting all openstack servers managed by the charm
+18:24:58 INFO Found following runners: set()
