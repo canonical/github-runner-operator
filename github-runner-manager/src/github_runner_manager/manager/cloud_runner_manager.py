@@ -176,9 +176,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(
-        self, instance_id: InstanceID, remove_token: str
-    ) -> RunnerDeletedInfo | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerDeletedInfo:
         """Delete self-hosted runner.
 
         Args:

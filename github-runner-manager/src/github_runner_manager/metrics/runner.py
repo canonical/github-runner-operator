@@ -106,18 +106,24 @@ class RunnerDeletedInfo(BaseModel):
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
         instance_id: The name of the runner.
+        runner_deleted_success: TODO.
     """
 
     installation_start_timestamp: NonNegativeFloat
-    # TODO rename to runner_installed_timestamp
+    # TODO maybe rename something like runner_installed_timestamp
     installed_timestamp: NonNegativeFloat | None
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
     instance_id: InstanceID
+    runner_deleted_success: bool
 
     @classmethod
     def build_runner_deleted_info(
-        cls, instance_id: InstanceID, installation_start: datetime, pulled_metrics: "PulledMetrics"
+        cls,
+        instance_id: InstanceID,
+        installation_start: datetime,
+        pulled_metrics: "PulledMetrics",
+        runner_deleted_success: bool,
     ) -> "RunnerDeletedInfo":
         """TODO.
 
@@ -125,6 +131,7 @@ class RunnerDeletedInfo(BaseModel):
            instance_id: InstanceID of the runner.
            installation_start: Creation time of the runner.
            pulled_metrics: TODO.
+           runner_deleted_success: TODO.
 
         Returns:
            The RunnerDeletedInfo object for the runner.
@@ -196,6 +203,7 @@ class RunnerDeletedInfo(BaseModel):
                 PostJobMetrics(**post_job_metrics) if post_job_metrics else None
             ),
             instance_id=instance_id,
+            runner_deleted_success=runner_deleted_success,
         )
 
 
@@ -311,73 +319,6 @@ class PulledMetrics:
     runner_installed: str | None = None
     pre_job_metrics: str | None = None
     post_job_metrics: str | None = None
-
-    def to_runner_metrics(
-        self, instance_id: InstanceID, installation_start: datetime
-    ) -> RunnerDeletedInfo | None:
-        """.
-
-        Args:
-           instance_id: InstanceID of the runner.
-           installation_start: Creation time of the runner.
-
-        Returns:
-           The RunnerDeletedInfo object for the runner or None if it can not be built.
-        """
-        if self.runner_installed is None:
-            logger.error(
-                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
-            )
-            return None
-
-        pre_job_metrics: dict | None = None
-        post_job_metrics: dict | None = None
-        try:
-            pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
-            post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
-        except (JSONDecodeError, TypeError):
-            logger.exception(
-                "Json Decode error. Corrupt metric data found for runner %s", instance_id
-            )
-
-        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
-            logger.error(
-                "Pre job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                pre_job_metrics,
-            )
-            pre_job_metrics = None
-
-        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
-            logger.error(
-                "Post job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                post_job_metrics,
-            )
-            post_job_metrics = None
-
-        try:
-            return RunnerDeletedInfo(
-                installation_start_timestamp=installation_start.timestamp(),
-                installed_timestamp=float(self.runner_installed),
-                pre_job=(  # pylint: disable=not-a-mapping
-                    PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
-                ),
-                post_job=(  # pylint: disable=not-a-mapping
-                    PostJobMetrics(**post_job_metrics) if post_job_metrics else None
-                ),
-                instance_id=instance_id,
-            )
-        except ValueError:
-            logger.exception(
-                "Error creating RunnerDeletedInfo %s, %s, %s",
-                instance_id,
-                installation_start,
-                self,
-            )
-            return None
 
 
 def issue_events(

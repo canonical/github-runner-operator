@@ -217,9 +217,37 @@ def _params_test_cleanup_extract_metrics():
     }}"""
 
     return [
-        pytest.param(None, None, None, [], id="All None. No metrics returned."),
         pytest.param(
-            "", None, None, [], id="Invalid runner-installed metrics. No metrics returned."
+            None,
+            None,
+            None,
+            [
+                RunnerDeletedInfo(
+                    instance_id=InstanceID(
+                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+                    ),
+                    installation_start_timestamp=openstack_created_at,
+                    installed_timestamp=None,
+                    runner_deleted_success=True,
+                )
+            ],
+            id="All None. No metrics returned.",
+        ),
+        pytest.param(
+            "",
+            None,
+            None,
+            [
+                RunnerDeletedInfo(
+                    instance_id=InstanceID(
+                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+                    ),
+                    installation_start_timestamp=openstack_created_at,
+                    installed_timestamp=None,
+                    runner_deleted_success=True,
+                )
+            ],
+            id="Invalid runner-installed metrics. No metrics returned.",
         ),
         pytest.param(
             str(openstack_installed_at),
@@ -232,6 +260,7 @@ def _params_test_cleanup_extract_metrics():
                     ),
                     installation_start_timestamp=openstack_created_at,
                     installed_timestamp=openstack_installed_at,
+                    runner_deleted_success=True,
                 ),
             ],
             id="Only installed_timestamp. Metric returned.",
@@ -254,6 +283,7 @@ def _params_test_cleanup_extract_metrics():
                         repository="canonical/github-runner-operator",
                         event="workflow_dispatch",
                     ),
+                    runner_deleted_success=True,
                 ),
             ],
             id="installed_timestamp and pre_job_metrics. Metric returned.",
@@ -281,6 +311,7 @@ def _params_test_cleanup_extract_metrics():
                         status=PostJobStatus.NORMAL,
                         status_info=CodeInformation(code=200),
                     ),
+                    runner_deleted_success=True,
                 ),
             ],
             id="installed_timestamp, pre_job_metrics and post_job_metrics. Metric returned",
@@ -329,6 +360,7 @@ def test_cleanup_extract_metrics(
 
     names = [InstanceID(prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy").name]
     openstack_cloud_mock = _create_openstack_cloud_mock(names)
+    openstack_cloud_mock.delete_instance.return_value = None
     runner_manager._openstack_cloud = openstack_cloud_mock
     health_checks_mock = _create_health_checks_mock()
     monkeypatch.setattr(

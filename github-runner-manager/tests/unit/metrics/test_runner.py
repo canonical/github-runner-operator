@@ -62,6 +62,7 @@ def _create_metrics_data(instance_id: InstanceID) -> RunnerDeletedInfo:
         ),
         post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
         instance_id=instance_id,
+        runner_deleted_success=True,
     )
 
 
