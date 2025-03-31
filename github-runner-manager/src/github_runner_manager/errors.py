@@ -21,6 +21,10 @@ class MissingServerConfigError(RunnerError):
     """Error for unable to create runner due to missing server configurations."""
 
 
+class RunnerDoesNotExistError(RunnerError):
+    """Runner does not exist in the cloud."""
+
+
 class IssueMetricEventError(Exception):
     """Represents an error when issuing a metric event."""
 
