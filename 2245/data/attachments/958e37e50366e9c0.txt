@@ -1,0 +1,101 @@
+06:25:35 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-success-xcb7 on cloud localhost
+06:25:35 WARNING unexpected facade SSHServer received from the controller
+06:25:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:37 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [allocating] waiting: waiting for machine
+06:26:07 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [allocating] waiting: waiting for machine
+06:26:37 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:27:07 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:27:38 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:28:08 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:28:39 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:29:09 INFO Waiting for model:
+  github-runner-image-builder-k4qxfoud/0 [executing] maintenance: Setting up Builder.
+06:29:50 INFO Deploying local:jammy/github-runner-0
+06:29:50 INFO Waiting for model:
+  test-k4qxfoud/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k4qxfoud/0 [idle] blocked: image integration required.
+06:30:20 INFO Waiting for model:
+  test-k4qxfoud/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k4qxfoud/0 [idle] blocked: image integration required.
+06:30:51 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:31:21 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:31:52 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:32:22 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:32:52 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:33:23 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:33:53 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:34:54 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:35:24 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:37:56 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:38:27 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:38:58 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:39:28 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:39:58 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k4qxfoud/0 [executing] active: Building image.
+06:40:29 INFO Waiting for model:
+  test-k4qxfoud/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-k4qxfoud/0 [idle] active: 
+06:40:59 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] active:
+06:43:30 INFO Waiting for model:
+  test-k4qxfoud/0 [executing] maintenance: Reconciling runners
+06:44:00 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] active: 
+06:44:59 INFO Waiting for model:
+  test-k4qxfoud/0 [executing] active: 
+06:45:29 INFO Waiting for model:
+  test-k4qxfoud/0 [idle] active: 
+06:45:31 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743403409.5041974, "event": "reconciliation", "flavor": "test-k4qxfoud", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 145.2342140674591}
+{"timestamp": 1743403435.6756582, "event": "reconciliation", "flavor": "test-k4qxfoud", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 25.014514446258545}
+{"timestamp": 1743403353.0, "event": "runner_installed", "flavor": "test-k4qxfoud", "duration": 75.0}
+{"timestamp": 1743403498.2892008, "event": "reconciliation", "flavor": "test-k4qxfoud", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 43.34410643577576}
+{"timestamp": 1743403514.7696815, "event": "reconciliation", "flavor": "test-k4qxfoud", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.309885501861572}

@@ -1,0 +1,81 @@
+06:25:40 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-qsml on cloud localhost
+06:25:40 WARNING unexpected facade SSHServer received from the controller
+06:25:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:43 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [allocating] waiting: waiting for machine
+06:26:13 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [allocating] waiting: waiting for machine
+06:26:43 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [executing] maintenance: Setting up Builder.
+06:27:13 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [executing] maintenance: Setting up Builder.
+06:27:44 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [executing] maintenance: Setting up Builder.
+06:28:14 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [executing] maintenance: Setting up Builder.
+06:28:44 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [executing] maintenance: Setting up Builder.
+06:29:14 INFO Waiting for model:
+  github-runner-image-builder-eu44kskg/0 [idle] blocked: image integration required.
+06:29:48 INFO Deploying local:jammy/github-runner-0
+06:29:48 INFO Waiting for model:
+  test-eu44kskg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eu44kskg/0 [idle] blocked: image integration required.
+06:30:19 INFO Waiting for model:
+  test-eu44kskg/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-eu44kskg/0 [idle] blocked: image integration required.
+06:30:49 INFO Waiting for model:
+  test-eu44kskg/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] blocked: image integration required.
+06:31:19 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:31:50 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:32:20 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:33:21 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:33:51 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:34:22 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:34:52 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:35:22 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:35:52 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:36:23 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:36:53 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:37:54 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:38:24 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:38:55 INFO Waiting for model:
+  test-eu44kskg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eu44kskg/0 [executing] active: Building image.
+06:39:25 INFO Waiting for model:
+  test-eu44kskg/0 [executing] maintenance: Reconciling runners
+06:39:51 INFO Waiting for model:
+  test-eu44kskg/0 [idle] active:

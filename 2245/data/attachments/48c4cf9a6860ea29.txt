@@ -1,0 +1,138 @@
+06:25:11 INFO Adding model github-pr-e884d-lxd:test-charm-fork-repo-grml on cloud localhost
+06:25:12 WARNING unexpected facade SSHServer received from the controller
+06:25:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:14 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [allocating] waiting: waiting for machine
+06:25:45 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [allocating] waiting: waiting for machine
+06:26:15 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [executing] maintenance: Setting up Builder.
+06:26:46 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [executing] maintenance: Setting up Builder.
+06:27:16 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [executing] maintenance: Setting up Builder.
+06:27:46 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [executing] maintenance: Setting up Builder.
+06:28:16 INFO Waiting for model:
+  github-runner-image-builder-uoa402tr/0 [executing] maintenance: Setting up Builder.
+06:29:00 INFO Deploying local:jammy/github-runner-0
+06:29:00 INFO Waiting for model:
+  test-uoa402tr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uoa402tr/0 [idle] blocked: image integration required.
+06:29:30 INFO Waiting for model:
+  test-uoa402tr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-uoa402tr/0 [idle] blocked: image integration required.
+06:30:01 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:30:31 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:31:01 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:31:32 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:32:02 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:32:32 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:33:02 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:33:33 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:34:03 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:34:33 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:35:04 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:35:34 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:36:04 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:36:34 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:37:05 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:37:35 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:38:06 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:38:36 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:39:07 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:39:37 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:40:07 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:40:38 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:41:08 INFO Waiting for model:
+  test-uoa402tr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoa402tr/0 [executing] active: Building image.
+06:41:38 INFO Waiting for model:
+  test-uoa402tr/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-uoa402tr/0 [idle] active: 
+06:42:05 INFO GitHub token rate limit: Rate(reset=2025-03-31 06:57:09+00:00, remaining=4876, limit=5000)
+06:45:54 INFO Waiting for model:
+  test-uoa402tr/0 [executing] active: 
+06:46:24 INFO Waiting for model:
+  test-uoa402tr/0 [idle] active: 
+06:46:36 INFO [TEST SETUP] Exposing port 8080 on test-uoa402tr-0-n-322ec00ab1c2
+06:46:36 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:83:a6:9d'}]])
+06:46:40 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-uoa402tr-0-n-322ec00ab1c2
+06:46:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:83:a6:9d'}]])
+06:46:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uoa402tr-0-n-322ec00ab1c2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.95 nc -z localhost 8080'
+06:46:44 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-uoa402tr-0-n-322ec00ab1c2
+06:46:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:83:a6:9d'}]])
+06:46:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uoa402tr-0-n-322ec00ab1c2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.95 curl http://localhost:8080'
+06:46:48 INFO Wait for condition not met, sleeping 10
+06:47:04 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-grml  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  06:47:04Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-uoa402tr           active      1  github-runner-image-builder  latest/edge   68  no       
+test-uoa402tr                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-uoa402tr/0*  active    idle   0        10.159.144.214            
+test-uoa402tr/0*                         active    idle   1        10.159.144.197  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.159.144.214  juju-0ac38c-0  ubuntu@22.04      Running
+1        started  10.159.144.197  juju-0ac38c-1  ubuntu@22.04      Running
+
+06:47:04 INFO Juju error logs:
+
+machine-0: 06:26:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-uoa402tr-0: 06:26:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-uoa402tr-0: 06:26:35 ERROR unit.github-runner-image-builder-uoa402tr/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-uoa402tr-0: 06:29:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:47:04 INFO Forgetting model main...
