@@ -26,7 +26,7 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import RunnerDeletedInfo
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -376,7 +376,9 @@ class RunnerManager:
                 runner_metrics_list.append(deleted_runner_metrics)
         return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
 
-    def _issue_runner_metrics(self, metrics: Iterator[RunnerMetrics]) -> IssuedMetricEventsStats:
+    def _issue_runner_metrics(
+        self, metrics: Iterator[RunnerDeletedInfo]
+    ) -> IssuedMetricEventsStats:
         """Issue runner metrics.
 
         Args:

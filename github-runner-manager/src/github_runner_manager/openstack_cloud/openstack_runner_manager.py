@@ -228,7 +228,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str
-    ) -> runner_metrics.RunnerMetrics | None:
+    ) -> runner_metrics.RunnerDeletedInfo | None:
         """Delete self-hosted runners.
 
         Args:
@@ -250,14 +250,15 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
-        pulled_metrics = self._delete_runner(instance, remove_token)
+        pulled_metrics = self._pull_metrics(instance)
+        self._delete_runner(instance, remove_token)
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
         return pulled_metrics.to_runner_metrics(instance.instance_id, instance.created_at)
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
-    ) -> Iterable[runner_metrics.RunnerMetrics]:
+    ) -> Iterable[runner_metrics.RunnerDeletedInfo]:
         """Remove idle and/or busy runners.
 
         Args:
@@ -286,7 +287,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Runners successfully flushed, cleaning up.")
         return self.cleanup(remove_token)
 
-    def cleanup(self, remove_token: str) -> Iterable[runner_metrics.RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[runner_metrics.RunnerDeletedInfo]:
         """Cleanup runner and resource on the cloud.
 
         Args:
@@ -308,7 +309,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Deleting unhealthy runners.")
         extracted_runner_metrics = []
         for runner in runners.unhealthy:
-            pulled_metrics = self._delete_runner(runner, remove_token)
+            pulled_metrics = self._pull_metrics(runner)
+            self._delete_runner(runner, remove_token)
             runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", runner.instance_id)
@@ -321,35 +323,43 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Extracting metrics.")
         return extracted_runner_metrics
 
-    def _delete_runner(
-        self, instance: OpenstackInstance, remove_token: str
-    ) -> runner_metrics.PulledMetrics:
-        """Delete self-hosted runners by openstack instance.
+    def _pull_metrics(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
+        """TODO.
 
         Args:
             instance: The OpenStack instance.
-            remove_token: The GitHub remove token.
         """
         pulled_metrics = runner_metrics.PulledMetrics()
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
             pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
 
-            try:
-                logger.info("Running runner removal script for %s", instance.instance_id)
-                OpenStackRunnerManager._run_runner_removal_script(
-                    instance.instance_id.name, ssh_conn, remove_token
-                )
-            except _GithubRunnerRemoveError:
-                logger.warning(
-                    "Unable to run github runner removal script for %s",
-                    instance.instance_id,
-                    stack_info=True,
-                )
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id
             )
+        return pulled_metrics
+
+    def _delete_runner(self, instance: OpenstackInstance, remove_token: str) -> None:
+        """Delete self-hosted runners by openstack instance.
+
+        Args:
+            instance: The OpenStack instance.
+            remove_token: The GitHub remove token.
+        """
+        try:
+            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+            logger.info("Running runner removal script for %s", instance.instance_id)
+            OpenStackRunnerManager._run_runner_removal_script(
+                instance.instance_id.name, ssh_conn, remove_token
+            )
+        except _GithubRunnerRemoveError:
+            logger.warning(
+                "Unable to run github runner removal script for %s",
+                instance.instance_id,
+                stack_info=True,
+            )
+        except SSHError:
             logger.warning(
                 "Skipping runner remove script for %s due to SSH issues", instance.instance_id
             )
@@ -360,7 +370,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.instance_id
             )
-        return pulled_metrics
 
     def _get_runners_health(self) -> _RunnerHealth:
         """Get runners by health state.

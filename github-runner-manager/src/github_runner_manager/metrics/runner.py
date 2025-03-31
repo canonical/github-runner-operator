@@ -96,7 +96,7 @@ class PostJobMetrics(BaseModel):
     status_info: Optional[CodeInformation]
 
 
-class RunnerMetrics(BaseModel):
+class RunnerDeletedInfo(BaseModel):
     """Metrics for a runner.
 
     Attributes:
@@ -108,11 +108,95 @@ class RunnerMetrics(BaseModel):
         instance_id: The name of the runner.
     """
 
-    installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
+    installation_start_timestamp: NonNegativeFloat
+    # TODO rename to runner_installed_timestamp
+    installed_timestamp: NonNegativeFloat | None
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
     instance_id: InstanceID
+
+    @classmethod
+    def build_runner_deleted_info(
+        cls, instance_id: InstanceID, installation_start: datetime, pulled_metrics: "PulledMetrics"
+    ) -> "RunnerDeletedInfo":
+        """TODO.
+
+        Args:
+           instance_id: InstanceID of the runner.
+           installation_start: Creation time of the runner.
+           pulled_metrics: TODO.
+
+        Returns:
+           The RunnerDeletedInfo object for the runner.
+        """
+        runner_installed: float | None = None
+        if pulled_metrics.runner_installed is None:
+            logger.error(
+                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
+            )
+        else:
+            try:
+                runner_installed = float(pulled_metrics.runner_installed)
+            except ValueError:
+                logger.exception(
+                    "Error creating RunnerDeletedInfo %s, %s, %s",
+                    instance_id,
+                    installation_start,
+                    pulled_metrics,
+                )
+
+        if pulled_metrics.runner_installed is None:
+            logger.error(
+                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
+            )
+
+        pre_job_metrics: dict | None = None
+        post_job_metrics: dict | None = None
+        try:
+            pre_job_metrics = (
+                json.loads(pulled_metrics.pre_job_metrics)
+                if pulled_metrics.pre_job_metrics
+                else None
+            )
+            post_job_metrics = (
+                json.loads(pulled_metrics.post_job_metrics)
+                if pulled_metrics.post_job_metrics
+                else None
+            )
+        except (JSONDecodeError, TypeError):
+            logger.exception(
+                "Json Decode error. Corrupt metric data found for runner %s", instance_id
+            )
+
+        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
+            logger.error(
+                "Pre job metrics for runner %s %s are not correct. Value: %s",
+                instance_id,
+                pulled_metrics,
+                pre_job_metrics,
+            )
+            pre_job_metrics = None
+
+        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
+            logger.error(
+                "Post job metrics for runner %s %s are not correct. Value: %s",
+                instance_id,
+                pulled_metrics,
+                post_job_metrics,
+            )
+            post_job_metrics = None
+
+        return cls(
+            installation_start_timestamp=installation_start.timestamp(),
+            installed_timestamp=runner_installed,
+            pre_job=(  # pylint: disable=not-a-mapping
+                PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
+            ),
+            post_job=(  # pylint: disable=not-a-mapping
+                PostJobMetrics(**post_job_metrics) if post_job_metrics else None
+            ),
+            instance_id=instance_id,
+        )
 
 
 def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "PulledMetrics":
@@ -230,7 +314,7 @@ class PulledMetrics:
 
     def to_runner_metrics(
         self, instance_id: InstanceID, installation_start: datetime
-    ) -> RunnerMetrics | None:
+    ) -> RunnerDeletedInfo | None:
         """.
 
         Args:
@@ -238,7 +322,7 @@ class PulledMetrics:
            installation_start: Creation time of the runner.
 
         Returns:
-           The RunnerMetrics object for the runner or None if it can not be built.
+           The RunnerDeletedInfo object for the runner or None if it can not be built.
         """
         if self.runner_installed is None:
             logger.error(
@@ -275,7 +359,7 @@ class PulledMetrics:
             post_job_metrics = None
 
         try:
-            return RunnerMetrics(
+            return RunnerDeletedInfo(
                 installation_start_timestamp=installation_start.timestamp(),
                 installed_timestamp=float(self.runner_installed),
                 pre_job=(  # pylint: disable=not-a-mapping
@@ -288,13 +372,16 @@ class PulledMetrics:
             )
         except ValueError:
             logger.exception(
-                "Error creating RunnerMetrics %s, %s, %s", instance_id, installation_start, self
+                "Error creating RunnerDeletedInfo %s, %s, %s",
+                instance_id,
+                installation_start,
+                self,
             )
             return None
 
 
 def issue_events(
-    runner_metrics: RunnerMetrics,
+    runner_metrics: RunnerDeletedInfo,
     flavor: str,
     job_metrics: Optional[GithubJobMetrics],
 ) -> set[Type[metric_events.Event]]:
@@ -311,7 +398,7 @@ def issue_events(
     issued_events: set[Type[metric_events.Event]] = set()
 
     try:
-        if runner_metrics.installation_start_timestamp:
+        if runner_metrics.installed_timestamp:
             issued_events.add(
                 _issue_runner_installed(runner_metrics=runner_metrics, flavor=flavor)
             )
@@ -364,7 +451,7 @@ def issue_events(
 
 
 def _issue_runner_installed(
-    runner_metrics: RunnerMetrics, flavor: str
+    runner_metrics: RunnerDeletedInfo, flavor: str
 ) -> Type[metric_events.Event]:
     """Issue the RunnerInstalled metric for a runner.
 
@@ -377,12 +464,13 @@ def _issue_runner_installed(
     Returns:
         The type of the issued event.
     """
+    # the installation_start_timestamp should be present
+    # JAVI check this
+    assert runner_metrics.installed_timestamp
+    assert runner_metrics.installation_start_timestamp
+    duration = runner_metrics.installed_timestamp - runner_metrics.installation_start_timestamp
     runner_installed = metric_events.RunnerInstalled(
-        timestamp=runner_metrics.installed_timestamp,
-        flavor=flavor,
-        # the installation_start_timestamp should be present
-        duration=runner_metrics.installed_timestamp  # type: ignore
-        - runner_metrics.installation_start_timestamp,  # type: ignore
+        timestamp=runner_metrics.installed_timestamp, flavor=flavor, duration=duration
     )
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
@@ -391,7 +479,7 @@ def _issue_runner_installed(
 
 
 def _issue_runner_start(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: Optional[GithubJobMetrics]
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStart metric for a runner.
 
@@ -412,7 +500,7 @@ def _issue_runner_start(
 
 
 def _issue_runner_stop(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: GithubJobMetrics
 ) -> Type[metric_events.Event]:
     """Issue the RunnerStop metric for a runner.
 
@@ -433,7 +521,7 @@ def _issue_runner_stop(
 
 
 def _create_runner_start(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: Optional[GithubJobMetrics]
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: Optional[GithubJobMetrics]
 ) -> metric_events.RunnerStart:
     """Create the RunnerStart event.
 
@@ -450,6 +538,9 @@ def _create_runner_start(
     Returns:
         The RunnerStart event.
     """
+    # TODO change for a log?
+    assert runner_metrics.installed_timestamp
+
     if (pre_job_metrics := runner_metrics.pre_job) is None:
         raise RunnerMetricsError(
             "Pre job runner metric not found during RunnerStop event, contact developers"
@@ -489,7 +580,7 @@ def _create_runner_start(
 
 
 def _create_runner_stop(
-    runner_metrics: RunnerMetrics, flavor: str, job_metrics: GithubJobMetrics
+    runner_metrics: RunnerDeletedInfo, flavor: str, job_metrics: GithubJobMetrics
 ) -> metric_events.RunnerStop:
     """Create the RunnerStop event.
 

@@ -19,7 +19,7 @@ from github_runner_manager.metrics.runner import (
     PostJobMetrics,
     PreJobMetrics,
     PullFileError,
-    RunnerMetrics,
+    RunnerDeletedInfo,
     ssh_pull_file,
 )
 from github_runner_manager.types_.github import JobConclusion
@@ -41,8 +41,8 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
-    """Create a RunnerMetrics object that is suitable for most tests.
+def _create_metrics_data(instance_id: InstanceID) -> RunnerDeletedInfo:
+    """Create a RunnerDeletedInfo object that is suitable for most tests.
 
     Args:
         instance_id: The test runner name.
@@ -50,7 +50,7 @@ def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
     Returns:
         Test metrics data.
     """
-    return RunnerMetrics(
+    return RunnerDeletedInfo(
         installation_start_timestamp=1,
         installed_timestamp=2,
         pre_job=PreJobMetrics(
@@ -199,13 +199,6 @@ def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
 
 
 @pytest.mark.parametrize(
-    "with_installation_start",
-    [
-        pytest.param(True, id="with installation start ts"),
-        pytest.param(False, id="without installation start ts"),
-    ],
-)
-@pytest.mark.parametrize(
     "with_pre_job, with_post_job",
     [
         pytest.param(True, True, id="with pre_job, with_post_job"),
@@ -214,7 +207,6 @@ def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
     ],
 )
 def test_issue_events_partial_metrics(
-    with_installation_start: bool,
     with_pre_job: bool,
     with_post_job: bool,
     issue_event_mock: MagicMock,
@@ -226,8 +218,6 @@ def test_issue_events_partial_metrics(
     """
     runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
-    if not with_installation_start:
-        runner_metrics_data.installation_start_timestamp = None
     if not with_pre_job:
         runner_metrics_data.pre_job = None
     if not with_post_job:
@@ -240,20 +230,19 @@ def test_issue_events_partial_metrics(
         runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
     )
 
-    expected_metrics = {metric_events.RunnerInstalled} if with_installation_start else set()
+    expected_metrics = {metric_events.RunnerInstalled}
     expected_metrics |= {metric_events.RunnerStart} if with_pre_job else set()
     expected_metrics |= {metric_events.RunnerStop} if with_post_job else set()
     assert issued_metrics == expected_metrics
 
-    if with_installation_start:
-        issue_event_mock.assert_any_call(
-            RunnerInstalled(
-                timestamp=runner_metrics_data.installed_timestamp,
-                flavor=flavor,
-                duration=runner_metrics_data.installed_timestamp
-                - runner_metrics_data.installation_start_timestamp,
-            )
+    issue_event_mock.assert_any_call(
+        RunnerInstalled(
+            timestamp=runner_metrics_data.installed_timestamp,
+            flavor=flavor,
+            duration=runner_metrics_data.installed_timestamp
+            - runner_metrics_data.installation_start_timestamp,
         )
+    )
 
     if with_pre_job:
         issue_event_mock.assert_any_call(

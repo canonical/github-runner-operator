@@ -20,7 +20,7 @@ from github_runner_manager.metrics.runner import (
     PostJobStatus,
     PreJobMetrics,
     PullFileError,
-    RunnerMetrics,
+    RunnerDeletedInfo,
 )
 from github_runner_manager.openstack_cloud import (
     health_checks,
@@ -226,7 +226,7 @@ def _params_test_cleanup_extract_metrics():
             None,
             None,
             [
-                RunnerMetrics(
+                RunnerDeletedInfo(
                     instance_id=InstanceID(
                         prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                     ),
@@ -241,7 +241,7 @@ def _params_test_cleanup_extract_metrics():
             pre_job_metrics_str,
             None,
             [
-                RunnerMetrics(
+                RunnerDeletedInfo(
                     instance_id=InstanceID(
                         prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                     ),
@@ -263,7 +263,7 @@ def _params_test_cleanup_extract_metrics():
             pre_job_metrics_str,
             post_job_metrics_str,
             [
-                RunnerMetrics(
+                RunnerDeletedInfo(
                     instance_id=InstanceID(
                         prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                     ),
@@ -297,13 +297,13 @@ def test_cleanup_extract_metrics(
     runner_installed_metrics: str | None,
     pre_job_metrics: str | None,
     post_job_metrics: str | None,
-    result: Iterable[RunnerMetrics],
+    result: Iterable[RunnerDeletedInfo],
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Given different values for values of metrics for a runner.
     act: Cleanup the runner for those metrics.
-    assert: The expected RunnerMetrics object is obtained, or None if there should not be one.
+    assert: The expected RunnerDeletedInfo object is obtained, or None if there should not be one.
     """
     ssh_pull_file_mock = MagicMock()
     monkeypatch.setattr(

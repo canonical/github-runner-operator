@@ -10,7 +10,7 @@ from enum import Enum, auto
 from typing import Iterable, Iterator, Sequence, Tuple
 
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.metrics.runner import RunnerDeletedInfo
 
 logger = logging.getLogger(__name__)
 
@@ -176,7 +176,9 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str
+    ) -> RunnerDeletedInfo | None:
         """Delete self-hosted runner.
 
         Args:
@@ -185,7 +187,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
+    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerDeletedInfo]:
         """Stop all runners.
 
         Args:
@@ -195,7 +197,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[RunnerDeletedInfo]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.
