@@ -145,6 +145,9 @@ class CloudRunnerInstance:
     state: CloudRunnerState
 
 
+# TODO PUT RunnerDeletedInfo (maybe call it CloudRunnerDeletedInfo) IN HERE?
+
+
 class CloudRunnerManager(abc.ABC):
     """Manage runner instance on cloud.
 

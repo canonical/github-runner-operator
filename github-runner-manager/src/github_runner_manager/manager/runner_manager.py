@@ -7,11 +7,16 @@ import logging
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
+from github_runner_manager.errors import (
+    GithubApiError,
+    GithubMetricsError,
+    RunnerDoesNotExistError,
+    RunnerError,
+)
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -192,7 +197,9 @@ class RunnerManager:
             ]
         return cast(tuple[RunnerInstance], tuple(runner_instances))
 
-    def delete_runners(self, num: int) -> IssuedMetricEventsStats:
+    def delete_runners(
+        self, num: int
+    ) -> tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete runners.
 
         Args:
@@ -210,7 +217,7 @@ class RunnerManager:
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
-    ) -> IssuedMetricEventsStats:
+    ) -> tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete runners according to state.
 
         Args:
@@ -233,10 +240,10 @@ class RunnerManager:
         if flush_mode == FlushMode.FLUSH_BUSY:
             busy = True
         remove_token = self._github.get_removal_token()
-        stats = self._cloud.flush_runners(remove_token, busy)
-        return self._issue_runner_metrics(metrics=stats)
+        deleted_runners = self._cloud.flush_runners(remove_token, busy)
+        return self._issue_runner_metrics(metrics=deleted_runners), deleted_runners
 
-    def cleanup(self) -> IssuedMetricEventsStats:
+    def cleanup(self) -> tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Run cleanup of the runners and other resources.
 
         Returns:
@@ -244,8 +251,8 @@ class RunnerManager:
         """
         self._cleanup_github_offline_runners()
         remove_token = self._github.get_removal_token()
-        deleted_runner_metrics = self._cloud.cleanup(remove_token)
-        return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+        deleted_runners = self._cloud.cleanup(remove_token)
+        return self._issue_runner_metrics(metrics=deleted_runners), deleted_runners
 
     def _cleanup_github_offline_runners(self) -> None:
         """Run cleanup of github runners in offline state."""
@@ -357,7 +364,7 @@ class RunnerManager:
 
     def _delete_runners(
         self, runners: Sequence[RunnerInstance], remove_token: str
-    ) -> IssuedMetricEventsStats:
+    ) -> tuple[IssuedMetricEventsStats, Iterable[RunnerDeletedInfo]]:
         """Delete list of runners.
 
         Args:
@@ -367,14 +374,17 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        runner_metrics_list = []
+        deleted_runners: list[RunnerDeletedInfo] = []
         for runner in runners:
-            deleted_runner_metrics = self._cloud.delete_runner(
-                instance_id=runner.instance_id, remove_token=remove_token
-            )
-            if deleted_runner_metrics is not None:
-                runner_metrics_list.append(deleted_runner_metrics)
-        return self._issue_runner_metrics(metrics=iter(runner_metrics_list))
+            try:
+                deleted_runner = self._cloud.delete_runner(
+                    instance_id=runner.instance_id, remove_token=remove_token
+                )
+                deleted_runner.append(deleted_runner)
+            except RunnerDoesNotExistError as exc:
+                logger.warning("Unable to delete runner %s. Error: %s}", runner.instance_id, exc)
+
+        return (self._issue_runner_metrics(metrics=iter(deleted_runners)), deleted_runners)
 
     def _issue_runner_metrics(
         self, metrics: Iterator[RunnerDeletedInfo]

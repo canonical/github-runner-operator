@@ -234,8 +234,8 @@ class RunnerScaler:
         Returns:
             Number of runners flushed.
         """
-        metric_stats = self._manager.cleanup()
-        delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
+        metric_stats, _ = self._manager.cleanup()
+        delete_metric_stats, _ = self._manager.flush_runners(flush_mode=flush_mode)
         events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
             event_name: delete_metric_stats.get(event_name, 0) + metric_stats.get(event_name, 0)
@@ -310,7 +310,7 @@ class RunnerScaler:
             The reconcile result.
         """
         delete_metric_stats = None
-        metric_stats = self._manager.cleanup()
+        metric_stats, _ = self._manager.cleanup()
         runners = self._manager.get_runners()
         logger.info("Reconcile runners from %s to %s", len(runners), expected_quantity)
         runner_diff = expected_quantity - len(runners)
@@ -323,7 +323,7 @@ class RunnerScaler:
                     "such as, image."
                 )
         elif runner_diff < 0:
-            delete_metric_stats = self._manager.delete_runners(-runner_diff)
+            delete_metric_stats, _ = self._manager.delete_runners(-runner_diff)
         else:
             logger.info("No changes to the number of runners.")
         # Merge the two metric stats.

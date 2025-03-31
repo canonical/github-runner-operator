@@ -23,6 +23,7 @@ from github_runner_manager.errors import (
     OpenStackError,
     OpenstackHealthCheckError,
     RunnerCreateError,
+    RunnerDoesNotExistError,
     RunnerStartError,
     SSHError,
 )
@@ -237,15 +238,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         Returns:
             Any metrics collected during the deletion of the runner.
+
+        Raises:
+            RunnerDoesNotExistError: TODO
         """
         logger.debug("Delete instance %s", instance_id)
         instance = self._openstack_cloud.get_instance(instance_id)
+        # TODO what to do in here?
         if instance is None:
-            logger.warning(
-                "Unable to delete instance %s as it is not found",
-                instance_id,
+            raise RunnerDoesNotExistError(
+                f"Unable to delete instance {instance_id} as it is not found"
             )
-            return None
 
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
@@ -312,23 +315,23 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.debug("Unknown health runners: %s", unknown_runner_names)
 
         logger.debug("Deleting unhealthy runners.")
-        extracted_runner_metrics = []
+        runners_deleted = []
         for runner in runners.unhealthy:
             pulled_metrics = self._pull_metrics(runner)
             runner_deleted_success = self._delete_runner(runner, remove_token)
-            runner_metric = runner_metrics.RunnerDeletedInfo.build_runner_deleted_info(
+            runner_deleted_info = runner_metrics.RunnerDeletedInfo.build_runner_deleted_info(
                 instance_id=runner.instance_id,
                 installation_start=runner.created_at,
                 pulled_metrics=pulled_metrics,
                 runner_deleted_success=runner_deleted_success,
             )
-            extracted_runner_metrics.append(runner_metric)
+            runners_deleted.append(runner_deleted_info)
         logger.debug("Cleaning up runner resources.")
         self._openstack_cloud.cleanup()
         logger.debug("Cleanup completed successfully.")
 
         logger.debug("Extracting metrics.")
-        return extracted_runner_metrics
+        return runners_deleted
 
     def _pull_metrics(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
         """TODO.
