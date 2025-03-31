@@ -1,0 +1,96 @@
+18:25:32 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-iok7 on cloud localhost
+18:25:32 WARNING unexpected facade SSHServer received from the controller
+18:25:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:34 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [allocating] waiting: waiting for machine
+18:26:04 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [allocating] waiting: waiting for machine
+18:26:35 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [allocating] waiting: agent initialising
+18:27:05 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [executing] maintenance: Setting up Builder.
+18:27:35 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [executing] maintenance: Setting up Builder.
+18:28:05 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [executing] maintenance: Setting up Builder.
+18:28:35 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [executing] maintenance: Setting up Builder.
+18:29:05 INFO Waiting for model:
+  github-runner-image-builder-ihe1wdup/0 [executing] maintenance: Setting up Builder.
+18:29:51 INFO Deploying local:jammy/github-runner-0
+18:29:51 INFO Waiting for model:
+  test-ihe1wdup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ihe1wdup/0 [idle] blocked: image integration required.
+18:30:21 INFO Waiting for model:
+  test-ihe1wdup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ihe1wdup/0 [idle] blocked: image integration required.
+18:30:52 INFO Waiting for model:
+  test-ihe1wdup/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ihe1wdup/0 [executing] blocked: image integration required.
+18:31:22 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:31:53 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:32:23 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:32:53 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:33:23 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:33:53 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:34:23 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:34:54 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:35:24 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:35:54 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:36:24 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:36:55 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:37:25 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:37:55 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:38:26 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:38:56 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:39:26 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:39:57 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:40:27 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:40:57 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ihe1wdup/0 [executing] active: Building image.
+18:41:28 INFO Waiting for model:
+  test-ihe1wdup/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ihe1wdup/0 [idle] active: 
+18:41:58 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] active: 
+18:42:04 INFO Waiting for model:
+  test-ihe1wdup/0 [idle] active:

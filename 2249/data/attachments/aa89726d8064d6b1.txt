@@ -1,0 +1,71 @@
+18:24:28 INFO Creating 1 runners
+18:24:29 INFO Creating openstack server with test-bnvypnz8-0-n-f9a6e9f14b6a
+18:24:53 WARNING NoValidConnectionsError. Unable to SSH into test-bnvypnz8-0-n-f9a6e9f14b6a with address 10.145.193.162. Error: [Errno None] Unable to connect to port 22 on 10.145.193.162
+18:24:53 WARNING Retrying error in 60 seconds: Failed to SSH to test-bnvypnz8-0-n-f9a6e9f14b6a during creation possible due to setup not completed
+18:25:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:53 INFO Authentication (publickey) successful!
+18:25:54 INFO Runner startup process found to be healthy on test-bnvypnz8-0-n-f9a6e9f14b6a
+18:25:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:54 INFO Authentication (publickey) successful!
+18:25:55 INFO Runner test-bnvypnz8-0-n-f9a6e9f14b6a found to be healthy
+18:25:55 INFO Runner test-bnvypnz8-0-n-f9a6e9f14b6a created successfully
+18:25:55 INFO Getting runners...
+18:25:56 INFO Getting all openstack servers managed by the charm
+18:25:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:58 INFO Authentication (publickey) successful!
+18:25:58 INFO Found following runners: {'test-bnvypnz8-0-n-f9a6e9f14b6a'}
+18:25:58 INFO Getting runners...
+18:26:00 INFO Getting all openstack servers managed by the charm
+18:26:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:01 INFO Authentication (publickey) successful!
+18:26:02 INFO Found following runners: {'test-bnvypnz8-0-n-f9a6e9f14b6a'}
+18:26:02 INFO Getting runners...
+18:26:03 INFO Getting all openstack servers managed by the charm
+18:26:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:04 INFO Authentication (publickey) successful!
+18:26:05 INFO Found following runners: {'test-bnvypnz8-0-n-f9a6e9f14b6a'}
+18:26:05 INFO Getting all openstack servers managed by the charm
+18:26:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:07 INFO Authentication (publickey) successful!
+18:26:08 INFO Getting runners...
+18:26:09 INFO Getting all openstack servers managed by the charm
+18:26:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:10 INFO Authentication (publickey) successful!
+18:26:11 INFO Found following runners: {'test-bnvypnz8-0-n-f9a6e9f14b6a'}
+18:26:12 INFO Offline github runners to delete: []:
+18:26:12 INFO Getting all openstack servers managed by the charm
+18:26:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:14 INFO Authentication (publickey) successful!
+18:26:15 INFO Cleaning up SSH key files
+18:26:15 INFO Found 1 key files, clean up 0 key files
+18:26:15 INFO Cleaning up openstack keypairs
+18:26:15 INFO Getting runners...
+18:26:17 INFO Getting all openstack servers managed by the charm
+18:26:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:18 INFO Authentication (publickey) successful!
+18:26:19 INFO Found following runners: {'test-bnvypnz8-0-n-f9a6e9f14b6a'}
+18:26:19 INFO Flushing idle runners...
+18:26:19 INFO Getting all openstack servers managed by the charm
+18:26:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:20 INFO Authentication (publickey) successful!
+18:26:21 INFO Attempting to kill runner process on test-bnvypnz8-0-n-f9a6e9f14b6a if not busy
+18:26:21 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:26:21 INFO Kill process command output, ok: True code 0, out: 1826
+, err: 
+18:26:21 INFO Getting all openstack servers managed by the charm
+18:26:22 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:22 INFO Authentication (publickey) successful!
+18:26:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:23 INFO Authentication (publickey) successful!
+18:26:23 INFO [chan 2] Opened sftp connection (server version 3)
+18:26:23 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.162, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:26:23 WARNING Failed to pull metrics for test-bnvypnz8-0-n-f9a6e9f14b6a: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:26:23 INFO Running runner removal script for test-bnvypnz8-0-n-f9a6e9f14b6a
+18:26:25 INFO Deleting openstack server with test-bnvypnz8-0-n-f9a6e9f14b6a
+18:26:27 INFO Cleaning up SSH key files
+18:26:27 INFO Found 0 key files, clean up 0 key files
+18:26:27 INFO Cleaning up openstack keypairs
+18:26:27 INFO Getting runners...
+18:26:28 INFO Getting all openstack servers managed by the charm
+18:26:29 INFO Found following runners: set()

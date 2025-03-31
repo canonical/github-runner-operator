@@ -1,0 +1,104 @@
+18:50:26 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active: 
+18:50:56 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] active:
+18:53:29 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active: 
+18:54:00 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] active: 
+18:54:06 INFO Wait for condition not met, sleeping 30
+18:54:49 INFO [TEST SETUP] Run command pkill -9 run.sh on test-qk05b8fo-0-n-6bf1090b16b2
+18:54:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.222', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e4:ea:8a'}]])
+18:54:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qk05b8fo-0-n-6bf1090b16b2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.222 pkill -9 run.sh'
+18:54:55 INFO Runner test-qk05b8fo-0-n-6bf1090b16b2 status: online
+18:54:55 INFO Runner still marked as online, waiting for it to be marked offline
+18:56:18 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active: 
+18:56:47 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743447025.8992975, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.302547216415405}
+{"timestamp": 1743447041.2637393, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.14501667022705}
+{"timestamp": 1743447183.7281473, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 108.20928287506104}
+{"timestamp": 1743447208.7837481, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 23.85751724243164}
+{"timestamp": 1743447229.1075332, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 19.114513635635376}
+{"timestamp": 1743447139.0, "event": "runner_installed", "flavor": "test-qk05b8fo", "duration": 47.0}
+{"timestamp": 1743447250.0, "event": "runner_start", "flavor": "test-qk05b8fo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 111.0, "queue_duration": 3.0}
+{"timestamp": 1743447291.0, "event": "runner_stop", "flavor": "test-qk05b8fo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1743447377.2544763, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.00139284133911}
+{"timestamp": 1743447390.8071926, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.294769048690796}
+18:56:49 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-2tsw  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  18:56:49Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qk05b8fo           active      1  github-runner-image-builder  latest/edge   68  no       
+test-qk05b8fo                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-qk05b8fo/0*  active    idle   0        10.168.132.239            
+test-qk05b8fo/0*                         active    idle   1        10.168.132.140  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.168.132.239  juju-8788d2-0  ubuntu@22.04      Running
+1        started  10.168.132.140  juju-8788d2-1  ubuntu@22.04      Running
+
+18:56:50 INFO Juju error logs:
+
+machine-0: 18:26:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qk05b8fo-0: 18:26:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-qk05b8fo-0: 18:26:56 ERROR unit.github-runner-image-builder-qk05b8fo/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:30:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qk05b8fo-0: 18:30:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-qk05b8fo-0: 18:49:21 ERROR unit.test-qk05b8fo/0.juju-log Unable to get SSH connection for instance test-qk05b8fo-0-n-044cad61620a, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-qk05b8fo-0-n-044cad61620a, key path: /home/runner-manager/.ssh/test-qk05b8fo-0-n-044cad61620a.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-qk05b8fo-0-n-044cad61620a
+unit-test-qk05b8fo-0: 18:49:25 ERROR unit.test-qk05b8fo/0.juju-log Unable to get SSH connection for instance test-qk05b8fo-0-n-044cad61620a, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-qk05b8fo-0-n-044cad61620a, key path: /home/runner-manager/.ssh/test-qk05b8fo-0-n-044cad61620a.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-qk05b8fo-0-n-044cad61620a
+unit-test-qk05b8fo-0: 18:49:27 ERROR unit.test-qk05b8fo/0.juju-log Failed to get SSH connection while removing test-qk05b8fo-0-n-044cad61620a
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qk05b8fo-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-qk05b8fo-0-n-044cad61620a, key path: /home/runner-manager/.ssh/test-qk05b8fo-0-n-044cad61620a.key
+unit-test-qk05b8fo-0: 18:49:29 ERROR unit.test-qk05b8fo/0.juju-log Invalid pulled metrics. No runner_installed information for test-qk05b8fo-0-n-044cad61620a.
+
+18:56:50 INFO Forgetting model main...

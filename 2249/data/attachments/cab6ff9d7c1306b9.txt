@@ -1,0 +1,119 @@
+18:25:12 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-failure-2tsw on cloud localhost
+18:25:12 WARNING unexpected facade SSHServer received from the controller
+18:25:12 INFO GitHub token rate limit: Rate(reset=2025-03-31 19:25:12+00:00, remaining=5000, limit=5000)
+18:25:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:28 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [allocating] waiting: waiting for machine
+18:25:58 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [allocating] waiting: waiting for machine
+18:26:28 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:26:58 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:27:29 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:27:59 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:28:29 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:29:00 INFO Waiting for model:
+  github-runner-image-builder-qk05b8fo/0 [executing] maintenance: Setting up Builder.
+18:29:40 INFO Deploying local:jammy/github-runner-0
+18:29:40 INFO Waiting for model:
+  test-qk05b8fo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qk05b8fo/0 [idle] blocked: image integration required.
+18:30:10 INFO Waiting for model:
+  test-qk05b8fo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qk05b8fo/0 [idle] blocked: image integration required.
+18:30:40 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-qk05b8fo/0 [idle] blocked: image integration required.
+18:31:11 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:31:41 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:32:12 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:32:42 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:33:12 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:33:43 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:34:13 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:34:44 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:35:14 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:35:45 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:36:15 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:36:45 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:37:15 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:37:45 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:38:16 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:38:46 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:39:16 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:39:46 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:40:16 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:40:46 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:41:16 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qk05b8fo/0 [executing] active: Building image.
+18:41:47 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] maintenance: Reconciling runners
+18:42:20 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active:
+18:47:58 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active: 
+18:48:28 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] active: 
+18:48:38 INFO [TEST SETUP] Exposing port 8080 on test-qk05b8fo-0-n-044cad61620a
+18:48:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7e:4d:f6'}]])
+18:48:42 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-qk05b8fo-0-n-044cad61620a
+18:48:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7e:4d:f6'}]])
+18:48:43 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qk05b8fo-0-n-044cad61620a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.71 nc -z localhost 8080'
+18:48:45 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-qk05b8fo-0-n-044cad61620a
+18:48:45 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7e:4d:f6'}]])
+18:48:46 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qk05b8fo-0-n-044cad61620a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.71 curl http://localhost:8080'
+18:48:50 INFO Wait for condition not met, sleeping 10
+18:49:33 INFO Waiting for model:
+  test-qk05b8fo/0 [executing] active: 
+18:50:04 INFO Waiting for model:
+  test-qk05b8fo/0 [idle] active: 
+18:50:07 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743446817.0, "event": "runner_installed", "flavor": "test-qk05b8fo", "duration": 149.0}
+{"timestamp": 1743446933.0, "event": "runner_start", "flavor": "test-qk05b8fo", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 116.0, "queue_duration": 1.0}
+{"timestamp": 1743446933.0, "event": "runner_stop", "flavor": "test-qk05b8fo", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1743446973.0508275, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 28.924670457839966}
+{"timestamp": 1743446990.86162, "event": "reconciliation", "flavor": "test-qk05b8fo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.479629039764404}
