@@ -70,7 +70,11 @@ service_config:
     http: http://httpproxy.example.com:3128
     https: http://httpsproxy.example.com:3128
     no_proxy: 127.0.0.1
-    use_aproxy: false
+  runner_proxy_config:
+    http: http://httprunnerproxy.example.com:3128
+    https: http://httpsrunnerproxy.example.com:3128
+    no_proxy: 127.0.0.1
+  use_aproxy: false
   repo_policy_compliance:
     token: token
     url: https://compliance.example.com
@@ -96,8 +100,13 @@ def app_config_fixture() -> ApplicationConfiguration:
                 http="http://httpproxy.example.com:3128",  # type: ignore
                 https="http://httpsproxy.example.com:3128",  # type: ignore
                 no_proxy="127.0.0.1",
-                use_aproxy=False,
             ),
+            runner_proxy_config=ProxyConfig(
+                http="http://httprunnerproxy.example.com:3128",  # type: ignore
+                https="http://httpsrunnerproxy.example.com:3128",  # type: ignore
+                no_proxy="127.0.0.1",
+            ),
+            use_aproxy=False,
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
