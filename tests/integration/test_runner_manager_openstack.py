@@ -98,16 +98,12 @@ def github_path_fixture(path: str) -> GitHubPath:
 def openstack_proxy_config_fixture(
     openstack_http_proxy: str, openstack_https_proxy: str, openstack_no_proxy: str
 ) -> ProxyConfig:
-    use_aproxy = False
-    if openstack_http_proxy or openstack_https_proxy:
-        use_aproxy = True
     http_proxy = openstack_http_proxy if openstack_http_proxy else None
     https_proxy = openstack_https_proxy if openstack_https_proxy else None
     return ProxyConfig(
         http=http_proxy,
         https=https_proxy,
         no_proxy=openstack_no_proxy,
-        use_aproxy=use_aproxy,
     )
 
 
@@ -154,11 +150,16 @@ async def openstack_runner_manager_fixture(
         flavor=flavor_name,
         network=network_name,
     )
+
+    use_aproxy = bool(proxy_config.proxy_address)
+
     service_config = SupportServiceConfig(
         proxy_config=proxy_config,
+        runner_proxy_config=proxy_config,
         dockerhub_mirror=None,
         ssh_debug_connections=[],
         repo_policy_compliance=None,
+        use_aproxy=use_aproxy,
     )
 
     openstack_runner_manager_config = OpenStackRunnerManagerConfig(

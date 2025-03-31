@@ -368,7 +368,7 @@ async def image_builder_fixture(
             "github-runner-image-builder",
             application_name=application_name,
             channel="latest/edge",
-            revision=61,
+            revision=68,
             config={
                 "build-interval": "12",
                 "revision-history-limit": "2",
@@ -381,6 +381,7 @@ async def image_builder_fixture(
                 "openstack-user-name": private_endpoint_config["username"],
                 "build-flavor": flavor_name,
                 "build-network": network_name,
+                "architecture": "amd64",
             },
         )
         await model.wait_for_idle(

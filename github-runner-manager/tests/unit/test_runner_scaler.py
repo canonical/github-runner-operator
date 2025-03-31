@@ -141,8 +141,8 @@ def application_configuration_fixture() -> ApplicationConfiguration:
                 http="http://httpproxy.example.com:3128",
                 https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
-                use_aproxy=False,
             ),
+            use_aproxy=False,
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
@@ -301,8 +301,8 @@ def test_build_runner_scaler(
                 http="http://httpproxy.example.com:3128",
                 https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
-                use_aproxy=False,
             ),
+            use_aproxy=False,
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
@@ -348,8 +348,8 @@ def test_build_runner_scaler(
                     http="http://httpproxy.example.com:3128",
                     https="http://httpsproxy.example.com:3128",
                     no_proxy="127.0.0.1",
-                    use_aproxy=False,
                 ),
+                use_aproxy=False,
                 dockerhub_mirror="https://docker.example.com",
                 ssh_debug_connections=[
                     SSHDebugConnection(
