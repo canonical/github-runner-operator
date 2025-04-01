@@ -8,8 +8,10 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
+from github_runner_manager import constants
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
+    UserInfo,
 )
 from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
@@ -106,16 +108,22 @@ class RunnerScaler:
         cls,
         application_configuration: ApplicationConfiguration,
         openstack_configuration: OpenStackConfiguration,
+        user: UserInfo | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
         Args:
             application_configuration: Main configuration for the application.
             openstack_configuration: OpenStack configuration.
+            user: The user to run reactive process.
 
         Returns:
             A new RunnerScaler.
         """
+        if user is None:
+            user = UserInfo(
+                user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP
+            )
         labels = application_configuration.extra_labels
         server_config = None
         base_quantity = 0
@@ -142,6 +150,7 @@ class RunnerScaler:
             github_configuration=application_configuration.github_config,
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
+                user=user,
             ),
             labels=labels,
         )
@@ -165,6 +174,7 @@ class RunnerScaler:
         return cls(
             runner_manager=runner_manager,
             reactive_process_config=reactive_runner_config,
+            user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
         )
@@ -173,6 +183,7 @@ class RunnerScaler:
         self,
         runner_manager: RunnerManager,
         reactive_process_config: ReactiveProcessConfig | None,
+        user: UserInfo,
         base_quantity: int,
         max_quantity: int,
     ):
@@ -181,11 +192,13 @@ class RunnerScaler:
         Args:
             runner_manager: The RunnerManager to perform runner reconcile.
             reactive_process_config: Reactive runner configuration.
+            user: The user to run the reactive process.
             base_quantity: The number of intended non-reactive runners.
             max_quantity: The number of maximum runners for reactive.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
+        self._user = user
         self._base_quantity = base_quantity
         self._max_quantity = max_quantity
 
@@ -272,6 +285,7 @@ class RunnerScaler:
                     expected_quantity=self._max_quantity,
                     runner_manager=self._manager,
                     reactive_process_config=self._reactive_config,
+                    user=self._user,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats

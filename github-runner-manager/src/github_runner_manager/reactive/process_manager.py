@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Module for managing processes which spawn runners reactively."""
+import dataclasses
 import logging
 import os
 import shutil
@@ -12,6 +13,7 @@ import subprocess  # nosec
 from pathlib import Path
 
 from github_runner_manager import constants
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from github_runner_manager.utilities import secure_run_subprocess
 
@@ -38,12 +40,15 @@ class ReactiveRunnerError(Exception):
     """Raised when a reactive runner error occurs."""
 
 
-def reconcile(quantity: int, reactive_process_config: ReactiveProcessConfig) -> int:
+def reconcile(
+    quantity: int, reactive_process_config: ReactiveProcessConfig, user: UserInfo
+) -> int:
     """Reconcile the number of reactive runner processes.
 
     Args:
         quantity: The number of processes to spawn.
         reactive_process_config: The reactive runner configuration.
+        user: The user to run the reactive process.
 
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
@@ -56,7 +61,7 @@ def reconcile(quantity: int, reactive_process_config: ReactiveProcessConfig) -> 
     delta = quantity - current_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
-        _setup_logging_for_processes()
+        _setup_logging_for_processes(user.user, user.group)
         for _ in range(delta):
             _spawn_runner(reactive_process_config)
     elif delta < 0:
@@ -107,13 +112,18 @@ def _get_pids() -> list[int]:
     ]
 
 
-def _setup_logging_for_processes() -> None:
-    """Set up the log dir."""
+def _setup_logging_for_processes(user: str, group: str) -> None:
+    """Set up the log dir.
+
+    Args:
+        user: The user for logging.
+        group: The group owning the logs.
+    """
     REACTIVE_RUNNER_LOG_DIR.mkdir(exist_ok=True)
     shutil.chown(
         REACTIVE_RUNNER_LOG_DIR,
-        user=constants.RUNNER_MANAGER_USER,
-        group=constants.RUNNER_MANAGER_GROUP,
+        user=user,
+        group=group,
     )
 
 

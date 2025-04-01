@@ -15,5 +15,6 @@ from .base import (  # noqa: F401
     RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
+    UserInfo,
 )
 from .github import GitHubConfiguration, GitHubOrg, GitHubPath, GitHubRepo  # noqa: F401

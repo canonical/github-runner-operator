@@ -56,7 +56,6 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     host: str,
     port: int,
     debug: bool,
-    debug_disable_reconcile: bool,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
 
@@ -76,8 +75,12 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     http_server_args = HTTPServerArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(target=partial(start_reconcile_service, config, openstack_config, lock))
-    thread_manager.add_thread(target=partial(start_http_server, config, openstack_config, lock, http_server_args))
+    thread_manager.add_thread(
+        target=partial(start_reconcile_service, config, openstack_config, lock)
+    )
+    thread_manager.add_thread(
+        target=partial(start_http_server, config, openstack_config, lock, http_server_args)
+    )
     thread_manager.start()
 
     thread_manager.raise_on_error()

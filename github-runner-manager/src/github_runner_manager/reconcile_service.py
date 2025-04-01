@@ -3,11 +3,14 @@
 
 """The reconcile service for managing the self-hosted runner."""
 
+import getpass
+import grp
 import logging
+import os
 from threading import Lock
 from time import sleep
 
-from github_runner_manager.configuration import ApplicationConfiguration
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
@@ -24,7 +27,8 @@ def start_reconcile_service(
         openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
     """
-    _ = RunnerScaler.build(app_config, openstack_config)
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+    _ = RunnerScaler.build(app_config, openstack_config, user)
     # The reconcile service is not implemented yet, current logging the lock status.
     while True:
         logger.info("Lock locked: %s", lock.locked())
