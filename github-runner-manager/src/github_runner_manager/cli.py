@@ -11,7 +11,7 @@ from typing import TextIO
 import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.http_server import start_http_server
+from github_runner_manager.http_server import HTTPServerArgs, start_http_server
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
 
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
     help="The file path containing the configurations.",
 )
 @click.option(
-    "--openstack-config",
+    "--openstack-config-file",
     type=click.File(mode="r", encoding="utf-8"),
     help="The file path containing the OpenStack configurations.",
 )
@@ -56,7 +56,7 @@ logger = logging.getLogger(__name__)
     help="Disable reconcile thread for debugging.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(
+def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config_file: TextIO,
     openstack_config_file: TextIO,
     host: str,
@@ -80,6 +80,7 @@ def main(
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
     openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
+    http_server_args = HTTPServerArgs(host=host, port=port, debug=debug)
 
     threads = []
     if not debug_disable_reconcile:
@@ -87,7 +88,7 @@ def main(
         service.start()
         threads.append(service)
     http_server = Thread(
-        target=partial(start_http_server, config, openstack_config, lock, host, port, debug)
+        target=partial(start_http_server, config, openstack_config, lock, http_server_args)
     )
     http_server.start()
     threads.append(http_server)

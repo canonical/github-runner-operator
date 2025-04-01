@@ -6,6 +6,7 @@
 The HTTP server for request to the github-runner-manager.
 """
 
+from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
@@ -83,13 +84,26 @@ def get_lock() -> Lock:
     raise LockError("Lock not configured")
 
 
+@dataclass
+class HTTPServerArgs:
+    """Arguments for HTTP server.
+
+    Attributes:
+        host: The hostname to listen on for the HTTP server.
+        port: The port to listen on for the HTTP server.
+        debug: Start the flask HTTP server in debug mode.
+    """
+
+    host: str
+    port: int
+    debug: bool
+
+
 def start_http_server(
     app_config: ApplicationConfiguration,
     openstack_config: OpenStackConfiguration,
     lock: Lock,
-    host: str,
-    port: int,
-    debug: bool,
+    http_server_args: HTTPServerArgs,
 ) -> None:
     """Start the HTTP server for interacting with the github-runner-manager service.
 
@@ -97,13 +111,15 @@ def start_http_server(
         app_config: The application configuration.
         openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
-        host: The hostname to listen on for the HTTP server.
-        port: The port to listen on for the HTTP server.
-        debug: Start the flask HTTP server in debug mode.
     """
     # The lock is passed from the caller, hence the need to update the global variable.
     global _lock  # pylint: disable=global-statement
     _lock = lock
     app.config[APP_CONFIG_NAME] = app_config
     app.config[OPENSTACK_CONFIG_NAME] = openstack_config
-    app.run(host=host, port=port, debug=debug, use_reloader=False)
+    app.run(
+        host=http_server_args.host,
+        port=http_server_args.port,
+        debug=http_server_args.debug,
+        use_reloader=False,
+    )
