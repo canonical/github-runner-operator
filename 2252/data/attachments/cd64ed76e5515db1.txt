@@ -1,0 +1,406 @@
+18:24:16 INFO Adding model github-pr-e884d-lxd:test-debug-ssh-tav9 on cloud localhost
+18:24:17 WARNING unexpected facade AgentLifeFlag received from the controller
+18:24:17 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:24:17 WARNING unexpected facade SecretsDrain received from the controller
+18:24:18 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:24:19 INFO Waiting for model:
+  github-runner-image-builder-brusr61x (not enough units yet - 0/1)
+18:24:49 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [allocating] waiting: waiting for machine
+18:25:19 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [executing] maintenance: Setting up Builder.
+18:25:49 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [executing] maintenance: Setting up Builder.
+18:26:19 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [executing] maintenance: Setting up Builder.
+18:26:49 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [executing] maintenance: Setting up Builder.
+18:27:19 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [executing] maintenance: Setting up Builder.
+18:27:49 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [idle] blocked: image integration required.
+18:28:10 INFO Deploying local:jammy/github-runner-0
+18:28:10 INFO Waiting for model:
+  test-brusr61x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-brusr61x/0 [idle] blocked: image integration required.
+18:28:40 INFO Waiting for model:
+  test-brusr61x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-brusr61x/0 [idle] blocked: image integration required.
+18:29:10 INFO Waiting for model:
+  test-brusr61x/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-brusr61x/0 [idle] blocked: image integration required.
+18:29:40 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:30:10 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:30:40 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:31:10 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:31:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:32:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:32:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:33:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:33:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:34:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:34:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:35:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:35:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:36:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:36:41 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:37:11 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:37:42 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:38:12 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:38:42 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: Building image.
+18:39:12 INFO Waiting for model:
+  test-brusr61x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-brusr61x/0 [executing] active: 
+18:39:42 INFO Waiting for model:
+  test-brusr61x/0 [idle] active: 
+18:39:53 INFO GitHub token rate limit: Rate(reset=2025-04-01 19:09:55+00:00, remaining=4880, limit=5000)
+18:39:57 INFO Deploying ch:amd64/jammy/tmate-ssh-server-10
+18:39:58 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:39:58 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:40:28 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:40:58 INFO Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+18:41:05 INFO Waiting for model:
+  github-runner-image-builder-brusr61x/0 [idle] active: 
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+18:41:35 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:42:05 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:42:36 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Added debug-ssh relation
+18:43:06 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:43:36 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:44:06 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:44:36 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:45:06 INFO Waiting for model:
+  test-brusr61x/0 [executing] maintenance: Reconciling runners
+18:45:28 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.43.49.81 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-brusr61x-0-n-433d0cbe8af3
+18:45:28 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.164', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0c:73:6e'}]])
+18:45:29 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-brusr61x-0-n-433d0cbe8af3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.164 sudo iptables -t nat -A OUTPUT -p tcp -d 10.43.49.81 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+18:45:31 INFO [TEST SETUP] Exposing port 10022 on test-brusr61x-0-n-433d0cbe8af3
+18:45:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.164', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0c:73:6e'}]])
+18:45:34 INFO [TEST SETUP] Run command nc -z localhost 10022 on test-brusr61x-0-n-433d0cbe8af3
+18:45:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.164', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0c:73:6e'}]])
+18:45:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-brusr61x-0-n-433d0cbe8af3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.164 nc -z localhost 10022'
+18:45:37 INFO Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+18:45:38 INFO Wait for condition not met, sleeping 10
+18:45:50 INFO Wait for condition not met, sleeping 60
+18:46:50 INFO Wait for condition not met, sleeping 60
+18:47:51 INFO Wait for condition not met, sleeping 60
+18:48:51 INFO Wait for condition not met, sleeping 60
+18:49:52 INFO Wait for condition not met, sleeping 60
+18:50:54 INFO Logs: ﻿2025-04-01T18:45:43.0469194Z Current runner version: '2.323.0'
+2025-04-01T18:45:43.0478992Z Runner name: 'test-brusr61x-0-n-433d0cbe8af3'
+2025-04-01T18:45:43.0480443Z Runner group name: 'Default'
+2025-04-01T18:45:43.0481704Z Machine name: 'github-runner'
+2025-04-01T18:45:43.0488487Z ##[group]GITHUB_TOKEN Permissions
+2025-04-01T18:45:43.0491581Z Actions: write
+2025-04-01T18:45:43.0492349Z Attestations: write
+2025-04-01T18:45:43.0493113Z Checks: write
+2025-04-01T18:45:43.0493777Z Contents: write
+2025-04-01T18:45:43.0494493Z Deployments: write
+2025-04-01T18:45:43.0495240Z Discussions: write
+2025-04-01T18:45:43.0496004Z Issues: write
+2025-04-01T18:45:43.0496682Z Metadata: read
+2025-04-01T18:45:43.0497379Z Models: read
+2025-04-01T18:45:43.0498404Z Packages: write
+2025-04-01T18:45:43.0499127Z Pages: write
+2025-04-01T18:45:43.0499799Z PullRequests: write
+2025-04-01T18:45:43.0500748Z RepositoryProjects: write
+2025-04-01T18:45:43.0501554Z SecurityEvents: write
+2025-04-01T18:45:43.0502320Z Statuses: write
+2025-04-01T18:45:43.0503210Z ##[endgroup]
+2025-04-01T18:45:43.0505941Z Secret source: Actions
+2025-04-01T18:45:43.0506848Z Prepare workflow directory
+2025-04-01T18:45:43.0964881Z Prepare all required actions
+2025-04-01T18:45:43.1036160Z Getting action download info
+2025-04-01T18:45:43.2700567Z Download action repository 'canonical/action-tmate@main' (SHA:366d1538966693beedfa54130ba4505343f814df)
+2025-04-01T18:45:44.7121568Z Complete job name: workflow-dispatch-tests
+2025-04-01T18:45:44.7839378Z A job started hook has been configured by the self-hosted runner administrator
+2025-04-01T18:45:44.8097296Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2025-04-01T18:45:44.8136478Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-04-01T18:45:44.8139353Z ##[endgroup]
+2025-04-01T18:45:44.8735856Z ##[group]Run canonical/action-tmate@main
+2025-04-01T18:45:44.8737122Z with:
+2025-04-01T18:45:44.8737851Z   sudo: auto
+2025-04-01T18:45:44.8738912Z   install-dependencies: true
+2025-04-01T18:45:44.8739936Z   limit-access-to-actor: auto
+2025-04-01T18:45:44.8741082Z   detached: false
+2025-04-01T18:45:44.8742660Z   github-token: ***
+2025-04-01T18:45:44.8743565Z ##[endgroup]
+2025-04-01T18:45:45.2740360Z Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+2025-04-01T18:45:45.3775725Z Get:2 http://availability-zone-1.clouds.archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+2025-04-01T18:45:45.6908312Z Get:3 http://availability-zone-1.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-04-01T18:45:45.7041517Z Get:4 http://availability-zone-1.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-04-01T18:45:46.0176478Z Fetched 508 kB in 1s (767 kB/s)
+2025-04-01T18:45:46.7932272Z Reading package lists...
+2025-04-01T18:45:46.8401479Z Reading package lists...
+2025-04-01T18:45:47.0402267Z Building dependency tree...
+2025-04-01T18:45:47.0406155Z Reading state information...
+2025-04-01T18:45:47.2872604Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.9).
+2025-04-01T18:45:47.2873419Z openssh-client set to manually installed.
+2025-04-01T18:45:47.2882144Z xz-utils is already the newest version (5.6.1+really5.4.5-1build0.1).
+2025-04-01T18:45:47.2887172Z xz-utils set to manually installed.
+2025-04-01T18:45:47.2888414Z 0 upgraded, 0 newly installed, 0 to remove and 6 not upgraded.
+2025-04-01T18:45:48.0123239Z Created symlink /etc/systemd/system/multi-user.target.wants/tmate-proxy.service → /etc/systemd/system/tmate-proxy.service.
+2025-04-01T18:45:51.1559789Z ssh -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:45:51.1605538Z 
+2025-04-01T18:45:51.1617335Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:45:51.1621370Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:45:56.1646973Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:45:56.1648266Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:01.1706288Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:01.1710086Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:06.1762653Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:06.1767261Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:11.1819140Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:11.1820814Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:16.1875943Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:16.1884319Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:21.1928205Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:21.1931968Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:26.1985392Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:26.1989879Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:31.2047727Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:31.2053054Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:36.2105908Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:36.2107317Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:41.2160462Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:41.2162161Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:46.2215712Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:46.2220546Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:51.2272996Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:51.2277466Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:56.2328709Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:46:56.2332926Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:01.2385043Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:01.2392523Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:06.2443292Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:06.2446470Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:11.2499132Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:11.2505953Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:16.2556459Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:16.2562288Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:21.2613125Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:21.2617344Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:26.2670688Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:26.2674677Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:31.2726635Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:31.2730504Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:36.2785967Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:36.2789015Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:41.2845365Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:41.2846706Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:46.2903493Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:46.2905724Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:51.2967330Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:51.2969895Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:56.2978709Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:47:56.2982938Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:01.3035969Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:01.3037055Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:06.3092216Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:06.3093386Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:11.3146694Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:11.3148311Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:16.3202559Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:16.3230071Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:21.3254500Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:21.3258344Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:26.3315343Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:26.3316258Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:31.3369542Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:31.3371472Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:36.3418266Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:36.3419226Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:41.3464314Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:41.3465042Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:46.3518579Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:46.3519938Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:51.3561318Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:51.3562816Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:56.3619222Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:48:56.3620095Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:01.3670371Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:01.3671412Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:06.3728451Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:06.3729503Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:11.3780120Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:11.3781574Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:16.3831443Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:16.3832265Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:21.3889646Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:21.3890933Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:26.3945651Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:26.3948212Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:31.3999869Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:31.4000987Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:36.4055310Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:36.4056137Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:41.4108585Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:41.4109767Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:46.4134726Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:46.4135691Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:51.4189654Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:51.4193694Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:56.4245913Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:49:56.4246898Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:01.4303040Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:01.4310016Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:06.4354793Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:06.4356973Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:11.4408510Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:11.4409676Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:16.4467311Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:16.4468763Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:21.4519238Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:21.4520014Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:26.4563962Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:26.4564972Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:31.4617171Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:31.4619234Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:36.4670417Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:36.4671707Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:41.4725930Z SSH: ssh -p 10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:41.4727078Z or: ssh -i <path-to-private-SSH-key> -p10022 6zhFnTXY2yLzETMMBrn8w38jy@10.43.49.81
+2025-04-01T18:50:44.8725488Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2025-04-01T18:50:44.8804497Z Post job cleanup.
+2025-04-01T18:50:44.9695211Z Cleaning up orphan processes
+2025-04-01T18:50:45.0125046Z Terminate orphan process: pid (2502) (tmate)
+2025-04-01T18:50:45.0176910Z Terminate orphan process: pid (2503) (bash)
+18:50:56 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-tav9  github-pr-e884d-lxd  localhost/localhost  3.1.10   unsupported  18:50:56Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-brusr61x           active      1  github-runner-image-builder  latest/edge   68  no       
+test-brusr61x                                  active      1  github-runner                               0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server             edge          10  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-brusr61x/0*  active    idle   0        10.43.49.169               
+test-brusr61x/0*                         active    idle   1        10.43.49.237               
+tmate-ssh-server/0*                      active    idle   2        10.43.49.81     10022/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.43.49.169  juju-a320fe-0  ubuntu@22.04      Running
+1        started  10.43.49.237  juju-a320fe-1  ubuntu@22.04      Running
+2        started  10.43.49.81   juju-a320fe-2  ubuntu@22.04      Running
+
+18:50:56 INFO Juju error logs:
+
+machine-0: 18:24:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:52 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:24:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-brusr61x-0: 18:24:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-brusr61x-0: 18:25:32 ERROR unit.github-runner-image-builder-brusr61x/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:28:43 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:28:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-brusr61x-0: 18:28:43 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:40:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:40:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:40:31 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-tmate-ssh-server-0: 18:40:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-brusr61x-0: 18:42:45 ERROR unit.test-brusr61x/0.juju-log debug-ssh:1: Unable to get SSH connection for instance test-brusr61x-0-n-213e7e4aa62e, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-brusr61x-0-n-213e7e4aa62e, key path: /home/runner-manager/.ssh/test-brusr61x-0-n-213e7e4aa62e.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-brusr61x-0-n-213e7e4aa62e
+unit-test-brusr61x-0: 18:42:50 ERROR unit.test-brusr61x/0.juju-log debug-ssh:1: Unable to get SSH connection for instance test-brusr61x-0-n-213e7e4aa62e, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-brusr61x-0-n-213e7e4aa62e, key path: /home/runner-manager/.ssh/test-brusr61x-0-n-213e7e4aa62e.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-brusr61x-0-n-213e7e4aa62e
+unit-test-brusr61x-0: 18:42:50 ERROR unit.test-brusr61x/0.juju-log debug-ssh:1: Failed to get SSH connection while removing test-brusr61x-0-n-213e7e4aa62e
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 335, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-brusr61x-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-brusr61x-0-n-213e7e4aa62e, key path: /home/runner-manager/.ssh/test-brusr61x-0-n-213e7e4aa62e.key
+unit-test-brusr61x-0: 18:42:52 ERROR unit.test-brusr61x/0.juju-log debug-ssh:1: Invalid pulled metrics. No runner_installed information for test-brusr61x-0-n-213e7e4aa62e.
+unit-test-brusr61x-0: 18:42:52 ERROR unit.test-brusr61x/0.juju-log debug-ssh:1: No metrics returned after deleting test-brusr61x-0-n-213e7e4aa62e
+
+18:50:57 INFO Forgetting model main...

@@ -1,0 +1,52 @@
+18:51:02 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] active:
+18:54:26 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] maintenance: Reconciling runners
+18:54:56 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] active: 
+18:55:02 INFO Wait for condition not met, sleeping 30
+18:55:46 INFO [TEST SETUP] Run command pkill -9 run.sh on test-uhfh81gk-0-n-7510ec1e8132
+18:55:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.52', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:21:d4:55'}]])
+18:55:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uhfh81gk-0-n-7510ec1e8132.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.52 pkill -9 run.sh'
+18:55:52 INFO Runner test-uhfh81gk-0-n-7510ec1e8132 status: online
+18:55:52 INFO Runner still marked as online, waiting for it to be marked offline
+18:57:19 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] maintenance: Reconciling runners
+18:57:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743533462.117373, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.912916421890259}
+{"timestamp": 1743533474.6583068, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.505454063415527}
+{"timestamp": 1743533643.2236986, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 139.24544215202332}
+{"timestamp": 1743533664.6740892, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 20.424034357070923}
+{"timestamp": 1743533684.1885142, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 18.468401193618774}
+{"timestamp": 1743533600.0, "event": "runner_installed", "flavor": "test-uhfh81gk", "duration": 85.0}
+{"timestamp": 1743533706.0, "event": "runner_start", "flavor": "test-uhfh81gk", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 106.0, "queue_duration": 3.0}
+{"timestamp": 1743533747.0, "event": "runner_stop", "flavor": "test-uhfh81gk", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1743533838.7987044, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.059520721435547}
+{"timestamp": 1743533852.2571526, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.360278606414795}
+18:57:50 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-mtss  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  18:57:50Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-uhfh81gk           active      1  github-runner-image-builder  latest/edge   68  no       
+test-uhfh81gk                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-uhfh81gk/0*  active    idle   0        10.126.27.213             
+test-uhfh81gk/0*                         active    idle   1        10.126.27.18    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.126.27.213  juju-115e13-0  ubuntu@22.04      Running
+1        started  10.126.27.18   juju-115e13-1  ubuntu@22.04      Running
+
+18:57:50 INFO Juju error logs:
+
+machine-0: 18:25:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-uhfh81gk-0: 18:25:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-uhfh81gk-0: 18:25:58 ERROR unit.github-runner-image-builder-uhfh81gk/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:29:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-uhfh81gk-0: 18:29:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+18:57:50 INFO Forgetting model main...

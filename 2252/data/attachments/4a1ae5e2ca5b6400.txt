@@ -1,0 +1,124 @@
+18:24:16 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-failure-mtss on cloud localhost
+18:24:16 WARNING unexpected facade SSHServer received from the controller
+18:24:16 INFO GitHub token rate limit: Rate(reset=2025-04-01 19:09:55+00:00, remaining=4990, limit=5000)
+18:24:31 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:32 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [allocating] waiting: waiting for machine
+18:25:02 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [allocating] waiting: waiting for machine
+18:25:33 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [executing] maintenance: Setting up Builder.
+18:26:03 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [executing] maintenance: Setting up Builder.
+18:26:34 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [executing] maintenance: Setting up Builder.
+18:27:04 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [executing] maintenance: Setting up Builder.
+18:27:34 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [executing] maintenance: Setting up Builder.
+18:28:05 INFO Waiting for model:
+  github-runner-image-builder-uhfh81gk/0 [idle] blocked: image integration required.
+18:28:38 INFO Deploying local:jammy/github-runner-0
+18:28:39 INFO Waiting for model:
+  test-uhfh81gk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uhfh81gk/0 [idle] blocked: image integration required.
+18:29:09 INFO Waiting for model:
+  test-uhfh81gk/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-uhfh81gk/0 [idle] blocked: image integration required.
+18:29:39 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:30:09 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:30:40 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:31:10 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:31:40 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:32:10 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:32:41 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:33:11 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:33:41 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:34:12 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:34:42 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:35:12 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:35:43 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:36:13 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:36:43 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:37:13 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:37:43 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:38:13 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:38:43 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:39:14 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:39:44 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:40:14 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:40:44 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:41:14 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uhfh81gk/0 [executing] active: Building image.
+18:41:44 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-uhfh81gk/0 [idle] active: 
+18:42:30 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] maintenance: Reconciling runners
+18:48:44 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] active: 
+18:49:14 INFO Waiting for model:
+  test-uhfh81gk/0 [idle] active: 
+18:49:25 INFO [TEST SETUP] Exposing port 8080 on test-uhfh81gk-0-n-7248199b8e75
+18:49:25 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.126', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:69:3a:7b'}]])
+18:49:29 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-uhfh81gk-0-n-7248199b8e75
+18:49:29 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.126', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:69:3a:7b'}]])
+18:49:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uhfh81gk-0-n-7248199b8e75.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.126 nc -z localhost 8080'
+18:49:32 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-uhfh81gk-0-n-7248199b8e75
+18:49:32 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.126', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:69:3a:7b'}]])
+18:49:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uhfh81gk-0-n-7248199b8e75.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.126 curl http://localhost:8080'
+18:49:37 INFO Wait for condition not met, sleeping 10
+18:50:13 INFO Waiting for model:
+  test-uhfh81gk/0 [executing] maintenance: Reconciling runners
+18:50:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743533274.0, "event": "runner_installed", "flavor": "test-uhfh81gk", "duration": 198.0}
+{"timestamp": 1743533380.0, "event": "runner_start", "flavor": "test-uhfh81gk", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-create-fork", "github_event": "workflow_dispatch", "idle": 106.0, "queue_duration": 1.0}
+{"timestamp": 1743533380.0, "event": "runner_stop", "flavor": "test-uhfh81gk", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-create-fork", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1743533412.3733962, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.040064811706543}
+{"timestamp": 1743533425.6518605, "event": "reconciliation", "flavor": "test-uhfh81gk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.242025136947632}

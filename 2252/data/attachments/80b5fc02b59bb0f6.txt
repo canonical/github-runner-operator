@@ -1,0 +1,130 @@
+18:56:59 INFO Adding model github-pr-e884d-lxd:test-reactive-xm5o on cloud localhost
+18:57:01 WARNING unexpected facade SSHServer received from the controller
+18:57:02 INFO GitHub token rate limit: Rate(reset=2025-04-01 19:52:44+00:00, remaining=4977, limit=5000)
+18:57:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:57:07 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [allocating] waiting: waiting for machine
+18:57:37 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [allocating] waiting: waiting for machine
+18:58:07 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+18:58:37 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+18:59:08 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+18:59:38 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+19:00:08 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+19:00:38 INFO Waiting for model:
+  github-runner-image-builder-t34xdsyt/0 [executing] maintenance: Setting up Builder.
+19:01:18 INFO Deploying local:jammy/github-runner-0
+19:01:18 INFO Waiting for model:
+  test-t34xdsyt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t34xdsyt/0 [idle] blocked: image integration required.
+19:01:48 INFO Waiting for model:
+  test-t34xdsyt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t34xdsyt/0 [idle] blocked: image integration required.
+19:02:18 INFO Waiting for model:
+  test-t34xdsyt/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t34xdsyt/0 [idle] blocked: image integration required.
+19:02:48 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:03:19 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:03:49 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:04:19 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:04:50 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:05:20 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:05:50 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:06:21 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:06:51 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:07:21 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:07:52 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:08:22 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:08:52 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:09:23 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:09:53 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:10:24 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:10:54 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t34xdsyt/0 [executing] active: Building image.
+19:11:24 INFO Waiting for model:
+  test-t34xdsyt/0 [executing] maintenance: Reconciling runners
+19:11:44 INFO Deploying ch:amd64/jammy/mongodb-212
+19:11:45 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:12:15 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:12:45 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+19:13:15 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+19:13:35 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:13:35 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:14:06 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:14:44 INFO Waiting for model:
+  test-t34xdsyt/0 [executing] active: 
+19:15:14 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active:
+19:15:20 INFO Wait for condition not met, sleeping 10
+19:16:09 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active: 
+19:16:24 INFO Wait for condition not met, sleeping 60
+19:17:56 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active: 
+19:18:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743534967.9813814, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 35.27812123298645}
+{"timestamp": 1743535013.0, "event": "runner_installed", "flavor": "test-t34xdsyt", "duration": 78.0}
+{"timestamp": 1743535017.0, "event": "runner_start", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743535020.0, "event": "runner_stop", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743535075.6096077, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.52625870704651}
+
+19:18:13 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743534967.9813814, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 35.27812123298645}
+{"timestamp": 1743535013.0, "event": "runner_installed", "flavor": "test-t34xdsyt", "duration": 78.0}
+{"timestamp": 1743535017.0, "event": "runner_start", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743535020.0, "event": "runner_stop", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743535075.6096077, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.52625870704651}
+
+19:18:14 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743534967.9813814, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 35.27812123298645}
+{"timestamp": 1743535013.0, "event": "runner_installed", "flavor": "test-t34xdsyt", "duration": 78.0}
+{"timestamp": 1743535017.0, "event": "runner_start", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743535020.0, "event": "runner_stop", "flavor": "test-t34xdsyt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743535075.6096077, "event": "reconciliation", "flavor": "test-t34xdsyt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.52625870704651}
+19:18:35 INFO Waiting for model:
+  test-t34xdsyt/0 [executing] active: 
+19:19:06 INFO Waiting for model:
+  test-t34xdsyt/0 [idle] active:
