@@ -5,7 +5,7 @@
 
 import logging
 from functools import partial
-from threading import Lock, Thread
+from threading import Lock
 from typing import TextIO
 
 import click
@@ -14,6 +14,7 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import HTTPServerArgs, start_http_server
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
+from github_runner_manager.thread_manager import ThreadManager
 
 logger = logging.getLogger(__name__)
 
@@ -48,13 +49,6 @@ logger = logging.getLogger(__name__)
     default=False,
     help="Debug mode for testing.",
 )
-@click.option(
-    "--debug-disable-reconcile",
-    is_flag=True,
-    show_default=True,
-    default=False,
-    help="Disable reconcile thread for debugging.",
-)
 # The entry point for the CLI will be tested with integration test.
 def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config_file: TextIO,
@@ -72,7 +66,6 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
-        debug_disable_reconcile: Whether to not start the reconcile service for debugging.
     """
     if debug:
         logging.basicConfig(level=logging.DEBUG)
@@ -82,16 +75,9 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
     http_server_args = HTTPServerArgs(host=host, port=port, debug=debug)
 
-    threads = []
-    if not debug_disable_reconcile:
-        service = Thread(target=partial(start_reconcile_service, config, openstack_config, lock))
-        service.start()
-        threads.append(service)
-    http_server = Thread(
-        target=partial(start_http_server, config, openstack_config, lock, http_server_args)
-    )
-    http_server.start()
-    threads.append(http_server)
+    thread_manager = ThreadManager()
+    thread_manager.add_thread(target=partial(start_reconcile_service, config, openstack_config, lock))
+    thread_manager.add_thread(target=partial(start_http_server, config, openstack_config, lock, http_server_args))
+    thread_manager.start()
 
-    for thread in threads:
-        thread.join()
+    thread_manager.raise_on_error()
