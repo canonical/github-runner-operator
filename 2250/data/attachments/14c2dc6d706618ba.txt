@@ -1,0 +1,104 @@
+06:25:10 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-thzu on cloud localhost
+06:25:10 WARNING unexpected facade SSHServer received from the controller
+06:25:12 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:13 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:25:43 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:26:14 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:26:44 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:27:14 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:27:45 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [allocating] waiting: waiting for machine
+06:28:15 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:28:46 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:29:16 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:29:46 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:30:17 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:30:47 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [executing] maintenance: Setting up Builder.
+06:31:18 INFO Waiting for model:
+  github-runner-image-builder-pyckg7gw/0 [idle] blocked: image integration required.
+06:31:46 INFO Deploying local:jammy/github-runner-0
+06:31:46 INFO Waiting for model:
+  test-pyckg7gw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pyckg7gw/0 [idle] blocked: image integration required.
+06:32:16 INFO Waiting for model:
+  test-pyckg7gw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pyckg7gw/0 [idle] blocked: image integration required.
+06:32:46 INFO Waiting for model:
+  test-pyckg7gw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pyckg7gw/0 [executing] blocked: image integration required.
+06:33:17 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:33:47 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:34:18 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:34:48 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:35:18 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:35:49 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:36:19 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:37:50 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:38:51 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:39:21 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:39:52 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:40:22 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:40:52 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:41:22 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:41:53 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:42:23 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:42:53 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pyckg7gw/0 [executing] active: Building image.
+06:43:24 INFO Waiting for model:
+  test-pyckg7gw/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-pyckg7gw/0 [idle] active: 
+06:43:51 INFO Waiting for model:
+  test-pyckg7gw/0 [idle] active:

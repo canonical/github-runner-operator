@@ -1,0 +1,59 @@
+06:30:36 INFO Creating 1 runners
+06:30:37 INFO Creating openstack server with test-rs59m0ok-0-n-0268cdff3e0c
+06:30:57 WARNING NoValidConnectionsError. Unable to SSH into test-rs59m0ok-0-n-0268cdff3e0c with address 10.145.193.182. Error: [Errno None] Unable to connect to port 22 on 10.145.193.182
+06:30:57 WARNING Retrying error in 60 seconds: Failed to SSH to test-rs59m0ok-0-n-0268cdff3e0c during creation possible due to setup not completed
+06:31:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:31:57 INFO Authentication (publickey) successful!
+06:31:58 WARNING Runner startup process not found on test-rs59m0ok-0-n-0268cdff3e0c
+06:31:58 WARNING Retrying error in 60 seconds: Runner startup process not found on test-rs59m0ok-0-n-0268cdff3e0c
+06:32:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:59 INFO Authentication (publickey) successful!
+06:32:59 INFO Runner startup process found to be healthy on test-rs59m0ok-0-n-0268cdff3e0c
+06:32:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:59 INFO Authentication (publickey) successful!
+06:33:00 INFO Runner test-rs59m0ok-0-n-0268cdff3e0c found to be healthy
+06:33:00 INFO Runner test-rs59m0ok-0-n-0268cdff3e0c created successfully
+06:33:00 INFO Getting runners...
+06:33:01 INFO Getting all openstack servers managed by the charm
+06:33:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:03 INFO Authentication (publickey) successful!
+06:33:04 INFO Found following runners: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:04 INFO Getting runners...
+06:33:05 INFO Getting all openstack servers managed by the charm
+06:33:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:07 INFO Authentication (publickey) successful!
+06:33:07 INFO Found following runners: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:07 INFO Getting runners...
+06:33:08 INFO Getting all openstack servers managed by the charm
+06:33:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:10 INFO Authentication (publickey) successful!
+06:33:11 INFO Found following runners: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:12 INFO Wait for condition not met, sleeping 10
+06:33:23 INFO Getting runners...
+06:33:25 INFO Getting all openstack servers managed by the charm
+06:33:26 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:26 INFO Authentication (publickey) successful!
+06:33:27 INFO Found following runners: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:27 WARNING Found runner instance on cloud but not registered on GitHub: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:27 INFO Getting runners...
+06:33:28 INFO Getting all openstack servers managed by the charm
+06:33:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:30 INFO Authentication (publickey) successful!
+06:33:31 INFO Found following runners: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:31 WARNING Found runner instance on cloud but not registered on GitHub: {'test-rs59m0ok-0-n-0268cdff3e0c'}
+06:33:32 INFO Offline github runners to delete: []:
+06:33:32 INFO Getting all openstack servers managed by the charm
+06:33:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:35 INFO Authentication (publickey) successful!
+06:33:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:35 INFO Authentication (publickey) successful!
+06:33:36 INFO [chan 2] Opened sftp connection (server version 3)
+06:33:36 INFO Running runner removal script for test-rs59m0ok-0-n-0268cdff3e0c
+06:33:36 INFO Deleting openstack server with test-rs59m0ok-0-n-0268cdff3e0c
+06:33:40 INFO Cleaning up SSH key files
+06:33:40 INFO Found 0 key files, clean up 0 key files
+06:33:40 INFO Cleaning up openstack keypairs
+06:33:41 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+06:33:41 INFO Getting runners...
+06:33:42 INFO Getting all openstack servers managed by the charm
+06:33:46 INFO Found following runners: set()

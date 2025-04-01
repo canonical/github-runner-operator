@@ -1,0 +1,149 @@
+06:25:08 INFO Adding model github-pr-e884d-lxd:test-charm-fork-path-change-qpfa on cloud localhost
+06:25:09 WARNING unexpected facade SSHServer received from the controller
+06:25:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:11 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:25:41 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:26:12 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:26:42 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:27:13 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:27:43 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: waiting for machine
+06:28:13 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [allocating] waiting: agent initialising
+06:28:43 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:29:14 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:29:44 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:30:14 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:30:44 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:31:15 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:31:45 INFO Waiting for model:
+  github-runner-image-builder-e5jfzbie/0 [executing] maintenance: Setting up Builder.
+06:32:24 INFO Deploying local:jammy/github-runner-0
+06:32:24 INFO Waiting for model:
+  test-e5jfzbie/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e5jfzbie/0 [idle] blocked: image integration required.
+06:32:54 INFO Waiting for model:
+  test-e5jfzbie/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e5jfzbie/0 [idle] blocked: image integration required.
+06:33:25 INFO Waiting for model:
+  test-e5jfzbie/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e5jfzbie/0 [idle] blocked: image integration required.
+06:33:55 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-e5jfzbie/0 [idle] blocked: image integration required.
+06:34:26 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-e5jfzbie/0 [idle] blocked: image integration required.
+06:34:56 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:35:26 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:35:57 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:36:27 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:36:58 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:37:28 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:37:58 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:38:28 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:38:59 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:39:29 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:39:59 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:40:29 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:40:59 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:41:30 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:42:00 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:42:30 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:43:00 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e5jfzbie/0 [executing] active: Building image.
+06:43:30 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-e5jfzbie/0 [idle] active: 
+06:44:00 INFO GitHub token rate limit: Rate(reset=2025-04-01 07:36:14+00:00, remaining=4897, limit=5000)
+06:44:12 INFO test_path_config_change
+06:44:12 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] active: 
+06:44:43 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] maintenance: Reconciling runners
+06:45:13 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] active: 
+06:45:22 INFO Ensure there is a runner (this calls reconcile)
+06:47:50 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] active: 
+06:48:20 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] active: 
+06:48:32 INFO Reconciling (again)
+06:51:56 INFO Waiting for model:
+  test-e5jfzbie/0 [executing] active: 
+06:52:26 INFO Waiting for model:
+  test-e5jfzbie/0 [idle] active: 
+06:52:37 INFO runners: ['test-e5jfzbie-0-n-2497358866db']
+06:52:38 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-03d5fedc9889"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-12e24196fdfb"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-255a42e40c94"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-31b6fe61ab66"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-c1926a4ef3ca"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-c278efb174ec"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-729ea7c8babc"), SelfHostedActionsRunner(name="test-abvutd8y-0-n-25ed405fc906"), SelfHostedActionsRunner(name="test-ambd7o1a-0-n-12133296b99a"), SelfHostedActionsRunner(name="test-clhp3mdg-0-n-0fd5d4041bac"), SelfHostedActionsRunner(name="test-cv0l6k26-0-n-ae662bbd8e65"), SelfHostedActionsRunner(name="test-d2ivawz2-0-n-d5239ebc1dc0"), SelfHostedActionsRunner(name="test-e5jfzbie-0-n-2497358866db"), SelfHostedActionsRunner(name="test-eh0v80dw-0-n-7e45df7e1f01"), SelfHostedActionsRunner(name="test-fcadc1o6-0-n-0ee175682d5d"), SelfHostedActionsRunner(name="test-fhl6x3we-0-n-c3d222cb19ba"), SelfHostedActionsRunner(name="test-hv2lpsza-0-n-8f51b1ace5b2"), SelfHostedActionsRunner(name="test-hydh0tt3-0-n-99245a99c61c"), SelfHostedActionsRunner(name="test-j8bmkq0j-0-n-d7bd8cd9fad9"), SelfHostedActionsRunner(name="test-ku2h3t1s-0-n-8e66fe3a6a59"), SelfHostedActionsRunner(name="test-luu7jnk1-0-n-8f05e7067b8c"), SelfHostedActionsRunner(name="test-m6ldbzay-0-n-51fae5b5bcda"), SelfHostedActionsRunner(name="test-mj0ni2h6-0-n-a245e88a57f9"), SelfHostedActionsRunner(name="test-nuynovg4-0-n-596eadea980b"), SelfHostedActionsRunner(name="test-ql2f4m95-0-n-d8cb13b6367c"), SelfHostedActionsRunner(name="test-rbpycjc0-0-n-2f07e736c19e"), SelfHostedActionsRunner(name="test-udnohd0a-0-n-794f5d0baff3"), SelfHostedActionsRunner(name="test-vet8gnh0-0-n-de9a265ac838"), SelfHostedActionsRunner(name="test-vl78e1wr-0-n-75d21d4f3064"), SelfHostedActionsRunner(name="test-vmv17wlg-0-n-c0585b409b80"), SelfHostedActionsRunner(name="test-w9506taz-0-n-4f91acac25f3"), SelfHostedActionsRunner(name="test-wgaxod1k-0-n-9f71a71581e9"), SelfHostedActionsRunner(name="test-whq1oigj-0-n-fbc7bf494666"), SelfHostedActionsRunner(name="test-zp62zydk-0-n-18d2226df300")]
+06:52:40 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-qpfa  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  06:52:40Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-e5jfzbie           active      1  github-runner-image-builder  latest/edge   68  no       
+test-e5jfzbie                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-e5jfzbie/0*  active    idle   0        10.109.170.179         
+test-e5jfzbie/0*                         active    idle   1        10.109.170.244         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.109.170.179  juju-bd6822-0  ubuntu@22.04      Running
+1        started  10.109.170.244  juju-bd6822-1  ubuntu@22.04      Running
+
+06:52:40 INFO Juju error logs:
+
+machine-0: 06:28:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-e5jfzbie-0: 06:28:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-e5jfzbie-0: 06:29:40 ERROR unit.github-runner-image-builder-e5jfzbie/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:33:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-e5jfzbie-0: 06:33:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:52:40 INFO Forgetting model main...
