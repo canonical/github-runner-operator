@@ -1,0 +1,130 @@
+06:47:04 INFO Adding model github-pr-e884d-lxd:test-reactive-ohl2 on cloud localhost
+06:47:04 WARNING unexpected facade SSHServer received from the controller
+06:47:04 INFO GitHub token rate limit: Rate(reset=2025-04-02 07:07:16+00:00, remaining=4428, limit=5000)
+06:47:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:47:09 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [allocating] waiting: waiting for machine
+06:47:39 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [allocating] waiting: waiting for machine
+06:48:10 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: installing charm software
+06:48:40 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: Setting up Builder.
+06:49:11 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: Setting up Builder.
+06:49:41 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: Setting up Builder.
+06:50:12 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: Setting up Builder.
+06:50:42 INFO Waiting for model:
+  github-runner-image-builder-q4ve3iof/0 [executing] maintenance: Setting up Builder.
+06:51:22 INFO Deploying local:jammy/github-runner-0
+06:51:22 INFO Waiting for model:
+  test-q4ve3iof/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q4ve3iof/0 [idle] blocked: image integration required.
+06:51:53 INFO Waiting for model:
+  test-q4ve3iof/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q4ve3iof/0 [idle] blocked: image integration required.
+06:52:23 INFO Waiting for model:
+  test-q4ve3iof/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q4ve3iof/0 [executing] blocked: image integration required.
+06:52:53 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:53:24 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:53:54 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:54:25 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:54:55 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:55:25 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:55:55 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:56:26 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:56:56 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:57:26 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:57:56 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:58:26 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:58:56 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:59:27 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+06:59:57 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+07:00:27 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q4ve3iof/0 [executing] active: Building image.
+07:00:57 INFO Waiting for model:
+  test-q4ve3iof/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-q4ve3iof/0 [idle] active: 
+07:01:28 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active: 
+07:01:43 INFO Deploying ch:amd64/jammy/mongodb-212
+07:01:44 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:02:14 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:02:45 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:03:15 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+07:03:40 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:03:40 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:04:10 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active: 
+  mongodb/0 [executing] active: 
+07:04:51 INFO Waiting for model:
+  test-q4ve3iof/0 [executing] active: 
+07:05:22 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active:
+07:05:32 INFO Wait for condition not met, sleeping 10
+07:06:23 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active: 
+07:06:39 INFO Wait for condition not met, sleeping 60
+07:08:08 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active: 
+07:08:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743577582.3186696, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 38.082359790802}
+{"timestamp": 1743577631.0, "event": "runner_installed", "flavor": "test-q4ve3iof", "duration": 84.0}
+{"timestamp": 1743577635.0, "event": "runner_start", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 101.0}
+{"timestamp": 1743577638.0, "event": "runner_stop", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743577687.8452787, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.1671085357666}
+
+07:08:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743577582.3186696, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 38.082359790802}
+{"timestamp": 1743577631.0, "event": "runner_installed", "flavor": "test-q4ve3iof", "duration": 84.0}
+{"timestamp": 1743577635.0, "event": "runner_start", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 101.0}
+{"timestamp": 1743577638.0, "event": "runner_stop", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743577687.8452787, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.1671085357666}
+
+07:08:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743577582.3186696, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 38.082359790802}
+{"timestamp": 1743577631.0, "event": "runner_installed", "flavor": "test-q4ve3iof", "duration": 84.0}
+{"timestamp": 1743577635.0, "event": "runner_start", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 101.0}
+{"timestamp": 1743577638.0, "event": "runner_stop", "flavor": "test-q4ve3iof", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743577687.8452787, "event": "reconciliation", "flavor": "test-q4ve3iof", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.1671085357666}
+07:08:49 INFO Waiting for model:
+  test-q4ve3iof/0 [executing] active: 
+07:09:19 INFO Waiting for model:
+  test-q4ve3iof/0 [idle] active:

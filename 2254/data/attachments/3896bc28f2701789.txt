@@ -1,0 +1,156 @@
+06:32:38 INFO Creating 2 runners
+06:34:05 INFO Getting runners...
+06:34:06 INFO Getting all openstack servers managed by the charm
+06:34:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:12 INFO Authentication (publickey) successful!
+06:34:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:12 INFO Authentication (publickey) successful!
+06:34:13 INFO Found following runners: {'test-ce5yum0n-0-n-035eb6cce073', 'test-ce5yum0n-0-n-d59eaf65c699', 'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:13 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:13 INFO Getting runners...
+06:34:14 INFO Getting all openstack servers managed by the charm
+06:34:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:18 INFO Authentication (publickey) successful!
+06:34:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:18 INFO Authentication (publickey) successful!
+06:34:19 INFO Found following runners: {'test-ce5yum0n-0-n-035eb6cce073', 'test-ce5yum0n-0-n-d59eaf65c699', 'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:19 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:19 INFO Flushing idle runners...
+06:34:19 INFO Getting all openstack servers managed by the charm
+06:34:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:23 INFO Authentication (publickey) successful!
+06:34:23 INFO Attempting to kill runner process on test-ce5yum0n-0-n-035eb6cce073 if not busy
+06:34:23 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:34:23 INFO Kill process command output, ok: True code 0, out: 1825
+, err: 
+06:34:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:24 INFO Authentication (publickey) successful!
+06:34:24 INFO Attempting to kill runner process on test-ce5yum0n-0-n-d59eaf65c699 if not busy
+06:34:24 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:34:24 INFO Kill process command output, ok: True code 0, out: 1836
+, err: 
+06:34:24 INFO Getting all openstack servers managed by the charm
+06:34:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:30 INFO Authentication (publickey) successful!
+06:34:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:31 INFO Authentication (publickey) successful!
+06:34:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:32 INFO Authentication (publickey) successful!
+06:34:32 INFO [chan 2] Opened sftp connection (server version 3)
+06:34:32 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.133, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:34:32 WARNING Failed to pull metrics for test-ce5yum0n-0-n-035eb6cce073: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:34:32 INFO Running runner removal script for test-ce5yum0n-0-n-035eb6cce073
+06:34:34 INFO Deleting openstack server with test-ce5yum0n-0-n-035eb6cce073
+06:34:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:36 INFO Authentication (publickey) successful!
+06:34:36 INFO [chan 2] Opened sftp connection (server version 3)
+06:34:36 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.47, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:34:36 WARNING Failed to pull metrics for test-ce5yum0n-0-n-d59eaf65c699: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:34:36 INFO Running runner removal script for test-ce5yum0n-0-n-d59eaf65c699
+06:34:38 INFO Deleting openstack server with test-ce5yum0n-0-n-d59eaf65c699
+06:34:42 INFO Cleaning up SSH key files
+06:34:42 INFO Found 0 key files, clean up 0 key files
+06:34:42 INFO Cleaning up openstack keypairs
+06:34:42 INFO Getting runners...
+06:34:43 INFO Getting all openstack servers managed by the charm
+06:34:46 ERROR Unable to get SSH connection for instance test-ce5yum0n-0-n-035eb6cce073, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ce5yum0n-0-n-035eb6cce073, key path: /home/ubuntu/.ssh/test-ce5yum0n-0-n-035eb6cce073.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ce5yum0n-0-n-035eb6cce073
+06:34:46 ERROR Unable to get SSH connection for instance test-ce5yum0n-0-n-d59eaf65c699, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ce5yum0n-0-n-d59eaf65c699, key path: /home/ubuntu/.ssh/test-ce5yum0n-0-n-d59eaf65c699.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ce5yum0n-0-n-d59eaf65c699
+06:34:46 INFO Found following runners: {'test-ce5yum0n-0-n-035eb6cce073', 'test-ce5yum0n-0-n-d59eaf65c699', 'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:46 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ce5yum0n-0-n-035eb6cce073', 'test-ce5yum0n-0-n-d59eaf65c699'}
+06:34:46 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:46 INFO Getting runners...
+06:34:47 INFO Getting all openstack servers managed by the charm
+06:34:51 ERROR Unable to get SSH connection for instance test-ce5yum0n-0-n-d59eaf65c699, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ce5yum0n-0-n-d59eaf65c699, key path: /home/ubuntu/.ssh/test-ce5yum0n-0-n-d59eaf65c699.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ce5yum0n-0-n-d59eaf65c699
+06:34:51 INFO Found following runners: {'test-ce5yum0n-0-n-f091d0c40df0', 'test-ce5yum0n-0-n-d59eaf65c699'}
+06:34:51 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ce5yum0n-0-n-d59eaf65c699'}
+06:34:51 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:34:51 INFO Wait for condition not met, sleeping 60
+06:35:51 INFO Getting runners...
+06:35:53 INFO Getting all openstack servers managed by the charm
+06:35:55 ERROR Unable to get SSH connection for instance test-ce5yum0n-0-n-d59eaf65c699, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ce5yum0n-0-n-d59eaf65c699, key path: /home/ubuntu/.ssh/test-ce5yum0n-0-n-d59eaf65c699.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ce5yum0n-0-n-d59eaf65c699
+06:35:55 INFO Found following runners: {'test-ce5yum0n-0-n-f091d0c40df0', 'test-ce5yum0n-0-n-d59eaf65c699'}
+06:35:55 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ce5yum0n-0-n-d59eaf65c699'}
+06:35:55 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:35:55 INFO Wait for condition not met, sleeping 60
+06:36:55 INFO Getting runners...
+06:36:56 INFO Getting all openstack servers managed by the charm
+06:36:58 INFO Found following runners: {'test-ce5yum0n-0-n-f091d0c40df0'}
+06:36:58 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-ce5yum0n-0-n-f091d0c40df0'}
