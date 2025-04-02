@@ -11,7 +11,7 @@ from typing import TextIO
 import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.http_server import HTTPServerArgs, start_http_server
+from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
@@ -72,7 +72,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
     openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
-    http_server_args = HTTPServerArgs(host=host, port=port, debug=debug)
+    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
     thread_manager.add_thread(

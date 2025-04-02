@@ -3,9 +3,7 @@
 import os
 import secrets
 import subprocess
-from grp import getgrgid
 from pathlib import Path
-from pwd import getpwuid
 from subprocess import CompletedProcess
 from unittest.mock import MagicMock
 

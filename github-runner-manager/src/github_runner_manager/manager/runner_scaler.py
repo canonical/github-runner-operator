@@ -8,7 +8,6 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager import constants
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     UserInfo,
@@ -175,7 +174,9 @@ class RunnerScaler:
             max_quantity=max_quantity,
         )
 
-    def __init__(
+    # The user argument will be removed once the charm no longer uses the github-runner-manager as
+    # a library.
+    def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         runner_manager: RunnerManager,
         reactive_process_config: ReactiveProcessConfig | None,

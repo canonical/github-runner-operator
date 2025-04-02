@@ -3,8 +3,6 @@
 
 """Module containing reactive scheduling related types."""
 
-from dataclasses import dataclass
-
 from pydantic import BaseModel
 
 from github_runner_manager.configuration.base import QueueConfig

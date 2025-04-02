@@ -6,12 +6,15 @@
 The HTTP server for request to the github-runner-manager.
 """
 
+import getpass
+import grp
+import os
 from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
 
-from github_runner_manager.configuration import ApplicationConfiguration
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.errors import LockError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
@@ -62,7 +65,8 @@ def flush_runner() -> tuple[str, int]:
     app.logger.info("Attempting to acquire the lock: %s", lock_state)
     with lock:
         app.logger.info("Flushing runners...")
-        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, openstack_config)
+        user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, openstack_config, user)
         app.logger.info("Flushing busy: %s", flush_busy)
         flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
         num_flushed = runner_scaler.flush(flush_mode)
@@ -85,8 +89,8 @@ def get_lock() -> Lock:
 
 
 @dataclass
-class HTTPServerArgs:
-    """Arguments for HTTP server.
+class FlaskArgs:
+    """Arguments for Flask HTTP server.
 
     Attributes:
         host: The hostname to listen on for the HTTP server.
@@ -103,7 +107,7 @@ def start_http_server(  # pragma: no cover
     app_config: ApplicationConfiguration,
     openstack_config: OpenStackConfiguration,
     lock: Lock,
-    http_server_args: HTTPServerArgs,
+    flask_args: FlaskArgs,
 ) -> None:
     """Start the HTTP server for interacting with the github-runner-manager service.
 
@@ -111,6 +115,7 @@ def start_http_server(  # pragma: no cover
         app_config: The application configuration.
         openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
+        flask_args: The arguments for the flask HTTP server.
     """
     # The lock is passed from the caller, hence the need to update the global variable.
     global _lock  # pylint: disable=global-statement
@@ -118,8 +123,8 @@ def start_http_server(  # pragma: no cover
     app.config[APP_CONFIG_NAME] = app_config
     app.config[OPENSTACK_CONFIG_NAME] = openstack_config
     app.run(
-        host=http_server_args.host,
-        port=http_server_args.port,
-        debug=http_server_args.debug,
+        host=flask_args.host,
+        port=flask_args.port,
+        debug=flask_args.debug,
         use_reloader=False,
     )

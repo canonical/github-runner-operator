@@ -15,6 +15,21 @@ from . import github
 logger = logging.getLogger(__name__)
 
 
+# The github-runner-manager is being refactor from a library to an application.
+# Once the charm no longer rely on the github-runner-manager as a library this will be removed.
+@dataclass
+class UserInfo:
+    """The user to run the reactive process.
+
+    Attributes:
+        user: The user for running the reactive processes.
+        group: The user group for running the reactive processes.
+    """
+
+    user: str
+    group: str
+
+
 class ApplicationConfiguration(BaseModel):
     """Main entry point for the Application Configuration.
 
@@ -256,18 +271,3 @@ SupportServiceConfig.update_forward_refs()
 NonReactiveConfiguration.update_forward_refs()
 NonReactiveCombination.update_forward_refs()
 ReactiveConfiguration.update_forward_refs()
-
-
-# The github-runner-manager is being refactor from a library to an application.
-# Once the charm no longer rely on the github-runner-manager as a library this will be removed.
-@dataclass
-class UserInfo:
-    """The user to run the reactive process.
-
-    Attributes:
-        user: The user for running the reactive processes.
-        group: The user group for running the reactive processes.
-    """
-
-    user: str
-    group: str
