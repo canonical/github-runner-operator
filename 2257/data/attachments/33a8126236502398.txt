@@ -1,0 +1,122 @@
+18:53:52 INFO Adding model github-pr-e884d-lxd:test-reactive-1blz on cloud localhost
+18:53:52 WARNING unexpected facade SSHServer received from the controller
+18:53:53 INFO GitHub token rate limit: Rate(reset=2025-04-02 19:23:47+00:00, remaining=4609, limit=5000)
+18:53:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:53:57 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [allocating] waiting: waiting for machine
+18:54:28 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [allocating] waiting: waiting for machine
+18:54:58 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [allocating] waiting: agent initialising
+18:55:29 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [executing] maintenance: Setting up Builder.
+18:55:59 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [executing] maintenance: Setting up Builder.
+18:56:30 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [executing] maintenance: Setting up Builder.
+18:57:00 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [executing] maintenance: Setting up Builder.
+18:57:31 INFO Waiting for model:
+  github-runner-image-builder-sqmpyzje/0 [executing] maintenance: Setting up Builder.
+18:58:07 INFO Deploying local:jammy/github-runner-0
+18:58:07 INFO Waiting for model:
+  test-sqmpyzje/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sqmpyzje/0 [idle] blocked: image integration required.
+18:58:38 INFO Waiting for model:
+  test-sqmpyzje/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sqmpyzje/0 [idle] blocked: image integration required.
+18:59:08 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+18:59:38 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:00:08 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:00:39 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:01:09 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:01:40 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:02:10 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:02:41 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:03:11 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:03:41 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:04:12 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:04:42 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:05:13 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:05:43 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:06:14 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:06:44 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sqmpyzje/0 [executing] active: Building image.
+19:07:14 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] maintenance: Reconciling runners
+19:07:38 INFO Deploying ch:amd64/jammy/mongodb-212
+19:07:38 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:08:08 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:08:39 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+19:09:09 INFO Waiting for model:
+  mongodb/0 [idle] active: 
+19:09:23 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:09:23 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:09:54 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:10:32 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] maintenance: Reconciling runners
+19:11:03 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active:
+19:11:10 INFO Wait for condition not met, sleeping 10
+19:12:01 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+19:12:16 INFO Wait for condition not met, sleeping 60
+19:13:49 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+19:14:05 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743621120.097623, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 37.007405042648315}
+{"timestamp": 1743621165.0, "event": "runner_installed", "flavor": "test-sqmpyzje", "duration": 80.0}
+{"timestamp": 1743621169.0, "event": "runner_start", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743621172.0, "event": "runner_stop", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743621228.8901093, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.497296810150146}
+
+19:14:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743621120.097623, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 37.007405042648315}
+{"timestamp": 1743621165.0, "event": "runner_installed", "flavor": "test-sqmpyzje", "duration": 80.0}
+{"timestamp": 1743621169.0, "event": "runner_start", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743621172.0, "event": "runner_stop", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743621228.8901093, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.497296810150146}
+
+19:14:07 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743621120.097623, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 37.007405042648315}
+{"timestamp": 1743621165.0, "event": "runner_installed", "flavor": "test-sqmpyzje", "duration": 80.0}
+{"timestamp": 1743621169.0, "event": "runner_start", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 96.0}
+{"timestamp": 1743621172.0, "event": "runner_stop", "flavor": "test-sqmpyzje", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743621228.8901093, "event": "reconciliation", "flavor": "test-sqmpyzje", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.497296810150146}
+19:14:30 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] active:

@@ -1,0 +1,96 @@
+18:25:20 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-success-jwzi on cloud localhost
+18:25:21 WARNING unexpected facade SSHServer received from the controller
+18:25:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:23 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [allocating] waiting: waiting for machine
+18:25:53 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [allocating] waiting: waiting for machine
+18:26:23 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: installing charm software
+18:26:53 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: Setting up Builder.
+18:27:24 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: Setting up Builder.
+18:27:54 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: Setting up Builder.
+18:28:25 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: Setting up Builder.
+18:28:55 INFO Waiting for model:
+  github-runner-image-builder-j1sdjeem/0 [executing] maintenance: Setting up Builder.
+18:29:31 INFO Deploying local:jammy/github-runner-0
+18:29:32 INFO Waiting for model:
+  test-j1sdjeem/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j1sdjeem/0 [idle] blocked: image integration required.
+18:30:02 INFO Waiting for model:
+  test-j1sdjeem/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j1sdjeem/0 [idle] blocked: image integration required.
+18:30:32 INFO Waiting for model:
+  test-j1sdjeem/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-j1sdjeem/0 [idle] blocked: image integration required.
+18:31:02 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:31:33 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:32:03 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:32:33 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:33:04 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:33:34 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:34:05 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:34:35 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:35:06 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:35:36 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:36:06 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:36:37 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:37:07 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:37:37 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:38:08 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:38:38 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:39:09 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j1sdjeem/0 [executing] active: Building image.
+18:39:39 INFO Waiting for model:
+  test-j1sdjeem/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-j1sdjeem/0 [idle] active: 
+18:40:09 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] active:
+18:44:46 INFO Waiting for model:
+  test-j1sdjeem/0 [executing] active: 
+18:45:16 INFO Waiting for model:
+  test-j1sdjeem/0 [idle] active: 
+18:46:10 INFO Waiting for model:
+  test-j1sdjeem/0 [executing] active: 
+18:46:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743619485.7789896, "event": "reconciliation", "flavor": "test-j1sdjeem", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 261.2276256084442}
+{"timestamp": 1743619514.9287043, "event": "reconciliation", "flavor": "test-j1sdjeem", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 27.96623921394348}
+{"timestamp": 1743619439.0, "event": "runner_installed", "flavor": "test-j1sdjeem", "duration": 202.0}
+{"timestamp": 1743619569.9637017, "event": "reconciliation", "flavor": "test-j1sdjeem", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 37.52849459648132}
+{"timestamp": 1743619584.8391979, "event": "reconciliation", "flavor": "test-j1sdjeem", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.65439748764038}

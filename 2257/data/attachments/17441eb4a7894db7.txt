@@ -1,0 +1,111 @@
+19:17:43 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] active: 
+19:18:13 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active:
+19:18:41 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] active: 
+19:19:11 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+19:19:18 INFO Wait for condition not met, sleeping 10
+19:19:30 INFO Wait for condition not met, sleeping 10
+19:19:40 INFO Wait for condition not met, sleeping 10
+19:19:51 INFO Wait for condition not met, sleeping 10
+19:20:01 INFO Wait for condition not met, sleeping 10
+19:20:11 INFO Wait for condition not met, sleeping 10
+19:20:22 INFO Wait for condition not met, sleeping 10
+19:21:15 INFO Waiting for model:
+  test-sqmpyzje/0 [executing] active: 
+19:21:45 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+19:21:48 INFO Wait for condition not met, sleeping 60
+19:22:48 INFO Wait for condition not met, sleeping 60
+19:23:49 INFO Wait for condition not met, sleeping 60
+19:24:49 INFO Wait for condition not met, sleeping 60
+19:25:50 INFO Wait for condition not met, sleeping 60
+19:26:51 INFO Wait for condition not met, sleeping 60
+19:27:51 INFO Wait for condition not met, sleeping 60
+19:28:52 INFO Wait for condition not met, sleeping 60
+19:29:52 INFO Wait for condition not met, sleeping 60
+19:30:52 INFO Wait for condition not met, sleeping 60
+19:31:53 INFO Wait for condition not met, sleeping 60
+19:32:54 INFO Wait for condition not met, sleeping 60
+19:33:54 INFO Wait for condition not met, sleeping 60
+19:34:57 INFO Wait for condition not met, sleeping 10
+19:35:24 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active:
+19:35:56 INFO Waiting for model:
+  test-sqmpyzje/0 [idle] active: 
+19:36:13 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-1blz  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  19:36:13Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sqmpyzje           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-sqmpyzje                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-sqmpyzje/0*  active    idle   0        10.126.104.25              
+mongodb/0*                               active    idle   2        10.126.104.27   27017/tcp  Primary
+test-sqmpyzje/0*                         active    idle   1        10.126.104.229             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.126.104.25   juju-39b5cd-0  ubuntu@22.04      Running
+1        started  10.126.104.229  juju-39b5cd-1  ubuntu@22.04      Running
+2        started  10.126.104.27   juju-39b5cd-2  ubuntu@22.04      Running
+
+19:36:14 INFO Juju error logs:
+
+machine-0: 18:54:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:54:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-sqmpyzje-0: 18:54:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-sqmpyzje-0: 18:55:30 ERROR unit.github-runner-image-builder-sqmpyzje/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:58:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:58:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sqmpyzje-0: 18:58:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 19:08:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 19:08:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 19:08:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 19:08:34 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 19:08:34 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-sqmpyzje-0: 19:11:36 ERROR unit.test-sqmpyzje/0.juju-log SSH connection failure with test-sqmpyzje-0-r-4e2facf7d1e9 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 301, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-sqmpyzje-0-r-4e2facf7d1e9
+unit-test-sqmpyzje-0: 19:11:41 ERROR unit.test-sqmpyzje/0.juju-log SSH connection failure with test-sqmpyzje-0-r-4e2facf7d1e9 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 301, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-sqmpyzje-0-r-4e2facf7d1e9
+unit-test-sqmpyzje-0: 19:11:51 ERROR unit.test-sqmpyzje/0.juju-log SSH connection failure with test-sqmpyzje-0-r-4e2facf7d1e9 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 301, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-sqmpyzje-0-r-4e2facf7d1e9
+unit-test-sqmpyzje-0: 19:11:51 ERROR unit.test-sqmpyzje/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-sqmpyzje-0-r-4e2facf7d1e9
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sqmpyzje-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 301, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-sqmpyzje-0-r-4e2facf7d1e9
+
+19:36:14 INFO Forgetting model main...

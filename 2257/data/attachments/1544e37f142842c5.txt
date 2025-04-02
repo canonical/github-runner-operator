@@ -1,0 +1,71 @@
+18:23:49 INFO Creating 1 runners
+18:23:49 INFO Creating openstack server with test-j8lzclnq-0-n-9852ddff0552
+18:24:12 WARNING NoValidConnectionsError. Unable to SSH into test-j8lzclnq-0-n-9852ddff0552 with address 10.145.193.13. Error: [Errno None] Unable to connect to port 22 on 10.145.193.13
+18:24:12 WARNING Retrying error in 60 seconds: Failed to SSH to test-j8lzclnq-0-n-9852ddff0552 during creation possible due to setup not completed
+18:25:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:12 INFO Authentication (publickey) successful!
+18:25:13 INFO Runner startup process found to be healthy on test-j8lzclnq-0-n-9852ddff0552
+18:25:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:13 INFO Authentication (publickey) successful!
+18:25:13 INFO Runner test-j8lzclnq-0-n-9852ddff0552 found to be healthy
+18:25:13 INFO Runner test-j8lzclnq-0-n-9852ddff0552 created successfully
+18:25:13 INFO Getting runners...
+18:25:15 INFO Getting all openstack servers managed by the charm
+18:25:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:17 INFO Authentication (publickey) successful!
+18:25:18 INFO Found following runners: {'test-j8lzclnq-0-n-9852ddff0552'}
+18:25:18 INFO Getting runners...
+18:25:19 INFO Getting all openstack servers managed by the charm
+18:25:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:20 INFO Authentication (publickey) successful!
+18:25:21 INFO Found following runners: {'test-j8lzclnq-0-n-9852ddff0552'}
+18:25:21 INFO Getting runners...
+18:25:22 INFO Getting all openstack servers managed by the charm
+18:25:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:23 INFO Authentication (publickey) successful!
+18:25:24 INFO Found following runners: {'test-j8lzclnq-0-n-9852ddff0552'}
+18:25:24 INFO Getting all openstack servers managed by the charm
+18:25:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:25 INFO Authentication (publickey) successful!
+18:25:26 INFO Getting runners...
+18:25:27 INFO Getting all openstack servers managed by the charm
+18:25:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:29 INFO Authentication (publickey) successful!
+18:25:29 INFO Found following runners: {'test-j8lzclnq-0-n-9852ddff0552'}
+18:25:30 INFO Offline github runners to delete: []:
+18:25:31 INFO Getting all openstack servers managed by the charm
+18:25:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:32 INFO Authentication (publickey) successful!
+18:25:33 INFO Cleaning up SSH key files
+18:25:33 INFO Found 1 key files, clean up 0 key files
+18:25:33 INFO Cleaning up openstack keypairs
+18:25:34 INFO Getting runners...
+18:25:35 INFO Getting all openstack servers managed by the charm
+18:25:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:36 INFO Authentication (publickey) successful!
+18:25:37 INFO Found following runners: {'test-j8lzclnq-0-n-9852ddff0552'}
+18:25:37 INFO Flushing idle runners...
+18:25:37 INFO Getting all openstack servers managed by the charm
+18:25:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:39 INFO Authentication (publickey) successful!
+18:25:39 INFO Attempting to kill runner process on test-j8lzclnq-0-n-9852ddff0552 if not busy
+18:25:39 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:25:39 INFO Kill process command output, ok: True code 0, out: 1820
+, err: 
+18:25:39 INFO Getting all openstack servers managed by the charm
+18:25:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:40 INFO Authentication (publickey) successful!
+18:25:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:25:41 INFO Authentication (publickey) successful!
+18:25:41 INFO [chan 2] Opened sftp connection (server version 3)
+18:25:41 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.13, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:25:41 WARNING Failed to pull metrics for test-j8lzclnq-0-n-9852ddff0552: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:25:41 INFO Running runner removal script for test-j8lzclnq-0-n-9852ddff0552
+18:25:43 INFO Deleting openstack server with test-j8lzclnq-0-n-9852ddff0552
+18:25:45 INFO Cleaning up SSH key files
+18:25:45 INFO Found 0 key files, clean up 0 key files
+18:25:45 INFO Cleaning up openstack keypairs
+18:25:45 INFO Getting runners...
+18:25:46 INFO Getting all openstack servers managed by the charm
+18:25:47 INFO Found following runners: set()
