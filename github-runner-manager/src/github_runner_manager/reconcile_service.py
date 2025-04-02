@@ -17,7 +17,7 @@ from github_runner_manager.openstack_cloud.configuration import OpenStackConfigu
 logger = logging.getLogger(__name__)
 
 
-def start_reconcile_service( 
+def start_reconcile_service(
     app_config: ApplicationConfiguration, openstack_config: OpenStackConfiguration, lock: Lock
 ) -> None:
     """Start the reconcile server.

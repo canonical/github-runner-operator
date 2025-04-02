@@ -206,7 +206,9 @@ def openstack_configuration_fixture() -> OpenStackConfiguration:
 
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
-def runner_scaler_one_runner_fixture(runner_manager: RunnerManager, user_info: UserInfo) -> RunnerScaler:
+def runner_scaler_one_runner_fixture(
+    runner_manager: RunnerManager, user_info: UserInfo
+) -> RunnerScaler:
     runner_scaler = RunnerScaler(
         runner_manager=runner_manager,
         reactive_process_config=None,
@@ -274,7 +276,9 @@ def test_build_runner_scaler(
     act: Call RunnerScaler.build
     assert: The RunnerScaler was created with the expected configuration.
     """
-    runner_scaler = RunnerScaler.build(application_configuration, openstack_configuration, user_info)
+    runner_scaler = RunnerScaler.build(
+        application_configuration, openstack_configuration, user_info
+    )
     assert runner_scaler
     # A few comprobations on key data
     # Pending to refactor, too invasive.
@@ -375,7 +379,7 @@ def test_get_no_runner(runner_manager: RunnerManager, user_info: UserInfo):
     Act: Get runner information.
     Assert: Information should contain no runners.
     """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info,base_quantity=0, max_quantity=0)
+    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=0, max_quantity=0)
     assert_runner_info(runner_scaler, online=0)
 
 
@@ -414,9 +418,7 @@ def test_reconcile_runner_create_one(runner_manager: RunnerManager, user_info: U
 
 
 def test_reconcile_runner_create_one_reactive(
-    monkeypatch: pytest.MonkeyPatch,
-    runner_manager: RunnerManager,
-    user_info: UserInfo
+    monkeypatch: pytest.MonkeyPatch, runner_manager: RunnerManager, user_info: UserInfo
 ):
     """
     Arrange: Prepare one RunnerScaler in reactive mode.
@@ -431,7 +433,9 @@ def test_reconcile_runner_create_one_reactive(
 
     from github_runner_manager.reactive.runner_manager import ReconcileResult
 
-    def _fake_reactive_reconcile(expected_quantity: int, runner_manager, reactive_process_config, user):
+    def _fake_reactive_reconcile(
+        expected_quantity: int, runner_manager, reactive_process_config, user
+    ):
         """Reactive reconcile fake."""
         return ReconcileResult(processes_diff=expected_quantity, metric_stats={"event": ""})
 
@@ -445,7 +449,10 @@ def test_reconcile_runner_create_one_reactive(
 
 
 def test_reconcile_error_still_issue_metrics(
-    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock, user_info: UserInfo
+    runner_manager: RunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    issue_events_mock: MagicMock,
+    user_info: UserInfo,
 ):
     """
     Arrange: A RunnerScaler with no runners which raises an error on reconcile.
@@ -464,7 +471,10 @@ def test_reconcile_error_still_issue_metrics(
 
 
 def test_reconcile_raises_reconcile_error(
-    runner_manager: RunnerManager, monkeypatch: pytest.MonkeyPatch, issue_events_mock: MagicMock, user_info: UserInfo
+    runner_manager: RunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
+    issue_events_mock: MagicMock,
+    user_info: UserInfo,
 ):
     """
     Arrange: A RunnerScaler with no runners which raises a Cloud error on reconcile.

@@ -11,6 +11,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.reactive.process_manager import (
     PIDS_COMMAND_LINE,
     PYTHON_BIN,
@@ -20,7 +21,6 @@ from github_runner_manager.reactive.process_manager import (
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
 from github_runner_manager.utilities import secure_run_subprocess
-from github_runner_manager.configuration import UserInfo
 
 EXAMPLE_MQ_URI = "http://example.com"
 
@@ -159,7 +159,9 @@ def test_reconcile_ignore_process_not_found_on_kill(
 
 
 def test_reconcile_raises_reactive_runner_error_on_ps_failure(
-    secure_run_subprocess_mock: MagicMock, reactive_process_config: ReactiveProcessConfig, user_info: UserInfo,
+    secure_run_subprocess_mock: MagicMock,
+    reactive_process_config: ReactiveProcessConfig,
+    user_info: UserInfo,
 ):
     """
     arrange: Mock that the ps command fails.

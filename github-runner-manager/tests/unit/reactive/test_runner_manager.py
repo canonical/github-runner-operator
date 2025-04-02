@@ -5,8 +5,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from github_runner_manager.configuration import UserInfo
 import github_runner_manager.reactive.process_manager
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -85,7 +85,9 @@ def test_reconcile_positive_runner_diff(
 
     runner_manager.cleanup.assert_called_once()
     reactive_process_manager.reconcile.assert_called_once_with(
-        quantity=expected_process_quantity, reactive_process_config=reactive_process_config, user=user_info
+        quantity=expected_process_quantity,
+        reactive_process_config=reactive_process_config,
+        user=user_info,
     )
 
 

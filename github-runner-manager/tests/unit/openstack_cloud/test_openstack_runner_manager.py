@@ -44,7 +44,9 @@ OPENSTACK_INSTANCE_PREFIX = "test"
 
 
 @pytest.fixture(name="runner_manager")
-def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch, user_info: UserInfo) -> OpenStackRunnerManager:
+def openstack_runner_manager_fixture(
+    monkeypatch: pytest.MonkeyPatch, user_info: UserInfo
+) -> OpenStackRunnerManager:
     """Mock required dependencies/configs and return an OpenStackRunnerManager instance."""
     monkeypatch.setattr(
         "github_runner_manager.openstack_cloud.openstack_runner_manager.OpenstackCloud",
