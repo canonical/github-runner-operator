@@ -5,6 +5,7 @@
 
 import logging
 
+from github_runner_manager import constants
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -14,6 +15,7 @@ from github_runner_manager.configuration import (
     QueueConfig,
     ReactiveConfiguration,
     SupportServiceConfig,
+    UserInfo,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
@@ -40,10 +42,12 @@ def create_runner_scaler(state: CharmState, app_name: str, unit_name: str) -> Ru
     """
     openstack_configuration = create_openstack_configuration(state, unit_name)
     application_configuration = create_application_configuration(state, app_name)
+    user = UserInfo(constants.RUNNER_MANAGER_USER, constants.RUNNER_MANAGER_GROUP)
 
     return RunnerScaler.build(
         application_configuration=application_configuration,
         openstack_configuration=openstack_configuration,
+        user=user,
     )
 
 

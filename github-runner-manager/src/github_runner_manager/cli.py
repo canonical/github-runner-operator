@@ -11,7 +11,8 @@ from typing import TextIO
 import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.http_server import start_http_server
+from github_runner_manager.http_server import FlaskArgs, start_http_server
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -23,6 +24,11 @@ logger = logging.getLogger(__name__)
     "--config-file",
     type=click.File(mode="r", encoding="utf-8"),
     help="The file path containing the configurations.",
+)
+@click.option(
+    "--openstack-config-file",
+    type=click.File(mode="r", encoding="utf-8"),
+    help="The file path containing the OpenStack configurations.",
 )
 @click.option(
     "--host",
@@ -44,11 +50,18 @@ logger = logging.getLogger(__name__)
     help="Debug mode for testing.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pragma: no cover
+def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    config_file: TextIO,
+    openstack_config_file: TextIO,
+    host: str,
+    port: int,
+    debug: bool,
+) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
         config_file: The configuration file.
+        openstack_config_file: The OpenStack configuration file.
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
@@ -58,10 +71,16 @@ def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pra
 
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
+    openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
+    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
-    thread_manager.add_thread(target=partial(start_http_server, config, lock, host, port, debug))
+    thread_manager.add_thread(
+        target=partial(start_reconcile_service, config, openstack_config, lock)
+    )
+    thread_manager.add_thread(
+        target=partial(start_http_server, config, openstack_config, lock, http_server_args)
+    )
     thread_manager.start()
 
     thread_manager.raise_on_error()

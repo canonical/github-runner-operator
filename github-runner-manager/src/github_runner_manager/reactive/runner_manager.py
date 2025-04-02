@@ -5,6 +5,7 @@
 import logging
 from dataclasses import dataclass
 
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -35,6 +36,7 @@ def reconcile(
     expected_quantity: int,
     runner_manager: RunnerManager,
     reactive_process_config: ReactiveProcessConfig,
+    user: UserInfo,
 ) -> ReconcileResult:
     """Reconcile runners reactively.
 
@@ -77,6 +79,7 @@ def reconcile(
         expected_quantity: Number of intended amount of runners + reactive processes.
         runner_manager: The runner manager to interact with current running runners.
         reactive_process_config: The reactive runner config.
+        user: The user to run the reactive process.
 
     Returns:
         The number of reactive processes created. If negative, its absolute value is equal
@@ -115,6 +118,7 @@ def reconcile(
     processes_created = process_manager.reconcile(
         quantity=process_quantity,
         reactive_process_config=reactive_process_config,
+        user=user,
     )
 
     return ReconcileResult(processes_diff=processes_created, metric_stats=metric_stats)

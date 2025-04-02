@@ -6,6 +6,7 @@ from unittest.mock import MagicMock
 import pytest
 
 import github_runner_manager.reactive.process_manager
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -66,6 +67,7 @@ def test_reconcile_positive_runner_diff(
     runner_manager: MagicMock,
     reactive_process_manager: MagicMock,
     reactive_process_config: MagicMock,
+    user_info: UserInfo,
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
@@ -79,11 +81,13 @@ def test_reconcile_positive_runner_diff(
     )
     _set_queue_non_empty(monkeypatch)
 
-    reconcile(desired_quantity, runner_manager, reactive_process_config)
+    reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
 
     runner_manager.cleanup.assert_called_once()
     reactive_process_manager.reconcile.assert_called_once_with(
-        quantity=expected_process_quantity, reactive_process_config=reactive_process_config
+        quantity=expected_process_quantity,
+        reactive_process_config=reactive_process_config,
+        user=user_info,
     )
 
 
@@ -102,6 +106,7 @@ def test_reconcile_negative_runner_diff(
     runner_manager: MagicMock,
     reactive_process_manager: MagicMock,
     reactive_process_config: MagicMock,
+    user_info: UserInfo,
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
@@ -115,12 +120,12 @@ def test_reconcile_negative_runner_diff(
     )
     _set_queue_non_empty(monkeypatch)
 
-    reconcile(desired_quantity, runner_manager, reactive_process_config)
+    reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
 
     runner_manager.cleanup.assert_called_once()
     runner_manager.delete_runners.assert_called_once_with(expected_number_of_runners_to_delete)
     reactive_process_manager.reconcile.assert_called_once_with(
-        quantity=0, reactive_process_config=reactive_process_config
+        quantity=0, reactive_process_config=reactive_process_config, user=user_info
     )
 
 
@@ -128,6 +133,7 @@ def test_reconcile_flushes_idle_runners_when_queue_is_empty(
     runner_manager: MagicMock,
     reactive_process_manager: MagicMock,
     reactive_process_config: MagicMock,
+    user_info: UserInfo,
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
@@ -138,7 +144,7 @@ def test_reconcile_flushes_idle_runners_when_queue_is_empty(
     quantity = randint(0, 10)
     _set_queue_empty(monkeypatch)
 
-    reconcile(quantity, runner_manager, reactive_process_config)
+    reconcile(quantity, runner_manager, reactive_process_config, user_info)
 
     runner_manager.flush_runners.assert_called_once_with(FlushMode.FLUSH_IDLE)
 
@@ -265,6 +271,7 @@ def test_reconcile_returns_issued_metrics(
     expected_metrics: IssuedMetricEventsStats,
     runner_manager: MagicMock,
     reactive_process_config: MagicMock,
+    user_info: UserInfo,
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
@@ -280,7 +287,7 @@ def test_reconcile_returns_issued_metrics(
 
     _set_queue_non_empty(monkeypatch)
 
-    result = reconcile(desired_quantity, runner_manager, reactive_process_config)
+    result = reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
 
     assert result.metric_stats == expected_metrics
 
@@ -398,6 +405,7 @@ def test_reconcile_empty_queue_returns_issued_metrics(
     expected_metrics: IssuedMetricEventsStats,
     runner_manager: MagicMock,
     reactive_process_config: MagicMock,
+    user_info: UserInfo,
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
@@ -414,7 +422,7 @@ def test_reconcile_empty_queue_returns_issued_metrics(
 
     _set_queue_empty(monkeypatch)
 
-    result = reconcile(desired_quantity, runner_manager, reactive_process_config)
+    result = reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
 
     assert result.metric_stats == expected_metrics
 

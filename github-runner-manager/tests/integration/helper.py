@@ -28,29 +28,42 @@ def get_app_log(app: subprocess.Popen) -> str:
     return app.stderr.read().decode("utf-8")
 
 
-def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
+def start_app(
+    config_file: Path, openstack_config_file: Path, extra_args: Sequence[str]
+) -> subprocess.Popen:
     """Start the CLI application.
 
     Args:
         config_file: The Path to the configuration file.
+        openstack_config_file: The Path to the OpenStack configuration file.
         extra_args: Any extra args to the CLI application.
 
     Returns:
         The process running the CLI application.
     """
     process = subprocess.Popen(
-        [PACKAGE_NAME, "--config-file", config_file, "--debug", *extra_args],
+        [
+            PACKAGE_NAME,
+            "--config-file",
+            config_file,
+            "--openstack-config-file",
+            openstack_config_file,
+            "--debug",
+            *extra_args,
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
+    logs = b""
     for line in process.stderr:
         if b"Address already in use" in line:
             assert False, "Test setup failure: Port used for testing taken"
         if b"Press CTRL+C to quit" in line:
             break
+        logs += line
     else:
-        assert False, "Test setup failure: Abnormal app exit"
+        assert False, f"Test setup failure: Abnormal app exit with logs:\n{logs.decode('utf-8')}"
     return process
 
 

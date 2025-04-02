@@ -3,11 +3,14 @@
 
 """Module containing OpenStack Configuration."""
 
-import dataclasses
+
+from typing import TextIO
+
+import yaml
+from pydantic import BaseModel
 
 
-@dataclasses.dataclass
-class OpenStackConfiguration:
+class OpenStackConfiguration(BaseModel):
     """OpenStack configuration.
 
     Attributes:
@@ -20,9 +23,21 @@ class OpenStackConfiguration:
     network: str
     credentials: "OpenStackCredentials"
 
+    @staticmethod
+    def from_yaml_file(file: TextIO) -> "OpenStackConfiguration":
+        """Initialize configuration from a YAML formatted file.
 
-@dataclasses.dataclass
-class OpenStackCredentials:
+        Args:
+            file: The file object to parse the configuration from.
+
+        Returns:
+            The configuration.
+        """
+        config = yaml.safe_load(file)
+        return OpenStackConfiguration.validate(config)
+
+
+class OpenStackCredentials(BaseModel):
     """OpenStack credentials.
 
     Attributes:
@@ -42,3 +57,7 @@ class OpenStackCredentials:
     user_domain_name: str
     project_domain_name: str
     region_name: str
+
+
+OpenStackConfiguration.update_forward_refs()
+OpenStackCredentials.update_forward_refs()

@@ -4,6 +4,7 @@
 """Base configuration for the Application."""
 
 import logging
+from dataclasses import dataclass
 from typing import Optional, TextIO
 
 import yaml
@@ -12,6 +13,21 @@ from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root
 from . import github
 
 logger = logging.getLogger(__name__)
+
+
+# The github-runner-manager is being refactor from a library to an application.
+# Once the charm no longer rely on the github-runner-manager as a library this will be removed.
+@dataclass
+class UserInfo:
+    """The user to run the reactive process.
+
+    Attributes:
+        user: The user for running the reactive processes.
+        group: The user group for running the reactive processes.
+    """
+
+    user: str
+    group: str
 
 
 class ApplicationConfiguration(BaseModel):
