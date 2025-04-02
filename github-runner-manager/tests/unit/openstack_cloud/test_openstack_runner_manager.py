@@ -10,7 +10,7 @@ from unittest.mock import ANY, MagicMock
 
 import pytest
 
-from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
 from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import runner
@@ -44,7 +44,7 @@ OPENSTACK_INSTANCE_PREFIX = "test"
 
 
 @pytest.fixture(name="runner_manager")
-def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenStackRunnerManager:
+def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch, user_info: UserInfo) -> OpenStackRunnerManager:
     """Mock required dependencies/configs and return an OpenStackRunnerManager instance."""
     monkeypatch.setattr(
         "github_runner_manager.openstack_cloud.openstack_runner_manager.OpenstackCloud",
@@ -64,7 +64,7 @@ def openstack_runner_manager_fixture(monkeypatch: pytest.MonkeyPatch) -> OpenSta
         service_config=service_config_mock,
     )
 
-    return OpenStackRunnerManager(config=config)
+    return OpenStackRunnerManager(config=config, user=user_info)
 
 
 @pytest.fixture(name="runner_metrics_mock")

@@ -19,7 +19,7 @@ import yaml
 from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
-from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
 from github_runner_manager.configuration.github import (
     GitHubConfiguration,
     GitHubPath,
@@ -169,9 +169,11 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         service_config=service_config,
     )
+    user = UserInfo("runner-manager", "runner-manager")
 
     yield OpenStackRunnerManager(
         config=openstack_runner_manager_config,
+        user=user,
     )
 
 

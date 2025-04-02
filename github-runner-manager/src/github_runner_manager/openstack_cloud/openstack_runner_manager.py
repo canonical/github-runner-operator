@@ -125,7 +125,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
     def __init__(
         self,
         config: OpenStackRunnerManagerConfig,
-        user: UserInfo | None = None,
+        user: UserInfo,
     ) -> None:
         """Construct the object.
 
@@ -138,7 +138,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._openstack_cloud = OpenstackCloud(
             credentials=self._credentials,
             prefix=self.name_prefix,
-            system_user=user.user if user is not None else constants.RUNNER_MANAGER_USER,
+            system_user=user.user,
             proxy_command=config.service_config.manager_proxy_command,
         )
         # Setting the env var to this process and any child process spawned.

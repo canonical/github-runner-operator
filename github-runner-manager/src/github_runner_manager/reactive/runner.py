@@ -3,10 +3,13 @@
 #  See LICENSE file for licensing details.
 
 """Script to spawn a reactive runner process."""
+import getpass
+import grp
 import logging
 import os
 import sys
 
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
@@ -43,7 +46,11 @@ def main() -> None:
 
     setup_root_logging()
     queue_config = runner_config.queue
-    openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
+
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+    openstack_runner_manager = OpenStackRunnerManager(
+        config=runner_config.cloud_runner_manager, user=user
+    )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
         github_configuration=runner_config.github_configuration,

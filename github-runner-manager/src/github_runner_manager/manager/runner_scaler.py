@@ -108,7 +108,7 @@ class RunnerScaler:
         cls,
         application_configuration: ApplicationConfiguration,
         openstack_configuration: OpenStackConfiguration,
-        user: UserInfo | None = None,
+        user: UserInfo,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
@@ -120,10 +120,6 @@ class RunnerScaler:
         Returns:
             A new RunnerScaler.
         """
-        if user is None:
-            user = UserInfo(
-                user=constants.RUNNER_MANAGER_USER, group=constants.RUNNER_MANAGER_GROUP
-            )
         labels = application_configuration.extra_labels
         server_config = None
         base_quantity = 0

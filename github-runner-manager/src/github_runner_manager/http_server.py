@@ -99,7 +99,7 @@ class HTTPServerArgs:
     debug: bool
 
 
-def start_http_server(
+def start_http_server( # pragma: no cover
     app_config: ApplicationConfiguration,
     openstack_config: OpenStackConfiguration,
     lock: Lock,
