@@ -1,0 +1,91 @@
+06:24:22 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-success-8l0o on cloud localhost
+06:24:23 WARNING unexpected facade SSHServer received from the controller
+06:24:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:25 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [allocating] waiting: waiting for machine
+06:24:56 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [allocating] waiting: waiting for machine
+06:25:26 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: installing charm software
+06:25:57 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: Setting up Builder.
+06:26:27 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: Setting up Builder.
+06:26:58 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: Setting up Builder.
+06:27:28 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: Setting up Builder.
+06:27:58 INFO Waiting for model:
+  github-runner-image-builder-bfrzy05z/0 [executing] maintenance: Setting up Builder.
+06:28:42 INFO Deploying local:jammy/github-runner-0
+06:28:42 INFO Waiting for model:
+  test-bfrzy05z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bfrzy05z/0 [idle] blocked: image integration required.
+06:29:13 INFO Waiting for model:
+  test-bfrzy05z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bfrzy05z/0 [idle] blocked: image integration required.
+06:29:43 INFO Waiting for model:
+  test-bfrzy05z/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] blocked: image integration required.
+06:30:13 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:30:43 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:31:13 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:31:44 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:32:14 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:32:44 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:33:15 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:33:45 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:34:15 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:34:46 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:35:16 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:35:46 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:36:17 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:36:47 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:37:18 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:37:48 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bfrzy05z/0 [executing] active: Building image.
+06:38:18 INFO Waiting for model:
+  test-bfrzy05z/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-bfrzy05z/0 [idle] active:
+06:40:59 INFO Waiting for model:
+  test-bfrzy05z/0 [executing] maintenance: Reconciling runners
+06:41:29 INFO Waiting for model:
+  test-bfrzy05z/0 [idle] active: 
+06:42:12 INFO Waiting for model:
+  test-bfrzy05z/0 [executing] active: 
+06:42:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743662457.9410172, "event": "reconciliation", "flavor": "test-bfrzy05z", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 129.50641632080078}
+{"timestamp": 1743662481.6436803, "event": "reconciliation", "flavor": "test-bfrzy05z", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 22.734626531600952}
+{"timestamp": 1743662414.0, "event": "runner_installed", "flavor": "test-bfrzy05z", "duration": 74.0}
+{"timestamp": 1743662531.8680847, "event": "reconciliation", "flavor": "test-bfrzy05z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.464136838912964}
+{"timestamp": 1743662545.1800065, "event": "reconciliation", "flavor": "test-bfrzy05z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.30853533744812}

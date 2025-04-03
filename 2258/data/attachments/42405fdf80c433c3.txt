@@ -1,0 +1,55 @@
+07:05:47 INFO Creating 1 runners
+07:05:48 INFO Creating openstack server with test-ikqgntl6-0-n-aacefa10a94d
+07:06:07 WARNING NoValidConnectionsError. Unable to SSH into test-ikqgntl6-0-n-aacefa10a94d with address 10.145.193.12. Error: [Errno None] Unable to connect to port 22 on 10.145.193.12
+07:06:07 WARNING Retrying error in 60 seconds: Failed to SSH to test-ikqgntl6-0-n-aacefa10a94d during creation possible due to setup not completed
+07:07:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:08 INFO Authentication (publickey) successful!
+07:07:09 INFO Runner startup process found to be healthy on test-ikqgntl6-0-n-aacefa10a94d
+07:07:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:09 INFO Authentication (publickey) successful!
+07:07:09 INFO Runner test-ikqgntl6-0-n-aacefa10a94d found to be healthy
+07:07:09 INFO Runner test-ikqgntl6-0-n-aacefa10a94d created successfully
+07:07:09 INFO Getting runners...
+07:07:10 INFO Getting all openstack servers managed by the charm
+07:07:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:12 INFO Authentication (publickey) successful!
+07:07:13 INFO Found following runners: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:13 INFO Getting runners...
+07:07:14 INFO Getting all openstack servers managed by the charm
+07:07:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:15 INFO Authentication (publickey) successful!
+07:07:16 INFO Found following runners: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:16 INFO Getting runners...
+07:07:17 INFO Getting all openstack servers managed by the charm
+07:07:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:19 INFO Authentication (publickey) successful!
+07:07:20 INFO Found following runners: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:21 INFO Wait for condition not met, sleeping 10
+07:07:32 INFO Getting runners...
+07:07:34 INFO Getting all openstack servers managed by the charm
+07:07:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:36 INFO Authentication (publickey) successful!
+07:07:37 INFO Found following runners: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:37 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:37 INFO Getting runners...
+07:07:38 INFO Getting all openstack servers managed by the charm
+07:07:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:40 INFO Authentication (publickey) successful!
+07:07:40 INFO Found following runners: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:40 WARNING Found runner instance on cloud but not registered on GitHub: {'test-ikqgntl6-0-n-aacefa10a94d'}
+07:07:41 INFO Offline github runners to delete: []:
+07:07:42 INFO Getting all openstack servers managed by the charm
+07:07:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:44 INFO Authentication (publickey) successful!
+07:07:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:07:44 INFO Authentication (publickey) successful!
+07:07:44 INFO [chan 2] Opened sftp connection (server version 3)
+07:07:44 INFO Running runner removal script for test-ikqgntl6-0-n-aacefa10a94d
+07:07:45 INFO Deleting openstack server with test-ikqgntl6-0-n-aacefa10a94d
+07:07:47 INFO Cleaning up SSH key files
+07:07:47 INFO Found 0 key files, clean up 0 key files
+07:07:47 INFO Cleaning up openstack keypairs
+07:07:48 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+07:07:48 INFO Getting runners...
+07:07:49 INFO Getting all openstack servers managed by the charm
+07:07:50 INFO Found following runners: set()

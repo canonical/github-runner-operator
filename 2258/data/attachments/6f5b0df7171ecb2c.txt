@@ -1,0 +1,173 @@
+06:24:27 INFO Adding model github-pr-e884d-lxd:test-charm-fork-repo-om43 on cloud localhost
+06:24:28 WARNING unexpected facade SSHServer received from the controller
+06:24:29 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:30 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [allocating] waiting: waiting for machine
+06:25:00 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [allocating] waiting: waiting for machine
+06:25:31 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [allocating] waiting: agent initialising
+06:26:01 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [executing] maintenance: Setting up Builder.
+06:26:31 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [executing] maintenance: Setting up Builder.
+06:27:01 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [executing] maintenance: Setting up Builder.
+06:27:32 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [executing] maintenance: Setting up Builder.
+06:28:02 INFO Waiting for model:
+  github-runner-image-builder-ka5maigh/0 [executing] maintenance: Setting up Builder.
+06:28:49 INFO Deploying local:jammy/github-runner-0
+06:28:49 INFO Waiting for model:
+  test-ka5maigh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ka5maigh/0 [idle] blocked: image integration required.
+06:29:20 INFO Waiting for model:
+  test-ka5maigh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ka5maigh/0 [idle] blocked: image integration required.
+06:29:50 INFO Waiting for model:
+  test-ka5maigh/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-ka5maigh/0 [idle] blocked: image integration required.
+06:30:20 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:30:50 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:31:21 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:31:51 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:32:21 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:32:52 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:33:22 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:34:53 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:35:23 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:37:55 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:38:25 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:38:56 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:39:26 INFO Waiting for model:
+  test-ka5maigh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ka5maigh/0 [executing] active: Building image.
+06:39:57 INFO Waiting for model:
+  test-ka5maigh/0 [idle] active: 
+06:40:12 INFO GitHub token rate limit: Rate(reset=2025-04-03 07:00:10+00:00, remaining=4858, limit=5000)
+06:47:08 INFO Waiting for model:
+  test-ka5maigh/0 [executing] active: 
+06:47:38 INFO Waiting for model:
+  test-ka5maigh/0 [idle] active:
+06:47:44 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-om43  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  06:47:44Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ka5maigh           active      1  github-runner-image-builder  latest/edge   68  no       
+test-ka5maigh                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ka5maigh/0*  active    idle   0        10.182.116.209            
+test-ka5maigh/0*                         active    idle   1        10.182.116.20   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.182.116.209  juju-67328d-0  ubuntu@22.04      Running
+1        started  10.182.116.20   juju-67328d-1  ubuntu@22.04      Running
+
+06:47:44 INFO Juju error logs:
+
+machine-0: 06:25:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ka5maigh-0: 06:25:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ka5maigh-0: 06:25:59 ERROR unit.github-runner-image-builder-ka5maigh/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ka5maigh-0: 06:29:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-ka5maigh-0: 06:47:01 ERROR unit.test-ka5maigh/0.juju-log Timeout creating openstack server test-ka5maigh-0-n-8a6469d42892
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 202, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-ka5maigh-0: 06:47:03 ERROR unit.test-ka5maigh/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 202, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_utils.py", line 224, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_compute.py", line 1021, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/cloud/_compute.py", line 1142, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/openstack/utils.py", line 73, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 176, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 221, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-ka5maigh-0-n-8a6469d42892
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 319, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 461, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/var/lib/juju/agents/unit-test-ka5maigh-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 184, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-ka5maigh-0-n-8a6469d42892 openstack runner
+
+06:47:44 INFO Forgetting model main...
