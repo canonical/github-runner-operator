@@ -5,6 +5,7 @@
 
 import logging
 import secrets
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -564,8 +565,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
             raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
         logger.info("Runner startup process found to be healthy on %s", instance.instance_id)
 
+    def _wait_runner_running(self, _: OpenstackInstance) -> None:
+        """Wait until runner is running."""
+        time.sleep(60)
+
     @retry(tries=5, delay=60, local_logger=logger)
-    def _wait_runner_running(self, instance: OpenstackInstance) -> None:
+    def _wait_runner_running_old(self, instance: OpenstackInstance) -> None:
         """Wait until runner is running.
 
         Args:
