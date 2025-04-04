@@ -6,14 +6,10 @@
 from enum import Enum, auto
 from typing import Iterable
 
-import jobmanager_client  # pylint: disable=import-error
-
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
-
-jobmanager_client.ApiClient  # pylint: disable=pointless-statement
 
 
 class GitHubRunnerState(str, Enum):

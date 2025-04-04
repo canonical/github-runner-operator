@@ -443,12 +443,13 @@ def test_charm_config_from_charm_valid():
 
     result = CharmConfig.from_charm(mock_charm)
 
-    assert result.path == GitHubRepo(owner="owner", repo="repo")
+    assert result.platform == "github"
+    assert result.platform_config.path == GitHubRepo(owner="owner", repo="repo")
+    assert result.platform_config.token == "abc123"
     assert result.reconcile_interval == 5
     assert result.dockerhub_mirror == "https://example.com"
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
-    assert result.token == "abc123"
     assert "openssl s_client" in result.manager_proxy_command
 
 

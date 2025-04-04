@@ -58,10 +58,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         The created ApplicationConfiguration
     """
     extra_labels = list(state.charm_config.labels)
-    github_configuration = GitHubConfiguration(
-        token=state.charm_config.token,
-        path=state.charm_config.path,
-    )
+    platform=state.charm_config.platform
+    platform_configuration = state.charm_config.platform_config
     service_config = SupportServiceConfig(
         manager_proxy_command=state.charm_config.manager_proxy_command,
         proxy_config=state.proxy_config,
@@ -76,8 +74,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
     return ApplicationConfiguration(
         name=app_name,
         extra_labels=extra_labels,
-        platform="github",
-        platform_config=github_configuration,
+        platform=platform,
+        platform_config=platform_configuration,
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,

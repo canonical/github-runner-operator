@@ -61,13 +61,13 @@ def complete_charm_state():
                     }
                 },
             ),
-            path=GitHubOrg(org="canonical", group="group"),
+            platform="github",
+            platform_config=GitHubConfiguration(token="githubtoken", path=GitHubOrg(org="canonical", group="group")),
             reconcile_interval=5,
             repo_policy_compliance=charm_state.RepoPolicyComplianceConfig(
                 token="token",
                 url="https://compliance.example.com",
             ),
-            token="githubtoken",
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,
         ),
