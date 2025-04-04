@@ -33,7 +33,8 @@ name: app_name
 extra_labels:
 - label1
 - label2
-github_config:
+platform: github
+platform_config:
   path:
     group: group
     org: canonical
@@ -92,7 +93,8 @@ def app_config_fixture() -> ApplicationConfiguration:
     return ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
-        github_config=GitHubConfiguration(
+        platform="github",
+        platform_config=GitHubConfiguration(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         service_config=SupportServiceConfig(

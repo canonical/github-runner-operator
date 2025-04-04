@@ -4,12 +4,12 @@
 """Base configuration for the Application."""
 
 import logging
-from typing import Optional, TextIO
+from typing import Literal, Optional, TextIO
 
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
-from . import github
+from . import github, jobmanager
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,8 @@ class ApplicationConfiguration(BaseModel):
     Attributes:
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
-        github_config: GitHub configuration.
+        platform: TODO.
+        platform_config: GitHub configuration.
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
@@ -28,7 +29,8 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
-    github_config: github.GitHubConfiguration
+    platform: Literal["github", "jobmanager"]
+    platform_config: github.GitHubConfiguration | jobmanager.JobManagerConfiguration
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"

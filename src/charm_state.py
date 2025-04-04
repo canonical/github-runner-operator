@@ -412,7 +412,7 @@ class CharmConfig(BaseModel):
             Current config of the charm.
         """
         try:
-            github_config = GithubConfig.from_charm(charm)
+            platform_config = GithubConfig.from_charm(charm)
         except CharmConfigInvalidError as exc:
             raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
 
@@ -451,10 +451,10 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path,
+            path=platform_config.path,
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
-            token=github_config.token,
+            token=platform_config.token,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
         )

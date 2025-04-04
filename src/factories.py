@@ -76,7 +76,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
     return ApplicationConfiguration(
         name=app_name,
         extra_labels=extra_labels,
-        github_config=github_configuration,
+        platform="github",
+        platform_config=github_configuration,
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,

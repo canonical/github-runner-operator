@@ -139,7 +139,7 @@ class RunnerScaler:
         )
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
-            github_configuration=application_configuration.github_config,
+            github_configuration=application_configuration.platform_config,
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
             ),
@@ -155,9 +155,9 @@ class RunnerScaler:
             reactive_runner_config = ReactiveProcessConfig(
                 queue=reactive_config.queue,
                 manager_name=application_configuration.name,
-                github_configuration=application_configuration.github_config,
+                github_configuration=application_configuration.platform_config,
                 cloud_runner_manager=openstack_runner_manager_config,
-                github_token=application_configuration.github_config.token,
+                github_token=application_configuration.platform_config.token,
                 supported_labels=supported_labels,
                 labels=labels,
             )

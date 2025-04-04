@@ -114,7 +114,8 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
     assert app_configuration == ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
-        github_config=GitHubConfiguration(
+        platform="github",
+        platform_config=GitHubConfiguration(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         service_config=SupportServiceConfig(
