@@ -1,4 +1,4 @@
 -r base_requirements.txt
 -r ./github-runner-manager/requirements.txt
--e file:./jobmanager_client/
--e file:./github-runner-manager
+./jobmanager_client/
+./github-runner-manager
