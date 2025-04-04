@@ -185,8 +185,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         # logger.debug("Waiting for runner process to startup: %s", instance.instance_id)
         # self._wait_runner_startup(instance)
-        logger.debug("Waiting for runner process to be running: %s", instance.instance_id)
-        self._wait_runner_running(instance)
+        # logger.debug("Waiting for runner process to be running: %s", instance.instance_id)
+        # self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.instance_id)
 
