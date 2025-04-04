@@ -1,0 +1,92 @@
+07:28:04 INFO Adding model github-pr-e884d-lxd:test-charm-runner-fpdg on cloud localhost
+07:28:05 WARNING unexpected facade SSHServer received from the controller
+07:28:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+07:28:07 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [allocating] waiting: waiting for machine
+07:28:37 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [allocating] waiting: waiting for machine
+07:29:08 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: installing charm software
+07:29:38 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:30:08 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:30:39 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:31:09 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:31:40 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:32:10 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [executing] maintenance: Setting up Builder.
+07:32:40 INFO Waiting for model:
+  github-runner-image-builder-np70q4q5/0 [idle] blocked: image integration required.
+07:33:01 INFO Deploying local:jammy/github-runner-0
+07:33:01 INFO Waiting for model:
+  test-np70q4q5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-np70q4q5/0 [idle] blocked: image integration required.
+07:33:31 INFO Waiting for model:
+  test-np70q4q5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-np70q4q5/0 [idle] blocked: image integration required.
+07:34:01 INFO Waiting for model:
+  test-np70q4q5/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] blocked: image integration required.
+07:34:32 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:35:02 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:35:32 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:36:03 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:36:33 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:37:03 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:37:33 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:38:04 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:38:34 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:39:04 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:39:34 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:40:05 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:40:35 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:41:06 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:41:36 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:42:06 INFO Waiting for model:
+  test-np70q4q5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-np70q4q5/0 [executing] active: Building image.
+07:42:37 INFO Waiting for model:
+  test-np70q4q5/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-np70q4q5/0 [idle] active: 
+07:43:07 INFO Waiting for model:
+  test-np70q4q5/0 [idle] active: 
+07:45:34 INFO Waiting for model:
+  test-np70q4q5/0 [executing] active: 
+07:46:05 INFO Waiting for model:
+  test-np70q4q5/0 [idle] active:
+07:46:59 INFO Waiting for model:
+  test-np70q4q5/0 [executing] maintenance: Reconciling runners
