@@ -1,0 +1,56 @@
+19:03:04 INFO Creating 1 runners
+19:03:04 INFO Creating openstack server with test-of4jjpfn-0-n-52517db26b82
+19:03:38 WARNING NoValidConnectionsError. Unable to SSH into test-of4jjpfn-0-n-52517db26b82 with address 10.145.193.243. Error: [Errno None] Unable to connect to port 22 on 10.145.193.243
+19:03:38 WARNING Retrying error in 60 seconds: Failed to SSH to test-of4jjpfn-0-n-52517db26b82 during creation possible due to setup not completed
+19:04:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:04:38 INFO Authentication (publickey) successful!
+19:04:39 INFO Runner startup process found to be healthy on test-of4jjpfn-0-n-52517db26b82
+19:04:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:04:39 INFO Authentication (publickey) successful!
+19:04:40 INFO Runner test-of4jjpfn-0-n-52517db26b82 found to be healthy
+19:04:40 INFO Runner test-of4jjpfn-0-n-52517db26b82 created successfully
+19:04:40 INFO Getting runners...
+19:04:41 INFO Getting all openstack servers managed by the charm
+19:04:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:04:42 INFO Authentication (publickey) successful!
+19:04:43 INFO Found following runners: {'test-of4jjpfn-0-n-52517db26b82'}
+19:04:43 INFO Getting runners...
+19:04:44 INFO Getting all openstack servers managed by the charm
+19:04:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:04:46 INFO Authentication (publickey) successful!
+19:04:47 INFO Found following runners: {'test-of4jjpfn-0-n-52517db26b82'}
+19:04:47 INFO Getting runners...
+19:04:48 INFO Getting all openstack servers managed by the charm
+19:04:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:04:50 INFO Authentication (publickey) successful!
+19:04:50 INFO Found following runners: {'test-of4jjpfn-0-n-52517db26b82'}
+19:04:52 INFO Wait for condition not met, sleeping 10
+19:05:03 INFO Getting runners...
+19:05:04 INFO Getting all openstack servers managed by the charm
+19:05:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:05:07 INFO Authentication (publickey) successful!
+19:05:07 INFO Found following runners: {'test-of4jjpfn-0-n-52517db26b82'}
+19:05:07 WARNING Found runner instance on cloud but not registered on GitHub: {'test-of4jjpfn-0-n-52517db26b82'}
+19:05:07 INFO Getting runners...
+19:05:09 INFO Getting all openstack servers managed by the charm
+19:05:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:05:11 INFO Authentication (publickey) successful!
+19:05:12 INFO Found following runners: {'test-of4jjpfn-0-n-52517db26b82'}
+19:05:12 WARNING Found runner instance on cloud but not registered on GitHub: {'test-of4jjpfn-0-n-52517db26b82'}
+19:05:13 INFO Offline github runners to delete: []:
+19:05:13 INFO Getting all openstack servers managed by the charm
+19:05:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:05:16 INFO Authentication (publickey) successful!
+19:05:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:05:17 INFO Authentication (publickey) successful!
+19:05:17 INFO [chan 2] Opened sftp connection (server version 3)
+19:05:17 INFO Running runner removal script for test-of4jjpfn-0-n-52517db26b82
+19:05:17 INFO Deleting openstack server with test-of4jjpfn-0-n-52517db26b82
+19:05:20 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/ports: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+19:05:21 INFO Cleaning up SSH key files
+19:05:21 INFO Found 0 key files, clean up 0 key files
+19:05:21 INFO Cleaning up openstack keypairs
+19:05:21 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+19:05:21 INFO Getting runners...
+19:05:24 INFO Getting all openstack servers managed by the charm
+19:05:25 INFO Found following runners: set()
