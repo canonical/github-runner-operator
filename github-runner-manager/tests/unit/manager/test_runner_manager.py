@@ -7,7 +7,6 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import RunnerCreateError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -118,17 +117,14 @@ def test_cleanup_removes_offline_expected_runners(
 
     cloud_runner_manager = MagicMock()
     cloud_runner_manager.get_runners.return_value = cloud_instances
-    github_org = GitHubRepo(owner="owner", repo="repo")
-    github_configuration = GitHubConfiguration(token="token", path=github_org)
+    github_client = MagicMock()
     runner_manager = RunnerManager(
         "managername",
-        github_configuration=github_configuration,
+        github_manager=github_client,
         cloud_runner_manager=cloud_runner_manager,
         labels=["label1", "label2"],
     )
 
-    github_client = MagicMock()
-    monkeypatch.setattr(runner_manager, "_github", github_client)
     github_client.get_runners.return_value = [github_runner]
     github_client.get_removal_token.return_value = "removaltoken"
 
@@ -151,16 +147,14 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     cloud_runner_manager = MagicMock()
     cloud_runner_manager.get_runners.return_value = cloud_instances
     cloud_runner_manager.name_prefix = "unit-0"
-    github_org = GitHubRepo(owner="owner", repo="repo")
-    github_configuration = GitHubConfiguration(token="token", path=github_org)
+    github_client = MagicMock()
     runner_manager = RunnerManager(
         "managername",
-        github_configuration=github_configuration,
+        github_manager=github_client,
         cloud_runner_manager=cloud_runner_manager,
         labels=["label1", "label2"],
     )
 
-    github_client = MagicMock()
     monkeypatch.setattr(runner_manager, "_github", github_client)
 
     github_runner = SelfHostedRunner(
