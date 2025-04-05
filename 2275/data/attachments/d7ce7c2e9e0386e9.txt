@@ -1,0 +1,72 @@
+18:46:39 INFO Waiting for model:
+  test-qaclnexx/0 [executing] active:
+18:50:30 INFO Waiting for model:
+  test-qaclnexx/0 [executing] active: 
+18:51:00 INFO Waiting for model:
+  test-qaclnexx/0 [idle] active: 
+18:51:11 INFO Wait for condition not met, sleeping 30
+18:51:54 INFO [TEST SETUP] Run command pkill -9 run.sh on test-qaclnexx-0-n-0f8e2501490c
+18:51:54 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.238', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7c:c6:19'}]])
+18:51:55 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qaclnexx-0-n-0f8e2501490c.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.238 pkill -9 run.sh'
+18:52:00 INFO Runner test-qaclnexx-0-n-0f8e2501490c status: online
+18:52:00 INFO Runner still marked as online, waiting for it to be marked offline
+18:53:25 INFO Waiting for model:
+  test-qaclnexx/0 [executing] active: 
+18:53:55 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743878798.809976, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.39282751083374}
+{"timestamp": 1743878812.8898444, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.900303602218628}
+{"timestamp": 1743879009.1596365, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 163.97122359275818}
+{"timestamp": 1743879029.628918, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 19.253416299819946}
+{"timestamp": 1743879052.332638, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 21.526904821395874}
+{"timestamp": 1743878963.0, "event": "runner_installed", "flavor": "test-qaclnexx", "duration": 104.0}
+{"timestamp": 1743879075.0, "event": "runner_start", "flavor": "test-qaclnexx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 112.0, "queue_duration": 3.0}
+{"timestamp": 1743879115.0, "event": "runner_stop", "flavor": "test-qaclnexx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1743879205.4686937, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.51774764060974}
+{"timestamp": 1743879218.6402006, "event": "reconciliation", "flavor": "test-qaclnexx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.0004141330719}
+18:53:59 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-f6vh  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  18:53:59Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qaclnexx           active      1  github-runner-image-builder  latest/edge   68  no       
+test-qaclnexx                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-qaclnexx/0*  active    idle   0        10.57.83.186              
+test-qaclnexx/0*                         active    idle   1        10.57.83.46     8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.57.83.186  juju-b7f8cd-0  ubuntu@22.04      Running
+1        started  10.57.83.46   juju-b7f8cd-1  ubuntu@22.04      Running
+
+18:53:59 INFO Juju error logs:
+
+machine-0: 18:25:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qaclnexx-0: 18:25:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-qaclnexx-0: 18:26:00 ERROR unit.github-runner-image-builder-qaclnexx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:29:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qaclnexx-0: 18:29:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-qaclnexx-0: 18:45:43 ERROR unit.test-qaclnexx/0.juju-log Unable to get SSH connection for instance test-qaclnexx-0-n-3110eb184671, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-qaclnexx-0-n-3110eb184671, key path: /home/runner-manager/.ssh/test-qaclnexx-0-n-3110eb184671.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qaclnexx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-qaclnexx-0-n-3110eb184671
+
+18:53:59 INFO Forgetting model main...

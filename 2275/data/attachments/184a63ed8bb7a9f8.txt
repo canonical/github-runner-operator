@@ -1,0 +1,128 @@
+18:53:03 INFO Adding model github-pr-e884d-lxd:test-reactive-kp9e on cloud localhost
+18:53:04 WARNING unexpected facade SSHServer received from the controller
+18:53:04 INFO GitHub token rate limit: Rate(reset=2025-04-05 19:24:15+00:00, remaining=4501, limit=5000)
+18:53:08 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:53:09 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [allocating] waiting: waiting for machine
+18:53:39 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [allocating] waiting: waiting for machine
+18:54:09 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [allocating] waiting: agent initialising
+18:54:39 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [executing] maintenance: Setting up Builder.
+18:55:10 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [executing] maintenance: Setting up Builder.
+18:55:40 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [executing] maintenance: Setting up Builder.
+18:56:11 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [executing] maintenance: Setting up Builder.
+18:56:41 INFO Waiting for model:
+  github-runner-image-builder-vb6xabwe/0 [executing] maintenance: Setting up Builder.
+18:57:20 INFO Deploying local:jammy/github-runner-0
+18:57:20 INFO Waiting for model:
+  test-vb6xabwe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vb6xabwe/0 [idle] blocked: image integration required.
+18:57:50 INFO Waiting for model:
+  test-vb6xabwe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vb6xabwe/0 [idle] blocked: image integration required.
+18:58:20 INFO Waiting for model:
+  test-vb6xabwe/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vb6xabwe/0 [idle] blocked: image integration required.
+18:58:51 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+18:59:21 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+18:59:51 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:00:22 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:00:52 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:01:22 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:01:53 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:02:23 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:02:53 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:03:24 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:03:54 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:04:25 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:04:55 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:05:26 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:05:56 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:06:26 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vb6xabwe/0 [executing] active: Building image.
+19:06:57 INFO Waiting for model:
+  test-vb6xabwe/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-vb6xabwe/0 [idle] active: 
+19:07:27 INFO Deploying ch:amd64/jammy/mongodb-212
+19:07:28 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:07:58 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:08:28 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: Installed MongoDB
+19:08:59 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+19:09:16 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:09:17 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:09:47 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:10:16 INFO Waiting for model:
+  test-vb6xabwe/0 [executing] active: 
+19:10:46 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active:
+19:10:52 INFO Wait for condition not met, sleeping 10
+19:11:39 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active: 
+19:11:55 INFO Wait for condition not met, sleeping 60
+19:13:19 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active: 
+19:13:35 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743880298.474092, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 33.41975021362305}
+{"timestamp": 1743880340.0, "event": "runner_installed", "flavor": "test-vb6xabwe", "duration": 73.0}
+{"timestamp": 1743880344.0, "event": "runner_start", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1743880347.0, "event": "runner_stop", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743880398.6454475, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.436240434646606}
+
+19:13:36 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743880298.474092, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 33.41975021362305}
+{"timestamp": 1743880340.0, "event": "runner_installed", "flavor": "test-vb6xabwe", "duration": 73.0}
+{"timestamp": 1743880344.0, "event": "runner_start", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1743880347.0, "event": "runner_stop", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743880398.6454475, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.436240434646606}
+
+19:13:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743880298.474092, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 33.41975021362305}
+{"timestamp": 1743880340.0, "event": "runner_installed", "flavor": "test-vb6xabwe", "duration": 73.0}
+{"timestamp": 1743880344.0, "event": "runner_start", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1743880347.0, "event": "runner_stop", "flavor": "test-vb6xabwe", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743880398.6454475, "event": "reconciliation", "flavor": "test-vb6xabwe", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.436240434646606}
+19:13:56 INFO Waiting for model:
+  test-vb6xabwe/0 [executing] active: 
+19:14:27 INFO Waiting for model:
+  test-vb6xabwe/0 [idle] active:
