@@ -1,0 +1,127 @@
+06:24:08 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-failure-5za8 on cloud localhost
+06:24:08 WARNING unexpected facade SSHServer received from the controller
+06:24:09 INFO GitHub token rate limit: Rate(reset=2025-04-05 07:24:08+00:00, remaining=5000, limit=5000)
+06:24:24 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:24 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [allocating] waiting: waiting for machine
+06:24:55 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [allocating] waiting: waiting for machine
+06:25:25 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [allocating] waiting: agent initialising
+06:25:55 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [executing] maintenance: Setting up Builder.
+06:26:26 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [executing] maintenance: Setting up Builder.
+06:26:56 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [executing] maintenance: Setting up Builder.
+06:27:27 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [executing] maintenance: Setting up Builder.
+06:27:57 INFO Waiting for model:
+  github-runner-image-builder-tgn2xp8z/0 [idle] blocked: image integration required.
+06:28:21 INFO Deploying local:jammy/github-runner-0
+06:28:21 INFO Waiting for model:
+  test-tgn2xp8z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tgn2xp8z/0 [idle] blocked: image integration required.
+06:28:51 INFO Waiting for model:
+  test-tgn2xp8z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tgn2xp8z/0 [idle] blocked: image integration required.
+06:29:22 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:29:52 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:30:22 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:30:53 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:31:23 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:31:53 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:32:24 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:32:54 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:33:24 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:33:55 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:34:25 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:34:55 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:35:26 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:35:56 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:36:27 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:36:57 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:37:27 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:37:58 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:38:28 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:38:58 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:39:29 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:39:59 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:40:29 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:41:00 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:41:30 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tgn2xp8z/0 [executing] active: Building image.
+06:42:00 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] active: 
+06:42:31 INFO Waiting for model:
+  test-tgn2xp8z/0 [executing] active:
+06:46:32 INFO Waiting for model:
+  test-tgn2xp8z/0 [executing] maintenance: Reconciling runners
+06:47:02 INFO Waiting for model:
+  test-tgn2xp8z/0 [idle] active: 
+06:47:14 INFO [TEST SETUP] Exposing port 8080 on test-tgn2xp8z-0-n-ccdcb0d6e9c2
+06:47:14 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.61', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:44:c2:a7'}]])
+06:47:18 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-tgn2xp8z-0-n-ccdcb0d6e9c2
+06:47:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.61', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:44:c2:a7'}]])
+06:47:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-tgn2xp8z-0-n-ccdcb0d6e9c2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.61 nc -z localhost 8080'
+06:47:21 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-tgn2xp8z-0-n-ccdcb0d6e9c2
+06:47:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.61', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:44:c2:a7'}]])
+06:47:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-tgn2xp8z-0-n-ccdcb0d6e9c2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.61 curl http://localhost:8080'
+06:47:26 INFO Wait for condition not met, sleeping 10
+06:47:37 INFO Wait for condition not met, sleeping 60
+06:49:05 INFO Waiting for model:
+  test-tgn2xp8z/0 [executing] maintenance: Reconciling runners
+06:49:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743835551.0, "event": "runner_installed", "flavor": "test-tgn2xp8z", "duration": 88.0}
+{"timestamp": 1743835650.0, "event": "runner_start", "flavor": "test-tgn2xp8z", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 99.0, "queue_duration": 2.0}
+{"timestamp": 1743835650.0, "event": "runner_stop", "flavor": "test-tgn2xp8z", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1743835743.9330764, "event": "reconciliation", "flavor": "test-tgn2xp8z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.882301092147827}
+{"timestamp": 1743835756.059967, "event": "reconciliation", "flavor": "test-tgn2xp8z", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.10273790359497}

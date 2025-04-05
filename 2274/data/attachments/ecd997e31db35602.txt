@@ -1,0 +1,40 @@
+07:00:25 INFO Waiting for model:
+  test-rdds5o8s/0 [executing] active: 
+07:00:56 INFO Waiting for model:
+  test-rdds5o8s/0 [idle] active:
+07:02:08 INFO Waiting for model:
+  test-rdds5o8s/0 [executing] maintenance: Reconciling runners
+07:02:38 INFO Waiting for model:
+  test-rdds5o8s/0 [idle] active: 
+07:02:49 INFO [TEST SETUP] Exposing port 8080 on test-rdds5o8s-0-n-202ab936c556
+07:02:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.129', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:31:11:99'}]])
+07:02:53 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-rdds5o8s-0-n-202ab936c556
+07:02:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.129', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:31:11:99'}]])
+07:02:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rdds5o8s-0-n-202ab936c556.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.129 nc -z localhost 8080'
+07:02:56 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-rdds5o8s-0-n-202ab936c556
+07:02:56 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.129', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:31:11:99'}]])
+07:02:57 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rdds5o8s-0-n-202ab936c556.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.129 curl http://localhost:8080'
+07:02:59 INFO Wait for condition not met, sleeping 10
+07:03:35 INFO Waiting for model:
+  test-rdds5o8s/0 [executing] maintenance: Reconciling runners
+07:04:05 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-yedq  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  07:04:05Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-rdds5o8s           active      1  github-runner-image-builder  latest/edge   68  no       
+test-rdds5o8s                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-rdds5o8s/0*  active    idle   0        10.108.126.201            
+test-rdds5o8s/0*                         active    idle   1        10.108.126.144  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.108.126.201  juju-8977d3-0  ubuntu@22.04      Running
+1        started  10.108.126.144  juju-8977d3-1  ubuntu@22.04      Running
+
+07:04:05 INFO Juju error logs:
+
+
+07:04:05 INFO Forgetting model main...
