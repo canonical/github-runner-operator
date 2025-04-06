@@ -1,0 +1,98 @@
+06:32:41 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-8ga8 on cloud localhost
+06:32:41 WARNING unexpected facade SSHServer received from the controller
+06:32:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:32:43 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [allocating] waiting: waiting for machine
+06:33:14 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [allocating] waiting: waiting for machine
+06:33:44 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [allocating] waiting: waiting for machine
+06:34:15 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:34:45 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:35:15 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:35:46 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:36:16 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:36:47 INFO Waiting for model:
+  github-runner-image-builder-lt99re7j/0 [executing] maintenance: Setting up Builder.
+06:37:25 INFO Deploying local:jammy/github-runner-0
+06:37:26 INFO Waiting for model:
+  test-lt99re7j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lt99re7j/0 [idle] blocked: image integration required.
+06:37:56 INFO Waiting for model:
+  test-lt99re7j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lt99re7j/0 [idle] blocked: image integration required.
+06:38:26 INFO Waiting for model:
+  test-lt99re7j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lt99re7j/0 [idle] blocked: image integration required.
+06:38:56 INFO Waiting for model:
+  test-lt99re7j/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-lt99re7j/0 [idle] blocked: image integration required.
+06:39:26 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:39:57 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:40:27 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:40:58 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:41:28 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:41:59 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:42:29 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:42:59 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:43:30 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:44:00 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:44:31 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:45:01 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:45:32 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:46:02 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:46:32 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:47:02 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:47:33 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:48:03 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:48:34 INFO Waiting for model:
+  test-lt99re7j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lt99re7j/0 [executing] active: Building image.
+06:49:04 INFO Waiting for model:
+  test-lt99re7j/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-lt99re7j/0 [idle] active: 
+06:49:35 INFO Waiting for model:
+  test-lt99re7j/0 [idle] active: 
+06:49:38 INFO Waiting for model:
+  test-lt99re7j/0 [idle] active:

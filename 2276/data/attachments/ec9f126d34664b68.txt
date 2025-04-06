@@ -1,0 +1,230 @@
+06:57:27 INFO Adding model github-pr-e884d-lxd:test-charm-upgrade-rpu3 on cloud localhost
+06:57:27 WARNING unexpected facade AgentLifeFlag received from the controller
+06:57:27 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:57:27 WARNING unexpected facade SecretsDrain received from the controller
+06:57:29 INFO Deploying ch:amd64/github-runner-image-builder-68
+06:57:29 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw (not enough units yet - 0/1)
+06:57:59 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [allocating] waiting: waiting for machine
+06:58:29 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [executing] maintenance: Setting up Builder.
+06:58:59 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [executing] maintenance: Setting up Builder.
+06:59:29 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [executing] maintenance: Setting up Builder.
+06:59:59 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [executing] maintenance: Setting up Builder.
+07:00:29 INFO Waiting for model:
+  github-runner-image-builder-asebsxaw/0 [executing] maintenance: Setting up Builder.
+07:01:17 INFO Deploying local:jammy/github-runner-0
+07:01:18 INFO Waiting for model:
+  test-asebsxaw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asebsxaw/0 [idle] blocked: image integration required.
+07:01:48 INFO Waiting for model:
+  test-asebsxaw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asebsxaw/0 [idle] blocked: image integration required.
+07:02:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-asebsxaw/0 [idle] blocked: image integration required.
+07:02:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:03:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:03:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:04:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:04:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:05:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:05:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:06:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:06:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:07:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:07:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:08:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:08:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:09:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:09:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:10:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:10:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asebsxaw/0 [executing] active: Building image.
+07:11:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-asebsxaw/0 [idle] active: 
+07:11:48 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:12:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:12:48 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:13:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:13:48 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:14:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:14:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:15:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:15:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:16:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:16:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:17:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:17:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:18:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:18:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:19:18 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:19:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] maintenance: Reconciling runners
+07:20:18 INFO Waiting for model:
+  test-asebsxaw/0 [executing] maintenance: Reconciling runners
+07:20:48 INFO Waiting for model:
+  test-asebsxaw/0 [idle] active: 
+07:21:55 INFO Waiting for model:
+  test-asebsxaw/0 [executing] active: 
+07:22:25 INFO Waiting for model:
+  test-asebsxaw/0 [idle] active:
+07:22:59 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-rpu3  github-pr-e884d-lxd  localhost/localhost  3.1.10   unsupported  07:22:59Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-asebsxaw           active      1  github-runner-image-builder  latest/edge   68  no       
+test-asebsxaw                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-asebsxaw/0*  active    idle   0        10.41.96.134           
+test-asebsxaw/0*                         active    idle   1        10.41.96.185           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.41.96.134  juju-9a47b8-0  ubuntu@22.04      Running
+1        started  10.41.96.185  juju-9a47b8-1  ubuntu@22.04      Running
+
+07:22:59 INFO Juju error logs:
+
+machine-0: 06:58:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:58:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:58:08 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-asebsxaw-0: 06:58:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-asebsxaw-0: 06:58:46 ERROR unit.github-runner-image-builder-asebsxaw/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 07:02:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:02:01 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 07:02:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-asebsxaw-0: 07:02:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-asebsxaw-0: 07:14:43 ERROR unit.test-asebsxaw/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/github_client.py", line 69, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/github_client.py", line 113, in get_runner_github_info
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/fastcore/net.py", line 120, in urlread
+    with urlopen(url, data=data, headers=headers, timeout=timeout, **kwargs) as u: res,hdrs = u.read(),u.headers
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/fastcore/net.py", line 111, in urlopen
+    try: return urlopener().open(urlwrap(url, data=data, headers=headers), timeout=timeout)
+  File "/usr/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/usr/lib/python3.10/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 503: Service Unavailable
+====Error Body====
+{
+  "message": "Server Error",
+  "documentation_url": "https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository",
+  "status": "503"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/./src/charm.py", line 631, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/__init__.py", line 343, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/_main.py", line 558, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/_main.py", line 543, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/_main.py", line 502, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/_main.py", line 530, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/framework.py", line 347, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/framework.py", line 906, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/ops/framework.py", line 996, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/./src/charm.py", line 115, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/./src/charm.py", line 338, in _on_reconcile_runners
+    self._trigger_reconciliation()
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/./src/charm.py", line 358, in _trigger_reconciliation
+    self._reconcile_openstack_runners(
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/./src/charm.py", line 502, in _reconcile_openstack_runners
+    runner_scaler.reconcile()
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 286, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 156, in get_runners
+    github_infos = self._github.get_runners(github_states)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/manager/github_runner_manager.py", line 75, in get_runners
+    runner_list = self.github.get_runner_github_info(self._path, self._prefix)
+  File "/var/lib/juju/agents/unit-test-asebsxaw-0/charm/venv/github_runner_manager/github_client.py", line 77, in wrapper
+    raise GithubApiError from exc
+github_runner_manager.errors.GithubApiError
+
+07:23:00 INFO Forgetting model main...

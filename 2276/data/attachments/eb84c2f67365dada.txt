@@ -1,0 +1,142 @@
+06:24:42 INFO Adding model github-pr-e884d-lxd:test-reactive-0z9f on cloud localhost
+06:24:42 WARNING unexpected facade SSHServer received from the controller
+06:24:42 INFO GitHub token rate limit: Rate(reset=2025-04-06 07:19:22+00:00, remaining=4998, limit=5000)
+06:24:46 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:47 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [allocating] waiting: waiting for machine
+06:25:17 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [allocating] waiting: waiting for machine
+06:25:48 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [allocating] waiting: agent initialising
+06:26:18 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [executing] maintenance: Setting up Builder.
+06:26:48 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [executing] maintenance: Setting up Builder.
+06:27:19 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [executing] maintenance: Setting up Builder.
+06:27:49 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [executing] maintenance: Setting up Builder.
+06:28:20 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [executing] maintenance: Setting up Builder.
+06:28:50 INFO Waiting for model:
+  github-runner-image-builder-tyhh35ny/0 [idle] blocked: image integration required.
+06:29:19 INFO Deploying local:jammy/github-runner-0
+06:29:19 INFO Waiting for model:
+  test-tyhh35ny/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tyhh35ny/0 [idle] blocked: image integration required.
+06:29:50 INFO Waiting for model:
+  test-tyhh35ny/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tyhh35ny/0 [idle] blocked: image integration required.
+06:30:20 INFO Waiting for model:
+  test-tyhh35ny/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tyhh35ny/0 [idle] blocked: image integration required.
+06:30:50 INFO Waiting for model:
+  test-tyhh35ny/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tyhh35ny/0 [idle] blocked: image integration required.
+06:31:20 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:31:51 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:32:21 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:33:22 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:34:53 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:35:24 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:37:56 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:38:26 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:38:57 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:39:27 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tyhh35ny/0 [executing] active: Building image.
+06:39:57 INFO Waiting for model:
+  test-tyhh35ny/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-tyhh35ny/0 [idle] active: 
+06:40:28 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active: 
+06:40:35 INFO Deploying ch:amd64/jammy/mongodb-212
+06:40:35 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+06:41:06 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+06:41:36 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+06:42:06 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+06:42:31 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:42:32 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:43:02 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:43:35 INFO Waiting for model:
+  test-tyhh35ny/0 [executing] maintenance: Reconciling runners
+06:44:06 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active:
+06:44:15 INFO Wait for condition not met, sleeping 10
+06:45:07 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active: 
+06:45:23 INFO Wait for condition not met, sleeping 60
+06:46:23 INFO Wait for condition not met, sleeping 60
+06:47:23 INFO Wait for condition not met, sleeping 60
+06:48:24 INFO Wait for condition not met, sleeping 60
+06:49:24 INFO Wait for condition not met, sleeping 60
+06:50:53 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active: 
+06:51:09 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743921906.6005857, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 39.47063493728638}
+{"timestamp": 1743922160.0, "event": "runner_installed", "flavor": "test-tyhh35ny", "duration": 291.0}
+{"timestamp": 1743922164.0, "event": "runner_start", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 309.0}
+{"timestamp": 1743922167.0, "event": "runner_stop", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743922252.402408, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.24331521987915}
+
+06:51:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743921906.6005857, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 39.47063493728638}
+{"timestamp": 1743922160.0, "event": "runner_installed", "flavor": "test-tyhh35ny", "duration": 291.0}
+{"timestamp": 1743922164.0, "event": "runner_start", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 309.0}
+{"timestamp": 1743922167.0, "event": "runner_stop", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743922252.402408, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.24331521987915}
+
+06:51:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1743921906.6005857, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 39.47063493728638}
+{"timestamp": 1743922160.0, "event": "runner_installed", "flavor": "test-tyhh35ny", "duration": 291.0}
+{"timestamp": 1743922164.0, "event": "runner_start", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 309.0}
+{"timestamp": 1743922167.0, "event": "runner_stop", "flavor": "test-tyhh35ny", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1743922252.402408, "event": "reconciliation", "flavor": "test-tyhh35ny", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.24331521987915}
+06:51:36 INFO Waiting for model:
+  test-tyhh35ny/0 [executing] maintenance: Reconciling runners
+06:52:07 INFO Waiting for model:
+  test-tyhh35ny/0 [idle] active:
