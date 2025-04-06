@@ -1,0 +1,71 @@
+18:57:34 INFO Creating 1 runners
+18:57:34 INFO Creating openstack server with test-a14aw7ps-0-n-26c19b8f4627
+18:57:57 WARNING NoValidConnectionsError. Unable to SSH into test-a14aw7ps-0-n-26c19b8f4627 with address 10.145.193.20. Error: [Errno None] Unable to connect to port 22 on 10.145.193.20
+18:57:57 WARNING Retrying error in 60 seconds: Failed to SSH to test-a14aw7ps-0-n-26c19b8f4627 during creation possible due to setup not completed
+18:58:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:57 INFO Authentication (publickey) successful!
+18:58:58 INFO Runner startup process found to be healthy on test-a14aw7ps-0-n-26c19b8f4627
+18:58:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:58 INFO Authentication (publickey) successful!
+18:58:58 INFO Runner test-a14aw7ps-0-n-26c19b8f4627 found to be healthy
+18:58:58 INFO Runner test-a14aw7ps-0-n-26c19b8f4627 created successfully
+18:58:58 INFO Getting runners...
+18:58:59 INFO Getting all openstack servers managed by the charm
+18:59:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:01 INFO Authentication (publickey) successful!
+18:59:01 INFO Found following runners: {'test-a14aw7ps-0-n-26c19b8f4627'}
+18:59:01 INFO Getting runners...
+18:59:02 INFO Getting all openstack servers managed by the charm
+18:59:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:04 INFO Authentication (publickey) successful!
+18:59:04 INFO Found following runners: {'test-a14aw7ps-0-n-26c19b8f4627'}
+18:59:04 INFO Getting runners...
+18:59:05 INFO Getting all openstack servers managed by the charm
+18:59:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:07 INFO Authentication (publickey) successful!
+18:59:07 INFO Found following runners: {'test-a14aw7ps-0-n-26c19b8f4627'}
+18:59:07 INFO Getting all openstack servers managed by the charm
+18:59:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:09 INFO Authentication (publickey) successful!
+18:59:09 INFO Getting runners...
+18:59:10 INFO Getting all openstack servers managed by the charm
+18:59:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:12 INFO Authentication (publickey) successful!
+18:59:12 INFO Found following runners: {'test-a14aw7ps-0-n-26c19b8f4627'}
+18:59:13 INFO Offline github runners to delete: []:
+18:59:14 INFO Getting all openstack servers managed by the charm
+18:59:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:17 INFO Authentication (publickey) successful!
+18:59:18 INFO Cleaning up SSH key files
+18:59:18 INFO Found 1 key files, clean up 0 key files
+18:59:18 INFO Cleaning up openstack keypairs
+18:59:18 INFO Getting runners...
+18:59:19 INFO Getting all openstack servers managed by the charm
+18:59:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:21 INFO Authentication (publickey) successful!
+18:59:21 INFO Found following runners: {'test-a14aw7ps-0-n-26c19b8f4627'}
+18:59:21 INFO Flushing idle runners...
+18:59:22 INFO Getting all openstack servers managed by the charm
+18:59:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:23 INFO Authentication (publickey) successful!
+18:59:23 INFO Attempting to kill runner process on test-a14aw7ps-0-n-26c19b8f4627 if not busy
+18:59:23 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:59:23 INFO Kill process command output, ok: True code 0, out: 1830
+, err: 
+18:59:23 INFO Getting all openstack servers managed by the charm
+18:59:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:25 INFO Authentication (publickey) successful!
+18:59:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:25 INFO Authentication (publickey) successful!
+18:59:26 INFO [chan 2] Opened sftp connection (server version 3)
+18:59:26 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.20, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:59:26 WARNING Failed to pull metrics for test-a14aw7ps-0-n-26c19b8f4627: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:59:26 INFO Running runner removal script for test-a14aw7ps-0-n-26c19b8f4627
+18:59:27 INFO Deleting openstack server with test-a14aw7ps-0-n-26c19b8f4627
+18:59:30 INFO Cleaning up SSH key files
+18:59:30 INFO Found 0 key files, clean up 0 key files
+18:59:30 INFO Cleaning up openstack keypairs
+18:59:30 INFO Getting runners...
+18:59:31 INFO Getting all openstack servers managed by the charm
+18:59:31 INFO Found following runners: set()

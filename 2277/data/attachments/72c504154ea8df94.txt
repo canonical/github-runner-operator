@@ -1,0 +1,40 @@
+18:56:12 INFO Waiting for model:
+  test-fcwm0dus/0 [executing] active: 
+18:56:43 INFO Waiting for model:
+  test-fcwm0dus/0 [idle] active:
+18:57:50 INFO Waiting for model:
+  test-fcwm0dus/0 [executing] maintenance: Reconciling runners
+18:58:20 INFO Waiting for model:
+  test-fcwm0dus/0 [idle] active: 
+18:58:29 INFO [TEST SETUP] Exposing port 8080 on test-fcwm0dus-0-n-5c44cad666c8
+18:58:29 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.57', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2c:d7:5a'}]])
+18:58:33 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-fcwm0dus-0-n-5c44cad666c8
+18:58:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.57', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2c:d7:5a'}]])
+18:58:34 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fcwm0dus-0-n-5c44cad666c8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.57 nc -z localhost 8080'
+18:58:35 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-fcwm0dus-0-n-5c44cad666c8
+18:58:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.57', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2c:d7:5a'}]])
+18:58:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fcwm0dus-0-n-5c44cad666c8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.57 curl http://localhost:8080'
+18:58:39 INFO Wait for condition not met, sleeping 10
+18:59:12 INFO Waiting for model:
+  test-fcwm0dus/0 [executing] active: 
+18:59:42 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-ctwm  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  18:59:42Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fcwm0dus           active      1  github-runner-image-builder  latest/edge   68  no       
+test-fcwm0dus                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-fcwm0dus/0*  active    idle   0        10.151.86.172             
+test-fcwm0dus/0*                         active    idle   1        10.151.86.167   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.151.86.172  juju-3dc5ff-0  ubuntu@22.04      Running
+1        started  10.151.86.167  juju-3dc5ff-1  ubuntu@22.04      Running
+
+18:59:42 INFO Juju error logs:
+
+
+18:59:42 INFO Forgetting model main...

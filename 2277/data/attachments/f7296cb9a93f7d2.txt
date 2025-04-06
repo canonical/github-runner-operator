@@ -1,0 +1,109 @@
+18:23:41 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-failure-r76g on cloud localhost
+18:23:41 WARNING unexpected facade SSHServer received from the controller
+18:23:42 INFO GitHub token rate limit: Rate(reset=2025-04-06 19:11:36+00:00, remaining=4991, limit=5000)
+18:23:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:23:58 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [allocating] waiting: waiting for machine
+18:24:28 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [allocating] waiting: waiting for machine
+18:24:58 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [allocating] waiting: agent initialising
+18:25:28 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [executing] maintenance: Setting up Builder.
+18:25:58 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [executing] maintenance: Setting up Builder.
+18:26:28 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [executing] maintenance: Setting up Builder.
+18:26:58 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [executing] maintenance: Setting up Builder.
+18:27:28 INFO Waiting for model:
+  github-runner-image-builder-kfl1sq9m/0 [executing] maintenance: Setting up Builder.
+18:28:04 INFO Deploying local:jammy/github-runner-0
+18:28:04 INFO Waiting for model:
+  test-kfl1sq9m/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfl1sq9m/0 [idle] blocked: image integration required.
+18:28:35 INFO Waiting for model:
+  test-kfl1sq9m/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kfl1sq9m/0 [idle] blocked: image integration required.
+18:29:05 INFO Waiting for model:
+  test-kfl1sq9m/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kfl1sq9m/0 [idle] blocked: image integration required.
+18:29:35 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:30:05 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:30:35 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:31:05 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:31:35 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:32:06 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:32:36 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:33:06 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:33:36 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:34:06 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:34:37 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:35:07 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:35:37 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:36:07 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:36:38 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:37:08 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:37:38 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:38:09 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:38:39 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:39:10 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:39:40 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kfl1sq9m/0 [executing] active: Building image.
+18:40:10 INFO Waiting for model:
+  test-kfl1sq9m/0 [executing] maintenance: Reconciling runners
+18:40:44 INFO Waiting for model:
+  test-kfl1sq9m/0 [executing] active:
+18:45:25 INFO Waiting for model:
+  test-kfl1sq9m/0 [executing] maintenance: Reconciling runners
+18:45:56 INFO Waiting for model:
+  test-kfl1sq9m/0 [idle] active: 
+18:46:11 INFO [TEST SETUP] Exposing port 8080 on test-kfl1sq9m-0-n-a5ed751b9fed
+18:46:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6a:78:2c'}]])
+18:46:14 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-kfl1sq9m-0-n-a5ed751b9fed
+18:46:14 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6a:78:2c'}]])
+18:46:15 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kfl1sq9m-0-n-a5ed751b9fed.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 nc -z localhost 8080'
+18:46:19 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-kfl1sq9m-0-n-a5ed751b9fed
+18:46:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6a:78:2c'}]])
+18:46:20 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kfl1sq9m-0-n-a5ed751b9fed.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 curl http://localhost:8080'
