@@ -1,0 +1,166 @@
+18:26:29 INFO GitHub token rate limit: Rate(reset=2025-04-07 19:24:23+00:00, remaining=4976, limit=5000)
+18:26:32 INFO Creating 1 runners
+18:26:33 INFO Creating openstack server with test-jxc7qhbb-0-n-3aba07bead55
+18:27:15 WARNING Unable to SSH into test-jxc7qhbb-0-n-3aba07bead55 with address 10.145.193.124
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 312, in get_ssh_connection
+    result = connection.run(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 22, in opens
+    self.open()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/fabric/connection.py", line 665, in open
+    result = self.client.connect(**kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/paramiko/client.py", line 386, in connect
+    sock.connect(addr)
+TimeoutError: timed out
+18:27:15 WARNING Retrying error in 60 seconds: Failed to SSH to test-jxc7qhbb-0-n-3aba07bead55 during creation possible due to setup not completed
+18:28:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:16 INFO Authentication (publickey) successful!
+18:28:17 INFO Runner startup process found to be healthy on test-jxc7qhbb-0-n-3aba07bead55
+18:28:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:17 INFO Authentication (publickey) successful!
+18:28:17 INFO Runner test-jxc7qhbb-0-n-3aba07bead55 found to be healthy
+18:28:17 INFO Runner test-jxc7qhbb-0-n-3aba07bead55 created successfully
+18:28:17 INFO Getting runners...
+18:28:19 INFO Getting all openstack servers managed by the charm
+18:28:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:20 INFO Authentication (publickey) successful!
+18:28:21 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:21 INFO Getting runners...
+18:28:22 INFO Getting all openstack servers managed by the charm
+18:28:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:24 INFO Authentication (publickey) successful!
+18:28:24 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:24 INFO Getting runners...
+18:28:25 INFO Getting all openstack servers managed by the charm
+18:28:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:27 INFO Authentication (publickey) successful!
+18:28:27 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:29 INFO Wait for condition not met, sleeping 10
+18:28:40 INFO Getting runners...
+18:28:41 INFO Getting all openstack servers managed by the charm
+18:28:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:43 INFO Authentication (publickey) successful!
+18:28:44 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:44 INFO Getting runners...
+18:28:45 INFO Getting all openstack servers managed by the charm
+18:28:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:46 INFO Authentication (publickey) successful!
+18:28:47 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:48 INFO Offline github runners to delete: []:
+18:28:48 INFO Getting all openstack servers managed by the charm
+18:28:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:50 INFO Authentication (publickey) successful!
+18:28:52 INFO Cleaning up SSH key files
+18:28:52 INFO Found 1 key files, clean up 0 key files
+18:28:52 INFO Cleaning up openstack keypairs
+18:28:52 INFO Getting runners...
+18:28:53 INFO Getting all openstack servers managed by the charm
+18:28:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:55 INFO Authentication (publickey) successful!
+18:28:55 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:28:55 INFO Flushing idle runners...
+18:28:56 INFO Getting all openstack servers managed by the charm
+18:28:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:57 INFO Authentication (publickey) successful!
+18:28:57 INFO Attempting to kill runner process on test-jxc7qhbb-0-n-3aba07bead55 if not busy
+18:28:57 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:28:57 INFO Kill process command output, ok: False code 1, out: 2225
+, err: 
+18:28:57 INFO Getting all openstack servers managed by the charm
+18:28:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:59 INFO Authentication (publickey) successful!
+18:29:01 INFO Cleaning up SSH key files
+18:29:01 INFO Found 1 key files, clean up 0 key files
+18:29:01 INFO Cleaning up openstack keypairs
+18:29:01 INFO Getting runners...
+18:29:02 INFO Getting all openstack servers managed by the charm
+18:29:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:04 INFO Authentication (publickey) successful!
+18:29:05 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:29:05 INFO Flushing idle and busy runners...
+18:29:05 INFO Getting all openstack servers managed by the charm
+18:29:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:07 INFO Authentication (publickey) successful!
+18:29:07 INFO Attempting to kill all runner process on test-jxc7qhbb-0-n-3aba07bead55
+18:29:07 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:29:07 INFO Kill process command output, ok: True code 0, out: 1831
+2225
+, err: 
+18:29:07 INFO Getting all openstack servers managed by the charm
+18:29:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:08 INFO Authentication (publickey) successful!
+18:29:10 INFO Cleaning up SSH key files
+18:29:10 INFO Found 1 key files, clean up 0 key files
+18:29:10 INFO Cleaning up openstack keypairs
+18:29:20 INFO Flushing idle and busy runners...
+18:29:20 INFO Getting all openstack servers managed by the charm
+18:29:22 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:22 INFO Authentication (publickey) successful!
+18:29:23 INFO Attempting to kill all runner process on test-jxc7qhbb-0-n-3aba07bead55
+18:29:23 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:29:23 INFO Kill process command output, ok: False code 1, out: , err: 
+18:29:23 INFO Getting all openstack servers managed by the charm
+18:29:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:25 INFO Authentication (publickey) successful!
+18:29:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:25 INFO Authentication (publickey) successful!
+18:29:25 INFO [chan 2] Opened sftp connection (server version 3)
+18:29:25 INFO Running runner removal script for test-jxc7qhbb-0-n-3aba07bead55
+18:29:27 INFO Deleting openstack server with test-jxc7qhbb-0-n-3aba07bead55
+18:29:30 INFO Cleaning up SSH key files
+18:29:30 INFO Found 0 key files, clean up 0 key files
+18:29:30 INFO Cleaning up openstack keypairs
+18:29:31 INFO Getting runners...
+18:29:32 INFO Getting all openstack servers managed by the charm
+18:29:33 ERROR Unable to get SSH connection for instance test-jxc7qhbb-0-n-3aba07bead55, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-jxc7qhbb-0-n-3aba07bead55, key path: /home/ubuntu/.ssh/test-jxc7qhbb-0-n-3aba07bead55.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-jxc7qhbb-0-n-3aba07bead55
+18:29:33 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:29:33 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:29:33 INFO Getting runners...
+18:29:35 INFO Getting all openstack servers managed by the charm
+18:29:36 ERROR Unable to get SSH connection for instance test-jxc7qhbb-0-n-3aba07bead55, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-jxc7qhbb-0-n-3aba07bead55, key path: /home/ubuntu/.ssh/test-jxc7qhbb-0-n-3aba07bead55.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-jxc7qhbb-0-n-3aba07bead55
+18:29:36 INFO Found following runners: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:29:36 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jxc7qhbb-0-n-3aba07bead55'}
+18:29:36 INFO Wait for condition not met, sleeping 60
+18:30:36 INFO Getting runners...
+18:30:37 INFO Getting all openstack servers managed by the charm
+18:30:38 INFO Found following runners: set()

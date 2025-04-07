@@ -1,0 +1,111 @@
+18:24:30 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-zr6g on cloud localhost
+18:24:30 WARNING unexpected facade SSHServer received from the controller
+18:24:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:32 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [allocating] waiting: waiting for machine
+18:25:03 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [allocating] waiting: waiting for machine
+18:25:33 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [allocating] waiting: waiting for machine
+18:26:03 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:26:33 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:27:03 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:27:34 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:28:04 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:28:34 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:29:04 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [executing] maintenance: Setting up Builder.
+18:29:34 INFO Waiting for model:
+  github-runner-image-builder-fek2u2y7/0 [idle] blocked: image integration required.
+18:29:55 INFO Deploying local:jammy/github-runner-0
+18:29:55 INFO Waiting for model:
+  test-fek2u2y7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fek2u2y7/0 [idle] blocked: image integration required.
+18:30:25 INFO Waiting for model:
+  test-fek2u2y7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fek2u2y7/0 [idle] blocked: image integration required.
+18:30:56 INFO Waiting for model:
+  test-fek2u2y7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fek2u2y7/0 [idle] blocked: image integration required.
+18:31:26 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:31:56 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:32:26 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:32:57 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:33:27 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:33:57 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:34:27 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:34:57 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:35:27 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:35:57 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:36:27 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:36:58 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:37:28 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:37:58 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:38:29 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:38:59 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:39:29 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:40:00 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:40:30 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:41:00 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:41:30 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:42:00 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:42:30 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [executing] active: Building image.
+18:43:00 INFO Waiting for model:
+  test-fek2u2y7/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-fek2u2y7/0 [idle] active: 
+18:43:30 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] active: 
+18:43:43 INFO Waiting for model:
+  test-fek2u2y7/0 [idle] active:

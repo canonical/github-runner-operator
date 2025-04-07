@@ -1,0 +1,98 @@
+18:24:27 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-success-854i on cloud localhost
+18:24:27 WARNING unexpected facade SSHServer received from the controller
+18:24:29 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:29 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [allocating] waiting: waiting for machine
+18:24:59 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [allocating] waiting: waiting for machine
+18:25:30 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [allocating] waiting: agent initialising
+18:26:00 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:26:30 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:27:00 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:27:30 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:28:00 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:28:30 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:29:00 INFO Waiting for model:
+  github-runner-image-builder-xpsndeum/0 [executing] maintenance: Setting up Builder.
+18:29:49 INFO Deploying local:jammy/github-runner-0
+18:29:49 INFO Waiting for model:
+  test-xpsndeum/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xpsndeum/0 [idle] blocked: image integration required.
+18:30:20 INFO Waiting for model:
+  test-xpsndeum/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xpsndeum/0 [idle] blocked: image integration required.
+18:30:50 INFO Waiting for model:
+  test-xpsndeum/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-xpsndeum/0 [idle] blocked: image integration required.
+18:31:20 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:32:20 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:32:50 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:33:20 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:33:50 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:34:20 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:34:50 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:35:21 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:35:51 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:36:22 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:36:52 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:37:22 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:37:53 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:38:23 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:38:54 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:39:24 INFO Waiting for model:
+  test-xpsndeum/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xpsndeum/0 [executing] active: Building image.
+18:39:54 INFO Waiting for model:
+  test-xpsndeum/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-xpsndeum/0 [idle] active:
+18:43:28 INFO Waiting for model:
+  test-xpsndeum/0 [executing] maintenance: Reconciling runners
+18:43:58 INFO Waiting for model:
+  test-xpsndeum/0 [idle] active: 
+18:44:39 INFO Waiting for model:
+  test-xpsndeum/0 [executing] maintenance: Reconciling runners
+18:45:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744051407.019844, "event": "reconciliation", "flavor": "test-xpsndeum", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 182.6020860671997}
+{"timestamp": 1744051427.8830795, "event": "reconciliation", "flavor": "test-xpsndeum", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 19.800865411758423}
+{"timestamp": 1744051361.0, "event": "runner_installed", "flavor": "test-xpsndeum", "duration": 125.0}
+{"timestamp": 1744051478.0272331, "event": "reconciliation", "flavor": "test-xpsndeum", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.91669011116028}
+{"timestamp": 1744051492.61055, "event": "reconciliation", "flavor": "test-xpsndeum", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.304099559783936}

@@ -1,0 +1,55 @@
+18:30:38 INFO Creating 1 runners
+18:30:39 INFO Creating openstack server with test-jxc7qhbb-0-n-7bab71815b30
+18:31:03 WARNING NoValidConnectionsError. Unable to SSH into test-jxc7qhbb-0-n-7bab71815b30 with address 10.145.193.55. Error: [Errno None] Unable to connect to port 22 on 10.145.193.55
+18:31:03 WARNING Retrying error in 60 seconds: Failed to SSH to test-jxc7qhbb-0-n-7bab71815b30 during creation possible due to setup not completed
+18:32:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:04 INFO Authentication (publickey) successful!
+18:32:05 INFO Runner startup process found to be healthy on test-jxc7qhbb-0-n-7bab71815b30
+18:32:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:05 INFO Authentication (publickey) successful!
+18:32:05 INFO Runner test-jxc7qhbb-0-n-7bab71815b30 found to be healthy
+18:32:05 INFO Runner test-jxc7qhbb-0-n-7bab71815b30 created successfully
+18:32:05 INFO Getting runners...
+18:32:07 INFO Getting all openstack servers managed by the charm
+18:32:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:10 INFO Authentication (publickey) successful!
+18:32:10 INFO Found following runners: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:10 INFO Getting runners...
+18:32:11 INFO Getting all openstack servers managed by the charm
+18:32:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:14 INFO Authentication (publickey) successful!
+18:32:15 INFO Found following runners: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:15 INFO Getting runners...
+18:32:16 INFO Getting all openstack servers managed by the charm
+18:32:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:18 INFO Authentication (publickey) successful!
+18:32:19 INFO Found following runners: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:21 INFO Wait for condition not met, sleeping 10
+18:32:32 INFO Getting runners...
+18:32:33 INFO Getting all openstack servers managed by the charm
+18:32:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:39 INFO Authentication (publickey) successful!
+18:32:39 INFO Found following runners: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:39 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:39 INFO Getting runners...
+18:32:41 INFO Getting all openstack servers managed by the charm
+18:32:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:44 INFO Authentication (publickey) successful!
+18:32:45 INFO Found following runners: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:45 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jxc7qhbb-0-n-7bab71815b30'}
+18:32:46 INFO Offline github runners to delete: []:
+18:32:46 INFO Getting all openstack servers managed by the charm
+18:32:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:49 INFO Authentication (publickey) successful!
+18:32:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:50 INFO Authentication (publickey) successful!
+18:32:50 INFO [chan 2] Opened sftp connection (server version 3)
+18:32:50 INFO Running runner removal script for test-jxc7qhbb-0-n-7bab71815b30
+18:32:51 INFO Deleting openstack server with test-jxc7qhbb-0-n-7bab71815b30
+18:32:55 INFO Cleaning up SSH key files
+18:32:55 INFO Found 0 key files, clean up 0 key files
+18:32:55 INFO Cleaning up openstack keypairs
+18:32:55 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+18:32:55 INFO Getting runners...
+18:32:56 INFO Getting all openstack servers managed by the charm
+18:32:58 INFO Found following runners: set()

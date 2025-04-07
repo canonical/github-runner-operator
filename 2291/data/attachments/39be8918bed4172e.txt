@@ -1,0 +1,90 @@
+18:46:29 INFO Adding model github-pr-e884d-lxd:test-charm-runner-3aj4 on cloud localhost
+18:46:30 WARNING unexpected facade SSHServer received from the controller
+18:46:31 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:46:32 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [allocating] waiting: waiting for machine
+18:47:02 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [allocating] waiting: waiting for machine
+18:47:32 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [allocating] waiting: agent initialising
+18:48:02 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [executing] maintenance: Setting up Builder.
+18:48:32 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [executing] maintenance: Setting up Builder.
+18:49:02 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [executing] maintenance: Setting up Builder.
+18:49:33 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [executing] maintenance: Setting up Builder.
+18:50:03 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [executing] maintenance: Setting up Builder.
+18:50:33 INFO Waiting for model:
+  github-runner-image-builder-mwzo35i5/0 [idle] blocked: image integration required.
+18:51:13 INFO Deploying local:jammy/github-runner-0
+18:51:13 INFO Waiting for model:
+  test-mwzo35i5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mwzo35i5/0 [idle] blocked: image integration required.
+18:51:44 INFO Waiting for model:
+  test-mwzo35i5/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mwzo35i5/0 [idle] blocked: image integration required.
+18:52:14 INFO Waiting for model:
+  test-mwzo35i5/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-mwzo35i5/0 [idle] blocked: image integration required.
+18:52:44 INFO Waiting for model:
+  test-mwzo35i5/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-mwzo35i5/0 [executing] blocked: image integration required.
+18:53:15 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:53:45 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:54:15 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:54:45 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:55:15 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:55:46 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:56:16 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:56:46 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:57:16 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:57:46 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:58:17 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:58:47 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:59:17 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+18:59:47 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+19:00:18 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+19:00:48 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mwzo35i5/0 [executing] active: Building image.
+19:01:18 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] active: 
+19:03:51 INFO Waiting for model:
+  test-mwzo35i5/0 [executing] active: 
+19:04:21 INFO Waiting for model:
+  test-mwzo35i5/0 [idle] active:
+19:05:08 INFO Waiting for model:
+  test-mwzo35i5/0 [executing] maintenance: Reconciling runners
