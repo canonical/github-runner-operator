@@ -58,6 +58,11 @@ options:
       "self-hosted", architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. 
       "jammy") are set. Any labels provided via this configuration will be appended to the default 
       values.
+  platform:
+    type: string
+    default: "github"
+    description: >-
+      Can be github or jobmanager.
   path:
     type: string
     default: ""
@@ -65,6 +70,7 @@ options:
       The organization or the repository to register the self-hosted runners. For organization the
       path would be the name of the organization. For repository the path should be in the
       "{owner}/{repo}" format.
+      TODO the url of the jobmanager.
   reconcile-interval:
     type: int
     default: 10

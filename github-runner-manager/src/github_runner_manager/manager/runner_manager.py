@@ -10,7 +10,6 @@ from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
-from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -91,7 +90,7 @@ class RunnerManager:
     def __init__(
         self,
         manager_name: str,
-        github_configuration: GitHubConfiguration,
+        github_manager: GitHubRunnerManager,
         cloud_runner_manager: CloudRunnerManager,
         labels: list[str],
     ):
@@ -99,17 +98,14 @@ class RunnerManager:
 
         Args:
             manager_name: Name of the manager.
-            github_configuration: Configuration for GitHub.
+            github_manager: TODO.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
-        self._github = GitHubRunnerManager(
-            prefix=self.name_prefix,
-            github_configuration=github_configuration,
-        )
+        self._github = github_manager
         self._labels = labels
 
     def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:

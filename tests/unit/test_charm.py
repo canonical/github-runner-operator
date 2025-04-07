@@ -478,7 +478,7 @@ class TestCharm(unittest.TestCase):
 
         # No config
         harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Invalid Github config, Missing path configuration")
+        mock_event.fail.assert_called_with("Invalid Platform config, Missing path configuration")
 
 
 @pytest.mark.parametrize(

@@ -21,7 +21,10 @@ from github_runner_manager.errors import (
 from github_runner_manager.manager.cloud_runner_manager import (
     HealthState,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.github_runner_manager import (
+    GitHubRunnerManager,
+    GitHubRunnerState,
+)
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -137,9 +140,14 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
+        # TODO if for the platform manager.
+        github_manager = GitHubRunnerManager(
+            prefix=openstack_configuration.vm_prefix,
+            github_configuration=application_configuration.github_config,
+        )
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
-            github_configuration=application_configuration.github_config,
+            github_manager=github_manager,
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
             ),
@@ -157,7 +165,6 @@ class RunnerScaler:
                 manager_name=application_configuration.name,
                 github_configuration=application_configuration.github_config,
                 cloud_runner_manager=openstack_runner_manager_config,
-                github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
                 labels=labels,
             )
