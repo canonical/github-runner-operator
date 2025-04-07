@@ -62,7 +62,7 @@ options:
     type: string
     default: "github"
     description: >-
-      Can be github or jobmanager.
+      Platform where the jobs will be run. Currently, only `github` is supported.
   path:
     type: string
     default: ""
@@ -70,7 +70,6 @@ options:
       The organization or the repository to register the self-hosted runners. For organization the
       path would be the name of the organization. For repository the path should be in the
       "{owner}/{repo}" format.
-      TODO the url of the jobmanager.
   reconcile-interval:
     type: int
     default: 10

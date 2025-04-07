@@ -10,7 +10,7 @@ class JobManagerConfiguration(BaseModel):
     """JobManager configuration for the application.
 
     Attributes:
-       url: TODO URL
+       url: URL of the JobManager.
     """
 
     url: str

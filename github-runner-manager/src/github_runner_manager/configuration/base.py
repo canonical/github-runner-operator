@@ -38,19 +38,19 @@ class ApplicationConfiguration(BaseModel):
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod
     def check_platform(cls, values: dict) -> dict:
-        """TODO.
+        """One and only one platform should be included in the configuration.
 
         Args:
             values: Values in the pydantic model.
 
         Raises:
-            ValueError: TODO
+            ValueError: If none or more than one platforms are provided in the configuration
 
         Returns:
-            TODO
+            Values in the pydantic model.
         """
         if bool(values.get("github_config")) == bool(values.get("jobmanager_config")):
-            raise ValueError("Only one of github and jobmanager configuration should be defined.")
+            raise ValueError("Only one of github_config of jobmanager_config should be provided")
         return values
 
     @staticmethod

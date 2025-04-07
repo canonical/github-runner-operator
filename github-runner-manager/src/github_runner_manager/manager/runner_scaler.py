@@ -21,10 +21,6 @@ from github_runner_manager.errors import (
 from github_runner_manager.manager.cloud_runner_manager import (
     HealthState,
 )
-from github_runner_manager.manager.github_runner_manager import (
-    GitHubRunnerManager,
-    GitHubRunnerState,
-)
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -39,6 +35,10 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
+)
+from github_runner_manager.platform.github_provider import (
+    GitHubRunnerPlatform,
+    PlatformRunnerState,
 )
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
@@ -140,7 +140,7 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        github_manager = GitHubRunnerManager(
+        github_manager = GitHubRunnerPlatform(
             prefix=openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
         )
@@ -210,15 +210,15 @@ class RunnerScaler:
         busy_runners = []
         for runner in runner_list:
             match runner.github_state:
-                case GitHubRunnerState.BUSY:
+                case PlatformRunnerState.BUSY:
                     online += 1
                     online_runners.append(runner.name)
                     busy += 1
                     busy_runners.append(runner.name)
-                case GitHubRunnerState.IDLE:
+                case PlatformRunnerState.IDLE:
                     online += 1
                     online_runners.append(runner.name)
-                case GitHubRunnerState.OFFLINE:
+                case PlatformRunnerState.OFFLINE:
                     offline += 1
                 case _:
                     unknown += 1
@@ -356,15 +356,15 @@ class RunnerScaler:
                 runner.health,
             )
         busy_runners = [
-            runner for runner in runner_list if runner.github_state == GitHubRunnerState.BUSY
+            runner for runner in runner_list if runner.github_state == PlatformRunnerState.BUSY
         ]
         idle_runners = [
-            runner for runner in runner_list if runner.github_state == GitHubRunnerState.IDLE
+            runner for runner in runner_list if runner.github_state == PlatformRunnerState.IDLE
         ]
         offline_healthy_runners = [
             runner
             for runner in runner_list
-            if runner.github_state == GitHubRunnerState.OFFLINE
+            if runner.github_state == PlatformRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
         unhealthy_states = {HealthState.UNHEALTHY, HealthState.UNKNOWN}
@@ -390,20 +390,20 @@ def _issue_reconciliation_metric(
     idle_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.IDLE
+        if runner.github_state == PlatformRunnerState.IDLE
     }
 
     offline_healthy_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.OFFLINE
+        if runner.github_state == PlatformRunnerState.OFFLINE
         and runner.health == HealthState.HEALTHY
     }
     available_runners = idle_runners | offline_healthy_runners
     active_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.BUSY
+        if runner.github_state == PlatformRunnerState.BUSY
     }
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)

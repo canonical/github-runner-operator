@@ -3,51 +3,16 @@
 
 """Client for managing self-hosted runner on GitHub side."""
 
-from enum import Enum, auto
 from typing import Iterable
 
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.platform import platform_provider
-from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
+from github_runner_manager.types_.github import SelfHostedRunner
 
 
-class GitHubRunnerState(str, Enum):
-    """State of the self-hosted runner on GitHub.
-
-    Attributes:
-        BUSY: Runner is working on a job assigned by GitHub.
-        IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e.
-            repo-policy-compliance check).
-        OFFLINE: Runner is not connected to GitHub.
-    """
-
-    BUSY = auto()
-    IDLE = auto()
-    OFFLINE = auto()
-
-    @staticmethod
-    def from_runner(runner: SelfHostedRunner) -> "GitHubRunnerState":
-        """Construct the object from GtiHub runner information.
-
-        Args:
-            runner: Information on the GitHub self-hosted runner.
-
-        Returns:
-            The state of runner.
-        """
-        state = GitHubRunnerState.OFFLINE
-        # A runner that is busy and offline is possible.
-        if runner.busy:
-            state = GitHubRunnerState.BUSY
-        if runner.status == GitHubRunnerStatus.ONLINE:
-            if not runner.busy:
-                state = GitHubRunnerState.IDLE
-        return state
-
-
-class GitHubRunnerManager(platform_provider.PlatformProvider):
+class GitHubRunnerPlatform(PlatformProvider):
     """Manage self-hosted runner on GitHub side."""
 
     def __init__(self, prefix: str, github_configuration: GitHubConfiguration):
@@ -62,7 +27,7 @@ class GitHubRunnerManager(platform_provider.PlatformProvider):
         self.github = GithubClient(github_configuration.token)
 
     def get_runners(
-        self, states: Iterable[GitHubRunnerState] | None = None
+        self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
         """Get info on self-hosted runners of certain states.
 
@@ -81,7 +46,7 @@ class GitHubRunnerManager(platform_provider.PlatformProvider):
         return tuple(
             runner
             for runner in runner_list
-            if GitHubRunnerManager._is_runner_in_state(runner, state_set)
+            if GitHubRunnerPlatform._is_runner_in_state(runner, state_set)
         )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
@@ -120,7 +85,7 @@ class GitHubRunnerManager(platform_provider.PlatformProvider):
         return self.github.get_runner_remove_token(self._path)
 
     @staticmethod
-    def _is_runner_in_state(runner: SelfHostedRunner, states: set[GitHubRunnerState]) -> bool:
+    def _is_runner_in_state(runner: SelfHostedRunner, states: set[PlatformRunnerState]) -> bool:
         """Check that the runner is in one of the states provided.
 
         Args:
@@ -130,4 +95,4 @@ class GitHubRunnerManager(platform_provider.PlatformProvider):
         Returns:
             True if the runner is in one of the state, else false.
         """
-        return GitHubRunnerState.from_runner(runner) in states
+        return PlatformRunnerState.from_runner(runner) in states
