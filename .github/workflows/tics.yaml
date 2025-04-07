@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   TICS:
     name: TICS
-    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v4
         with:
