@@ -16,6 +16,7 @@ from github_runner_manager.configuration import (
     SupportServiceConfig,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubOrg
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -28,7 +29,7 @@ import factories
 
 
 @pytest.fixture
-def complete_charm_state():
+def valid_charm_state():
     """Returns a fixture with a fully populated CharmState."""
     return charm_state.CharmState(
         arch="arm64",
@@ -102,17 +103,9 @@ def complete_charm_state():
     )
 
 
-def test_create_application_configuration(complete_charm_state: charm_state.CharmState):
-    """
-    arrange: Prepare a fully populated CharmState.
-    act: Call create_application_configuration.
-    assert: The ApplicationConfiguration is correctly populated.
-    """
-    state = complete_charm_state
-
-    app_configuration = factories.create_application_configuration(state, "app_name")
-
-    assert app_configuration == ApplicationConfiguration(
+@pytest.fixture
+def aplication_configuration_for_valid_charm_state():
+    return ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
         github_config=GitHubConfiguration(
@@ -182,13 +175,29 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
     )
 
 
-def test_create_openstack_configuration(complete_charm_state: charm_state.CharmState):
+def test_create_application_configuration(
+    valid_charm_state: charm_state.CharmState,
+    aplication_configuration_for_valid_charm_state: ApplicationConfiguration,
+):
+    """
+    arrange: Prepare a fully populated CharmState.
+    act: Call create_application_configuration.
+    assert: The ApplicationConfiguration is correctly populated.
+    """
+    state = valid_charm_state
+
+    app_configuration = factories.create_application_configuration(state, "app_name")
+
+    assert app_configuration == aplication_configuration_for_valid_charm_state
+
+
+def test_create_openstack_configuration(valid_charm_state: charm_state.CharmState):
     """
     arrange: Prepare a fully populated CharmState.
     act: Call create_openstack_configuration.
     assert: The OpenStackConfiguration is correctly populated.
     """
-    state = complete_charm_state
+    state = valid_charm_state
 
     openstack_configuration = factories.create_openstack_configuration(state, "unit_name")
 
@@ -205,3 +214,29 @@ def test_create_openstack_configuration(complete_charm_state: charm_state.CharmS
             region_name="region",
         ),
     )
+
+
+def test_create_application_configuration_with_jobmanager(
+    valid_charm_state: charm_state.CharmState,
+    aplication_configuration_for_valid_charm_state: ApplicationConfiguration,
+):
+    """
+    arrange: Prepare a fully populated CharmState. Update to use JobManager instead of GitHub.
+    act: Call create_application_configuration.
+    assert: The ApplicationConfiguration is correctly populated.
+    """
+    state = valid_charm_state
+    state.charm_config.github_config = None
+    state.charm_config.jobmanager_config = JobManagerConfiguration(
+        url="https://jobmanager.example.com"
+    )
+
+    expected_application_configuration = aplication_configuration_for_valid_charm_state
+    expected_application_configuration.github_config = None
+    expected_application_configuration.jobmanager_config = JobManagerConfiguration(
+        url="https://jobmanager.example.com"
+    )
+
+    app_configuration = factories.create_application_configuration(state, "app_name")
+
+    assert app_configuration == aplication_configuration_for_valid_charm_state
