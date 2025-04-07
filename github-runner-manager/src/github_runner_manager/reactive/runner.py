@@ -10,6 +10,7 @@ import sys
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.reactive.consumer import consume
 from github_runner_manager.reactive.process_manager import RUNNER_CONFIG_ENV_VAR
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -44,13 +45,18 @@ def main() -> None:
     setup_root_logging()
     queue_config = runner_config.queue
     openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
+    # TODO if for the platform manager.
+    github_manager = GitHubRunnerPlatform(
+        prefix=runner_config.cloud_runner_manager.prefix,
+        github_configuration=runner_config.github_configuration,
+    )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
-        github_configuration=runner_config.github_configuration,
+        github_manager=github_manager,
         cloud_runner_manager=openstack_runner_manager,
         labels=runner_config.labels,
     )
-    github_client = GithubClient(token=runner_config.github_token)
+    github_client = GithubClient(token=runner_config.github_configuration.token)
     consume(
         queue_config=queue_config,
         runner_manager=runner_manager,

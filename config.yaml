@@ -58,6 +58,11 @@ options:
       "self-hosted", architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. 
       "jammy") are set. Any labels provided via this configuration will be appended to the default 
       values.
+  platform:
+    type: string
+    default: "github"
+    description: >-
+      Platform where the jobs will be run. Currently, only `github` is supported.
   path:
     type: string
     default: ""

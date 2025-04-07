@@ -20,7 +20,6 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
-    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME,
@@ -39,7 +38,6 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     FlavorLabel,
-    GithubConfig,
     OpenstackImage,
     OpenstackRunnerConfig,
     ProxyConfig,
@@ -78,46 +76,6 @@ def test_github_org_path():
     path = github_org.path()
 
     assert path == org
-
-
-def test_github_config_from_charm_invalud_path():
-    """
-    arrange: Create an invalid GitHub path string and runner group name.
-    act: Call parse_github_path with the invalid path string and runner group name.
-    assert: Verify that the function raises CharmConfigInvalidError.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = "invalidpath/"
-    mock_charm.config[GROUP_CONFIG_NAME] = "test_group"
-
-    with pytest.raises(CharmConfigInvalidError):
-        GithubConfig.from_charm(mock_charm)
-
-
-def test_github_config_from_charm_empty_path():
-    """
-    arrange: Create a mock CharmBase instance with an empty path configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method raises CharmConfigInvalidError.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = ""
-
-    with pytest.raises(CharmConfigInvalidError):
-        GithubConfig.from_charm(mock_charm)
-
-
-def test_github_config_from_charm_invalid_token():
-    """
-    arrange: Create a mock CharmBase instance with an empty token configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method raises CharmConfigInvalidError.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[TOKEN_CONFIG_NAME] = ""
-
-    with pytest.raises(CharmConfigInvalidError):
-        GithubConfig.from_charm(mock_charm)
 
 
 @pytest.mark.parametrize(
@@ -374,7 +332,7 @@ def test_charm_config_from_charm_invalid_github_config():
     # Act and Assert
     with pytest.raises(CharmConfigInvalidError) as exc_info:
         CharmConfig.from_charm(mock_charm)
-    assert str(exc_info.value) == "Invalid Github config, Missing path configuration"
+    assert str(exc_info.value) == "Invalid Platform config, Missing path configuration"
 
 
 def test_charm_config_from_charm_invalid_reconcile_interval():
@@ -443,12 +401,13 @@ def test_charm_config_from_charm_valid():
 
     result = CharmConfig.from_charm(mock_charm)
 
-    assert result.path == GitHubRepo(owner="owner", repo="repo")
+    assert not result.jobmanager_config
+    assert result.github_config.path == GitHubRepo(owner="owner", repo="repo")
+    assert result.github_config.token == "abc123"
     assert result.reconcile_interval == 5
     assert result.dockerhub_mirror == "https://example.com"
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
-    assert result.token == "abc123"
     assert "openssl s_client" in result.manager_proxy_command
 
 

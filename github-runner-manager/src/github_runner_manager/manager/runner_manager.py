@@ -10,7 +10,6 @@ from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
-from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -18,15 +17,15 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.github_runner_manager import (
-    GitHubRunnerManager,
-    GitHubRunnerState,
-)
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.platform.github_provider import (
+    GitHubRunnerPlatform,
+    PlatformRunnerState,
+)
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -61,7 +60,7 @@ class RunnerInstance:
     name: str
     instance_id: InstanceID
     health: HealthState
-    github_state: GitHubRunnerState | None
+    github_state: PlatformRunnerState | None
     cloud_state: CloudRunnerState
 
     def __init__(self, cloud_instance: CloudRunnerInstance, github_info: SelfHostedRunner | None):
@@ -75,7 +74,7 @@ class RunnerInstance:
         self.instance_id = cloud_instance.instance_id
         self.health = cloud_instance.health
         self.github_state = (
-            GitHubRunnerState.from_runner(github_info) if github_info is not None else None
+            PlatformRunnerState.from_runner(github_info) if github_info is not None else None
         )
         self.cloud_state = cloud_instance.state
 
@@ -91,7 +90,7 @@ class RunnerManager:
     def __init__(
         self,
         manager_name: str,
-        github_configuration: GitHubConfiguration,
+        github_manager: GitHubRunnerPlatform,
         cloud_runner_manager: CloudRunnerManager,
         labels: list[str],
     ):
@@ -99,17 +98,14 @@ class RunnerManager:
 
         Args:
             manager_name: Name of the manager.
-            github_configuration: Configuration for GitHub.
+            github_manager: TODO.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
-        self._github = GitHubRunnerManager(
-            prefix=self.name_prefix,
-            github_configuration=github_configuration,
-        )
+        self._github = github_manager
         self._labels = labels
 
     def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
@@ -136,7 +132,7 @@ class RunnerManager:
 
     def get_runners(
         self,
-        github_states: Sequence[GitHubRunnerState] | None = None,
+        github_states: Sequence[PlatformRunnerState] | None = None,
         cloud_states: Sequence[CloudRunnerState] | None = None,
     ) -> tuple[RunnerInstance]:
         """Get information on runner filter by state.
@@ -266,7 +262,7 @@ class RunnerManager:
             cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
         }
 
-        github_runners_offline = self._github.get_runners([GitHubRunnerState.OFFLINE])
+        github_runners_offline = self._github.get_runners([PlatformRunnerState.OFFLINE])
         github_runners_to_delete = []
         for github_runner in github_runners_offline:
             # Delete all non-reactive runners
@@ -434,7 +430,7 @@ class RunnerManager:
         """
 
         cloud_runner_manager: CloudRunnerManager
-        github_runner_manager: GitHubRunnerManager
+        github_runner_manager: GitHubRunnerPlatform
         labels: list[str]
         reactive: bool
 

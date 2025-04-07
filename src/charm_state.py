@@ -6,7 +6,7 @@
 import dataclasses
 import json
 import logging
-import platform
+import platform as platform_info
 import re
 from enum import Enum
 from pathlib import Path
@@ -16,7 +16,11 @@ from urllib.parse import urlsplit
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
-from github_runner_manager.configuration.github import GitHubPath, parse_github_path
+from github_runner_manager.configuration.github import (
+    GitHubConfiguration,
+    parse_github_path,
+)
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from ops import CharmBase
 from pydantic import (
     AnyHttpUrl,
@@ -48,6 +52,7 @@ OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 PATH_CONFIG_NAME = "path"
+PLATFORM_CONFIG_NAME = "platform"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
@@ -76,48 +81,6 @@ class AnyHttpsUrl(AnyHttpUrl):
     """
 
     allowed_schemes = {"https"}
-
-
-@dataclasses.dataclass
-class GithubConfig:
-    """Charm configuration related to GitHub.
-
-    Attributes:
-        token: The Github API access token (PAT).
-        path: The Github org/repo path.
-    """
-
-    token: str
-    path: GitHubPath
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
-        """Get github related charm configuration values from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: If an invalid configuration value was set.
-
-        Returns:
-            The parsed GitHub configuration values.
-        """
-        runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
-
-        path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
-        if not path_str:
-            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
-        try:
-            path = parse_github_path(cast(str, path_str), cast(str, runner_group))
-        except ValueError as e:
-            raise CharmConfigInvalidError(str(e)) from e
-
-        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
-        if not token:
-            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
-
-        return cls(token=cast(str, token), path=path)
 
 
 class Arch(str, Enum):
@@ -287,11 +250,10 @@ class CharmConfig(BaseModel):
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
-        path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
-            name.
+        github_config: TODO
+        jobmanager_config: TODO
         reconcile_interval: Time between each reconciliation of runners in minutes.
         repo_policy_compliance: Configuration for the repo policy compliance service.
-        token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
     """
@@ -299,10 +261,10 @@ class CharmConfig(BaseModel):
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
-    path: GitHubPath
+    github_config: GitHubConfiguration | None
+    jobmanager_config: JobManagerConfiguration | None
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
-    token: str
     manager_proxy_command: str | None
     use_aproxy: bool
 
@@ -399,7 +361,8 @@ class CharmConfig(BaseModel):
         return reconcile_interval
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "CharmConfig":
+    # Pending to refactor. TODO.
+    def from_charm(cls, charm: CharmBase) -> "CharmConfig":  # noqa: C901
         """Initialize the config from charm.
 
         Args:
@@ -412,9 +375,23 @@ class CharmConfig(BaseModel):
             Current config of the charm.
         """
         try:
-            github_config = GithubConfig.from_charm(charm)
+            github_config = None
+            jobmanager_config = None
+            platform = cast(str, charm.config.get(PLATFORM_CONFIG_NAME, "github"))
+            if platform == "github":
+                github_config = _parse_github_configuration(
+                    path=cast(str, charm.config.get(PATH_CONFIG_NAME, "")),
+                    token=cast(str, charm.config.get(TOKEN_CONFIG_NAME)),
+                    runner_group=cast(str, charm.config.get(GROUP_CONFIG_NAME, "default")),
+                )
+            elif platform == "jobmanager":
+                jobmanager_config = _parse_jobmanager_configuration(
+                    path=cast(str, charm.config.get(PATH_CONFIG_NAME, "")),
+                )
+            else:
+                raise CharmConfigInvalidError("Invalid platform configuration")
         except CharmConfigInvalidError as exc:
-            raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
+            raise CharmConfigInvalidError(f"Invalid Platform config, {str(exc)}") from exc
 
         try:
             reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
@@ -451,10 +428,11 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path,
+            platform=platform,
+            github_config=github_config,
+            jobmanager_config=jobmanager_config,
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
-            token=github_config.token,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
         )
@@ -635,7 +613,7 @@ def _get_supported_arch() -> Arch:
     Returns:
         Arch: Current machine architecture.
     """
-    arch = platform.machine()
+    arch = platform_info.machine()
     match arch:
         case arch if arch in ARCHITECTURES_ARM64:
             return Arch.ARM64
@@ -900,3 +878,47 @@ def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
         except ValueError as exc:
             raise CharmConfigInvalidError("Invalid flavor-label configuration") from exc
     return combinations
+
+
+def _parse_github_configuration(path: str, runner_group: str, token: str) -> GitHubConfiguration:
+    """TODO.
+
+    Args:
+        path: TODO
+        runner_group: TODO
+        token: TODO
+
+    Raises:
+        CharmConfigInvalidError: If any invalid configuration has been set on the charm.
+
+    Returns:
+        The platform (github or jobmanager) configuration.
+    """
+    if not path:
+        raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+
+    if not token:
+        raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+    try:
+        github_path = parse_github_path(path, runner_group)
+        return GitHubConfiguration(token=token, path=github_path)
+    except ValueError as e:
+        raise CharmConfigInvalidError(str(e)) from e
+
+
+def _parse_jobmanager_configuration(path: str) -> JobManagerConfiguration:
+    """TODO.
+
+    Args:
+        path: TODO
+
+    Raises:
+        CharmConfigInvalidError: If any invalid configuration has been set on the charm.
+
+    Returns:
+        The platform (github or jobmanager) configuration.
+    """
+    if not path:
+        raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+
+    return JobManagerConfiguration(path)

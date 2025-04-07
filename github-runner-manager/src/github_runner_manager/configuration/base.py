@@ -9,7 +9,7 @@ from typing import Optional, TextIO
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
-from . import github
+from . import github, jobmanager
 
 logger = logging.getLogger(__name__)
 
@@ -21,6 +21,7 @@ class ApplicationConfiguration(BaseModel):
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
+        jobmanager_config: TODO
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
@@ -28,10 +29,29 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
-    github_config: github.GitHubConfiguration
+    github_config: github.GitHubConfiguration | None
+    jobmanager_config: jobmanager.JobManagerConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
+
+    @root_validator(pre=False, skip_on_failure=True)
+    @classmethod
+    def check_platform(cls, values: dict) -> dict:
+        """One and only one platform should be included in the configuration.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Raises:
+            ValueError: If none or more than one platforms are provided in the configuration
+
+        Returns:
+            Values in the pydantic model.
+        """
+        if bool(values.get("github_config")) == bool(values.get("jobmanager_config")):
+            raise ValueError("Only one of github_config of jobmanager_config should be provided")
+        return values
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":

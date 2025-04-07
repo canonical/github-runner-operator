@@ -34,7 +34,6 @@ from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -50,10 +49,11 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
-    MockGitHubRunnerManager,
+    MockGitHubRunnerPlatform,
     SharedMockRunnerManagerState,
 )
 
@@ -84,10 +84,10 @@ def github_path_fixture() -> GitHubPath:
 @pytest.fixture(scope="function", name="mock_runner_managers")
 def mock_runner_managers_fixture(
     github_path: GitHubPath,
-) -> tuple[MockCloudRunnerManager, MockGitHubRunnerManager]:
+) -> tuple[MockCloudRunnerManager, MockGitHubRunnerPlatform]:
     state = SharedMockRunnerManagerState()
     mock_cloud = MockCloudRunnerManager(state)
-    mock_github = MockGitHubRunnerManager(mock_cloud.name_prefix, github_path, state)
+    mock_github = MockGitHubRunnerPlatform(mock_cloud.name_prefix, github_path, state)
     return (mock_cloud, mock_github)
 
 
@@ -219,7 +219,7 @@ def runner_scaler_one_runner_fixture(runner_manager: RunnerManager) -> RunnerSca
 
 def set_one_runner_state(
     runner_scaler: RunnerScaler,
-    github_state: GitHubRunnerState | None = None,
+    github_state: PlatformRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
 ):
     """Set the runner state for a RunnerScaler with one runner.
@@ -536,7 +536,7 @@ def test_flush_busy_on_busy_runner(
     Assert: No runners.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
 
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
     assert_runner_info(runner_scaler, online=0)
@@ -551,7 +551,7 @@ def test_get_runner_one_busy_runner(
     Assert: One busy runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
 
     assert_runner_info(runner_scaler=runner_scaler, online=1, busy=1)
 
@@ -563,7 +563,7 @@ def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
     Assert: One offline runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.OFFLINE)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
 
     assert_runner_info(runner_scaler=runner_scaler, offline=1)
 

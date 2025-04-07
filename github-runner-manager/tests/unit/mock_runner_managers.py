@@ -14,9 +14,9 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JITConfig,
@@ -230,7 +230,7 @@ class MockRunner:
     name: str
     instance_id: InstanceID
     cloud_state: CloudRunnerState
-    github_state: GitHubRunnerState
+    github_state: PlatformRunnerState
     health: bool
 
     def __init__(self, name: str):
@@ -242,7 +242,7 @@ class MockRunner:
         self.name = name
         self.instance_id = secrets.token_hex(6)
         self.cloud_state = CloudRunnerState.ACTIVE
-        self.github_state = GitHubRunnerState.IDLE
+        self.github_state = PlatformRunnerState.IDLE
         self.health = True
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
@@ -263,7 +263,7 @@ class MockRunner:
 class SharedMockRunnerManagerState:
     """State shared by mock runner managers.
 
-    For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerManager.
+    For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerPlatform.
 
     Attributes:
         runners: The runners.
@@ -366,7 +366,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             self.state.runners = {
                 instance_id: runner
                 for instance_id, runner in self.state.runners.items()
-                if runner.github_state == GitHubRunnerState.BUSY
+                if runner.github_state == PlatformRunnerState.BUSY
             }
         return iter([MagicMock()])
 
@@ -385,8 +385,8 @@ class MockCloudRunnerManager(CloudRunnerManager):
         return [MagicMock()]
 
 
-class MockGitHubRunnerManager:
-    """Mock of GitHubRunnerManager.
+class MockGitHubRunnerPlatform:
+    """Mock of GitHubRunnerPlatform.
 
     Attributes:
         github: The GitHub client.
@@ -432,7 +432,7 @@ class MockGitHubRunnerManager:
         return "mock_remove_token"
 
     def get_runners(
-        self, states: Iterable[GitHubRunnerState] | None = None
+        self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
         """Get the runners.
 
@@ -443,19 +443,19 @@ class MockGitHubRunnerManager:
             List of runners.
         """
         if states is None:
-            states = [member.value for member in GitHubRunnerState]
+            states = [member.value for member in PlatformRunnerState]
 
         github_state_set = set(states)
         return tuple(
             SelfHostedRunner(
-                busy=runner.github_state == GitHubRunnerState.BUSY,
+                busy=runner.github_state == PlatformRunnerState.BUSY,
                 id=random.randint(1, 1000000),
                 labels=[],
                 os="linux",
                 instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
-                    if runner.github_state == GitHubRunnerState.OFFLINE
+                    if runner.github_state == PlatformRunnerState.OFFLINE
                     else GitHubRunnerStatus.ONLINE
                 ),
             )
