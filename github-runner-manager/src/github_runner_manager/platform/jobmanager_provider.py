@@ -11,7 +11,7 @@ from github_runner_manager.platform import platform_provider
 class JobManagerPlatform(
     platform_provider.PlatformProvider
 ):  # pylint: disable=too-few-public-methods
-    """TODO."""
+    """This class defines the API and the base class for a platform."""
 
     def __init__(self, prefix: str, jobmanager_configuration: JobManagerConfiguration):
         """Construct the object.

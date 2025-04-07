@@ -140,6 +140,8 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
+        # Pending to create a platform provider instead, using JobManager or Github
+        # depending on the configuration
         github_manager = GitHubRunnerPlatform(
             prefix=openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,

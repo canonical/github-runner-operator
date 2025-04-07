@@ -21,7 +21,7 @@ class ApplicationConfiguration(BaseModel):
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
-        jobmanager_config: TODO
+        jobmanager_config: JobManager configuration.
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
