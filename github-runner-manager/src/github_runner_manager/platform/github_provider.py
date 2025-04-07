@@ -24,7 +24,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         self._prefix = prefix
         self._path = github_configuration.path
-        self.github = GithubClient(github_configuration.token)
+        self._client = GithubClient(github_configuration.token)
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
@@ -37,7 +37,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             Information on the runners.
         """
-        runner_list = self.github.get_runner_github_info(self._path, self._prefix)
+        runner_list = self._client.get_runner_github_info(self._path, self._prefix)
 
         if states is None:
             return tuple(runner_list)
@@ -56,9 +56,9 @@ class GitHubRunnerPlatform(PlatformProvider):
             runners: list of runners to delete.
         """
         for runner in runners:
-            self.github.delete_runner(self._path, runner.id)
+            self._client.delete_runner(self._path, runner.id)
 
-    def get_registration_jittoken(
+    def get_runner_token(
         self, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
@@ -72,7 +72,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the runner.
         """
-        return self.github.get_runner_registration_jittoken(self._path, instance_id, labels)
+        return self._client.get_runner_registration_jittoken(self._path, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.
@@ -82,7 +82,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             The removal token.
         """
-        return self.github.get_runner_remove_token(self._path)
+        return self._client.get_runner_remove_token(self._path)
 
     @staticmethod
     def _is_runner_in_state(runner: SelfHostedRunner, states: set[PlatformRunnerState]) -> bool:

@@ -3,14 +3,15 @@
 
 """JobManager platform provider."""
 
+from typing import Iterable
+
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
-from github_runner_manager.platform import platform_provider
+from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
+from github_runner_manager.types_.github import SelfHostedRunner
 
 
-# Work in progress.
-class JobManagerPlatform(
-    platform_provider.PlatformProvider
-):  # pylint: disable=too-few-public-methods
+class JobManagerPlatform(PlatformProvider):
     """This class defines the API and the base class for a platform."""
 
     def __init__(self, prefix: str, jobmanager_configuration: JobManagerConfiguration):
@@ -25,4 +26,54 @@ class JobManagerPlatform(
         """
         self._prefix = prefix
         self._path = jobmanager_configuration.path
+        raise NotImplementedError
+
+    def get_runners(
+        self, states: Iterable[PlatformRunnerState] | None = None
+    ) -> tuple[SelfHostedRunner, ...]:
+        """Get info on self-hosted runners of certain states.
+
+        Args:
+            states: Filter the runners for these states. If None, all runners are returned.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError
+
+    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
+        """Delete runners in GitHub.
+
+        Args:
+            runners: list of runners to delete.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError
+
+    def get_runner_token(
+        self, instance_id: InstanceID, labels: list[str]
+    ) -> tuple[str, SelfHostedRunner]:
+        """Get registration JIT token from GitHub.
+
+        This token is used for registering self-hosted runners.
+
+        Args:
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError
+
+    def get_removal_token(self) -> str:
+        """Get removal token from Platform.
+
+        This token is used for removing self-hosted runners.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
         raise NotImplementedError

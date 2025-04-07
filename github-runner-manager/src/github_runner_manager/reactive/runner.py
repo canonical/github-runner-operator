@@ -52,7 +52,7 @@ def main() -> None:
     )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
-        github_manager=github_manager,
+        platform_provider=github_manager,
         cloud_runner_manager=openstack_runner_manager,
         labels=runner_config.labels,
     )

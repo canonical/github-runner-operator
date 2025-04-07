@@ -24,6 +24,9 @@ from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.github_provider import (
     GitHubRunnerPlatform,
+)
+from github_runner_manager.platform.platform_provider import (
+    PlatformProvider,
     PlatformRunnerState,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
@@ -90,7 +93,7 @@ class RunnerManager:
     def __init__(
         self,
         manager_name: str,
-        github_manager: GitHubRunnerPlatform,
+        platform_provider: PlatformProvider,
         cloud_runner_manager: CloudRunnerManager,
         labels: list[str],
     ):
@@ -98,14 +101,14 @@ class RunnerManager:
 
         Args:
             manager_name: Name of the manager.
-            github_manager: GitHub platform provider.
+            platform_provider: TODO
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
         """
         self.manager_name = manager_name
         self._cloud = cloud_runner_manager
         self.name_prefix = self._cloud.name_prefix
-        self._github = github_manager
+        self._platform: PlatformProvider = platform_provider
         self._labels = labels
 
     def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
@@ -125,7 +128,7 @@ class RunnerManager:
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._github, labels, reactive)
+            RunnerManager._CreateRunnerArgs(self._cloud, self._platform, labels, reactive)
             for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
@@ -149,7 +152,7 @@ class RunnerManager:
             Information on the runners.
         """
         logger.info("Getting runners...")
-        github_infos = self._github.get_runners(github_states)
+        github_infos = self._platform.get_runners(github_states)
         cloud_infos = self._cloud.get_runners(cloud_states)
         github_infos_map = {info.instance_id.name: info for info in github_infos}
         cloud_infos_map = {info.name: info for info in cloud_infos}
@@ -201,7 +204,7 @@ class RunnerManager:
         runners_list = self.get_runners()[:num]
         runner_names = [runner.name for runner in runners_list]
         logger.info("Deleting runners: %s", runner_names)
-        remove_token = self._github.get_removal_token()
+        remove_token = self._platform.get_removal_token()
         return self._delete_runners(runners=runners_list, remove_token=remove_token)
 
     def flush_runners(
@@ -228,7 +231,7 @@ class RunnerManager:
         busy = False
         if flush_mode == FlushMode.FLUSH_BUSY:
             busy = True
-        remove_token = self._github.get_removal_token()
+        remove_token = self._platform.get_removal_token()
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
@@ -239,7 +242,7 @@ class RunnerManager:
             Stats on metrics events issued during the cleanup of runners.
         """
         self._cleanup_github_offline_runners()
-        remove_token = self._github.get_removal_token()
+        remove_token = self._platform.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
 
@@ -262,7 +265,7 @@ class RunnerManager:
             cloud_instance.instance_id: cloud_instance for cloud_instance in cloud_instances
         }
 
-        github_runners_offline = self._github.get_runners([PlatformRunnerState.OFFLINE])
+        github_runners_offline = self._platform.get_runners([PlatformRunnerState.OFFLINE])
         github_runners_to_delete = []
         for github_runner in github_runners_offline:
             # Delete all non-reactive runners
@@ -287,7 +290,7 @@ class RunnerManager:
             "Offline github runners to delete: %s:",
             [runner.instance_id for runner in github_runners_to_delete],
         )
-        self._github.delete_runners(github_runners_to_delete)
+        self._platform.delete_runners(github_runners_to_delete)
 
     @staticmethod
     def _spawn_runners(
@@ -391,7 +394,8 @@ class RunnerManager:
             if extracted_metrics.pre_job:
                 try:
                     job_metrics = github_metrics.job(
-                        github_client=self._github.github,
+                        # TODO WHY??
+                        github_client=self._platform.github,
                         pre_job_metrics=extracted_metrics.pre_job,
                         runner_name=extracted_metrics.instance_id.name,
                     )
@@ -450,8 +454,8 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        registration_jittoken, github_runner = (
-            args.github_runner_manager.get_registration_jittoken(instance_id, args.labels)
+        registration_jittoken, github_runner = args.github_runner_manager.get_runner_token(
+            instance_id, args.labels
         )
         try:
             args.cloud_runner_manager.create_runner(

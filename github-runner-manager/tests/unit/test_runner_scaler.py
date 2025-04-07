@@ -118,12 +118,12 @@ def runner_manager_fixture(
     )
 
     runner_manager = RunnerManager(
-        "mock_runners",
-        GitHubConfiguration(token="mock_token", path=github_path),
-        mock_cloud,
+        manager_name="mock_runners",
+        # GitHubConfiguration(token="mock_token", path=github_path),
+        platform_provider=mock_github,
+        cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
-    runner_manager._github = mock_github
     return runner_manager
 
 
@@ -229,7 +229,7 @@ def set_one_runner_state(
         github_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
     """
-    runner_dict = runner_scaler._manager._github.state.runners
+    runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
     if github_state is not None:
@@ -281,8 +281,7 @@ def test_build_runner_scaler(
     # A few comprobations on key data
     # Pending to refactor, too invasive.
     assert runner_scaler._manager.manager_name == "app_name"
-    assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
-    assert runner_scaler._manager._github.github._token == "githubtoken"
+    assert runner_scaler._manager._platform._path == GitHubOrg(org="canonical", group="group")
     assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",

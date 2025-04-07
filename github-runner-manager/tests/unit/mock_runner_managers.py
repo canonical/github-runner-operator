@@ -409,7 +409,7 @@ class MockGitHubRunnerPlatform:
         self.state = state
         self.path = path
 
-    def get_registration_jittoken(
+    def get_runner_token(
         self, instance_id: str, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
         """Get the registration JIT token for registering runners on GitHub.

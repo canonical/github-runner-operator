@@ -36,10 +36,9 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
-from github_runner_manager.platform.github_provider import (
-    GitHubRunnerPlatform,
-    PlatformRunnerState,
-)
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -116,6 +115,9 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             openstack_configuration: OpenStack configuration.
 
+        Raises:
+            ValueError: Invalid configuration.
+
         Returns:
             A new RunnerScaler.
         """
@@ -142,13 +144,22 @@ class RunnerScaler:
         )
         # Pending to create a platform provider instead, using JobManager or Github
         # depending on the configuration
-        github_manager = GitHubRunnerPlatform(
-            prefix=openstack_configuration.vm_prefix,
-            github_configuration=application_configuration.github_config,
-        )
+        if application_configuration.github_config:
+            platform_provider = GitHubRunnerPlatform(
+                prefix=openstack_configuration.vm_prefix,
+                github_configuration=application_configuration.github_config,
+            )
+        elif application_configuration.jobmanager_config:
+            platform_provider = JobManagerPlatform(
+                prefix=openstack_configuration.vm_prefix,
+                jobmanager_configuration=application_configuration.jobmanager_config,
+            )
+        else:
+            raise ValueError("No valid platform configuration")
+
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
-            github_manager=github_manager,
+            platform_provider=platform_provider,
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
             ),
