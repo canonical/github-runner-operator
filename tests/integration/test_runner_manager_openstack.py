@@ -26,7 +26,10 @@ from github_runner_manager.configuration.github import (
     parse_github_path,
 )
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.github_runner_manager import (
+    GitHubRunnerManager,
+    GitHubRunnerState,
+)
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -188,9 +191,13 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     github_configuration = GitHubConfiguration(token=token, path=github_path)
+    github_manager = GitHubRunnerManager(
+        prefix=openstack_runner_manager.name_prefix,
+        github_configuration=github_configuration,
+    )
     yield RunnerManager(
         manager_name="test_runner",
-        github_configuration=github_configuration,
+        github_manager=github_manager,
         cloud_runner_manager=openstack_runner_manager,
         labels=["openstack_test", runner_label],
     )

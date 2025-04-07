@@ -140,7 +140,6 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        # TODO if for the platform manager.
         github_manager = GitHubRunnerManager(
             prefix=openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,

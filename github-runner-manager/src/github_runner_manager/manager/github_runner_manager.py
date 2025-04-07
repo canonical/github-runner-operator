@@ -9,6 +9,7 @@ from typing import Iterable
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.platform import platform_provider
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -46,8 +47,7 @@ class GitHubRunnerState(str, Enum):
         return state
 
 
-# Thin wrapper around the GitHub Client. Not much value in unit testing.
-class GitHubRunnerManager:  # pragma: no cover
+class GitHubRunnerManager(platform_provider.PlatformProvider):
     """Manage self-hosted runner on GitHub side."""
 
     def __init__(self, prefix: str, github_configuration: GitHubConfiguration):
