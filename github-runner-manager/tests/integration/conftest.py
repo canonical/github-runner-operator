@@ -19,8 +19,7 @@ def config_fixture() -> dict:
     return {
         "name": "app_name",
         "extra_labels": ["label1", "label2"],
-        "platform": "github",
-        "platform_config": {
+        "github_config": {
             "path": {"group": "group", "org": "canonical"},
             "token": "githubtoken",
         },

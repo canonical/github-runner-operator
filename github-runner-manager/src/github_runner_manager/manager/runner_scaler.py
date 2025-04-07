@@ -143,7 +143,7 @@ class RunnerScaler:
         # TODO if for the platform manager.
         github_manager = GitHubRunnerManager(
             prefix=openstack_configuration.vm_prefix,
-            github_configuration=application_configuration.platform_config,
+            github_configuration=application_configuration.github_config,
         )
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
@@ -163,9 +163,8 @@ class RunnerScaler:
             reactive_runner_config = ReactiveProcessConfig(
                 queue=reactive_config.queue,
                 manager_name=application_configuration.name,
-                github_configuration=application_configuration.platform_config,
+                github_configuration=application_configuration.github_config,
                 cloud_runner_manager=openstack_runner_manager_config,
-                github_token=application_configuration.platform_config.token,
                 supported_labels=supported_labels,
                 labels=labels,
             )

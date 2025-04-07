@@ -15,7 +15,6 @@ from github_runner_manager.configuration import (
     ReactiveConfiguration,
     SupportServiceConfig,
 )
-from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
@@ -58,8 +57,6 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         The created ApplicationConfiguration
     """
     extra_labels = list(state.charm_config.labels)
-    platform=state.charm_config.platform
-    platform_configuration = state.charm_config.platform_config
     service_config = SupportServiceConfig(
         manager_proxy_command=state.charm_config.manager_proxy_command,
         proxy_config=state.proxy_config,
@@ -74,8 +71,8 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
     return ApplicationConfiguration(
         name=app_name,
         extra_labels=extra_labels,
-        platform=platform,
-        platform_config=platform_configuration,
+        github_config=state.charm_config.github_config,
+        jobmanager_config=state.charm_config.jobmanager_config,
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,

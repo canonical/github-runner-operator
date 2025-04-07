@@ -133,8 +133,7 @@ def application_configuration_fixture() -> ApplicationConfiguration:
     return ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
-        platform="github",
-        platform_config=GitHubConfiguration(
+        github_config=GitHubConfiguration(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         service_config=SupportServiceConfig(

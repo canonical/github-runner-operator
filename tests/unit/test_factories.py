@@ -61,8 +61,9 @@ def complete_charm_state():
                     }
                 },
             ),
-            platform="github",
-            platform_config=GitHubConfiguration(token="githubtoken", path=GitHubOrg(org="canonical", group="group")),
+            github_config=GitHubConfiguration(
+                token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            ),
             reconcile_interval=5,
             repo_policy_compliance=charm_state.RepoPolicyComplianceConfig(
                 token="token",
@@ -114,8 +115,7 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
     assert app_configuration == ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
-        platform="github",
-        platform_config=GitHubConfiguration(
+        github_config=GitHubConfiguration(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         service_config=SupportServiceConfig(

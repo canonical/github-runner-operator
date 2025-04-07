@@ -4,7 +4,7 @@
 """Base configuration for the Application."""
 
 import logging
-from typing import Literal, Optional, TextIO
+from typing import Optional, TextIO
 
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
@@ -20,8 +20,8 @@ class ApplicationConfiguration(BaseModel):
     Attributes:
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
-        platform: TODO.
-        platform_config: GitHub configuration.
+        github_config: GitHub configuration.
+        jobmanager_config: TODO
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
@@ -29,11 +29,29 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
-    platform: Literal["github", "jobmanager"]
-    platform_config: github.GitHubConfiguration | jobmanager.JobManagerConfiguration
+    github_config: github.GitHubConfiguration | None
+    jobmanager_config: jobmanager.JobManagerConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
+
+    @root_validator(pre=False, skip_on_failure=True)
+    @classmethod
+    def check_platform(cls, values: dict) -> dict:
+        """TODO.
+
+        Args:
+            values: Values in the pydantic model.
+
+        Raises:
+            ValueError: TODO
+
+        Returns:
+            TODO
+        """
+        if bool(values.get("github_config")) == bool(values.get("jobmanager_config")):
+            raise ValueError("Only one of github and jobmanager configuration should be defined.")
+        return values
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":
