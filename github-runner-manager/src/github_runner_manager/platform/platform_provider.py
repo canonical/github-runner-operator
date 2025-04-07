@@ -7,6 +7,8 @@ import abc
 from enum import Enum, auto
 from typing import Iterable  # pylint: disable=unused-import
 
+from pydantic import HttpUrl
+
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
@@ -51,6 +53,14 @@ class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
         """Get removal token from Platform.
 
         This token is used for removing self-hosted runners.
+        """
+
+    @abc.abstractmethod
+    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
+        """Check if the job has already been picked up.
+
+        Args:
+            job_url: The URL of the job.
         """
 
 

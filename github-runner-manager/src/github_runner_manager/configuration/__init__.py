@@ -3,7 +3,7 @@
 
 """Module containing application configuration for the github_runner_manager library."""
 
-from .base import (  # noqa: F401
+from github_runner_manager.configuration.base import (  # noqa: F401
     ApplicationConfiguration,
     Flavor,
     Image,
@@ -16,4 +16,9 @@ from .base import (  # noqa: F401
     SSHDebugConnection,
     SupportServiceConfig,
 )
-from .github import GitHubConfiguration, GitHubOrg, GitHubPath, GitHubRepo  # noqa: F401
+from github_runner_manager.configuration.github import (  # noqa: F401
+    GitHubConfiguration,
+    GitHubOrg,
+    GitHubPath,
+    GitHubRepo,
+)

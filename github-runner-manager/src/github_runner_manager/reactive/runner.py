@@ -7,7 +7,6 @@ import logging
 import os
 import sys
 
-from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
@@ -46,21 +45,20 @@ def main() -> None:
     queue_config = runner_config.queue
     openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
     # TODO if for the platform manager.
-    github_manager = GitHubRunnerPlatform(
+    github_provider = GitHubRunnerPlatform(
         prefix=runner_config.cloud_runner_manager.prefix,
         github_configuration=runner_config.github_configuration,
     )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
-        platform_provider=github_manager,
+        platform_provider=github_provider,
         cloud_runner_manager=openstack_runner_manager,
         labels=runner_config.labels,
     )
-    github_client = GithubClient(token=runner_config.github_configuration.token)
     consume(
         queue_config=queue_config,
         runner_manager=runner_manager,
-        github_client=github_client,
+        platform_provider=github_provider,
         supported_labels=runner_config.supported_labels,
     )
 
