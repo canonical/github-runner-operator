@@ -111,21 +111,6 @@ class CharmConfigInvalidError(Exception):
         self.msg = msg
 
 
-def _valid_storage_size_str(size: str) -> bool:
-    """Validate the storage size string.
-
-    Args:
-        size: Storage size string.
-
-    Return:
-        Whether the string is valid.
-    """
-    # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
-    # EiB suffix for storage size as specified in config.yaml.
-    valid_suffixes = {"KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
-    return size[-3:] in valid_suffixes and size[:-3].isdigit()
-
-
 WORD_ONLY_REGEX = re.compile("^[\\w\\-]+$")
 
 
@@ -250,8 +235,8 @@ class CharmConfig(BaseModel):
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
-        github_config: TODO
-        jobmanager_config: TODO
+        github_config: Configuration for GitHub.
+        jobmanager_config: Configuration for the JobManager.
         reconcile_interval: Time between each reconciliation of runners in minutes.
         repo_policy_compliance: Configuration for the repo policy compliance service.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
@@ -361,7 +346,7 @@ class CharmConfig(BaseModel):
         return reconcile_interval
 
     @classmethod
-    # Pending to refactor. TODO.
+    # This method is reported as too complex. Pending to review.
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":  # noqa: C901
         """Initialize the config from charm.
 
@@ -881,19 +866,7 @@ def _parse_flavor_label_list(flavor_label_config: str) -> list[FlavorLabel]:
 
 
 def _parse_github_configuration(path: str, runner_group: str, token: str) -> GitHubConfiguration:
-    """TODO.
-
-    Args:
-        path: TODO
-        runner_group: TODO
-        token: TODO
-
-    Raises:
-        CharmConfigInvalidError: If any invalid configuration has been set on the charm.
-
-    Returns:
-        The platform (github or jobmanager) configuration.
-    """
+    """Parse configuration for GitHub."""
     if not path:
         raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
 
@@ -907,18 +880,8 @@ def _parse_github_configuration(path: str, runner_group: str, token: str) -> Git
 
 
 def _parse_jobmanager_configuration(path: str) -> JobManagerConfiguration:
-    """TODO.
-
-    Args:
-        path: TODO
-
-    Raises:
-        CharmConfigInvalidError: If any invalid configuration has been set on the charm.
-
-    Returns:
-        The platform (github or jobmanager) configuration.
-    """
+    """Parse configuration for the JobManager."""
     if not path:
         raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
 
-    return JobManagerConfiguration(path)
+    return JobManagerConfiguration(url=path)

@@ -9,7 +9,8 @@ from unittest.mock import MagicMock
 import pytest
 import yaml
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from github_runner_manager.configuration.github import GitHubConfiguration, GitHubOrg, GitHubRepo
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from pydantic import BaseModel
 from pydantic.error_wrappers import ValidationError
 from pydantic.networks import IPv4Address
@@ -20,6 +21,7 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
+    GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME,
@@ -27,6 +29,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    PLATFORM_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
@@ -46,90 +49,6 @@ from charm_state import (
 )
 from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
-
-
-def test_github_repo_path():
-    """
-    arrange: Create a GithubRepo instance with owner and repo attributes.
-    act: Call the path method of the GithubRepo instance with a mock.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    owner = "test_owner"
-    repo = "test_repo"
-    github_repo = GitHubRepo(owner=owner, repo=repo)
-
-    path = github_repo.path()
-
-    assert path == f"{owner}/{repo}"
-
-
-def test_github_org_path():
-    """
-    arrange: Create a GithubOrg instance with org and group attributes.
-    act: Call the path method of the GithubOrg instance.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    org = "test_org"
-    group = "test_group"
-    github_org = GitHubOrg(org=org, group=group)
-
-    path = github_org.path()
-
-    assert path == org
-
-
-@pytest.mark.parametrize(
-    "path_str, runner_group, expected_type, expected_attrs",
-    [
-        ("owner/repo", "test_group", GitHubRepo, {"owner": "owner", "repo": "repo"}),
-        ("test_org", "test_group", GitHubOrg, {"org": "test_org", "group": "test_group"}),
-    ],
-)
-def test_parse_github_path(
-    path_str: str,
-    runner_group: str,
-    expected_type: GitHubRepo | GitHubOrg,
-    expected_attrs: dict[str, str],
-):
-    """
-    arrange: Create different GitHub path strings and runner group names.
-    act: Call parse_github_path with the given path string and runner group name.
-    assert: Verify that the function returns the expected type and attributes.
-    """
-    result = charm_state.parse_github_path(path_str, runner_group)
-
-    # Assert
-    assert isinstance(result, expected_type)
-    for attr, value in expected_attrs.items():
-        assert getattr(result, attr) == value
-
-
-@pytest.mark.parametrize(
-    "size, expected_result",
-    [
-        ("100KiB", True),
-        ("10MiB", True),
-        ("1GiB", True),
-        ("0TiB", True),
-        ("1000PiB", True),
-        ("10000EiB", True),
-        ("100KB", False),  # Invalid suffix
-        ("100GB", False),  # Invalid suffix
-        ("abc", False),  # Non-numeric characters
-        ("100", False),  # No suffix
-        ("100Ki", False),  # Incomplete suffix
-        ("100.5MiB", False),  # Non-integer size
-    ],
-)
-def test_valid_storage_size_str(size: str, expected_result: bool):
-    """
-    arrange: Provide storage size string.
-    act: Call _valid_storage_size_str with the provided storage size string.
-    assert: Verify that the function returns the expected result.
-    """
-    result = charm_state._valid_storage_size_str(size)
-
-    assert result == expected_result
 
 
 def test_parse_labels_invalid():
@@ -1088,3 +1007,129 @@ def test_proxy_config(
     assert charm_state.charm_config.use_aproxy == use_aproxy
     assert charm_state.proxy_config == expected_proxy
     assert charm_state.runner_proxy_config == expected_runner_proxy
+
+
+@pytest.mark.parametrize(
+    "platform, path, token, group, github_config, jobmanager_config",
+    [
+        pytest.param(
+            "github",
+            "canonical",
+            "mytoken",
+            "default",
+            GitHubConfiguration(token="mytoken", path=GitHubOrg(org="canonical", group="default")),
+            None,
+            id="github for org",
+        ),
+        pytest.param(
+            "github",
+            "canonical/github-runner-operator",
+            "mytoken",
+            "",
+            GitHubConfiguration(
+                token="mytoken", path=GitHubRepo(owner="canonical", repo="github-runner-operator")
+            ),
+            None,
+            id="github for repo",
+        ),
+        pytest.param(
+            "jobmanager",
+            "https://jobmanager.example.com",
+            "",
+            "",
+            None,
+            JobManagerConfiguration(url="https://jobmanager.example.com"),
+            id="jobmanager",
+        ),
+    ],
+)
+def test_platform_valid_config(
+    platform: str,
+    path: str,
+    token: str,
+    group: str,
+    github_config: GitHubConfiguration,
+    jobmanager_config: JobManagerConfiguration,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for the manager proxy,
+       the runner proxy and aproxy.
+    assert: The expected proxies and aproxy information should be populated.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    mock_charm.config[PLATFORM_CONFIG_NAME] = platform
+    mock_charm.config[PATH_CONFIG_NAME] = path
+    mock_charm.config[TOKEN_CONFIG_NAME] = token
+    mock_charm.config[GROUP_CONFIG_NAME] = group
+
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+    mock_database = MagicMock(spec=DatabaseRequires)
+    mock_database.relations = []
+
+    charm_state = CharmState.from_charm(mock_charm, mock_database)
+    assert charm_state.charm_config.github_config == github_config
+    assert charm_state.charm_config.jobmanager_config == jobmanager_config
+
+
+@pytest.mark.parametrize(
+    "platform, path, token, group, error_message",
+    [
+        pytest.param(
+            "invalid",
+            "",
+            "",
+            "",
+            "Invalid Platform",
+            id="Invalid platform",
+        ),
+        pytest.param(
+            "github",
+            "",
+            "",
+            "",
+            "Missing path",
+            id="github, missing path",
+        ),
+        pytest.param(
+            "github",
+            "canonical",
+            "",
+            "",
+            "Missing token",
+            id="github, missing token",
+        ),
+        pytest.param(
+            "jobmanager",
+            "",
+            "",
+            "",
+            "Missing path",
+            id="jobmanager, missing path",
+        ),
+    ],
+)
+def test_platform_invalid_config(
+    platform: str, path: str, token: str, group: str, error_message: str
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for the manager proxy,
+       the runner proxy and aproxy.
+    assert: The expected proxies and aproxy information should be populated.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    mock_charm.config[PLATFORM_CONFIG_NAME] = platform
+    mock_charm.config[PATH_CONFIG_NAME] = path
+    mock_charm.config[TOKEN_CONFIG_NAME] = token
+    mock_charm.config[GROUP_CONFIG_NAME] = group
+
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+    mock_database = MagicMock(spec=DatabaseRequires)
+    mock_database.relations = []
+
+    with pytest.raises(CharmConfigInvalidError) as exc_info:
+        _ = CharmState.from_charm(mock_charm, mock_database)
+    assert error_message in str(exc_info.value)

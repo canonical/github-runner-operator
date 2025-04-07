@@ -1,18 +1,19 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""TODO."""
+"""Base classes and APIs for platform providers."""
 
 from enum import Enum, auto
 
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
-# Work in progress.
+# Work in progress. This will be the parent class (and API) for GitHub and JobManager.
 class PlatformProvider:  # pylint: disable=too-few-public-methods
-    """TODO."""
+    """Base class for a Provider."""
 
 
+# Pending to review the coupling of this class with GitHub
 class PlatformRunnerState(str, Enum):
     """State of the self-hosted runner on GitHub.
 

@@ -98,7 +98,7 @@ class RunnerManager:
 
         Args:
             manager_name: Name of the manager.
-            github_manager: TODO.
+            github_manager: GitHub platform provider.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
         """

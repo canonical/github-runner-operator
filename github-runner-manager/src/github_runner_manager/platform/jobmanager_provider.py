@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""TODO."""
+"""JobManager platform provider."""
 
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.platform import platform_provider
