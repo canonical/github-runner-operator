@@ -101,7 +101,7 @@ class RunnerManager:
 
         Args:
             manager_name: Name of the manager.
-            platform_provider: TODO
+            platform_provider: Platform provider.
             cloud_runner_manager: For managing the cloud instance of the runner.
             labels: Labels for the runners created.
         """

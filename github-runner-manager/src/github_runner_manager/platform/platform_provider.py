@@ -20,12 +20,11 @@ class PlatformError(Exception):
 
 
 class JobNotFoundError(PlatformError):
-    """Represents an error when the job could not be found on GitHub."""
+    """Represents an error when the job could not be found on the platform."""
 
 
-# Work in progress. This will be the parent class (and API) for GitHub and JobManager.
-class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
-    """Base class for a Provider."""
+class PlatformProvider(abc.ABC):
+    """Base class for a Platform Provider."""
 
     @abc.abstractmethod
     def get_runners(
@@ -39,7 +38,7 @@ class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
 
     @abc.abstractmethod
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners in GitHub.
+        """Delete runners.
 
         Args:
             runners: list of runners to delete.
@@ -49,7 +48,7 @@ class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
     def get_runner_token(
         self, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
-        """Get registration JIT token from GitHub.
+        """Get one time token for a runner.
 
         This token is used for registering self-hosted runners.
 
@@ -75,24 +74,24 @@ class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
 
     @abc.abstractmethod
     def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> "JobInfo":
-        """Check if the job has already been picked up.
+        """Get the Job info from the provider.
 
         Args:
-            repository: TODO
-            workflow_run_id: TODO
-            runner: TODO
+            repository: repository to get the job from.
+            workflow_run_id: workflow run id of the job.
+            runner: runner to get the job from.
         """
 
 
 # Pending to review the coupling of this class with GitHub
 class PlatformRunnerState(str, Enum):
-    """State of the self-hosted runner on GitHub.
+    """State of the self-hosted runner.
 
     Attributes:
-        BUSY: Runner is working on a job assigned by GitHub.
+        BUSY: Runner is working on a job assigned.
         IDLE: Runner is waiting to take a job or is running pre-job tasks (i.e.
             repo-policy-compliance check).
-        OFFLINE: Runner is not connected to GitHub.
+        OFFLINE: Runner is not connected.
     """
 
     BUSY = auto()
@@ -101,10 +100,10 @@ class PlatformRunnerState(str, Enum):
 
     @staticmethod
     def from_runner(runner: SelfHostedRunner) -> "PlatformRunnerState":
-        """Construct the object from GtiHub runner information.
+        """Construct the object from runner information.
 
         Args:
-            runner: Information on the GitHub self-hosted runner.
+            runner: Information on the self-hosted runner.
 
         Returns:
             The state of runner.
@@ -126,7 +125,7 @@ class JobInfo:
     Attributes:
         created_at: The time the job was created.
         started_at: The time the job was started.
-        conclusion: TODO
+        conclusion: The end result of a job.
     """
 
     created_at: datetime

@@ -97,7 +97,7 @@ def consume(
     Args:
         queue_config: The configuration for the message queue.
         runner_manager: The runner manager used to create the runner.
-        platform_provider: TODO
+        platform_provider: Platform provider.
         supported_labels: The supported labels for the runner. If the job has unsupported labels,
             the message is requeued.
 
@@ -176,7 +176,7 @@ def _spawn_runner(
         runner_manager: The runner manager to use.
         job_url: The URL of the job.
         msg: The message to acknowledge or reject.
-        platform_provider: TODO
+        platform_provider: Platform provider.
     """
     if platform_provider.check_job_been_picked_up(job_url=job_url):
         msg.ack()

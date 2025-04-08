@@ -17,7 +17,7 @@ from github_runner_manager.types_.github import SelfHostedRunner
 
 
 class JobManagerPlatform(PlatformProvider):
-    """This class defines the API and the base class for a platform."""
+    """Manage self-hosted runner on the JobManager."""
 
     def __init__(self, prefix: str):
         """Construct the object.
@@ -45,7 +45,7 @@ class JobManagerPlatform(PlatformProvider):
         raise NotImplementedError
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners in GitHub.
+        """Delete runners.
 
         Args:
             runners: list of runners to delete.
@@ -58,7 +58,7 @@ class JobManagerPlatform(PlatformProvider):
     def get_runner_token(
         self, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
-        """Get registration JIT token from GitHub.
+        """Get a token for a runner.
 
         This token is used for registering self-hosted runners.
 
@@ -93,12 +93,12 @@ class JobManagerPlatform(PlatformProvider):
         raise NotImplementedError
 
     def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
-        """Check if the job has already been picked up.
+        """Get the Job info from the provider.
 
         Args:
-            repository: TODO
-            workflow_run_id: TODO
-            runner: TODO
+            repository: repository to get the job from.
+            workflow_run_id: workflow run id of the job.
+            runner: runner to get the job from.
 
         Raises:
             NotImplementedError: Work in progress.

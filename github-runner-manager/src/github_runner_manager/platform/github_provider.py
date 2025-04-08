@@ -150,15 +150,15 @@ class GitHubRunnerPlatform(PlatformProvider):
         return job_info.status in [*JobPickedUpStates]
 
     def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
-        """TODO.
+        """Get the Job info from the provider.
 
         Args:
-            repository: TODO
-            workflow_run_id: TODO
-            runner: TODO
+            repository: repository to get the job from.
+            workflow_run_id: workflow run id of the job.
+            runner: runner to get the job from.
 
         Returns:
-            TODO
+            Information about the Job.
 
         Raises:
             JobNotFoundError: If the job was not found.
