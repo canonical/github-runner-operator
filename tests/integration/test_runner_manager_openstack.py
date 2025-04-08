@@ -1,4 +1,4 @@
-1#  Copyright 2025 Canonical Ltd.
+#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager.
