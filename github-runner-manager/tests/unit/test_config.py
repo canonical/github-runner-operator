@@ -83,6 +83,8 @@ service_config:
     host: 10.10.10.10
     port: 3000
     rsa_fingerprint: SHA256:rsa
+extra-test-data:
+  hello-world: example-string
 """
 
 

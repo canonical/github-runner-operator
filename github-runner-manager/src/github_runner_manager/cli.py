@@ -26,11 +26,6 @@ logger = logging.getLogger(__name__)
     help="The file path containing the configurations.",
 )
 @click.option(
-    "--openstack-config-file",
-    type=click.File(mode="r", encoding="utf-8"),
-    help="The file path containing the OpenStack configurations.",
-)
-@click.option(
     "--host",
     type=str,
     help="The hostname to listen on for the HTTP server.",
@@ -50,9 +45,8 @@ logger = logging.getLogger(__name__)
     help="Debug mode for testing.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+def main(
     config_file: TextIO,
-    openstack_config_file: TextIO,
     host: str,
     port: int,
     debug: bool,
@@ -71,7 +65,7 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
 
     lock = Lock()
     config = ApplicationConfiguration.from_yaml_file(config_file)
-    openstack_config = OpenStackConfiguration.from_yaml_file(openstack_config_file)
+    openstack_config = OpenStackConfiguration.from_yaml_file(config_file)
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
