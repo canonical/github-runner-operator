@@ -26,7 +26,7 @@ from github_runner_manager.configuration.github import (
     parse_github_path,
 )
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -35,6 +35,10 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
+)
+from github_runner_manager.platform.github_provider import (
+    GitHubRunnerPlatform,
+    PlatformRunnerState,
 )
 from openstack.connection import Connection as OpenstackConnection
 
@@ -188,9 +192,13 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     github_configuration = GitHubConfiguration(token=token, path=github_path)
+    github_platform = GitHubRunnerPlatform.build(
+        prefix=openstack_runner_manager.name_prefix,
+        github_configuration=github_configuration,
+    )
     yield RunnerManager(
         manager_name="test_runner",
-        github_configuration=github_configuration,
+        platform_provider=github_platform,
         cloud_runner_manager=openstack_runner_manager,
         labels=["openstack_test", runner_label],
     )
@@ -198,7 +206,7 @@ async def runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
-    runner_manager.create_runners(1)
+    runner_manager.create_runners(1, RunnerMetadata())
     runner_list = runner_manager.get_runners()
     try:
         await wait_runner_amount(runner_manager, 1)
@@ -211,7 +219,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     ), "Test arrange failed: Expect runner in active state"
     try:
         await wait_for(
-            lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
+            lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
             timeout=120,
             check_interval=10,
         )
@@ -294,7 +302,7 @@ async def test_runner_normal_idle_lifecycle(
         4. No runners.
     """
     # 1.
-    runner_id_list = runner_manager.create_runners(1)
+    runner_id_list = runner_manager.create_runners(1, RunnerMetadata())
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
@@ -312,7 +320,7 @@ async def test_runner_normal_idle_lifecycle(
     assert runner.cloud_state == CloudRunnerState.ACTIVE
     # Update on GitHub-side can take a bit of time.
     await wait_for(
-        lambda: runner_manager.get_runners()[0].github_state == GitHubRunnerState.IDLE,
+        lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
         timeout=120,
         check_interval=10,
     )
@@ -376,7 +384,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GitHubRunnerState.BUSY
+    assert busy_runner.github_state == PlatformRunnerState.BUSY
 
     # 2.
     runner_manager_with_one_runner.cleanup()
@@ -385,7 +393,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     runner = runner_list[0]
     assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GitHubRunnerState.BUSY
+    assert busy_runner.github_state == PlatformRunnerState.BUSY
 
     # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
@@ -393,7 +401,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == GitHubRunnerState.BUSY
+    assert busy_runner.github_state == PlatformRunnerState.BUSY
 
     # 4.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
@@ -452,7 +460,7 @@ async def test_runner_normal_lifecycle(
         """
         runners = runner_manager_with_one_runner.get_runners()
         assert len(runners) == 1
-        return runners[0].github_state in (GitHubRunnerState.OFFLINE, None)
+        return runners[0].github_state in (PlatformRunnerState.OFFLINE, None)
 
     await wait_for(is_runner_offline, check_interval=60, timeout=600)
 
