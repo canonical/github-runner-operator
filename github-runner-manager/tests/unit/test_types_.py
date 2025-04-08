@@ -7,6 +7,7 @@ import pytest
 from pydantic import ValidationError
 
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
+from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo, parse_github_path
 
 
 @pytest.mark.parametrize(
@@ -77,3 +78,59 @@ def test_proxy_address(
     assert expected_address == proxy_config.proxy_address
     assert expected_port == proxy_config.proxy_port
     assert expected_host == proxy_config.proxy_host
+
+
+def test_github_repo_path():
+    """
+    arrange: Create a GithubRepo instance with owner and repo attributes.
+    act: Call the path method of the GithubRepo instance with a mock.
+    assert: Verify that the returned path is constructed correctly.
+    """
+    owner = "test_owner"
+    repo = "test_repo"
+    github_repo = GitHubRepo(owner=owner, repo=repo)
+
+    path = github_repo.path()
+
+    assert path == f"{owner}/{repo}"
+
+
+def test_github_org_path():
+    """
+    arrange: Create a GithubOrg instance with org and group attributes.
+    act: Call the path method of the GithubOrg instance.
+    assert: Verify that the returned path is constructed correctly.
+    """
+    org = "test_org"
+    group = "test_group"
+    github_org = GitHubOrg(org=org, group=group)
+
+    path = github_org.path()
+
+    assert path == org
+
+
+@pytest.mark.parametrize(
+    "path_str, runner_group, expected_type, expected_attrs",
+    [
+        ("owner/repo", "test_group", GitHubRepo, {"owner": "owner", "repo": "repo"}),
+        ("test_org", "test_group", GitHubOrg, {"org": "test_org", "group": "test_group"}),
+    ],
+)
+def test_parse_github_path(
+    path_str: str,
+    runner_group: str,
+    expected_type: GitHubRepo | GitHubOrg,
+    expected_attrs: dict[str, str],
+):
+    """
+    arrange: Create different GitHub path strings and runner group names.
+    act: Call parse_github_path with the given path string and runner group name.
+    assert: Verify that the function returns the expected type and attributes.
+    """
+    result = parse_github_path(path_str, runner_group)
+
+    # Assert
+    assert isinstance(result, expected_type)
+    for attr, value in expected_attrs.items():
+        assert getattr(result, attr) == value
