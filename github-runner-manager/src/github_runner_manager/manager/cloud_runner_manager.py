@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Iterable, Iterator, Sequence, Tuple
 
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
@@ -158,12 +158,15 @@ class CloudRunnerManager(abc.ABC):
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod
-    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
+    def create_runner(
+        self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
+    ) -> None:
         """Create a self-hosted runner.
 
         Args:
+            metadata: TODO.
             instance_id: Instance ID for the runner.
-            registration_jittoken: The JIT GitHub registration token for registering runners.
+            runner_token: The one time token the runner.
         """
 
     @abc.abstractmethod
