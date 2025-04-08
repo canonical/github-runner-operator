@@ -11,7 +11,7 @@ from typing import Iterable  # pylint: disable=unused-import
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -46,7 +46,7 @@ class PlatformProvider(abc.ABC):
 
     @abc.abstractmethod
     def get_runner_token(
-        self, instance_id: InstanceID, labels: list[str]
+        self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
         """Get one time token for a runner.
 
@@ -54,6 +54,7 @@ class PlatformProvider(abc.ABC):
 
         Args:
             instance_id: Instance ID of the runner.
+            metadata: TODO.
             labels: Labels for the runner.
         """
 

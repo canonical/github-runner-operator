@@ -13,8 +13,9 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
+from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -147,7 +148,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     cloud_runner_manager = MagicMock()
     cloud_runner_manager.get_runners.return_value = cloud_instances
     cloud_runner_manager.name_prefix = "unit-0"
-    github_provider = MagicMock()
+    github_provider = MagicMock(spec=PlatformProvider)
 
     runner_manager = RunnerManager(
         "managername",
@@ -176,7 +177,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         ),
     ]
 
-    def _get_reg_token(instance_id, labels):
+    def _get_reg_token(instance_id, metadata, labels):
         """Return a registration token."""
         nonlocal github_runner
         github_runner.instance_id = instance_id
@@ -186,5 +187,5 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
     github_provider.get_runners.return_value = github_runners
 
-    _ = runner_manager.create_runners(1, True)
+    _ = runner_manager.create_runners(1, RunnerMetadata(), True)
     github_provider.delete_runners.assert_called_once_with([github_runner])

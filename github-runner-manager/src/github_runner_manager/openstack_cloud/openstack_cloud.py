@@ -24,7 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
@@ -175,7 +175,7 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
+            self, metadata: RunnerMetadata, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -210,6 +210,7 @@ class OpenstackCloud:
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
+                    meta=metadata.as_dict(),
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)
