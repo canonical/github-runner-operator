@@ -1,4 +1,4 @@
-#  Copyright 2025 Canonical Ltd.
+1#  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 
 """Testing the RunnerManager class with OpenStackRunnerManager as CloudManager.
@@ -191,13 +191,13 @@ async def runner_manager_fixture(
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
     github_configuration = GitHubConfiguration(token=token, path=github_path)
-    github_manager = GitHubRunnerPlatform.build(
+    github_platform = GitHubRunnerPlatform.build(
         prefix=openstack_runner_manager.name_prefix,
         github_configuration=github_configuration,
     )
     yield RunnerManager(
         manager_name="test_runner",
-        github_manager=github_manager,
+        platform_provider=github_platform,
         cloud_runner_manager=openstack_runner_manager,
         labels=["openstack_test", runner_label],
     )
