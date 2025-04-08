@@ -4,6 +4,8 @@
 """Base classes and APIs for platform providers."""
 
 import abc
+from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum, auto
 from typing import Iterable  # pylint: disable=unused-import
 
@@ -11,6 +13,14 @@ from pydantic import HttpUrl
 
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+
+
+class PlatformError(Exception):
+    """Base class for all platform provider errors."""
+
+
+class JobNotFoundError(PlatformError):
+    """Represents an error when the job could not be found on GitHub."""
 
 
 # Work in progress. This will be the parent class (and API) for GitHub and JobManager.
@@ -63,6 +73,16 @@ class PlatformProvider(abc.ABC):  # pylint: disable=too-few-public-methods
             job_url: The URL of the job.
         """
 
+    @abc.abstractmethod
+    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> "JobInfo":
+        """Check if the job has already been picked up.
+
+        Args:
+            repository: TODO
+            workflow_run_id: TODO
+            runner: TODO
+        """
+
 
 # Pending to review the coupling of this class with GitHub
 class PlatformRunnerState(str, Enum):
@@ -97,3 +117,19 @@ class PlatformRunnerState(str, Enum):
             if not runner.busy:
                 state = PlatformRunnerState.IDLE
         return state
+
+
+@dataclass
+class JobInfo:
+    """Stats for a job on a platform.
+
+    Attributes:
+        created_at: The time the job was created.
+        started_at: The time the job was started.
+        conclusion: TODO
+    """
+
+    created_at: datetime
+    started_at: datetime
+    # A str until we realise a common pattern, use a simple str
+    conclusion: str | None

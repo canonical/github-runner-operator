@@ -394,10 +394,9 @@ class RunnerManager:
             if extracted_metrics.pre_job:
                 try:
                     job_metrics = github_metrics.job(
-                        # TODO WHY??
-                        github_client=self._platform.github,
+                        platform_provider=self._platform,
                         pre_job_metrics=extracted_metrics.pre_job,
-                        runner_name=extracted_metrics.instance_id.name,
+                        runner=extracted_metrics.instance_id,
                     )
                 except GithubMetricsError:
                     logger.exception(

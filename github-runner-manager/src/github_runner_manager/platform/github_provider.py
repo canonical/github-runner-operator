@@ -9,10 +9,16 @@ from typing import Iterable
 
 from pydantic import HttpUrl
 
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
+from github_runner_manager.configuration.github import GitHubRepo
+from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
+from github_runner_manager.platform.platform_provider import (
+    JobInfo,
+    JobNotFoundError,
+    PlatformProvider,
+    PlatformRunnerState,
+)
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -21,16 +27,17 @@ logger = logging.getLogger(__name__)
 class GitHubRunnerPlatform(PlatformProvider):
     """Manage self-hosted runner on GitHub side."""
 
-    def __init__(self, prefix: str, github_configuration: GitHubConfiguration):
+    def __init__(self, prefix: str, path: str, github_client: GithubClient):
         """Construct the object.
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
-            github_configuration: GitHub configuration information.
+            path: GitHub path.
+            github_client: GitHub client.
         """
         self._prefix = prefix
-        self._path = github_configuration.path
-        self._client = GithubClient(github_configuration.token)
+        self._path = path
+        self._client = github_client
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
@@ -122,6 +129,42 @@ class GitHubRunnerPlatform(PlatformProvider):
             path=GitHubRepo(owner=owner, repo=repo), job_id=job_id
         )
         return job_info.status in [*JobPickedUpStates]
+
+    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
+        """TODO.
+
+        Args:
+            repository: TODO
+            workflow_run_id: TODO
+            runner: TODO
+
+        Returns:
+            TODO
+
+        Raises:
+            JobNotFoundError: If the job was not found.
+
+        """
+        owner, repo = repository.split("/", maxsplit=1)
+        try:
+            job_info = self._client.get_job_info_by_runner_name(
+                path=GitHubRepo(owner=owner, repo=repo),
+                workflow_run_id=workflow_run_id,
+                runner_name=runner.name,
+            )
+        except GithubJobNotFoundError as exc:
+            raise JobNotFoundError from exc
+        logger.debug(
+            "Job info for runner %s with workflow run id %s: %s",
+            runner,
+            workflow_run_id,
+            job_info,
+        )
+        return JobInfo(
+            created_at=job_info.created_at,
+            started_at=job_info.started_at,
+            conclusion=job_info.conclusion,
+        )
 
     @staticmethod
     def _is_runner_in_state(runner: SelfHostedRunner, states: set[PlatformRunnerState]) -> bool:

@@ -18,6 +18,7 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
+from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import (
     HealthState,
 )
@@ -144,7 +145,8 @@ class RunnerScaler:
         if application_configuration.github_config:
             platform_provider = GitHubRunnerPlatform(
                 prefix=openstack_configuration.vm_prefix,
-                github_configuration=application_configuration.github_config,
+                path=application_configuration.github_config.path,
+                github_client=GithubClient(application_configuration.github_config.token),
             )
         else:
             raise ValueError("No valid platform configuration")
