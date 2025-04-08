@@ -80,6 +80,7 @@ and labels with `small` to small.
 This means, depending on which labels your users are setting in the workflow file, a VM of a different runner application will be used to
 execute the job.
 
+
 Switch to the k8s model and deploy the webhook router charm:
 
 ```shell
@@ -88,6 +89,10 @@ juju deploy github-runner-webhook-router --channel latest/edge --revision 30 --c
 juju consume <offer-url>
 juju integrate github-runner-webhook-router mongodb
 ```
+
+>[!IMPORTANT]
+> The webhook router needs to be deployed with the name `github-runner-webhook-router`, as the database name is currently hardcoded in the charm.
+
 
 In this example we use "small" as the default runner application, to which all jobs with empty labels (or default labels such as `self-hosted`,`linux`) 
 are routed to.
