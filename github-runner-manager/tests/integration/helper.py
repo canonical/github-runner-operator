@@ -29,7 +29,7 @@ def get_app_log(app: subprocess.Popen) -> str:
 
 
 def start_app(
-    config_file: Path, openstack_config_file: Path, extra_args: Sequence[str]
+    config_file: Path, extra_args: Sequence[str]
 ) -> subprocess.Popen:
     """Start the CLI application.
 
@@ -46,8 +46,6 @@ def start_app(
             PACKAGE_NAME,
             "--config-file",
             config_file,
-            "--openstack-config-file",
-            openstack_config_file,
             "--debug",
             *extra_args,
         ],

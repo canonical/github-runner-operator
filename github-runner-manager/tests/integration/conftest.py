@@ -82,19 +82,13 @@ def openstack_config_fixture() -> dict:
 
 
 @pytest.fixture(name="config_file", scope="module")
-def config_file_fixture(tmp_path_factory, config: dict) -> Path:
+def config_file_fixture(tmp_path_factory, config: dict, openstack_config) -> Path:
     config_file = tmp_path_factory.mktemp("config") / "config.yaml"
     with open(config_file, "w") as file:
-        yaml.safe_dump(config, file)
+        app_yaml = yaml.safe_dump(config)
+        openstack_yaml = yaml.safe_dump(openstack_config)
+        file.write(app_yaml + openstack_yaml)
     return config_file
-
-
-@pytest.fixture(name="openstack_config_file", scope="module")
-def openstack_config_file_fixture(tmp_path_factory, openstack_config: dict) -> Path:
-    openstack_config_file = tmp_path_factory.mktemp("openstack") / "config.yaml"
-    with open(openstack_config_file, "w") as file:
-        yaml.safe_dump(openstack_config, file)
-    return openstack_config_file
 
 
 @pytest.fixture(name="install_app", scope="module")
@@ -104,8 +98,8 @@ def install_app_fixture() -> None:
 
 @pytest.fixture(name="app", scope="function")
 def app_fixture(
-    install_app: None, config_file: Path, openstack_config_file: Path
+    install_app: None, config_file: Path, 
 ) -> Iterator[subprocess.Popen]:
-    process = start_app(config_file, openstack_config_file, [])
+    process = start_app(config_file, [])
     yield process
     process.kill()

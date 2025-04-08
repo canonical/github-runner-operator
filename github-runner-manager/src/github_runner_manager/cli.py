@@ -3,6 +3,7 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
+from io import StringIO
 import logging
 from functools import partial
 from threading import Lock
@@ -64,8 +65,9 @@ def main(
         logging.basicConfig(level=logging.DEBUG)
 
     lock = Lock()
-    config = ApplicationConfiguration.from_yaml_file(config_file)
-    openstack_config = OpenStackConfiguration.from_yaml_file(config_file)
+    config_str = config_file.read()
+    config = ApplicationConfiguration.from_yaml_file(StringIO(config_str))
+    openstack_config = OpenStackConfiguration.from_yaml_file(StringIO(config_str))
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
