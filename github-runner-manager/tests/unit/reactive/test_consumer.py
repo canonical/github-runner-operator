@@ -5,8 +5,7 @@ import secrets
 from contextlib import closing
 from datetime import datetime, timezone
 from random import randint
-from unittest.mock import MagicMock
-
+from unittest.mock import MagicMock, ANY
 import pytest
 from kombu import Connection, Message
 from kombu.exceptions import KombuError
@@ -68,7 +67,7 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
         supported_labels=supported_labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 
