@@ -171,4 +171,4 @@ class RunnerMetadata:
 
     def as_dict(self) -> dict[str, str]:
         """TODO."""
-        return {k: v for k, v in asdict(self) if v is not None}
+        return {k: v for k, v in asdict(self).values() if v is not None}
