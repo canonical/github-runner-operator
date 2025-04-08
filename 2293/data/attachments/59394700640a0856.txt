@@ -1,0 +1,40 @@
+07:23:42 INFO Waiting for model:
+  test-ok3687vc/0 [executing] active: 
+07:24:12 INFO Waiting for model:
+  test-ok3687vc/0 [idle] active:
+07:25:24 INFO Waiting for model:
+  test-ok3687vc/0 [executing] active: 
+07:25:54 INFO Waiting for model:
+  test-ok3687vc/0 [idle] active: 
+07:26:03 INFO [TEST SETUP] Exposing port 8080 on test-ok3687vc-0-n-f18a9d8d64e2
+07:26:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.41', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c9:be:78'}]])
+07:26:06 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ok3687vc-0-n-f18a9d8d64e2
+07:26:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.41', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c9:be:78'}]])
+07:26:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ok3687vc-0-n-f18a9d8d64e2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.41 nc -z localhost 8080'
+07:26:09 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ok3687vc-0-n-f18a9d8d64e2
+07:26:09 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.41', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c9:be:78'}]])
+07:26:10 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ok3687vc-0-n-f18a9d8d64e2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.41 curl http://localhost:8080'
+07:26:13 INFO Wait for condition not met, sleeping 10
+07:26:47 INFO Waiting for model:
+  test-ok3687vc/0 [executing] active: 
+07:27:17 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-mxrp  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  07:27:17Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ok3687vc           active      1  github-runner-image-builder  latest/edge   68  no       
+test-ok3687vc                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ok3687vc/0*  active    idle   0        10.199.180.96             
+test-ok3687vc/0*                         active    idle   1        10.199.180.174  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.199.180.96   juju-c741e6-0  ubuntu@22.04      Running
+1        started  10.199.180.174  juju-c741e6-1  ubuntu@22.04      Running
+
+07:27:18 INFO Juju error logs:
+
+
+07:27:18 INFO Forgetting model main...

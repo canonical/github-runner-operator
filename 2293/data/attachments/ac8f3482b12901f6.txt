@@ -1,0 +1,118 @@
+06:24:59 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-failure-azzg on cloud localhost
+06:25:00 WARNING unexpected facade SSHServer received from the controller
+06:25:01 INFO GitHub token rate limit: Rate(reset=2025-04-08 06:26:43+00:00, remaining=4961, limit=5000)
+06:25:16 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:17 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [allocating] waiting: waiting for machine
+06:25:47 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [allocating] waiting: waiting for machine
+06:26:18 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [allocating] waiting: waiting for machine
+06:26:48 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [allocating] waiting: agent initialising
+06:27:19 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:27:49 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:28:19 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:28:50 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:29:20 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:29:51 INFO Waiting for model:
+  github-runner-image-builder-jhbc68j1/0 [executing] maintenance: Setting up Builder.
+06:30:34 INFO Deploying local:jammy/github-runner-0
+06:30:34 INFO Waiting for model:
+  test-jhbc68j1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jhbc68j1/0 [idle] blocked: image integration required.
+06:31:05 INFO Waiting for model:
+  test-jhbc68j1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jhbc68j1/0 [idle] blocked: image integration required.
+06:31:35 INFO Waiting for model:
+  test-jhbc68j1/0 [executing] waiting: agent initialising
+  github-runner-image-builder-jhbc68j1/0 [idle] blocked: image integration required.
+06:32:05 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:32:35 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:33:06 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:33:36 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:34:07 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:34:37 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:35:07 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:35:38 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:36:08 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:36:39 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:37:09 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:37:39 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:38:09 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:38:40 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:39:10 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:39:41 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:40:11 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:40:41 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:41:11 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:41:41 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:42:11 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:42:42 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jhbc68j1/0 [executing] active: Building image.
+06:43:12 INFO Waiting for model:
+  test-jhbc68j1/0 [executing] maintenance: Reconciling runners
+06:44:01 INFO Waiting for model:
+  test-jhbc68j1/0 [executing] maintenance: Reconciling runners
+06:44:31 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] active:
+06:49:33 INFO Waiting for model:
+  test-jhbc68j1/0 [executing] active: 
+06:50:03 INFO Waiting for model:
+  test-jhbc68j1/0 [idle] active: 
+06:50:20 INFO [TEST SETUP] Exposing port 8080 on test-jhbc68j1-0-n-c15143f72aa9
+06:50:20 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.190', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9d:55:b2'}]])
+06:50:24 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-jhbc68j1-0-n-c15143f72aa9
+06:50:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.190', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9d:55:b2'}]])
+06:50:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jhbc68j1-0-n-c15143f72aa9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.190 nc -z localhost 8080'
+06:50:27 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-jhbc68j1-0-n-c15143f72aa9
+06:50:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.190', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9d:55:b2'}]])
+06:50:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jhbc68j1-0-n-c15143f72aa9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.190 curl http://localhost:8080'

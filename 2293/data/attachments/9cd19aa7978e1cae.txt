@@ -1,0 +1,130 @@
+06:24:25 INFO Adding model github-pr-e884d-lxd:test-charm-fork-repo-wtjz on cloud localhost
+06:24:25 WARNING unexpected facade SSHServer received from the controller
+06:24:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:27 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [allocating] waiting: waiting for machine
+06:24:57 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [allocating] waiting: waiting for machine
+06:25:27 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [allocating] waiting: waiting for machine
+06:25:58 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:26:28 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:26:58 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:27:29 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:27:59 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:28:30 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [executing] maintenance: Setting up Builder.
+06:29:00 INFO Waiting for model:
+  github-runner-image-builder-vexqluey/0 [idle] blocked: image integration required.
+06:29:15 INFO Deploying local:jammy/github-runner-0
+06:29:15 INFO Waiting for model:
+  test-vexqluey/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vexqluey/0 [idle] blocked: image integration required.
+06:29:45 INFO Waiting for model:
+  test-vexqluey/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vexqluey/0 [idle] blocked: image integration required.
+06:30:16 INFO Waiting for model:
+  test-vexqluey/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vexqluey/0 [idle] blocked: image integration required.
+06:30:46 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:31:16 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:31:47 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:32:17 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:32:47 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:33:18 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:33:48 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:34:18 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:34:48 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:35:19 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:35:49 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:36:19 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:37:51 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:38:52 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:39:22 INFO Waiting for model:
+  test-vexqluey/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vexqluey/0 [executing] active: Building image.
+06:39:52 INFO Waiting for model:
+  test-vexqluey/0 [executing] maintenance: Reconciling runners
+06:40:20 INFO GitHub token rate limit: Rate(reset=2025-04-08 07:27:13+00:00, remaining=4880, limit=5000)
+06:44:14 INFO Waiting for model:
+  test-vexqluey/0 [executing] maintenance: Reconciling runners
+06:44:44 INFO Waiting for model:
+  test-vexqluey/0 [idle] active: 
+06:45:02 INFO [TEST SETUP] Exposing port 8080 on test-vexqluey-0-n-b4556c65d2ed
+06:45:02 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:27:20:ef'}]])
+06:45:06 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-vexqluey-0-n-b4556c65d2ed
+06:45:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:27:20:ef'}]])
+06:45:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vexqluey-0-n-b4556c65d2ed.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.199 nc -z localhost 8080'
+06:45:09 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-vexqluey-0-n-b4556c65d2ed
+06:45:09 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:27:20:ef'}]])
+06:45:10 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vexqluey-0-n-b4556c65d2ed.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.199 curl http://localhost:8080'
+06:45:15 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-wtjz  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  06:45:15Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-vexqluey           active      1  github-runner-image-builder  latest/edge   68  no       
+test-vexqluey                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-vexqluey/0*  active    idle   0        10.191.11.114             
+test-vexqluey/0*                         active    idle   1        10.191.11.146   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.191.11.114  juju-ba96c8-0  ubuntu@22.04      Running
+1        started  10.191.11.146  juju-ba96c8-1  ubuntu@22.04      Running
+
+06:45:15 INFO Juju error logs:
+
+machine-0: 06:25:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-vexqluey-0: 06:25:30 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-vexqluey-0: 06:26:34 ERROR unit.github-runner-image-builder-vexqluey/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vexqluey-0: 06:29:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:45:15 INFO Forgetting model main...

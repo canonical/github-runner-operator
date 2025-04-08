@@ -1,0 +1,61 @@
+07:21:06 INFO Waiting for model:
+  test-sqh05vu2/0 [executing] active: 
+07:21:36 INFO Waiting for model:
+  test-sqh05vu2/0 [idle] active:
+07:22:08 INFO Waiting for model:
+  test-sqh05vu2/0 [executing] maintenance: Reconciling runners
+07:22:38 INFO Waiting for model:
+  test-sqh05vu2/0 [idle] active: 
+07:22:46 INFO Wait for condition not met, sleeping 10
+07:22:58 INFO Wait for condition not met, sleeping 10
+07:23:08 INFO Wait for condition not met, sleeping 10
+07:23:19 INFO Wait for condition not met, sleeping 10
+07:23:29 INFO Wait for condition not met, sleeping 10
+07:23:39 INFO Wait for condition not met, sleeping 10
+07:23:50 INFO Wait for condition not met, sleeping 10
+07:24:00 INFO Wait for condition not met, sleeping 10
+07:24:11 INFO Wait for condition not met, sleeping 10
+07:24:21 INFO Wait for condition not met, sleeping 10
+07:24:32 INFO Wait for condition not met, sleeping 10
+07:25:30 INFO Waiting for model:
+  test-sqh05vu2/0 [executing] maintenance: Reconciling runners
+07:26:00 INFO Waiting for model:
+  test-sqh05vu2/0 [idle] active: 
+07:26:06 INFO Wait for condition not met, sleeping 60
+07:27:07 INFO Wait for condition not met, sleeping 60
+07:28:07 INFO Wait for condition not met, sleeping 60
+07:29:08 INFO Wait for condition not met, sleeping 60
+07:30:08 INFO Wait for condition not met, sleeping 60
+07:31:09 INFO Wait for condition not met, sleeping 60
+07:32:09 INFO Wait for condition not met, sleeping 60
+07:33:10 INFO Wait for condition not met, sleeping 60
+07:34:10 INFO Wait for condition not met, sleeping 60
+07:35:13 INFO Wait for condition not met, sleeping 10
+07:35:40 INFO Waiting for model:
+  test-sqh05vu2/0 [idle] active:
+07:36:13 INFO Waiting for model:
+  test-sqh05vu2/0 [idle] active: 
+07:36:30 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-n17w  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  07:36:30Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sqh05vu2           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-sqh05vu2                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-sqh05vu2/0*  active    idle   0        10.32.22.86                
+mongodb/0*                               active    idle   2        10.32.22.84     27017/tcp  Primary
+test-sqh05vu2/0*                         active    idle   1        10.32.22.87                
+
+Machine  State    Address      Inst id        Base          AZ  Message
+0        started  10.32.22.86  juju-87a931-0  ubuntu@22.04      Running
+1        started  10.32.22.87  juju-87a931-1  ubuntu@22.04      Running
+2        started  10.32.22.84  juju-87a931-2  ubuntu@22.04      Running
+
+07:36:30 INFO Juju error logs:
+
+
+07:36:30 INFO Forgetting model main...
