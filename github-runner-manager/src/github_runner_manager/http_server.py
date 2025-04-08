@@ -54,7 +54,7 @@ def flush_runner() -> tuple[str, int]:
     app_config = app.config[APP_CONFIG_NAME]
     openstack_config = app.config[OPENSTACK_CONFIG_NAME]
 
-    flush_busy_str = request.headers.get("flush-busy")
+    flush_busy_str = request.args.get("flush-busy")
     flush_busy = False
     if flush_busy_str in ("True", "true"):
         flush_busy = True
@@ -103,7 +103,7 @@ class FlaskArgs:
     debug: bool
 
 
-def start_http_server(  # pragma: no cover
+def start_http_server(
     app_config: ApplicationConfiguration,
     openstack_config: OpenStackConfiguration,
     lock: Lock,

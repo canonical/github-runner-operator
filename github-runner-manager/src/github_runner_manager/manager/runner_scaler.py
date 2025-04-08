@@ -174,8 +174,11 @@ class RunnerScaler:
             max_quantity=max_quantity,
         )
 
-    # The user argument will be removed once the charm no longer uses the github-runner-manager as
-    # a library.
+    # The `user` argument will be removed once the charm no longer uses the github-runner-manager
+    # as a library. The `user` is currently an argument as github-runner-manager as a library needs
+    # it to be set to a hardcoded value, while as an application the value would be the current
+    # user.
+    # Disable the too many arguments for now as `user` will be removed later on.
     def __init__(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         runner_manager: RunnerManager,

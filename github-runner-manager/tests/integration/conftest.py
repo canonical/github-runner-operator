@@ -106,31 +106,6 @@ def install_app_fixture() -> None:
 def app_fixture(
     install_app: None, config_file: Path, openstack_config_file: Path
 ) -> Iterator[subprocess.Popen]:
-
-    # TODO: debug
-    # with open(config_file, "r") as file:
-    #     config = file.read()
-    # with open(openstack_config_file, "r") as file:
-    #     openstack_config = file.read()
-    # import getpass
-    # import grp
-    # import os
-
-    # from src.github_runner_manager.configuration import ApplicationConfiguration
-    # from src.github_runner_manager.manager.runner_scaler import RunnerScaler
-    # from src.github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
-    # from src.github_runner_manager.configuration import UserInfo
-
-    # user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
-    # runner_scaler = RunnerScaler.build(
-    #     ApplicationConfiguration.from_yaml_file(config),
-    #     OpenStackConfiguration.from_yaml_file(openstack_config),
-    #     user,
-    # )
-
-    # pytest.set_trace()
-    # pass
-
     process = start_app(config_file, openstack_config_file, [])
     yield process
     process.kill()

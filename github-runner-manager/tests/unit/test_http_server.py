@@ -37,7 +37,7 @@ def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
 def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
     mock = MagicMock(spec=RunnerScaler)
     monkeypatch.setattr(
-        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, y: mock
+        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, y, z: mock
     )
     return mock
 
@@ -72,7 +72,7 @@ def test_flush_runner_flush_busy(
     app.config["lock"] = lock
     client = app.test_client()
 
-    response = client.post("/runner/flush", headers={"flush-busy": "true"})
+    response = client.post("/runner/flush?flush-busy=true")
 
     assert response.status_code == 204
     assert not lock.locked()
@@ -90,7 +90,7 @@ def test_flush_runner_unlocked(
     app.config["lock"] = lock
     client = app.test_client()
 
-    response = client.post("/runner/flush", headers={"flush-busy": "false"})
+    response = client.post("/runner/flush?flush-busy=false")
 
     assert response.status_code == 204
     assert not lock.locked()
