@@ -91,7 +91,7 @@ class GitHubRunnerPlatform(PlatformProvider):
             self._client.delete_runner(self._path, runner.id)
 
     def get_runner_token(
-        self, _: RunnerMetadata, instance_id: InstanceID, labels: list[str]
+        self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
 
