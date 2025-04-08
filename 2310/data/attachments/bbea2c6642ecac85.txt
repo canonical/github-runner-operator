@@ -1,0 +1,84 @@
+20:11:10 INFO Adding model github-pr-e884d-lxd:test-charm-no-runner-1nd1 on cloud localhost
+20:11:10 WARNING unexpected facade SSHServer received from the controller
+20:11:12 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+20:11:13 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [allocating] waiting: waiting for machine
+20:11:43 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [allocating] waiting: waiting for machine
+20:12:14 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [allocating] waiting: agent initialising
+20:12:44 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [executing] maintenance: Setting up Builder.
+20:13:15 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [executing] maintenance: Setting up Builder.
+20:13:45 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [executing] maintenance: Setting up Builder.
+20:14:16 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [executing] maintenance: Setting up Builder.
+20:14:46 INFO Waiting for model:
+  github-runner-image-builder-lfxsnq02/0 [idle] blocked: image integration required.
+20:15:12 INFO Deploying local:jammy/github-runner-0
+20:15:12 INFO Waiting for model:
+  test-lfxsnq02/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lfxsnq02/0 [idle] blocked: image integration required.
+20:15:42 INFO Waiting for model:
+  test-lfxsnq02/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lfxsnq02/0 [idle] blocked: image integration required.
+20:16:12 INFO Waiting for model:
+  test-lfxsnq02/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lfxsnq02/0 [executing] blocked: image integration required.
+20:16:43 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:17:13 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:17:43 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:18:14 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:18:44 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:19:14 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:19:45 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:20:15 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:20:45 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:21:16 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:21:46 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:22:16 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:22:46 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:23:16 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:23:47 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:24:17 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:24:48 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lfxsnq02/0 [executing] active: Building image.
+20:25:18 INFO Waiting for model:
+  test-lfxsnq02/0 [executing] maintenance: Reconciling runners
+20:25:44 INFO Waiting for model:
+  test-lfxsnq02/0 [idle] active:
