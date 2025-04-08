@@ -9,7 +9,7 @@ from typing import Iterable
 
 from pydantic import HttpUrl
 
-from github_runner_manager.configuration.github import GitHubRepo
+from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID
@@ -38,6 +38,25 @@ class GitHubRunnerPlatform(PlatformProvider):
         self._prefix = prefix
         self._path = path
         self._client = github_client
+
+    @classmethod
+    def build(
+        cls, prefix: str, github_configuration: GitHubConfiguration
+    ) -> "GitHubRunnerPlatform":
+        """Build a GitHubRunnerPlatform.
+
+        Args:
+            prefix: The prefix in the name to identify the runners managed by this instance.
+            github_configuration: GitHub configuration
+
+        Returns:
+            A new GitHubRunnerPlatform.
+        """
+        return cls(
+            prefix=prefix,
+            path=github_configuration.path,
+            github_client=GithubClient(github_configuration.token),
+        )
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

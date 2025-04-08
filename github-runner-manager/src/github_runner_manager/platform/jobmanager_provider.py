@@ -8,7 +8,11 @@ from typing import Iterable
 from pydantic import HttpUrl
 
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
+from github_runner_manager.platform.platform_provider import (
+    JobInfo,
+    PlatformProvider,
+    PlatformRunnerState,
+)
 from github_runner_manager.types_.github import SelfHostedRunner
 
 
@@ -82,6 +86,19 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             job_url: The URL of the job.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError
+
+    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
+        """Check if the job has already been picked up.
+
+        Args:
+            repository: TODO
+            workflow_run_id: TODO
+            runner: TODO
 
         Raises:
             NotImplementedError: Work in progress.
