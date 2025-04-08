@@ -50,36 +50,6 @@ from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
-def test_github_repo_path():
-    """
-    arrange: Create a GithubRepo instance with owner and repo attributes.
-    act: Call the path method of the GithubRepo instance with a mock.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    owner = "test_owner"
-    repo = "test_repo"
-    github_repo = GitHubRepo(owner=owner, repo=repo)
-
-    path = github_repo.path()
-
-    assert path == f"{owner}/{repo}"
-
-
-def test_github_org_path():
-    """
-    arrange: Create a GithubOrg instance with org and group attributes.
-    act: Call the path method of the GithubOrg instance.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    org = "test_org"
-    group = "test_group"
-    github_org = GitHubOrg(org=org, group=group)
-
-    path = github_org.path()
-
-    assert path == org
-
-
 def test_github_config_from_charm_invalud_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.

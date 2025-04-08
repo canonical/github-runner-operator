@@ -9,7 +9,7 @@ from typing import Optional, TextIO
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
-from . import github
+from github_runner_manager.configuration import github
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
-    github_config: github.GitHubConfiguration
+    github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"

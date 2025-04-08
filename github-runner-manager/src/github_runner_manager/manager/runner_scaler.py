@@ -18,10 +18,10 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
+from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import (
     HealthState,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -37,6 +37,8 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -113,6 +115,9 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             openstack_configuration: OpenStack configuration.
 
+        Raises:
+            ValueError: Invalid configuration.
+
         Returns:
             A new RunnerScaler.
         """
@@ -137,9 +142,18 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
+        if application_configuration.github_config:
+            platform_provider = GitHubRunnerPlatform(
+                prefix=openstack_configuration.vm_prefix,
+                path=application_configuration.github_config.path,
+                github_client=GithubClient(application_configuration.github_config.token),
+            )
+        else:
+            raise ValueError("No valid platform configuration")
+
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
-            github_configuration=application_configuration.github_config,
+            platform_provider=platform_provider,
             cloud_runner_manager=OpenStackRunnerManager(
                 config=openstack_runner_manager_config,
             ),
@@ -157,7 +171,6 @@ class RunnerScaler:
                 manager_name=application_configuration.name,
                 github_configuration=application_configuration.github_config,
                 cloud_runner_manager=openstack_runner_manager_config,
-                github_token=application_configuration.github_config.token,
                 supported_labels=supported_labels,
                 labels=labels,
             )
@@ -204,15 +217,15 @@ class RunnerScaler:
         busy_runners = []
         for runner in runner_list:
             match runner.github_state:
-                case GitHubRunnerState.BUSY:
+                case PlatformRunnerState.BUSY:
                     online += 1
                     online_runners.append(runner.name)
                     busy += 1
                     busy_runners.append(runner.name)
-                case GitHubRunnerState.IDLE:
+                case PlatformRunnerState.IDLE:
                     online += 1
                     online_runners.append(runner.name)
-                case GitHubRunnerState.OFFLINE:
+                case PlatformRunnerState.OFFLINE:
                     offline += 1
                 case _:
                     unknown += 1
@@ -350,15 +363,15 @@ class RunnerScaler:
                 runner.health,
             )
         busy_runners = [
-            runner for runner in runner_list if runner.github_state == GitHubRunnerState.BUSY
+            runner for runner in runner_list if runner.github_state == PlatformRunnerState.BUSY
         ]
         idle_runners = [
-            runner for runner in runner_list if runner.github_state == GitHubRunnerState.IDLE
+            runner for runner in runner_list if runner.github_state == PlatformRunnerState.IDLE
         ]
         offline_healthy_runners = [
             runner
             for runner in runner_list
-            if runner.github_state == GitHubRunnerState.OFFLINE
+            if runner.github_state == PlatformRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
         unhealthy_states = {HealthState.UNHEALTHY, HealthState.UNKNOWN}
@@ -384,20 +397,20 @@ def _issue_reconciliation_metric(
     idle_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.IDLE
+        if runner.github_state == PlatformRunnerState.IDLE
     }
 
     offline_healthy_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.OFFLINE
+        if runner.github_state == PlatformRunnerState.OFFLINE
         and runner.health == HealthState.HEALTHY
     }
     available_runners = idle_runners | offline_healthy_runners
     active_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == GitHubRunnerState.BUSY
+        if runner.github_state == PlatformRunnerState.BUSY
     }
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)
