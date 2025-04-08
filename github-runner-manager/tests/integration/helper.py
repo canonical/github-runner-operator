@@ -28,14 +28,11 @@ def get_app_log(app: subprocess.Popen) -> str:
     return app.stderr.read().decode("utf-8")
 
 
-def start_app(
-    config_file: Path, extra_args: Sequence[str]
-) -> subprocess.Popen:
+def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
     """Start the CLI application.
 
     Args:
         config_file: The Path to the configuration file.
-        openstack_config_file: The Path to the OpenStack configuration file.
         extra_args: Any extra args to the CLI application.
 
     Returns:

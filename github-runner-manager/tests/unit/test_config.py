@@ -12,7 +12,6 @@ import pytest
 import yaml
 from pydantic import MongoDsn
 
-from src.github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration, OpenStackCredentials
 from src.github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -27,6 +26,10 @@ from src.github_runner_manager.configuration import (
     RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
+)
+from src.github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+    OpenStackCredentials,
 )
 
 SAMPLE_YAML_CONFIGURATION = """
@@ -96,9 +99,22 @@ network: test_network
 vm_prefix: test_unit
 """
 
+
 @pytest.fixture(name="openstack_config", scope="module")
-def openstack_config_fixture() -> dict:
-  return OpenStackConfiguration(vm_prefix='test_unit', network='test_network', credentials=OpenStackCredentials(auth_url='http://example.com/test', project_name='test_project', username='test_username', password='test_password', user_domain_name='test_user_domain_name', project_domain_name='test_project_domain_name', region_name='test_region'))
+def openstack_config_fixture() -> OpenStackConfiguration:
+    return OpenStackConfiguration(
+        vm_prefix="test_unit",
+        network="test_network",
+        credentials=OpenStackCredentials(
+            auth_url="http://example.com/test",
+            project_name="test_project",
+            username="test_username",
+            password="test_password",
+            user_domain_name="test_user_domain_name",
+            project_domain_name="test_project_domain_name",
+            region_name="test_region",
+        ),
+    )
 
 
 @pytest.fixture(name="app_config", scope="module")
@@ -192,9 +208,7 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration, open
     assert: The content matches.
     """
     yaml_config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
-    loaded_app_config = ApplicationConfiguration.validate(
-        yaml_config
-    )
+    loaded_app_config = ApplicationConfiguration.validate(yaml_config)
     loaded_openstack_config = OpenStackConfiguration.validate(yaml_config)
     assert loaded_app_config == app_config
     assert loaded_openstack_config == openstack_config

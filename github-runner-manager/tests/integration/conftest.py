@@ -98,7 +98,8 @@ def install_app_fixture() -> None:
 
 @pytest.fixture(name="app", scope="function")
 def app_fixture(
-    install_app: None, config_file: Path, 
+    install_app: None,
+    config_file: Path,
 ) -> Iterator[subprocess.Popen]:
     process = start_app(config_file, [])
     yield process

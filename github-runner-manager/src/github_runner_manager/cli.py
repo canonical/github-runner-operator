@@ -3,9 +3,9 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
-from io import StringIO
 import logging
 from functools import partial
+from io import StringIO
 from threading import Lock
 from typing import TextIO
 
@@ -56,8 +56,7 @@ def main(
 
     Args:
         config_file: The configuration file.
-        openstack_config_file: The OpenStack configuration file.
-        host: The hostname to listen on for the HTTP server.
+        host: The hostname to listen on for the HTTP server
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
     """
