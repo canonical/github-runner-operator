@@ -44,8 +44,13 @@ def config_fixture() -> dict:
                 "http": "http://httpproxy.example.com:3128",
                 "https": "http://httpsproxy.example.com:3128",
                 "no_proxy": "127.0.0.1",
-                "use_aproxy": False,
             },
+            "runner_proxy_config": {
+                "http": "http://httpproxy.example.com:3128",
+                "https": "http://httpsproxy.example.com:3128",
+                "no_proxy": "127.0.0.1",
+            },
+            "use_aproxy": False,
             "repo_policy_compliance": {"token": "token", "url": "https://compliance.example.com"},
             "ssh_debug_connections": [
                 {
