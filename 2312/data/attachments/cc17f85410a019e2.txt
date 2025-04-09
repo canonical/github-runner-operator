@@ -1,0 +1,62 @@
+06:58:01 INFO Waiting for model:
+  test-mpih989y/0 [executing] active: 
+06:58:31 INFO Waiting for model:
+  test-mpih989y/0 [idle] active:
+06:59:49 INFO Waiting for model:
+  test-mpih989y/0 [executing] active: 
+07:00:19 INFO Waiting for model:
+  test-mpih989y/0 [idle] active: 
+07:00:34 INFO [TEST SETUP] Exposing port 8080 on test-mpih989y-0-n-3bc261ea476d
+07:00:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:ac:1a'}]])
+07:00:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-mpih989y-0-n-3bc261ea476d
+07:00:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:ac:1a'}]])
+07:00:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-mpih989y-0-n-3bc261ea476d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.108 nc -z localhost 8080'
+07:00:40 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-mpih989y-0-n-3bc261ea476d
+07:00:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:ac:1a'}]])
+07:00:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-mpih989y-0-n-3bc261ea476d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.108 curl http://localhost:8080'
+07:00:44 INFO Wait for condition not met, sleeping 10
+07:01:24 INFO Waiting for model:
+  test-mpih989y/0 [executing] active: 
+07:01:54 INFO Waiting for model:
+  test-mpih989y/0 [idle] active: 
+07:01:58 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-zp23  github-pr-e884d-lxd  localhost/localhost  3.6.4    unsupported  07:01:58Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mpih989y           active      1  github-runner-image-builder  latest/edge   68  no       
+test-mpih989y                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-mpih989y/0*  active    idle   0        10.158.3.225              
+test-mpih989y/0*                         active    idle   1        10.158.3.102    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.158.3.225  juju-57af50-0  ubuntu@22.04      Running
+1        started  10.158.3.102  juju-57af50-1  ubuntu@22.04      Running
+
+07:01:58 INFO Juju error logs:
+
+unit-test-mpih989y-0: 06:53:42 ERROR unit.test-mpih989y/0.juju-log Unable to get SSH connection for instance test-mpih989y-0-n-0675f7481691, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-mpih989y-0-n-0675f7481691, key path: /home/runner-manager/.ssh/test-mpih989y-0-n-0675f7481691.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-mpih989y-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-mpih989y-0-n-0675f7481691
+
+07:01:58 INFO Forgetting model main...

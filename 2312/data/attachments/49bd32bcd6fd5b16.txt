@@ -1,0 +1,104 @@
+06:24:50 INFO Adding model github-pr-e884d-lxd:test-charm-metrics-success-d5jj on cloud localhost
+06:24:50 WARNING unexpected facade SSHServer received from the controller
+06:24:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:53 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [allocating] waiting: waiting for machine
+06:25:23 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [allocating] waiting: waiting for machine
+06:25:54 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [allocating] waiting: waiting for machine
+06:26:24 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [allocating] waiting: waiting for machine
+06:26:54 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: installing charm software
+06:27:25 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: Setting up Builder.
+06:27:55 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: Setting up Builder.
+06:28:26 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: Setting up Builder.
+06:28:56 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: Setting up Builder.
+06:29:26 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [executing] maintenance: Setting up Builder.
+06:29:57 INFO Waiting for model:
+  github-runner-image-builder-x7jrpvhr/0 [idle] blocked: image integration required.
+06:30:26 INFO Deploying local:jammy/github-runner-0
+06:30:26 INFO Waiting for model:
+  test-x7jrpvhr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-x7jrpvhr/0 [idle] blocked: image integration required.
+06:30:56 INFO Waiting for model:
+  test-x7jrpvhr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-x7jrpvhr/0 [idle] blocked: image integration required.
+06:31:27 INFO Waiting for model:
+  test-x7jrpvhr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-x7jrpvhr/0 [idle] blocked: image integration required.
+06:31:57 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:32:28 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:32:58 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:33:28 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:33:59 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:34:29 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:34:59 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:35:30 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:36:00 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:36:30 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:37:01 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:37:31 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:38:01 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:38:32 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:39:02 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:39:32 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:40:03 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:40:33 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-x7jrpvhr/0 [executing] active: Building image.
+06:41:03 INFO Waiting for model:
+  test-x7jrpvhr/0 [executing] maintenance: Reconciling runners
+06:44:53 INFO Waiting for model:
+  test-x7jrpvhr/0 [executing] maintenance: Reconciling runners
+06:45:23 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] active: 
+06:46:25 INFO Waiting for model:
+  test-x7jrpvhr/0 [executing] active: 
+06:46:55 INFO Waiting for model:
+  test-x7jrpvhr/0 [idle] active: 
+06:47:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744181092.0661302, "event": "reconciliation", "flavor": "test-x7jrpvhr", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 204.65890836715698}
+{"timestamp": 1744181118.233704, "event": "reconciliation", "flavor": "test-x7jrpvhr", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 25.007660627365112}
+{"timestamp": 1744181036.0, "event": "runner_installed", "flavor": "test-x7jrpvhr", "duration": 135.0}
+{"timestamp": 1744181184.3957381, "event": "reconciliation", "flavor": "test-x7jrpvhr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 48.0542778968811}
+{"timestamp": 1744181204.9983654, "event": "reconciliation", "flavor": "test-x7jrpvhr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.469370365142822}
