@@ -34,7 +34,6 @@ from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
@@ -50,10 +49,11 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
     OpenStackServerConfig,
 )
+from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
-    MockGitHubRunnerManager,
+    MockGitHubRunnerPlatform,
     SharedMockRunnerManagerState,
 )
 
@@ -84,10 +84,10 @@ def github_path_fixture() -> GitHubPath:
 @pytest.fixture(scope="function", name="mock_runner_managers")
 def mock_runner_managers_fixture(
     github_path: GitHubPath,
-) -> tuple[MockCloudRunnerManager, MockGitHubRunnerManager]:
+) -> tuple[MockCloudRunnerManager, MockGitHubRunnerPlatform]:
     state = SharedMockRunnerManagerState()
     mock_cloud = MockCloudRunnerManager(state)
-    mock_github = MockGitHubRunnerManager(mock_cloud.name_prefix, github_path, state)
+    mock_github = MockGitHubRunnerPlatform(mock_cloud.name_prefix, github_path, state)
     return (mock_cloud, mock_github)
 
 
@@ -118,12 +118,12 @@ def runner_manager_fixture(
     )
 
     runner_manager = RunnerManager(
-        "mock_runners",
-        GitHubConfiguration(token="mock_token", path=github_path),
-        mock_cloud,
+        manager_name="mock_runners",
+        # GitHubConfiguration(token="mock_token", path=github_path),
+        platform_provider=mock_github,
+        cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
-    runner_manager._github = mock_github
     return runner_manager
 
 
@@ -219,7 +219,7 @@ def runner_scaler_one_runner_fixture(runner_manager: RunnerManager) -> RunnerSca
 
 def set_one_runner_state(
     runner_scaler: RunnerScaler,
-    github_state: GitHubRunnerState | None = None,
+    github_state: PlatformRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
 ):
     """Set the runner state for a RunnerScaler with one runner.
@@ -229,7 +229,7 @@ def set_one_runner_state(
         github_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
     """
-    runner_dict = runner_scaler._manager._github.state.runners
+    runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
     if github_state is not None:
@@ -281,8 +281,7 @@ def test_build_runner_scaler(
     # A few comprobations on key data
     # Pending to refactor, too invasive.
     assert runner_scaler._manager.manager_name == "app_name"
-    assert runner_scaler._manager._github._path == GitHubOrg(org="canonical", group="group")
-    assert runner_scaler._manager._github.github._token == "githubtoken"
+    assert runner_scaler._manager._platform._path == GitHubOrg(org="canonical", group="group")
     assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",
@@ -536,7 +535,7 @@ def test_flush_busy_on_busy_runner(
     Assert: No runners.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
 
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
     assert_runner_info(runner_scaler, online=0)
@@ -551,7 +550,7 @@ def test_get_runner_one_busy_runner(
     Assert: One busy runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
 
     assert_runner_info(runner_scaler=runner_scaler, online=1, busy=1)
 
@@ -563,7 +562,7 @@ def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
     Assert: One offline runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, GitHubRunnerState.OFFLINE)
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
 
     assert_runner_info(runner_scaler=runner_scaler, offline=1)
 

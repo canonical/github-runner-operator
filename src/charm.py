@@ -203,9 +203,6 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
-        self.framework.observe(
-            self.on.update_dependencies_action, self._on_update_dependencies_action
-        )
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
@@ -429,16 +426,6 @@ class GithubRunnerCharm(CharmBase):
             return
         self.unit.status = ActiveStatus()
         event.set_results({"delta": {"virtual-machines": delta}})
-
-    @catch_action_errors
-    def _on_update_dependencies_action(self, event: ActionEvent) -> None:
-        """Handle the action of updating dependencies and flushing runners if needed.
-
-        Args:
-            event: Action event of updating dependencies.
-        """
-        # No dependencies managed by the charm for OpenStack-based runners.
-        event.set_results({"flush": False})
 
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
