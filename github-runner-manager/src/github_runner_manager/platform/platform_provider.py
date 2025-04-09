@@ -112,9 +112,8 @@ class PlatformRunnerState(str, Enum):
         # A runner that is busy and offline is possible.
         if runner.busy:
             state = PlatformRunnerState.BUSY
-        if runner.status == GitHubRunnerStatus.ONLINE:
-            if not runner.busy:
-                state = PlatformRunnerState.IDLE
+        if runner.status == GitHubRunnerStatus.ONLINE and not runner.busy:
+            state = PlatformRunnerState.IDLE
         return state
 
 
