@@ -11,14 +11,14 @@ import pytest
 from kombu import Connection, Message
 from kombu.exceptions import KombuError
 
+from github_runner_manager.configuration.github import GitHubRepo
 from github_runner_manager.reactive import consumer
 from github_runner_manager.reactive.consumer import JobError, Labels, get_queue_size
 from github_runner_manager.reactive.types_ import QueueConfig
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
-from github_runner_manager.configuration.github import GitHubRepo
 
 IN_MEMORY_URI = "memory://"
-FAKE_JOB_ID =  "8200803099"
+FAKE_JOB_ID = "8200803099"
 FAKE_JOB_URL = f"https://api.github.com/repos/fakeuser/gh-runner-test/actions/runs/{FAKE_JOB_ID}"
 
 
@@ -76,6 +76,7 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
 
     _assert_queue_is_empty(queue_config.queue_name)
 
+
 def test_consume_after_in_progress(queue_config: QueueConfig):
     """
     arrange: Two jobs, the first one in progress and the second one queued.
@@ -100,10 +101,13 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
     github_client_mock = MagicMock(spec=consumer.GithubClient)
 
-    queued_job_infos_for_queued_iter = iter([
-        _create_job_info(JobStatus.QUEUED),
-        _create_job_info(JobStatus.IN_PROGRESS),
-    ])
+    queued_job_infos_for_queued_iter = iter(
+        [
+            _create_job_info(JobStatus.QUEUED),
+            _create_job_info(JobStatus.IN_PROGRESS),
+        ]
+    )
+
     def _get_job_info(path: GitHubRepo, job_id=str):
         """Get information about a job."""
         # For the in progress job, return in progress
@@ -124,7 +128,7 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
     runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
-    
+
 
 def test_consume_reject_if_job_gets_not_picked_up(queue_config: QueueConfig):
     """
