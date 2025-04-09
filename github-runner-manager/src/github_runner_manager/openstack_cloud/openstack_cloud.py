@@ -352,11 +352,12 @@ class OpenstackCloud:
         logger.info("Getting all openstack servers managed by the charm")
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            instance_list = self._get_openstack_instances(conn)
+            instance_list = list(self._get_openstack_instances(conn))
             server_names = set(server.name for server in instance_list)
 
             server_list = [
-                OpenstackCloud._get_and_ensure_unique_server(conn, name) for name in server_names
+                OpenstackCloud._get_and_ensure_unique_server(conn, name, instance_list)
+                for name in server_names
             ]
             return tuple(
                 OpenstackInstance(server, self.prefix)
@@ -440,7 +441,7 @@ class OpenstackCloud:
 
     @staticmethod
     def _get_and_ensure_unique_server(
-        conn: OpenstackConnection, name: str
+        conn: OpenstackConnection, name: str, all_servers: list[OpenstackServer] | None = None
     ) -> OpenstackServer | None:
         """Get the latest server of the name and ensure it is unique.
 
@@ -450,11 +451,16 @@ class OpenstackCloud:
         Args:
             conn: The connection to OpenStack.
             name: The name of the OpenStack name.
+            all_servers: Optionally the list of servers to not request it to openstack again.
 
         Returns:
             A server with the name.
         """
-        servers: list[OpenstackServer] = conn.search_servers(name)
+        servers: list[OpenstackServer]
+        if not all_servers:
+            servers = conn.search_servers(name)
+        else:
+            servers = [server for server in all_servers if server.name == name]
 
         if not servers:
             return None
