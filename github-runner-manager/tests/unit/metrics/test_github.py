@@ -8,7 +8,7 @@ import pytest
 
 from github_runner_manager.errors import GithubMetricsError, JobNotFoundError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics.runner import PreJobMetrics
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
@@ -52,7 +52,10 @@ def test_job(pre_job_metrics: PreJobMetrics):
         prefix=prefix, path="canonical", github_client=github_client
     )
     job_metrics = github_metrics.job(
-        platform_provider=github_provider, pre_job_metrics=pre_job_metrics, runner=runner
+        platform_provider=github_provider,
+        pre_job_metrics=pre_job_metrics,
+        runner=runner,
+        metadata=RunnerMetadata(),
     )
 
     assert job_metrics.queue_duration == 3600
@@ -75,5 +78,8 @@ def test_job_job_not_found(pre_job_metrics: PreJobMetrics):
 
     with pytest.raises(GithubMetricsError):
         github_metrics.job(
-            platform_provider=github_provider, pre_job_metrics=pre_job_metrics, runner=runner
+            platform_provider=github_provider,
+            metadata=RunnerMetadata(),
+            pre_job_metrics=pre_job_metrics,
+            runner=runner,
         )

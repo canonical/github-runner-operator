@@ -10,7 +10,7 @@ import pytest
 import pytest_asyncio
 from github import Branch, Repository
 from github.WorkflowRun import WorkflowRun
-from github_runner_manager.metrics.runner import PostJobStatus
+from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
 from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from juju.model import Model

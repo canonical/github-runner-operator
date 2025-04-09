@@ -131,7 +131,7 @@ async def deploy_github_runner_charm(
             "juju-http-proxy": http_proxy,
             "juju-https-proxy": https_proxy,
             "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
+            "logging-config": "<root>=INFO;unit=INFO",
         }
     )
 

@@ -7,7 +7,7 @@ from typing import Iterable
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
@@ -56,14 +56,15 @@ class JobManagerPlatform(PlatformProvider):
         raise NotImplementedError
 
     def get_runner_token(
-        self, instance_id: InstanceID, labels: list[str]
+        self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
-        """Get a token for a runner.
+        """Get one time token for a runner.
 
         This token is used for registering self-hosted runners.
 
         Args:
             instance_id: Instance ID of the runner.
+            metadata: TODO.
             labels: Labels for the runner.
 
         Raises:
@@ -81,21 +82,25 @@ class JobManagerPlatform(PlatformProvider):
         """
         raise NotImplementedError
 
-    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
+    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 
         Args:
             job_url: The URL of the job.
+            metadata: TODO.
 
         Raises:
             NotImplementedError: Work in progress.
         """
         raise NotImplementedError
 
-    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
+    def get_job_info(
+        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+    ) -> JobInfo:
         """Get the Job info from the provider.
 
         Args:
+            metadata: TODO.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

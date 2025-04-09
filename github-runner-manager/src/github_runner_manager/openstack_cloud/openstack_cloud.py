@@ -24,7 +24,7 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 
@@ -48,6 +48,7 @@ class OpenstackInstance:
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
         status: Status of the server.
+        metadata: TODO
     """
 
     addresses: list[str]
@@ -55,6 +56,7 @@ class OpenstackInstance:
     instance_id: InstanceID
     server_id: str
     status: str
+    metadata: RunnerMetadata
 
     def __init__(self, server: OpenstackServer, prefix: str):
         """Construct the object.
@@ -72,6 +74,7 @@ class OpenstackInstance:
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
+        self.metadata = RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata()
 
 
 P = ParamSpec("P")
@@ -175,11 +178,18 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+        image: str,
+        flavor: str,
+        network: str,
+        cloud_init: str,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
         Args:
+            metadata: TODO.
             instance_id: The instance ID to form the instance name.
             image: The image used to create the instance.
             flavor: The flavor used to create the instance.
@@ -197,7 +207,8 @@ class OpenstackCloud:
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = self._setup_keypair(conn, instance_id)
-
+            meta = metadata.as_dict()
+            meta["prefix"] = self.prefix
             try:
                 server = conn.create_server(
                     name=instance_id.name,
@@ -210,6 +221,7 @@ class OpenstackCloud:
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
+                    meta=meta,
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)
