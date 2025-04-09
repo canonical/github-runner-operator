@@ -1,0 +1,104 @@
+18:30:19 INFO Creating 1 runners
+18:30:20 INFO Creating openstack server with test-jby91wqv-0-n-ebca8d6e7bd9
+18:30:49 WARNING NoValidConnectionsError. Unable to SSH into test-jby91wqv-0-n-ebca8d6e7bd9 with address 10.145.193.80. Error: [Errno None] Unable to connect to port 22 on 10.145.193.80
+18:30:49 WARNING Retrying error in 60 seconds: Failed to SSH to test-jby91wqv-0-n-ebca8d6e7bd9 during creation possible due to setup not completed
+18:31:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:50 INFO Authentication (publickey) successful!
+18:31:51 INFO Runner startup process found to be healthy on test-jby91wqv-0-n-ebca8d6e7bd9
+18:31:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:51 INFO Authentication (publickey) successful!
+18:31:52 INFO Runner test-jby91wqv-0-n-ebca8d6e7bd9 found to be healthy
+18:31:52 INFO Runner test-jby91wqv-0-n-ebca8d6e7bd9 created successfully
+18:31:52 INFO Getting runners...
+18:31:53 INFO Getting all openstack servers managed by the charm
+18:31:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:56 INFO Authentication (publickey) successful!
+18:31:57 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:31:57 INFO Getting runners...
+18:31:58 INFO Getting all openstack servers managed by the charm
+18:32:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:02 INFO Authentication (publickey) successful!
+18:32:03 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:03 INFO Getting runners...
+18:32:04 INFO Getting all openstack servers managed by the charm
+18:32:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:06 INFO Authentication (publickey) successful!
+18:32:07 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:09 INFO Wait for condition not met, sleeping 10
+18:32:20 INFO Getting runners...
+18:32:21 INFO Getting all openstack servers managed by the charm
+18:32:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:23 INFO Authentication (publickey) successful!
+18:32:24 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:24 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:24 INFO Getting runners...
+18:32:25 INFO Getting all openstack servers managed by the charm
+18:32:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:27 INFO Authentication (publickey) successful!
+18:32:28 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:28 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:29 INFO Offline github runners to delete: []:
+18:32:29 INFO Getting all openstack servers managed by the charm
+18:32:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:33 INFO Authentication (publickey) successful!
+18:32:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:34 INFO Authentication (publickey) successful!
+18:32:34 INFO [chan 2] Opened sftp connection (server version 3)
+18:32:34 INFO Running runner removal script for test-jby91wqv-0-n-ebca8d6e7bd9
+18:32:35 INFO Deleting openstack server with test-jby91wqv-0-n-ebca8d6e7bd9
+18:32:39 INFO Cleaning up SSH key files
+18:32:39 INFO Found 0 key files, clean up 0 key files
+18:32:39 INFO Cleaning up openstack keypairs
+18:32:40 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+18:32:40 INFO Getting runners...
+18:32:41 INFO Getting all openstack servers managed by the charm
+18:32:43 ERROR Unable to get SSH connection for instance test-jby91wqv-0-n-ebca8d6e7bd9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-jby91wqv-0-n-ebca8d6e7bd9, key path: /home/ubuntu/.ssh/test-jby91wqv-0-n-ebca8d6e7bd9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-jby91wqv-0-n-ebca8d6e7bd9
+18:32:43 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:43 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:43 INFO Getting runners...
+18:32:44 INFO Getting all openstack servers managed by the charm
+18:32:46 ERROR Unable to get SSH connection for instance test-jby91wqv-0-n-ebca8d6e7bd9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 297, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-jby91wqv-0-n-ebca8d6e7bd9, key path: /home/ubuntu/.ssh/test-jby91wqv-0-n-ebca8d6e7bd9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-jby91wqv-0-n-ebca8d6e7bd9
+18:32:46 INFO Found following runners: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:46 WARNING Found runner instance on cloud but not registered on GitHub: {'test-jby91wqv-0-n-ebca8d6e7bd9'}
+18:32:46 INFO Wait for condition not met, sleeping 60
+18:33:46 INFO Getting runners...
+18:33:48 INFO Getting all openstack servers managed by the charm
+18:33:50 INFO Found following runners: set()

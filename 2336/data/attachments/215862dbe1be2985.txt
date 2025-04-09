@@ -1,0 +1,106 @@
+18:38:11 INFO Adding model github-pr-db445-lxd:test-charm-metrics-failure-f4q8 on cloud localhost
+18:38:11 WARNING unexpected facade SSHServer received from the controller
+18:38:12 INFO GitHub token rate limit: Rate(reset=2025-04-09 18:45:53+00:00, remaining=4469, limit=5000)
+18:38:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:38:27 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [allocating] waiting: waiting for machine
+18:38:57 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [allocating] waiting: waiting for machine
+18:39:27 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [allocating] waiting: waiting for machine
+18:39:57 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:40:28 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:40:58 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:41:28 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:41:58 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:42:28 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [executing] maintenance: Setting up Builder.
+18:42:58 INFO Waiting for model:
+  github-runner-image-builder-uqxqgfbh/0 [idle] blocked: image integration required.
+18:43:37 INFO Deploying local:jammy/github-runner-0
+18:43:37 INFO Waiting for model:
+  test-uqxqgfbh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uqxqgfbh/0 [idle] blocked: image integration required.
+18:44:07 INFO Waiting for model:
+  test-uqxqgfbh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uqxqgfbh/0 [idle] blocked: image integration required.
+18:44:38 INFO Waiting for model:
+  test-uqxqgfbh/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-uqxqgfbh/0 [idle] blocked: image integration required.
+18:45:08 INFO Waiting for model:
+  test-uqxqgfbh/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uqxqgfbh/0 [idle] blocked: image integration required.
+18:45:38 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:46:09 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:46:39 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:47:09 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:47:39 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:48:10 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:48:40 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:49:10 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:49:40 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:50:11 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:50:41 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:51:11 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:51:41 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:52:11 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:52:42 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:53:12 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uqxqgfbh/0 [executing] active: Building image.
+18:53:42 INFO Waiting for model:
+  test-uqxqgfbh/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-uqxqgfbh/0 [idle] active: 
+18:54:13 INFO Waiting for model:
+  test-uqxqgfbh/0 [executing] maintenance: Reconciling runners
+18:54:55 INFO Waiting for model:
+  test-uqxqgfbh/0 [executing] active: 
+18:55:25 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] active:
+18:59:34 INFO Waiting for model:
+  test-uqxqgfbh/0 [executing] maintenance: Reconciling runners
+19:00:05 INFO Waiting for model:
+  test-uqxqgfbh/0 [idle] active: 
+19:00:17 INFO [TEST SETUP] Exposing port 8080 on test-uqxqgfbh-0-n-c8c3a78b74be
+19:00:17 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:93:5c'}]])
+19:00:21 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-uqxqgfbh-0-n-c8c3a78b74be
+19:00:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:93:5c'}]])
+19:00:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uqxqgfbh-0-n-c8c3a78b74be.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.184 nc -z localhost 8080'
+19:00:24 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-uqxqgfbh-0-n-c8c3a78b74be
+19:00:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:93:5c'}]])
+19:00:26 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uqxqgfbh-0-n-c8c3a78b74be.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.184 curl http://localhost:8080'
