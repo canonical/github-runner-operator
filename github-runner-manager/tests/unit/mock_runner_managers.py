@@ -487,21 +487,25 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             if instance_id.name not in runners_names_to_delete
         }
 
-    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
+    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 
         Args:
             job_url: The URL of the job.
+            metadata: TODO.
 
         Raises:
             NotImplementedError: Work in progress.
         """
         raise NotImplementedError
 
-    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
+    def get_job_info(
+        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+    ) -> JobInfo:
         """Get the Job info from the provider.
 
         Args:
+            metadata: TODO.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

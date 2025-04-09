@@ -404,6 +404,7 @@ class RunnerManager:
                     job_metrics = github_metrics.job(
                         platform_provider=self._platform,
                         pre_job_metrics=extracted_metrics.pre_job,
+                        metadata=extracted_metrics.metadata,
                         runner=extracted_metrics.instance_id,
                     )
                 except GithubMetricsError:

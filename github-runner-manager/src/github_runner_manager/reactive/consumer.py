@@ -179,17 +179,17 @@ def _spawn_runner(
         msg: The message to acknowledge or reject.
         platform_provider: Platform provider.
     """
-    if platform_provider.check_job_been_picked_up(job_url=job_url):
+    metadata = RunnerMetadata()
+    if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
         msg.ack()
         return
-    metadata = RunnerMetadata()
     instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner. Will reject the message.")
         msg.reject(requeue=True)
         return
     for _ in range(10):
-        if platform_provider.check_job_been_picked_up(job_url=job_url):
+        if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             msg.ack()
             break
         sleep(30)

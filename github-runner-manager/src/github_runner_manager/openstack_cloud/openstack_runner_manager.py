@@ -159,7 +159,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def create_runner(
         self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
-    ) -> None:
+    ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
@@ -170,6 +170,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
             RunnerCreateError: Unable to create runner due to OpenStack issues.
+
+        Returns:
+            The newly created runner instance.
         """
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
@@ -193,6 +196,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.instance_id)
+        return self._build_cloud_runner_instance(instance)
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -216,21 +220,25 @@ class OpenStackRunnerManager(CloudRunnerManager):
             except OpenstackHealthCheckError:
                 logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.instance_id.name)
                 healthy = None
-            metadata = RunnerMetadata(instance.metadata)
-            runners.append(
-                CloudRunnerInstance(
-                    name=instance.instance_id.name,
-                    metadata=metadata,
-                    instance_id=instance.instance_id,
-                    health=HealthState.from_value(healthy),
-                    state=CloudRunnerState.from_openstack_server_status(instance.status),
-                )
-            )
+            runners.append(self._build_cloud_runner_instance(instance, healthy))
         if states is None:
             return tuple(runners)
 
         state_set = set(states)
         return tuple(runner for runner in runners if runner.state in state_set)
+
+    def _build_cloud_runner_instance(
+        self, instance: OpenstackInstance, healthy: bool | None = None
+    ) -> CloudRunnerInstance:
+        """TODO."""
+        metadata = instance.metadata
+        return CloudRunnerInstance(
+            name=instance.instance_id.name,
+            metadata=metadata,
+            instance_id=instance.instance_id,
+            health=HealthState.from_value(healthy),
+            state=CloudRunnerState.from_openstack_server_status(instance.status),
+        )
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str
@@ -253,13 +261,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             return None
 
+        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
-        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        return pulled_metrics.to_runner_metrics(instance.instance_id, instance.created_at)
+        cloud_instance = self._build_cloud_runner_instance(instance)
+        return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
@@ -315,7 +324,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         extracted_runner_metrics = []
         for runner in runners.unhealthy:
             pulled_metrics = self._delete_runner(runner, remove_token)
-            runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
+            cloud_runner = self._build_cloud_runner_instance(runner)
+            runner_metric = pulled_metrics.to_runner_metrics(cloud_runner, runner.created_at)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", runner.instance_id)
             else:

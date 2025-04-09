@@ -7,10 +7,11 @@ import abc
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Iterable, Iterator, Sequence, Tuple
+from typing import Iterable, Iterator, Optional, Sequence, Tuple
+
+from pydantic import BaseModel, Field, NonNegativeFloat
 
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
-from github_runner_manager.metrics.runner import RunnerMetrics
 
 logger = logging.getLogger(__name__)
 
@@ -147,6 +148,83 @@ class CloudRunnerInstance:
     state: CloudRunnerState
 
 
+class PreJobMetrics(BaseModel):
+    """Metrics for the pre-job phase of a runner.
+
+    Attributes:
+        timestamp: The UNIX time stamp of the time at which the event was originally issued.
+        workflow: The workflow name.
+        workflow_run_id: The workflow run id.
+        repository: The repository path in the format '<owner>/<repo>'.
+        event: The github event.
+    """
+
+    timestamp: NonNegativeFloat
+    workflow: str
+    workflow_run_id: str
+    repository: str = Field(None, regex=r"^.+/.+$")
+    event: str
+
+
+class PostJobStatus(str, Enum):
+    """The status of the post-job phase of a runner.
+
+    Attributes:
+        NORMAL: Represents a normal post-job.
+        ABNORMAL: Represents an error with post-job.
+        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
+    """
+
+    NORMAL = "normal"
+    ABNORMAL = "abnormal"
+    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
+
+
+class CodeInformation(BaseModel):
+    """Information about a status code.
+
+    Attributes:
+        code: The status code.
+    """
+
+    code: int
+
+
+class PostJobMetrics(BaseModel):
+    """Metrics for the post-job phase of a runner.
+
+    Attributes:
+        timestamp: The UNIX time stamp of the time at which the event was originally issued.
+        status: The status of the job.
+        status_info: More information about the status.
+    """
+
+    timestamp: NonNegativeFloat
+    status: PostJobStatus
+    status_info: Optional[CodeInformation]
+
+
+class RunnerMetrics(BaseModel):
+    """Metrics for a runner.
+
+    Attributes:
+        installation_start_timestamp: The UNIX time stamp of the time at which the runner
+            installation started.
+        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
+        pre_job: The metrics for the pre-job phase.
+        post_job: The metrics for the post-job phase.
+        instance_id: The name of the runner.
+        metadata: TODO.
+    """
+
+    installation_start_timestamp: NonNegativeFloat | None
+    installed_timestamp: NonNegativeFloat
+    pre_job: PreJobMetrics | None
+    post_job: PostJobMetrics | None
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+
+
 class CloudRunnerManager(abc.ABC):
     """Manage runner instance on cloud.
 
@@ -162,7 +240,7 @@ class CloudRunnerManager(abc.ABC):
     @abc.abstractmethod
     def create_runner(
         self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
-    ) -> None:
+    ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:

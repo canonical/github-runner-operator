@@ -12,15 +12,17 @@ import pytest
 
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig
 from github_runner_manager.errors import OpenstackHealthCheckError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
-from github_runner_manager.metrics import runner
-from github_runner_manager.metrics.runner import (
+from github_runner_manager.manager.cloud_runner_manager import (
     CodeInformation,
     PostJobMetrics,
     PostJobStatus,
     PreJobMetrics,
-    PullFileError,
     RunnerMetrics,
+)
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.metrics import runner
+from github_runner_manager.metrics.runner import (
+    PullFileError,
 )
 from github_runner_manager.openstack_cloud import (
     health_checks,
@@ -234,6 +236,7 @@ def _params_test_cleanup_extract_metrics():
                     ),
                     installation_start_timestamp=openstack_created_at,
                     installed_timestamp=openstack_installed_at,
+                    metadata=RunnerMetadata(),
                 ),
             ],
             id="Only installed_timestamp. Metric returned.",
@@ -256,6 +259,7 @@ def _params_test_cleanup_extract_metrics():
                         repository="canonical/github-runner-operator",
                         event="workflow_dispatch",
                     ),
+                    metadata=RunnerMetadata(),
                 ),
             ],
             id="installed_timestamp and pre_job_metrics. Metric returned.",
@@ -266,6 +270,7 @@ def _params_test_cleanup_extract_metrics():
             post_job_metrics_str,
             [
                 RunnerMetrics(
+                    metadata=RunnerMetadata(),
                     instance_id=InstanceID(
                         prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                     ),

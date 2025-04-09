@@ -9,6 +9,7 @@ from typing import Any, Optional
 from pydantic import BaseModel, NonNegativeFloat
 
 from github_runner_manager.errors import IssueMetricEventError
+from github_runner_manager.manager.cloud_runner_manager import CodeInformation
 
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
 
@@ -93,18 +94,6 @@ class RunnerStart(Event):
     github_event: str
     idle: NonNegativeFloat
     queue_duration: Optional[NonNegativeFloat]
-
-
-class CodeInformation(BaseModel):
-    """Information about a status code.
-
-    This could e.g. be an exit code or a http status code.
-
-    Attributes:
-        code: The status code.
-    """
-
-    code: int
 
 
 class RunnerStop(Event):

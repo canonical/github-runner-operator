@@ -117,10 +117,11 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         return self._client.get_runner_remove_token(self._path)
 
-    def check_job_been_picked_up(self, job_url: HttpUrl) -> bool:
+    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 
         Args:
+            metadata: TODO.
             job_url: The URL of the job.
 
         Returns:
@@ -150,10 +151,13 @@ class GitHubRunnerPlatform(PlatformProvider):
         )
         return job_info.status in [*JobPickedUpStates]
 
-    def get_job_info(self, repository: str, workflow_run_id: str, runner: InstanceID) -> JobInfo:
+    def get_job_info(
+        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+    ) -> JobInfo:
         """Get the Job info from the provider.
 
         Args:
+            metadata: TODO.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

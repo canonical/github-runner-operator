@@ -48,6 +48,7 @@ class OpenstackInstance:
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
         status: Status of the server.
+        metadata: TODO
     """
 
     addresses: list[str]
@@ -55,6 +56,7 @@ class OpenstackInstance:
     instance_id: InstanceID
     server_id: str
     status: str
+    metadata: RunnerMetadata
 
     def __init__(self, server: OpenstackServer, prefix: str):
         """Construct the object.
@@ -72,6 +74,7 @@ class OpenstackInstance:
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
+        self.metadata = RunnerMetadata(server.metadata) if server.metadata else RunnerMetadata()
 
 
 P = ParamSpec("P")
