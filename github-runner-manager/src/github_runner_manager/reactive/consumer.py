@@ -163,7 +163,7 @@ def consume(
 
 
 def _parse_job_details(msg: Message) -> JobDetails:
-    """TODO."""
+    """Parse JobDetails from a message."""
     try:
         job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
     except ValidationError as exc:

@@ -109,7 +109,7 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
         # For the in progress job, return in progress
         if job_id == FAKE_JOB_ID:
             return _create_job_info(JobStatus.IN_PROGRESS)
-        # For the queued job, first returned queued and then in progress
+        # For the queued job, first return it as queued and then as in progress
         return next(queued_job_infos_for_queued_iter)
 
     github_client_mock.get_job_info.side_effect = _get_job_info
