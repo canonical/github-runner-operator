@@ -44,7 +44,6 @@ def main() -> None:
     setup_root_logging()
     queue_config = runner_config.queue
     openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
-    # TODO if for the platform manager.
     github_provider = GitHubRunnerPlatform.build(
         prefix=runner_config.cloud_runner_manager.prefix,
         github_configuration=runner_config.github_configuration,
