@@ -5,7 +5,8 @@ import secrets
 from contextlib import closing
 from datetime import datetime, timezone
 from random import randint
-from unittest.mock import MagicMock, ANY
+from unittest.mock import ANY, MagicMock
+
 import pytest
 from kombu import Connection, Message
 from kombu.exceptions import KombuError

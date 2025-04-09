@@ -109,7 +109,7 @@ class RunnerManager:
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
 
-    def         create_runners(
+    def create_runners(
         self, num: int, metadata: RunnerMetadata, reactive: bool = False
     ) -> tuple[InstanceID, ...]:
         """Create runners.

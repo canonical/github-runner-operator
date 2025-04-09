@@ -175,11 +175,18 @@ class OpenstackCloud:
     # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
     # added.
     def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-            self, metadata: RunnerMetadata, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+        image: str,
+        flavor: str,
+        network: str,
+        cloud_init: str,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
         Args:
+            metadata: TODO.
             instance_id: The instance ID to form the instance name.
             image: The image used to create the instance.
             flavor: The flavor used to create the instance.
@@ -197,7 +204,8 @@ class OpenstackCloud:
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
             keypair = self._setup_keypair(conn, instance_id)
-
+            meta = metadata.as_dict()
+            meta["prefix"] = self.prefix
             try:
                 server = conn.create_server(
                     name=instance_id.name,
@@ -210,7 +218,7 @@ class OpenstackCloud:
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
-                    meta=metadata.as_dict(),
+                    meta=meta,
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)

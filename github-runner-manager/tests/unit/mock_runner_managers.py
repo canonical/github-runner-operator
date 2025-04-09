@@ -225,6 +225,7 @@ class MockRunner:
     Attributes:
         name: The name of the runner.
         instance_id: The instance id of the runner.
+        metadata: TODO.
         cloud_state: The cloud state of the runner.
         github_state: The github state of the runner.
         health: The health state of the runner.
@@ -232,6 +233,7 @@ class MockRunner:
 
     name: str
     instance_id: InstanceID
+    metadata: RunnerMetadata
     cloud_state: CloudRunnerState
     github_state: PlatformRunnerState
     health: bool
@@ -244,6 +246,7 @@ class MockRunner:
         """
         self.name = name
         self.instance_id = secrets.token_hex(6)
+        self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
         self.github_state = PlatformRunnerState.IDLE
         self.health = True
@@ -256,6 +259,7 @@ class MockRunner:
         """
         return CloudRunnerInstance(
             name=self.name,
+            metadata=self.metadata,
             instance_id=self.instance_id,
             health=self.health,
             state=self.cloud_state,

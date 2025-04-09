@@ -98,6 +98,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         This token is used for registering self-hosted runners.
 
         Args:
+            metadata: TODO.
             instance_id: Instance ID of the runner.
             labels: Labels for the runner.
 

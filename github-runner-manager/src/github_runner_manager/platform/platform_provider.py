@@ -7,6 +7,7 @@ import abc
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum, auto
+
 # Pylint exception needed because of typing forward references.
 from typing import Iterable  # pylint: disable=unused-import
 

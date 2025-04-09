@@ -135,12 +135,14 @@ class CloudRunnerInstance:
     Attributes:
         name: Name of the instance hosting the runner.
         instance_id: ID of the instance.
+        metadata: TODO.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
     """
 
     name: str
     instance_id: InstanceID
+    metadata: RunnerMetadata
     health: HealthState
     state: CloudRunnerState
 

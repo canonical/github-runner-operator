@@ -111,6 +111,7 @@ def test_cleanup_removes_offline_expected_runners(
             CloudRunnerInstance(
                 name=instance_id.name,
                 instance_id=instance_id,
+                metadata=RunnerMetadata(),
                 health=health,
                 state=cloud_state,
             ),

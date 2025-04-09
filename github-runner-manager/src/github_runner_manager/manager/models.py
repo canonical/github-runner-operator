@@ -4,7 +4,7 @@
 """Module containing the main classes for business logic."""
 
 import secrets
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 
 INSTANCE_SUFFIX_LENGTH = 12
 
@@ -170,5 +170,9 @@ class RunnerMetadata:
     url: str | None = None
 
     def as_dict(self) -> dict[str, str]:
-        """TODO."""
+        """TODO.
+
+        Returns:
+            TODO.
+        """
         return {k: v for k, v in asdict(self).items() if v is not None}

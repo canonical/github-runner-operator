@@ -216,9 +216,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
             except OpenstackHealthCheckError:
                 logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.instance_id.name)
                 healthy = None
+            metadata = RunnerMetadata(instance.metadata)
             runners.append(
                 CloudRunnerInstance(
                     name=instance.instance_id.name,
+                    metadata=metadata,
                     instance_id=instance.instance_id,
                     health=HealthState.from_value(healthy),
                     state=CloudRunnerState.from_openstack_server_status(instance.status),
