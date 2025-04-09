@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 
 Labels = set[str]
 
+# This control message is for testing. The reactive process will stop consuming messages
+# when the message is sent. This message does not come from the router.
 END_PROCESSING_PAYLOAD = "__END__"
 
 
