@@ -74,7 +74,7 @@ class OpenstackInstance:
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
-        self.metadata = RunnerMetadata(server.metadata) if server.metadata else RunnerMetadata()
+        self.metadata = RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata()
 
 
 P = ParamSpec("P")
