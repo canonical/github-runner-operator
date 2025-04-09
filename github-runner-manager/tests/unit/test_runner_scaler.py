@@ -119,7 +119,6 @@ def runner_manager_fixture(
 
     runner_manager = RunnerManager(
         manager_name="mock_runners",
-        # GitHubConfiguration(token="mock_token", path=github_path),
         platform_provider=mock_github,
         cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
