@@ -25,7 +25,7 @@ Container_Boundary(c1, "GitHub Runner Charm"){
 
 
 
-    Component(githubrunnermanager, "GitHubRunnerManager", "", "")
+    Component(githubrunnermanager, "GitHubRunnerPlatform", "", "")
     Component(cloudrunnermanager, "CloudRunnerManager", "", "")
 
     Component(openstackrunnermanager, "OpenstackRunnerManager", "", "")

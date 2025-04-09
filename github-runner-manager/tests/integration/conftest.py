@@ -19,7 +19,10 @@ def config_fixture() -> dict:
     return {
         "name": "app_name",
         "extra_labels": ["label1", "label2"],
-        "github_config": {"path": {"group": "group", "org": "canonical"}, "token": "githubtoken"},
+        "github_config": {
+            "path": {"group": "group", "org": "canonical"},
+            "token": "githubtoken",
+        },
         "non_reactive_configuration": {
             "combinations": [
                 {
