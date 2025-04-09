@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 
 Labels = set[str]
 
+END_PROCESSING_PAYLOAD = "__END__"
+
 
 class JobPickedUpStates(str, Enum):
     """The states of a job that indicate it has been picked up.
@@ -116,7 +118,6 @@ def consume(
             the message is requeued.
 
     Raises:
-        JobError: If the job details are invalid.
         QueueError: If an error when communicating with the queue occurs.
     """
     try:
@@ -125,38 +126,56 @@ def consume(
             closing(SimpleQueue(conn, queue_config.queue_name)) as simple_queue,
             signal_handler(signal.SIGTERM),
         ):
-            msg = simple_queue.get(block=True)
-            try:
-                job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
-            except ValidationError as exc:
-                logger.error("Found invalid job details, will reject the message.")
-                msg.reject(requeue=False)
-                raise JobError(f"Invalid job details: {msg.payload}") from exc
-            logger.info(
-                "Received job with labels %s and job_url %s",
-                job_details.labels,
-                job_details.url,
-            )
-            if not _validate_labels(labels=job_details.labels, supported_labels=supported_labels):
-                logger.error(
-                    "Found unsupported job labels in %s. "
-                    "Will not spawn a runner and reject the message.",
-                    job_details.labels,
-                )
-                # We currently do not expect this to happen, but we should handle it.
-                # We do not want to requeue the message as it will be rejected again.
-                # This may change in the future when messages for multiple
-                # flavours are sent to the same queue.
-                msg.reject(requeue=False)
-            else:
+            # Get messages until we can spawn a runner.
+            while True:
+                msg = simple_queue.get(block=True)
+                # Payload to stop the processing
+                if msg.payload == END_PROCESSING_PAYLOAD:
+                    msg.ack()
+                    break
+                job_details = _parse_job_details(msg)
+                if not _validate_labels(
+                    labels=job_details.labels, supported_labels=supported_labels
+                ):
+                    logger.error(
+                        "Found unsupported job labels in %s. "
+                        "Will not spawn a runner and reject the message.",
+                        job_details.labels,
+                    )
+                    # We currently do not expect this to happen, but we should handle it.
+                    # We do not want to requeue the message as it will be rejected again.
+                    # This may change in the future when messages for multiple
+                    # flavours are sent to the same queue.
+                    msg.reject(requeue=False)
+                    continue
+                if _check_job_been_picked_up(job_url=job_details.url, github_client=github_client):
+                    msg.ack()
+                    continue
                 _spawn_runner(
                     runner_manager=runner_manager,
                     job_url=job_details.url,
                     msg=msg,
                     github_client=github_client,
                 )
+                break
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
+
+
+def _parse_job_details(msg: Message) -> JobDetails:
+    """TODO."""
+    try:
+        job_details = cast(JobDetails, JobDetails.parse_raw(msg.payload))
+    except ValidationError as exc:
+        logger.error("Found invalid job details, will reject the message.")
+        msg.reject(requeue=False)
+        raise JobError(f"Invalid job details: {msg.payload}") from exc
+    logger.info(
+        "Received job with labels %s and job_url %s",
+        job_details.labels,
+        job_details.url,
+    )
+    return job_details
 
 
 def _validate_labels(labels: Labels, supported_labels: Labels) -> bool:
@@ -189,9 +208,6 @@ def _spawn_runner(
         msg: The message to acknowledge or reject.
         github_client: The GitHub client to use to check the job status.
     """
-    if _check_job_been_picked_up(job_url=job_url, github_client=github_client):
-        msg.ack()
-        return
     instance_ids = runner_manager.create_runners(1, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner. Will reject the message.")
