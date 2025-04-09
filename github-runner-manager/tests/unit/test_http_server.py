@@ -37,7 +37,7 @@ def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
 def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
     mock = MagicMock(spec=RunnerScaler)
     monkeypatch.setattr(
-        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, y, z: mock
+        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, z: mock
     )
     return mock
 

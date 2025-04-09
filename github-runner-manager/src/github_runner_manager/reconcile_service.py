@@ -8,14 +8,11 @@ from threading import Lock
 from time import sleep
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
 logger = logging.getLogger(__name__)
 
 
-def start_reconcile_service(
-    _app_config: ApplicationConfiguration, _openstack_config: OpenStackConfiguration, lock: Lock
-) -> None:
+def start_reconcile_service(_: ApplicationConfiguration, lock: Lock) -> None:
     """Start the reconcile server.
 
     Args:

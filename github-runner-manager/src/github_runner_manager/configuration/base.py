@@ -10,6 +10,8 @@ from typing import Optional, TextIO
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
+
 from . import github
 
 logger = logging.getLogger(__name__)
@@ -43,6 +45,7 @@ class ApplicationConfiguration(BaseModel):
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
+        openstack_configuration: Configuration for authorization to a OpenStack host.
     """
 
     name: str
@@ -51,6 +54,7 @@ class ApplicationConfiguration(BaseModel):
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
+    openstack_configuration: OpenStackConfiguration
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":

@@ -181,23 +181,18 @@ def application_configuration_fixture() -> ApplicationConfiguration:
             ],
             flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
-    )
-
-
-@pytest.fixture(scope="function", name="openstack_configuration")
-def openstack_configuration_fixture() -> OpenStackConfiguration:
-    """Returns a fixture with a fully populated OpenStackConfiguration."""
-    return OpenStackConfiguration(
-        vm_prefix="unit_name",
-        network="network",
-        credentials=OpenStackCredentials(
-            auth_url="auth_url",
-            project_name="project_name",
-            username="username",
-            password="password",
-            user_domain_name="user_domain_name",
-            project_domain_name="project_domain_name",
-            region_name="region",
+        openstack_configuration=OpenStackConfiguration(
+            vm_prefix="unit_name",
+            network="network",
+            credentials=OpenStackCredentials(
+                auth_url="auth_url",
+                project_name="project_name",
+                username="username",
+                password="password",
+                user_domain_name="user_domain_name",
+                project_domain_name="project_domain_name",
+                region_name="region",
+            ),
         ),
     )
 
@@ -265,7 +260,6 @@ def assert_runner_info(
 def test_build_runner_scaler(
     monkeypatch: pytest.MonkeyPatch,
     application_configuration: ApplicationConfiguration,
-    openstack_configuration: OpenStackConfiguration,
     user_info: UserInfo,
 ):
     """
@@ -273,9 +267,7 @@ def test_build_runner_scaler(
     act: Call RunnerScaler.build
     assert: The RunnerScaler was created with the expected configuration.
     """
-    runner_scaler = RunnerScaler.build(
-        application_configuration, openstack_configuration, user_info
-    )
+    runner_scaler = RunnerScaler.build(application_configuration, user_info)
     assert runner_scaler
     # A few comprobations on key data
     # Pending to refactor, too invasive.

@@ -18,7 +18,6 @@ from github_runner_manager.configuration import ApplicationConfiguration, UserIn
 from github_runner_manager.errors import LockError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
-from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
 APP_CONFIG_NAME = "app_config"
 OPENSTACK_CONFIG_NAME = "openstack_config"
@@ -52,7 +51,6 @@ def flush_runner() -> tuple[str, int]:
         A empty response.
     """
     app_config = app.config[APP_CONFIG_NAME]
-    openstack_config = app.config[OPENSTACK_CONFIG_NAME]
 
     flush_busy_str = request.args.get("flush-busy")
     flush_busy = False
@@ -66,7 +64,7 @@ def flush_runner() -> tuple[str, int]:
     with lock:
         app.logger.info("Flushing runners...")
         user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
-        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, openstack_config, user)
+        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, user)
         app.logger.info("Flushing busy: %s", flush_busy)
         flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
         num_flushed = runner_scaler.flush(flush_mode)
@@ -105,7 +103,6 @@ class FlaskArgs:
 
 def start_http_server(
     app_config: ApplicationConfiguration,
-    openstack_config: OpenStackConfiguration,
     lock: Lock,
     flask_args: FlaskArgs,
 ) -> None:
@@ -113,7 +110,6 @@ def start_http_server(
 
     Args:
         app_config: The application configuration.
-        openstack_config: The openstack configuration.
         lock: The lock representing modification access to the managed set of runners.
         flask_args: The arguments for the flask HTTP server.
     """
@@ -121,7 +117,6 @@ def start_http_server(
     global _lock  # pylint: disable=global-statement
     _lock = lock
     app.config[APP_CONFIG_NAME] = app_config
-    app.config[OPENSTACK_CONFIG_NAME] = openstack_config
     app.run(
         host=flask_args.host,
         port=flask_args.port,

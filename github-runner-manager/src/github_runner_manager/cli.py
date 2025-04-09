@@ -13,7 +13,6 @@ import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
-from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -66,16 +65,11 @@ def main(
     lock = Lock()
     config_str = config_file.read()
     config = ApplicationConfiguration.from_yaml_file(StringIO(config_str))
-    openstack_config = OpenStackConfiguration.from_yaml_file(StringIO(config_str))
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(
-        target=partial(start_reconcile_service, config, openstack_config, lock)
-    )
-    thread_manager.add_thread(
-        target=partial(start_http_server, config, openstack_config, lock, http_server_args)
-    )
+    thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
+    thread_manager.add_thread(target=partial(start_http_server, config, lock, http_server_args))
     thread_manager.start()
 
     thread_manager.raise_on_error()

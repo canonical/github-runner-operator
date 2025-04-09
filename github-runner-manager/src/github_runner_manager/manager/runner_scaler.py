@@ -30,9 +30,6 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.openstack_cloud.configuration import (
-    OpenStackConfiguration,
-)
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
@@ -106,14 +103,12 @@ class RunnerScaler:
     def build(
         cls,
         application_configuration: ApplicationConfiguration,
-        openstack_configuration: OpenStackConfiguration,
         user: UserInfo,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
         Args:
             application_configuration: Main configuration for the application.
-            openstack_configuration: OpenStack configuration.
             user: The user to run reactive process.
 
         Returns:
@@ -130,13 +125,13 @@ class RunnerScaler:
                 image=combination.image.name,
                 # Pending to add support for more flavor label combinations
                 flavor=combination.flavor.name,
-                network=openstack_configuration.network,
+                network=application_configuration.openstack_configuration.network,
             )
             base_quantity = combination.base_virtual_machines
 
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
-            prefix=openstack_configuration.vm_prefix,
-            credentials=openstack_configuration.credentials,
+            prefix=application_configuration.openstack_configuration.vm_prefix,
+            credentials=application_configuration.openstack_configuration.credentials,
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
