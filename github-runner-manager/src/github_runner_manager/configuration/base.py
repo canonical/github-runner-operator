@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 
 # The github-runner-manager is being refactor from a library to an application.
 # Once the charm no longer rely on the github-runner-manager as a library this will be removed.
+# The github-runner-manager needs a input representing the user for process execution due to as a
+# library the user needs to be a hardcoded value. With the github-runner-manager as application,
+# user would be the current user running the application.
 @dataclass
 class UserInfo:
     """The user to run the reactive process.
