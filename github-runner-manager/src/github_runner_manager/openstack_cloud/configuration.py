@@ -23,19 +23,6 @@ class OpenStackConfiguration(BaseModel):
     network: str
     credentials: "OpenStackCredentials"
 
-    @staticmethod
-    def from_yaml_file(file: TextIO) -> "OpenStackConfiguration":
-        """Initialize configuration from a YAML formatted file.
-
-        Args:
-            file: The file object to parse the configuration from.
-
-        Returns:
-            The configuration.
-        """
-        config = yaml.safe_load(file)
-        return OpenStackConfiguration.validate(config)
-
 
 class OpenStackCredentials(BaseModel):
     """OpenStack credentials.
