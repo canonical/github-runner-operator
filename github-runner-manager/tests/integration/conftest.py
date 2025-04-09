@@ -61,33 +61,27 @@ def config_fixture() -> dict:
                 }
             ],
         },
-    }
-
-
-@pytest.fixture(name="openstack_config", scope="module")
-def openstack_config_fixture() -> dict:
-    return {
-        "vm_prefix": "test_unit",
-        "network": "test_network",
-        "credentials": {
-            "auth_url": "http://example.com/test",
-            "project_name": "test_project",
-            "username": "test_username",
-            "password": "test_password",
-            "user_domain_name": "test_user_domain_name",
-            "project_domain_name": "test_project_domain_name",
-            "region_name": "test_region",
-        },
+        "openstack_configuration": {
+            "vm_prefix": "test_unit",
+            "network": "test_network",
+            "credentials": {
+                "auth_url": "http://example.com/test",
+                "project_name": "test_project",
+                "username": "test_username",
+                "password": "test_password",
+                "user_domain_name": "test_user_domain_name",
+                "project_domain_name": "test_project_domain_name",
+                "region_name": "test_region",
+            },
+        }
     }
 
 
 @pytest.fixture(name="config_file", scope="module")
-def config_file_fixture(tmp_path_factory, config: dict, openstack_config) -> Path:
+def config_file_fixture(tmp_path_factory, config: dict) -> Path:
     config_file = tmp_path_factory.mktemp("config") / "config.yaml"
     with open(config_file, "w") as file:
-        app_yaml = yaml.safe_dump(config)
-        openstack_yaml = yaml.safe_dump(openstack_config)
-        file.write(app_yaml + openstack_yaml)
+        yaml.safe_dump(config, file)
     return config_file
 
 
