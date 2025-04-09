@@ -240,7 +240,7 @@ def _check_job_been_picked_up(job_url: HttpUrl, github_client: GithubClient) -> 
     job_id = job_url_path_parts[-1]
     owner = job_url_path_parts[2]
     repo = job_url_path_parts[3]
-    logging.debug(
+    logging.info(
         "Parsed job_id: %s, owner: %s, repo: %s from job_url path %s", job_id, owner, repo, path
     )
 
