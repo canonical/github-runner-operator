@@ -196,8 +196,10 @@ class OpenstackCloud:
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
+            # there is a race condition in here in the reactive case.
+            # When a key is created in the file system but the instance is
+            # not yet in openstack, the reconcile can remove that key.
             keypair = self._setup_keypair(conn, instance_id)
-
             try:
                 server = conn.create_server(
                     name=instance_id.name,
