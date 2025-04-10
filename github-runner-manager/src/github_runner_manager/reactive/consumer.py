@@ -7,7 +7,6 @@ import logging
 import signal
 import sys
 from contextlib import closing
-from enum import Enum
 from time import sleep
 from types import FrameType
 from typing import Generator, cast
@@ -17,26 +16,13 @@ from kombu.exceptions import KombuError
 from kombu.simple import SimpleQueue
 from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
-from github_runner_manager.configuration.github import GitHubRepo
-from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.runner_manager import RunnerManager
+from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.reactive.types_ import QueueConfig
 
 logger = logging.getLogger(__name__)
 
 Labels = set[str]
-
-
-class JobPickedUpStates(str, Enum):
-    """The states of a job that indicate it has been picked up.
-
-    Attributes:
-        COMPLETED: The job has completed.
-        IN_PROGRESS: The job is in progress.
-    """
-
-    COMPLETED = "completed"
-    IN_PROGRESS = "in_progress"
 
 
 class JobDetails(BaseModel):
@@ -100,7 +86,7 @@ def get_queue_size(queue_config: QueueConfig) -> int:
 def consume(
     queue_config: QueueConfig,
     runner_manager: RunnerManager,
-    github_client: GithubClient,
+    platform_provider: PlatformProvider,
     supported_labels: Labels,
 ) -> None:
     """Consume a job from the message queue.
@@ -111,7 +97,7 @@ def consume(
     Args:
         queue_config: The configuration for the message queue.
         runner_manager: The runner manager used to create the runner.
-        github_client: The GitHub client to use to check the job status.
+        platform_provider: Platform provider.
         supported_labels: The supported labels for the runner. If the job has unsupported labels,
             the message is requeued.
 
@@ -153,7 +139,7 @@ def consume(
                     runner_manager=runner_manager,
                     job_url=job_details.url,
                     msg=msg,
-                    github_client=github_client,
+                    platform_provider=platform_provider,
                 )
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
@@ -173,7 +159,10 @@ def _validate_labels(labels: Labels, supported_labels: Labels) -> bool:
 
 
 def _spawn_runner(
-    runner_manager: RunnerManager, job_url: HttpUrl, msg: Message, github_client: GithubClient
+    runner_manager: RunnerManager,
+    job_url: HttpUrl,
+    msg: Message,
+    platform_provider: PlatformProvider,
 ) -> None:
     """Spawn a runner.
 
@@ -187,9 +176,9 @@ def _spawn_runner(
         runner_manager: The runner manager to use.
         job_url: The URL of the job.
         msg: The message to acknowledge or reject.
-        github_client: The GitHub client to use to check the job status.
+        platform_provider: Platform provider.
     """
-    if _check_job_been_picked_up(job_url=job_url, github_client=github_client):
+    if platform_provider.check_job_been_picked_up(job_url=job_url):
         msg.ack()
         return
     instance_ids = runner_manager.create_runners(1, reactive=True)
@@ -198,41 +187,12 @@ def _spawn_runner(
         msg.reject(requeue=True)
         return
     for _ in range(10):
-        if _check_job_been_picked_up(job_url=job_url, github_client=github_client):
+        if platform_provider.check_job_been_picked_up(job_url=job_url):
             msg.ack()
             break
         sleep(30)
     else:
         msg.reject(requeue=True)
-
-
-def _check_job_been_picked_up(job_url: HttpUrl, github_client: GithubClient) -> bool:
-    """Check if the job has already been picked up.
-
-    Args:
-        job_url: The URL of the job.
-        github_client: The GitHub client to use to check the job status.
-
-    Returns:
-        True if the job has been picked up, False otherwise.
-    """
-    # job_url has the format:
-    # "https://api.github.com/repos/cbartz/gh-runner-test/actions/jobs/22428484402"
-    path = job_url.path
-    # we know that path is not empty as it is validated by the JobDetails model
-    job_url_path_parts = path.split("/")  # type: ignore
-    job_id = job_url_path_parts[-1]
-    owner = job_url_path_parts[2]
-    repo = job_url_path_parts[3]
-    logging.debug(
-        "Parsed job_id: %s, owner: %s, repo: %s from job_url path %s", job_id, owner, repo, path
-    )
-
-    # See response format:
-    # https://docs.github.com/en/rest/actions/workflow-jobs?apiVersion=2022-11-28#get-a-job-for-a-workflow-run
-
-    job_info = github_client.get_job_info(path=GitHubRepo(owner=owner, repo=repo), job_id=job_id)
-    return job_info.status in [*JobPickedUpStates]
 
 
 @contextlib.contextmanager

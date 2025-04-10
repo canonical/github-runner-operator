@@ -4,9 +4,6 @@
 """Module containing OpenStack Configuration."""
 
 
-from typing import TextIO
-
-import yaml
 from pydantic import BaseModel
 
 

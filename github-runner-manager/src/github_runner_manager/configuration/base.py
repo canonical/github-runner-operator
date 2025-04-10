@@ -10,9 +10,8 @@ from typing import Optional, TextIO
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
+from github_runner_manager.configuration import github
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
-
-from . import github
 
 logger = logging.getLogger(__name__)
 
