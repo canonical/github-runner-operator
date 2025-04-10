@@ -157,7 +157,7 @@ class InstanceID:
 
 @dataclass
 class RunnerMetadata:
-    """This class container information about the runner and the platform it runs in.
+    """This class contains information about the runner and the platform it runs in.
 
     The information in this class is needed to link cloud runners with their
     platform ones.
