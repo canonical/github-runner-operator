@@ -23,7 +23,7 @@ def setup_root_logging() -> None:
     # setup root logger to log in a file which will be picked up by grafana agent and sent to Loki
     logging.basicConfig(
         stream=sys.stdout,
-        level=logging.DEBUG,
+        level=logging.INFO,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
