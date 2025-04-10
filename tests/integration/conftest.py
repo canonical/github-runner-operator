@@ -343,7 +343,7 @@ async def openstack_model_proxy(
             "juju-http-proxy": openstack_http_proxy,
             "juju-https-proxy": openstack_https_proxy,
             "juju-no-proxy": openstack_no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
+            "logging-config": "<root>=INFO;unit=INFO",
         }
     )
 

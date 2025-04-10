@@ -16,6 +16,7 @@ from kombu.exceptions import KombuError
 from kombu.simple import SimpleQueue
 from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
+from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.reactive.types_ import QueueConfig
@@ -136,7 +137,10 @@ def consume(
                     # flavours are sent to the same queue.
                     msg.reject(requeue=False)
                     continue
-                if platform_provider.check_job_been_picked_up(job_url=job_details.url):
+                metadata = RunnerMetadata()
+                if platform_provider.check_job_been_picked_up(
+                    metadata=metadata, job_url=job_details.url
+                ):
                     msg.ack()
                     continue
                 _spawn_runner(
@@ -199,13 +203,14 @@ def _spawn_runner(
         msg: The message to acknowledge or reject.
         platform_provider: Platform provider.
     """
-    instance_ids = runner_manager.create_runners(1, reactive=True)
+    metadata = RunnerMetadata()
+    instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner. Will reject the message.")
         msg.reject(requeue=True)
         return
     for _ in range(10):
-        if platform_provider.check_job_been_picked_up(job_url=job_url):
+        if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             msg.ack()
             break
         sleep(30)

@@ -4,7 +4,7 @@
 """Module containing the main classes for business logic."""
 
 import secrets
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 INSTANCE_SUFFIX_LENGTH = 12
 
@@ -153,3 +153,26 @@ class InstanceID:
             String with the representation of the InstanceID.
         """
         return f"InstanceID({self.name!r})"
+
+
+@dataclass
+class RunnerMetadata:
+    """TODO.
+
+    Attributes:
+        platform_name: TODO
+        runner_id: TODO
+        url: TODO for runner?? for platform? what does this mean??
+    """
+
+    platform_name: str = "github"
+    runner_id: str | None = None
+    url: str | None = None
+
+    def as_dict(self) -> dict[str, str]:
+        """TODO.
+
+        Returns:
+            TODO.
+        """
+        return {k: v for k, v in asdict(self).items() if v is not None}
