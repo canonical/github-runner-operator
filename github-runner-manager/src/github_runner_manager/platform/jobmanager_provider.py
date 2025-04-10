@@ -58,13 +58,13 @@ class JobManagerPlatform(PlatformProvider):
     def get_runner_token(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
-        """Get one time token for a runner.
+        """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
 
         Args:
             instance_id: Instance ID of the runner.
-            metadata: TODO.
+            metadata: Metadata for the runner.
             labels: Labels for the runner.
 
         Raises:
@@ -87,7 +87,8 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             job_url: The URL of the job.
-            metadata: TODO.
+            metadata: Metadata for the runner.
+
 
         Raises:
             NotImplementedError: Work in progress.
@@ -100,7 +101,7 @@ class JobManagerPlatform(PlatformProvider):
         """Get the Job info from the provider.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata for the runner.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

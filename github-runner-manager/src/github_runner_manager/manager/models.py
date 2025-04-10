@@ -157,12 +157,15 @@ class InstanceID:
 
 @dataclass
 class RunnerMetadata:
-    """TODO.
+    """This class container information about the runner and the platform it runs in.
+
+    The information in this class is needed to link cloud runners with their
+    platform ones.
 
     Attributes:
-        platform_name: TODO
-        runner_id: TODO
-        url: TODO for runner?? for platform? what does this mean??
+        platform_name: Platform name where the runner resides (github, jobmanager...)
+        runner_id: Id of the runner in the platform
+        url: URL for the runner.
     """
 
     platform_name: str = "github"
@@ -170,9 +173,9 @@ class RunnerMetadata:
     url: str | None = None
 
     def as_dict(self) -> dict[str, str]:
-        """TODO.
+        """Return the metadata as a dict.
 
         Returns:
-            TODO.
+            metadata as a dict.
         """
         return {k: v for k, v in asdict(self).items() if v is not None}

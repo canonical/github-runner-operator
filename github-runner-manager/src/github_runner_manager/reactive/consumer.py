@@ -137,6 +137,7 @@ def consume(
                     # flavours are sent to the same queue.
                     msg.reject(requeue=False)
                     continue
+                # Defaults as github, needed to select the platform provider.
                 metadata = RunnerMetadata()
                 if platform_provider.check_job_been_picked_up(
                     metadata=metadata, job_url=job_details.url

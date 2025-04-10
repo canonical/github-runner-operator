@@ -100,7 +100,7 @@ def test_create_runner_with_aproxy(
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
 
-    runner_manager.create_runner(metadata, instance_id, registration_jittoken)
+    runner_manager.create_runner(instance_id, metadata, registration_jittoken)
     openstack_cloud.launch_instance.assert_called_once()
     assert (
         "snap set aproxy proxy=proxy.example.com:3128"
@@ -131,7 +131,7 @@ def test_create_runner_without_aproxy(
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
 
-    runner_manager.create_runner(metadata, instance_id, registration_jittoken)
+    runner_manager.create_runner(instance_id, metadata, registration_jittoken)
     openstack_cloud.launch_instance.assert_called_once()
     assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 

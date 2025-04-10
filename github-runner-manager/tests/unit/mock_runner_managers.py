@@ -225,7 +225,7 @@ class MockRunner:
     Attributes:
         name: The name of the runner.
         instance_id: The instance id of the runner.
-        metadata: TODO.
+        metadata: Metadata of the server.
         cloud_state: The cloud state of the runner.
         github_state: The github state of the runner.
         health: The health state of the runner.
@@ -309,13 +309,13 @@ class MockCloudRunnerManager(CloudRunnerManager):
         return self.prefix
 
     def create_runner(
-        self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
+        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
     ) -> None:
         """Create a self-hosted runner.
 
         Args:
-            metadata: TODO.
             instance_id: Instance ID for the runner to create.
+            metadata: Metadata for the runner.
             runner_token: The runner token.
         """
         name = f"{self.name_prefix}-{instance_id}"
@@ -425,7 +425,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         """Get the registration JIT token for registering runners on GitHub.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata of the server.
             instance_id: Instance ID of the runner.
             labels: Labels for the runner.
 
@@ -491,8 +491,8 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         """Check if the job has already been picked up.
 
         Args:
+            metadata: Metadata of the instance.
             job_url: The URL of the job.
-            metadata: TODO.
 
         Raises:
             NotImplementedError: Work in progress.
@@ -505,7 +505,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         """Get the Job info from the provider.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata of the runner.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

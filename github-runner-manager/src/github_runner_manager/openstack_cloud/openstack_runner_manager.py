@@ -158,13 +158,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return self._config.prefix
 
     def create_runner(
-        self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
+        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            metadata: TODO.
             instance_id: Instance ID for the runner to create.
+            metadata: Metadata for the runner.
             runner_token: The token for the runner.
 
         Raises:
@@ -230,7 +230,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
     def _build_cloud_runner_instance(
         self, instance: OpenstackInstance, healthy: bool | None = None
     ) -> CloudRunnerInstance:
-        """TODO."""
+        """Build a new cloud runner instance from an openstack instance."""
         metadata = instance.metadata
         return CloudRunnerInstance(
             name=instance.instance_id.name,

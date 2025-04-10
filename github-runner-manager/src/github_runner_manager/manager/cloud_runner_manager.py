@@ -136,7 +136,7 @@ class CloudRunnerInstance:
     Attributes:
         name: Name of the instance hosting the runner.
         instance_id: ID of the instance.
-        metadata: TODO.
+        metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
     """
@@ -208,21 +208,21 @@ class RunnerMetrics(BaseModel):
     """Metrics for a runner.
 
     Attributes:
+        instance_id: The name of the runner.
+        metadata: Runner metadata.
         installation_start_timestamp: The UNIX time stamp of the time at which the runner
             installation started.
         installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
-        instance_id: The name of the runner.
-        metadata: TODO.
     """
 
+    instance_id: InstanceID
+    metadata: RunnerMetadata
     installation_start_timestamp: NonNegativeFloat | None
     installed_timestamp: NonNegativeFloat
     pre_job: PreJobMetrics | None
     post_job: PostJobMetrics | None
-    instance_id: InstanceID
-    metadata: RunnerMetadata
 
 
 class CloudRunnerManager(abc.ABC):
@@ -239,13 +239,13 @@ class CloudRunnerManager(abc.ABC):
 
     @abc.abstractmethod
     def create_runner(
-        self, metadata: RunnerMetadata, instance_id: InstanceID, runner_token: str
+        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            metadata: TODO.
             instance_id: Instance ID for the runner.
+            metadata: Runner Metadata.
             runner_token: The one time token the runner.
         """
 

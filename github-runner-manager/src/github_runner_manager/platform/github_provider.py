@@ -98,7 +98,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         This token is used for registering self-hosted runners.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
             labels: Labels for the runner.
 
@@ -121,7 +121,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """Check if the job has already been picked up.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata for the runner.
             job_url: The URL of the job.
 
         Returns:
@@ -157,7 +157,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """Get the Job info from the provider.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata of the runner.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

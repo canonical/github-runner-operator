@@ -50,13 +50,13 @@ class PlatformProvider(abc.ABC):
     def get_runner_token(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
-        """Get one time token for a runner.
+        """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
 
         Args:
+            metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
-            metadata: TODO.
             labels: Labels for the runner.
         """
 
@@ -72,7 +72,7 @@ class PlatformProvider(abc.ABC):
         """Check if the job has already been picked up.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata for the runner.
             job_url: The URL of the job.
         """
 
@@ -83,7 +83,7 @@ class PlatformProvider(abc.ABC):
         """Get the Job info from the provider.
 
         Args:
-            metadata: TODO.
+            metadata: metadata. Always needed at least for the platform selection.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.

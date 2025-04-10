@@ -27,7 +27,7 @@ def job(
         platform_provider: The platform provider.
         pre_job_metrics: The pre-job metrics.
         runner: The runner instance id.
-        metadata: TODO.
+        metadata: Metadata for the runner.
 
     Raises:
         GithubMetricsError: If the job for given workflow run is not found.

@@ -132,7 +132,8 @@ class RunnerManager:
             RunnerManager._CreateRunnerArgs(
                 cloud_runner_manager=self._cloud,
                 platform_provider=self._platform,
-                # Be careful as the metadata may be manipulated when creating the runner
+                # The metadata may be manipulated when creating the runner, as the platform may
+                # assign for example the id of the runner if it was not provided.
                 metadata=copy.copy(metadata),
                 labels=labels,
                 reactive=reactive,
@@ -437,7 +438,7 @@ class RunnerManager:
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
             platform_provider: To manage self-hosted runner on the Platform side.
-            metadata: TODO.
+            metadata: Metadata for the runner to create.
             labels: List of labels to add to the runners.
             reactive: If the runner is reactive.
         """
@@ -465,7 +466,7 @@ class RunnerManager:
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
         runner_token, github_runner = args.platform_provider.get_runner_token(
-            metadata=args.metadata, instance_id=instance_id, labels=args.labels
+            instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
         # Update the runner id if necessary
@@ -474,12 +475,13 @@ class RunnerManager:
 
         try:
             args.cloud_runner_manager.create_runner(
-                metadata=args.metadata, instance_id=instance_id, runner_token=runner_token
+                instance_id=instance_id, metadata=args.metadata, runner_token=runner_token
             )
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or
             # because it is being created.
+            logger.warning("Deleting runner %s from platform", instance_id)
             args.platform_provider.delete_runners([github_runner])
             raise
         return instance_id

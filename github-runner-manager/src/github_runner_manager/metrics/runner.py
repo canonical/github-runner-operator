@@ -164,7 +164,7 @@ class PulledMetrics:
         """.
 
         Args:
-           instance: TODO
+           instance: Cloud runner instance.
            installation_start: Creation time of the runner.
 
         Returns:

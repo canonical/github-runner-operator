@@ -48,7 +48,7 @@ class OpenstackInstance:
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
         status: Status of the server.
-        metadata: TODO
+        metadata: Medatada of the server.
     """
 
     addresses: list[str]
@@ -74,6 +74,7 @@ class OpenstackInstance:
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
+        # To be backwards compatible, we need a default RunnerMetadata.
         self.metadata = RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata()
 
 
@@ -189,7 +190,7 @@ class OpenstackCloud:
         """Create an OpenStack instance.
 
         Args:
-            metadata: TODO.
+            metadata: Metadata for the runner.
             instance_id: The instance ID to form the instance name.
             image: The image used to create the instance.
             flavor: The flavor used to create the instance.
