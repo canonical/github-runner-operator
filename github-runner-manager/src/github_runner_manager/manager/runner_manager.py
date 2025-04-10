@@ -53,6 +53,7 @@ class RunnerInstance:
     Attributes:
         name: Full name of the runner. Managed by the cloud runner manager.
         instance_id: ID of the runner. Managed by the runner manager.
+        metadata: Metadata for the runner.
         health: The health state of the runner.
         github_state: State on github.
         cloud_state: State on cloud.
@@ -60,6 +61,7 @@ class RunnerInstance:
 
     name: str
     instance_id: InstanceID
+    metadata: RunnerMetadata
     health: HealthState
     github_state: PlatformRunnerState | None
     cloud_state: CloudRunnerState
@@ -73,6 +75,7 @@ class RunnerInstance:
         """
         self.name = cloud_instance.name
         self.instance_id = cloud_instance.instance_id
+        self.metadata = cloud_instance.metadata
         self.health = cloud_instance.health
         self.github_state = (
             PlatformRunnerState.from_runner(github_info) if github_info is not None else None

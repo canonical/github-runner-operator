@@ -318,6 +318,7 @@ async def test_runner_normal_idle_lifecycle(
     runner = runner_list[0]
     assert runner.instance_id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert runner.metadata.platform_name == "github"
     # Update on GitHub-side can take a bit of time.
     await wait_for(
         lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
