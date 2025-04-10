@@ -137,6 +137,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             credentials=self._credentials,
             prefix=self.name_prefix,
             system_user=constants.RUNNER_MANAGER_USER,
+            proxy_command=config.service_config.manager_proxy_command,
         )
         # Setting the env var to this process and any child process spawned.
         proxies = config.service_config.proxy_config
@@ -401,16 +402,22 @@ class OpenStackRunnerManager(CloudRunnerManager):
         )
 
         service_config = self._config.service_config
+        runner_http_proxy = (
+            service_config.runner_proxy_config.proxy_address
+            if service_config.runner_proxy_config
+            else None
+        )
+        ssh_debug_info = (
+            secrets.choice(service_config.ssh_debug_connections)
+            if service_config.ssh_debug_connections
+            else None
+        )
         env_contents = jinja.get_template("env.j2").render(
             pre_job_script=str(PRE_JOB_SCRIPT),
             dockerhub_mirror=service_config.dockerhub_mirror or "",
-            ssh_debug_info=(
-                secrets.choice(service_config.ssh_debug_connections)
-                if service_config.ssh_debug_connections
-                else None
-            ),
+            ssh_debug_info=ssh_debug_info,
+            tmate_server_proxy=runner_http_proxy,
         )
-
         pre_job_contents_dict = {
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
@@ -429,9 +436,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         aproxy_address = (
-            service_config.proxy_config.aproxy_address
-            if service_config.proxy_config is not None
-            else None
+            service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
             jittoken=registration_jittoken,
@@ -440,6 +445,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
             aproxy_address=aproxy_address,
             dockerhub_mirror=service_config.dockerhub_mirror,
+            ssh_debug_info=ssh_debug_info,
+            runner_proxy_config=service_config.runner_proxy_config,
         )
 
     def _get_repo_policy_compliance_client(self) -> RepoPolicyComplianceClient | None:
@@ -554,7 +561,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         # starts up much faster.
         if RUNNER_STARTUP_PROCESS not in result.stdout:
             logger.warning("Runner startup process not found on %s", instance.instance_id)
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_sid}")
+            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
         logger.info("Runner startup process found to be healthy on %s", instance.instance_id)
 
     @retry(tries=5, delay=60, local_logger=logger)

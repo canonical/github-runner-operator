@@ -43,6 +43,7 @@ FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
 MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME = "max-total-virtual-machines"
+MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME = "manager-ssh-proxy-command"
 OPENSTACK_CLOUDS_YAML_CONFIG_NAME = "openstack-clouds-yaml"
 OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
@@ -51,11 +52,13 @@ RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
 # bandit thinks this is a hardcoded password
 REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
 REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
+RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
+USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 
 # Integration names
@@ -289,6 +292,8 @@ class CharmConfig(BaseModel):
         reconcile_interval: Time between each reconciliation of runners in minutes.
         repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
+        manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
+        use_aproxy: Whether to use aproxy in the runner.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -298,6 +303,8 @@ class CharmConfig(BaseModel):
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str
+    manager_proxy_command: str | None
+    use_aproxy: bool
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -434,6 +441,11 @@ class CharmConfig(BaseModel):
                 )
             repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
 
+        manager_proxy_command = (
+            cast(str, charm.config.get(MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME, "")) or None
+        )
+        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
@@ -443,6 +455,8 @@ class CharmConfig(BaseModel):
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
             token=github_config.token,
+            manager_proxy_command=manager_proxy_command,
+            use_aproxy=use_aproxy,
         )
 
 
@@ -565,16 +579,12 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+def _build_proxy_config_from_charm() -> "ProxyConfig":
     """Initialize the proxy config from charm.
-
-    Args:
-        charm: The charm instance.
 
     Returns:
         Current proxy config of the charm.
     """
-    use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
     http_proxy = get_env_var("JUJU_CHARM_HTTP_PROXY") or None
     https_proxy = get_env_var("JUJU_CHARM_HTTPS_PROXY") or None
     no_proxy = get_env_var("JUJU_CHARM_NO_PROXY") or None
@@ -587,8 +597,17 @@ def _build_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
         http=http_proxy,
         https=https_proxy,
         no_proxy=no_proxy,
-        use_aproxy=use_aproxy,
     )
+
+
+def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
+    """Initialize the proxy configuration for the runner."""
+    runner_http_proxy = cast(str, charm.config.get(RUNNER_HTTP_PROXY_CONFIG_NAME, "")) or None
+    if runner_http_proxy:
+        return ProxyConfig(
+            http=runner_http_proxy,
+        )
+    return _build_proxy_config_from_charm()
 
 
 class UnsupportedArchitectureError(Exception):
@@ -651,6 +670,9 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
                 "%s relation data for %s not yet ready.", DEBUG_SSH_INTEGRATION_NAME, unit.name
             )
             continue
+        use_runner_http_proxy = cast(
+            bool, charm.config.get(USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME, False)
+        )
         ssh_debug_connections.append(
             # pydantic allows string to be passed as IPvAnyAddress and as int,
             # mypy complains about it
@@ -659,6 +681,7 @@ def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugCon
                 port=port,  # type: ignore
                 rsa_fingerprint=rsa_fingerprint,
                 ed25519_fingerprint=ed25519_fingerprint,
+                use_runner_http_proxy=use_runner_http_proxy,
             )
         )
     return ssh_debug_connections
@@ -718,6 +741,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
+        runner_proxy_config: Proxy-related configuration for the runner.
         reactive_config: The charm configuration related to reactive spawning mode.
         runner_config: The charm configuration related to runner VM configuration.
         ssh_debug_connections: SSH debug connections configuration information.
@@ -726,6 +750,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
+    runner_proxy_config: ProxyConfig
     charm_config: CharmConfig
     runner_config: OpenstackRunnerConfig
     reactive_config: ReactiveConfig | None
@@ -741,6 +766,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         state_dict = dataclasses.asdict(state)
         # Convert pydantic object to python object serializable by json module.
         state_dict["proxy_config"] = json.loads(state_dict["proxy_config"].json())
+        state_dict["runner_proxy_config"] = json.loads(state_dict["runner_proxy_config"].json())
         state_dict["charm_config"] = json.loads(state_dict["charm_config"].json())
         if state.reactive_config:
             state_dict["reactive_config"] = json.loads(state_dict["reactive_config"].json())
@@ -795,15 +821,21 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             Current state of the charm.
         """
         try:
-            proxy_config = _build_proxy_config_from_charm(charm)
-        except ValueError as exc:
-            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
-
-        try:
             charm_config = CharmConfig.from_charm(charm)
         except ValueError as exc:
             logger.error("Invalid charm config: %s", exc)
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
+
+        try:
+            proxy_config = _build_proxy_config_from_charm()
+            runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
+            if charm_config.use_aproxy and not runner_proxy_config.proxy_address:
+                raise CharmConfigInvalidError(
+                    "Invalid proxy configuration: aproxy requires a runner proxy to be set"
+                )
+
+        except ValueError as exc:
+            raise CharmConfigInvalidError(f"Invalid proxy configuration: {str(exc)}") from exc
 
         try:
             runner_config = OpenstackRunnerConfig.from_charm(charm)
@@ -834,6 +866,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
+            runner_proxy_config=runner_proxy_config,
             charm_config=charm_config,
             runner_config=runner_config,
             reactive_config=reactive_config,

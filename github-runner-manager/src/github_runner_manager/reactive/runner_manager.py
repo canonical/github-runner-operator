@@ -5,12 +5,12 @@
 import logging
 from dataclasses import dataclass
 
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
     RunnerManager,
 )
+from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive import process_manager
 from github_runner_manager.reactive.consumer import get_queue_size
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -93,7 +93,7 @@ def reconcile(
     # Only count runners which are online on GitHub to prevent machines to be just in
     # construction to be counted and then killed immediately by the process manager.
     runners = runner_manager.get_runners(
-        github_states=[GitHubRunnerState.IDLE, GitHubRunnerState.BUSY]
+        github_states=[PlatformRunnerState.IDLE, PlatformRunnerState.BUSY]
     )
     runner_diff = expected_quantity - len(runners)
 
