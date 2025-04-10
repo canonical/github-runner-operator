@@ -1,0 +1,113 @@
+18:24:38 INFO Adding model github-pr-ff70a-lxd:test-charm-metrics-failure-xv3x on cloud localhost
+18:24:38 WARNING unexpected facade SSHServer received from the controller
+18:24:39 INFO GitHub token rate limit: Rate(reset=2025-04-10 18:52:40+00:00, remaining=4906, limit=5000)
+18:24:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:55 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [allocating] waiting: waiting for machine
+18:25:25 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [allocating] waiting: waiting for machine
+18:25:55 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [allocating] waiting: waiting for machine
+18:26:25 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [executing] maintenance: Setting up Builder.
+18:26:56 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [executing] maintenance: Setting up Builder.
+18:27:26 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [executing] maintenance: Setting up Builder.
+18:27:56 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [executing] maintenance: Setting up Builder.
+18:28:26 INFO Waiting for model:
+  github-runner-image-builder-uvp3tk26/0 [executing] maintenance: Setting up Builder.
+18:29:12 INFO Deploying local:jammy/github-runner-0
+18:29:12 INFO Waiting for model:
+  test-uvp3tk26/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uvp3tk26/0 [idle] blocked: image integration required.
+18:29:42 INFO Waiting for model:
+  test-uvp3tk26/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uvp3tk26/0 [idle] blocked: image integration required.
+18:30:13 INFO Waiting for model:
+  test-uvp3tk26/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-uvp3tk26/0 [idle] blocked: image integration required.
+18:30:43 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:31:13 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:31:44 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:32:14 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:32:44 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:33:14 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:33:45 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:34:15 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:34:45 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:35:16 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:35:46 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:36:16 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:36:46 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:37:17 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:37:47 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:38:17 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:38:47 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:39:17 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uvp3tk26/0 [executing] active: Building image.
+18:39:47 INFO Waiting for model:
+  test-uvp3tk26/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-uvp3tk26/0 [idle] active: 
+18:40:17 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] active: 
+18:40:44 INFO Waiting for model:
+  test-uvp3tk26/0 [executing] maintenance: Reconciling runners
+18:41:14 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] active:
+18:45:10 INFO Waiting for model:
+  test-uvp3tk26/0 [executing] active: 
+18:45:40 INFO Waiting for model:
+  test-uvp3tk26/0 [idle] active: 
+18:45:47 INFO [TEST SETUP] Exposing port 8080 on test-uvp3tk26-0-n-2057a6e5d834
+18:45:47 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:da:10:f1'}]])
+18:45:51 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-uvp3tk26-0-n-2057a6e5d834
+18:45:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:da:10:f1'}]])
+18:45:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uvp3tk26-0-n-2057a6e5d834.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.141 nc -z localhost 8080'
+18:45:53 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-uvp3tk26-0-n-2057a6e5d834
+18:45:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.141', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:da:10:f1'}]])
+18:45:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uvp3tk26-0-n-2057a6e5d834.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.141 curl http://localhost:8080'
+18:45:58 INFO Wait for condition not met, sleeping 10
+18:46:39 INFO Waiting for model:
+  test-uvp3tk26/0 [executing] maintenance: Reconciling runners
+18:47:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744310664.0, "event": "runner_installed", "flavor": "test-uvp3tk26", "duration": 98.0}
+{"timestamp": 1744310762.0, "event": "runner_start", "flavor": "test-uvp3tk26", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 98.0, "queue_duration": 1.0}
+{"timestamp": 1744310762.0, "event": "runner_stop", "flavor": "test-uvp3tk26", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1744310798.473813, "event": "reconciliation", "flavor": "test-uvp3tk26", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.29352641105652}
+{"timestamp": 1744310813.2268105, "event": "reconciliation", "flavor": "test-uvp3tk26", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.665996313095093}
