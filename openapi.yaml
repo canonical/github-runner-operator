@@ -1,0 +1,289 @@
+openapi: 3.0.3
+info:
+  title: Job Manager API
+  description: API for managing jobs and builders within the Job Manager system.
+  version: 1.0.0
+servers:
+  - url: http://job-manager.internal
+paths:
+  /v1/jobs:
+    post:
+      summary: Create a new job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                repository_url:
+                  type: string
+                repository_ref:
+                  type: string
+                architecture:
+                  type: string
+                vm_dependecies:
+                  type: object
+                  nullable: true
+                commands:
+                  type: array
+                  items:
+                    type: string
+                secrets:
+                  type: object
+                  nullable: true
+                environment:
+                  type: object
+                  nullable: true
+                artifacts_dir:
+                  type: string
+                topology:
+                  type: string
+                  nullable: true
+                vm_size:
+                  type: string
+                  nullable: true
+      responses:
+        '201':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status_url:
+                    type: string
+                    example: "http://job-manager.internal/v1/jobs/123"
+                  maintenance:
+                    type: object
+                    properties:
+                      kind:
+                        type: string
+                      message:
+                        type: string
+    get:
+      summary: Retrieve jobs
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: architecture
+          in: query
+          schema:
+            type: string
+        - name: base_series
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+  /v1/jobs/{job_id}:
+    get:
+      summary: Retrieve job details
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Job details returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+    put:
+      summary: Modify a job
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [cancelled, pending]
+      responses:
+        '200':
+          description: Job modified successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  /v1/jobs/{job_id}/health:
+    put:
+      summary: Send builder health checks
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                cpu_usage:
+                  type: string
+                ram_usage:
+                  type: string
+                disk_usage:
+                  type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: Health check received
+    get:
+      summary: Retrieve builder status
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Builder status returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  label:
+                    type: string
+                  cpu_usage:
+                    type: string
+                  ram_usage:
+                    type: string
+                  disk_usage:
+                    type: string
+                  status:
+                    type: string
+                  job:
+                    $ref: '#/components/schemas/Job'
+  /v1/jobs/{job_id}/token:
+    post:
+      summary: Generate a JWT token
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                public_key:
+                  type: string
+                private_key:
+                  type: string
+                job_id:
+                  type: integer
+      responses:
+        '200':
+          description: Token generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    $ref: '#/components/schemas/Token/properties/token_value'
+components:
+  schemas:
+    Job:
+      type: object
+      properties:
+        job_id:
+          type: integer
+        requested_by:
+          type: string
+        repository_url:
+          type: string
+        repository_ref:
+          type: string
+        architecture:
+          type: string
+        base_series:
+          type: string
+        vm_dependencies:
+          type: object
+        commands:
+          type: array
+          items:
+            type: string
+        secrets:
+          type: object
+        environment:
+          type: object
+        artifacts_dir:
+          type: string
+        topology:
+          type: string
+        vm_ip:
+          type: string
+        vm_size:
+          type: string
+          enum: [S, M, L]
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED]
+        artifact_urls:
+          type: array
+          items:
+            type: string
+        log_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+    Token:
+      type: object
+      properties:
+        token_id:
+          type: integer
+        token_value:
+          type: string
+        job_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
