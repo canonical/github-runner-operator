@@ -32,6 +32,7 @@ from tests.integration.utils_reactive import (
 )
 
 logger = logging.getLogger(__name__)
+pytestmark = pytest.mark.openstack
 
 # TODO copy pasted from test_reactive and other places. Refactor in a common place
 # Very inefficient
@@ -123,7 +124,7 @@ async def test_jobmanager(
         url=job_url,
     )
 
-    with TestServer(monkeypatch, ("", 8000)) as httpd:
+    with PuppetServer(("", 8000)) as httpd:
         add_to_queue(
             json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
             mongodb_uri,
@@ -131,8 +132,10 @@ async def test_jobmanager(
         )
 
         returned_job = Job()
+
+        # first thing, the github-runner checks the job!
         httpd.handle_get_request(
-            f"/v1/jobs/{job_id}", json.dumps(returned_job.to_json()), timeout=5
+            f"/v1/jobs/{job_id}", json.dumps(returned_job.to_json()), timeout=50
         )
 
         # here the agent will v1/jobs/{job_id}/health
@@ -155,16 +158,14 @@ class TestHandler(http.server.BaseHTTPRequestHandler):
         self.send_error(404)
 
 
-class TestServer(socketserver.TCPServer):
+class PuppetServer(socketserver.TCPServer):
     """TODO."""  # noqa: DCO020, DCO060
 
     allow_reuse_address = True
 
-    def __init__(self, monkeypatch, server_address, bind_and_activate=True):
+    def __init__(self, server_address, bind_and_activate=True):
         """TODO."""  # noqa: DCO020, DCO060
-        # Using monkeypatch for now as it is easy
-        self.monkeypatch = monkeypatch
-        # So we do not want other server handler.
+        # So we do not mess with other server's handler.
         self.mock_handler = type("", (TestHandler,), {})
         super().__init__(server_address, self.mock_handler, bind_and_activate)
 
