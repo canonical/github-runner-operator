@@ -45,9 +45,9 @@ from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -119,7 +119,6 @@ def runner_manager_fixture(
 
     runner_manager = RunnerManager(
         manager_name="mock_runners",
-        # GitHubConfiguration(token="mock_token", path=github_path),
         platform_provider=mock_github,
         cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
