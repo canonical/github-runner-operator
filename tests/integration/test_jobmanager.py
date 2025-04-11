@@ -8,15 +8,13 @@ import json
 import logging
 import socket
 import socketserver
-from typing import AsyncIterator, Optional
+from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
 from github_runner_manager.reactive.consumer import JobDetails
 from jobmanager_client.models.job import Job
 from juju.application import Application
-from juju.model import Model
-from ops.model import ActiveStatus
 from pytest_operator.plugin import OpsTest
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME
@@ -33,37 +31,6 @@ from tests.integration.utils_reactive import (
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
-
-# TODO copy pasted from test_reactive and other places. Refactor in a common place
-# Very inefficient
-
-
-@pytest_asyncio.fixture(scope="module", name="app_for_jobmanager")
-async def app_for_jobmanager_fixture(
-    model: Model,
-    app_openstack_runner: Application,
-    mongodb: Application,
-    existing_app_suffix: Optional[str],
-    image_builder: Application,
-) -> Application:
-    """Application for testing reactive jobmanager."""
-    await image_builder.set_config(
-        {
-            "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"
-        }
-    )
-
-    logger.info("app_for_jobmanager fixture")
-    if not existing_app_suffix:
-        await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
-
-    await model.wait_for_idle(
-        apps=[app_openstack_runner.name, image_builder.name, mongodb.name],
-        status=ActiveStatus.name,
-    )
-    logger.info("app_for_jobmanager fixture ready")
-
-    return app_openstack_runner
 
 
 @pytest_asyncio.fixture(name="app")

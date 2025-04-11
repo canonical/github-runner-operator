@@ -348,20 +348,41 @@ async def openstack_model_proxy(
     )
 
 
+@pytest_asyncio.fixture(scope="module", name="image_builder_config")
+async def image_builder_config_fixture(
+    private_endpoint_config: PrivateEndpointConfigs | None,
+    flavor_name: str,
+    network_name: str,
+):
+    """The image builder application default for OpenStack runners."""
+    if not private_endpoint_config:
+        raise ValueError("Private endpoints are required for testing OpenStack runners.")
+    return {
+        "build-interval": "12",
+        "revision-history-limit": "2",
+        "openstack-auth-url": private_endpoint_config["auth_url"],
+        # Bandit thinks this is a hardcoded password
+        "openstack-password": private_endpoint_config["password"],  # nosec: B105
+        "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+        "openstack-project-name": private_endpoint_config["project_name"],
+        "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+        "openstack-user-name": private_endpoint_config["username"],
+        "build-flavor": flavor_name,
+        "build-network": network_name,
+        "architecture": "amd64",
+    }
+
+
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
     model: Model,
-    private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
-    flavor_name: str,
-    network_name: str,
+    image_builder_config: dict,
     openstack_model_proxy: None,
     openstack_connection,
 ):
     """The image builder application for OpenStack runners."""
-    if not private_endpoint_config:
-        raise ValueError("Private endpoints are required for testing OpenStack runners.")
     if not existing_app_suffix:
         application_name = image_builder_app_name
         app = await model.deploy(
@@ -369,20 +390,7 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             revision=68,
-            config={
-                "build-interval": "12",
-                "revision-history-limit": "2",
-                "openstack-auth-url": private_endpoint_config["auth_url"],
-                # Bandit thinks this is a hardcoded password
-                "openstack-password": private_endpoint_config["password"],  # nosec: B105
-                "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
-                "openstack-project-name": private_endpoint_config["project_name"],
-                "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
-                "openstack-user-name": private_endpoint_config["username"],
-                "build-flavor": flavor_name,
-                "build-network": network_name,
-                "architecture": "amd64",
-            },
+            config=image_builder_config,
         )
         await model.wait_for_idle(
             apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
@@ -414,7 +422,7 @@ async def app_openstack_runner_fixture(
     existing_app_suffix: Optional[str],
     image_builder: Application,
 ) -> AsyncIterator[Application]:
-    """Application launching VMs and no runners."""
+    """Application without image builder.."""
     if existing_app_suffix:
         application = model.applications[app_name]
     else:
@@ -441,21 +449,34 @@ async def app_openstack_runner_fixture(
             },
             wait_idle=False,
         )
-        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
-    await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=25 * 60
-    )
 
     return application
+
+
+@pytest_asyncio.fixture(scope="module", name="app_openstack_runner_builder")
+async def app_openstack_runner_builder_fixture(
+    model: Model,
+    app_openstack_runner: Application,
+    image_builder: Application,
+    existing_app_suffix: Optional[str],
+) -> AsyncIterator[Application]:
+    """Application launching VMs and no runners."""
+    if existing_app_suffix:
+        return app_openstack_runner
+    await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")
+    await model.wait_for_idle(
+        apps=[app_openstack_runner.name, image_builder.name], status=ACTIVE, timeout=25 * 60
+    )
+    return app_openstack_runner
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
 async def app_scheduled_events_fixture(
     model: Model,
-    app_openstack_runner,
+    app_openstack_runner_builder,
 ):
     """Application to check scheduled events."""
-    application = app_openstack_runner
+    application = app_openstack_runner_builder
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
@@ -466,10 +487,10 @@ async def app_scheduled_events_fixture(
 @pytest_asyncio.fixture(scope="module", name="app_no_wait_tmate")
 async def app_no_wait_tmate_fixture(
     model: Model,
-    app_openstack_runner,
+    app_openstack_runner_builder,
 ):
     """Application to check tmate ssh with openstack without waiting for active."""
-    application = app_openstack_runner
+    application = app_openstack_runner_builder
     await application.set_config(
         {"reconcile-interval": "60", BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}
     )
@@ -699,15 +720,49 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
 @pytest_asyncio.fixture(scope="module", name="app_for_reactive")
 async def app_for_reactive_fixture(
     model: Model,
-    app_openstack_runner: Application,
+    app_openstack_runner_builder: Application,
     mongodb: Application,
     existing_app_suffix: Optional[str],
 ) -> Application:
     """Application for testing reactive."""
     if not existing_app_suffix:
-        await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
+        await model.relate(
+            f"{app_openstack_runner_builder.name}:mongodb", f"{mongodb.name}:database"
+        )
 
-    await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
+    await model.wait_for_idle(
+        apps=[app_openstack_runner_builder.name, mongodb.name], status=ACTIVE
+    )
+
+    return app_openstack_runner_builder
+
+
+@pytest_asyncio.fixture(scope="module", name="app_for_jobmanager")
+async def app_for_jobmanager_fixture(
+    model: Model,
+    app_openstack_runner: Application,
+    image_builder: Application,
+    mongodb: Application,
+    existing_app_suffix: Optional[str],
+) -> Application:
+    """Application for testing reactive.
+
+    It will not work if app_openstack_runner_builder is also applied.
+    """
+    if not existing_app_suffix:
+        await image_builder.set_config(
+            {
+                "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"
+            }
+        )
+        await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")
+        await model.integrate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
+
+    await model.wait_for_idle(
+        apps=[app_openstack_runner.name, image_builder.name, mongodb.name],
+        status=ACTIVE,
+        timeout=25 * 60,
+    )
 
     return app_openstack_runner
 
@@ -715,7 +770,7 @@ async def app_for_reactive_fixture(
 @pytest_asyncio.fixture(scope="module", name="basic_app")
 async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
     """Setup the charm with the basic configuration."""
-    return request.getfixturevalue("app_openstack_runner")
+    return request.getfixturevalue("app_openstack_runner_builder")
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")
