@@ -5,13 +5,14 @@
 
 import logging
 from functools import partial
+from io import StringIO
 from threading import Lock
 from typing import TextIO
 
 import click
 
 from github_runner_manager.configuration import ApplicationConfiguration
-from github_runner_manager.http_server import start_http_server
+from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
 
@@ -44,12 +45,17 @@ logger = logging.getLogger(__name__)
     help="Debug mode for testing.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pragma: no cover
+def main(
+    config_file: TextIO,
+    host: str,
+    port: int,
+    debug: bool,
+) -> None:  # pragma: no cover
     """Start the reconcile service.
 
     Args:
         config_file: The configuration file.
-        host: The hostname to listen on for the HTTP server.
+        host: The hostname to listen on for the HTTP server
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
     """
@@ -57,11 +63,13 @@ def main(config_file: TextIO, host: str, port: int, debug: bool) -> None:  # pra
         logging.basicConfig(level=logging.DEBUG)
 
     lock = Lock()
-    config = ApplicationConfiguration.from_yaml_file(config_file)
+    config_str = config_file.read()
+    config = ApplicationConfiguration.from_yaml_file(StringIO(config_str))
+    http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
     thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
-    thread_manager.add_thread(target=partial(start_http_server, config, lock, host, port, debug))
+    thread_manager.add_thread(target=partial(start_http_server, config, lock, http_server_args))
     thread_manager.start()
 
     thread_manager.raise_on_error()
