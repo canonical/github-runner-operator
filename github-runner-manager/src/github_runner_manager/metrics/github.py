@@ -5,7 +5,7 @@
 import logging
 
 from github_runner_manager.errors import GithubMetricsError
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics.runner import PreJobMetrics
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.platform.platform_provider import JobNotFoundError, PlatformProvider
@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 def job(
-    platform_provider: PlatformProvider, pre_job_metrics: PreJobMetrics, runner: InstanceID
+    platform_provider: PlatformProvider,
+    pre_job_metrics: PreJobMetrics,
+    runner: InstanceID,
+    metadata: RunnerMetadata,
 ) -> GithubJobMetrics:
     """Calculate the job metrics for a runner.
 
@@ -24,6 +27,7 @@ def job(
         platform_provider: The platform provider.
         pre_job_metrics: The pre-job metrics.
         runner: The runner instance id.
+        metadata: Metadata for the runner.
 
     Raises:
         GithubMetricsError: If the job for given workflow run is not found.
@@ -33,6 +37,7 @@ def job(
     """
     try:
         job_info = platform_provider.get_job_info(
+            metadata=metadata,
             repository=pre_job_metrics.repository,
             workflow_run_id=pre_job_metrics.workflow_run_id,
             runner=runner,
