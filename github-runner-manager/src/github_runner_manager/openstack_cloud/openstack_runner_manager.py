@@ -15,8 +15,7 @@ import jinja2
 import paramiko
 from fabric import Connection as SSHConnection
 
-from github_runner_manager.configuration import SupportServiceConfig, UserInfo
-from github_runner_manager import constants
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.errors import (
     KeyfileError,
     MissingServerConfigError,

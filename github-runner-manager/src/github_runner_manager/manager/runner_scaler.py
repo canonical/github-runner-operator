@@ -30,9 +30,6 @@ from github_runner_manager.manager.runner_manager import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.openstack_cloud.configuration import (
-    OpenStackConfiguration,
-)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
