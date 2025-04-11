@@ -1,0 +1,53 @@
+18:36:46 INFO Adding model github-pr-5e3eb-lxd:test-debug-ssh-2rub on cloud localhost
+18:36:46 WARNING unexpected facade AgentLifeFlag received from the controller
+18:36:46 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:36:46 WARNING unexpected facade SecretsDrain received from the controller
+18:36:49 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:36:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1 (not enough units yet - 0/1)
+18:37:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [allocating] waiting: waiting for machine
+18:37:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:38:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:38:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:39:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:39:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:40:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:40:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:41:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:41:49 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:42:19 INFO Waiting for model:
+  github-runner-image-builder-je983tf1/0 [executing] maintenance: Setting up Builder.
+18:42:38 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-2rub  github-pr-5e3eb-lxd  localhost/localhost  3.1.10   unsupported  18:42:38Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-je983tf1           error       1  github-runner-image-builder  latest/edge   68  no       hook failed: "install"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-je983tf1/0*  error     idle   0        10.63.197.105          hook failed: "install"
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.63.197.105  juju-f79245-0  ubuntu@22.04      Running
+
+18:42:38 INFO Juju error logs:
+
+machine-0: 18:37:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:37:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:37:26 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-je983tf1-0: 18:37:26 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+18:42:39 INFO Forgetting model main...
