@@ -80,7 +80,6 @@ and labels with `small` to small.
 This means, depending on which labels your users are setting in the workflow file, a VM of a different runner application will be used to
 execute the job.
 
-
 Switch to the k8s model and deploy the webhook router charm:
 
 ```shell
