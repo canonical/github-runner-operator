@@ -752,7 +752,7 @@ async def app_for_jobmanager_fixture(
     if not existing_app_suffix:
         await image_builder.set_config(
             {
-                "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"
+                "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
             }
         )
         await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")

@@ -117,7 +117,7 @@ async def test_jobmanager(
     assert True
 
 
-class TestHandler(http.server.BaseHTTPRequestHandler):
+class PuppetHandler(http.server.BaseHTTPRequestHandler):
     """TODO."""
 
     def do_GET(self):  # noqa: N802
@@ -133,18 +133,20 @@ class PuppetServer(socketserver.TCPServer):
     def __init__(self, server_address, bind_and_activate=True):
         """TODO."""  # noqa: DCO020, DCO060
         # So we do not mess with other server's handler.
-        self.mock_handler = type("", (TestHandler,), {})
+        self.mock_handler = type("", (PuppetHandler,), {})
         super().__init__(server_address, self.mock_handler, bind_and_activate)
 
-    def handle_get_request(self, url, response, timeout=10):
+    def handle_get_request(self, path, response, timeout=10):
         """TODO."""  # noqa: DCO020, DCO060, DCO050
         self.timeout = timeout
         handler_executed = False
+        error = None
 
         def _handler(handler):
             """TODO."""
-            nonlocal handler_executed
-            # TODO FAIL IR URL IS WRONG!
+            nonlocal handler_executed, error, path
+            if path != handler.path:
+                error = f"Wrong path {handler.path}. Expected {path}"
             handler.send_response(200, "OK")
             handler.end_headers()
             handler.wfile.write(response.encode("utf-8"))
@@ -155,6 +157,8 @@ class PuppetServer(socketserver.TCPServer):
             setattr(self.mock_handler, "do_GET", _handler)
             self.handle_request()
             if not handler_executed:
-                raise AssertionError("GRR, not called.")
+                raise AssertionError("Request timeout.")
+            if error:
+                raise AssertionError(error)
         finally:
             setattr(self.mock_handler, "do_GET", oldval)
