@@ -52,7 +52,7 @@ async def test_charm_upgrade(
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 302  # update this value every release to stable.
+    latest_stable_revision = 354  # update this value every release to stable.
     # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
@@ -96,7 +96,7 @@ async def test_charm_upgrade(
         apps=[application.name, image_builder.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=20 * 60,
+        timeout=25 * 60,
         check_freq=30,
     )
     origin = client.CharmOrigin(

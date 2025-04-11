@@ -3,6 +3,7 @@
 
 """Module for managing the GitHub self-hosted runners hosted on cloud instances."""
 
+import copy
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
@@ -17,14 +18,11 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.github_provider import (
-    GitHubRunnerPlatform,
-)
 from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerState,
@@ -55,6 +53,7 @@ class RunnerInstance:
     Attributes:
         name: Full name of the runner. Managed by the cloud runner manager.
         instance_id: ID of the runner. Managed by the runner manager.
+        metadata: Metadata for the runner.
         health: The health state of the runner.
         github_state: State on github.
         cloud_state: State on cloud.
@@ -62,6 +61,7 @@ class RunnerInstance:
 
     name: str
     instance_id: InstanceID
+    metadata: RunnerMetadata
     health: HealthState
     github_state: PlatformRunnerState | None
     cloud_state: CloudRunnerState
@@ -75,6 +75,7 @@ class RunnerInstance:
         """
         self.name = cloud_instance.name
         self.instance_id = cloud_instance.instance_id
+        self.metadata = cloud_instance.metadata
         self.health = cloud_instance.health
         self.github_state = (
             PlatformRunnerState.from_runner(github_info) if github_info is not None else None
@@ -111,11 +112,14 @@ class RunnerManager:
         self._platform: PlatformProvider = platform_provider
         self._labels = labels
 
-    def create_runners(self, num: int, reactive: bool = False) -> tuple[InstanceID, ...]:
+    def create_runners(
+        self, num: int, metadata: RunnerMetadata, reactive: bool = False
+    ) -> tuple[InstanceID, ...]:
         """Create runners.
 
         Args:
             num: Number of runners to create.
+            metadata: Metadata information for the runner.
             reactive: If the runner is reactive.
 
         Returns:
@@ -128,7 +132,15 @@ class RunnerManager:
         # we have to add them manually.
         labels += constants.GITHUB_DEFAULT_LABELS
         create_runner_args = [
-            RunnerManager._CreateRunnerArgs(self._cloud, self._platform, labels, reactive)
+            RunnerManager._CreateRunnerArgs(
+                cloud_runner_manager=self._cloud,
+                platform_provider=self._platform,
+                # The metadata may be manipulated when creating the runner, as the platform may
+                # assign for example the id of the runner if it was not provided.
+                metadata=copy.copy(metadata),
+                labels=labels,
+                reactive=reactive,
+            )
             for _ in range(num)
         ]
         return RunnerManager._spawn_runners(create_runner_args)
@@ -396,6 +408,7 @@ class RunnerManager:
                     job_metrics = github_metrics.job(
                         platform_provider=self._platform,
                         pre_job_metrics=extracted_metrics.pre_job,
+                        metadata=extracted_metrics.metadata,
                         runner=extracted_metrics.instance_id,
                     )
                 except GithubMetricsError:
@@ -427,13 +440,15 @@ class RunnerManager:
 
         Attrs:
             cloud_runner_manager: For managing the cloud instance of the runner.
-            github_runner_manager: To manage self-hosted runner on the GitHub side.
+            platform_provider: To manage self-hosted runner on the Platform side.
+            metadata: Metadata for the runner to create.
             labels: List of labels to add to the runners.
             reactive: If the runner is reactive.
         """
 
         cloud_runner_manager: CloudRunnerManager
-        github_runner_manager: GitHubRunnerPlatform
+        platform_provider: PlatformProvider
+        metadata: RunnerMetadata
         labels: list[str]
         reactive: bool
 
@@ -453,17 +468,23 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        registration_jittoken, github_runner = args.github_runner_manager.get_runner_token(
-            instance_id, args.labels
+        runner_token, github_runner = args.platform_provider.get_runner_token(
+            instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
+
+        # Update the runner id if necessary
+        if not args.metadata.runner_id:
+            args.metadata.runner_id = str(github_runner.id)
+
         try:
             args.cloud_runner_manager.create_runner(
-                instance_id=instance_id, registration_jittoken=registration_jittoken
+                instance_id=instance_id, metadata=args.metadata, runner_token=runner_token
             )
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or
             # because it is being created.
-            args.github_runner_manager.delete_runners([github_runner])
+            logger.warning("Deleting runner %s from platform", instance_id)
+            args.platform_provider.delete_runners([github_runner])
             raise
         return instance_id
