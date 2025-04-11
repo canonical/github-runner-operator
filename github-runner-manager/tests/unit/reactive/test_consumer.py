@@ -5,13 +5,14 @@ import secrets
 from contextlib import closing
 from datetime import datetime, timezone
 from random import randint
-from unittest.mock import MagicMock
+from unittest.mock import ANY, MagicMock
 
 import pytest
 from kombu import Connection, Message
 from kombu.exceptions import KombuError
 from pydantic import HttpUrl
 
+from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.reactive import consumer
@@ -71,7 +72,7 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
         supported_labels=supported_labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 
@@ -102,7 +103,7 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
 
     job_picked_up_for_queued_iter = iter([False, True])
 
-    def _check_job_been_picked_up(job_url: HttpUrl):
+    def _check_job_been_picked_up(metadata: RunnerMetadata, job_url: HttpUrl):
         """Check if a job has been picked up."""
         # For the in progress job, return in progress
         if job_url == FAKE_JOB_URL:
@@ -119,7 +120,7 @@ def test_consume_after_in_progress(queue_config: QueueConfig):
         supported_labels=labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 

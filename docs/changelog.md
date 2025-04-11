@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-04-09
+
+- Remove update-dependencies action. This actions is not needed for external cloud providers.
+
 ### 2025-03-27
 
 - Add proxy configuration options for charm to facilitate its use in corporate environments.

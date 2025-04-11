@@ -27,12 +27,16 @@ from github_runner_manager.manager.runner_manager import (
     IssuedMetricEventsStats,
     RunnerInstance,
     RunnerManager,
+    RunnerMetadata,
 )
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+)
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.platform_provider import PlatformRunnerState
@@ -336,7 +340,7 @@ class RunnerScaler:
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
             try:
-                self._manager.create_runners(runner_diff)
+                self._manager.create_runners(num=runner_diff, metadata=RunnerMetadata())
             except MissingServerConfigError:
                 logging.exception(
                     "Unable to spawn runner due to missing server configuration, "
