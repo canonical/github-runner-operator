@@ -5,6 +5,7 @@
 import functools
 import logging
 import shutil
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime
@@ -37,6 +38,7 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
 
+_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
 
 @dataclass
 class OpenstackInstance:
@@ -402,6 +404,7 @@ class OpenstackCloud:
                 path.is_file()
                 and InstanceID.name_has_prefix(self.prefix, path.name)
                 and path.name.endswith(".key")
+                and path.stat().st_mtime < time.time() -  _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
             ):
                 total += 1
                 if path in exclude_filename:
