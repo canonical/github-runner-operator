@@ -172,7 +172,7 @@ async def openstack_runner_manager_fixture(
         server_config=server_config,
         service_config=service_config,
     )
-    user = UserInfo("runner-manager", "runner-manager")
+    user = UserInfo("ubuntu", "ubuntu")
 
     yield OpenStackRunnerManager(
         config=openstack_runner_manager_config,
