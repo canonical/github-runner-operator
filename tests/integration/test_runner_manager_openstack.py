@@ -26,6 +26,7 @@ from github_runner_manager.configuration.github import (
     parse_github_path,
 )
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
+from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
@@ -205,7 +206,7 @@ async def runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
-    runner_manager.create_runners(1)
+    runner_manager.create_runners(1, RunnerMetadata())
     runner_list = runner_manager.get_runners()
     try:
         await wait_runner_amount(runner_manager, 1)
@@ -301,7 +302,7 @@ async def test_runner_normal_idle_lifecycle(
         4. No runners.
     """
     # 1.
-    runner_id_list = runner_manager.create_runners(1)
+    runner_id_list = runner_manager.create_runners(1, RunnerMetadata())
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
@@ -317,6 +318,7 @@ async def test_runner_normal_idle_lifecycle(
     runner = runner_list[0]
     assert runner.instance_id == runner_id
     assert runner.cloud_state == CloudRunnerState.ACTIVE
+    assert runner.metadata.platform_name == "github"
     # Update on GitHub-side can take a bit of time.
     await wait_for(
         lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
@@ -521,7 +523,7 @@ async def test_runner_spawn_two(
         2. No runners.
     """
     # 1.
-    runner_id_list = runner_manager.create_runners(2)
+    runner_id_list = runner_manager.create_runners(2, RunnerMetadata())
     assert isinstance(runner_id_list, tuple)
     assert len(runner_id_list) == 2
 

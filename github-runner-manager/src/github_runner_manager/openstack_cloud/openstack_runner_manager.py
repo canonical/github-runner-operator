@@ -32,7 +32,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud import health_checks
@@ -157,23 +157,30 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         return self._config.prefix
 
-    def create_runner(self, instance_id: InstanceID, registration_jittoken: str) -> None:
+    def create_runner(
+        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
+    ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
-            registration_jittoken: The JIT GitHub registration token for registering runners.
+            metadata: Metadata for the runner.
+            runner_token: The token for the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
             RunnerCreateError: Unable to create runner due to OpenStack issues.
+
+        Returns:
+            The newly created runner instance.
         """
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
 
-        cloud_init = self._generate_cloud_init(registration_jittoken=registration_jittoken)
+        cloud_init = self._generate_cloud_init(runner_token=runner_token)
         try:
             instance = self._openstack_cloud.launch_instance(
+                metadata=metadata,
                 instance_id=instance_id,
                 image=server_config.image,
                 flavor=server_config.flavor,
@@ -189,6 +196,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.instance_id)
+        return self._build_cloud_runner_instance(instance)
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -212,19 +220,25 @@ class OpenStackRunnerManager(CloudRunnerManager):
             except OpenstackHealthCheckError:
                 logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.instance_id.name)
                 healthy = None
-            runners.append(
-                CloudRunnerInstance(
-                    name=instance.instance_id.name,
-                    instance_id=instance.instance_id,
-                    health=HealthState.from_value(healthy),
-                    state=CloudRunnerState.from_openstack_server_status(instance.status),
-                )
-            )
+            runners.append(self._build_cloud_runner_instance(instance, healthy))
         if states is None:
             return tuple(runners)
 
         state_set = set(states)
         return tuple(runner for runner in runners if runner.state in state_set)
+
+    def _build_cloud_runner_instance(
+        self, instance: OpenstackInstance, healthy: bool | None = None
+    ) -> CloudRunnerInstance:
+        """Build a new cloud runner instance from an openstack instance."""
+        metadata = instance.metadata
+        return CloudRunnerInstance(
+            name=instance.instance_id.name,
+            metadata=metadata,
+            instance_id=instance.instance_id,
+            health=HealthState.from_value(healthy),
+            state=CloudRunnerState.from_openstack_server_status(instance.status),
+        )
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str
@@ -247,13 +261,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             return None
 
+        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
-        pulled_metrics = self._delete_runner(instance, remove_token)
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        return pulled_metrics.to_runner_metrics(instance.instance_id, instance.created_at)
+        cloud_instance = self._build_cloud_runner_instance(instance)
+        return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
 
     def flush_runners(
         self, remove_token: str, busy: bool = False
@@ -309,7 +324,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         extracted_runner_metrics = []
         for runner in runners.unhealthy:
             pulled_metrics = self._delete_runner(runner, remove_token)
-            runner_metric = pulled_metrics.to_runner_metrics(runner.instance_id, runner.created_at)
+            cloud_runner = self._build_cloud_runner_instance(runner)
+            runner_metric = pulled_metrics.to_runner_metrics(cloud_runner, runner.created_at)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", runner.instance_id)
             else:
@@ -386,13 +402,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, registration_jittoken: str) -> str:
+    def _generate_cloud_init(self, runner_token: str) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            registration_jittoken: The JIT GitHub runner registration token.
+            runner_token: The JIT GitHub runner registration token.
 
         Returns:
             The cloud init userdata for openstack instance.
@@ -439,7 +455,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            jittoken=registration_jittoken,
+            jittoken=runner_token,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
