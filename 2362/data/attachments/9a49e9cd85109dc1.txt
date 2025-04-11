@@ -1,0 +1,56 @@
+07:27:12 INFO Creating 2 runners
+07:28:39 INFO Getting runners...
+07:28:40 INFO Getting all openstack servers managed by the charm
+07:28:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:41 INFO Authentication (publickey) successful!
+07:28:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:42 INFO Authentication (publickey) successful!
+07:28:43 INFO Found following runners: {'test-awm0idau-0-n-677919145ef6', 'test-awm0idau-0-n-902c47d03ecf'}
+07:28:43 INFO Getting runners...
+07:28:44 INFO Getting all openstack servers managed by the charm
+07:28:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:45 INFO Authentication (publickey) successful!
+07:28:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:46 INFO Authentication (publickey) successful!
+07:28:46 INFO Found following runners: {'test-awm0idau-0-n-677919145ef6', 'test-awm0idau-0-n-902c47d03ecf'}
+07:28:46 INFO Flushing idle runners...
+07:28:47 INFO Getting all openstack servers managed by the charm
+07:28:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:48 INFO Authentication (publickey) successful!
+07:28:48 INFO Attempting to kill runner process on test-awm0idau-0-n-677919145ef6 if not busy
+07:28:48 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:28:48 INFO Kill process command output, ok: True code 0, out: 1822
+, err: 
+07:28:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:48 INFO Authentication (publickey) successful!
+07:28:48 INFO Attempting to kill runner process on test-awm0idau-0-n-902c47d03ecf if not busy
+07:28:48 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:28:49 INFO Kill process command output, ok: True code 0, out: 1817
+, err: 
+07:28:49 INFO Getting all openstack servers managed by the charm
+07:28:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:50 INFO Authentication (publickey) successful!
+07:28:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:50 INFO Authentication (publickey) successful!
+07:28:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:51 INFO Authentication (publickey) successful!
+07:28:51 INFO [chan 2] Opened sftp connection (server version 3)
+07:28:51 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.242, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:28:51 WARNING Failed to pull metrics for test-awm0idau-0-n-677919145ef6: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:28:51 INFO Running runner removal script for test-awm0idau-0-n-677919145ef6
+07:28:53 INFO Deleting openstack server with test-awm0idau-0-n-677919145ef6
+07:28:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:28:54 INFO Authentication (publickey) successful!
+07:28:55 INFO [chan 2] Opened sftp connection (server version 3)
+07:28:55 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.65, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:28:55 WARNING Failed to pull metrics for test-awm0idau-0-n-902c47d03ecf: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:28:55 INFO Running runner removal script for test-awm0idau-0-n-902c47d03ecf
+07:28:56 INFO Deleting openstack server with test-awm0idau-0-n-902c47d03ecf
+07:28:59 INFO Cleaning up SSH key files
+07:28:59 INFO Found 0 key files, clean up 0 key files
+07:28:59 INFO Cleaning up openstack keypairs
+07:28:59 INFO Getting runners...
+07:29:00 INFO Getting all openstack servers managed by the charm
+07:29:02 INFO Found following runners: set()

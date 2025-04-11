@@ -1,0 +1,95 @@
+06:53:23 INFO Adding model github-pr-33119-lxd:test-charm-metrics-success-n9zt on cloud localhost
+06:53:23 WARNING unexpected facade SSHServer received from the controller
+06:53:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:53:26 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [allocating] waiting: waiting for machine
+06:53:56 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [allocating] waiting: waiting for machine
+06:54:26 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [allocating] waiting: agent initialising
+06:54:57 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [executing] maintenance: Setting up Builder.
+06:55:27 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [executing] maintenance: Setting up Builder.
+06:55:58 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [executing] maintenance: Setting up Builder.
+06:56:28 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [executing] maintenance: Setting up Builder.
+06:56:58 INFO Waiting for model:
+  github-runner-image-builder-zuros9fg/0 [executing] maintenance: Setting up Builder.
+06:57:42 INFO Deploying local:jammy/github-runner-0
+06:57:42 INFO Waiting for model:
+  test-zuros9fg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zuros9fg/0 [idle] blocked: image integration required.
+06:58:12 INFO Waiting for model:
+  test-zuros9fg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zuros9fg/0 [idle] blocked: image integration required.
+06:58:42 INFO Waiting for model:
+  test-zuros9fg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zuros9fg/0 [idle] blocked: image integration required.
+06:59:12 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+06:59:43 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:00:13 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:00:44 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:01:14 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:01:44 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:02:14 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:02:45 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:03:15 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:03:45 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:04:16 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:04:46 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:05:16 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:05:47 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:06:17 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:06:48 INFO Waiting for model:
+  test-zuros9fg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zuros9fg/0 [executing] active: Building image.
+07:07:18 INFO Waiting for model:
+  test-zuros9fg/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zuros9fg/0 [idle] active: 
+07:07:48 INFO Waiting for model:
+  test-zuros9fg/0 [idle] active:
+07:10:40 INFO Waiting for model:
+  test-zuros9fg/0 [executing] maintenance: Reconciling runners
+07:11:10 INFO Waiting for model:
+  test-zuros9fg/0 [idle] active: 
+07:11:50 INFO Waiting for model:
+  test-zuros9fg/0 [executing] maintenance: Reconciling runners
+07:12:20 INFO Waiting for model:
+  test-zuros9fg/0 [idle] active: 
+07:12:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744355439.0197961, "event": "reconciliation", "flavor": "test-zuros9fg", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 163.633403301239}
+{"timestamp": 1744355458.618162, "event": "reconciliation", "flavor": "test-zuros9fg", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 18.637044429779053}
+{"timestamp": 1744355373.0, "event": "runner_installed", "flavor": "test-zuros9fg", "duration": 80.0}
+{"timestamp": 1744355509.1218688, "event": "reconciliation", "flavor": "test-zuros9fg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.032031774520874}
+{"timestamp": 1744355528.1522253, "event": "reconciliation", "flavor": "test-zuros9fg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.006691694259644}

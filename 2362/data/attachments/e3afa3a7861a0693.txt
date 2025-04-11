@@ -1,0 +1,97 @@
+06:48:39 INFO Adding model github-pr-33119-lxd:test-charm-metrics-failure-66ll on cloud localhost
+06:48:39 WARNING unexpected facade SSHServer received from the controller
+06:48:40 INFO GitHub token rate limit: Rate(reset=2025-04-11 07:23:41+00:00, remaining=4244, limit=5000)
+06:48:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:48:55 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [allocating] waiting: waiting for machine
+06:49:26 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [allocating] waiting: waiting for machine
+06:49:56 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [allocating] waiting: agent initialising
+06:50:26 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [executing] maintenance: Setting up Builder.
+06:50:57 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [executing] maintenance: Setting up Builder.
+06:51:27 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [executing] maintenance: Setting up Builder.
+06:51:57 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [executing] maintenance: Setting up Builder.
+06:52:28 INFO Waiting for model:
+  github-runner-image-builder-pbbaobu1/0 [executing] maintenance: Setting up Builder.
+06:53:09 INFO Deploying local:jammy/github-runner-0
+06:53:09 INFO Waiting for model:
+  test-pbbaobu1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pbbaobu1/0 [idle] blocked: image integration required.
+06:53:39 INFO Waiting for model:
+  test-pbbaobu1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pbbaobu1/0 [idle] blocked: image integration required.
+06:54:09 INFO Waiting for model:
+  test-pbbaobu1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pbbaobu1/0 [idle] blocked: image integration required.
+06:54:39 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:55:10 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:55:40 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:56:11 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:56:41 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:57:11 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:57:42 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:58:12 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:58:43 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:59:13 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+06:59:43 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:00:13 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:00:44 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:01:14 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:01:44 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:02:14 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:02:45 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pbbaobu1/0 [executing] active: Building image.
+07:03:15 INFO Waiting for model:
+  test-pbbaobu1/0 [executing] maintenance: Reconciling runners
+07:03:53 INFO Waiting for model:
+  test-pbbaobu1/0 [executing] active:
+07:08:01 INFO Waiting for model:
+  test-pbbaobu1/0 [executing] maintenance: Reconciling runners
+07:08:31 INFO Waiting for model:
+  test-pbbaobu1/0 [idle] active: 
+07:08:40 INFO [TEST SETUP] Exposing port 8080 on test-pbbaobu1-0-n-2bef6acd19d7
+07:08:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7a:2f:06'}]])
+07:08:46 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-pbbaobu1-0-n-2bef6acd19d7
+07:08:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7a:2f:06'}]])
+07:08:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pbbaobu1-0-n-2bef6acd19d7.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.62 nc -z localhost 8080'
+07:08:49 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-pbbaobu1-0-n-2bef6acd19d7
+07:08:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:7a:2f:06'}]])
+07:08:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pbbaobu1-0-n-2bef6acd19d7.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.62 curl http://localhost:8080'

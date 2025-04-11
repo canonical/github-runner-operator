@@ -1,0 +1,100 @@
+07:28:29 INFO Waiting for model:
+  test-z2l6inye/0 [executing] active: 
+07:29:00 INFO Waiting for model:
+  test-z2l6inye/0 [idle] active:
+07:29:30 INFO Waiting for model:
+  test-z2l6inye/0 [executing] active: 
+07:30:00 INFO Waiting for model:
+  test-z2l6inye/0 [idle] active: 
+07:30:07 INFO Wait for condition not met, sleeping 10
+07:30:19 INFO Wait for condition not met, sleeping 10
+07:30:29 INFO Wait for condition not met, sleeping 10
+07:30:40 INFO Wait for condition not met, sleeping 10
+07:30:50 INFO Wait for condition not met, sleeping 10
+07:31:01 INFO Wait for condition not met, sleeping 10
+07:31:11 INFO Wait for condition not met, sleeping 10
+07:31:22 INFO Wait for condition not met, sleeping 10
+07:31:32 INFO Wait for condition not met, sleeping 10
+07:32:31 INFO Waiting for model:
+  test-z2l6inye/0 [executing] active: 
+07:33:01 INFO Waiting for model:
+  test-z2l6inye/0 [idle] active: 
+07:33:13 INFO Wait for condition not met, sleeping 60
+07:34:13 INFO Wait for condition not met, sleeping 60
+07:35:14 INFO Wait for condition not met, sleeping 60
+07:36:15 INFO Wait for condition not met, sleeping 60
+07:37:15 INFO Wait for condition not met, sleeping 60
+07:38:16 INFO Wait for condition not met, sleeping 60
+07:39:16 INFO Wait for condition not met, sleeping 60
+07:40:17 INFO Wait for condition not met, sleeping 60
+07:41:17 INFO Wait for condition not met, sleeping 60
+07:42:17 INFO Wait for condition not met, sleeping 60
+07:43:18 INFO Wait for condition not met, sleeping 60
+07:44:19 INFO Wait for condition not met, sleeping 60
+07:45:21 INFO Wait for condition not met, sleeping 10
+07:45:50 INFO Waiting for model:
+  test-z2l6inye/0 [idle] active:
+07:46:28 INFO Waiting for model:
+  test-z2l6inye/0 [idle] active: 
+07:46:45 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-2odu  github-pr-33119-lxd  localhost/localhost  3.6.4    unsupported  07:46:45Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-z2l6inye           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-z2l6inye                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-z2l6inye/0*  active    idle   0        10.189.123.249             
+mongodb/0*                               active    idle   2        10.189.123.168  27017/tcp  Primary
+test-z2l6inye/0*                         active    idle   1        10.189.123.199             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.189.123.249  juju-5839dc-0  ubuntu@22.04      Running
+1        started  10.189.123.199  juju-5839dc-1  ubuntu@22.04      Running
+2        started  10.189.123.168  juju-5839dc-2  ubuntu@22.04      Running
+
+07:46:45 INFO Juju error logs:
+
+unit-test-z2l6inye-0: 07:21:58 ERROR unit.test-z2l6inye/0.juju-log SSH connection failure with test-z2l6inye-0-r-0448bfc3561d during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 303, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-z2l6inye-0-r-0448bfc3561d
+unit-test-z2l6inye-0: 07:22:03 ERROR unit.test-z2l6inye/0.juju-log SSH connection failure with test-z2l6inye-0-r-0448bfc3561d during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 303, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-z2l6inye-0-r-0448bfc3561d
+unit-test-z2l6inye-0: 07:22:13 ERROR unit.test-z2l6inye/0.juju-log SSH connection failure with test-z2l6inye-0-r-0448bfc3561d during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 303, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-z2l6inye-0-r-0448bfc3561d
+unit-test-z2l6inye-0: 07:22:13 ERROR unit.test-z2l6inye/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-z2l6inye-0-r-0448bfc3561d
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 483, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 106, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-z2l6inye-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 303, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-z2l6inye-0-r-0448bfc3561d
+
+07:46:45 INFO Forgetting model main...

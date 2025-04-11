@@ -1,0 +1,28 @@
+07:08:57 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-66ll  github-pr-33119-lxd  localhost/localhost  3.6.4    unsupported  07:08:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pbbaobu1           active      1  github-runner-image-builder  latest/edge   68  no       
+test-pbbaobu1                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-pbbaobu1/0*  active    idle   0        10.17.99.164              
+test-pbbaobu1/0*                         active    idle   1        10.17.99.172    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.17.99.164  juju-199036-0  ubuntu@22.04      Running
+1        started  10.17.99.172  juju-199036-1  ubuntu@22.04      Running
+
+07:08:57 INFO Juju error logs:
+
+machine-0: 06:49:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:49:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pbbaobu1-0: 06:49:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pbbaobu1-0: 06:50:31 ERROR unit.github-runner-image-builder-pbbaobu1/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:53:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:53:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pbbaobu1-0: 06:53:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:08:57 INFO Forgetting model main...
