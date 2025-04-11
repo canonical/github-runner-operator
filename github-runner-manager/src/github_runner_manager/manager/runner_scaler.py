@@ -32,10 +32,10 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
 )
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
 )
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.platform_provider import PlatformRunnerState

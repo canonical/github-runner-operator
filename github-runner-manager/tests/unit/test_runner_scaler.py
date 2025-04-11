@@ -45,9 +45,9 @@ from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
 )
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig

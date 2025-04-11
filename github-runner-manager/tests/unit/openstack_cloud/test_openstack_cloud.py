@@ -19,7 +19,7 @@ FAKE_ARG = "fake"
 @pytest.mark.parametrize(
     "public_method, args",
     [
-        pytest.param("launch_instance", (FAKE_ARG,) * 6, id="launch_instance"),
+        pytest.param("launch_instance", (FAKE_ARG,) * 4, id="launch_instance"),
         pytest.param("get_instance", (FAKE_ARG,), id="get_instance"),
         pytest.param("delete_instance", (FAKE_ARG,), id="delete_instance"),
         pytest.param("get_instances", (), id="get_instances"),

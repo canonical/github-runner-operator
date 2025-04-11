@@ -30,11 +30,13 @@ from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
 from github_runner_manager.openstack_cloud import constants, health_checks
+from github_runner_manager.openstack_cloud.models import (
+    OpenStackRunnerManagerConfig,
+    OpenStackServerConfig,
+)
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackCredentials,
     OpenStackRunnerManager,
-    OpenStackRunnerManagerConfig,
-    OpenStackServerConfig,
 )
 from github_runner_manager.platform.github_provider import (
     GitHubRunnerPlatform,

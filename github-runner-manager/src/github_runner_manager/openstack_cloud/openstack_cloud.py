@@ -27,6 +27,7 @@ from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 
 logger = logging.getLogger(__name__)
 
@@ -176,15 +177,11 @@ class OpenstackCloud:
         self._proxy_command = proxy_command
 
     @_catch_openstack_errors
-    # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
-    # added.
-    def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def launch_instance(
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
-        image: str,
-        flavor: str,
-        network: str,
+        server_config: OpenStackServerConfig,
         cloud_init: str,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
@@ -192,9 +189,7 @@ class OpenstackCloud:
         Args:
             metadata: Metadata for the runner.
             instance_id: The instance ID to form the instance name.
-            image: The image used to create the instance.
-            flavor: The flavor used to create the instance.
-            network: The network used to create the instance.
+            server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
 
         Raises:
@@ -216,10 +211,10 @@ class OpenstackCloud:
             try:
                 server = conn.create_server(
                     name=instance_id.name,
-                    image=image,
+                    image=server_config.image,
                     key_name=keypair.name,
-                    flavor=flavor,
-                    network=network,
+                    flavor=server_config.flavor,
+                    network=server_config.network,
                     security_groups=[security_group.id],
                     userdata=cloud_init,
                     auto_ip=False,

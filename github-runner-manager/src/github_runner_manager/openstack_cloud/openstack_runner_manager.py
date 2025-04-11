@@ -16,7 +16,6 @@ import paramiko
 from fabric import Connection as SSHConnection
 
 from github_runner_manager import constants
-from github_runner_manager.configuration import SupportServiceConfig
 from github_runner_manager.errors import (
     KeyfileError,
     MissingServerConfigError,
@@ -42,9 +41,9 @@ from github_runner_manager.openstack_cloud.constants import (
     RUNNER_LISTENER_PROCESS,
     RUNNER_WORKER_PROCESS,
 )
+from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
 from github_runner_manager.openstack_cloud.openstack_cloud import (
     OpenstackCloud,
-    OpenStackCredentials,
     OpenstackInstance,
 )
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
@@ -66,38 +65,6 @@ HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
 
 class _GithubRunnerRemoveError(Exception):
     """Represents an error while SSH into a runner and running the remove script."""
-
-
-@dataclass
-class OpenStackServerConfig:
-    """Configuration for OpenStack server.
-
-    Attributes:
-        image: The image name for runners to use.
-        flavor: The flavor name for runners to use.
-        network: The network name for runners to use.
-    """
-
-    image: str
-    flavor: str
-    network: str
-
-
-@dataclass
-class OpenStackRunnerManagerConfig:
-    """Configuration for OpenStack runner manager.
-
-    Attributes:
-        prefix: The prefix of the runner names.
-        credentials: The OpenStack authorization information.
-        server_config: The configuration for OpenStack server.
-        service_config: The configuration for supporting services.
-    """
-
-    prefix: str
-    credentials: OpenStackCredentials
-    server_config: OpenStackServerConfig | None
-    service_config: SupportServiceConfig
 
 
 @dataclass
@@ -182,9 +149,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             instance = self._openstack_cloud.launch_instance(
                 metadata=metadata,
                 instance_id=instance_id,
-                image=server_config.image,
-                flavor=server_config.flavor,
-                network=server_config.network,
+                server_config=server_config,
                 cloud_init=cloud_init,
             )
         except OpenStackError as err:
