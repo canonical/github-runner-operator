@@ -711,7 +711,6 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
     """Deploy MongoDB."""
     if not existing_app_suffix:
         mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
-        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
@@ -756,10 +755,16 @@ async def app_for_jobmanager_fixture(
             }
         )
         await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")
+        # no comment... we are is quite broken.
+        await model.wait_for_idle(
+            apps=[app_openstack_runner.name, image_builder.name],
+            status=ACTIVE,
+            timeout=25 * 60,
+        )
         await model.integrate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
     await model.wait_for_idle(
-        apps=[app_openstack_runner.name, image_builder.name, mongodb.name],
+        apps=[app_openstack_runner.name, image_builder.name],
         status=ACTIVE,
         timeout=25 * 60,
     )
