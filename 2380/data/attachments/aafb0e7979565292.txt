@@ -1,0 +1,65 @@
+19:08:22 INFO Creating 2 runners
+19:09:48 INFO Getting runners...
+19:09:49 INFO Getting all openstack servers managed by the charm
+19:09:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:50 INFO Authentication (publickey) successful!
+19:09:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:51 INFO Authentication (publickey) successful!
+19:09:51 INFO Found following runners: {'test-rllwqo3k-0-n-78d3b45c1dbc', 'test-rllwqo3k-0-n-60e223b68666'}
+19:09:51 INFO Getting runners...
+19:09:52 INFO Getting all openstack servers managed by the charm
+19:09:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:55 INFO Authentication (publickey) successful!
+19:09:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:55 INFO Authentication (publickey) successful!
+19:09:56 INFO Found following runners: {'test-rllwqo3k-0-n-78d3b45c1dbc', 'test-rllwqo3k-0-n-60e223b68666'}
+19:09:56 INFO Flushing idle runners...
+19:09:56 INFO Getting all openstack servers managed by the charm
+19:09:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:57 INFO Authentication (publickey) successful!
+19:09:58 INFO Attempting to kill runner process on test-rllwqo3k-0-n-78d3b45c1dbc if not busy
+19:09:58 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:09:58 INFO Kill process command output, ok: True code 0, out: 1938
+, err: 
+19:09:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:58 INFO Authentication (publickey) successful!
+19:09:58 INFO Attempting to kill runner process on test-rllwqo3k-0-n-60e223b68666 if not busy
+19:09:58 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:09:58 INFO Kill process command output, ok: True code 0, out: 1931
+, err: 
+19:09:58 INFO Getting all openstack servers managed by the charm
+19:09:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:09:59 INFO Authentication (publickey) successful!
+19:09:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:10:00 INFO Authentication (publickey) successful!
+19:10:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:10:00 INFO Authentication (publickey) successful!
+19:10:00 INFO [chan 2] Opened sftp connection (server version 3)
+19:10:00 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.124, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+19:10:00 WARNING Failed to pull metrics for test-rllwqo3k-0-n-78d3b45c1dbc: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+19:10:00 INFO Running runner removal script for test-rllwqo3k-0-n-78d3b45c1dbc
+19:10:02 INFO Deleting openstack server with test-rllwqo3k-0-n-78d3b45c1dbc
+19:10:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:10:03 INFO Authentication (publickey) successful!
+19:10:04 INFO [chan 2] Opened sftp connection (server version 3)
+19:10:04 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.156, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+19:10:04 WARNING Failed to pull metrics for test-rllwqo3k-0-n-60e223b68666: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+19:10:04 INFO Running runner removal script for test-rllwqo3k-0-n-60e223b68666
+19:10:05 INFO Deleting openstack server with test-rllwqo3k-0-n-60e223b68666
+19:10:07 INFO Cleaning up SSH key files
+19:10:07 INFO Found 0 key files, clean up 0 key files
+19:10:07 INFO Cleaning up openstack keypairs
+19:10:08 INFO Getting runners...
+19:10:09 INFO Getting all openstack servers managed by the charm
+19:10:09 INFO Found following runners: {'test-rllwqo3k-0-n-60e223b68666'}
+19:10:09 WARNING Found runner instance on cloud but not registered on GitHub: {'test-rllwqo3k-0-n-60e223b68666'}
+19:10:09 INFO Getting runners...
+19:10:11 INFO Getting all openstack servers managed by the charm
+19:10:12 INFO Found following runners: {'test-rllwqo3k-0-n-60e223b68666'}
+19:10:12 WARNING Found runner instance on cloud but not registered on GitHub: {'test-rllwqo3k-0-n-60e223b68666'}
+19:10:12 INFO Wait for condition not met, sleeping 60
+19:11:12 INFO Getting runners...
+19:11:13 INFO Getting all openstack servers managed by the charm
+19:11:14 INFO Found following runners: set()

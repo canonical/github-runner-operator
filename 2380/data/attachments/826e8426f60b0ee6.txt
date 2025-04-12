@@ -1,0 +1,151 @@
+18:29:12 INFO Adding model github-pr-5e3eb-lxd:test-charm-scheduled-events-dbfy on cloud localhost
+18:29:12 WARNING unexpected facade AgentLifeFlag received from the controller
+18:29:12 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:29:12 WARNING unexpected facade SecretsDrain received from the controller
+18:29:14 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:29:14 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b (not enough units yet - 0/1)
+18:29:44 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [allocating] waiting: waiting for machine
+18:30:14 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [allocating] waiting: agent initialising
+18:30:44 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [allocating] waiting: agent initialising
+18:31:14 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [executing] maintenance: Setting up Builder.
+18:31:44 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [executing] maintenance: Setting up Builder.
+18:32:14 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [executing] maintenance: Setting up Builder.
+18:32:44 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [executing] maintenance: Setting up Builder.
+18:33:14 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [executing] maintenance: Setting up Builder.
+18:33:45 INFO Waiting for model:
+  github-runner-image-builder-n8qrnp0b/0 [idle] blocked: image integration required.
+18:34:01 INFO Deploying local:jammy/github-runner-0
+18:34:01 INFO Waiting for model:
+  test-n8qrnp0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n8qrnp0b/0 [idle] blocked: image integration required.
+18:34:31 INFO Waiting for model:
+  test-n8qrnp0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n8qrnp0b/0 [idle] blocked: image integration required.
+18:35:01 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-n8qrnp0b/0 [idle] blocked: image integration required.
+18:35:31 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:36:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:36:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:37:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:37:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:38:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:38:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:39:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:39:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:40:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:40:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:41:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:41:32 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:42:02 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:42:33 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:43:03 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n8qrnp0b/0 [executing] active: Building image.
+18:43:33 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-n8qrnp0b/0 [idle] active: 
+18:44:03 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] active: 
+18:44:06 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] active: 
+18:44:36 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Reconciling runners
+18:45:06 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Reconciling runners
+18:45:36 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Reconciling runners
+18:46:06 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Reconciling runners
+18:46:36 INFO Waiting for model:
+  test-n8qrnp0b/0 [executing] maintenance: Reconciling runners
+18:47:18 INFO Waiting for model:
+  test-n8qrnp0b/0 [idle] active:
+18:47:35 INFO Wait for condition not met, sleeping 3
+18:47:38 INFO Wait for condition not met, sleeping 3
+18:47:42 INFO Wait for condition not met, sleeping 3
+18:47:45 INFO Wait for condition not met, sleeping 3
+18:47:49 INFO Wait for condition not met, sleeping 3
+18:47:52 INFO Wait for condition not met, sleeping 3
+18:47:56 INFO Wait for condition not met, sleeping 3
+18:47:59 INFO Wait for condition not met, sleeping 3
+18:48:02 INFO Wait for condition not met, sleeping 3
+18:48:08 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-dbfy  github-pr-5e3eb-lxd  localhost/localhost  3.1.10   unsupported  18:48:08Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-n8qrnp0b           active      1  github-runner-image-builder  latest/edge   68  no       
+test-n8qrnp0b                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-n8qrnp0b/0*  active    idle   0        10.251.64.107          
+test-n8qrnp0b/0*                         active    idle   1        10.251.64.248          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.251.64.107  juju-91ab80-0  ubuntu@22.04      Running
+1        started  10.251.64.248  juju-91ab80-1  ubuntu@22.04      Running
+
+18:48:08 INFO Juju error logs:
+
+machine-0: 18:29:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:29:53 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:29:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-n8qrnp0b-0: 18:29:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-n8qrnp0b-0: 18:29:53 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:29:56 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:01 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:06 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:12 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:19 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:28 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:30:39 ERROR juju.worker.dependency "uniter" manifold worker returned unexpected error: preparing operation "install ch:amd64/github-runner-image-builder-68" for github-runner-image-builder-n8qrnp0b/0: failed to download charm "ch:amd64/github-runner-image-builder-68" from API server: Get https://10.251.64.95:17070/model/a59ed494-dfa4-40dc-8c46-33f02791ab80/charms?file=%2A&url=ch%3Aamd64%2Fgithub-runner-image-builder-68: cannot retrieve charm: ch:amd64/github-runner-image-builder-68
+unit-github-runner-image-builder-n8qrnp0b-0: 18:31:24 ERROR unit.github-runner-image-builder-n8qrnp0b/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:34:40 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:34:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:34:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-n8qrnp0b-0: 18:34:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+18:48:09 INFO Forgetting model main...
