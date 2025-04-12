@@ -1,0 +1,144 @@
+06:47:31 INFO Adding model github-pr-5e3eb-lxd:test-reactive-h4h9 on cloud localhost
+06:47:31 WARNING unexpected facade SSHServer received from the controller
+06:47:32 INFO GitHub token rate limit: Rate(reset=2025-04-12 07:16:26+00:00, remaining=4997, limit=5000)
+06:47:36 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:47:36 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [allocating] waiting: waiting for machine
+06:48:07 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [allocating] waiting: waiting for machine
+06:48:37 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [allocating] waiting: waiting for machine
+06:49:07 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [executing] maintenance: Setting up Builder.
+06:49:37 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [executing] maintenance: Setting up Builder.
+06:50:07 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [executing] maintenance: Setting up Builder.
+06:50:37 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [executing] maintenance: Setting up Builder.
+06:51:07 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [executing] maintenance: Setting up Builder.
+06:51:38 INFO Waiting for model:
+  github-runner-image-builder-q74qgkkl/0 [idle] blocked: image integration required.
+06:52:05 INFO Deploying local:jammy/github-runner-0
+06:52:05 INFO Waiting for model:
+  test-q74qgkkl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q74qgkkl/0 [idle] blocked: image integration required.
+06:52:35 INFO Waiting for model:
+  test-q74qgkkl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q74qgkkl/0 [idle] blocked: image integration required.
+06:53:05 INFO Waiting for model:
+  test-q74qgkkl/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q74qgkkl/0 [idle] blocked: image integration required.
+06:53:36 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:54:06 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:54:36 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:55:07 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:55:37 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:56:07 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:56:37 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:57:08 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:57:38 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:58:08 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:58:39 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:59:09 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+06:59:40 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:00:10 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:00:40 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:01:10 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:01:41 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:02:11 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:02:41 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:03:11 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:03:41 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:04:12 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q74qgkkl/0 [executing] active: Building image.
+07:04:42 INFO Waiting for model:
+  test-q74qgkkl/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-q74qgkkl/0 [idle] active: 
+07:05:12 INFO Waiting for model:
+  test-q74qgkkl/0 [idle] active: 
+07:05:19 INFO Deploying ch:amd64/jammy/mongodb-212
+07:05:19 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:05:49 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:06:20 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:06:50 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:07:21 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:07:51 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:08:21 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:08:52 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:09:22 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:09:53 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:10:23 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:10:53 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:11:24 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:11:54 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:12:24 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:12:55 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:13:25 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:13:55 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:14:26 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:14:56 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB

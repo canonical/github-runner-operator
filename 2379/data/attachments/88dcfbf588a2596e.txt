@@ -1,0 +1,80 @@
+06:40:10 INFO Creating 2 runners
+06:41:38 INFO Getting runners...
+06:41:39 INFO Getting all openstack servers managed by the charm
+06:41:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:41 INFO Authentication (publickey) successful!
+06:41:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:42 INFO Authentication (publickey) successful!
+06:41:42 INFO Found following runners: {'test-yerx4ci0-0-n-7eb14b54e024', 'test-yerx4ci0-0-n-6ae7a0d0467d'}
+06:41:42 INFO Getting runners...
+06:41:43 INFO Getting all openstack servers managed by the charm
+06:41:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:45 INFO Authentication (publickey) successful!
+06:41:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:45 INFO Authentication (publickey) successful!
+06:41:46 INFO Found following runners: {'test-yerx4ci0-0-n-7eb14b54e024', 'test-yerx4ci0-0-n-6ae7a0d0467d'}
+06:41:46 INFO Flushing idle runners...
+06:41:46 INFO Getting all openstack servers managed by the charm
+06:41:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:48 INFO Authentication (publickey) successful!
+06:41:48 INFO Attempting to kill runner process on test-yerx4ci0-0-n-7eb14b54e024 if not busy
+06:41:48 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:41:48 INFO Kill process command output, ok: True code 0, out: 1951
+, err: 
+06:41:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:49 INFO Authentication (publickey) successful!
+06:41:49 INFO Attempting to kill runner process on test-yerx4ci0-0-n-6ae7a0d0467d if not busy
+06:41:49 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:41:49 INFO Kill process command output, ok: True code 0, out: 1942
+, err: 
+06:41:49 INFO Getting all openstack servers managed by the charm
+06:41:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:50 INFO Authentication (publickey) successful!
+06:41:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:51 INFO Authentication (publickey) successful!
+06:41:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:51 INFO Authentication (publickey) successful!
+06:41:51 INFO [chan 2] Opened sftp connection (server version 3)
+06:41:51 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.119, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:41:51 WARNING Failed to pull metrics for test-yerx4ci0-0-n-7eb14b54e024: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:41:51 INFO Running runner removal script for test-yerx4ci0-0-n-7eb14b54e024
+06:41:53 INFO Deleting openstack server with test-yerx4ci0-0-n-7eb14b54e024
+06:41:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:41:55 INFO Authentication (publickey) successful!
+06:41:55 INFO [chan 2] Opened sftp connection (server version 3)
+06:41:55 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.189, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:41:55 WARNING Failed to pull metrics for test-yerx4ci0-0-n-6ae7a0d0467d: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:41:55 INFO Running runner removal script for test-yerx4ci0-0-n-6ae7a0d0467d
+06:41:57 INFO Deleting openstack server with test-yerx4ci0-0-n-6ae7a0d0467d
+06:41:59 INFO Cleaning up SSH key files
+06:41:59 INFO Found 0 key files, clean up 0 key files
+06:41:59 INFO Cleaning up openstack keypairs
+06:41:59 INFO Getting runners...
+06:42:01 INFO Getting all openstack servers managed by the charm
+06:42:02 ERROR Unable to get SSH connection for instance test-yerx4ci0-0-n-6ae7a0d0467d, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 111, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 308, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-yerx4ci0-0-n-6ae7a0d0467d, key path: /home/ubuntu/.ssh/test-yerx4ci0-0-n-6ae7a0d0467d.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-yerx4ci0-0-n-6ae7a0d0467d
+06:42:02 INFO Found following runners: {'test-yerx4ci0-0-n-6ae7a0d0467d'}
+06:42:02 WARNING Found runner instance on cloud but not registered on GitHub: {'test-yerx4ci0-0-n-6ae7a0d0467d'}
+06:42:02 INFO Getting runners...
+06:42:03 INFO Getting all openstack servers managed by the charm
+06:42:05 INFO Found following runners: set()

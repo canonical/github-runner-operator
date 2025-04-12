@@ -1,0 +1,100 @@
+06:36:13 INFO Adding model github-pr-5e3eb-lxd:test-charm-metrics-success-4wqc on cloud localhost
+06:36:13 WARNING unexpected facade SSHServer received from the controller
+06:36:15 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:36:15 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [allocating] waiting: waiting for machine
+06:36:45 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [allocating] waiting: waiting for machine
+06:37:16 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [allocating] waiting: waiting for machine
+06:37:46 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [allocating] waiting: agent initialising
+06:38:17 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [allocating] waiting: agent initialising
+06:38:47 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] maintenance: Setting up Builder.
+06:39:17 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] maintenance: Setting up Builder.
+06:39:48 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] maintenance: Setting up Builder.
+06:40:18 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] maintenance: Setting up Builder.
+06:40:49 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] maintenance: Setting up Builder.
+06:41:19 INFO Waiting for model:
+  github-runner-image-builder-qf030gxv/0 [executing] blocked: image integration required.
+06:41:52 INFO Deploying local:jammy/github-runner-0
+06:41:52 INFO Waiting for model:
+  test-qf030gxv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qf030gxv/0 [idle] blocked: image integration required.
+06:42:22 INFO Waiting for model:
+  test-qf030gxv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qf030gxv/0 [idle] blocked: image integration required.
+06:42:53 INFO Waiting for model:
+  test-qf030gxv/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qf030gxv/0 [idle] blocked: image integration required.
+06:43:23 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:43:53 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:44:24 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:44:54 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:45:24 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:45:55 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:46:25 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:46:55 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:47:25 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:47:55 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:48:25 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:48:56 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:49:26 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:49:56 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:50:26 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:50:57 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:51:27 INFO Waiting for model:
+  test-qf030gxv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qf030gxv/0 [executing] active: Building image.
+06:51:58 INFO Waiting for model:
+  test-qf030gxv/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-qf030gxv/0 [idle] active:
+06:54:59 INFO Waiting for model:
+  test-qf030gxv/0 [executing] maintenance: Reconciling runners
+06:55:29 INFO Waiting for model:
+  test-qf030gxv/0 [idle] active: 
+06:56:07 INFO Waiting for model:
+  test-qf030gxv/0 [executing] active: 
+06:56:38 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744440898.8303316, "event": "reconciliation", "flavor": "test-qf030gxv", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 149.37934637069702}
+{"timestamp": 1744440918.639485, "event": "reconciliation", "flavor": "test-qf030gxv", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 18.628427743911743}
+{"timestamp": 1744440844.0, "event": "runner_installed", "flavor": "test-qf030gxv", "duration": 83.0}
+{"timestamp": 1744440966.675636, "event": "reconciliation", "flavor": "test-qf030gxv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.19465184211731}
+{"timestamp": 1744440981.7747293, "event": "reconciliation", "flavor": "test-qf030gxv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.886844873428345}

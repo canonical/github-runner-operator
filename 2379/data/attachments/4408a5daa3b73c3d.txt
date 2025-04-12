@@ -1,0 +1,111 @@
+06:33:30 INFO GitHub token rate limit: Rate(reset=2025-04-12 06:47:03+00:00, remaining=4957, limit=5000)
+06:33:33 INFO Creating 1 runners
+06:33:33 INFO Creating openstack server with test-yerx4ci0-0-n-f1f2e29e5063
+06:33:46 INFO Waiting for runner process to startup: test-yerx4ci0-0-n-f1f2e29e5063
+06:33:57 WARNING NoValidConnectionsError. Unable to SSH into test-yerx4ci0-0-n-f1f2e29e5063 with address 10.145.193.33. Error: [Errno None] Unable to connect to port 22 on 10.145.193.33
+06:33:57 WARNING Retrying error in 60 seconds: Failed to SSH to test-yerx4ci0-0-n-f1f2e29e5063 during creation possible due to setup not completed
+06:34:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:57 INFO Authentication (publickey) successful!
+06:34:59 WARNING Runner startup process not found on test-yerx4ci0-0-n-f1f2e29e5063
+06:34:59 WARNING Retrying error in 60 seconds: Runner startup process not found on test-yerx4ci0-0-n-f1f2e29e5063
+06:35:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:35:59 INFO Authentication (publickey) successful!
+06:36:00 INFO Runner startup process found to be healthy on test-yerx4ci0-0-n-f1f2e29e5063
+06:36:00 INFO Waiting for runner process to be running: test-yerx4ci0-0-n-f1f2e29e5063
+06:36:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:00 INFO Authentication (publickey) successful!
+06:36:00 INFO Runner test-yerx4ci0-0-n-f1f2e29e5063 found to be healthy
+06:36:00 INFO Runner test-yerx4ci0-0-n-f1f2e29e5063 created successfully
+06:36:00 INFO Getting runners...
+06:36:02 INFO Getting all openstack servers managed by the charm
+06:36:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:03 INFO Authentication (publickey) successful!
+06:36:03 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:03 INFO Getting runners...
+06:36:05 INFO Getting all openstack servers managed by the charm
+06:36:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:06 INFO Authentication (publickey) successful!
+06:36:06 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:06 INFO Getting runners...
+06:36:08 INFO Getting all openstack servers managed by the charm
+06:36:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:09 INFO Authentication (publickey) successful!
+06:36:09 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:11 INFO Wait for condition not met, sleeping 10
+06:36:22 INFO Getting runners...
+06:36:23 INFO Getting all openstack servers managed by the charm
+06:36:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:25 INFO Authentication (publickey) successful!
+06:36:26 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:26 INFO Getting runners...
+06:36:27 INFO Getting all openstack servers managed by the charm
+06:36:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:28 INFO Authentication (publickey) successful!
+06:36:28 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:30 INFO Offline github runners to delete: []:
+06:36:30 INFO Getting all openstack servers managed by the charm
+06:36:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:31 INFO Authentication (publickey) successful!
+06:36:32 INFO Cleaning up SSH key files
+06:36:32 INFO Found 1 key files, clean up 0 key files
+06:36:32 INFO Cleaning up openstack keypairs
+06:36:33 INFO Getting runners...
+06:36:34 INFO Getting all openstack servers managed by the charm
+06:36:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:35 INFO Authentication (publickey) successful!
+06:36:35 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:35 INFO Flushing idle runners...
+06:36:36 INFO Getting all openstack servers managed by the charm
+06:36:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:37 INFO Authentication (publickey) successful!
+06:36:37 INFO Attempting to kill runner process on test-yerx4ci0-0-n-f1f2e29e5063 if not busy
+06:36:37 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:36:37 INFO Kill process command output, ok: False code 1, out: 2405
+, err: 
+06:36:37 INFO Getting all openstack servers managed by the charm
+06:36:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:38 INFO Authentication (publickey) successful!
+06:36:40 INFO Cleaning up SSH key files
+06:36:40 INFO Found 1 key files, clean up 0 key files
+06:36:40 INFO Cleaning up openstack keypairs
+06:36:40 INFO Getting runners...
+06:36:41 INFO Getting all openstack servers managed by the charm
+06:36:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:42 INFO Authentication (publickey) successful!
+06:36:43 INFO Found following runners: {'test-yerx4ci0-0-n-f1f2e29e5063'}
+06:36:43 INFO Flushing idle and busy runners...
+06:36:43 INFO Getting all openstack servers managed by the charm
+06:36:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:45 INFO Authentication (publickey) successful!
+06:36:45 INFO Attempting to kill all runner process on test-yerx4ci0-0-n-f1f2e29e5063
+06:36:45 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:36:45 INFO Kill process command output, ok: True code 0, out: 2093
+2405
+, err: 
+06:36:45 INFO Getting all openstack servers managed by the charm
+06:36:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:46 INFO Authentication (publickey) successful!
+06:36:48 INFO Cleaning up SSH key files
+06:36:48 INFO Found 1 key files, clean up 0 key files
+06:36:48 INFO Cleaning up openstack keypairs
+06:36:58 INFO Flushing idle and busy runners...
+06:36:58 INFO Getting all openstack servers managed by the charm
+06:36:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:59 INFO Authentication (publickey) successful!
+06:37:00 INFO Attempting to kill all runner process on test-yerx4ci0-0-n-f1f2e29e5063
+06:37:00 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:37:00 INFO Kill process command output, ok: False code 1, out: , err: 
+06:37:00 INFO Getting all openstack servers managed by the charm
+06:37:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:01 INFO Authentication (publickey) successful!
+06:37:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:02 INFO Authentication (publickey) successful!
+06:37:02 INFO [chan 2] Opened sftp connection (server version 3)
+06:37:02 INFO Running runner removal script for test-yerx4ci0-0-n-f1f2e29e5063
+06:37:04 INFO Deleting openstack server with test-yerx4ci0-0-n-f1f2e29e5063
+06:37:06 INFO Cleaning up SSH key files
+06:37:06 INFO Found 0 key files, clean up 0 key files
+06:37:06 INFO Cleaning up openstack keypairs
+06:37:06 INFO Getting runners...
+06:37:08 INFO Getting all openstack servers managed by the charm
+06:37:09 INFO Found following runners: set()

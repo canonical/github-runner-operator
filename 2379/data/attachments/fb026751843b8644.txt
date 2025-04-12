@@ -1,0 +1,98 @@
+06:32:18 INFO Adding model github-pr-5e3eb-lxd:test-charm-runner-noj4 on cloud localhost
+06:32:18 WARNING unexpected facade SSHServer received from the controller
+06:32:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:32:20 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [allocating] waiting: waiting for machine
+06:32:51 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [allocating] waiting: waiting for machine
+06:33:21 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [allocating] waiting: agent initialising
+06:33:51 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:34:21 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:34:51 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:35:21 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:35:52 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:36:22 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [executing] maintenance: Setting up Builder.
+06:36:53 INFO Waiting for model:
+  github-runner-image-builder-kqm14sip/0 [idle] blocked: image integration required.
+06:37:17 INFO Deploying local:jammy/github-runner-0
+06:37:17 INFO Waiting for model:
+  test-kqm14sip/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kqm14sip/0 [idle] blocked: image integration required.
+06:37:48 INFO Waiting for model:
+  test-kqm14sip/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kqm14sip/0 [idle] blocked: image integration required.
+06:38:18 INFO Waiting for model:
+  test-kqm14sip/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kqm14sip/0 [idle] blocked: image integration required.
+06:38:48 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:39:19 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:39:49 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:40:19 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:40:49 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:41:20 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:41:50 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:42:20 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:42:51 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:43:21 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:43:51 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:44:22 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:44:52 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:45:23 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:45:53 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:46:23 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:46:53 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:47:23 INFO Waiting for model:
+  test-kqm14sip/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kqm14sip/0 [executing] active: Building image.
+06:47:54 INFO Waiting for model:
+  test-kqm14sip/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kqm14sip/0 [idle] active: 
+06:51:01 INFO Waiting for model:
+  test-kqm14sip/0 [executing] active: 
+06:51:31 INFO Waiting for model:
+  test-kqm14sip/0 [idle] active:
+06:52:10 INFO Waiting for model:
+  test-kqm14sip/0 [executing] maintenance: Reconciling runners
+06:52:40 INFO Waiting for model:
+  test-kqm14sip/0 [idle] active:
