@@ -1,0 +1,99 @@
+18:51:36 INFO Adding model github-pr-5e3eb-lxd:test-charm-metrics-failure-jpja on cloud localhost
+18:51:36 WARNING unexpected facade SSHServer received from the controller
+18:51:37 INFO GitHub token rate limit: Rate(reset=2025-04-13 19:11:25+00:00, remaining=4894, limit=5000)
+18:51:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:51:52 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [allocating] waiting: waiting for machine
+18:52:22 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [allocating] waiting: waiting for machine
+18:52:52 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [allocating] waiting: agent initialising
+18:53:23 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:53:53 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:54:24 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:54:54 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:55:24 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:55:55 INFO Waiting for model:
+  github-runner-image-builder-v8m1yyrx/0 [executing] maintenance: Setting up Builder.
+18:56:36 INFO Deploying local:jammy/github-runner-0
+18:56:36 INFO Waiting for model:
+  test-v8m1yyrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-v8m1yyrx/0 [idle] blocked: image integration required.
+18:57:06 INFO Waiting for model:
+  test-v8m1yyrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-v8m1yyrx/0 [idle] blocked: image integration required.
+18:57:36 INFO Waiting for model:
+  test-v8m1yyrx/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-v8m1yyrx/0 [idle] blocked: image integration required.
+18:58:07 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+18:58:37 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+18:59:07 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+18:59:37 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:00:08 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:00:38 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:01:08 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:01:38 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:02:09 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:02:39 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:03:09 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:03:40 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:04:10 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:04:40 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:05:11 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:05:41 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:06:12 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-v8m1yyrx/0 [executing] active: Building image.
+19:06:42 INFO Waiting for model:
+  test-v8m1yyrx/0 [executing] maintenance: Reconciling runners
+19:07:20 INFO Waiting for model:
+  test-v8m1yyrx/0 [executing] maintenance: Reconciling runners
+19:11:40 INFO Waiting for model:
+  test-v8m1yyrx/0 [executing] maintenance: Reconciling runners
+19:12:11 INFO Waiting for model:
+  test-v8m1yyrx/0 [idle] active: 
+19:12:13 INFO [TEST SETUP] Exposing port 8080 on test-v8m1yyrx-0-n-dd77f5c71cbb
+19:12:13 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.200', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:ea:15'}]])
+19:12:16 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-v8m1yyrx-0-n-dd77f5c71cbb
+19:12:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.200', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:ea:15'}]])
+19:12:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-v8m1yyrx-0-n-dd77f5c71cbb.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.200 nc -z localhost 8080'
+19:12:19 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-v8m1yyrx-0-n-dd77f5c71cbb
+19:12:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.200', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:ea:15'}]])
+19:12:20 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-v8m1yyrx-0-n-dd77f5c71cbb.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.200 curl http://localhost:8080'
