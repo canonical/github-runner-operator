@@ -1,0 +1,104 @@
+06:54:12 INFO Waiting for model:
+  test-d3rhdkde/0 [executing] active: 
+06:54:43 INFO Waiting for model:
+  test-d3rhdkde/0 [idle] active:
+06:55:13 INFO Waiting for model:
+  test-d3rhdkde/0 [executing] active: 
+06:55:43 INFO Waiting for model:
+  test-d3rhdkde/0 [idle] active: 
+06:55:50 INFO Wait for condition not met, sleeping 10
+06:56:02 INFO Wait for condition not met, sleeping 10
+06:56:12 INFO Wait for condition not met, sleeping 10
+06:56:23 INFO Wait for condition not met, sleeping 10
+06:56:33 INFO Wait for condition not met, sleeping 10
+06:56:44 INFO Wait for condition not met, sleeping 10
+06:57:35 INFO Waiting for model:
+  test-d3rhdkde/0 [executing] active: 
+06:58:06 INFO Wait for condition not met, sleeping 60
+06:59:06 INFO Wait for condition not met, sleeping 60
+07:00:07 INFO Wait for condition not met, sleeping 60
+07:01:08 INFO Wait for condition not met, sleeping 60
+07:02:08 INFO Wait for condition not met, sleeping 60
+07:03:09 INFO Wait for condition not met, sleeping 60
+07:04:09 INFO Wait for condition not met, sleeping 60
+07:05:10 INFO Wait for condition not met, sleeping 60
+07:06:10 INFO Wait for condition not met, sleeping 60
+07:07:11 INFO Wait for condition not met, sleeping 60
+07:08:11 INFO Wait for condition not met, sleeping 60
+07:09:12 INFO Wait for condition not met, sleeping 60
+07:10:28 INFO Waiting for model:
+  test-d3rhdkde/0 [idle] active: 
+07:10:45 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-uenn  github-pr-5e3eb-lxd  localhost/localhost  3.6.4    unsupported  07:10:45Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-d3rhdkde           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-d3rhdkde                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-d3rhdkde/0*  active    idle   0        10.181.44.146              
+mongodb/0*                               active    idle   2        10.181.44.54    27017/tcp  Primary
+test-d3rhdkde/0*                         active    idle   1        10.181.44.123              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.181.44.146  juju-fef134-0  ubuntu@22.04      Running
+1        started  10.181.44.123  juju-fef134-1  ubuntu@22.04      Running
+2        started  10.181.44.54   juju-fef134-2  ubuntu@22.04      Running
+
+07:10:45 INFO Juju error logs:
+
+machine-0: 06:25:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-d3rhdkde-0: 06:25:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-d3rhdkde-0: 06:25:41 ERROR unit.github-runner-image-builder-d3rhdkde/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:28:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-d3rhdkde-0: 06:28:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:44:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:44:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:44:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:44:38 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:44:38 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-d3rhdkde-0: 06:48:00 ERROR unit.test-d3rhdkde/0.juju-log SSH connection failure with test-d3rhdkde-0-r-2313990a9eb6 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 464, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 111, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 312, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-d3rhdkde-0-r-2313990a9eb6
+unit-test-d3rhdkde-0: 06:48:05 ERROR unit.test-d3rhdkde/0.juju-log SSH connection failure with test-d3rhdkde-0-r-2313990a9eb6 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 464, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 111, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 312, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-d3rhdkde-0-r-2313990a9eb6
+unit-test-d3rhdkde-0: 06:48:15 ERROR unit.test-d3rhdkde/0.juju-log SSH connection failure with test-d3rhdkde-0-r-2313990a9eb6 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 464, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 111, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 312, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-d3rhdkde-0-r-2313990a9eb6
+unit-test-d3rhdkde-0: 06:48:15 ERROR unit.test-d3rhdkde/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-d3rhdkde-0-r-2313990a9eb6
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 464, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 111, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-d3rhdkde-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 312, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-d3rhdkde-0-r-2313990a9eb6
+
+07:10:45 INFO Forgetting model main...

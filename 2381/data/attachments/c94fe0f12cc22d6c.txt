@@ -1,0 +1,73 @@
+06:54:45 INFO Creating 1 runners
+06:54:46 INFO Creating openstack server with test-kuf4pt6a-0-n-4ed90ddcd55c
+06:56:18 INFO Waiting for runner process to startup: test-kuf4pt6a-0-n-4ed90ddcd55c
+06:56:29 WARNING NoValidConnectionsError. Unable to SSH into test-kuf4pt6a-0-n-4ed90ddcd55c with address 10.145.193.110. Error: [Errno None] Unable to connect to port 22 on 10.145.193.110
+06:56:29 WARNING Retrying error in 60 seconds: Failed to SSH to test-kuf4pt6a-0-n-4ed90ddcd55c during creation possible due to setup not completed
+06:57:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:29 INFO Authentication (publickey) successful!
+06:57:30 INFO Runner startup process found to be healthy on test-kuf4pt6a-0-n-4ed90ddcd55c
+06:57:30 INFO Waiting for runner process to be running: test-kuf4pt6a-0-n-4ed90ddcd55c
+06:57:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:30 INFO Authentication (publickey) successful!
+06:57:31 INFO Runner test-kuf4pt6a-0-n-4ed90ddcd55c found to be healthy
+06:57:31 INFO Runner test-kuf4pt6a-0-n-4ed90ddcd55c created successfully
+06:57:31 INFO Getting runners...
+06:57:32 INFO Getting all openstack servers managed by the charm
+06:57:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:34 INFO Authentication (publickey) successful!
+06:57:34 INFO Found following runners: {'test-kuf4pt6a-0-n-4ed90ddcd55c'}
+06:57:34 INFO Getting runners...
+06:57:35 INFO Getting all openstack servers managed by the charm
+06:57:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:37 INFO Authentication (publickey) successful!
+06:57:37 INFO Found following runners: {'test-kuf4pt6a-0-n-4ed90ddcd55c'}
+06:57:37 INFO Getting runners...
+06:57:38 INFO Getting all openstack servers managed by the charm
+06:57:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:39 INFO Authentication (publickey) successful!
+06:57:40 INFO Found following runners: {'test-kuf4pt6a-0-n-4ed90ddcd55c'}
+06:57:40 INFO Getting all openstack servers managed by the charm
+06:57:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:41 INFO Authentication (publickey) successful!
+06:57:42 INFO Getting runners...
+06:57:43 INFO Getting all openstack servers managed by the charm
+06:57:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:44 INFO Authentication (publickey) successful!
+06:57:45 INFO Found following runners: {'test-kuf4pt6a-0-n-4ed90ddcd55c'}
+06:57:46 INFO Offline github runners to delete: []:
+06:57:46 INFO Getting all openstack servers managed by the charm
+06:57:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:47 INFO Authentication (publickey) successful!
+06:57:50 INFO Cleaning up SSH key files
+06:57:50 INFO Found 1 key files, clean up 0 key files
+06:57:50 INFO Cleaning up openstack keypairs
+06:57:50 INFO Getting runners...
+06:57:51 INFO Getting all openstack servers managed by the charm
+06:57:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:52 INFO Authentication (publickey) successful!
+06:57:53 INFO Found following runners: {'test-kuf4pt6a-0-n-4ed90ddcd55c'}
+06:57:53 INFO Flushing idle runners...
+06:57:53 INFO Getting all openstack servers managed by the charm
+06:57:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:54 INFO Authentication (publickey) successful!
+06:57:54 INFO Attempting to kill runner process on test-kuf4pt6a-0-n-4ed90ddcd55c if not busy
+06:57:54 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:57:55 INFO Kill process command output, ok: True code 0, out: 1938
+, err: 
+06:57:55 INFO Getting all openstack servers managed by the charm
+06:57:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:56 INFO Authentication (publickey) successful!
+06:57:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:57:56 INFO Authentication (publickey) successful!
+06:57:57 INFO [chan 2] Opened sftp connection (server version 3)
+06:57:57 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.110, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:57:57 WARNING Failed to pull metrics for test-kuf4pt6a-0-n-4ed90ddcd55c: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:57:57 INFO Running runner removal script for test-kuf4pt6a-0-n-4ed90ddcd55c
+06:57:58 INFO Deleting openstack server with test-kuf4pt6a-0-n-4ed90ddcd55c
+06:58:00 INFO Cleaning up SSH key files
+06:58:00 INFO Found 0 key files, clean up 0 key files
+06:58:00 INFO Cleaning up openstack keypairs
+06:58:00 INFO Getting runners...
+06:58:01 INFO Getting all openstack servers managed by the charm
+06:58:02 INFO Found following runners: set()

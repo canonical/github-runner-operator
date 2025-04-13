@@ -1,0 +1,111 @@
+06:58:03 INFO GitHub token rate limit: Rate(reset=2025-04-13 07:39:15+00:00, remaining=4508, limit=5000)
+06:58:06 INFO Creating 1 runners
+06:58:06 INFO Creating openstack server with test-kuf4pt6a-0-n-54fc92aa4921
+06:58:20 INFO Waiting for runner process to startup: test-kuf4pt6a-0-n-54fc92aa4921
+06:58:31 WARNING NoValidConnectionsError. Unable to SSH into test-kuf4pt6a-0-n-54fc92aa4921 with address 10.145.193.14. Error: [Errno None] Unable to connect to port 22 on 10.145.193.14
+06:58:31 WARNING Retrying error in 60 seconds: Failed to SSH to test-kuf4pt6a-0-n-54fc92aa4921 during creation possible due to setup not completed
+06:59:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:31 INFO Authentication (publickey) successful!
+06:59:32 INFO Runner startup process found to be healthy on test-kuf4pt6a-0-n-54fc92aa4921
+06:59:32 INFO Waiting for runner process to be running: test-kuf4pt6a-0-n-54fc92aa4921
+06:59:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:32 INFO Authentication (publickey) successful!
+06:59:33 INFO Runner test-kuf4pt6a-0-n-54fc92aa4921 found to be healthy
+06:59:33 INFO Runner test-kuf4pt6a-0-n-54fc92aa4921 created successfully
+06:59:33 INFO Getting runners...
+06:59:34 INFO Getting all openstack servers managed by the charm
+06:59:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:35 INFO Authentication (publickey) successful!
+06:59:36 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+06:59:36 INFO Getting runners...
+06:59:37 INFO Getting all openstack servers managed by the charm
+06:59:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:38 INFO Authentication (publickey) successful!
+06:59:39 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+06:59:39 INFO Getting runners...
+06:59:40 INFO Getting all openstack servers managed by the charm
+06:59:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:41 INFO Authentication (publickey) successful!
+06:59:42 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+06:59:43 INFO Wait for condition not met, sleeping 10
+06:59:54 INFO Getting runners...
+06:59:56 INFO Getting all openstack servers managed by the charm
+06:59:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:59:57 INFO Authentication (publickey) successful!
+06:59:57 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+06:59:57 INFO Getting runners...
+06:59:58 INFO Getting all openstack servers managed by the charm
+07:00:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:00 INFO Authentication (publickey) successful!
+07:00:00 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+07:00:02 INFO Offline github runners to delete: []:
+07:00:03 INFO Getting all openstack servers managed by the charm
+07:00:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:04 INFO Authentication (publickey) successful!
+07:00:06 INFO Cleaning up SSH key files
+07:00:06 INFO Found 1 key files, clean up 0 key files
+07:00:06 INFO Cleaning up openstack keypairs
+07:00:06 INFO Getting runners...
+07:00:07 INFO Getting all openstack servers managed by the charm
+07:00:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:09 INFO Authentication (publickey) successful!
+07:00:09 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+07:00:09 INFO Flushing idle runners...
+07:00:10 INFO Getting all openstack servers managed by the charm
+07:00:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:11 INFO Authentication (publickey) successful!
+07:00:11 INFO Attempting to kill runner process on test-kuf4pt6a-0-n-54fc92aa4921 if not busy
+07:00:11 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:00:11 INFO Kill process command output, ok: False code 1, out: 2230
+, err: 
+07:00:11 INFO Getting all openstack servers managed by the charm
+07:00:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:13 INFO Authentication (publickey) successful!
+07:00:14 INFO Cleaning up SSH key files
+07:00:14 INFO Found 1 key files, clean up 0 key files
+07:00:14 INFO Cleaning up openstack keypairs
+07:00:14 INFO Getting runners...
+07:00:16 INFO Getting all openstack servers managed by the charm
+07:00:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:17 INFO Authentication (publickey) successful!
+07:00:17 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+07:00:17 INFO Flushing idle and busy runners...
+07:00:18 INFO Getting all openstack servers managed by the charm
+07:00:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:19 INFO Authentication (publickey) successful!
+07:00:19 INFO Attempting to kill all runner process on test-kuf4pt6a-0-n-54fc92aa4921
+07:00:19 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+07:00:19 INFO Kill process command output, ok: True code 0, out: 1833
+2230
+, err: 
+07:00:19 INFO Getting all openstack servers managed by the charm
+07:00:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:20 INFO Authentication (publickey) successful!
+07:00:22 INFO Cleaning up SSH key files
+07:00:22 INFO Found 1 key files, clean up 0 key files
+07:00:22 INFO Cleaning up openstack keypairs
+07:00:32 INFO Flushing idle and busy runners...
+07:00:32 INFO Getting all openstack servers managed by the charm
+07:00:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:33 INFO Authentication (publickey) successful!
+07:00:34 INFO Attempting to kill all runner process on test-kuf4pt6a-0-n-54fc92aa4921
+07:00:34 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+07:00:34 INFO Kill process command output, ok: False code 1, out: , err: 
+07:00:34 INFO Getting all openstack servers managed by the charm
+07:00:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:35 INFO Authentication (publickey) successful!
+07:00:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:00:35 INFO Authentication (publickey) successful!
+07:00:36 INFO [chan 2] Opened sftp connection (server version 3)
+07:00:36 INFO Running runner removal script for test-kuf4pt6a-0-n-54fc92aa4921
+07:00:37 INFO Deleting openstack server with test-kuf4pt6a-0-n-54fc92aa4921
+07:00:41 INFO Cleaning up SSH key files
+07:00:41 INFO Found 0 key files, clean up 0 key files
+07:00:41 INFO Cleaning up openstack keypairs
+07:00:41 INFO Getting runners...
+07:00:42 INFO Getting all openstack servers managed by the charm
+07:00:44 INFO Found following runners: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+07:00:44 WARNING Found runner instance on cloud but not registered on GitHub: {'test-kuf4pt6a-0-n-54fc92aa4921'}
+07:00:44 INFO Getting runners...
+07:00:45 INFO Getting all openstack servers managed by the charm
+07:00:46 INFO Found following runners: set()

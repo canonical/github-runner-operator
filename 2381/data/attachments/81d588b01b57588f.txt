@@ -1,0 +1,135 @@
+06:24:01 INFO Adding model github-pr-5e3eb-lxd:test-charm-fork-path-change-pok4 on cloud localhost
+06:24:01 WARNING unexpected facade SSHServer received from the controller
+06:24:03 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:04 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [allocating] waiting: waiting for machine
+06:24:34 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [allocating] waiting: waiting for machine
+06:25:04 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [allocating] waiting: agent initialising
+06:25:35 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [executing] maintenance: Setting up Builder.
+06:26:05 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [executing] maintenance: Setting up Builder.
+06:26:36 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [executing] maintenance: Setting up Builder.
+06:27:06 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [executing] maintenance: Setting up Builder.
+06:27:37 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [executing] maintenance: Setting up Builder.
+06:28:07 INFO Waiting for model:
+  github-runner-image-builder-vpt9supe/0 [idle] blocked: image integration required.
+06:28:33 INFO Deploying local:jammy/github-runner-0
+06:28:33 INFO Waiting for model:
+  test-vpt9supe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vpt9supe/0 [idle] blocked: image integration required.
+06:29:03 INFO Waiting for model:
+  test-vpt9supe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vpt9supe/0 [idle] blocked: image integration required.
+06:29:34 INFO Waiting for model:
+  test-vpt9supe/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vpt9supe/0 [idle] blocked: image integration required.
+06:30:04 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:30:34 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:31:04 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:31:35 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:32:05 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:32:35 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:33:06 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:33:36 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:34:07 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:34:37 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:35:07 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:35:38 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:36:08 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:36:38 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:37:09 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:37:39 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:38:09 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:38:39 INFO Waiting for model:
+  test-vpt9supe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vpt9supe/0 [executing] active: Building image.
+06:39:10 INFO Waiting for model:
+  test-vpt9supe/0 [executing] maintenance: Reconciling runners
+06:39:30 INFO GitHub token rate limit: Rate(reset=2025-04-13 07:10:30+00:00, remaining=4940, limit=5000)
+06:39:41 INFO test_path_config_change
+06:39:41 INFO Waiting for model:
+  test-vpt9supe/0 [idle] active: 
+06:40:12 INFO Waiting for model:
+  test-vpt9supe/0 [executing] maintenance: Reconciling runners
+06:40:42 INFO Waiting for model:
+  test-vpt9supe/0 [idle] active: 
+06:40:51 INFO Ensure there is a runner (this calls reconcile)
+06:44:02 INFO Waiting for model:
+  test-vpt9supe/0 [executing] active: 
+06:44:32 INFO Waiting for model:
+  test-vpt9supe/0 [idle] active: 
+06:44:39 INFO Reconciling (again)
+06:47:48 INFO Waiting for model:
+  test-vpt9supe/0 [executing] active: 
+06:48:18 INFO Waiting for model:
+  test-vpt9supe/0 [idle] active: 
+06:48:25 INFO runners: ['test-vpt9supe-0-n-042f30d2e663']
+06:48:26 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-0b5c3134d129"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-221806e278f7"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-45db1af953a2"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-66e97f0b91c1"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-6b330f168783"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-9b5c20a0ff00"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-f8fe2680a80b"), SelfHostedActionsRunner(name="test-bc5o91a5-0-n-19b96eb71328"), SelfHostedActionsRunner(name="test-cdwbfr8k-0-n-9ac96fe6dc59"), SelfHostedActionsRunner(name="test-cmkgpn4v-0-n-41a1c383a5cd"), SelfHostedActionsRunner(name="test-d3rhdkde-0-r-2313990a9eb6"), SelfHostedActionsRunner(name="test-ed08yoec-0-n-142c98eec87b"), SelfHostedActionsRunner(name="test-f02yuuyj-0-n-5b428881e2a7"), SelfHostedActionsRunner(name="test-f2cc9792-0-n-f9dc58fcaca3"), SelfHostedActionsRunner(name="test-fm7f6t6g-0-n-bb21633db6b8"), SelfHostedActionsRunner(name="test-fpnldsm1-0-n-51f6378c8f31"), SelfHostedActionsRunner(name="test-fzxg5oi7-0-n-49b7757473b9"), SelfHostedActionsRunner(name="test-g1l2b9j5-0-n-b3c7e343b841"), SelfHostedActionsRunner(name="test-gpy2av3x-0-n-7756061858cb"), SelfHostedActionsRunner(name="test-iaj5e02t-0-n-7f1088dbd6a4"), SelfHostedActionsRunner(name="test-imzmihcw-0-n-add1a54f6ef5"), SelfHostedActionsRunner(name="test-j27v0aw3-0-n-763dac70b8ee"), SelfHostedActionsRunner(name="test-j28cu0kw-0-n-f1fca41b63c4"), SelfHostedActionsRunner(name="test-j7wvwh7f-0-n-55002ef240d1"), SelfHostedActionsRunner(name="test-k9qsxo3h-0-n-e0066bb3f101"), SelfHostedActionsRunner(name="test-kbdih5ui-0-n-622bac5e88c1"), SelfHostedActionsRunner(name="test-knvjp4o0-0-n-e2ae9e146a55"), SelfHostedActionsRunner(name="test-kx5wg6mj-0-n-74ecda678868"), SelfHostedActionsRunner(name="test-lt08x42p-0-n-54d8d8bcdd4f"), SelfHostedActionsRunner(name="test-mbotbnp1-0-n-74755a66e0f6"), SelfHostedActionsRunner(name="test-mbotbnp1-0-n-982835a99640"), SelfHostedActionsRunner(name="test-n8qrnp0b-0-n-a04fbd42c2f2"), SelfHostedActionsRunner(name="test-na8g2qsl-0-n-6eb8782e2231"), SelfHostedActionsRunner(name="test-nj7wtmny-0-n-ff8ff303fdd7"), SelfHostedActionsRunner(name="test-nolaqp5z-0-n-c48d7384370d"), SelfHostedActionsRunner(name="test-nozfo2yq-0-n-cd9d9c876ec2"), SelfHostedActionsRunner(name="test-p1jraejo-0-n-bdb22e49b0e8"), SelfHostedActionsRunner(name="test-qx0y1joo-0-n-e1e1215d200a"), SelfHostedActionsRunner(name="test-rq6ve2tg-0-n-449af6058459"), SelfHostedActionsRunner(name="test-rte43fuy-0-n-b531c28ff1cc"), SelfHostedActionsRunner(name="test-ry70j0xg-0-n-61eadf781d7e"), SelfHostedActionsRunner(name="test-sg4m4br1-0-n-72cefa4ffc59"), SelfHostedActionsRunner(name="test-si5jln0j-0-n-f070170b4b93"), SelfHostedActionsRunner(name="test-thzou5j7-0-n-d6aa03efee00"), SelfHostedActionsRunner(name="test-twmcz3l3-0-n-d1435799b6ed"), SelfHostedActionsRunner(name="test-ub9n2fo3-0-n-fa8d47c977d4"), SelfHostedActionsRunner(name="test-uneao2rg-0-n-fce2772ac895"), SelfHostedActionsRunner(name="test-v7hi6woa-0-n-0998fbe7af79"), SelfHostedActionsRunner(name="test-vpt9supe-0-n-042f30d2e663"), SelfHostedActionsRunner(name="test-w9lupxzf-0-n-469ab2a65915"), SelfHostedActionsRunner(name="test-xjgee251-0-n-f62333b4552b"), SelfHostedActionsRunner(name="test-z2dii9qi-0-n-26e8de03727c")]
+06:48:27 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-pok4  github-pr-5e3eb-lxd  localhost/localhost  3.6.4    unsupported  06:48:27Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-vpt9supe           active      1  github-runner-image-builder  latest/edge   68  no       
+test-vpt9supe                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vpt9supe/0*  active    idle   0        10.181.44.106          
+test-vpt9supe/0*                         active    idle   1        10.181.44.225          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.181.44.106  juju-ff6323-0  ubuntu@22.04      Running
+1        started  10.181.44.225  juju-ff6323-1  ubuntu@22.04      Running
+
+06:48:27 INFO Juju error logs:
+
+machine-0: 06:25:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-vpt9supe-0: 06:25:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-vpt9supe-0: 06:25:39 ERROR unit.github-runner-image-builder-vpt9supe/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-vpt9supe-0: 06:29:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:48:27 INFO Forgetting model main...

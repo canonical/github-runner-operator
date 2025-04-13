@@ -1,0 +1,142 @@
+06:23:46 INFO Adding model github-pr-5e3eb-lxd:test-charm-fork-repo-gkzz on cloud localhost
+06:23:47 WARNING unexpected facade SSHServer received from the controller
+06:23:48 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:23:49 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [allocating] waiting: waiting for machine
+06:24:19 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [allocating] waiting: waiting for machine
+06:24:50 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [allocating] waiting: agent initialising
+06:25:20 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [executing] maintenance: Setting up Builder.
+06:25:51 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [executing] maintenance: Setting up Builder.
+06:26:21 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [executing] maintenance: Setting up Builder.
+06:26:51 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [executing] maintenance: Setting up Builder.
+06:27:22 INFO Waiting for model:
+  github-runner-image-builder-wuz3kfsp/0 [executing] maintenance: Setting up Builder.
+06:28:04 INFO Deploying local:jammy/github-runner-0
+06:28:04 INFO Waiting for model:
+  test-wuz3kfsp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wuz3kfsp/0 [idle] blocked: image integration required.
+06:28:35 INFO Waiting for model:
+  test-wuz3kfsp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wuz3kfsp/0 [idle] blocked: image integration required.
+06:29:05 INFO Waiting for model:
+  test-wuz3kfsp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wuz3kfsp/0 [executing] blocked: image integration required.
+06:29:35 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:30:06 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:30:36 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:31:06 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:31:37 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:32:07 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:32:38 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:33:08 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:33:38 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:34:09 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:34:39 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:35:10 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:35:40 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:36:41 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:37:11 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:37:41 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:38:11 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:38:42 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:39:12 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:39:42 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:40:13 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:40:43 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wuz3kfsp/0 [executing] active: Building image.
+06:41:14 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] active: 
+06:41:26 INFO GitHub token rate limit: Rate(reset=2025-04-13 07:39:15+00:00, remaining=4962, limit=5000)
+06:45:51 INFO Waiting for model:
+  test-wuz3kfsp/0 [executing] active: 
+06:46:21 INFO Waiting for model:
+  test-wuz3kfsp/0 [idle] active: 
+06:46:31 INFO [TEST SETUP] Exposing port 8080 on test-wuz3kfsp-0-n-68f2037e8e0d
+06:46:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.248', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:49:2c:52'}]])
+06:46:34 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-wuz3kfsp-0-n-68f2037e8e0d
+06:46:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.248', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:49:2c:52'}]])
+06:46:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wuz3kfsp-0-n-68f2037e8e0d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.248 nc -z localhost 8080'
+06:46:37 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-wuz3kfsp-0-n-68f2037e8e0d
+06:46:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.248', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:49:2c:52'}]])
+06:46:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wuz3kfsp-0-n-68f2037e8e0d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.248 curl http://localhost:8080'
+06:46:42 INFO Wait for condition not met, sleeping 10
+06:46:57 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-gkzz  github-pr-5e3eb-lxd  localhost/localhost  3.6.4    unsupported  06:46:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-wuz3kfsp           active      1  github-runner-image-builder  latest/edge   68  no       
+test-wuz3kfsp                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-wuz3kfsp/0*  active    idle   0        10.221.226.194            
+test-wuz3kfsp/0*                         active    idle   1        10.221.226.56   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.221.226.194  juju-3d37d1-0  ubuntu@22.04      Running
+1        started  10.221.226.56   juju-3d37d1-1  ubuntu@22.04      Running
+
+06:46:57 INFO Juju error logs:
+
+machine-0: 06:24:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-wuz3kfsp-0: 06:24:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-wuz3kfsp-0: 06:25:31 ERROR unit.github-runner-image-builder-wuz3kfsp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:28:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-wuz3kfsp-0: 06:28:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:46:57 INFO Forgetting model main...
