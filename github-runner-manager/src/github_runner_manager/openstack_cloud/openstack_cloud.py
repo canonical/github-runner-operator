@@ -661,6 +661,6 @@ def _find_missing_security_rules(
 def _rule_matches(rule: SecurityGroupRule, expected_rule_dict: SecurityRuleDict) -> bool:
     """TODO."""
     for condition_name, condition_value in expected_rule_dict.items():
-        if condition_name not in rule[condition_name] or rule[condition_name] != condition_value:
+        if condition_name not in rule or rule[condition_name] != condition_value:
             return False
     return True
