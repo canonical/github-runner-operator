@@ -31,7 +31,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud import health_checks
@@ -127,14 +127,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return self._config.prefix
 
     def create_runner(
-        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_config_data: RunnerConfigData,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_token: The token for the runner.
+            runner_config_data: Config data for spawning the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -146,7 +149,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
 
-        cloud_init = self._generate_cloud_init(runner_token=runner_token)
+        cloud_init = self._generate_cloud_init(runner_token=runner_config_data.token)
         try:
             instance = self._openstack_cloud.launch_instance(
                 metadata=metadata,
