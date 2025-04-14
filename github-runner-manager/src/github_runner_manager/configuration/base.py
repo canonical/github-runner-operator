@@ -4,14 +4,34 @@
 """Base configuration for the Application."""
 
 import logging
+from dataclasses import dataclass
 from typing import Optional, TextIO
 
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
 from github_runner_manager.configuration import github
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
 logger = logging.getLogger(__name__)
+
+
+# The github-runner-manager is being refactor from a library to an application.
+# Once the charm no longer rely on the github-runner-manager as a library this will be removed.
+# The github-runner-manager needs a input representing the user for process execution due to as a
+# library the user needs to be a hardcoded value. With the github-runner-manager as application,
+# user would be the current user running the application.
+@dataclass
+class UserInfo:
+    """The user to run the reactive process.
+
+    Attributes:
+        user: The user for running the reactive processes.
+        group: The user group for running the reactive processes.
+    """
+
+    user: str
+    group: str
 
 
 class ApplicationConfiguration(BaseModel):
@@ -24,6 +44,7 @@ class ApplicationConfiguration(BaseModel):
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
+        openstack_configuration: Configuration for authorization to a OpenStack host.
     """
 
     name: str
@@ -32,6 +53,7 @@ class ApplicationConfiguration(BaseModel):
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
+    openstack_configuration: OpenStackConfiguration
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":

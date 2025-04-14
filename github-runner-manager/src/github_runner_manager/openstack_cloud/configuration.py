@@ -3,11 +3,11 @@
 
 """Module containing OpenStack Configuration."""
 
-import dataclasses
+
+from pydantic import BaseModel
 
 
-@dataclasses.dataclass
-class OpenStackConfiguration:
+class OpenStackConfiguration(BaseModel):
     """OpenStack configuration.
 
     Attributes:
@@ -21,8 +21,7 @@ class OpenStackConfiguration:
     credentials: "OpenStackCredentials"
 
 
-@dataclasses.dataclass
-class OpenStackCredentials:
+class OpenStackCredentials(BaseModel):
     """OpenStack credentials.
 
     Attributes:
@@ -42,3 +41,7 @@ class OpenStackCredentials:
     user_domain_name: str
     project_domain_name: str
     region_name: str
+
+
+OpenStackConfiguration.update_forward_refs()
+OpenStackCredentials.update_forward_refs()

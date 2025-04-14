@@ -5,6 +5,7 @@
 
 import logging
 
+from github_runner_manager import constants
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -14,6 +15,7 @@ from github_runner_manager.configuration import (
     QueueConfig,
     ReactiveConfiguration,
     SupportServiceConfig,
+    UserInfo,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
@@ -38,21 +40,24 @@ def create_runner_scaler(state: CharmState, app_name: str, unit_name: str) -> Ru
     Returns:
         An instance of RunnerScaler.
     """
-    openstack_configuration = create_openstack_configuration(state, unit_name)
-    application_configuration = create_application_configuration(state, app_name)
+    application_configuration = create_application_configuration(state, app_name, unit_name)
+    user = UserInfo(constants.RUNNER_MANAGER_USER, constants.RUNNER_MANAGER_GROUP)
 
     return RunnerScaler.build(
         application_configuration=application_configuration,
-        openstack_configuration=openstack_configuration,
+        user=user,
     )
 
 
-def create_application_configuration(state: CharmState, app_name: str) -> ApplicationConfiguration:
+def create_application_configuration(
+    state: CharmState, app_name: str, unit_name: str
+) -> ApplicationConfiguration:
     """Create the ApplicationConfiguration from the CharmState.
 
     Args:
         state: The CharmState.
         app_name: Application name to pass to ApplicationConfiguration.
+        unit_name: The unit name of the juju unit.
 
     Returns:
         The created ApplicationConfiguration
@@ -73,6 +78,7 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
     )
     non_reactive_configuration = _get_non_reactive_configuration(state)
     reactive_configuration = _get_reactive_configuration(state, app_name)
+    openstack_configuration = create_openstack_configuration(state, unit_name)
     return ApplicationConfiguration(
         name=app_name,
         extra_labels=extra_labels,
@@ -80,6 +86,7 @@ def create_application_configuration(state: CharmState, app_name: str) -> Applic
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,
+        openstack_configuration=openstack_configuration,
     )
 
 
