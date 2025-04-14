@@ -113,30 +113,35 @@ async def test_jobmanager(
     act: Put the message in the queue.
     assert: Work in progress.
     """
+    # The http server simulates the jobmanager. Both the github-runner application
+    # and the builder-agent will interact with the jobmanager. An alternative is
+    # to create a test with a real jobmanager, and this could be done in the future.
     logger.info("Start of test_jobmanager test")
 
     # put in a fixture
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip_address = s.getsockname()[0]
-    logger.info("IP Address to use: %s", ip_address)
+    logger.info("IP Address to use as the fake jobmanager: %s", ip_address)
     s.close()
 
-    port = httpserver.port
-    base_url = f"http://{ip_address}:{port}"
+    jobmanager_base_url = f"http://{ip_address}:{httpserver.port}"
 
     mongodb_uri = await get_mongodb_uri(ops_test, app)
     labels = {app.name, "x64"}
 
     job_id = 99
     job_path = f"/v1/jobs/{job_id}"
-    job_url = f"{base_url}{job_path}"
+    job_url = f"{jobmanager_base_url}{job_path}"
 
     job = JobDetails(
         labels=labels,
         url=job_url,
     )
 
+    # The first interaction with the jobmanager after the github-runner gets
+    # a message in the queue is to check if the job has been picked up. If it is pending,
+    # the github-runner will spawn a reactive runner.
     returned_job = Job(job_id=job_id, status="PENDING")
     httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
@@ -153,9 +158,12 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    # ok, now a pending matcher for a while until the runner sends alive
-    _ = httpserver.expect_request(job_path).respond_with_json(returned_job.to_dict())
+    # From this point, the github-runner reactive process will check if the job has been picked
+    # up. The jobmanager will return pending until the builder-agent is alive (that is,
+    # the server is alive and running).
+    httpserver.expect_request(job_path).respond_with_json(returned_job.to_dict())
 
+    # The github-runner will request a token to spawn the runner.
     token_path = f"/v1/jobs/{job_id}/token"
     returned_token = V1JobsJobIdTokenPost200Response(token="token")
     httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
@@ -167,4 +175,6 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
+    # At this point the openstack instance is spawned, but cloud init is not ye correct.
+    # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder should be spawned, but pending to replace cloud init."

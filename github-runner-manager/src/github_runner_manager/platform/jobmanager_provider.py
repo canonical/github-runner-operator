@@ -18,7 +18,11 @@ from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerState,
 )
-from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+from github_runner_manager.types_.github import (
+    GitHubRunnerStatus,
+    SelfHostedRunner,
+    SelfHostedRunnerLabel,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -95,14 +99,15 @@ class JobManagerPlatform(PlatformProvider):
                             busy=False,
                             id=int(metadata.runner_id),
                             metadata=metadata,
-                            labels=labels,
+                            labels=[SelfHostedRunnerLabel(name=label) for label in labels],
                             status=GitHubRunnerStatus.OFFLINE,
                             instance_id=instance_id,
                         ),
                     )
                 raise PlatformApiError("Empty token from jobmanager API")
             except ApiException as exc:
-                raise PlatformApiError from exc
+                logger.exception("Error calling jobmanager api.")
+                raise PlatformApiError("API error") from exc
 
     def get_removal_token(self) -> str:
         """Get removal token from Platform.
@@ -137,7 +142,7 @@ class JobManagerPlatform(PlatformProvider):
                     return True
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
-                raise PlatformApiError from exc
+                raise PlatformApiError("API error") from exc
             return False
 
     def get_job_info(
