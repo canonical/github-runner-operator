@@ -58,7 +58,7 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
         "protocol": "tcp",
         "port_range_min": 10022,
         "port_range_max": 10022,
-        "direction": "ingress",
+        "direction": "egress",
         "ethertype": "IPv4",
     },
 }
