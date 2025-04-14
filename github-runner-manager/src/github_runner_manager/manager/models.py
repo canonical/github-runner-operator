@@ -187,10 +187,10 @@ class RunnerConfigData:
 
     Attributes:
         token: TODO
-        opened_ingress_tcp_ports: TODO
+        ingress_tcp_ports_to_open: TODO
         shell_run_script: TODO
     """
 
     token: str
-    opened_ingress_tcp_ports: list[int] = field(default_factory=lambda: [])
+    ingress_tcp_ports_to_open: list[int] = field(default_factory=lambda: [])
     shell_run_script: str | None = None

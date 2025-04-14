@@ -156,6 +156,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 instance_id=instance_id,
                 server_config=server_config,
                 cloud_init=cloud_init,
+                ingress_tcp_ports_to_open=runner_config_data.ingress_tcp_ports_to_open,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
