@@ -457,10 +457,11 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             states = [member.value for member in PlatformRunnerState]
 
         github_state_set = set(states)
+        runner_id = random.randint(1, 1000000)
         return tuple(
             SelfHostedRunner(
                 busy=runner.github_state == PlatformRunnerState.BUSY,
-                id=random.randint(1, 1000000),
+                id=runner_id,
                 labels=[],
                 os="linux",
                 instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
@@ -469,6 +470,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                     if runner.github_state == PlatformRunnerState.OFFLINE
                     else GitHubRunnerStatus.ONLINE
                 ),
+                metadata=RunnerMetadata(platform_name="github", runner_id=str(runner_id)),
             )
             for runner in self.state.runners.values()
             if runner.github_state in github_state_set

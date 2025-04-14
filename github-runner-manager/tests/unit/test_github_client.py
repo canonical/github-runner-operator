@@ -17,7 +17,7 @@ import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JobConclusion,
@@ -393,6 +393,7 @@ def test_get_runner_token_repo(github_client: GithubClient):
         os="unknown",
         status=GitHubRunnerStatus.OFFLINE,
         instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=113),
     )
 
 
@@ -542,4 +543,5 @@ def test_get_runner_token_org(github_client: GithubClient, monkeypatch: pytest.M
         os="unknown",
         status=GitHubRunnerStatus.OFFLINE,
         instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=18),
     )

@@ -348,6 +348,8 @@ async def openstack_model_proxy(
     )
 
 
+# TODO OVERRIDE THIS FIXTORE IN TEST_JOBMANAGER.PY INSTEAD OF
+# ALL THE BUILDING OF THE JOBMANAGER GITHUB-RUNNER
 @pytest_asyncio.fixture(scope="module", name="image_builder_config")
 async def image_builder_config_fixture(
     private_endpoint_config: PrivateEndpointConfigs | None,
@@ -751,7 +753,8 @@ async def app_for_jobmanager_fixture(
     if not existing_app_suffix:
         await image_builder.set_config(
             {
-                "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
+                # "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
+                "script-url": "https://raw.githubusercontent.com/javierdelapuente/github-runner-operator/refs/heads/test/stg-jobmanager/post-image-build.sh"  # noqa
             }
         )
         await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")

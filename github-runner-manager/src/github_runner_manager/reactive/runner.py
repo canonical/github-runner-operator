@@ -9,7 +9,7 @@ import sys
 
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
-from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.multiplexor_provider import MultiplexorPlatform
 from github_runner_manager.reactive.consumer import consume
 from github_runner_manager.reactive.process_manager import RUNNER_CONFIG_ENV_VAR
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -44,7 +44,7 @@ def main() -> None:
     setup_root_logging()
     queue_config = runner_config.queue
     openstack_runner_manager = OpenStackRunnerManager(config=runner_config.cloud_runner_manager)
-    github_provider = GitHubRunnerPlatform.build(
+    github_provider = MultiplexorPlatform.build(
         prefix=runner_config.cloud_runner_manager.prefix,
         github_configuration=runner_config.github_configuration,
     )

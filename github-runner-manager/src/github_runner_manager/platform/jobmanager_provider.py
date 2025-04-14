@@ -3,8 +3,12 @@
 
 """JobManager platform provider."""
 
+import logging
 from typing import Iterable
 
+import jobmanager_client
+from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
+from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
@@ -13,7 +17,9 @@ from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerState,
 )
-from github_runner_manager.types_.github import SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+
+logger = logging.getLogger(__name__)
 
 
 class JobManagerPlatform(PlatformProvider):
@@ -24,12 +30,20 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
-
-        Raises:
-            NotImplementedError: Work in progress
         """
         self._prefix = prefix
-        raise NotImplementedError
+
+    @classmethod
+    def build(cls, prefix: str) -> "JobManagerPlatform":
+        """TODO.
+
+        Args:
+            prefix: The prefix in the name to identify the runners managed by this instance.
+
+        Returns:
+            TODO.
+        """
+        return cls(prefix)
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
@@ -39,21 +53,20 @@ class JobManagerPlatform(PlatformProvider):
         Args:
             states: Filter the runners for these states. If None, all runners are returned.
 
-        Raises:
-            NotImplementedError: Work in progress.
+        Returns:
+            TODO.
         """
-        raise NotImplementedError
+        # TODO for now return empty so the reconciliation can work
+        logger.warning("jobmanager.get_runners NOT IMPLEMENTED")
+        return ()
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.
 
         Args:
             runners: list of runners to delete.
-
-        Raises:
-            NotImplementedError: Work in progress.
         """
-        raise NotImplementedError
+        logger.warning("jobmanager.delete_runners NOT IMPLEMENTED")
 
     def get_runner_token(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
@@ -68,9 +81,40 @@ class JobManagerPlatform(PlatformProvider):
             labels: Labels for the runner.
 
         Raises:
-            NotImplementedError: Work in progress.
+            ApiException: Work in progress.
+
+        Returns:
+            TODO.
         """
-        raise NotImplementedError
+        configuration = jobmanager_client.Configuration(host=metadata.url)
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            try:
+                # Retrieve jobs
+                jobrequest = V1JobsJobIdTokenPostRequest(job_id=int(metadata.runner_id))
+                response = api_instance.v1_jobs_job_id_token_post(
+                    int(metadata.runner_id), jobrequest
+                )
+                if response.token:
+                    return (
+                        response.token,
+                        # Just pretending one to match the api. The API should not return this
+                        # probably.
+                        SelfHostedRunner(
+                            busy=False,
+                            id=int(metadata.runner_id),
+                            metadata=metadata,
+                            labels=[],
+                            os="",
+                            status=GitHubRunnerStatus.OFFLINE,
+                            instance_id=instance_id,
+                        ),
+                    )
+                raise ApiException("Empty token from API")
+            except ApiException:
+                # TODO WHAT TO DO IN HERE?
+                logger.exception("Error calling jobmanager api")
+                raise
 
     def get_removal_token(self) -> str:
         """Get removal token from Platform.
@@ -80,6 +124,7 @@ class JobManagerPlatform(PlatformProvider):
         Raises:
             NotImplementedError: Work in progress.
         """
+        logger.warning("jobmanager.get_removal_token NOT IMPLEMENTED")
         raise NotImplementedError
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
@@ -89,11 +134,22 @@ class JobManagerPlatform(PlatformProvider):
             job_url: The URL of the job.
             metadata: Metadata for the runner.
 
-
-        Raises:
-            NotImplementedError: Work in progress.
+        Returns:
+            TODO
         """
-        raise NotImplementedError
+        configuration = jobmanager_client.Configuration(host=metadata.url)
+
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            try:
+                # Retrieve jobs
+                job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
+                if job.status != "PENDING":
+                    return True
+            except ApiException:
+                # TODO WHAT TO DO IN HERE?
+                logger.exception("Error calling jobmanager api")
+            return False
 
     def get_job_info(
         self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
@@ -109,4 +165,5 @@ class JobManagerPlatform(PlatformProvider):
         Raises:
             NotImplementedError: Work in progress.
         """
+        logger.warning("jobmanager.get_job_info NOT IMPLEMENTED")
         raise NotImplementedError
