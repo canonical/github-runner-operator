@@ -12,7 +12,7 @@ from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
@@ -65,9 +65,9 @@ class JobManagerPlatform(PlatformProvider):
         # TODO for now do not do any work so the reconciliation can work.
         logger.warning("jobmanager.delete_runners not implemented")
 
-    def get_runner_token(
+    def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -94,7 +94,7 @@ class JobManagerPlatform(PlatformProvider):
                 )
                 if response.token:
                     return (
-                        response.token,
+                        RunnerConfigData(token=response.token),
                         SelfHostedRunner(
                             busy=False,
                             id=int(metadata.runner_id),
