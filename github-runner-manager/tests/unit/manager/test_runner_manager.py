@@ -102,7 +102,6 @@ def test_cleanup_removes_offline_expected_runners(
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        os="unknown",
         instance_id=instance_id,
         metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
@@ -164,7 +163,6 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        os="unknown",
         instance_id=InstanceID.build("invalid"),
         metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
@@ -175,7 +173,6 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
             labels=[],
             status=GitHubRunnerStatus.OFFLINE,
             busy=True,
-            os="unknown",
             instance_id=InstanceID.build("unit-0"),
             metadata=RunnerMetadata(platform_name="github", runner_id="2"),
         ),

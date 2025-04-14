@@ -125,6 +125,7 @@ def consume(
                     msg.ack()
                     break
                 job_details = _parse_job_details(msg)
+                logger.info("Received reactive job: %s", job_details)
                 if not _validate_labels(
                     labels=job_details.labels, supported_labels=supported_labels
                 ):
@@ -164,7 +165,7 @@ def consume(
 def _build_runner_metadata(job_url: str) -> RunnerMetadata:
     """Build runner metadata from the job url."""
     parsed_url = urlparse(job_url)
-    # We expect the netlo to contain github.com, otherwise this function will fail,
+    # We expect the netloc to contain github.com, otherwise this function will fail,
     # as will use jobmanager code to handle github runners.
     if "github.com" in parsed_url.netloc:
         return RunnerMetadata()
@@ -229,7 +230,7 @@ def _spawn_runner(
         job_url: The URL of the job.
         msg: The message to acknowledge or reject.
         platform_provider: Platform provider.
-        metadata: TODO.
+        metadata: RunnerMetadata for the runner to spawn..
     """
     instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:

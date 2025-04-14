@@ -27,7 +27,7 @@ class MultiplexerPlatform(PlatformProvider):
         """Construct the object.
 
         Args:
-            providers: TODO
+            providers: dict of providers to use for multiplexing.
         """
         self._providers = providers
 
@@ -35,14 +35,14 @@ class MultiplexerPlatform(PlatformProvider):
     def build(
         cls, prefix: str, github_configuration: GitHubConfiguration
     ) -> "MultiplexerPlatform":
-        """Build a TODO.
+        """Build a new MultiplexerPlatform.
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
             github_configuration: GitHub configuration
 
         Returns:
-            A new GitHubRunnerPlatform.
+            A new MultiplexerPlatform.
         """
         github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
         jobmanager_platform = JobManagerPlatform.build()

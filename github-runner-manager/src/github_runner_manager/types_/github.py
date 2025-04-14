@@ -65,7 +65,6 @@ class SelfHostedRunner(BaseModel):
         busy: Whether the runner is executing a job.
         id: Unique identifier of the runner.
         labels: Labels of the runner.
-        os: Operation system of the runner.
         status: The Github runner status.
         instance_id: InstanceID of the runner.
         metadata: Runner metadata.
@@ -74,7 +73,6 @@ class SelfHostedRunner(BaseModel):
     busy: bool
     id: int
     labels: list[SelfHostedRunnerLabel]
-    os: str
     status: GitHubRunnerStatus
     instance_id: InstanceID
     metadata: RunnerMetadata

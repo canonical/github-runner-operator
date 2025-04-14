@@ -463,7 +463,6 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                 busy=runner.github_state == PlatformRunnerState.BUSY,
                 id=runner_id,
                 labels=[],
-                os="linux",
                 instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE

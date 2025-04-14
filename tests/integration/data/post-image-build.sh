@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
 
 # Ensure the script is run with superuser privileges
 if [[ $EUID -ne 0 ]]; then
