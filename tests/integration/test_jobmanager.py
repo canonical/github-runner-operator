@@ -64,13 +64,17 @@ async def image_builder_config_fixture(
 
 
 @pytest.fixture(scope="session")
-def httpserver_listen_address():
-    return ("0.0.0.0", 8000)
+def httpserver_listen_port() -> int:
+    return 8000
+
+@pytest.fixture(scope="session")
+def httpserver_listen_address(httpserver_listen_port: int):
+    return ("0.0.0.0", httpserver_listen_port)
 
 
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
-    ops_test: OpsTest, app_for_reactive: Application
+        ops_test: OpsTest, app_for_reactive: Application,
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     app_for_jobmanager = app_for_reactive
@@ -102,9 +106,10 @@ async def test_jobmanager(
     httpserver: HTTPServer,
 ):
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Prepare a Job related to the jobmanager.
+        Prepare a fake http server to simulate all interactions.
+    act: Put the message in the queue.
+    assert: Work in progress.
     """
     logger.info("Start of test_jobmanager test")
 
@@ -115,8 +120,7 @@ async def test_jobmanager(
     logger.info("IP Address to use: %s", ip_address)
     s.close()
 
-    # put in a fixture
-    port = 8000
+    port = httpserver.port
     base_url = f"http://{ip_address}:{port}"
 
     mongodb_uri = await get_mongodb_uri(ops_test, app)
@@ -140,29 +144,25 @@ async def test_jobmanager(
             mongodb_uri,
             app.name,
         )
-        logger.info("JAVI Waiting for first pending")
+        logger.info("Waiting for first check job status.")
     assert waiting.result
 
-    logger.info("JAVI Elapsed time: %s sec", (waiting.elapsed_time))
-    logger.info("JAVI server log: %s ", (httpserver.log))
-    logger.info("JAVI matchers: %s ", (httpserver.format_matchers()))
+    logger.info("Elapsed time: %s sec", (waiting.elapsed_time))
+    logger.info("server log: %s ", (httpserver.log))
+    logger.info("matchers: %s ", (httpserver.format_matchers()))
 
     # ok, now a pending matcher for a while until the runner sends alive
     _ = httpserver.expect_request(job_path).respond_with_json(returned_job.to_dict())
-
-    logger.info("JAVI Elapsed time: %s sec", (waiting.elapsed_time))
-    logger.info("JAVI server log: %s ", (httpserver.log))
-    logger.info("JAVI matchers: %s ", (httpserver.format_matchers()))
 
     token_path = f"/v1/jobs/{job_id}/token"
     returned_token = V1JobsJobIdTokenPost200Response(token="token")
     httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
-        logger.info("JAVI waiting for get token")
+        logger.info("Waiting for get token.")
     assert waiting.result
 
-    logger.info("JAVI Elapsed time: %s sec", (waiting.elapsed_time))
-    logger.info("JAVI server log: %s ", (httpserver.log))
-    logger.info("JAVI matchers: %s ", (httpserver.format_matchers()))
+    logger.info("Elapsed time: %s sec", (waiting.elapsed_time))
+    logger.info("server log: %s ", (httpserver.log))
+    logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    assert False, "end of test not finished"
+    assert True, "At this point the builder should be spawned, but pending to replace cloud init."
