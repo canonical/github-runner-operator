@@ -67,6 +67,7 @@ async def image_builder_config_fixture(
 def httpserver_listen_port() -> int:
     return 8000
 
+
 @pytest.fixture(scope="session")
 def httpserver_listen_address(httpserver_listen_port: int):
     return ("0.0.0.0", httpserver_listen_port)
@@ -74,7 +75,8 @@ def httpserver_listen_address(httpserver_listen_port: int):
 
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
-        ops_test: OpsTest, app_for_reactive: Application,
+    ops_test: OpsTest,
+    app_for_reactive: Application,
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     app_for_jobmanager = app_for_reactive
