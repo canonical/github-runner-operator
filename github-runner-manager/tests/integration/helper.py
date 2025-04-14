@@ -39,18 +39,26 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
         The process running the CLI application.
     """
     process = subprocess.Popen(
-        [PACKAGE_NAME, "--config-file", config_file, "--debug", *extra_args],
+        [
+            PACKAGE_NAME,
+            "--config-file",
+            config_file,
+            "--debug",
+            *extra_args,
+        ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
+    logs = b""
     for line in process.stderr:
         if b"Address already in use" in line:
             assert False, "Test setup failure: Port used for testing taken"
         if b"Press CTRL+C to quit" in line:
             break
+        logs += line
     else:
-        assert False, "Test setup failure: Abnormal app exit"
+        assert False, f"Test setup failure: Abnormal app exit with logs:\n{logs.decode('utf-8')}"
     return process
 
 
