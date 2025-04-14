@@ -621,7 +621,7 @@ class OpenstackCloud:
                 description="For servers managed by the github-runner charm.",
             )
 
-        missing_rules = _find_missing_security_rules(security_group.rules, expected_rules)
+        missing_rules = _find_missing_security_rules(security_group, expected_rules)
 
         for missing_rule_name, missing_rule in missing_rules.items():
             conn.create_security_group_rule(secgroup_name_or_id=security_group.id, **missing_rule)
