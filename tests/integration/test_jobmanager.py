@@ -24,6 +24,7 @@ from tests.integration.helpers.charm_metrics import (
     clear_metrics_log,
 )
 from tests.integration.helpers.common import reconcile
+from tests.integration.helpers.openstack import PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,
     assert_queue_is_empty,
@@ -35,6 +36,33 @@ logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
 
 
+@pytest_asyncio.fixture(scope="module", name="image_builder_config")
+async def image_builder_config_fixture(
+    private_endpoint_config: PrivateEndpointConfigs | None,
+    flavor_name: str,
+    network_name: str,
+):
+    """The image builder application default for OpenStack runners."""
+    if not private_endpoint_config:
+        raise ValueError("Private endpoints are required for testing OpenStack runners.")
+    return {
+        "build-interval": "12",
+        "revision-history-limit": "2",
+        "openstack-auth-url": private_endpoint_config["auth_url"],
+        # Bandit thinks this is a hardcoded password
+        "openstack-password": private_endpoint_config["password"],  # nosec: B105
+        "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+        "openstack-project-name": private_endpoint_config["project_name"],
+        "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+        "openstack-user-name": private_endpoint_config["username"],
+        "build-flavor": flavor_name,
+        "build-network": network_name,
+        "architecture": "amd64",
+        # "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
+        "script-url": "https://raw.githubusercontent.com/canonical/github-runner-operator/refs/heads/back-to-first-jobmanager-try/tests/integration/data/post-image-build.sh",  # noqa
+    }
+
+
 @pytest.fixture(scope="session")
 def httpserver_listen_address():
     return ("0.0.0.0", 8000)
@@ -42,9 +70,10 @@ def httpserver_listen_address():
 
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
-    ops_test: OpsTest, app_for_jobmanager: Application
+    ops_test: OpsTest, app_for_reactive: Application
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
+    app_for_jobmanager = app_for_reactive
     mongodb_uri = await get_mongodb_uri(ops_test, app_for_jobmanager)
     clear_queue(mongodb_uri, app_for_jobmanager.name)
     assert_queue_is_empty(mongodb_uri, app_for_jobmanager.name)

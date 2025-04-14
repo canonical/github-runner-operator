@@ -348,8 +348,6 @@ async def openstack_model_proxy(
     )
 
 
-# TODO OVERRIDE THIS FIXTORE IN TEST_JOBMANAGER.PY INSTEAD OF
-# ALL THE BUILDING OF THE JOBMANAGER GITHUB-RUNNER
 @pytest_asyncio.fixture(scope="module", name="image_builder_config")
 async def image_builder_config_fixture(
     private_endpoint_config: PrivateEndpointConfigs | None,
@@ -381,6 +379,8 @@ async def image_builder_fixture(
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
     image_builder_config: dict,
+    flavor_name: str,
+    network_name: str,
     openstack_model_proxy: None,
     openstack_connection,
 ):
@@ -424,7 +424,7 @@ async def app_openstack_runner_fixture(
     existing_app_suffix: Optional[str],
     image_builder: Application,
 ) -> AsyncIterator[Application]:
-    """Application without image builder.."""
+    """Application launching VMs and no runners."""
     if existing_app_suffix:
         application = model.applications[app_name]
     else:
@@ -451,34 +451,21 @@ async def app_openstack_runner_fixture(
             },
             wait_idle=False,
         )
+        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+    await model.wait_for_idle(
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=25 * 60
+    )
 
     return application
-
-
-@pytest_asyncio.fixture(scope="module", name="app_openstack_runner_builder")
-async def app_openstack_runner_builder_fixture(
-    model: Model,
-    app_openstack_runner: Application,
-    image_builder: Application,
-    existing_app_suffix: Optional[str],
-) -> AsyncIterator[Application]:
-    """Application launching VMs and no runners."""
-    if existing_app_suffix:
-        return app_openstack_runner
-    await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")
-    await model.wait_for_idle(
-        apps=[app_openstack_runner.name, image_builder.name], status=ACTIVE, timeout=25 * 60
-    )
-    return app_openstack_runner
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
 async def app_scheduled_events_fixture(
     model: Model,
-    app_openstack_runner_builder,
+    app_openstack_runner,
 ):
     """Application to check scheduled events."""
-    application = app_openstack_runner_builder
+    application = app_openstack_runner
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
@@ -489,10 +476,10 @@ async def app_scheduled_events_fixture(
 @pytest_asyncio.fixture(scope="module", name="app_no_wait_tmate")
 async def app_no_wait_tmate_fixture(
     model: Model,
-    app_openstack_runner_builder,
+    app_openstack_runner,
 ):
     """Application to check tmate ssh with openstack without waiting for active."""
-    application = app_openstack_runner_builder
+    application = app_openstack_runner
     await application.set_config(
         {"reconcile-interval": "60", BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}
     )
@@ -713,6 +700,7 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
     """Deploy MongoDB."""
     if not existing_app_suffix:
         mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
@@ -721,56 +709,15 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
 @pytest_asyncio.fixture(scope="module", name="app_for_reactive")
 async def app_for_reactive_fixture(
     model: Model,
-    app_openstack_runner_builder: Application,
+    app_openstack_runner: Application,
     mongodb: Application,
     existing_app_suffix: Optional[str],
 ) -> Application:
     """Application for testing reactive."""
     if not existing_app_suffix:
-        await model.relate(
-            f"{app_openstack_runner_builder.name}:mongodb", f"{mongodb.name}:database"
-        )
+        await model.relate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
 
-    await model.wait_for_idle(
-        apps=[app_openstack_runner_builder.name, mongodb.name], status=ACTIVE
-    )
-
-    return app_openstack_runner_builder
-
-
-@pytest_asyncio.fixture(scope="module", name="app_for_jobmanager")
-async def app_for_jobmanager_fixture(
-    model: Model,
-    app_openstack_runner: Application,
-    image_builder: Application,
-    mongodb: Application,
-    existing_app_suffix: Optional[str],
-) -> Application:
-    """Application for testing reactive.
-
-    It will not work if app_openstack_runner_builder is also applied.
-    """
-    if not existing_app_suffix:
-        await image_builder.set_config(
-            {
-                # "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
-                "script-url": "https://raw.githubusercontent.com/javierdelapuente/github-runner-operator/refs/heads/test/stg-jobmanager/post-image-build.sh"  # noqa
-            }
-        )
-        await model.integrate(f"{image_builder.name}:image", f"{app_openstack_runner.name}:image")
-        # no comment... we are is quite broken.
-        await model.wait_for_idle(
-            apps=[app_openstack_runner.name, image_builder.name],
-            status=ACTIVE,
-            timeout=25 * 60,
-        )
-        await model.integrate(f"{app_openstack_runner.name}:mongodb", f"{mongodb.name}:database")
-
-    await model.wait_for_idle(
-        apps=[app_openstack_runner.name, image_builder.name],
-        status=ACTIVE,
-        timeout=25 * 60,
-    )
+    await model.wait_for_idle(apps=[app_openstack_runner.name, mongodb.name], status=ACTIVE)
 
     return app_openstack_runner
 
@@ -778,7 +725,7 @@ async def app_for_jobmanager_fixture(
 @pytest_asyncio.fixture(scope="module", name="basic_app")
 async def basic_app_fixture(request: pytest.FixtureRequest) -> Application:
     """Setup the charm with the basic configuration."""
-    return request.getfixturevalue("app_openstack_runner_builder")
+    return request.getfixturevalue("app_openstack_runner")
 
 
 @pytest_asyncio.fixture(scope="function", name="instance_helper")

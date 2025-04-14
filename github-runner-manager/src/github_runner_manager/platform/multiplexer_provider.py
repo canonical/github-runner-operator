@@ -1,9 +1,6 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-# Many not implemented methods equal to the jobmanager.
-# pylint:disable=duplicate-code
-
 """Multiplexer platform provider."""
 
 from collections import defaultdict
