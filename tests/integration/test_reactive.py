@@ -50,7 +50,7 @@ async def app_fixture(
     clear_queue(mongodb_uri, app_for_reactive.name)
     assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
 
-    await app_for_reactive.set_co1nfig(
+    await app_for_reactive.set_config(
         {
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
