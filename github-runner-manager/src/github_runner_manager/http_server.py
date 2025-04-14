@@ -6,12 +6,21 @@
 The HTTP server for request to the github-runner-manager.
 """
 
+import getpass
+import grp
+import os
+from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
 
-from github_runner_manager.configuration import ApplicationConfiguration
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.errors import LockError
+from github_runner_manager.manager.runner_manager import FlushMode
+from github_runner_manager.manager.runner_scaler import RunnerScaler
+
+APP_CONFIG_NAME = "app_config"
+OPENSTACK_CONFIG_NAME = "openstack_config"
 
 app = Flask(__name__)
 
@@ -41,18 +50,25 @@ def flush_runner() -> tuple[str, int]:
     Returns:
         A empty response.
     """
-    flush_busy = request.headers.get("flush-busy")
-    if flush_busy in ("True", "true"):
-        app.logger.info("Flushing busy runners...")
-    else:
-        app.logger.info("Flushing idle runners...")
+    app_config = app.config[APP_CONFIG_NAME]
+
+    flush_busy_str = request.args.get("flush-busy")
+    flush_busy = False
+    if flush_busy_str in ("True", "true"):
+        flush_busy = True
 
     lock = get_lock()
-    app.logger.info("Lock locked: %s", lock.locked())
-    app.logger.info("Flush: Attempting to acquire the lock...")
+
+    lock_state = "locked" if lock.locked() else "unlocked"
+    app.logger.info("Attempting to acquire the lock: %s", lock_state)
     with lock:
-        app.logger.info("Flushing the runners")
-    app.logger.info("Flushed the runners")
+        app.logger.info("Flushing runners...")
+        user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, user)
+        app.logger.info("Flushing busy: %s", flush_busy)
+        flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
+        num_flushed = runner_scaler.flush(flush_mode)
+        app.logger.info("Flushed %s runners", num_flushed)
     return ("", 204)
 
 
@@ -70,18 +86,40 @@ def get_lock() -> Lock:
     raise LockError("Lock not configured")
 
 
-def start_http_server(
-    _: ApplicationConfiguration, lock: Lock, host: str, port: int, debug: bool
-) -> None:
-    """Start the HTTP server for interacting with the github-runner-manager service.
+@dataclass
+class FlaskArgs:
+    """Arguments for Flask HTTP server.
 
-    Args:
-        lock: The lock representing modification access to the managed set of runners.
+    Attributes:
         host: The hostname to listen on for the HTTP server.
         port: The port to listen on for the HTTP server.
         debug: Start the flask HTTP server in debug mode.
     """
+
+    host: str
+    port: int
+    debug: bool
+
+
+def start_http_server(
+    app_config: ApplicationConfiguration,
+    lock: Lock,
+    flask_args: FlaskArgs,
+) -> None:
+    """Start the HTTP server for interacting with the github-runner-manager service.
+
+    Args:
+        app_config: The application configuration.
+        lock: The lock representing modification access to the managed set of runners.
+        flask_args: The arguments for the flask HTTP server.
+    """
     # The lock is passed from the caller, hence the need to update the global variable.
     global _lock  # pylint: disable=global-statement
     _lock = lock
-    app.run(host=host, port=port, debug=debug, use_reloader=False)
+    app.config[APP_CONFIG_NAME] = app_config
+    app.run(
+        host=flask_args.host,
+        port=flask_args.port,
+        debug=flask_args.debug,
+        use_reloader=False,
+    )
