@@ -139,24 +139,11 @@ def consume(
                     # flavours are sent to the same queue.
                     msg.reject(requeue=False)
                     continue
-                # Defaults as github, needed to select the platform provider.
-                parsed_url = urlparse(job_details.url)
-                if "github.com" in parsed_url.netloc:
-                    metadata = RunnerMetadata()
-                else:
-
-                    parsed_url = urlparse(job_details.url)
-                    match_result = re.match(r"^(.+)v1/jobs/(\d+)$", parsed_url.path)
-                    if not match_result:
-                        logger.error("Error URL for a job. url: %s", job_details.url)
-                        msg.reject(requeue=False)
-                        break
-                    base_url = parsed_url._replace(path=match_result.group(1)).geturl()
-                    runner_id = match_result.group(2)
-                    metadata = RunnerMetadata(
-                        platform_name="jobmanager", url=base_url, runner_id=runner_id
-                    )
-                logger.info("JAVI metadata for the new job %s", metadata)
+                try:
+                    metadata = _build_runner_metadata(job_details.url)
+                except ValueError:
+                    msg.reject(requeue=False)
+                    break
                 if platform_provider.check_job_been_picked_up(
                     metadata=metadata, job_url=job_details.url
                 ):
@@ -172,6 +159,25 @@ def consume(
                 break
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
+
+
+def _build_runner_metadata(job_url: str) -> RunnerMetadata:
+    """Build runner metadata from the job url."""
+    parsed_url = urlparse(job_url)
+    # We expect the netlo to contain github.com, otherwise this function will fail,
+    # as will use jobmanager code to handle github runners.
+    if "github.com" in parsed_url.netloc:
+        return RunnerMetadata()
+
+    # From here on jobmanager. For now we just regex on the url to check if it is the url
+    # of a runner.
+    match_result = re.match(r"^(.+)v1/jobs/(\d+)$", parsed_url.path)
+    if not match_result:
+        logger.error("Invalid URL for a job. url: %s", job_url)
+        raise ValueError(f"Invalid format for job url {job_url}")
+    base_url = parsed_url._replace(path=match_result.group(1)).geturl()
+    runner_id = match_result.group(2)
+    return RunnerMetadata(platform_name="jobmanager", url=base_url, runner_id=runner_id)
 
 
 def _parse_job_details(msg: Message) -> JobDetails:

@@ -79,9 +79,9 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
 
 def test_consume_job_manager(queue_config: QueueConfig):
     """
-    arrange: TODO.
-    act: TODO
-    assert: TODO
+    arrange: New Job created in the queue with a format matching the jobmanager.
+    act: Call consume.
+    assert: A runner in created with the correct metadata
     """
     labels = {"label1"}
 

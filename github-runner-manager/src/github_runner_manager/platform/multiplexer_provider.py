@@ -4,7 +4,7 @@
 # Many not implemented methods equal to the jobmanager.
 # pylint:disable=duplicate-code
 
-"""Multiplexor platform provider."""
+"""Multiplexer platform provider."""
 
 from collections import defaultdict
 from typing import Iterable
@@ -23,8 +23,8 @@ from github_runner_manager.platform.platform_provider import (
 from github_runner_manager.types_.github import SelfHostedRunner
 
 
-class MultiplexorPlatform(PlatformProvider):
-    """Manage self-hosted runner on the Multiplexor."""
+class MultiplexerPlatform(PlatformProvider):
+    """Manage self-hosted runner on the Multiplexer."""
 
     def __init__(self, providers: dict[str, PlatformProvider]):
         """Construct the object.
@@ -37,7 +37,7 @@ class MultiplexorPlatform(PlatformProvider):
     @classmethod
     def build(
         cls, prefix: str, github_configuration: GitHubConfiguration
-    ) -> "MultiplexorPlatform":
+    ) -> "MultiplexerPlatform":
         """Build a TODO.
 
         Args:
@@ -48,7 +48,7 @@ class MultiplexorPlatform(PlatformProvider):
             A new GitHubRunnerPlatform.
         """
         github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
-        jobmanager_platform = JobManagerPlatform.build(prefix)
+        jobmanager_platform = JobManagerPlatform.build()
         return cls({"github": github_platform, "jobmanager": jobmanager_platform})
 
     def get_runners(
@@ -60,15 +60,14 @@ class MultiplexorPlatform(PlatformProvider):
             states: Filter the runners for these states. If None, all runners are returned.
 
         Returns:
-            TODO
+            Get the list of runners from all platforms.
         """
-        # TODO THIS IS PROBABLY WRONG. IF THE JOBMANAGER DOES NOT OFFER AN API TO
-        # GET ALL RUNNERS, WE SHOULD DELETE THIS FUNCTION AND GET THEM FROM THE
-        # CLOUD MANAGER. IN THAT CASE, A FUNCTION TO DELETE STRAY RUNNERS IN THE
-        # PLATFORM PROVIDER SHOULD BE CREATED. THAT IS TO DELETE (OFFLINE, IDLE) IN GITHUB
-        # SO THEY DO NOT ROAM FOR A FULL DAY IF THEY (DELETE THEM ONCE WHEY ARE OLDER
-        # THAN 15/20 MIN, TO GIVE THE RUNNER ENOUGH TIME TO GET ONLINE)
-        # todo why a tuple??
+        # FIXME. This method should not exist as the jobmanager does not offer a API to
+        # get all runners (at least not for the github-runner). We should delete this method
+        # and instead get all runners from the cloud manager.
+        # A method to delete all runners in the platform that are not in the cloud manager
+        # may also be needed, for example github may need to have this, so there are no runners
+        # in offline/idle state without a cloud instance.
         runners = ()
         for platform in self._providers.values():
             runners += platform.get_runners(states)
@@ -80,13 +79,11 @@ class MultiplexorPlatform(PlatformProvider):
         Args:
             runners: list of runners to delete.
         """
-        # TODO THIS FUNCTIONS IS WRONG. SelfHostedRunner should include a platform name
         platform_runners: dict[str, PlatformProvider] = defaultdict(list)
         for runner in runners:
             platform_runners[runner.metadata.platform_name].append(runner)
 
         for platform_name, platform_runners in platform_runners.items():
-            # TODO HANDLE ERRORS BETTER.
             self._providers[platform_name].delete_runners(platform_runners)
 
     def get_runner_token(
@@ -102,7 +99,7 @@ class MultiplexorPlatform(PlatformProvider):
             labels: Labels for the runner.
 
         Returns:
-            TODO
+            The runner token and the runner.
         """
         return self._get_provider(metadata).get_runner_token(metadata, instance_id, labels)
 
@@ -112,10 +109,10 @@ class MultiplexorPlatform(PlatformProvider):
         This token is used for removing self-hosted runners.
 
         Returns:
-            TODO.
+            The removal token..
         """
-        # TODO. THIS IS WRONG. THIS FUNCTION SHOULD DISAPPEAR AND BE RELATED TO A SPECIFIC RUNNER
-        # LEFT HERE TO USE GITHUB TO NOT BREAK THE RECONCILE LOOP.
+        # FIXME. This method should not exist. There should be just a method to delete a runner,
+        # For now, the github implementation is just used to not break the reconcile loop.
         return self._providers["github"].get_removal_token()
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
@@ -125,9 +122,8 @@ class MultiplexorPlatform(PlatformProvider):
             job_url: The URL of the job.
             metadata: Metadata for the runner.
 
-
         Returns:
-            TODO.
+            True if the job has been picked up, False otherwise.
         """
         return self._get_provider(metadata).check_job_been_picked_up(metadata, job_url)
 
@@ -143,13 +139,12 @@ class MultiplexorPlatform(PlatformProvider):
             runner: runner to get the job from.
 
         Returns:
-            TODO.
+            Information about the Job.
         """
         return self._get_provider(metadata).get_job_info(
             metadata, repository, workflow_run_id, runner
         )
 
     def _get_provider(self, metadata: RunnerMetadata) -> PlatformProvider:
-        """TODO."""
-        # TODO, raise if wrong and those things
+        """Get the provider based on the RunnerMetadata."""
         return self._providers[metadata.platform_name]

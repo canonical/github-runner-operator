@@ -68,7 +68,7 @@ class SelfHostedRunner(BaseModel):
         os: Operation system of the runner.
         status: The Github runner status.
         instance_id: InstanceID of the runner.
-        metadata: TODO
+        metadata: Runner metadata.
     """
 
     busy: bool

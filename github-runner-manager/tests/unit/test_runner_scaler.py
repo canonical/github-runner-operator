@@ -271,7 +271,6 @@ def test_build_runner_scaler(
     # A few comprobations on key data
     # Pending to refactor, too invasive.
     assert runner_scaler._manager.manager_name == "app_name"
-    # assert runner_scaler._manager._platform._path == GitHubOrg(org="canonical", group="group")
     assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
         prefix="unit_name",
