@@ -19,10 +19,10 @@ from github_runner_manager.platform.jobmanager_provider import JobManagerPlatfor
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
 
 
-def test_get_runner_token_succeeds(monkeypatch: pytest.MonkeyPatch):
+def test_get_runner_config_data_succeeds(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Mock the client api to return a token.
-    act: Call get_runner_token.
+    act: Call get_runner_config_data.
     assert: The correct token and the correct runner are returned..
     """
     call_api_mock = MagicMock()
@@ -36,9 +36,9 @@ def test_get_runner_token_succeeds(monkeypatch: pytest.MonkeyPatch):
     labels = ["label"]
     platform = JobManagerPlatform()
 
-    token, runner = platform.get_runner_token(metadata, instance_id, labels)
+    config_data, runner = platform.get_runner_config_data(metadata, instance_id, labels)
 
-    assert token == "mytoken"
+    assert config_data.token == "mytoken"
     assert runner.labels == [SelfHostedRunnerLabel(name="label")]
     assert runner.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE
@@ -52,10 +52,12 @@ def test_get_runner_token_succeeds(monkeypatch: pytest.MonkeyPatch):
         pytest.param(ApiException, "API error", id="Exception from api"),
     ],
 )
-def test_get_runner_token_fails(monkeypatch: pytest.MonkeyPatch, api_return_value, error_message):
+def test_get_runner_config_data_fails(
+    monkeypatch: pytest.MonkeyPatch, api_return_value, error_message
+):
     """
     arrange: Mock the jobmanager client to return different error conditions.
-    act: Call get_runner_token.
+    act: Call get_runner_config_data.
     assert: PlatformApiError should be raised with the expected message.
     """
     call_api_mock = MagicMock()
@@ -70,7 +72,7 @@ def test_get_runner_token_fails(monkeypatch: pytest.MonkeyPatch, api_return_valu
     platform = JobManagerPlatform()
 
     with pytest.raises(PlatformApiError) as exc:
-        _token, _runner = platform.get_runner_token(metadata, instance_id, labels)
+        _config_data, _runner = platform.get_runner_config_data(metadata, instance_id, labels)
 
     assert error_message in str(exc.value)
 

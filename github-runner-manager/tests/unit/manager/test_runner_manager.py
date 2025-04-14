@@ -13,7 +13,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -178,13 +178,13 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         ),
     ]
 
-    def _get_reg_token(instance_id, metadata, labels):
+    def _get_runner_config_data(instance_id, metadata, labels):
         """Return a registration token."""
         nonlocal github_runner
         github_runner.instance_id = instance_id
-        return "token", github_runner
+        return RunnerConfigData(token="token"), github_runner
 
-    github_provider.get_runner_token.side_effect = _get_reg_token
+    github_provider.get_runner_config_data.side_effect = _get_runner_config_data
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
     github_provider.get_runners.return_value = github_runners
 

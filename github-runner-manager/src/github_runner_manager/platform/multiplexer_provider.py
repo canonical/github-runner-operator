@@ -9,7 +9,7 @@ from typing import Iterable
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
@@ -93,9 +93,9 @@ class MultiplexerPlatform(PlatformProvider):
         for platform_name, platform_runners in platform_runners.items():
             self._providers[platform_name].delete_runners(platform_runners)
 
-    def get_runner_token(
+    def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -108,7 +108,7 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             The runner token and the runner.
         """
-        return self._get_provider(metadata).get_runner_token(metadata, instance_id, labels)
+        return self._get_provider(metadata).get_runner_config_data(metadata, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from Platform.
