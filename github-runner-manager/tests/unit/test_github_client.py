@@ -356,7 +356,7 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
         github_client.get_runner_remove_token(github_repo)
 
 
-def test_get_runner_config_data_repo(github_client: GithubClient):
+def test_get_runner_context_repo(github_client: GithubClient):
     """
     arrange: A mocked GitHub client that replies with information about jitconfig for repo.
     act: Call get_runner_registration_jittoken.
@@ -432,7 +432,7 @@ def test_catch_http_errors_from_getting_runner_group_id(
         )
 
 
-def test_get_runner_config_data_org(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A mocked GitHub client that replies with information about jitconfig for org.
        The requests library is patched to return information about github runner groups.

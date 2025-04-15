@@ -468,7 +468,7 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_config_data, github_runner = args.platform_provider.get_runner_config_data(
+        runner_context, github_runner = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
@@ -480,7 +480,7 @@ class RunnerManager:
             args.cloud_runner_manager.create_runner(
                 instance_id=instance_id,
                 metadata=args.metadata,
-                runner_config_data=runner_config_data,
+                runner_context=runner_context,
             )
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners

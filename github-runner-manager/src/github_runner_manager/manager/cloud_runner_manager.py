@@ -242,14 +242,14 @@ class CloudRunnerManager(abc.ABC):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerContext,
+        runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner.
             metadata: Runner Metadata.
-            runner_config_data: Configuration data needed to spawn the runner.
+            runner_context: Configuration data needed to spawn the runner.
         """
 
     @abc.abstractmethod

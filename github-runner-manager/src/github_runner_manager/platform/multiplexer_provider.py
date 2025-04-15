@@ -93,7 +93,7 @@ class MultiplexerPlatform(PlatformProvider):
         for platform_name, platform_runners in platform_runners.items():
             self._providers[platform_name].delete_runners(platform_runners)
 
-    def get_runner_config_data(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
@@ -108,7 +108,7 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             The runner token and the runner.
         """
-        return self._get_provider(metadata).get_runner_config_data(metadata, instance_id, labels)
+        return self._get_provider(metadata).get_runner_context(metadata, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from Platform.

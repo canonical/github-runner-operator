@@ -312,14 +312,14 @@ class MockCloudRunnerManager(CloudRunnerManager):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerContext,
+        runner_context: RunnerContext,
     ) -> None:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_config_data: TODO.
+            runner_context: TODO.
         """
         name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
@@ -422,7 +422,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         self.state = state
         self.path = path
 
-    def get_runner_config_data(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get the registration JIT token for registering runners on GitHub.

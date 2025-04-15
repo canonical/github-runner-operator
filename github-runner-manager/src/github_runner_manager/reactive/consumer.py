@@ -172,7 +172,7 @@ def _build_runner_metadata(job_url: str) -> RunnerMetadata:
 
     # From here on jobmanager. For now we just regex on the url to check if it is the url
     # of a runner.
-    match_result = re.match(r"^(.+)v1/jobs/(\d+)$", parsed_url.path)
+    match_result = re.match(r"^(.+)/v1/jobs/(\d+)$", parsed_url.path)
     if not match_result:
         logger.error("Invalid URL for a job. url: %s", job_url)
         raise ValueError(f"Invalid format for job url {job_url}")
