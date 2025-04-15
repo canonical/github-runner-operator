@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **ram_usage** | **str** |  | [optional] 
 **disk_usage** | **str** |  | [optional] 
 **status** | **str** |  | [optional] 
-**job** | [**Job**](Job.md) |  | [optional] 
+**deletable** | **bool** |  | [optional] 
 
 ## Example
 

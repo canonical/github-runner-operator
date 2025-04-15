@@ -1,5 +1,3 @@
-# Copyright 2025 Canonical Ltd.
-# See LICENSE file for licensing details.
 openapi: 3.0.3
 info:
   title: Job Manager API
@@ -183,8 +181,8 @@ paths:
                     type: string
                   status:
                     type: string
-                  job:
-                    $ref: '#/components/schemas/Job'
+                  deletable:
+                    type: boolean
   /v1/jobs/{job_id}/token:
     post:
       summary: Generate a JWT token
