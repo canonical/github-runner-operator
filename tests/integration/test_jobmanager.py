@@ -3,6 +3,7 @@
 
 """Testing for jobmanager platform."""
 
+import asyncio
 import json
 import logging
 import socket
@@ -24,7 +25,7 @@ from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, MAX_TOTAL_VIRTUAL_MAC
 from tests.integration.helpers.charm_metrics import (
     clear_metrics_log,
 )
-from tests.integration.helpers.common import reconcile
+from tests.integration.helpers.common import reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,
@@ -93,7 +94,9 @@ async def app_fixture(
     await reconcile(app_for_jobmanager, app_for_jobmanager.model)
     await clear_metrics_log(app_for_jobmanager.units[0])
 
+    logger.info("yielding app_for_jobmanager")
     yield app_for_jobmanager
+    logger.info("cleaning app_for_jobmanager")
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_jobmanager.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
@@ -146,14 +149,16 @@ async def test_jobmanager(
     returned_job = Job(job_id=job_id, status=JobStatus.PENDING.value)
     httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
-    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
+    with httpserver.wait(
+        raise_assertions=False, stop_on_nohandler=False, timeout=60 * 2
+    ) as waiting:
         add_to_queue(
             json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
             mongodb_uri,
             app.name,
         )
         logger.info("Waiting for first check job status.")
-    assert waiting.result
+    assert waiting.result, "Failed Waiting for first check job status."
 
     logger.info("Elapsed time: %s sec", (waiting.elapsed_time))
     logger.info("server log: %s ", (httpserver.log))
@@ -168,19 +173,32 @@ async def test_jobmanager(
     token_path = f"/v1/jobs/{job_id}/token"
     returned_token = V1JobsJobIdTokenPost200Response(token="token")
     httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
-    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for get token.")
-    assert waiting.result
+    assert waiting.result, "Failed Waiting for get token."
 
-    logger.info("Elapsed time: %s sec", (waiting.elapsed_time))
+    logger.info("After get token: Elapsed time: %s sec", (waiting.elapsed_time))
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    # At this point the openstack instance is spawned.
+    # At this point the openstack instance is spawned. We need to be able to access it.
+    # first wait a bit so there is a server. 60 seconds is something reasonable...
+    await asyncio.sleep(60)
+    logger.info("waiting for runner address")
+    unit = app.units[0]
+
+    def _check_server_has_addresses() -> bool:
+        """Check if the server has an address."""
+        nonlocal unit
+        server = instance_helper.get_single_runner(unit)
+        network_address_list = server.addresses.values()
+        return bool(network_address_list)
+
+    await wait_for(_check_server_has_addresses, check_interval=60, timeout=600)
+    logger.info("waiting for runner address finished")
 
     # We have an issue, as the runner must be able to contact this test
     # Some tunnelling is necessary.
-    unit = app.units[0]
     dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {ip_address} --dport {httpserver.port} -j DNAT --to-destination 127.0.0.1:{httpserver.port}"  # noqa  # pylint: disable=line-too-long
     _, _, _ = await instance_helper.run_in_instance(
         unit,
@@ -204,8 +222,8 @@ async def test_jobmanager(
     ).respond_with_data("OK")
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
-    logger.info("server log: %s ", (httpserver.log))
-    assert waiting.result
+    logger.info("server log after first contact: %s ", (httpserver.log))
+    assert waiting.result, "builder-agent did not contact us."
 
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder should be spawned, but pending to replace cloud init."
