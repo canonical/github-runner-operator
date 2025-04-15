@@ -31,14 +31,9 @@ from github_runner_manager.configuration.github import (
     GitHubRepo,
 )
 from github_runner_manager.errors import CloudError, ReconcileError
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerState,
-)
+from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.manager.runner_manager import (
-    FlushMode,
-    RunnerManager,
-)
+from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.metrics.events import Reconciliation
 from github_runner_manager.openstack_cloud.configuration import (

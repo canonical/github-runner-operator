@@ -16,11 +16,7 @@ import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
 from pydantic import ValidationError
 
-from github_runner_manager.errors import (
-    IssueMetricEventError,
-    RunnerMetricsError,
-    SSHError,
-)
+from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     PostJobMetrics,

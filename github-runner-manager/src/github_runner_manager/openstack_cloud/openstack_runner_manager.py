@@ -42,10 +42,7 @@ from github_runner_manager.openstack_cloud.constants import (
     RUNNER_WORKER_PROCESS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
-from github_runner_manager.openstack_cloud.openstack_cloud import (
-    OpenstackCloud,
-    OpenstackInstance,
-)
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 from github_runner_manager.utilities import retry, set_env_var
 

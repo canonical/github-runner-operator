@@ -5,10 +5,9 @@
 import functools
 import logging
 import shutil
-import time
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from functools import reduce
 from pathlib import Path
 from typing import Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
@@ -39,6 +38,7 @@ _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
 
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
+
 
 @dataclass
 class OpenstackInstance:

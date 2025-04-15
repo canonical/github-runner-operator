@@ -18,19 +18,10 @@ from ghapi.page import paged
 from requests import RequestException
 from typing_extensions import assert_never
 
-from github_runner_manager.configuration.github import (
-    GitHubOrg,
-    GitHubPath,
-    GitHubRepo,
-)
+from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.types_.github import (
-    JITConfig,
-    JobInfo,
-    RemoveToken,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 

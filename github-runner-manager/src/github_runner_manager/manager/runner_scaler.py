@@ -8,9 +8,7 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager.configuration import (
-    ApplicationConfiguration,
-)
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,
@@ -18,9 +16,7 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import (
-    HealthState,
-)
+from github_runner_manager.manager.cloud_runner_manager import HealthState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -29,9 +25,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.openstack_cloud.configuration import (
-    OpenStackConfiguration,
-)
+from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,

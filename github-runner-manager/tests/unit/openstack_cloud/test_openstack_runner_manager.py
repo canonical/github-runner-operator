@@ -21,13 +21,8 @@ from github_runner_manager.manager.cloud_runner_manager import (
 )
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import runner
-from github_runner_manager.metrics.runner import (
-    PullFileError,
-)
-from github_runner_manager.openstack_cloud import (
-    health_checks,
-    openstack_cloud,
-)
+from github_runner_manager.metrics.runner import PullFileError
+from github_runner_manager.openstack_cloud import health_checks, openstack_cloud
 from github_runner_manager.openstack_cloud.constants import (
     POST_JOB_METRICS_FILE_NAME,
     PRE_JOB_METRICS_FILE_NAME,
