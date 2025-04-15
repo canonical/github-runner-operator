@@ -1,5 +1,18 @@
 # Changelog
 
+### 2025-04-09
+
+- Remove update-dependencies action. This actions is not needed for external cloud providers.
+
+### 2025-03-27
+
+- Add proxy configuration options for charm to facilitate its use in corporate environments.
+  - manager-ssh-proxy-command: ProxyCommand ssh-config option used to ssh from the manager to the runners.
+  - runner-http-proxy: Allows the proxy in the runner to be different to the proxy in the
+    juju model config for the manager.
+  - use-runner-proxy-for-tmate: Whether to proxy the ssh connection from the runner to the tmate-server
+    using the runner http proxy.
+
 ### 2025-03-25
 
 - Add documentation explaining security design of the charm.
