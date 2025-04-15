@@ -432,7 +432,9 @@ class OpenstackCloud:
             if (
                 key.name
                 and InstanceID.name_has_prefix(self.prefix, key.name)
-                and datetime.fromisoformat(key.created_at).replace(tzinfo=timezone.utc)
+                and datetime.fromisoformat(key.created_at.replace("Z", "+00:00")).replace(
+                    tzinfo=timezone.utc
+                )
                 <= now - timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION)
             ):
                 if str(key.name) in exclude_instance_set:
