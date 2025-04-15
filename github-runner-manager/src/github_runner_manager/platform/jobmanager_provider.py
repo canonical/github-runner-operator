@@ -95,8 +95,8 @@ class JobManagerPlatform(PlatformProvider):
                 )
                 if response.token:
                     token = response.token
-                    jobmanager_endpoint =  f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
-                    command_to_run = f"BUILDER_LABEL=label JOB_MANAGER_BEARER_TOKEN={token} JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} builder-agent"
+                    jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
+                    command_to_run = f"BUILDER_LABEL=label JOB_MANAGER_BEARER_TOKEN={token} JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} builder-agent"  # noqa  # pylint: disable=line-too-long
                     return (
                         RunnerContext(token=token, shell_run_script=command_to_run),
                         SelfHostedRunner(
