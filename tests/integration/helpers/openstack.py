@@ -122,7 +122,7 @@ class OpenStackInstanceHelper:
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
-        logger.debug(
+        logger.info(
             "Run command '%s' in runner with result %s: '%s' '%s'",
             command,
             exit_code,

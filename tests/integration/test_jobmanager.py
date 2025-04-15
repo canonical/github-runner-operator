@@ -196,6 +196,7 @@ async def test_jobmanager(
 
     # At this point the openstack instance is spawned. We need to be able to access it.
     # first wait a bit so there is a server. 60 seconds is something reasonable...
+    logger.info("waiting 60s for runner startup")
     await asyncio.sleep(60)
     logger.info("waiting for runner address")
     unit = app.units[0]
@@ -219,6 +220,7 @@ async def test_jobmanager(
         assert_on_failure=True,
         # we should have enough time for the runner to start
         timeout=60 * 15,
+        assert_msg="Failed setting iptables rules",
     )
     await instance_helper.expose_to_instance(unit=unit, port=httpserver.port, host=ip_address)
 
@@ -237,13 +239,19 @@ async def test_jobmanager(
     httpserver.check_assertions()
 
     # Ok, at this point, we want to tell the builder-agent to execute some random thing.
+    execute_command = (
+        "'curl http://127.0.0.1:8080/execute -X POST "
+        '--header "Content-Type: application/json" '
+        '--data "'
+        '{\\"commands\\":[\\"sleep 100\\"]}"'
+        "'"
+    )
     _, _, _ = await instance_helper.run_in_instance(
         unit=unit,
-        command="curl http://127.0.0.1:8080/execute -X POST "
-        '--header "Content-Type: application/json" '
-        '--data \'{"commands":["sleep 100"]}\'',
+        command=execute_command,
         assert_on_failure=True,
         timeout=10,
+        assert_msg="Failed executing commands in builder-agent",
     )
 
     httpserver.expect_oneshot_request(
