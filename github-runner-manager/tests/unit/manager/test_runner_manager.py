@@ -13,7 +13,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -102,8 +102,8 @@ def test_cleanup_removes_offline_expected_runners(
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        os="unknown",
         instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
     cloud_instances: tuple[CloudRunnerInstance, ...] = ()
     if cloud_state:
@@ -163,28 +163,28 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        os="unknown",
         instance_id=InstanceID.build("invalid"),
+        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
     github_runners = [
         github_runner,
         SelfHostedRunner(
-            id=1,
+            id=2,
             labels=[],
             status=GitHubRunnerStatus.OFFLINE,
             busy=True,
-            os="unknown",
             instance_id=InstanceID.build("unit-0"),
+            metadata=RunnerMetadata(platform_name="github", runner_id="2"),
         ),
     ]
 
-    def _get_reg_token(instance_id, metadata, labels):
+    def _get_runner_context(instance_id, metadata, labels):
         """Return a registration token."""
         nonlocal github_runner
         github_runner.instance_id = instance_id
-        return "token", github_runner
+        return RunnerContext(token="token"), github_runner
 
-    github_provider.get_runner_token.side_effect = _get_reg_token
+    github_provider.get_runner_context.side_effect = _get_runner_context
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
     github_provider.get_runners.return_value = github_runners
 

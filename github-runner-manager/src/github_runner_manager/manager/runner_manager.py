@@ -11,7 +11,7 @@ from multiprocessing import Pool
 from typing import Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
-from github_runner_manager.errors import GithubApiError, GithubMetricsError, RunnerError
+from github_runner_manager.errors import GithubMetricsError, PlatformApiError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -328,7 +328,7 @@ class RunnerManager:
         if num == 1:
             try:
                 return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
-            except (RunnerError, GithubApiError):
+            except (RunnerError, PlatformApiError):
                 logger.exception("Failed to spawn a runner.")
                 return tuple()
 
@@ -358,7 +358,7 @@ class RunnerManager:
             for _ in range(num):
                 try:
                     instance_id = next(jobs)
-                except (RunnerError, GithubApiError):
+                except (RunnerError, PlatformApiError):
                     logger.exception("Failed to spawn a runner.")
                 except StopIteration:
                     break
@@ -468,7 +468,7 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_token, github_runner = args.platform_provider.get_runner_token(
+        runner_context, github_runner = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
@@ -478,7 +478,9 @@ class RunnerManager:
 
         try:
             args.cloud_runner_manager.create_runner(
-                instance_id=instance_id, metadata=args.metadata, runner_token=runner_token
+                instance_id=instance_id,
+                metadata=args.metadata,
+                runner_context=runner_context,
             )
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners

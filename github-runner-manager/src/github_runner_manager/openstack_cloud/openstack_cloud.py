@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+import copy
 import functools
 import logging
 import shutil
@@ -10,7 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from functools import reduce
 from pathlib import Path
-from typing import Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
+from typing import Any, Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
 
 import keystoneauth1.exceptions
 import openstack
@@ -21,6 +22,7 @@ from openstack.compute.v2.keypair import Keypair as OpenstackKeypair
 from openstack.compute.v2.server import Server as OpenstackServer
 from openstack.connection import Connection as OpenstackConnection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
+from openstack.network.v2.security_group_rule import SecurityGroupRule
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
@@ -36,6 +38,30 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
+
+SecurityRuleDict = dict[str, Any]
+
+DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
+    "icmp": {
+        "protocol": "icmp",
+        "direction": "ingress",
+        "ethertype": "IPv4",
+    },
+    "ssh": {
+        "protocol": "tcp",
+        "port_range_min": 22,
+        "port_range_max": 22,
+        "direction": "ingress",
+        "ethertype": "IPv4",
+    },
+    "tmate_ssh": {
+        "protocol": "tcp",
+        "port_range_min": 10022,
+        "port_range_max": 10022,
+        "direction": "egress",
+        "ethertype": "IPv4",
+    },
+}
 
 
 @dataclass
@@ -177,12 +203,14 @@ class OpenstackCloud:
         self._proxy_command = proxy_command
 
     @_catch_openstack_errors
-    def launch_instance(
+    # Pending to review the list of arguments
+    def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
         server_config: OpenStackServerConfig,
         cloud_init: str,
+        ingress_tcp_ports_to_open: list[int] | None = None,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -191,6 +219,7 @@ class OpenstackCloud:
             instance_id: The instance ID to form the instance name.
             server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
+            ingress_tcp_ports_to_open: TODO.
 
         Raises:
             OpenStackError: Unable to create OpenStack server.
@@ -201,7 +230,7 @@ class OpenstackCloud:
         logger.info("Creating openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            security_group = OpenstackCloud._ensure_security_group(conn)
+            security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports_to_open)
             # there is a race condition in here in the reactive case.
             # When a key is created in the file system but the instance is
             # not yet in openstack, the reconcile can remove that key.
@@ -554,18 +583,33 @@ class OpenstackCloud:
         key_path.unlink(missing_ok=True)
 
     @staticmethod
-    def _ensure_security_group(conn: OpenstackConnection) -> OpenstackSecurityGroup:
+    def _ensure_security_group(
+        conn: OpenstackConnection, ingress_tcp_ports_to_open: list[int] | None
+    ) -> OpenstackSecurityGroup:
         """Ensure runner security group exists.
+
+        These rules will apply to all runners in the security group in
+        the OpenStack project. Pending to split it by github-runner and
+        platform name.
 
         Args:
             conn: The connection object to access OpenStack cloud.
+            ingress_tcp_ports_to_open: TODO
 
         Returns:
             The security group with the rules for runners.
         """
-        rule_exists_icmp = False
-        rule_exists_ssh = False
-        rule_exists_tmate_ssh = False
+        expected_rules = copy.deepcopy(DEFAULT_SECURITY_RULES)
+
+        if ingress_tcp_ports_to_open:
+            for tcp_port in enumerate(ingress_tcp_ports_to_open):
+                expected_rules[f"tcp{tcp_port}"] = {
+                    "protocol": "tcp",
+                    "port_range_min": tcp_port,
+                    "port_range_max": tcp_port,
+                    "direction": "ingress",
+                    "ethertype": "IPv4",
+                }
 
         security_group_list = conn.list_security_groups(filters={"name": _SECURITY_GROUP_NAME})
         # Pick the first security_group returned.
@@ -576,60 +620,47 @@ class OpenstackCloud:
                 name=_SECURITY_GROUP_NAME,
                 description="For servers managed by the github-runner charm.",
             )
-        else:
-            existing_rules = security_group.security_group_rules
-            for rule in existing_rules:
-                if rule["protocol"] == "icmp":
-                    logger.debug(
-                        "Found ICMP rule in existing security group %s of ID %s",
-                        _SECURITY_GROUP_NAME,
-                        security_group.id,
-                    )
-                    rule_exists_icmp = True
-                if (
-                    rule["protocol"] == "tcp"
-                    and rule["port_range_min"] == rule["port_range_max"] == 22
-                ):
-                    logger.debug(
-                        "Found SSH rule in existing security group %s of ID %s",
-                        _SECURITY_GROUP_NAME,
-                        security_group.id,
-                    )
-                    rule_exists_ssh = True
-                if (
-                    rule["protocol"] == "tcp"
-                    and rule["port_range_min"] == rule["port_range_max"] == 10022
-                ):
-                    logger.debug(
-                        "Found tmate SSH rule in existing security group %s of ID %s",
-                        _SECURITY_GROUP_NAME,
-                        security_group.id,
-                    )
-                    rule_exists_tmate_ssh = True
 
-        if not rule_exists_icmp:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=security_group.id,
-                protocol="icmp",
-                direction="ingress",
-                ethertype="IPv4",
-            )
-        if not rule_exists_ssh:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=security_group.id,
-                port_range_min="22",
-                port_range_max="22",
-                protocol="tcp",
-                direction="ingress",
-                ethertype="IPv4",
-            )
-        if not rule_exists_tmate_ssh:
-            conn.create_security_group_rule(
-                secgroup_name_or_id=security_group.id,
-                port_range_min="10022",
-                port_range_max="10022",
-                protocol="tcp",
-                direction="egress",
-                ethertype="IPv4",
+        missing_rules = _find_missing_security_rules(security_group, expected_rules)
+
+        for missing_rule_name, missing_rule in missing_rules.items():
+            conn.create_security_group_rule(secgroup_name_or_id=security_group.id, **missing_rule)
+            logger.debug(
+                "Adding %s in existing security group %s of ID %s",
+                missing_rule_name,
+                _SECURITY_GROUP_NAME,
+                security_group.id,
             )
         return security_group
+
+
+def _find_missing_security_rules(
+    security_group: OpenstackSecurityGroup, expected_rules: dict[str, SecurityRuleDict]
+) -> dict[str, SecurityRuleDict]:
+    """TODO."""
+    # A bit messy.
+    missing_rules: dict[str, SecurityRuleDict] = {}
+    existing_rules = security_group.security_group_rules
+    for expected_rule_name, expected_rule in expected_rules.items():
+        expected_rule_found = False
+        for existing_rule in existing_rules:
+            if _rule_matches(existing_rule, expected_rule):
+                expected_rule_found = True
+                break
+        if not expected_rule_found:
+            missing_rules[expected_rule_name] = expected_rule
+            logger.debug(
+                "Found missing rule %s in security group %s of ID %s",
+                expected_rule_name,
+                _SECURITY_GROUP_NAME,
+                security_group.id,
+            )
+    return missing_rules
+
+
+def _rule_matches(rule: SecurityGroupRule, expected_rule_dict: SecurityRuleDict) -> bool:
+    """TODO."""
+    for condition_name, condition_value in expected_rule_dict.items():
+        if condition_name not in rule or rule[condition_name] != condition_value:
+            return False
+    return True

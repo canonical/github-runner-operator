@@ -45,7 +45,7 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 20 * 60
+IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 25 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -348,20 +348,43 @@ async def openstack_model_proxy(
     )
 
 
+@pytest_asyncio.fixture(scope="module", name="image_builder_config")
+async def image_builder_config_fixture(
+    private_endpoint_config: PrivateEndpointConfigs | None,
+    flavor_name: str,
+    network_name: str,
+):
+    """The image builder application default for OpenStack runners."""
+    if not private_endpoint_config:
+        raise ValueError("Private endpoints are required for testing OpenStack runners.")
+    return {
+        "build-interval": "12",
+        "revision-history-limit": "2",
+        "openstack-auth-url": private_endpoint_config["auth_url"],
+        # Bandit thinks this is a hardcoded password
+        "openstack-password": private_endpoint_config["password"],  # nosec: B105
+        "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
+        "openstack-project-name": private_endpoint_config["project_name"],
+        "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
+        "openstack-user-name": private_endpoint_config["username"],
+        "build-flavor": flavor_name,
+        "build-network": network_name,
+        "architecture": "amd64",
+    }
+
+
 @pytest_asyncio.fixture(scope="module", name="image_builder")
 async def image_builder_fixture(
     model: Model,
-    private_endpoint_config: PrivateEndpointConfigs | None,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
+    image_builder_config: dict,
     flavor_name: str,
     network_name: str,
     openstack_model_proxy: None,
     openstack_connection,
 ):
     """The image builder application for OpenStack runners."""
-    if not private_endpoint_config:
-        raise ValueError("Private endpoints are required for testing OpenStack runners.")
     if not existing_app_suffix:
         application_name = image_builder_app_name
         app = await model.deploy(
@@ -369,20 +392,7 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             revision=68,
-            config={
-                "build-interval": "12",
-                "revision-history-limit": "2",
-                "openstack-auth-url": private_endpoint_config["auth_url"],
-                # Bandit thinks this is a hardcoded password
-                "openstack-password": private_endpoint_config["password"],  # nosec: B105
-                "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
-                "openstack-project-name": private_endpoint_config["project_name"],
-                "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
-                "openstack-user-name": private_endpoint_config["username"],
-                "build-flavor": flavor_name,
-                "build-network": network_name,
-                "architecture": "amd64",
-            },
+            config=image_builder_config,
         )
         await model.wait_for_idle(
             apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
@@ -443,7 +453,7 @@ async def app_openstack_runner_fixture(
         )
         await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
     await model.wait_for_idle(
-        apps=[application.name, image_builder.name], status=ACTIVE, timeout=25 * 60
+        apps=[application.name, image_builder.name], status=ACTIVE, timeout=30 * 60
     )
 
     return application

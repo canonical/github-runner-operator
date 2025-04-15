@@ -15,9 +15,9 @@ from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
+from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JobConclusion,
@@ -330,14 +330,14 @@ def test_catch_http_errors(github_client: GithubClient):
     """
     arrange: A mocked Github Client that raises a 500 HTTPError.
     act: Call  an API endpoint.
-    assert: A GithubApiError is raised.
+    assert: A PlatformApiError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
         "http://test.com", 500, "", http.client.HTTPMessage(), None
     )
 
-    with pytest.raises(GithubApiError):
+    with pytest.raises(PlatformApiError):
         github_client.get_runner_remove_token(github_repo)
 
 
@@ -356,7 +356,7 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
         github_client.get_runner_remove_token(github_repo)
 
 
-def test_get_runner_token_repo(github_client: GithubClient):
+def test_get_runner_context_repo(github_client: GithubClient):
     """
     arrange: A mocked GitHub client that replies with information about jitconfig for repo.
     act: Call get_runner_registration_jittoken.
@@ -390,9 +390,9 @@ def test_get_runner_token_repo(github_client: GithubClient):
         busy=False,
         id=113,
         labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
-        os="unknown",
         status=GitHubRunnerStatus.OFFLINE,
         instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=113),
     )
 
 
@@ -402,7 +402,7 @@ def test_catch_http_errors_from_getting_runner_group_id(
     """
     arrange: A mocked Github Client that raises a 500 HTTPError when getting the runner group id.
     act: Call
-    assert: A GithubApiError is raised.
+    assert: A PlatformApiError is raised.
     """
     github_repo = GitHubOrg(org="theorg", group="my group name")
     instance_id = InstanceID.build("test-runner")
@@ -426,13 +426,13 @@ def test_catch_http_errors_from_getting_runner_group_id(
         return _Response()
 
     monkeypatch.setattr(requests, "get", _mock_get)
-    with pytest.raises(GithubApiError):
+    with pytest.raises(PlatformApiError):
         _, _ = github_client.get_runner_registration_jittoken(
             path=github_repo, instance_id=instance_id, labels=labels
         )
 
 
-def test_get_runner_token_org(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A mocked GitHub client that replies with information about jitconfig for org.
        The requests library is patched to return information about github runner groups.
@@ -539,7 +539,7 @@ def test_get_runner_token_org(github_client: GithubClient, monkeypatch: pytest.M
         busy=False,
         id=18,
         labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
-        os="unknown",
         status=GitHubRunnerStatus.OFFLINE,
         instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=18),
     )
