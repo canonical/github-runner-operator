@@ -25,7 +25,7 @@ from tests.integration.helpers.charm_metrics import (
     clear_metrics_log,
 )
 from tests.integration.helpers.common import reconcile
-from tests.integration.helpers.openstack import PrivateEndpointConfigs
+from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,
     assert_queue_is_empty,
@@ -103,6 +103,7 @@ async def app_fixture(
 @pytest.mark.abort_on_fail
 async def test_jobmanager(
     monkeypatch: pytest.MonkeyPatch,
+    instance_helper: OpenStackInstanceHelper,
     app: Application,
     ops_test: OpsTest,
     httpserver: HTTPServer,
@@ -174,6 +175,19 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    # At this point the openstack instance is spawned, but cloud init is not yet correct.
+    # At this point the openstack instance is spawned. We have an issue, as the runner must
+    # be able to contact this test
+    unit = app.units[0]
+
+    dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {ip_address} --dport {httpserver.port} -j DNAT --to-destination 127.0.0.1:{httpserver.port}"
+    _, _, _ = await instance_helper.run_in_instance(
+        unit,
+        dnat_comman_in_runner,
+        assert_on_failure=True,
+        # we should have enough time for the runner to start
+        timeout=60 * 15,
+    )
+    await instance_helper.expose_to_instance(unit=unit, port=httpserver.port, host=ip_address)
+
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder should be spawned, but pending to replace cloud init."
