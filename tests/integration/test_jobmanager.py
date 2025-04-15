@@ -132,6 +132,7 @@ async def test_jobmanager(
 
     job_id = 99
     job_path = f"/v1/jobs/{job_id}"
+    job_path_health = f"/v1/jobs/{job_id}/health"
     job_url = f"{jobmanager_base_url}{job_path}"
 
     job = JobDetails(
@@ -175,10 +176,9 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    # At this point the openstack instance is spawned. We have an issue, as the runner must
-    # be able to contact this test
-    unit = app.units[0]
+    # At this point the openstack instance is spawned. We have an issue, as the runner must be able to contact this test
 
+    unit = app.units[0]
     dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {ip_address} --dport {httpserver.port} -j DNAT --to-destination 127.0.0.1:{httpserver.port}"
     _, _, _ = await instance_helper.run_in_instance(
         unit,
@@ -188,6 +188,16 @@ async def test_jobmanager(
         timeout=60 * 15,
     )
     await instance_helper.expose_to_instance(unit=unit, port=httpserver.port, host=ip_address)
+
+    # the builder-agent will make PUT requests to http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
+    # It will send a jeon like {"label": "label", "status": "IDLE"}
+    # status can be: IDLE, EXECUTING, FINISHED,
+    # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
+    httpserver.expect_oneshot_request(job_path_health, method="PUT", json={"label": "label"}).respond_with_data("OK")
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
+        logger.info("Waiting for builder-agent to contact us.")
+    logger.info("server log: %s ", (httpserver.log))
+    assert waiting.result
 
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder should be spawned, but pending to replace cloud init."
