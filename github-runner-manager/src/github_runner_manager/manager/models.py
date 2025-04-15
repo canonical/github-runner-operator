@@ -182,7 +182,7 @@ class RunnerMetadata:
 
 
 @dataclass
-class RunnerConfigData:
+class RunnerContext:
     """Information provided by the platform provider needed to spawn a runner.
 
     Attributes:

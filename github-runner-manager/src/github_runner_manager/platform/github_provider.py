@@ -12,7 +12,7 @@ from pydantic import HttpUrl
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
@@ -92,7 +92,7 @@ class GitHubRunnerPlatform(PlatformProvider):
 
     def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
@@ -108,7 +108,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         token, runner = self._client.get_runner_registration_jittoken(
             self._path, instance_id, labels
         )
-        return RunnerConfigData(token=token), runner
+        return RunnerContext(token=token), runner
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.

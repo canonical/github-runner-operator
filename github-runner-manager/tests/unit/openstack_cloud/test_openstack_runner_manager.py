@@ -19,7 +19,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     PreJobMetrics,
     RunnerMetrics,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.runner import (
     PullFileError,
@@ -94,7 +94,7 @@ def test_create_runner_with_aproxy(
 
     prefix = "test"
     registration_jittoken = "jittoken"
-    runner_config_data = RunnerConfigData(token=registration_jittoken)
+    runner_config_data = RunnerContext(token=registration_jittoken)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
@@ -126,7 +126,7 @@ def test_create_runner_without_aproxy(
 
     prefix = "test"
     registration_jittoken = "jittoken"
-    runner_config_data = RunnerConfigData(token=registration_jittoken)
+    runner_config_data = RunnerContext(token=registration_jittoken)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))

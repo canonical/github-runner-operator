@@ -9,7 +9,7 @@ from typing import Iterable
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
@@ -95,7 +95,7 @@ class MultiplexerPlatform(PlatformProvider):
 
     def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.

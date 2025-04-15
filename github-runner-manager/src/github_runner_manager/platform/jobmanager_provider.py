@@ -13,7 +13,7 @@ from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
@@ -68,7 +68,7 @@ class JobManagerPlatform(PlatformProvider):
 
     def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -95,7 +95,7 @@ class JobManagerPlatform(PlatformProvider):
                 )
                 if response.token:
                     return (
-                        RunnerConfigData(token=response.token),
+                        RunnerContext(token=response.token),
                         SelfHostedRunner(
                             busy=False,
                             id=int(metadata.runner_id),
