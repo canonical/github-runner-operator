@@ -10,6 +10,8 @@ from unittest.mock import MagicMock
 import keystoneauth1.exceptions
 import openstack
 import pytest
+from openstack.compute.v2.keypair import Keypair
+from openstack.connection import Connection
 
 from github_runner_manager.errors import OpenStackError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
@@ -108,12 +110,25 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
         (cloud._ssh_key_dir / f"{FAKE_PREFIX}-new-server2.key", now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION - 1)),
     )
     # Create keypair files
+    keypair_list: list[Keypair] = []
     for keypair, mtime in itertools.chain(keypairs_older_then_threshold, keypairs_newer_than_threshold):
         keypair.write_text("foobar")
         os.utime(keypair, (mtime.timestamp(), mtime.timestamp()))
+        keypair_list.append(Keypair(created_at=mtime.strftime("%Y-%m-%dT%H:%M:%SZ"), name=keypair.name.removesuffix(".key")))
+
+    openstack_connection_mock = MagicMock(spec=Connection)
+    openstack_connection_mock.__enter__.return_value = openstack_connection_mock
+    openstack_connection_mock.list_keypairs.return_value = keypair_list
+    openstack_connection_mock.list_keypairs.return_value = keypair_list
+    openstack_connect_mock.return_value = openstack_connection_mock
+
     cloud.cleanup()
+
     # Check if only the old keypairs are deleted
+    keypair_delete_calls = [call[0][0] for call in openstack_connection_mock.delete_keypair.call_args_list]
     for keypair, _ in keypairs_older_then_threshold:
         assert not keypair.exists()
+        assert keypair.name.removesuffix(".key") in keypair_delete_calls
     for keypair, _ in keypairs_newer_than_threshold:
         assert keypair.exists()
+        assert keypair.name.removesuffix(".key") not in keypair_delete_calls

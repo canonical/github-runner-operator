@@ -398,13 +398,14 @@ class OpenstackCloud:
 
         total = 0
         deleted = 0
+        now_ts = time.time()
         for path in self._ssh_key_dir.iterdir():
             # Find key file from this application.
             if (
                 path.is_file()
                 and InstanceID.name_has_prefix(self.prefix, path.name)
                 and path.name.endswith(".key")
-                and path.stat().st_mtime < time.time() -  _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
+                and path.stat().st_mtime < now_ts -  _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
             ):
                 total += 1
                 if path in exclude_filename:
