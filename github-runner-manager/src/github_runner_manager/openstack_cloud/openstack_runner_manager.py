@@ -130,14 +130,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerContext,
+        runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_config_data: Config data for spawning the runner.
+            runner_context: Config data for spawning the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -149,14 +149,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
 
-        cloud_init = self._generate_cloud_init(runner_token=runner_config_data.token)
+        cloud_init = self._generate_cloud_init(runner_context=runner_context)
         try:
             instance = self._openstack_cloud.launch_instance(
                 metadata=metadata,
                 instance_id=instance_id,
                 server_config=server_config,
                 cloud_init=cloud_init,
-                ingress_tcp_ports_to_open=runner_config_data.ingress_tcp_ports_to_open,
+                ingress_tcp_ports_to_open=runner_context.ingress_tcp_ports_to_open,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
@@ -373,13 +373,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, runner_token: str) -> str:
+    def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            runner_token: The JIT GitHub runner registration token.
+            runner_context: TODO
 
         Returns:
             The cloud init userdata for openstack instance.
@@ -426,7 +426,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            jittoken=runner_token,
+            run_script=runner_context.shell_run_script,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
