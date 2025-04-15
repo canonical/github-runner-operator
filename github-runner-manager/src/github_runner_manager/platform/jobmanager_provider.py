@@ -98,7 +98,8 @@ class JobManagerPlatform(PlatformProvider):
                     jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
                     # TODO pending to put label
                     # TODO the final part of the cloud init, write_post_metrics, will not work
-                    # as the builder-agent does not die.
+                    # as the builder-agent does not die. Anyway, we can get that information
+                    # from the jobmanager api.
                     command_to_run = f"BUILDER_LABEL=label JOB_MANAGER_BEARER_TOKEN={token} JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} builder-agent"  # noqa  # pylint: disable=line-too-long
                     return (
                         RunnerContext(
