@@ -77,7 +77,7 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
     act: Call cleanup.
     assert: Only keypairs older than a threshold are deleted.
     """
-    ### arrange ###
+    # arrange #
     # Mock expanduser as this is used in OpenstackCloud constructor
     monkeypatch.setattr(
         "github_runner_manager.openstack_cloud.openstack_cloud.Path.expanduser", MagicMock()
@@ -143,10 +143,10 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
     openstack_connection_mock.list_keypairs.return_value = keypair_list
     openstack_connect_mock.return_value = openstack_connection_mock
 
-    ### act ###
+    # act #
     cloud.cleanup()
 
-    ### assert ###
+    # assert #
     # Check if only the old keypairs are deleted
     keypair_delete_calls = [
         call[0][0] for call in openstack_connection_mock.delete_keypair.call_args_list
