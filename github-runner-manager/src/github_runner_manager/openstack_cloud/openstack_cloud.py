@@ -602,7 +602,7 @@ class OpenstackCloud:
         expected_rules = copy.deepcopy(DEFAULT_SECURITY_RULES)
 
         if ingress_tcp_ports_to_open:
-            for tcp_port in enumerate(ingress_tcp_ports_to_open):
+            for tcp_port in ingress_tcp_ports_to_open:
                 expected_rules[f"tcp{tcp_port}"] = {
                     "protocol": "tcp",
                     "port_range_min": tcp_port,
