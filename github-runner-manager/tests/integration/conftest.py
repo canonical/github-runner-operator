@@ -64,12 +64,25 @@ def config_fixture() -> dict:
                 }
             ],
         },
+        "openstack_configuration": {
+            "vm_prefix": "test_unit",
+            "network": "test_network",
+            "credentials": {
+                "auth_url": "http://example.com/test",
+                "project_name": "test_project",
+                "username": "test_username",
+                "password": "test_password",
+                "user_domain_name": "test_user_domain_name",
+                "project_domain_name": "test_project_domain_name",
+                "region_name": "test_region",
+            },
+        },
     }
 
 
 @pytest.fixture(name="config_file", scope="module")
 def config_file_fixture(tmp_path_factory, config: dict) -> Path:
-    config_file = tmp_path_factory.mktemp("config") / "test.yaml"
+    config_file = tmp_path_factory.mktemp("config") / "config.yaml"
     with open(config_file, "w") as file:
         yaml.safe_dump(config, file)
     return config_file
@@ -81,7 +94,10 @@ def install_app_fixture() -> None:
 
 
 @pytest.fixture(name="app", scope="function")
-def app_fixture(install_app: None, config_file: Path) -> Iterator[subprocess.Popen]:
+def app_fixture(
+    install_app: None,
+    config_file: Path,
+) -> Iterator[subprocess.Popen]:
     process = start_app(config_file, [])
     yield process
     process.kill()

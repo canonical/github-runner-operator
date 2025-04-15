@@ -27,6 +27,10 @@ from src.github_runner_manager.configuration import (
     SSHDebugConnection,
     SupportServiceConfig,
 )
+from src.github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+    OpenStackCredentials,
+)
 
 SAMPLE_YAML_CONFIGURATION = """
 name: app_name
@@ -83,6 +87,17 @@ service_config:
     host: 10.10.10.10
     port: 3000
     rsa_fingerprint: SHA256:rsa
+openstack_configuration:
+    credentials:
+      auth_url: http://example.com/test
+      password: test_password
+      project_domain_name: test_project_domain_name
+      project_name: test_project
+      region_name: test_region
+      user_domain_name: test_user_domain_name
+      username: test_username
+    network: test_network
+    vm_prefix: test_unit
 """
 
 
@@ -155,6 +170,19 @@ def app_config_fixture() -> ApplicationConfiguration:
             ],
             flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
+        openstack_configuration=OpenStackConfiguration(
+            vm_prefix="test_unit",
+            network="test_network",
+            credentials=OpenStackCredentials(
+                auth_url="http://example.com/test",
+                project_name="test_project",
+                username="test_username",
+                password="test_password",
+                user_domain_name="test_user_domain_name",
+                project_domain_name="test_project_domain_name",
+                region_name="test_region",
+            ),
+        ),
     )
 
 
@@ -176,7 +204,6 @@ def test_load_configuration_from_yaml(app_config: ApplicationConfiguration):
     act: Get the ApplicationConfiguration object.
     assert: The content matches.
     """
-    loaded_config = ApplicationConfiguration.validate(
-        yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
-    )
-    assert app_config == loaded_config
+    yaml_config = yaml.safe_load(StringIO(SAMPLE_YAML_CONFIGURATION))
+    loaded_app_config = ApplicationConfiguration.validate(yaml_config)
+    assert loaded_app_config == app_config
