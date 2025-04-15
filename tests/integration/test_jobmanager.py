@@ -236,5 +236,13 @@ async def test_jobmanager(
 
     httpserver.check_assertions()
 
+    # # Ok, at this point, we want to tell the builder-agent to execute some random thing.
+    # _, _, _ = await instance_helper.run_in_instance(
+    #     unit,
+    #     curl http://127.0.0.1:8080 ...????,
+    #     assert_on_failure=True,
+    #     timeout=60,
+    # )
+
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder is spawned, but will be killed badly by the reconcile"

@@ -96,9 +96,12 @@ class JobManagerPlatform(PlatformProvider):
                 if response.token:
                     token = response.token
                     jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
+                    # TODO pending to put label
+                    # TODO the final part of the cloud init, write_post_metrics, will not work
+                    # as the builder-agent does not die.
                     command_to_run = f"BUILDER_LABEL=label JOB_MANAGER_BEARER_TOKEN={token} JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} builder-agent"  # noqa  # pylint: disable=line-too-long
                     return (
-                        RunnerContext(token=token, shell_run_script=command_to_run),
+                        RunnerContext(token=token, shell_run_script=command_to_run, ingress_tcp_ports_to_open=[8080]),
                         SelfHostedRunner(
                             busy=False,
                             id=int(metadata.runner_id),
