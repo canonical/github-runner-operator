@@ -1,0 +1,73 @@
+18:58:12 INFO Creating 1 runners
+18:58:12 INFO Creating openstack server with test-vyfo747l-0-n-2e2de4ed0a9e
+18:58:25 INFO Waiting for runner process to startup: test-vyfo747l-0-n-2e2de4ed0a9e
+18:58:37 WARNING NoValidConnectionsError. Unable to SSH into test-vyfo747l-0-n-2e2de4ed0a9e with address 10.145.193.52. Error: [Errno None] Unable to connect to port 22 on 10.145.193.52
+18:58:37 WARNING Retrying error in 60 seconds: Failed to SSH to test-vyfo747l-0-n-2e2de4ed0a9e during creation possible due to setup not completed
+18:59:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:37 INFO Authentication (publickey) successful!
+18:59:38 INFO Runner startup process found to be healthy on test-vyfo747l-0-n-2e2de4ed0a9e
+18:59:38 INFO Waiting for runner process to be running: test-vyfo747l-0-n-2e2de4ed0a9e
+18:59:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:38 INFO Authentication (publickey) successful!
+18:59:38 INFO Runner test-vyfo747l-0-n-2e2de4ed0a9e found to be healthy
+18:59:38 INFO Runner test-vyfo747l-0-n-2e2de4ed0a9e created successfully
+18:59:38 INFO Getting runners...
+18:59:40 INFO Getting all openstack servers managed by the charm
+18:59:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:41 INFO Authentication (publickey) successful!
+18:59:41 INFO Found following runners: {'test-vyfo747l-0-n-2e2de4ed0a9e'}
+18:59:41 INFO Getting runners...
+18:59:42 INFO Getting all openstack servers managed by the charm
+18:59:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:44 INFO Authentication (publickey) successful!
+18:59:44 INFO Found following runners: {'test-vyfo747l-0-n-2e2de4ed0a9e'}
+18:59:44 INFO Getting runners...
+18:59:46 INFO Getting all openstack servers managed by the charm
+18:59:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:47 INFO Authentication (publickey) successful!
+18:59:47 INFO Found following runners: {'test-vyfo747l-0-n-2e2de4ed0a9e'}
+18:59:47 INFO Getting all openstack servers managed by the charm
+18:59:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:49 INFO Authentication (publickey) successful!
+18:59:49 INFO Getting runners...
+18:59:51 INFO Getting all openstack servers managed by the charm
+18:59:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:52 INFO Authentication (publickey) successful!
+18:59:53 INFO Found following runners: {'test-vyfo747l-0-n-2e2de4ed0a9e'}
+18:59:54 INFO Offline github runners to delete: []:
+18:59:54 INFO Getting all openstack servers managed by the charm
+18:59:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:59:56 INFO Authentication (publickey) successful!
+18:59:58 INFO Cleaning up SSH key files
+18:59:58 INFO Found 1 key files, clean up 0 key files
+18:59:58 INFO Cleaning up openstack keypairs
+18:59:58 INFO Getting runners...
+18:59:59 INFO Getting all openstack servers managed by the charm
+19:00:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:03 INFO Authentication (publickey) successful!
+19:00:03 INFO Found following runners: {'test-vyfo747l-0-n-2e2de4ed0a9e'}
+19:00:03 INFO Flushing idle runners...
+19:00:04 INFO Getting all openstack servers managed by the charm
+19:00:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:05 INFO Authentication (publickey) successful!
+19:00:05 INFO Attempting to kill runner process on test-vyfo747l-0-n-2e2de4ed0a9e if not busy
+19:00:05 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:00:05 INFO Kill process command output, ok: True code 0, out: 1820
+, err: 
+19:00:05 INFO Getting all openstack servers managed by the charm
+19:00:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:07 INFO Authentication (publickey) successful!
+19:00:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:07 INFO Authentication (publickey) successful!
+19:00:07 INFO [chan 2] Opened sftp connection (server version 3)
+19:00:07 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.52, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+19:00:07 WARNING Failed to pull metrics for test-vyfo747l-0-n-2e2de4ed0a9e: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+19:00:07 INFO Running runner removal script for test-vyfo747l-0-n-2e2de4ed0a9e
+19:00:09 INFO Deleting openstack server with test-vyfo747l-0-n-2e2de4ed0a9e
+19:00:12 INFO Cleaning up SSH key files
+19:00:12 INFO Found 0 key files, clean up 0 key files
+19:00:12 INFO Cleaning up openstack keypairs
+19:00:12 INFO Getting runners...
+19:00:13 INFO Getting all openstack servers managed by the charm
+19:00:14 INFO Found following runners: set()

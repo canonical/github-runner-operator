@@ -1,0 +1,107 @@
+19:00:15 INFO GitHub token rate limit: Rate(reset=2025-04-14 19:34:15+00:00, remaining=4593, limit=5000)
+19:00:18 INFO Creating 1 runners
+19:00:18 INFO Creating openstack server with test-vyfo747l-0-n-5b586db2b6b8
+19:00:35 INFO Waiting for runner process to startup: test-vyfo747l-0-n-5b586db2b6b8
+19:00:42 WARNING NoValidConnectionsError. Unable to SSH into test-vyfo747l-0-n-5b586db2b6b8 with address 10.145.193.60. Error: [Errno None] Unable to connect to port 22 on 10.145.193.60
+19:00:42 WARNING Retrying error in 60 seconds: Failed to SSH to test-vyfo747l-0-n-5b586db2b6b8 during creation possible due to setup not completed
+19:01:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:43 INFO Authentication (publickey) successful!
+19:01:44 INFO Runner startup process found to be healthy on test-vyfo747l-0-n-5b586db2b6b8
+19:01:44 INFO Waiting for runner process to be running: test-vyfo747l-0-n-5b586db2b6b8
+19:01:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:44 INFO Authentication (publickey) successful!
+19:01:44 INFO Runner test-vyfo747l-0-n-5b586db2b6b8 found to be healthy
+19:01:44 INFO Runner test-vyfo747l-0-n-5b586db2b6b8 created successfully
+19:01:44 INFO Getting runners...
+19:01:45 INFO Getting all openstack servers managed by the charm
+19:01:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:47 INFO Authentication (publickey) successful!
+19:01:47 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:01:47 INFO Getting runners...
+19:01:48 INFO Getting all openstack servers managed by the charm
+19:01:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:50 INFO Authentication (publickey) successful!
+19:01:51 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:01:51 INFO Getting runners...
+19:01:52 INFO Getting all openstack servers managed by the charm
+19:01:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:53 INFO Authentication (publickey) successful!
+19:01:54 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:01:56 INFO Wait for condition not met, sleeping 10
+19:02:07 INFO Getting runners...
+19:02:08 INFO Getting all openstack servers managed by the charm
+19:02:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:10 INFO Authentication (publickey) successful!
+19:02:11 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:02:11 INFO Getting runners...
+19:02:12 INFO Getting all openstack servers managed by the charm
+19:02:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:13 INFO Authentication (publickey) successful!
+19:02:14 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:02:15 INFO Offline github runners to delete: []:
+19:02:15 INFO Getting all openstack servers managed by the charm
+19:02:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:17 INFO Authentication (publickey) successful!
+19:02:19 INFO Cleaning up SSH key files
+19:02:19 INFO Found 1 key files, clean up 0 key files
+19:02:19 INFO Cleaning up openstack keypairs
+19:02:19 INFO Getting runners...
+19:02:20 INFO Getting all openstack servers managed by the charm
+19:02:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:21 INFO Authentication (publickey) successful!
+19:02:22 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:02:22 INFO Flushing idle runners...
+19:02:22 INFO Getting all openstack servers managed by the charm
+19:02:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:27 INFO Authentication (publickey) successful!
+19:02:27 INFO Attempting to kill runner process on test-vyfo747l-0-n-5b586db2b6b8 if not busy
+19:02:27 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:02:27 INFO Kill process command output, ok: False code 1, out: 2327
+, err: 
+19:02:27 INFO Getting all openstack servers managed by the charm
+19:02:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:28 INFO Authentication (publickey) successful!
+19:02:30 INFO Cleaning up SSH key files
+19:02:30 INFO Found 1 key files, clean up 0 key files
+19:02:30 INFO Cleaning up openstack keypairs
+19:02:30 INFO Getting runners...
+19:02:32 INFO Getting all openstack servers managed by the charm
+19:02:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:33 INFO Authentication (publickey) successful!
+19:02:33 INFO Found following runners: {'test-vyfo747l-0-n-5b586db2b6b8'}
+19:02:33 INFO Flushing idle and busy runners...
+19:02:34 INFO Getting all openstack servers managed by the charm
+19:02:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:35 INFO Authentication (publickey) successful!
+19:02:35 INFO Attempting to kill all runner process on test-vyfo747l-0-n-5b586db2b6b8
+19:02:35 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+19:02:35 INFO Kill process command output, ok: True code 0, out: 1928
+2327
+, err: 
+19:02:35 INFO Getting all openstack servers managed by the charm
+19:02:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:37 INFO Authentication (publickey) successful!
+19:02:39 INFO Cleaning up SSH key files
+19:02:39 INFO Found 1 key files, clean up 0 key files
+19:02:39 INFO Cleaning up openstack keypairs
+19:02:49 INFO Flushing idle and busy runners...
+19:02:49 INFO Getting all openstack servers managed by the charm
+19:02:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:51 INFO Authentication (publickey) successful!
+19:02:51 INFO Attempting to kill all runner process on test-vyfo747l-0-n-5b586db2b6b8
+19:02:51 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+19:02:51 INFO Kill process command output, ok: False code 1, out: , err: 
+19:02:51 INFO Getting all openstack servers managed by the charm
+19:02:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:53 INFO Authentication (publickey) successful!
+19:02:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:53 INFO Authentication (publickey) successful!
+19:02:54 INFO [chan 2] Opened sftp connection (server version 3)
+19:02:54 INFO Running runner removal script for test-vyfo747l-0-n-5b586db2b6b8
+19:02:55 INFO Deleting openstack server with test-vyfo747l-0-n-5b586db2b6b8
+19:02:58 INFO Cleaning up SSH key files
+19:02:58 INFO Found 0 key files, clean up 0 key files
+19:02:58 INFO Cleaning up openstack keypairs
+19:02:59 INFO Getting runners...
+19:03:00 INFO Getting all openstack servers managed by the charm
+19:03:01 INFO Found following runners: set()
