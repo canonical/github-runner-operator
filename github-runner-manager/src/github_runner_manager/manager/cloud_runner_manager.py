@@ -11,7 +11,7 @@ from typing import Iterable, Iterator, Optional, Sequence, Tuple
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 
 logger = logging.getLogger(__name__)
 
@@ -242,7 +242,7 @@ class CloudRunnerManager(abc.ABC):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerConfigData,
+        runner_config_data: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 

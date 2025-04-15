@@ -31,7 +31,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud import health_checks
@@ -130,7 +130,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerConfigData,
+        runner_config_data: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
