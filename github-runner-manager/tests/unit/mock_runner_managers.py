@@ -16,7 +16,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerConfigData, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.platform.platform_provider import JobInfo, PlatformProvider
@@ -312,7 +312,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         self,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
-        runner_config_data: RunnerConfigData,
+        runner_config_data: RunnerContext,
     ) -> None:
         """Create a self-hosted runner.
 
@@ -424,7 +424,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
 
     def get_runner_config_data(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
-    ) -> tuple[RunnerConfigData, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get the registration JIT token for registering runners on GitHub.
 
         Args:
@@ -435,7 +435,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the SelfHostedRunner
         """
-        return RunnerConfigData(token="mock_registration_token"), MagicMock(
+        return RunnerContext(token="mock_registration_token"), MagicMock(
             spec=list(SelfHostedRunner.__fields__.keys())
         )
 
