@@ -1,0 +1,56 @@
+07:02:51 INFO Waiting for model:
+  test-bsjimleo/0 [executing] maintenance: Reconciling runners
+07:03:21 INFO Waiting for model:
+  test-bsjimleo/0 [idle] active:
+07:07:19 INFO Waiting for model:
+  test-bsjimleo/0 [executing] active: 
+07:07:50 INFO Waiting for model:
+  test-bsjimleo/0 [idle] active: 
+07:08:01 INFO Wait for condition not met, sleeping 30
+07:08:45 INFO [TEST SETUP] Run command pkill -9 run.sh on test-bsjimleo-0-n-65aa1e3e9849
+07:08:45 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.96', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:71:69:a8'}]])
+07:08:46 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bsjimleo-0-n-65aa1e3e9849.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.96 pkill -9 run.sh'
+07:08:51 INFO Runner test-bsjimleo-0-n-65aa1e3e9849 status: online
+07:08:51 INFO Runner still marked as online, waiting for it to be marked offline
+07:10:26 INFO Waiting for model:
+  test-bsjimleo/0 [executing] active: 
+07:10:56 INFO Waiting for model:
+  test-bsjimleo/0 [idle] active: 
+07:11:04 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744700570.31871, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.740071535110474}
+{"timestamp": 1744700588.2255569, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.65929341316223}
+{"timestamp": 1744700816.4967847, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 197.10754561424255}
+{"timestamp": 1744700839.3802788, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 21.445733785629272}
+{"timestamp": 1744700861.6616433, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 21.02812433242798}
+{"timestamp": 1744700772.0, "event": "runner_installed", "flavor": "test-bsjimleo", "duration": 136.0}
+{"timestamp": 1744700885.0, "event": "runner_start", "flavor": "test-bsjimleo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 113.0, "queue_duration": 4.0}
+{"timestamp": 1744700926.0, "event": "runner_stop", "flavor": "test-bsjimleo", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1744701025.501957, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 28.990740537643433}
+{"timestamp": 1744701047.1145244, "event": "reconciliation", "flavor": "test-bsjimleo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.40477681159973}
+07:11:07 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-uzm9  github-pr-091e9-lxd  localhost/localhost  3.6.5    unsupported  07:11:07Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-bsjimleo           active      1  github-runner-image-builder  latest/edge   68  no       
+test-bsjimleo                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-bsjimleo/0*  active    idle   0        10.6.134.160              
+test-bsjimleo/0*                         active    idle   1        10.6.134.116    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.6.134.160  juju-315993-0  ubuntu@22.04      Running
+1        started  10.6.134.116  juju-315993-1  ubuntu@22.04      Running
+
+07:11:07 INFO Juju error logs:
+
+machine-0: 06:41:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:41:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-bsjimleo-0: 06:41:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-bsjimleo-0: 06:42:43 ERROR unit.github-runner-image-builder-bsjimleo/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:46:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:46:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-bsjimleo-0: 06:46:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:11:07 INFO Forgetting model main...

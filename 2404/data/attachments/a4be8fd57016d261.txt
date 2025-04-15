@@ -1,0 +1,132 @@
+06:40:29 WARNING unexpected facade SSHServer received from the controller
+06:40:29 INFO Adding model github-pr-091e9-lxd:test-charm-fork-repo-hg63 on cloud localhost
+06:40:30 WARNING unexpected facade SSHServer received from the controller
+06:40:30 WARNING unexpected facade SSHSession received from the controller
+06:40:30 WARNING unexpected facade SSHTunneler received from the controller
+06:40:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:40:33 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [allocating] waiting: waiting for machine
+06:41:03 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [allocating] waiting: waiting for machine
+06:41:33 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [allocating] waiting: waiting for machine
+06:42:03 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] maintenance: Setting up Builder.
+06:42:33 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] maintenance: Setting up Builder.
+06:43:03 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] maintenance: Setting up Builder.
+06:43:33 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] maintenance: Setting up Builder.
+06:44:03 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] maintenance: Setting up Builder.
+06:44:33 INFO Waiting for model:
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Waiting for first image.
+06:45:10 INFO Deploying local:jammy/github-runner-0
+06:45:11 INFO Waiting for model:
+  test-e1xpytv7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e1xpytv7/0 [idle] blocked: image integration required.
+06:45:41 INFO Waiting for model:
+  test-e1xpytv7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e1xpytv7/0 [idle] blocked: image integration required.
+06:46:12 INFO Waiting for model:
+  test-e1xpytv7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-e1xpytv7/0 [idle] blocked: image integration required.
+06:46:42 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:47:12 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:47:42 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:48:13 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:48:43 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:49:13 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:49:44 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:50:14 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:50:44 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:51:14 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:51:45 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:52:15 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:52:46 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:53:16 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:53:46 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:54:16 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:54:47 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e1xpytv7/0 [executing] active: Building image.
+06:55:17 INFO Waiting for model:
+  test-e1xpytv7/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-e1xpytv7/0 [idle] active: 
+06:55:48 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] active: 
+06:56:03 INFO GitHub token rate limit: Rate(reset=2025-04-15 07:15:05+00:00, remaining=4253, limit=5000)
+07:00:04 INFO Waiting for model:
+  test-e1xpytv7/0 [executing] active: 
+07:00:34 INFO Waiting for model:
+  test-e1xpytv7/0 [idle] active: 
+07:00:40 INFO [TEST SETUP] Exposing port 8080 on test-e1xpytv7-0-n-72f5cbcebc33
+07:00:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.136', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:61:04:36'}]])
+07:00:44 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-e1xpytv7-0-n-72f5cbcebc33
+07:00:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.136', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:61:04:36'}]])
+07:00:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e1xpytv7-0-n-72f5cbcebc33.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.136 nc -z localhost 8080'
+07:00:47 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-e1xpytv7-0-n-72f5cbcebc33
+07:00:47 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.136', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:61:04:36'}]])
+07:00:48 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e1xpytv7-0-n-72f5cbcebc33.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.136 curl http://localhost:8080'
+07:00:51 INFO Wait for condition not met, sleeping 10
+07:01:07 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-hg63  github-pr-091e9-lxd  localhost/localhost  3.6.5    unsupported  07:01:07Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-e1xpytv7           active      1  github-runner-image-builder  latest/edge   68  no       
+test-e1xpytv7                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-e1xpytv7/0*  active    idle   0        10.167.230.117            
+test-e1xpytv7/0*                         active    idle   1        10.167.230.206  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.167.230.117  juju-8b5e8f-0  ubuntu@22.04      Running
+1        started  10.167.230.206  juju-8b5e8f-1  ubuntu@22.04      Running
+
+07:01:07 INFO Juju error logs:
+
+machine-0: 06:41:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:41:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-e1xpytv7-0: 06:41:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-e1xpytv7-0: 06:42:31 ERROR unit.github-runner-image-builder-e1xpytv7/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:45:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:45:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-e1xpytv7-0: 06:45:57 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:01:07 INFO Forgetting model main...

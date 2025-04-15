@@ -1,0 +1,103 @@
+06:40:04 WARNING unexpected facade SSHServer received from the controller
+06:40:04 INFO Adding model github-pr-091e9-lxd:test-charm-metrics-success-fy2n on cloud localhost
+06:40:05 WARNING unexpected facade SSHServer received from the controller
+06:40:05 WARNING unexpected facade SSHSession received from the controller
+06:40:05 WARNING unexpected facade SSHTunneler received from the controller
+06:40:07 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:40:07 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [allocating] waiting: waiting for machine
+06:40:37 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [allocating] waiting: waiting for machine
+06:41:07 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [allocating] waiting: waiting for machine
+06:41:37 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] maintenance: Setting up Builder.
+06:42:07 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] maintenance: Setting up Builder.
+06:42:38 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] maintenance: Setting up Builder.
+06:43:08 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] maintenance: Setting up Builder.
+06:43:38 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] maintenance: Setting up Builder.
+06:44:08 INFO Waiting for model:
+  github-runner-image-builder-eb9sxaj2/0 [executing] blocked: image integration required.
+06:44:46 INFO Deploying local:jammy/github-runner-0
+06:44:46 INFO Waiting for model:
+  test-eb9sxaj2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eb9sxaj2/0 [idle] blocked: image integration required.
+06:45:16 INFO Waiting for model:
+  test-eb9sxaj2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eb9sxaj2/0 [idle] blocked: image integration required.
+06:45:46 INFO Waiting for model:
+  test-eb9sxaj2/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-eb9sxaj2/0 [idle] blocked: image integration required.
+06:46:17 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:46:47 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:47:17 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:47:48 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:48:18 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:48:48 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:49:19 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:49:49 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:50:19 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:50:50 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:51:20 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:51:50 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:52:21 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:52:51 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:53:21 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:53:51 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:54:22 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:54:52 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eb9sxaj2/0 [executing] active: Building image.
+06:55:23 INFO Waiting for model:
+  test-eb9sxaj2/0 [executing] maintenance: Reconciling runners
+07:00:02 INFO Waiting for model:
+  test-eb9sxaj2/0 [executing] active: 
+07:00:32 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] active: 
+07:01:16 INFO Waiting for model:
+  test-eb9sxaj2/0 [executing] active: 
+07:01:46 INFO Waiting for model:
+  test-eb9sxaj2/0 [idle] active: 
+07:01:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744700401.5990267, "event": "reconciliation", "flavor": "test-eb9sxaj2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 248.55916333198547}
+{"timestamp": 1744700423.93532, "event": "reconciliation", "flavor": "test-eb9sxaj2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 21.285791635513306}
+{"timestamp": 1744700352.0, "event": "runner_installed", "flavor": "test-eb9sxaj2", "duration": 183.0}
+{"timestamp": 1744700476.005523, "event": "reconciliation", "flavor": "test-eb9sxaj2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.371339082717896}
+{"timestamp": 1744700493.143066, "event": "reconciliation", "flavor": "test-eb9sxaj2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.03441548347473}
