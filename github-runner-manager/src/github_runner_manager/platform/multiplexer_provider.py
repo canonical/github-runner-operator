@@ -1,7 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
 
-"""Multiplexer platform provider."""
+"""Multiplexer platform provider to use several providers simultaneously."""
 
 from collections import defaultdict
 from typing import Iterable
@@ -21,7 +21,13 @@ from github_runner_manager.types_.github import SelfHostedRunner
 
 
 class MultiplexerPlatform(PlatformProvider):
-    """Manage self-hosted runner on the Multiplexer."""
+    """Manage self-hosted runner on the Multiplexer.
+
+    The Multiplexer platform provider serves as an interface to use several
+    platform providers simultaneously. In that way, one runner manager can use for example
+    GitHub and JobManager providers together. The multiplexer will route the requests
+    to the adequate provider..
+    """
 
     def __init__(self, providers: dict[str, PlatformProvider]):
         """Construct the object.

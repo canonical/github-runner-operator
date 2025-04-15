@@ -10,6 +10,7 @@ from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
+from github_runner_manager.platform.jobmanager_provider import JobStatus
 from github_runner_manager.reactive.consumer import JobDetails
 from jobmanager_client.models.job import Job
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
@@ -58,8 +59,7 @@ async def image_builder_config_fixture(
         "build-flavor": flavor_name,
         "build-network": network_name,
         "architecture": "amd64",
-        # "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main"  # noqa
-        "script-url": "https://raw.githubusercontent.com/canonical/github-runner-operator/refs/heads/back-to-first-jobmanager-try/tests/integration/data/post-image-build.sh",  # noqa
+        "script-url": "https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main",  # noqa
     }
 
 
@@ -118,7 +118,6 @@ async def test_jobmanager(
     # to create a test with a real jobmanager, and this could be done in the future.
     logger.info("Start of test_jobmanager test")
 
-    # put in a fixture
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip_address = s.getsockname()[0]
@@ -139,10 +138,10 @@ async def test_jobmanager(
         url=job_url,
     )
 
-    # The first interaction with the jobmanager after the github-runner gets
+    # The first interaction with the jobmanager after the runner manager gets
     # a message in the queue is to check if the job has been picked up. If it is pending,
     # the github-runner will spawn a reactive runner.
-    returned_job = Job(job_id=job_id, status="PENDING")
+    returned_job = Job(job_id=job_id, status=JobStatus.PENDING.value)
     httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
@@ -163,7 +162,7 @@ async def test_jobmanager(
     # the server is alive and running).
     httpserver.expect_request(job_path).respond_with_json(returned_job.to_dict())
 
-    # The github-runner will request a token to spawn the runner.
+    # The runner manager will request a token to spawn the runner.
     token_path = f"/v1/jobs/{job_id}/token"
     returned_token = V1JobsJobIdTokenPost200Response(token="token")
     httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
@@ -175,6 +174,6 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
-    # At this point the openstack instance is spawned, but cloud init is not ye correct.
+    # At this point the openstack instance is spawned, but cloud init is not yet correct.
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
     assert True, "At this point the builder should be spawned, but pending to replace cloud init."

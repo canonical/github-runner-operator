@@ -4,6 +4,7 @@
 """JobManager platform provider."""
 
 import logging
+from enum import Enum
 from typing import Iterable
 
 import jobmanager_client
@@ -138,7 +139,7 @@ class JobManagerPlatform(PlatformProvider):
             api_instance = jobmanager_client.DefaultApi(api_client)
             try:
                 job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
-                if job.status != "PENDING":
+                if job.status != JobStatus.PENDING:
                     return True
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
@@ -160,3 +161,15 @@ class JobManagerPlatform(PlatformProvider):
             NotImplementedError: Work in progress.
         """
         raise NotImplementedError
+
+
+class JobStatus(str, Enum):
+    """Status of a job on the JobManager.
+
+    Attributes:
+        IN_PROGRESS: Represents a job that is in progress.
+        PENDING: Represents a job that is pending.
+    """
+
+    IN_PROGRESS = "IN_PROGRESS"
+    PENDING = "PENDING"

@@ -15,7 +15,7 @@ from jobmanager_client.rest import ApiException
 
 from github_runner_manager.errors import PlatformApiError
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
-from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
+from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
 
 
@@ -78,8 +78,8 @@ def test_get_runner_token_fails(monkeypatch: pytest.MonkeyPatch, api_return_valu
 @pytest.mark.parametrize(
     "api_return_value, picked_up",
     [
-        pytest.param(Job(status="IN_PROGRESS"), True, id="in progress job"),
-        pytest.param(Job(status="PENDING"), False, id="pending job"),
+        pytest.param(Job(status=JobStatus.IN_PROGRESS.value), True, id="in progress job"),
+        pytest.param(Job(status=JobStatus.PENDING.value), False, id="pending job"),
     ],
 )
 def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_value, picked_up):
