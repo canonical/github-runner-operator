@@ -90,7 +90,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         for runner in runners:
             self._client.delete_runner(self._path, runner.id)
 
-    def get_runner_config_data(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
@@ -108,7 +108,8 @@ class GitHubRunnerPlatform(PlatformProvider):
         token, runner = self._client.get_runner_registration_jittoken(
             self._path, instance_id, labels
         )
-        return RunnerContext(token=token), runner
+        command_to_run = f'su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig { token }"'  # noqa  # pylint: disable=line-too-long
+        return RunnerContext(token=token, shell_run_script=command_to_run), runner
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.
