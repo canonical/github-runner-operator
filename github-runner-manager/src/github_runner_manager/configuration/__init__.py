@@ -15,6 +15,7 @@ from github_runner_manager.configuration.base import (  # noqa: F401
     RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
+    UserInfo,
 )
 from github_runner_manager.configuration.github import (  # noqa: F401
     GitHubConfiguration,

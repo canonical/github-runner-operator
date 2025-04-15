@@ -15,7 +15,7 @@ import jinja2
 import paramiko
 from fabric import Connection as SSHConnection
 
-from github_runner_manager import constants
+from github_runner_manager.configuration import UserInfo
 from github_runner_manager.errors import (
     KeyfileError,
     MissingServerConfigError,
@@ -89,18 +89,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
     def __init__(
         self,
         config: OpenStackRunnerManagerConfig,
+        user: UserInfo,
     ) -> None:
         """Construct the object.
 
         Args:
             config: The configuration for the openstack runner manager.
+            user: The
         """
         self._config = config
         self._credentials = config.credentials
         self._openstack_cloud = OpenstackCloud(
             credentials=self._credentials,
             prefix=self.name_prefix,
-            system_user=constants.RUNNER_MANAGER_USER,
+            system_user=user.user,
             proxy_command=config.service_config.manager_proxy_command,
         )
         # Setting the env var to this process and any child process spawned.
