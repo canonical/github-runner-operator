@@ -243,10 +243,24 @@ async def test_jobmanager(
         '--header "Content-Type: application/json" '
         '--data \'{"commands":["sleep 100"]}\'',
         assert_on_failure=True,
-        timeout=60,
+        timeout=10,
     )
 
-    # The reconcile loop is still not adapted and will kill the instance incorrectly.
-    assert (
-        True
-    ), "At this point the builder is spawned and working, but will be badly killed by the reconcile"
+    httpserver.expect_oneshot_request(
+        job_path_health,
+        method="PUT",
+        json={"label": "label", "status": "EXECUTING"},
+        headers={"Authorization": "Bearer token"},
+    ).respond_with_data("OK")
+    httpserver.expect_oneshot_request(
+        job_path_health,
+        method="PUT",
+        json={"label": "label", "status": "FINISHED"},
+        headers={"Authorization": "Bearer token"},
+    ).respond_with_data("OK")
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=120) as waiting:
+        logger.info("Waiting for builder-agent to contact us.")
+    logger.info("server log after executing: %s ", (httpserver.log))
+    assert waiting.result, "builder-agent did not contact us for executing or idle."
+
+    # The reconcile loop is still not adapted and will badly kill the instance.
