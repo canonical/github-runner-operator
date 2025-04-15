@@ -181,6 +181,19 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     logger.info("matchers: %s ", (httpserver.format_matchers()))
 
+    # The builder-agent can get to us at any point.
+    # the builder-agent will make PUT requests to
+    # http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
+    # It will send a jeon like {"label": "label", "status": "IDLE"}
+    # status can be: IDLE, EXECUTING, FINISHED,
+    # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
+    httpserver.expect_request(
+        job_path_health,
+        method="PUT",
+        json={"label": "label", "status": "IDLE"},
+        headers={"Authorization": "Bearer token"},
+    ).respond_with_data("OK")
+
     # At this point the openstack instance is spawned. We need to be able to access it.
     # first wait a bit so there is a server. 60 seconds is something reasonable...
     await asyncio.sleep(60)
@@ -209,11 +222,7 @@ async def test_jobmanager(
     )
     await instance_helper.expose_to_instance(unit=unit, port=httpserver.port, host=ip_address)
 
-    # the builder-agent will make PUT requests to
-    # http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
-    # It will send a jeon like {"label": "label", "status": "IDLE"}
-    # status can be: IDLE, EXECUTING, FINISHED,
-    # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
+    # We want to here from the builder-agent at least one.
     httpserver.expect_oneshot_request(
         job_path_health,
         method="PUT",
@@ -225,5 +234,7 @@ async def test_jobmanager(
     logger.info("server log after first contact: %s ", (httpserver.log))
     assert waiting.result, "builder-agent did not contact us."
 
+    httpserver.check_assertions()
+
     # The reconcile loop is still not adapted and will kill the instance incorrectly.
-    assert True, "At this point the builder should be spawned, but pending to replace cloud init."
+    assert True, "At this point the builder is spawned, but will be killed badly by the reconcile"

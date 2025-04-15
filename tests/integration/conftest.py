@@ -699,7 +699,6 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
     """Deploy MongoDB."""
     if not existing_app_suffix:
         mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
-        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
@@ -708,8 +707,8 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
 @pytest_asyncio.fixture(scope="module", name="app_for_reactive")
 async def app_for_reactive_fixture(
     model: Model,
-    app_openstack_runner: Application,
     mongodb: Application,
+    app_openstack_runner: Application,
     existing_app_suffix: Optional[str],
 ) -> Application:
     """Application for testing reactive."""
