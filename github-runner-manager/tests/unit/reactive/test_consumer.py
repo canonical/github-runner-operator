@@ -77,6 +77,44 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
     _assert_queue_is_empty(queue_config.queue_name)
 
 
+def test_consume_job_manager(queue_config: QueueConfig):
+    """
+    arrange: New Job created in the queue with a format matching the jobmanager.
+    act: Call consume.
+    assert: A runner in created with the correct metadata
+    """
+    labels = {"label1"}
+
+    job_id = "5"
+    job_url = f"https://jobmanager.example.com/subpath/v1/jobs/{job_id}"
+
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=job_url,
+    )
+    _put_in_queue(job_details.json(), queue_config.queue_name)
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    platform_mock = MagicMock(spec=PlatformProvider)
+    platform_mock.check_job_been_picked_up.side_effect = [False, True]
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_mock,
+        supported_labels=labels,
+    )
+
+    expected_metadata = RunnerMetadata(
+        platform_name="jobmanager", url="https://jobmanager.example.com/subpath", runner_id=job_id
+    )
+    runner_manager_mock.create_runners.assert_called_once_with(
+        1, metadata=expected_metadata, reactive=True
+    )
+
+    _assert_queue_is_empty(queue_config.queue_name)
+
+
 def test_consume_after_in_progress(queue_config: QueueConfig):
     """
     arrange: Two jobs, the first one in progress and the second one queued.

@@ -44,7 +44,7 @@ class OpenStackInstanceHelper:
             port: The port on the juju machine to expose to the runner.
             host: Host for the reverse tunnel.
         """
-        runner = self._get_single_runner(unit=unit)
+        runner = self.get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         logger.info("[TEST SETUP] Exposing port %s on %s", port, runner.name)
         network_address_list = runner.addresses.values()
@@ -99,7 +99,7 @@ class OpenStackInstanceHelper:
         Returns:
             Tuple of return code, stdout and stderr.
         """
-        runner = self._get_single_runner(unit=unit)
+        runner = self.get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         logger.info("[TEST SETUP] Run command %s on %s", command, runner.name)
         network_address_list = runner.addresses.values()
@@ -185,7 +185,7 @@ class OpenStackInstanceHelper:
         Args:
             unit: The GitHub Runner Charm unit to delete the runner name for.
         """
-        runner = self._get_single_runner(unit)
+        runner = self.get_single_runner(unit)
         self.openstack_connection.delete_server(name_or_id=runner.id)
 
     def _get_runners(self, unit: Unit) -> list[Server]:
@@ -195,7 +195,7 @@ class OpenStackInstanceHelper:
         runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
         return runners
 
-    def _get_single_runner(self, unit: Unit) -> Server:
+    def get_single_runner(self, unit: Unit) -> Server:
         """Get the only runner for the unit.
 
         This method asserts for exactly one runner for the unit.
