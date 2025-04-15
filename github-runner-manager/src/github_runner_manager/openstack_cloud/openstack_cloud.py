@@ -398,14 +398,14 @@ class OpenstackCloud:
 
         total = 0
         deleted = 0
-        now_ts = time.time()
+        now_ts = datetime.now(timezone.utc).timestamp()
         for path in self._ssh_key_dir.iterdir():
             # Find key file from this application.
             if (
                 path.is_file()
                 and InstanceID.name_has_prefix(self.prefix, path.name)
                 and path.name.endswith(".key")
-                and path.stat().st_mtime < now_ts -  _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
+                and path.stat().st_mtime <= now_ts - _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
             ):
                 total += 1
                 if path in exclude_filename:
@@ -426,9 +426,15 @@ class OpenstackCloud:
         logger.info("Cleaning up openstack keypairs")
         exclude_instance_set = set(exclude_instances)
         keypairs = conn.list_keypairs()
+        now = datetime.now(tz=timezone.utc)
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
-            if key.name and InstanceID.name_has_prefix(self.prefix, key.name):
+            if (
+                key.name
+                and InstanceID.name_has_prefix(self.prefix, key.name)
+                and datetime.fromisoformat(key.created_at).replace(tzinfo=timezone.utc)
+                <= now - timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION)
+            ):
                 if str(key.name) in exclude_instance_set:
                     continue
                 try:

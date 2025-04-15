@@ -15,8 +15,9 @@ from openstack.connection import Connection
 
 from github_runner_manager.errors import OpenStackError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
+    _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
     OpenstackCloud,
-    OpenStackCredentials, _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
+    OpenStackCredentials,
 )
 
 FAKE_ARG = "fake"
@@ -72,9 +73,9 @@ def test_raises_openstack_error(
 
 def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
     """
-    arrange: Keypair files with different st_mtime.
+    arrange: Keypair files with different creation time.
     act: Call cleanup.
-    assert: Only keypair files older than the threshold are deleted.
+    assert: Only keypair files older than a threshold are deleted.
     """
     # Mock expanduser as this is used in OpenstackCloud constructor
     monkeypatch.setattr(
@@ -100,21 +101,44 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
         openstack_connect_mock,
     )
 
-    now = datetime.datetime.now(datetime.timezone.utc)
-    keypairs_older_then_threshold = (
-        (cloud._ssh_key_dir / f"{FAKE_PREFIX}-old-server1.key", now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION + 1)),
-        (cloud._ssh_key_dir / f"{FAKE_PREFIX}-old-server2.key", now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION)),
+    now = _mock_datetime_now(monkeypatch)
+    keypairs_older_then_min_age = (
+        (
+            cloud._ssh_key_dir / f"{FAKE_PREFIX}-old-.key",
+            now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION + 1),
+        ),
+        (
+            cloud._ssh_key_dir / f"{FAKE_PREFIX}-old-server2.key",
+            now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION * 2),
+        ),
+        (
+            cloud._ssh_key_dir / f"{FAKE_PREFIX}-old-server3.key",
+            now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION),
+        ),
     )
-    keypairs_newer_than_threshold = (
-        (cloud._ssh_key_dir / f"{FAKE_PREFIX}-new-server1.key", now - datetime.timedelta(seconds=1)),
-        (cloud._ssh_key_dir / f"{FAKE_PREFIX}-new-server2.key", now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION - 1)),
+    keypairs_younger_or_equal_min_age = (
+        (
+            cloud._ssh_key_dir / f"{FAKE_PREFIX}-new-server1.key",
+            now - datetime.timedelta(seconds=1),
+        ),
+        (
+            cloud._ssh_key_dir / f"{FAKE_PREFIX}-new-server2.key",
+            now - datetime.timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION - 1),
+        ),
     )
-    # Create keypair files
+    # Create keypairs
     keypair_list: list[Keypair] = []
-    for keypair, mtime in itertools.chain(keypairs_older_then_threshold, keypairs_newer_than_threshold):
+    for keypair, mtime in itertools.chain(
+        keypairs_older_then_min_age, keypairs_younger_or_equal_min_age
+    ):
         keypair.write_text("foobar")
         os.utime(keypair, (mtime.timestamp(), mtime.timestamp()))
-        keypair_list.append(Keypair(created_at=mtime.strftime("%Y-%m-%dT%H:%M:%SZ"), name=keypair.name.removesuffix(".key")))
+        keypair_list.append(
+            Keypair(
+                created_at=mtime.strftime("%Y-%m-%dT%H:%M:%S.%f"),
+                name=keypair.name.removesuffix(".key"),
+            )
+        )
 
     openstack_connection_mock = MagicMock(spec=Connection)
     openstack_connection_mock.__enter__.return_value = openstack_connection_mock
@@ -125,10 +149,26 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
     cloud.cleanup()
 
     # Check if only the old keypairs are deleted
-    keypair_delete_calls = [call[0][0] for call in openstack_connection_mock.delete_keypair.call_args_list]
-    for keypair, _ in keypairs_older_then_threshold:
+    keypair_delete_calls = [
+        call[0][0] for call in openstack_connection_mock.delete_keypair.call_args_list
+    ]
+    for keypair, _ in keypairs_older_then_min_age:
         assert not keypair.exists()
         assert keypair.name.removesuffix(".key") in keypair_delete_calls
-    for keypair, _ in keypairs_newer_than_threshold:
+    for keypair, _ in keypairs_younger_or_equal_min_age:
         assert keypair.exists()
         assert keypair.name.removesuffix(".key") not in keypair_delete_calls
+
+
+def _mock_datetime_now(monkeypatch):
+    """Mock datetime.now() to return a fixed datetime."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    now_mock = MagicMock()
+    now_mock.return_value = now
+    datetime_mock = MagicMock()
+    datetime_mock.now.return_value = now
+    datetime_mock.fromisoformat = datetime.datetime.fromisoformat
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.datetime", datetime_mock
+    )
+    return now
