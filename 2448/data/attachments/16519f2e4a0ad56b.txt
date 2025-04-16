@@ -1,0 +1,104 @@
+18:25:09 WARNING unexpected facade SSHServer received from the controller
+18:25:09 INFO Adding model github-pr-29fbc-lxd:test-charm-no-runner-lld2 on cloud localhost
+18:25:09 WARNING unexpected facade SSHServer received from the controller
+18:25:09 WARNING unexpected facade SSHSession received from the controller
+18:25:09 WARNING unexpected facade SSHTunneler received from the controller
+18:25:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:12 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [allocating] waiting: waiting for machine
+18:26:12 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [allocating] waiting: waiting for machine
+18:26:42 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:27:12 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:27:43 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:28:13 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:28:43 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:29:14 INFO Waiting for model:
+  github-runner-image-builder-a8k53ved/0 [executing] maintenance: Setting up Builder.
+18:30:01 INFO Deploying local:jammy/github-runner-0
+18:30:01 INFO Waiting for model:
+  test-a8k53ved/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a8k53ved/0 [idle] blocked: image integration required.
+18:30:31 INFO Waiting for model:
+  test-a8k53ved/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a8k53ved/0 [idle] blocked: image integration required.
+18:31:01 INFO Waiting for model:
+  test-a8k53ved/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a8k53ved/0 [idle] blocked: image integration required.
+18:31:32 INFO Waiting for model:
+  test-a8k53ved/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-a8k53ved/0 [idle] blocked: image integration required.
+18:32:02 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:32:33 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:33:03 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:33:33 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:34:03 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:34:34 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:35:04 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:35:34 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:36:05 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:36:35 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:37:05 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:37:35 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:38:05 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:39:06 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:39:36 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:40:06 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:40:36 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:41:07 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:41:37 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:42:07 INFO Waiting for model:
+  test-a8k53ved/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a8k53ved/0 [executing] active: Building image.
+18:42:38 INFO Waiting for model:
+  test-a8k53ved/0 [executing] maintenance: Reconciling runners
+18:43:04 INFO Waiting for model:
+  test-a8k53ved/0 [idle] active:

@@ -1,0 +1,95 @@
+18:45:18 WARNING unexpected facade SSHServer received from the controller
+18:45:18 INFO Adding model github-pr-29fbc-lxd:test-charm-runner-48pt on cloud localhost
+18:45:18 WARNING unexpected facade SSHServer received from the controller
+18:45:18 WARNING unexpected facade SSHSession received from the controller
+18:45:18 WARNING unexpected facade SSHTunneler received from the controller
+18:45:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:45:21 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [allocating] waiting: waiting for machine
+18:45:51 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [allocating] waiting: waiting for machine
+18:46:21 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [allocating] waiting: waiting for machine
+18:46:51 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] maintenance: Setting up Builder.
+18:47:21 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] maintenance: Setting up Builder.
+18:47:51 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] maintenance: Setting up Builder.
+18:48:21 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] maintenance: Setting up Builder.
+18:48:52 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] maintenance: Setting up Builder.
+18:49:22 INFO Waiting for model:
+  github-runner-image-builder-pzqwsila/0 [executing] active: Waiting for first image.
+18:49:57 INFO Deploying local:jammy/github-runner-0
+18:49:57 INFO Waiting for model:
+  test-pzqwsila/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pzqwsila/0 [idle] blocked: image integration required.
+18:50:28 INFO Waiting for model:
+  test-pzqwsila/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pzqwsila/0 [idle] blocked: image integration required.
+18:50:58 INFO Waiting for model:
+  test-pzqwsila/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pzqwsila/0 [idle] blocked: image integration required.
+18:51:28 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:51:58 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:52:28 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:52:58 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:53:28 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:53:58 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:54:29 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:54:59 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:55:29 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:55:59 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:56:29 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:57:00 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:57:30 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:58:01 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:58:31 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:59:01 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+18:59:31 INFO Waiting for model:
+  test-pzqwsila/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pzqwsila/0 [executing] active: Building image.
+19:00:02 INFO Waiting for model:
+  test-pzqwsila/0 [executing] maintenance: Reconciling runners
+19:03:22 INFO Waiting for model:
+  test-pzqwsila/0 [executing] active: 
+19:03:53 INFO Waiting for model:
+  test-pzqwsila/0 [idle] active:
+19:04:48 INFO Waiting for model:
+  test-pzqwsila/0 [executing] active: 
+19:05:18 INFO Waiting for model:
+  test-pzqwsila/0 [idle] active:

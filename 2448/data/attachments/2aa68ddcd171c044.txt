@@ -1,0 +1,59 @@
+18:32:22 INFO Creating 2 runners
+18:33:51 INFO Getting runners...
+18:33:52 INFO Getting all openstack servers managed by the charm
+18:33:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:55 INFO Authentication (publickey) successful!
+18:33:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:56 INFO Authentication (publickey) successful!
+18:33:56 INFO Found following runners: {'test-dl8grvi7-0-n-5709c1dd10c4', 'test-dl8grvi7-0-n-1231d5874577', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:33:56 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:33:56 INFO Getting runners...
+18:33:58 INFO Getting all openstack servers managed by the charm
+18:34:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:01 INFO Authentication (publickey) successful!
+18:34:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:02 INFO Authentication (publickey) successful!
+18:34:02 INFO Found following runners: {'test-dl8grvi7-0-n-5709c1dd10c4', 'test-dl8grvi7-0-n-1231d5874577', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:34:02 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:34:02 INFO Flushing idle runners...
+18:34:03 INFO Getting all openstack servers managed by the charm
+18:34:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:05 INFO Authentication (publickey) successful!
+18:34:05 INFO Attempting to kill runner process on test-dl8grvi7-0-n-5709c1dd10c4 if not busy
+18:34:05 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:34:06 INFO Kill process command output, ok: True code 0, out: 1805
+, err: 
+18:34:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:06 INFO Authentication (publickey) successful!
+18:34:06 INFO Attempting to kill runner process on test-dl8grvi7-0-n-1231d5874577 if not busy
+18:34:06 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:34:06 INFO Kill process command output, ok: True code 0, out: 1995
+, err: 
+18:34:06 INFO Getting all openstack servers managed by the charm
+18:34:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:08 INFO Authentication (publickey) successful!
+18:34:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:08 INFO Authentication (publickey) successful!
+18:34:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:09 INFO Authentication (publickey) successful!
+18:34:09 INFO [chan 2] Opened sftp connection (server version 3)
+18:34:09 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.203, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:34:09 WARNING Failed to pull metrics for test-dl8grvi7-0-n-5709c1dd10c4: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:34:09 INFO Running runner removal script for test-dl8grvi7-0-n-5709c1dd10c4
+18:34:11 INFO Deleting openstack server with test-dl8grvi7-0-n-5709c1dd10c4
+18:34:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:34:15 INFO Authentication (publickey) successful!
+18:34:16 INFO [chan 2] Opened sftp connection (server version 3)
+18:34:16 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.122, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:34:16 WARNING Failed to pull metrics for test-dl8grvi7-0-n-1231d5874577: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:34:16 INFO Running runner removal script for test-dl8grvi7-0-n-1231d5874577
+18:34:17 INFO Deleting openstack server with test-dl8grvi7-0-n-1231d5874577
+18:34:23 INFO Cleaning up SSH key files
+18:34:23 INFO Found 0 key files, clean up 0 key files
+18:34:23 INFO Cleaning up openstack keypairs
+18:34:23 INFO Getting runners...
+18:34:25 INFO Getting all openstack servers managed by the charm
+18:34:26 INFO Found following runners: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:34:26 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}

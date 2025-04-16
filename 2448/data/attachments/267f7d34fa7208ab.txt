@@ -1,0 +1,63 @@
+18:30:02 INFO Creating 1 runners
+18:30:03 INFO Creating openstack server with test-dl8grvi7-0-n-7362bd5c45b4
+18:30:22 INFO Waiting for runner process to startup: test-dl8grvi7-0-n-7362bd5c45b4
+18:30:29 WARNING NoValidConnectionsError. Unable to SSH into test-dl8grvi7-0-n-7362bd5c45b4 with address 10.145.193.47. Error: [Errno None] Unable to connect to port 22 on 10.145.193.47
+18:30:29 WARNING Retrying error in 60 seconds: Failed to SSH to test-dl8grvi7-0-n-7362bd5c45b4 during creation possible due to setup not completed
+18:31:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:29 INFO Authentication (publickey) successful!
+18:31:30 INFO Runner startup process found to be healthy on test-dl8grvi7-0-n-7362bd5c45b4
+18:31:30 INFO Waiting for runner process to be running: test-dl8grvi7-0-n-7362bd5c45b4
+18:31:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:31 INFO Authentication (publickey) successful!
+18:31:31 INFO Runner test-dl8grvi7-0-n-7362bd5c45b4 found to be healthy
+18:31:31 INFO Runner test-dl8grvi7-0-n-7362bd5c45b4 created successfully
+18:31:31 INFO Getting runners...
+18:31:33 INFO Getting all openstack servers managed by the charm
+18:31:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:34 INFO Authentication (publickey) successful!
+18:31:35 INFO Found following runners: {'test-dl8grvi7-0-n-7362bd5c45b4', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:35 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:35 INFO Getting runners...
+18:31:36 INFO Getting all openstack servers managed by the charm
+18:31:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:38 INFO Authentication (publickey) successful!
+18:31:39 INFO Found following runners: {'test-dl8grvi7-0-n-7362bd5c45b4', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:39 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:39 INFO Getting runners...
+18:31:40 INFO Getting all openstack servers managed by the charm
+18:31:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:43 INFO Authentication (publickey) successful!
+18:31:44 INFO Found following runners: {'test-dl8grvi7-0-n-7362bd5c45b4', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:44 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:31:46 INFO Wait for condition not met, sleeping 10
+18:31:57 INFO Getting runners...
+18:31:58 INFO Getting all openstack servers managed by the charm
+18:32:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:00 INFO Authentication (publickey) successful!
+18:32:01 INFO Found following runners: {'test-dl8grvi7-0-n-7362bd5c45b4', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:32:01 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dl8grvi7-0-n-7362bd5c45b4'}
+18:32:01 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:32:01 INFO Getting runners...
+18:32:02 INFO Getting all openstack servers managed by the charm
+18:32:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:05 INFO Authentication (publickey) successful!
+18:32:06 INFO Found following runners: {'test-dl8grvi7-0-n-7362bd5c45b4', 'test-dl8grvi7-0-n-75cb34b20354'}
+18:32:06 WARNING Found runner instance on cloud but not registered on GitHub: {'test-dl8grvi7-0-n-7362bd5c45b4'}
+18:32:06 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:32:07 INFO Offline github runners to delete: []:
+18:32:08 INFO Getting all openstack servers managed by the charm
+18:32:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:10 INFO Authentication (publickey) successful!
+18:32:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:11 INFO Authentication (publickey) successful!
+18:32:11 INFO [chan 2] Opened sftp connection (server version 3)
+18:32:11 INFO Running runner removal script for test-dl8grvi7-0-n-7362bd5c45b4
+18:32:12 INFO Deleting openstack server with test-dl8grvi7-0-n-7362bd5c45b4
+18:32:17 INFO Cleaning up SSH key files
+18:32:17 INFO Found 0 key files, clean up 0 key files
+18:32:17 INFO Cleaning up openstack keypairs
+18:32:17 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+18:32:17 INFO Getting runners...
+18:32:18 INFO Getting all openstack servers managed by the charm
+18:32:22 INFO Found following runners: {'test-dl8grvi7-0-n-75cb34b20354'}
+18:32:22 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-dl8grvi7-0-n-75cb34b20354'}
