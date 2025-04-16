@@ -33,7 +33,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform
 from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
@@ -139,7 +139,7 @@ class RunnerScaler:
             service_config=application_configuration.service_config,
         )
         if application_configuration.github_config:
-            platform_provider = GitHubRunnerPlatform.build(
+            platform_provider = MultiplexerPlatform.build(
                 prefix=application_configuration.openstack_configuration.vm_prefix,
                 github_configuration=application_configuration.github_config,
             )
