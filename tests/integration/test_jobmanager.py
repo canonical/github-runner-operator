@@ -185,9 +185,9 @@ async def test_jobmanager(
         "method": "PUT",
         "headers": {"Authorization": "Bearer token"},
     }
-    json_idle = {"json": {"label": "label", "status": "IDLE"}}
-    json_executing = {"json": {"label": "label", "status": "EXECUTING"}}
-    json_finished = {"json": {"label": "label", "status": "FINISHED"}}
+    json_idle = {"json": {"label": app.name, "status": "IDLE"}}
+    json_executing = {"json": {"label": app.name, "status": "EXECUTING"}}
+    json_finished = {"json": {"label": app.name, "status": "FINISHED"}}
 
     httpserver.expect_request(**base_builder_agent_health_request | json_idle).respond_with_data(
         "OK"
