@@ -1,0 +1,189 @@
+06:25:50 INFO Adding model github-pr-29fbc-lxd:test-charm-scheduled-events-pzwf on cloud localhost
+06:25:50 WARNING unexpected facade AgentLifeFlag received from the controller
+06:25:50 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:25:50 WARNING unexpected facade SecretsDrain received from the controller
+06:25:53 INFO Deploying ch:amd64/github-runner-image-builder-68
+06:25:53 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td (not enough units yet - 0/1)
+06:26:23 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [allocating] waiting: waiting for machine
+06:26:53 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [allocating] waiting: agent initialising
+06:27:23 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:27:53 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:28:23 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:28:53 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:29:24 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:29:54 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [executing] maintenance: Setting up Builder.
+06:30:24 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [idle] blocked: image integration required.
+06:30:50 INFO Deploying local:jammy/github-runner-0
+06:30:50 INFO Waiting for model:
+  test-zpmu52td/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zpmu52td/0 [idle] blocked: image integration required.
+06:31:20 INFO Waiting for model:
+  test-zpmu52td/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zpmu52td/0 [idle] blocked: image integration required.
+06:31:50 INFO Waiting for model:
+  test-zpmu52td/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zpmu52td/0 [idle] blocked: image integration required.
+06:32:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:33:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:33:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:34:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:34:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:35:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:35:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:36:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:36:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:37:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:37:51 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:38:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:39:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:39:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:40:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:40:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:41:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:41:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:42:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:42:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:43:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:43:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:44:22 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:44:52 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:45:23 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:45:53 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:46:23 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:46:53 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:47:23 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:47:53 INFO Waiting for model:
+  test-zpmu52td/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zpmu52td/0 [executing] active: Building image.
+06:48:23 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zpmu52td/0 [idle] active: 
+06:48:53 INFO Waiting for model:
+  test-zpmu52td/0 [idle] active: 
+06:49:02 INFO Waiting for model:
+  test-zpmu52td/0 [idle] active: 
+06:49:32 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+06:50:02 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+06:50:32 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+06:51:02 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+06:51:32 INFO Waiting for model:
+  test-zpmu52td/0 [idle] active: 
+06:52:03 INFO Waiting for model:
+  test-zpmu52td/0 [idle] active:
+06:52:20 INFO Wait for condition not met, sleeping 3
+06:52:23 INFO Wait for 10 minutes
+07:02:23 INFO Waiting for model:
+  github-runner-image-builder-zpmu52td/0 [idle] active: 
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+07:02:53 INFO Waiting for model:
+  test-zpmu52td/0 [executing] maintenance: Reconciling runners
+07:03:24 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-pzwf  github-pr-29fbc-lxd  localhost/localhost  3.1.10   unsupported  07:03:24Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-zpmu52td           active      1  github-runner-image-builder  latest/edge   68  no       
+test-zpmu52td                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-zpmu52td/0*  active    idle   0        10.90.172.13           
+test-zpmu52td/0*                         active    idle   1        10.90.172.46           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.90.172.13  juju-a20a73-0  ubuntu@22.04      Running
+1        started  10.90.172.46  juju-a20a73-1  ubuntu@22.04      Running
+
+07:03:24 INFO Juju error logs:
+
+machine-0: 06:26:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:49 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-zpmu52td-0: 06:26:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-zpmu52td-0: 06:27:56 ERROR unit.github-runner-image-builder-zpmu52td/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:31:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:31:40 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:31:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-zpmu52td-0: 06:31:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:03:25 INFO Forgetting model main...

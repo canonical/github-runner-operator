@@ -1,0 +1,122 @@
+06:27:45 WARNING unexpected facade SSHServer received from the controller
+06:27:46 INFO Adding model github-pr-29fbc-lxd:test-charm-runner-m6s1 on cloud localhost
+06:27:46 WARNING unexpected facade SSHServer received from the controller
+06:27:46 WARNING unexpected facade SSHSession received from the controller
+06:27:46 WARNING unexpected facade SSHTunneler received from the controller
+06:27:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:27:48 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [allocating] waiting: waiting for machine
+06:28:18 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [allocating] waiting: waiting for machine
+06:28:49 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [allocating] waiting: waiting for machine
+06:29:19 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:29:49 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:30:20 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:30:50 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:31:21 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:31:51 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [executing] maintenance: Setting up Builder.
+06:32:21 INFO Waiting for model:
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:32:42 INFO Deploying local:jammy/github-runner-0
+06:32:42 INFO Waiting for model:
+  test-w7ibbif2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:33:12 INFO Waiting for model:
+  test-w7ibbif2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:33:42 INFO Waiting for model:
+  test-w7ibbif2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:34:13 INFO Waiting for model:
+  test-w7ibbif2/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:34:43 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:35:13 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:35:44 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:36:14 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w7ibbif2/0 [idle] blocked: image integration required.
+06:36:45 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:37:15 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:37:45 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:38:16 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:38:46 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:39:16 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:39:46 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:40:17 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:40:47 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:41:17 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:41:48 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:42:18 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:42:48 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:43:18 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:43:49 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:44:19 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:44:50 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:45:20 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:45:50 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:46:21 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w7ibbif2/0 [executing] active: Building image.
+06:46:51 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-w7ibbif2/0 [idle] active: 
+06:47:21 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] active: 
+06:50:18 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] active: 
+06:50:49 INFO Waiting for model:
+  test-w7ibbif2/0 [idle] active:
+06:51:31 INFO Waiting for model:
+  test-w7ibbif2/0 [executing] active:

@@ -1,0 +1,136 @@
+06:29:25 WARNING unexpected facade SSHServer received from the controller
+06:29:25 INFO Adding model github-pr-29fbc-lxd:test-charm-metrics-failure-jzoj on cloud localhost
+06:29:25 WARNING unexpected facade SSHServer received from the controller
+06:29:25 WARNING unexpected facade SSHSession received from the controller
+06:29:25 WARNING unexpected facade SSHTunneler received from the controller
+06:29:26 INFO GitHub token rate limit: Rate(reset=2025-04-16 06:49:43+00:00, remaining=4950, limit=5000)
+06:29:41 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:29:41 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [allocating] waiting: waiting for machine
+06:30:12 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [allocating] waiting: waiting for machine
+06:30:42 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [allocating] waiting: waiting for machine
+06:31:12 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:31:42 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:32:12 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:32:42 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:33:12 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:33:43 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [executing] maintenance: Setting up Builder.
+06:34:13 INFO Waiting for model:
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:34:51 INFO Deploying local:jammy/github-runner-0
+06:34:52 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:35:22 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:35:52 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:36:23 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:36:53 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:37:23 INFO Waiting for model:
+  test-u870oxr2/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-u870oxr2/0 [idle] blocked: image integration required.
+06:37:53 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:38:24 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:38:54 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:39:25 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:39:55 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:40:26 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:40:56 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:41:27 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:41:57 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:42:27 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:42:58 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:43:28 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:43:59 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:44:29 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:45:00 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:45:30 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:46:01 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:46:31 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:47:01 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:47:32 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:48:02 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:48:32 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:49:02 INFO Waiting for model:
+  test-u870oxr2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-u870oxr2/0 [executing] active: Building image.
+06:49:33 INFO Waiting for model:
+  test-u870oxr2/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-u870oxr2/0 [idle] active: 
+06:50:03 INFO Waiting for model:
+  test-u870oxr2/0 [executing] active: 
+06:50:38 INFO Waiting for model:
+  test-u870oxr2/0 [executing] maintenance: Reconciling runners
+06:51:08 INFO Waiting for model:
+  test-u870oxr2/0 [idle] active:
+06:55:10 INFO Waiting for model:
+  test-u870oxr2/0 [executing] active: 
+06:55:40 INFO Waiting for model:
+  test-u870oxr2/0 [idle] active: 
+06:55:48 INFO [TEST SETUP] Exposing port 8080 on test-u870oxr2-0-n-f89678ef8859
+06:55:48 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5d:93:78'}]])
+06:55:52 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-u870oxr2-0-n-f89678ef8859
+06:55:52 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5d:93:78'}]])
+06:55:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-u870oxr2-0-n-f89678ef8859.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.189 nc -z localhost 8080'
+06:55:54 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-u870oxr2-0-n-f89678ef8859
+06:55:54 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5d:93:78'}]])
+06:55:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-u870oxr2-0-n-f89678ef8859.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.189 curl http://localhost:8080'

@@ -1,0 +1,125 @@
+06:29:52 WARNING unexpected facade SSHServer received from the controller
+06:29:52 INFO Adding model github-pr-29fbc-lxd:test-charm-no-runner-arbo on cloud localhost
+06:29:52 WARNING unexpected facade SSHServer received from the controller
+06:29:52 WARNING unexpected facade SSHSession received from the controller
+06:29:52 WARNING unexpected facade SSHTunneler received from the controller
+06:29:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:29:54 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [allocating] waiting: waiting for machine
+06:30:24 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [allocating] waiting: waiting for machine
+06:30:55 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [allocating] waiting: waiting for machine
+06:31:25 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:31:56 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:32:26 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:32:57 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:33:27 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:33:58 INFO Waiting for model:
+  github-runner-image-builder-zr4bfsw1/0 [executing] maintenance: Setting up Builder.
+06:34:44 INFO Deploying local:jammy/github-runner-0
+06:34:44 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:35:14 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:35:45 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:36:15 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:36:46 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:37:16 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:37:46 INFO Waiting for model:
+  test-zr4bfsw1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zr4bfsw1/0 [idle] blocked: image integration required.
+06:38:16 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:38:47 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:39:17 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:39:47 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:40:18 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:40:48 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:41:18 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:41:49 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:42:19 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:42:50 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:43:20 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:43:51 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:44:21 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:44:51 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:45:22 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:45:52 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:46:23 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:46:53 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:47:24 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:47:54 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:48:24 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:48:54 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:49:24 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:49:54 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zr4bfsw1/0 [executing] active: Building image.
+06:50:24 INFO Waiting for model:
+  test-zr4bfsw1/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zr4bfsw1/0 [idle] active: 
+06:50:54 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] active: 
+06:51:04 INFO Waiting for model:
+  test-zr4bfsw1/0 [idle] active:

@@ -1,0 +1,146 @@
+07:02:02 WARNING unexpected facade SSHServer received from the controller
+07:02:02 INFO Adding model github-pr-29fbc-lxd:test-reactive-dfs5 on cloud localhost
+07:02:02 WARNING unexpected facade SSHServer received from the controller
+07:02:02 WARNING unexpected facade SSHSession received from the controller
+07:02:02 WARNING unexpected facade SSHTunneler received from the controller
+07:02:03 INFO GitHub token rate limit: Rate(reset=2025-04-16 07:54:39+00:00, remaining=4732, limit=5000)
+07:02:07 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+07:02:08 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [allocating] waiting: waiting for machine
+07:02:38 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [allocating] waiting: waiting for machine
+07:03:09 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [allocating] waiting: waiting for machine
+07:03:39 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [executing] maintenance: Setting up Builder.
+07:04:09 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [executing] maintenance: Setting up Builder.
+07:04:40 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [executing] maintenance: Setting up Builder.
+07:05:10 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [executing] maintenance: Setting up Builder.
+07:05:41 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [executing] maintenance: Setting up Builder.
+07:06:11 INFO Waiting for model:
+  github-runner-image-builder-mrki1l91/0 [idle] blocked: image integration required.
+07:06:31 INFO Deploying local:jammy/github-runner-0
+07:06:31 INFO Waiting for model:
+  test-mrki1l91/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mrki1l91/0 [idle] blocked: image integration required.
+07:07:01 INFO Waiting for model:
+  test-mrki1l91/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mrki1l91/0 [idle] blocked: image integration required.
+07:07:31 INFO Waiting for model:
+  test-mrki1l91/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mrki1l91/0 [idle] blocked: image integration required.
+07:08:01 INFO Waiting for model:
+  test-mrki1l91/0 [executing] waiting: agent initialising
+  github-runner-image-builder-mrki1l91/0 [idle] blocked: image integration required.
+07:08:31 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:09:02 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:09:32 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:10:02 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:10:33 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:11:03 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:11:33 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:12:04 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:12:34 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:13:04 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:13:35 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:14:05 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:14:36 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:15:06 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:15:36 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:16:07 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:16:37 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:17:08 INFO Waiting for model:
+  test-mrki1l91/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [executing] active: Building image.
+07:17:38 INFO Waiting for model:
+  test-mrki1l91/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-mrki1l91/0 [idle] active: 
+07:18:09 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active: 
+07:18:22 INFO Deploying ch:amd64/jammy/mongodb-212
+07:18:23 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:18:54 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:19:24 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing charm software
+07:19:54 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: starting MongoDB
+07:20:25 INFO Waiting for model:
+  mongodb/0 [idle] active: 
+07:20:31 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:20:32 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:21:02 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:21:35 INFO Waiting for model:
+  test-mrki1l91/0 [executing] maintenance: Reconciling runners
+07:22:05 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active:
+07:22:12 INFO Wait for condition not met, sleeping 10
+07:23:07 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active: 
+07:23:22 INFO Wait for condition not met, sleeping 60
+07:24:54 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active: 
+07:25:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744788186.190731, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.11810803413391}
+{"timestamp": 1744788231.0, "event": "runner_installed", "flavor": "test-mrki1l91", "duration": 79.0}
+{"timestamp": 1744788235.0, "event": "runner_start", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 102.0}
+{"timestamp": 1744788238.0, "event": "runner_stop", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1744788293.4550447, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.02666449546814}
+
+07:25:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744788186.190731, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.11810803413391}
+{"timestamp": 1744788231.0, "event": "runner_installed", "flavor": "test-mrki1l91", "duration": 79.0}
+{"timestamp": 1744788235.0, "event": "runner_start", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 102.0}
+{"timestamp": 1744788238.0, "event": "runner_stop", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1744788293.4550447, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.02666449546814}
+
+07:25:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744788186.190731, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.11810803413391}
+{"timestamp": 1744788231.0, "event": "runner_installed", "flavor": "test-mrki1l91", "duration": 79.0}
+{"timestamp": 1744788235.0, "event": "runner_start", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 102.0}
+{"timestamp": 1744788238.0, "event": "runner_stop", "flavor": "test-mrki1l91", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1744788293.4550447, "event": "reconciliation", "flavor": "test-mrki1l91", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.02666449546814}
+07:25:39 INFO Waiting for model:
+  test-mrki1l91/0 [executing] active: 
+07:26:10 INFO Waiting for model:
+  test-mrki1l91/0 [idle] active:
