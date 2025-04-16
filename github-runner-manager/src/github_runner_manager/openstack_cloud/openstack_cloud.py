@@ -38,7 +38,7 @@ _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
 
 # Keypairs younger than this value should not be deleted to avoid a race condition where
-# the openstack server is in construction but not yet returned by the API, and the keypair get's
+# the openstack server is in construction but not yet returned by the API, and the keypair gets
 # deleted.
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
 
