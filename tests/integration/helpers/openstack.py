@@ -44,7 +44,7 @@ class OpenStackInstanceHelper:
             port: The port on the juju machine to expose to the runner.
             host: Host for the reverse tunnel.
         """
-        runner = self._get_single_runner(unit=unit)
+        runner = self.get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         logger.info("[TEST SETUP] Exposing port %s on %s", port, runner.name)
         network_address_list = runner.addresses.values()
@@ -64,13 +64,15 @@ class OpenStackInstanceHelper:
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
-        exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
+        logger.info("ssh tunnel command %s", ssh_cmd)
+        exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd)
+        logger.info("ssh tunnel result %s %s %s", exit_code, stdout, stderr)
         assert (
             exit_code == 0
         ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"
 
         await sleep(1)
-        for _ in range(6):
+        for _ in range(10):
             exit_code, _, _ = await self.run_in_instance(
                 unit=unit, command=f"nc -z localhost {port}"
             )
@@ -99,7 +101,7 @@ class OpenStackInstanceHelper:
         Returns:
             Tuple of return code, stdout and stderr.
         """
-        runner = self._get_single_runner(unit=unit)
+        runner = self.get_single_runner(unit=unit)
         assert runner, f"Runner not found for unit {unit.name}"
         logger.info("[TEST SETUP] Run command %s on %s", command, runner.name)
         network_address_list = runner.addresses.values()
@@ -122,7 +124,7 @@ class OpenStackInstanceHelper:
         ssh_cmd_as_ubuntu_user = f"su - ubuntu -c '{ssh_cmd}'"
         logging.warning("ssh_cmd: %s", ssh_cmd_as_ubuntu_user)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd, timeout)
-        logger.debug(
+        logger.info(
             "Run command '%s' in runner with result %s: '%s' '%s'",
             command,
             exit_code,
@@ -185,7 +187,7 @@ class OpenStackInstanceHelper:
         Args:
             unit: The GitHub Runner Charm unit to delete the runner name for.
         """
-        runner = self._get_single_runner(unit)
+        runner = self.get_single_runner(unit)
         self.openstack_connection.delete_server(name_or_id=runner.id)
 
     def _get_runners(self, unit: Unit) -> list[Server]:
@@ -195,7 +197,7 @@ class OpenStackInstanceHelper:
         runners = [server for server in servers if server.name.startswith(unit_name_without_slash)]
         return runners
 
-    def _get_single_runner(self, unit: Unit) -> Server:
+    def get_single_runner(self, unit: Unit) -> Server:
         """Get the only runner for the unit.
 
         This method asserts for exactly one runner for the unit.
