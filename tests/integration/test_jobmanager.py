@@ -3,6 +3,7 @@
 
 """Testing for jobmanager platform."""
 
+import asyncio
 import json
 import logging
 import socket
@@ -65,6 +66,7 @@ async def image_builder_config_fixture(
 
 @pytest.fixture(scope="session")
 def httpserver_listen_port() -> int:
+    # Be sure not to use the listening port of the builder-agent.
     return 8000
 
 
@@ -93,9 +95,7 @@ async def app_fixture(
     await reconcile(app_for_jobmanager, app_for_jobmanager.model)
     await clear_metrics_log(app_for_jobmanager.units[0])
 
-    logger.info("yielding app_for_jobmanager")
     yield app_for_jobmanager
-    logger.info("cleaning app_for_jobmanager")
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_jobmanager.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
@@ -119,8 +119,6 @@ async def test_jobmanager(
     # The http server simulates the jobmanager. Both the github-runner application
     # and the builder-agent will interact with the jobmanager. An alternative is
     # to create a test with a real jobmanager, and this could be done in the future.
-    logger.info("Start of test_jobmanager test")
-
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     ip_address = s.getsockname()[0]
@@ -146,6 +144,7 @@ async def test_jobmanager(
     # a message in the queue is to check if the job has been picked up. If it is pending,
     # the github-runner will spawn a reactive runner.
     returned_job = Job(job_id=job_id, status=JobStatus.PENDING.value)
+
     httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
     with httpserver.wait(
@@ -157,11 +156,8 @@ async def test_jobmanager(
             app.name,
         )
         logger.info("Waiting for first check job status.")
-    assert waiting.result, "Failed Waiting for first check job status."
-
-    logger.info("Elapsed time: %s sec", (waiting.elapsed_time))
     logger.info("server log: %s ", (httpserver.log))
-    logger.info("matchers: %s ", (httpserver.format_matchers()))
+    assert waiting.result, "Failed Waiting for first check job status."
 
     # From this point, the github-runner reactive process will check if the job has been picked
     # up. The jobmanager will return pending until the builder-agent is alive (that is,
@@ -172,13 +168,11 @@ async def test_jobmanager(
     token_path = f"/v1/jobs/{job_id}/token"
     returned_token = V1JobsJobIdTokenPost200Response(token="token")
     httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
+
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for get token.")
-    assert waiting.result, "Failed Waiting for get token."
-
-    logger.info("After get token: Elapsed time: %s sec", (waiting.elapsed_time))
     logger.info("server log: %s ", (httpserver.log))
-    logger.info("matchers: %s ", (httpserver.format_matchers()))
+    assert waiting.result, "Failed Waiting for get token."
 
     # The builder-agent can get to us at any point.
     # the builder-agent will make PUT requests to
@@ -186,37 +180,38 @@ async def test_jobmanager(
     # It will send a jeon like {"label": "label", "status": "IDLE"}
     # status can be: IDLE, EXECUTING, FINISHED,
     # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
-    httpserver.expect_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "IDLE"},
-        headers={"Authorization": "Bearer token"},
-    ).respond_with_data("OK")
+    base_builder_agent_health_request = {
+        "uri": job_path_health,
+        "method": "PUT",
+        "headers": {"Authorization": "Bearer token"},
+    }
+    json_idle = {"json": {"label": "label", "status": "IDLE"}}
+    json_executing = {"json": {"label": "label", "status": "EXECUTING"}}
+    json_finished = {"json": {"label": "label", "status": "FINISHED"}}
+
+    httpserver.expect_request(**base_builder_agent_health_request | json_idle).respond_with_data(
+        "OK"
+    )
 
     # At this point the openstack instance is spawned. We need to be able to access it.
     # first wait a bit so there is a server. 60 seconds is something reasonable...
     unit = app.units[0]
 
     async def _prepare_runner() -> bool:
-        """TODO."""
+        """Prepare the tunner so the runner builder-agent can get to the jobmanager."""
         return await _prepare_runner_tunnel_for_builder_agent(
             instance_helper, unit, ip_address, httpserver.port
         )
 
-    logger.info("Prepare runner.")
-    await wait_for(_prepare_runner, check_interval=5, timeout=600)
-    logger.info("Runner prepared.")
+    await wait_for(_prepare_runner, check_interval=10, timeout=600)
 
-    # We want to here from the builder-agent at least one.
+    # We want to hear from the builder-agent at least one.
     httpserver.expect_oneshot_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "IDLE"},
-        headers={"Authorization": "Bearer token"},
+        **base_builder_agent_health_request | json_idle
     ).respond_with_data("OK")
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
-    logger.info("server log after first contact: %s ", (httpserver.log))
+    logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "builder-agent did not contact us."
 
     httpserver.check_assertions()
@@ -225,47 +220,41 @@ async def test_jobmanager(
     await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
     httpserver.expect_oneshot_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "EXECUTING"},
-        headers={"Authorization": "Bearer token"},
+        **base_builder_agent_health_request | json_executing
     ).respond_with_data("OK")
     httpserver.expect_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "EXECUTING"},
-        headers={"Authorization": "Bearer token"},
+        **base_builder_agent_health_request | json_executing
     ).respond_with_data("OK")
     httpserver.expect_oneshot_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "FINISHED"},
-        headers={"Authorization": "Bearer token"},
+        **base_builder_agent_health_request | json_finished
     ).respond_with_data("OK")
     httpserver.expect_request(
-        job_path_health,
-        method="PUT",
-        json={"label": "label", "status": "FINISHED"},
-        headers={"Authorization": "Bearer token"},
+        **base_builder_agent_health_request | json_finished
     ).respond_with_data("OK")
+
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=120) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
     logger.info("server log after executing: %s ", (httpserver.log))
+    assert waiting.result, "builder-agent did not execute or finished."
 
     httpserver.check_assertions()
-
-    # The reconcile loop is still not adapted and will badly kill the instance.
+    # The reconcile loop is still not adapted and will badly kill the instance as the ssh
+    # health check will mark the instance as unhealthy.
 
 
 async def _prepare_runner_tunnel_for_builder_agent(
     instance_helper, unit, jobmanager_address, jobmanager_port
 ) -> bool:
-    """TODO."""
+    """Prepare the runner tunner so the builder-agent can access the fake jobmanager.
+
+    This function return False if the tunnel could not be prepared and
+    retrying is possible.
+    """
     logger.info("trying to prepare tunnel for builder agent")
     try:
         server = instance_helper.get_single_runner(unit)
     except AssertionError:
-        # Not runner or two runners
+        # No runner or two runners
         logger.info("no runner or two runners in unit, return False")
         return False
     network_address_list = server.addresses.values()
@@ -282,6 +271,11 @@ async def _prepare_runner_tunnel_for_builder_agent(
         logger.info("cannot ssh yet, return False")
         return False
 
+    # Not sure about this. We should check if the nftables interfere with the iptables rules.
+    # For now, a sleep for a bit of time so we the runner has time to flush and apply the
+    # nftables rules. We may also check this issue in other tests.
+    await asyncio.sleep(60)
+
     dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {jobmanager_address} --dport {jobmanager_port} -j DNAT --to-destination 127.0.0.1:{jobmanager_port}"  # noqa  # pylint: disable=line-too-long
     exit_code, _, _ = await instance_helper.run_in_instance(
         unit,
@@ -296,7 +290,7 @@ async def _prepare_runner_tunnel_for_builder_agent(
 
 
 async def _execute_command_with_builder_agent(instance_helper, unit, command) -> None:
-    """TODO."""
+    """Execute a command in the builder-agent."""
     execute_command = (
         "'curl http://127.0.0.1:8080/execute -X POST "
         '--header "Content-Type: application/json" '

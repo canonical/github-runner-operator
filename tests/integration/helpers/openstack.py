@@ -64,13 +64,14 @@ class OpenStackInstanceHelper:
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
-        exit_code, _, stderr = await run_in_unit(unit, ssh_cmd)
+        exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd)
+        logger.info("ssh tunner result %s %s %s", exit_code, stdout, stderr)
         assert (
             exit_code == 0
         ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"
 
         await sleep(1)
-        for _ in range(6):
+        for _ in range(10):
             exit_code, _, _ = await self.run_in_instance(
                 unit=unit, command=f"nc -z localhost {port}"
             )
