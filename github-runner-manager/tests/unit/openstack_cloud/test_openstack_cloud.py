@@ -87,7 +87,7 @@ def test_raises_openstack_error(
             | {
                 "tcp8080": {
                     "direction": "ingress",
-                    "ether_type": "IPv4",
+                    "ethertype": "IPv4",
                     "port_range_max": 8080,
                     "port_range_min": 8080,
                     "protocol": "tcp",

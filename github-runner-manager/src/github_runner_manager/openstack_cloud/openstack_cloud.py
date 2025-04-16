@@ -45,21 +45,21 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
     "icmp": {
         "protocol": "icmp",
         "direction": "ingress",
-        "ether_type": "IPv4",
+        "ethertype": "IPv4",
     },
     "ssh": {
         "protocol": "tcp",
         "port_range_min": 22,
         "port_range_max": 22,
         "direction": "ingress",
-        "ether_type": "IPv4",
+        "ethertype": "IPv4",
     },
     "tmate_ssh": {
         "protocol": "tcp",
         "port_range_min": 10022,
         "port_range_max": 10022,
         "direction": "egress",
-        "ether_type": "IPv4",
+        "ethertype": "IPv4",
     },
 }
 
@@ -646,7 +646,7 @@ def get_missing_security_rules(
                 "port_range_min": tcp_port,
                 "port_range_max": tcp_port,
                 "direction": "ingress",
-                "ether_type": "IPv4",
+                "ethertype": "IPv4",
             }
 
     existing_rules = security_group.security_group_rules
@@ -664,6 +664,6 @@ def get_missing_security_rules(
 def _rule_matches(rule: SecurityGroupRule, expected_rule_dict: SecurityRuleDict) -> bool:
     """Check if an expected rule matches a security rule."""
     for condition_name, condition_value in expected_rule_dict.items():
-        if condition_name not in rule or rule[condition_name] != condition_value:
+        if rule[condition_name] != condition_value:
             return False
     return True
