@@ -19,7 +19,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     PreJobMetrics,
     RunnerMetrics,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.runner import (
     PullFileError,
@@ -93,7 +93,8 @@ def test_create_runner_with_aproxy(
     service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
 
     prefix = "test"
-    registration_jittoken = "jittoken"
+    agent_command = "agent"
+    runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
@@ -102,7 +103,7 @@ def test_create_runner_with_aproxy(
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
 
-    runner_manager.create_runner(instance_id, metadata, registration_jittoken)
+    runner_manager.create_runner(instance_id, metadata, runner_context)
     openstack_cloud.launch_instance.assert_called_once()
     assert (
         "snap set aproxy proxy=proxy.example.com:3128"
@@ -124,7 +125,8 @@ def test_create_runner_without_aproxy(
     service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
 
     prefix = "test"
-    registration_jittoken = "jittoken"
+    agent_command = "agent"
+    runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
@@ -133,7 +135,7 @@ def test_create_runner_without_aproxy(
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
 
-    runner_manager.create_runner(instance_id, metadata, registration_jittoken)
+    runner_manager.create_runner(instance_id, metadata, runner_context)
     openstack_cloud.launch_instance.assert_called_once()
     assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 

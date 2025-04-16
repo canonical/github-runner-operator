@@ -19,8 +19,7 @@ import json
 
 
 from typing import Optional
-from pydantic import BaseModel, StrictStr
-from jobmanager_client.models.job import Job
+from pydantic import BaseModel, StrictBool, StrictStr
 
 class V1JobsJobIdHealthGet200Response(BaseModel):
     """
@@ -31,8 +30,8 @@ class V1JobsJobIdHealthGet200Response(BaseModel):
     ram_usage: Optional[StrictStr] = None
     disk_usage: Optional[StrictStr] = None
     status: Optional[StrictStr] = None
-    job: Optional[Job] = None
-    __properties = ["label", "cpu_usage", "ram_usage", "disk_usage", "status", "job"]
+    deletable: Optional[StrictBool] = None
+    __properties = ["label", "cpu_usage", "ram_usage", "disk_usage", "status", "deletable"]
 
     class Config:
         """Pydantic configuration"""
@@ -58,9 +57,6 @@ class V1JobsJobIdHealthGet200Response(BaseModel):
                           exclude={
                           },
                           exclude_none=True)
-        # override the default output from pydantic by calling `to_dict()` of job
-        if self.job:
-            _dict['job'] = self.job.to_dict()
         return _dict
 
     @classmethod
@@ -78,7 +74,7 @@ class V1JobsJobIdHealthGet200Response(BaseModel):
             "ram_usage": obj.get("ram_usage"),
             "disk_usage": obj.get("disk_usage"),
             "status": obj.get("status"),
-            "job": Job.from_dict(obj.get("job")) if obj.get("job") is not None else None
+            "deletable": obj.get("deletable")
         })
         return _obj
 

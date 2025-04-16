@@ -13,7 +13,7 @@ from typing import Iterable  # pylint: disable=unused-import
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -47,9 +47,9 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runner_token(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.

@@ -4,7 +4,7 @@
 """Module containing the main classes for business logic."""
 
 import secrets
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 INSTANCE_SUFFIX_LENGTH = 12
 
@@ -179,3 +179,16 @@ class RunnerMetadata:
             metadata as a dict.
         """
         return {k: v for k, v in asdict(self).items() if v is not None}
+
+
+@dataclass
+class RunnerContext:
+    """Information provided by the platform provider needed to spawn a runner.
+
+    Attributes:
+        shell_run_script: Script to run the platform agent.
+        ingress_tcp_ports_to_open: Ports to be opened in the cloud provider.
+    """
+
+    shell_run_script: str
+    ingress_tcp_ports_to_open: list[int] = field(default_factory=lambda: [])

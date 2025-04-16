@@ -11,7 +11,7 @@ from typing import Iterable, Iterator, Optional, Sequence, Tuple
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 
 logger = logging.getLogger(__name__)
 
@@ -239,14 +239,17 @@ class CloudRunnerManager(abc.ABC):
 
     @abc.abstractmethod
     def create_runner(
-        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner.
             metadata: Runner Metadata.
-            runner_token: The one time token the runner.
+            runner_context: Context information needed to spawn the runner.
         """
 
     @abc.abstractmethod

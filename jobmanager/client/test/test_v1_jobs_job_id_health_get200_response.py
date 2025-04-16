@@ -41,32 +41,7 @@ class TestV1JobsJobIdHealthGet200Response(unittest.TestCase):
                 ram_usage = '',
                 disk_usage = '',
                 status = '',
-                job = jobmanager_client.models.job.Job(
-                    job_id = 56, 
-                    requested_by = '', 
-                    repository_url = '', 
-                    repository_ref = '', 
-                    architecture = '', 
-                    base_series = '', 
-                    vm_dependencies = jobmanager_client.models.vm_dependencies.vm_dependencies(), 
-                    commands = [
-                        ''
-                        ], 
-                    secrets = jobmanager_client.models.secrets.secrets(), 
-                    environment = jobmanager_client.models.environment.environment(), 
-                    artifacts_dir = '', 
-                    topology = '', 
-                    vm_ip = '', 
-                    vm_size = 'S', 
-                    status = 'PENDING', 
-                    artifact_urls = [
-                        ''
-                        ], 
-                    log_url = '', 
-                    created_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                    updated_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                    started_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
-                    completed_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), )
+                deletable = True
             )
         else:
             return V1JobsJobIdHealthGet200Response(

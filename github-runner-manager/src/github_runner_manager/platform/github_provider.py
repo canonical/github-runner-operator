@@ -12,7 +12,7 @@ from pydantic import HttpUrl
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
@@ -90,9 +90,9 @@ class GitHubRunnerPlatform(PlatformProvider):
         for runner in runners:
             self._client.delete_runner(self._path, runner.id)
 
-    def get_runner_token(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
@@ -105,7 +105,11 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the runner.
         """
-        return self._client.get_runner_registration_jittoken(self._path, instance_id, labels)
+        token, runner = self._client.get_runner_registration_jittoken(
+            self._path, instance_id, labels
+        )
+        command_to_run = f'su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig { token }"'  # noqa  # pylint: disable=line-too-long
+        return RunnerContext(shell_run_script=command_to_run), runner
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.
