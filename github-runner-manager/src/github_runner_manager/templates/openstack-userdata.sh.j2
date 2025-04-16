@@ -115,6 +115,9 @@ date +%s >  {{ metrics_exchange_path }}/runner-installed.timestamp
 
 # Run runner
 # We want to capture the exit code of the run script and write the post-job metrics.
+# If the agent provided does not stop, the metrics will not be written to the file and
+# should be taken from the platform provider.
+
 (set +e; {{ run_script }}; write_post_metrics $?)
 
 

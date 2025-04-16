@@ -137,7 +137,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_context: Config data for spawning the runner.
+            runner_context: Context data for spawning the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -379,7 +379,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         This is the script the openstack server runs on startup.
 
         Args:
-            runner_context: TODO
+            runner_context: Context for the runner.
 
         Returns:
             The cloud init userdata for openstack instance.

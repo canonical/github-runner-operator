@@ -186,11 +186,9 @@ class RunnerContext:
     """Information provided by the platform provider needed to spawn a runner.
 
     Attributes:
-        token: TODO
-        ingress_tcp_ports_to_open: TODO
-        shell_run_script: TODO
+        shell_run_script: Script to run the platform agent.
+        ingress_tcp_ports_to_open: Ports to be opened in the cloud provider.
     """
 
-    token: str
+    shell_run_script: str
     ingress_tcp_ports_to_open: list[int] = field(default_factory=lambda: [])
-    shell_run_script: str | None = None

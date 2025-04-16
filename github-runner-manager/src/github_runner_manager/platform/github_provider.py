@@ -109,7 +109,7 @@ class GitHubRunnerPlatform(PlatformProvider):
             self._path, instance_id, labels
         )
         command_to_run = f'su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig { token }"'  # noqa  # pylint: disable=line-too-long
-        return RunnerContext(token=token, shell_run_script=command_to_run), runner
+        return RunnerContext(shell_run_script=command_to_run), runner
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.

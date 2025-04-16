@@ -93,8 +93,8 @@ def test_create_runner_with_aproxy(
     service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
 
     prefix = "test"
-    registration_jittoken = "jittoken"
-    runner_context = RunnerContext(token=registration_jittoken)
+    agent_command = "agent"
+    runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
@@ -125,8 +125,8 @@ def test_create_runner_without_aproxy(
     service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
 
     prefix = "test"
-    registration_jittoken = "jittoken"
-    runner_context = RunnerContext(token=registration_jittoken)
+    agent_command = "agent"
+    runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
     monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))

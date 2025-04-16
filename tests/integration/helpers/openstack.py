@@ -64,8 +64,9 @@ class OpenStackInstanceHelper:
         exit_code, _, _ = await run_in_unit(unit, f"ls {key_path}")
         assert exit_code == 0, f"Unable to find key file {key_path}"
         ssh_cmd = f'ssh -fNT -R {port}:{host}:{port} -i {key_path} -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@{ip} &'
+        logger.info("ssh tunnel command %s", ssh_cmd)
         exit_code, stdout, stderr = await run_in_unit(unit, ssh_cmd)
-        logger.info("ssh tunner result %s %s %s", exit_code, stdout, stderr)
+        logger.info("ssh tunnel result %s %s %s", exit_code, stdout, stderr)
         assert (
             exit_code == 0
         ), f"Error in starting background process of SSH remote forwarding of port {port}: {stderr}"

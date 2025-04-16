@@ -249,7 +249,7 @@ class CloudRunnerManager(abc.ABC):
         Args:
             instance_id: Instance ID for the runner.
             metadata: Runner Metadata.
-            runner_context: Configuration data needed to spawn the runner.
+            runner_context: Context information needed to spawn the runner.
         """
 
     @abc.abstractmethod

@@ -38,7 +38,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
 
     context, runner = platform.get_runner_context(metadata, instance_id, labels)
 
-    assert context.token == "mytoken"
+    assert "builder-agent" in context.shell_run_script
     assert runner.labels == [SelfHostedRunnerLabel(name="label")]
     assert runner.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE

@@ -219,7 +219,7 @@ class OpenstackCloud:
             instance_id: The instance ID to form the instance name.
             server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
-            ingress_tcp_ports_to_open: TODO.
+            ingress_tcp_ports_to_open: Ports to be allowed to connect to the new instance.
 
         Raises:
             OpenStackError: Unable to create OpenStack server.
@@ -589,12 +589,13 @@ class OpenstackCloud:
         """Ensure runner security group exists.
 
         These rules will apply to all runners in the security group in
-        the OpenStack project. Pending to split it by github-runner and
-        platform name.
+        the OpenStack project. An improvement would be to do it based on
+        runner manager and platform provider, as those opened ports will be
+        currently for all runners in the openstack project.
 
         Args:
             conn: The connection object to access OpenStack cloud.
-            ingress_tcp_ports_to_open: TODO
+            ingress_tcp_ports_to_open: Ports to create an ingress rule for.
 
         Returns:
             The security group with the rules for runners.

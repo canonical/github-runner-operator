@@ -319,7 +319,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_context: TODO.
+            runner_context: Context for the runner.
         """
         name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
@@ -435,7 +435,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the SelfHostedRunner
         """
-        return RunnerContext(token="mock_registration_token"), MagicMock(
+        return RunnerContext(shell_run_script="fake-agent"), MagicMock(
             spec=list(SelfHostedRunner.__fields__.keys())
         )
 
