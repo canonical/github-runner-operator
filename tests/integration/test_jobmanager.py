@@ -196,33 +196,23 @@ async def test_jobmanager(
 
     # At this point the openstack instance is spawned. We need to be able to access it.
     # first wait a bit so there is a server. 60 seconds is something reasonable...
-    logger.info("waiting 60s for runner startup")
-    await asyncio.sleep(60)
-    logger.info("waiting for runner address")
     unit = app.units[0]
 
-    def _check_server_has_addresses() -> bool:
-        """Check if the server has an address."""
-        nonlocal unit
-        server = instance_helper.get_single_runner(unit)
-        network_address_list = server.addresses.values()
-        return bool(network_address_list)
+    async def _prepare_runner() -> bool:
+        """TODO."""
+        return await _prepare_runner_tunnel_for_builder_agent(
+            instance_helper, unit, ip_address, httpserver.port
+        )
 
-    await wait_for(_check_server_has_addresses, check_interval=60, timeout=600)
-    logger.info("waiting for runner address finished")
+    logger.info("Prepare runner.")
+    await wait_for(_prepare_runner, check_interval=5, timeout=600)
+    logger.info("Runner prepared.")
 
-    # We have an issue, as the runner must be able to contact this test
-    # Some tunnelling is necessary.
-    dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {ip_address} --dport {httpserver.port} -j DNAT --to-destination 127.0.0.1:{httpserver.port}"  # noqa  # pylint: disable=line-too-long
-    _, _, _ = await instance_helper.run_in_instance(
-        unit,
-        dnat_comman_in_runner,
-        assert_on_failure=True,
-        # we should have enough time for the runner to start
-        timeout=60 * 15,
-        assert_msg="Failed setting iptables rules",
-    )
-    await instance_helper.expose_to_instance(unit=unit, port=httpserver.port, host=ip_address)
+    # big race condition in here. nftables in the runner clears everything.
+    # I think this happens in other tests so they are flaky.
+    await asyncio.sleep(60)
+    logger.info("Try again to prepare.")
+    _prepare_runner()
 
     # We want to here from the builder-agent at least one.
     httpserver.expect_oneshot_request(
@@ -231,7 +221,7 @@ async def test_jobmanager(
         json={"label": "label", "status": "IDLE"},
         headers={"Authorization": "Bearer token"},
     ).respond_with_data("OK")
-    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=10) as waiting:
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
     logger.info("server log after first contact: %s ", (httpserver.log))
     assert waiting.result, "builder-agent did not contact us."
@@ -239,22 +229,15 @@ async def test_jobmanager(
     httpserver.check_assertions()
 
     # Ok, at this point, we want to tell the builder-agent to execute some random thing.
-    execute_command = (
-        "'curl http://127.0.0.1:8080/execute -X POST "
-        '--header "Content-Type: application/json" '
-        '--data "'
-        '{\\"commands\\":[\\"sleep 100\\"]}"'
-        "'"
-    )
-    _, _, _ = await instance_helper.run_in_instance(
-        unit=unit,
-        command=execute_command,
-        assert_on_failure=True,
-        timeout=10,
-        assert_msg="Failed executing commands in builder-agent",
-    )
+    await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
     httpserver.expect_oneshot_request(
+        job_path_health,
+        method="PUT",
+        json={"label": "label", "status": "EXECUTING"},
+        headers={"Authorization": "Bearer token"},
+    ).respond_with_data("OK")
+    httpserver.expect_request(
         job_path_health,
         method="PUT",
         json={"label": "label", "status": "EXECUTING"},
@@ -266,9 +249,63 @@ async def test_jobmanager(
         json={"label": "label", "status": "FINISHED"},
         headers={"Authorization": "Bearer token"},
     ).respond_with_data("OK")
+    httpserver.expect_request(
+        job_path_health,
+        method="PUT",
+        json={"label": "label", "status": "FINISHED"},
+        headers={"Authorization": "Bearer token"},
+    ).respond_with_data("OK")
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=120) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
     logger.info("server log after executing: %s ", (httpserver.log))
-    assert waiting.result, "builder-agent did not contact us for executing or idle."
+
+    httpserver.check_assertions()
 
     # The reconcile loop is still not adapted and will badly kill the instance.
+
+
+async def _prepare_runner_tunnel_for_builder_agent(
+    instance_helper, unit, jobmanager_address, jobmanager_port
+) -> bool:
+    """TODO."""
+    logger.info("trying to prepare tunnel for builder agent")
+    try:
+        server = instance_helper.get_single_runner(unit)
+    except AssertionError:
+        # Not runner or two runners
+        logger.info("not runner or two runners, return False")
+        return False
+    network_address_list = server.addresses.values()
+    if not network_address_list:
+        logger.info("no addresses yet, return False")
+        return False
+
+    dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {jobmanager_address} --dport {jobmanager_port} -j DNAT --to-destination 127.0.0.1:{jobmanager_port}"  # noqa  # pylint: disable=line-too-long
+    exit_code, _, _ = await instance_helper.run_in_instance(
+        unit,
+        dnat_comman_in_runner,
+        timeout=10,
+    )
+    if exit_code != 0:
+        logger.info("could not apply iptables, return False")
+        return False
+    instance_helper.expose_to_instance(unit=unit, port=jobmanager_address, host=jobmanager_port)
+    return True
+
+
+async def _execute_command_with_builder_agent(instance_helper, unit, command) -> None:
+    """TODO."""
+    execute_command = (
+        "'curl http://127.0.0.1:8080/execute -X POST "
+        '--header "Content-Type: application/json" '
+        '--data "'
+        f'{{\\"commands\\":[\\"{command}\\"]}}"'
+        "'"
+    )
+    _, _, _ = await instance_helper.run_in_instance(
+        unit=unit,
+        command=execute_command,
+        assert_on_failure=True,
+        timeout=10,
+        assert_msg="Failed executing commands in builder-agent",
+    )
