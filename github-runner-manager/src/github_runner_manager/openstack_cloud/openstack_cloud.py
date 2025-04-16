@@ -37,6 +37,9 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
 
+# Keypairs younger than this value should not be deleted to avoid a race condition where
+# the openstack server is in construction but not yet returned by the API, and the keypair get's
+# deleted.
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
 
 
@@ -388,7 +391,7 @@ class OpenstackCloud:
             self._cleanup_openstack_keypairs(conn, exclude_list)
 
     def _cleanup_key_files(self, exclude_instances: Iterable[str]) -> None:
-        """Delete all SSH key files except the specified instances.
+        """Delete all SSH key files except the specified instances or the ones with young age.
 
         Args:
             exclude_instances: The keys of these instance will not be deleted.
@@ -417,7 +420,7 @@ class OpenstackCloud:
     def _cleanup_openstack_keypairs(
         self, conn: OpenstackConnection, exclude_instances: Iterable[str]
     ) -> None:
-        """Delete all OpenStack keypairs except the specified instances.
+        """Delete all OpenStack keypairs except the specified instances or the ones with young age.
 
         Args:
             conn: The Openstack connection instance.
