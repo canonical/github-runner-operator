@@ -212,7 +212,7 @@ async def test_jobmanager(
     # I think this happens in other tests so they are flaky.
     await asyncio.sleep(60)
     logger.info("Try again to prepare.")
-    _prepare_runner()
+    await _prepare_runner()
 
     # We want to here from the builder-agent at least one.
     httpserver.expect_oneshot_request(
