@@ -45,21 +45,21 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
     "icmp": {
         "protocol": "icmp",
         "direction": "ingress",
-        "ethertype": "IPv4",
+        "ether_type": "IPv4",
     },
     "ssh": {
         "protocol": "tcp",
         "port_range_min": 22,
         "port_range_max": 22,
         "direction": "ingress",
-        "ethertype": "IPv4",
+        "ether_type": "IPv4",
     },
     "tmate_ssh": {
         "protocol": "tcp",
         "port_range_min": 10022,
         "port_range_max": 10022,
         "direction": "egress",
-        "ethertype": "IPv4",
+        "ether_type": "IPv4",
     },
 }
 
@@ -600,18 +600,6 @@ class OpenstackCloud:
         Returns:
             The security group with the rules for runners.
         """
-        expected_rules = copy.deepcopy(DEFAULT_SECURITY_RULES)
-
-        if ingress_tcp_ports_to_open:
-            for tcp_port in ingress_tcp_ports_to_open:
-                expected_rules[f"tcp{tcp_port}"] = {
-                    "protocol": "tcp",
-                    "port_range_min": tcp_port,
-                    "port_range_max": tcp_port,
-                    "direction": "ingress",
-                    "ethertype": "IPv4",
-                }
-
         security_group_list = conn.list_security_groups(filters={"name": _SECURITY_GROUP_NAME})
         # Pick the first security_group returned.
         security_group = next(iter(security_group_list), None)
@@ -622,7 +610,7 @@ class OpenstackCloud:
                 description="For servers managed by the github-runner charm.",
             )
 
-        missing_rules = _find_missing_security_rules(security_group, expected_rules)
+        missing_rules = get_missing_security_rules(security_group, ingress_tcp_ports_to_open)
 
         for missing_rule_name, missing_rule in missing_rules.items():
             conn.create_security_group_rule(secgroup_name_or_id=security_group.id, **missing_rule)
@@ -635,16 +623,42 @@ class OpenstackCloud:
         return security_group
 
 
-def _find_missing_security_rules(
-    security_group: OpenstackSecurityGroup, expected_rules: dict[str, SecurityRuleDict]
+def get_missing_security_rules(
+    security_group: OpenstackSecurityGroup, ingress_tcp_ports_to_open: list[int] | None
 ) -> dict[str, SecurityRuleDict]:
-    """TODO."""
-    # A bit messy.
+    """Get security rules to add to the security group.
+
+    Args:
+        security_group: The security group where rules will be added.
+        ingress_tcp_ports_to_open: Ports to create an ingress rule for.
+
+    Returns:
+        A dictionary with the rules that should be added to the security group.
+    """
     missing_rules: dict[str, SecurityRuleDict] = {}
+
+    # We do not want to mess with the default security rules, so the deepcopy.
+    expected_rules = copy.deepcopy(DEFAULT_SECURITY_RULES)
+    if ingress_tcp_ports_to_open:
+        for tcp_port in ingress_tcp_ports_to_open:
+            expected_rules[f"tcp{tcp_port}"] = {
+                "protocol": "tcp",
+                "port_range_min": tcp_port,
+                "port_range_max": tcp_port,
+                "direction": "ingress",
+                "ether_type": "IPv4",
+            }
+
     existing_rules = security_group.security_group_rules
     for expected_rule_name, expected_rule in expected_rules.items():
         expected_rule_found = False
         for existing_rule in existing_rules:
+            logger.info(
+                "rule %s existing %s matches %s ",
+                expected_rule,
+                existing_rule,
+                _rule_matches(existing_rule, expected_rule),
+            )
             if _rule_matches(existing_rule, expected_rule):
                 expected_rule_found = True
                 break
@@ -660,8 +674,12 @@ def _find_missing_security_rules(
 
 
 def _rule_matches(rule: SecurityGroupRule, expected_rule_dict: SecurityRuleDict) -> bool:
-    """TODO."""
+    """Check if an expected rule matches a security rule."""
+    logger.info("rule: %s", rule.items())
     for condition_name, condition_value in expected_rule_dict.items():
+        logger.info(" condition_name %s, in rule %s", condition_name, condition_name in rule)
+        if condition_name in rule:
+            logger.info("  %s", rule[condition_name])
         if condition_name not in rule or rule[condition_name] != condition_value:
             return False
     return True
