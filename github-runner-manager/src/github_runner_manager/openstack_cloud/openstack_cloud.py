@@ -614,7 +614,7 @@ class OpenstackCloud:
 
         for missing_rule_name, missing_rule in missing_rules.items():
             conn.create_security_group_rule(secgroup_name_or_id=security_group.id, **missing_rule)
-            logger.debug(
+            logger.info(
                 "Adding %s in existing security group %s of ID %s",
                 missing_rule_name,
                 _SECURITY_GROUP_NAME,
@@ -653,33 +653,17 @@ def get_missing_security_rules(
     for expected_rule_name, expected_rule in expected_rules.items():
         expected_rule_found = False
         for existing_rule in existing_rules:
-            logger.info(
-                "rule %s existing %s matches %s ",
-                expected_rule,
-                existing_rule,
-                _rule_matches(existing_rule, expected_rule),
-            )
             if _rule_matches(existing_rule, expected_rule):
                 expected_rule_found = True
                 break
         if not expected_rule_found:
             missing_rules[expected_rule_name] = expected_rule
-            logger.debug(
-                "Found missing rule %s in security group %s of ID %s",
-                expected_rule_name,
-                _SECURITY_GROUP_NAME,
-                security_group.id,
-            )
     return missing_rules
 
 
 def _rule_matches(rule: SecurityGroupRule, expected_rule_dict: SecurityRuleDict) -> bool:
     """Check if an expected rule matches a security rule."""
-    logger.info("rule: %s", rule.items())
     for condition_name, condition_value in expected_rule_dict.items():
-        logger.info(" condition_name %s, in rule %s", condition_name, condition_name in rule)
-        if condition_name in rule:
-            logger.info("  %s", rule[condition_name])
         if condition_name not in rule or rule[condition_name] != condition_value:
             return False
     return True
