@@ -384,7 +384,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Returns:
             The cloud init userdata for openstack instance.
         """
-        jinja = jinja2.Environment(
+        # We do not autoscape, the reason is that we are not generating html or xml
+        jinja = jinja2.Environment(  # nosec
             loader=jinja2.PackageLoader("github_runner_manager", "templates")
         )
 

@@ -3,7 +3,6 @@
 
 """Testing for jobmanager platform."""
 
-import asyncio
 import json
 import logging
 import socket
@@ -208,12 +207,6 @@ async def test_jobmanager(
     await wait_for(_prepare_runner, check_interval=5, timeout=600)
     logger.info("Runner prepared.")
 
-    # big race condition in here. nftables in the runner clears everything.
-    # I think this happens in other tests so they are flaky.
-    await asyncio.sleep(60)
-    logger.info("Try again to prepare.")
-    await _prepare_runner()
-
     # We want to here from the builder-agent at least one.
     httpserver.expect_oneshot_request(
         job_path_health,
@@ -273,11 +266,20 @@ async def _prepare_runner_tunnel_for_builder_agent(
         server = instance_helper.get_single_runner(unit)
     except AssertionError:
         # Not runner or two runners
-        logger.info("not runner or two runners, return False")
+        logger.info("no runner or two runners in unit, return False")
         return False
     network_address_list = server.addresses.values()
     if not network_address_list:
         logger.info("no addresses yet, return False")
+        return False
+
+    exit_code, stdout, _ = await instance_helper.run_in_instance(
+        unit,
+        "'echo hello'",
+        timeout=10,
+    )
+    if exit_code != 0 or not stdout or "hello" not in stdout:
+        logger.info("cannot ssh yet, return False")
         return False
 
     dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {jobmanager_address} --dport {jobmanager_port} -j DNAT --to-destination 127.0.0.1:{jobmanager_port}"  # noqa  # pylint: disable=line-too-long
@@ -286,10 +288,10 @@ async def _prepare_runner_tunnel_for_builder_agent(
         dnat_comman_in_runner,
         timeout=10,
     )
-    if exit_code != 0:
-        logger.info("could not apply iptables, return False")
-        return False
-    instance_helper.expose_to_instance(unit=unit, port=jobmanager_address, host=jobmanager_port)
+    assert exit_code == 0, "could not apply iptables"
+    await instance_helper.expose_to_instance(
+        unit=unit, port=jobmanager_port, host=jobmanager_address
+    )
     return True
 
 
