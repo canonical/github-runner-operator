@@ -1,0 +1,108 @@
+18:24:55 WARNING unexpected facade SSHServer received from the controller
+18:24:55 INFO Adding model github-pr-9f697-lxd:test-charm-metrics-failure-eox7 on cloud localhost
+18:24:55 WARNING unexpected facade SSHServer received from the controller
+18:24:55 WARNING unexpected facade SSHSession received from the controller
+18:24:55 WARNING unexpected facade SSHTunneler received from the controller
+18:24:56 INFO GitHub token rate limit: Rate(reset=2025-04-17 19:23:33+00:00, remaining=4996, limit=5000)
+18:25:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:12 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [allocating] waiting: waiting for machine
+18:26:12 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [allocating] waiting: waiting for machine
+18:26:42 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [executing] maintenance: Setting up Builder.
+18:27:13 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [executing] maintenance: Setting up Builder.
+18:27:43 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [executing] maintenance: Setting up Builder.
+18:28:14 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [executing] maintenance: Setting up Builder.
+18:28:44 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [executing] maintenance: Setting up Builder.
+18:29:15 INFO Waiting for model:
+  github-runner-image-builder-zy0prw6t/0 [idle] blocked: image integration required.
+18:29:32 INFO Deploying local:jammy/github-runner-0
+18:29:32 INFO Waiting for model:
+  test-zy0prw6t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zy0prw6t/0 [idle] blocked: image integration required.
+18:30:03 INFO Waiting for model:
+  test-zy0prw6t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zy0prw6t/0 [idle] blocked: image integration required.
+18:30:33 INFO Waiting for model:
+  test-zy0prw6t/0 [executing] waiting: agent initialising
+  github-runner-image-builder-zy0prw6t/0 [idle] blocked: image integration required.
+18:31:03 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:31:34 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:32:04 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:32:34 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:33:05 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:33:35 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:34:05 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:34:36 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:35:06 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:35:36 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:36:07 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:36:37 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:37:07 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:37:38 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:38:08 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:38:38 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:39:08 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:39:39 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:40:09 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zy0prw6t/0 [executing] active: Building image.
+18:40:39 INFO Waiting for model:
+  test-zy0prw6t/0 [executing] maintenance: Reconciling runners
+18:41:18 INFO Waiting for model:
+  test-zy0prw6t/0 [executing] active:
+18:45:53 INFO Waiting for model:
+  test-zy0prw6t/0 [executing] maintenance: Reconciling runners
+18:46:23 INFO Waiting for model:
+  test-zy0prw6t/0 [idle] active: 
+18:46:30 INFO [TEST SETUP] Exposing port 8080 on test-zy0prw6t-0-n-abdff1423228
+18:46:30 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.8', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a5:44:55'}]])
+18:46:34 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-zy0prw6t-0-n-abdff1423228
+18:46:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.8', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a5:44:55'}]])
+18:46:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zy0prw6t-0-n-abdff1423228.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.8 nc -z localhost 8080'
+18:46:37 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-zy0prw6t-0-n-abdff1423228
+18:46:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.8', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a5:44:55'}]])
+18:46:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zy0prw6t-0-n-abdff1423228.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.8 curl http://localhost:8080'

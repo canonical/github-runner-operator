@@ -1,0 +1,204 @@
+18:50:23 WARNING unexpected facade SSHServer received from the controller
+18:50:24 INFO Adding model github-pr-9f697-lxd:test-reactive-k75k on cloud localhost
+18:50:24 WARNING unexpected facade SSHServer received from the controller
+18:50:24 WARNING unexpected facade SSHSession received from the controller
+18:50:24 WARNING unexpected facade SSHTunneler received from the controller
+18:50:24 INFO GitHub token rate limit: Rate(reset=2025-04-17 19:39:32+00:00, remaining=4731, limit=5000)
+18:50:29 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:50:29 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [allocating] waiting: waiting for machine
+18:50:59 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [allocating] waiting: waiting for machine
+18:51:30 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [allocating] waiting: agent initialising
+18:52:00 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [executing] maintenance: Setting up Builder.
+18:52:30 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [executing] maintenance: Setting up Builder.
+18:53:01 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [executing] maintenance: Setting up Builder.
+18:53:31 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [executing] maintenance: Setting up Builder.
+18:54:02 INFO Waiting for model:
+  github-runner-image-builder-n86uoi8i/0 [executing] maintenance: Setting up Builder.
+18:54:36 INFO Deploying local:jammy/github-runner-0
+18:54:36 INFO Waiting for model:
+  test-n86uoi8i/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n86uoi8i/0 [idle] blocked: image integration required.
+18:55:07 INFO Waiting for model:
+  test-n86uoi8i/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n86uoi8i/0 [idle] blocked: image integration required.
+18:55:37 INFO Waiting for model:
+  test-n86uoi8i/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-n86uoi8i/0 [idle] blocked: image integration required.
+18:56:07 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:56:37 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:57:08 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:57:38 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:58:08 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:58:39 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:59:09 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+18:59:39 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:00:10 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:00:40 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:01:11 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:01:41 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:02:11 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:02:41 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:03:12 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:03:42 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:04:12 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:04:42 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:05:13 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:05:43 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:06:13 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:06:43 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:07:14 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:07:44 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:08:14 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:08:45 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:09:15 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:09:45 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:10:16 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:10:46 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:11:16 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:11:47 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:12:17 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:12:47 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:13:18 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:13:48 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:14:18 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:14:48 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:15:19 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:15:49 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:16:19 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:16:50 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:17:20 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:17:50 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:18:21 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:18:51 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:19:21 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:19:52 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:20:22 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:20:53 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:21:23 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:21:53 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:22:24 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:22:54 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:23:24 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:23:55 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.
+19:24:25 INFO Waiting for model:
+  test-n86uoi8i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n86uoi8i/0 [executing] active: Building image.

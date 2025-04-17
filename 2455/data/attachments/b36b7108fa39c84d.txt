@@ -1,0 +1,36 @@
+18:44:27 INFO Waiting for model:
+  test-qvn82shk/0 [executing] active: 
+18:44:57 INFO Waiting for model:
+  test-qvn82shk/0 [idle] active: 
+18:45:40 INFO Waiting for model:
+  test-qvn82shk/0 [executing] maintenance: Reconciling runners
+18:46:10 INFO Waiting for model:
+  test-qvn82shk/0 [idle] active:
+18:46:15 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-5s27  github-pr-9f697-lxd  localhost/localhost  3.6.5    unsupported  18:46:15Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qvn82shk           active      1  github-runner-image-builder  latest/edge   68  no       
+test-qvn82shk                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-qvn82shk/0*  active    idle   0        10.173.166.64          
+test-qvn82shk/0*                         active    idle   1        10.173.166.121         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.173.166.64   juju-8f9556-0  ubuntu@22.04      Running
+1        started  10.173.166.121  juju-8f9556-1  ubuntu@22.04      Running
+
+18:46:15 INFO Juju error logs:
+
+machine-0: 18:25:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qvn82shk-0: 18:25:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-qvn82shk-0: 18:26:17 ERROR unit.github-runner-image-builder-qvn82shk/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:29:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qvn82shk-0: 18:29:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+18:46:15 INFO Forgetting model main...
