@@ -250,7 +250,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            manager_service.install_github_runner_manager()
+            manager_service.install_package()
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
 

@@ -43,7 +43,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service()
 
 
-def install_github_runner_manager() -> None:
+def install_package() -> None:
     """Install the GitHub runner manager package.
 
     Raises:
