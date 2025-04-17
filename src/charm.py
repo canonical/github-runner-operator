@@ -41,6 +41,7 @@ from ops.framework import StoredState
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
+import manager_service
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -56,6 +57,7 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationInstallError,
     SubprocessError,
     TokenError,
 )
@@ -248,6 +250,11 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
+            manager_service.install_github_runner_manager()
+        except RunnerManagerApplicationInstallError:
+            logger.error("Failed to install github runner manager package")
+
+        try:
             logrotate.setup()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
@@ -317,6 +324,8 @@ class GithubRunnerCharm(CharmBase):
             flush_and_reconcile = True
 
         state = self._setup_state()
+
+        manager_service.setup(state, self.app.name, self.unit.name)
 
         if not self._get_set_image_ready_status():
             return
@@ -495,7 +504,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one"])
+        self._apt_install(["run-one", "python3-pip"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.
