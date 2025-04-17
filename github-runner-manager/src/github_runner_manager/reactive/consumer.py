@@ -4,12 +4,14 @@
 """Module responsible for consuming jobs from the message queue."""
 import contextlib
 import logging
+import re
 import signal
 import sys
 from contextlib import closing
 from time import sleep
 from types import FrameType
 from typing import Generator, cast
+from urllib.parse import urlparse
 
 from kombu import Connection, Message
 from kombu.exceptions import KombuError
@@ -123,6 +125,7 @@ def consume(
                     msg.ack()
                     break
                 job_details = _parse_job_details(msg)
+                logger.info("Received reactive job: %s", job_details)
                 if not _validate_labels(
                     labels=job_details.labels, supported_labels=supported_labels
                 ):
@@ -137,8 +140,11 @@ def consume(
                     # flavours are sent to the same queue.
                     msg.reject(requeue=False)
                     continue
-                # Defaults as github, needed to select the platform provider.
-                metadata = RunnerMetadata()
+                try:
+                    metadata = _build_runner_metadata(job_details.url)
+                except ValueError:
+                    msg.reject(requeue=False)
+                    break
                 if platform_provider.check_job_been_picked_up(
                     metadata=metadata, job_url=job_details.url
                 ):
@@ -149,10 +155,30 @@ def consume(
                     job_url=job_details.url,
                     msg=msg,
                     platform_provider=platform_provider,
+                    metadata=metadata,
                 )
                 break
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
+
+
+def _build_runner_metadata(job_url: str) -> RunnerMetadata:
+    """Build runner metadata from the job url."""
+    parsed_url = urlparse(job_url)
+    # We expect the netloc to contain github.com, otherwise this function will fail,
+    # as will use jobmanager code to handle github runners.
+    if "github.com" in parsed_url.netloc:
+        return RunnerMetadata()
+
+    # From here on jobmanager. For now we just regex on the url to check if it is the url
+    # of a runner.
+    match_result = re.match(r"^(.+)v1/jobs/(\d+)$", parsed_url.path)
+    if not match_result:
+        logger.error("Invalid URL for a job. url: %s", job_url)
+        raise ValueError(f"Invalid format for job url {job_url}")
+    base_url = parsed_url._replace(path=match_result.group(1)).geturl()
+    runner_id = match_result.group(2)
+    return RunnerMetadata(platform_name="jobmanager", url=base_url, runner_id=runner_id)
 
 
 def _parse_job_details(msg: Message) -> JobDetails:
@@ -189,6 +215,7 @@ def _spawn_runner(
     job_url: HttpUrl,
     msg: Message,
     platform_provider: PlatformProvider,
+    metadata: RunnerMetadata,
 ) -> None:
     """Spawn a runner.
 
@@ -203,8 +230,8 @@ def _spawn_runner(
         job_url: The URL of the job.
         msg: The message to acknowledge or reject.
         platform_provider: Platform provider.
+        metadata: RunnerMetadata for the runner to spawn..
     """
-    metadata = RunnerMetadata()
     instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:
         logger.error("Failed to spawn a runner. Will reject the message.")
