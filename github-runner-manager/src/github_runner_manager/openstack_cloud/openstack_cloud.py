@@ -7,7 +7,7 @@ import logging
 import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from functools import reduce
 from pathlib import Path
 from typing import Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
@@ -386,61 +386,70 @@ class OpenstackCloud:
         """Cleanup unused key files and openstack keypairs."""
         with _get_openstack_connection(credentials=self._credentials) as conn:
             instances = self._get_openstack_instances(conn)
-            exclude_list = [server.name for server in instances]
-            self._cleanup_key_files(exclude_list)
-            self._cleanup_openstack_keypairs(conn, exclude_list)
+            exclude_keyfiles_set = {
+                self._get_key_path(InstanceID.build_from_name(self.prefix, server.name))
+                for server in instances
+            }
+            exclude_keyfiles_set |= set(self._get_fresh_keypair_files())
+            self._cleanup_key_files(exclude_keyfiles_set)
+            # we implicitly assume that the mapping keyfile -> openstack key name
+            # is done using the filename
+            exclude_key_set = set(
+                keyfile.name.removesuffix(".key") for keyfile in exclude_keyfiles_set
+            )
+            self._cleanup_openstack_keypairs(conn, exclude_key_set)
 
-    def _cleanup_key_files(self, exclude_instances: Iterable[str]) -> None:
+    def _get_fresh_keypair_files(self) -> Iterable[Path]:
+        """Get the keypair files that are younger than the minimum age."""
+        now_ts = datetime.now(timezone.utc).timestamp()
+        for path in self._ssh_key_dir.iterdir():
+            if (
+                path.is_file()
+                and InstanceID.name_has_prefix(self.prefix, path.name)
+                and path.name.endswith(".key")
+                and path.stat().st_mtime >= now_ts - _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
+            ):
+                yield path
+
+    def _cleanup_key_files(self, exclude_key_files: set[Path]) -> None:
         """Delete all SSH key files except the specified instances or the ones with young age.
 
         Args:
-            exclude_instances: The keys of these instance will not be deleted.
+            exclude_key_files: These key files will not be deleted.
         """
         logger.info("Cleaning up SSH key files")
-        exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
 
         total = 0
         deleted = 0
-        now_ts = datetime.now(timezone.utc).timestamp()
         for path in self._ssh_key_dir.iterdir():
             # Find key file from this application.
             if (
                 path.is_file()
                 and InstanceID.name_has_prefix(self.prefix, path.name)
                 and path.name.endswith(".key")
-                and path.stat().st_mtime <= now_ts - _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
             ):
                 total += 1
-                if path in exclude_filename:
+                if path in exclude_key_files:
                     continue
                 path.unlink()
                 deleted += 1
         logger.info("Found %s key files, clean up %s key files", total, deleted)
 
     def _cleanup_openstack_keypairs(
-        self, conn: OpenstackConnection, exclude_instances: Iterable[str]
+        self, conn: OpenstackConnection, exclude_keys: set[str]
     ) -> None:
         """Delete all OpenStack keypairs except the specified instances or the ones with young age.
 
         Args:
             conn: The Openstack connection instance.
-            exclude_instances: The keys of these instance will not be deleted.
+            exclude_keys: These keys will not be deleted.
         """
         logger.info("Cleaning up openstack keypairs")
-        exclude_instance_set = set(exclude_instances)
         keypairs = conn.list_keypairs()
-        now = datetime.now(tz=timezone.utc)
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
-            if (
-                key.name
-                and InstanceID.name_has_prefix(self.prefix, key.name)
-                and datetime.fromisoformat(key.created_at.replace("Z", "+00:00")).replace(
-                    tzinfo=timezone.utc
-                )
-                <= now - timedelta(seconds=_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION)
-            ):
-                if str(key.name) in exclude_instance_set:
+            if key.name and InstanceID.name_has_prefix(self.prefix, key.name):
+                if str(key.name) in exclude_keys:
                     continue
                 try:
                     self._delete_keypair(conn, InstanceID.build_from_name(self.prefix, key.name))
@@ -524,6 +533,21 @@ class OpenstackCloud:
             Path to reserved for the key file of the runner.
         """
         return self._ssh_key_dir / f"{instance_id}.key"
+
+    def _get_instance_id_from_key_path(self, key_path: Path) -> InstanceID:
+        """Get the instance ID from the key path.
+
+        Args:
+            key_path: The path to the key file.
+
+        Returns:
+            The instance ID.
+        """
+        if not key_path.is_file():
+            raise KeyfileError(
+                f"Missing keyfile for server: {key_path.name}, key path: {key_path}"
+            )
+        return InstanceID.build_from_name(self.prefix, key_path.name.removesuffix(".key"))
 
     def _setup_keypair(
         self, conn: OpenstackConnection, instance_id: InstanceID

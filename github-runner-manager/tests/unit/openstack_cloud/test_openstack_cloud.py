@@ -132,7 +132,6 @@ def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatc
         os.utime(keypair, (mtime.timestamp(), mtime.timestamp()))
         keypair_list.append(
             Keypair(
-                created_at=mtime.strftime("%Y-%m-%dT%H:%M:%S.%f"),
                 name=keypair.name.removesuffix(".key"),
             )
         )
