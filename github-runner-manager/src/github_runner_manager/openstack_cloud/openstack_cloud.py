@@ -534,21 +534,6 @@ class OpenstackCloud:
         """
         return self._ssh_key_dir / f"{instance_id}.key"
 
-    def _get_instance_id_from_key_path(self, key_path: Path) -> InstanceID:
-        """Get the instance ID from the key path.
-
-        Args:
-            key_path: The path to the key file.
-
-        Returns:
-            The instance ID.
-        """
-        if not key_path.is_file():
-            raise KeyfileError(
-                f"Missing keyfile for server: {key_path.name}, key path: {key_path}"
-            )
-        return InstanceID.build_from_name(self.prefix, key_path.name.removesuffix(".key"))
-
     def _setup_keypair(
         self, conn: OpenstackConnection, instance_id: InstanceID
     ) -> OpenstackKeypair:
