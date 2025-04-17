@@ -1,0 +1,120 @@
+06:24:43 WARNING unexpected facade SSHServer received from the controller
+06:24:43 INFO Adding model github-pr-9f697-lxd:test-charm-metrics-success-icqa on cloud localhost
+06:24:43 WARNING unexpected facade SSHServer received from the controller
+06:24:43 WARNING unexpected facade SSHSession received from the controller
+06:24:43 WARNING unexpected facade SSHTunneler received from the controller
+06:24:45 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:45 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [allocating] waiting: waiting for machine
+06:25:15 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [allocating] waiting: waiting for machine
+06:25:45 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [allocating] waiting: waiting for machine
+06:26:15 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [allocating] waiting: agent initialising
+06:26:46 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [executing] maintenance: Setting up Builder.
+06:27:16 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [executing] maintenance: Setting up Builder.
+06:27:46 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [executing] maintenance: Setting up Builder.
+06:28:16 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [executing] maintenance: Setting up Builder.
+06:28:47 INFO Waiting for model:
+  github-runner-image-builder-unqfbaak/0 [idle] blocked: image integration required.
+06:29:17 INFO Deploying local:jammy/github-runner-0
+06:29:17 INFO Waiting for model:
+  test-unqfbaak/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-unqfbaak/0 [idle] blocked: image integration required.
+06:29:47 INFO Waiting for model:
+  test-unqfbaak/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-unqfbaak/0 [idle] blocked: image integration required.
+06:30:18 INFO Waiting for model:
+  test-unqfbaak/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-unqfbaak/0 [idle] blocked: image integration required.
+06:30:48 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:31:18 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:31:48 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:32:19 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:32:49 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:33:19 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:33:49 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:34:19 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:34:49 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:35:19 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:35:49 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:36:20 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:37:50 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:38:20 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:38:50 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:39:20 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:39:51 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:40:21 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:40:51 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:41:22 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:41:52 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:42:22 INFO Waiting for model:
+  test-unqfbaak/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unqfbaak/0 [executing] active: Building image.
+06:42:52 INFO Waiting for model:
+  test-unqfbaak/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-unqfbaak/0 [idle] active:
+06:45:43 INFO Waiting for model:
+  test-unqfbaak/0 [executing] active: 
+06:46:13 INFO Waiting for model:
+  test-unqfbaak/0 [idle] active: 
+06:46:59 INFO Waiting for model:
+  test-unqfbaak/0 [executing] active: 
+06:47:30 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744872342.9781125, "event": "reconciliation", "flavor": "test-unqfbaak", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 139.88998007774353}
+{"timestamp": 1744872366.3083005, "event": "reconciliation", "flavor": "test-unqfbaak", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 22.05682945251465}
+{"timestamp": 1744872290.0, "event": "runner_installed", "flavor": "test-unqfbaak", "duration": 71.0}
+{"timestamp": 1744872418.3338323, "event": "reconciliation", "flavor": "test-unqfbaak", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.70535349845886}
+{"timestamp": 1744872433.307445, "event": "reconciliation", "flavor": "test-unqfbaak", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.72730565071106}

@@ -1,0 +1,36 @@
+06:44:49 INFO Waiting for model:
+  test-ws5wd4xp/0 [executing] active: 
+06:45:19 INFO Waiting for model:
+  test-ws5wd4xp/0 [idle] active: 
+06:46:16 INFO Waiting for model:
+  test-ws5wd4xp/0 [executing] active: 
+06:46:47 INFO Waiting for model:
+  test-ws5wd4xp/0 [idle] active:
+06:46:55 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-90ry  github-pr-9f697-lxd  localhost/localhost  3.6.5    unsupported  06:46:55Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ws5wd4xp           active      1  github-runner-image-builder  latest/edge   68  no       
+test-ws5wd4xp                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ws5wd4xp/0*  active    idle   0        10.247.57.252          
+test-ws5wd4xp/0*                         active    idle   1        10.247.57.27           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.247.57.252  juju-dc5699-0  ubuntu@22.04      Running
+1        started  10.247.57.27   juju-dc5699-1  ubuntu@22.04      Running
+
+06:46:55 INFO Juju error logs:
+
+machine-0: 06:26:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ws5wd4xp-0: 06:26:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ws5wd4xp-0: 06:26:44 ERROR unit.github-runner-image-builder-ws5wd4xp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:30:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:30:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ws5wd4xp-0: 06:30:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:46:55 INFO Forgetting model main...

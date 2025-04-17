@@ -1,0 +1,109 @@
+06:24:45 WARNING unexpected facade SSHServer received from the controller
+06:24:45 INFO Adding model github-pr-9f697-lxd:test-charm-metrics-failure-ncbt on cloud localhost
+06:24:45 WARNING unexpected facade SSHServer received from the controller
+06:24:45 WARNING unexpected facade SSHSession received from the controller
+06:24:45 WARNING unexpected facade SSHTunneler received from the controller
+06:24:46 INFO GitHub token rate limit: Rate(reset=2025-04-17 07:10:43+00:00, remaining=4980, limit=5000)
+06:25:00 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:01 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [allocating] waiting: waiting for machine
+06:25:31 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [allocating] waiting: waiting for machine
+06:26:02 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [allocating] waiting: waiting for machine
+06:26:32 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [executing] maintenance: Setting up Builder.
+06:27:03 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [executing] maintenance: Setting up Builder.
+06:27:33 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [executing] maintenance: Setting up Builder.
+06:28:03 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [executing] maintenance: Setting up Builder.
+06:28:33 INFO Waiting for model:
+  github-runner-image-builder-ze2j23sd/0 [executing] maintenance: Setting up Builder.
+06:29:19 INFO Deploying local:jammy/github-runner-0
+06:29:19 INFO Waiting for model:
+  test-ze2j23sd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ze2j23sd/0 [idle] blocked: image integration required.
+06:29:49 INFO Waiting for model:
+  test-ze2j23sd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ze2j23sd/0 [idle] blocked: image integration required.
+06:30:19 INFO Waiting for model:
+  test-ze2j23sd/0 [executing] waiting: agent initialising
+  github-runner-image-builder-ze2j23sd/0 [idle] blocked: image integration required.
+06:30:49 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:31:19 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:31:50 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:32:20 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:33:21 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:34:22 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:34:52 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:35:23 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:35:53 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:37:55 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:38:25 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:38:55 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:39:25 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:39:56 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:40:26 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ze2j23sd/0 [executing] active: Building image.
+06:40:56 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] active: 
+06:41:29 INFO Waiting for model:
+  test-ze2j23sd/0 [executing] active:
+06:45:54 INFO Waiting for model:
+  test-ze2j23sd/0 [executing] active: 
+06:46:24 INFO Waiting for model:
+  test-ze2j23sd/0 [idle] active: 
+06:46:34 INFO [TEST SETUP] Exposing port 8080 on test-ze2j23sd-0-n-58217f27a1da
+06:46:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.154', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:38:82:1e'}]])
+06:46:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ze2j23sd-0-n-58217f27a1da
+06:46:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.154', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:38:82:1e'}]])
+06:46:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ze2j23sd-0-n-58217f27a1da.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.154 nc -z localhost 8080'
+06:46:41 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ze2j23sd-0-n-58217f27a1da
+06:46:41 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.154', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:38:82:1e'}]])
+06:46:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ze2j23sd-0-n-58217f27a1da.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.154 curl http://localhost:8080'

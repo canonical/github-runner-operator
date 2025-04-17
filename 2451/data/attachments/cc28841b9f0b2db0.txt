@@ -1,0 +1,59 @@
+07:01:32 INFO Creating 2 runners
+07:02:59 INFO Getting runners...
+07:03:01 INFO Getting all openstack servers managed by the charm
+07:03:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:03 INFO Authentication (publickey) successful!
+07:03:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:03 INFO Authentication (publickey) successful!
+07:03:04 INFO Found following runners: {'test-km3thpdr-0-n-0e60bfa69d79', 'test-km3thpdr-0-n-50c3d412090b', 'test-km3thpdr-0-n-9c36d536f233'}
+07:03:04 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-km3thpdr-0-n-50c3d412090b'}
+07:03:04 INFO Getting runners...
+07:03:05 INFO Getting all openstack servers managed by the charm
+07:03:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:07 INFO Authentication (publickey) successful!
+07:03:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:08 INFO Authentication (publickey) successful!
+07:03:08 INFO Found following runners: {'test-km3thpdr-0-n-0e60bfa69d79', 'test-km3thpdr-0-n-50c3d412090b', 'test-km3thpdr-0-n-9c36d536f233'}
+07:03:08 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-km3thpdr-0-n-50c3d412090b'}
+07:03:08 INFO Flushing idle runners...
+07:03:09 INFO Getting all openstack servers managed by the charm
+07:03:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:10 INFO Authentication (publickey) successful!
+07:03:10 INFO Attempting to kill runner process on test-km3thpdr-0-n-0e60bfa69d79 if not busy
+07:03:10 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:03:10 INFO Kill process command output, ok: True code 0, out: 1854
+, err: 
+07:03:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:10 INFO Authentication (publickey) successful!
+07:03:10 INFO Attempting to kill runner process on test-km3thpdr-0-n-9c36d536f233 if not busy
+07:03:10 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:03:11 INFO Kill process command output, ok: True code 0, out: 1941
+, err: 
+07:03:11 INFO Getting all openstack servers managed by the charm
+07:03:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:12 INFO Authentication (publickey) successful!
+07:03:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:12 INFO Authentication (publickey) successful!
+07:03:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:13 INFO Authentication (publickey) successful!
+07:03:13 INFO [chan 2] Opened sftp connection (server version 3)
+07:03:13 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.53, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:03:13 WARNING Failed to pull metrics for test-km3thpdr-0-n-0e60bfa69d79: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:03:13 INFO Running runner removal script for test-km3thpdr-0-n-0e60bfa69d79
+07:03:15 INFO Deleting openstack server with test-km3thpdr-0-n-0e60bfa69d79
+07:03:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:16 INFO Authentication (publickey) successful!
+07:03:17 INFO [chan 2] Opened sftp connection (server version 3)
+07:03:17 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.127, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:03:17 WARNING Failed to pull metrics for test-km3thpdr-0-n-9c36d536f233: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:03:17 INFO Running runner removal script for test-km3thpdr-0-n-9c36d536f233
+07:03:18 INFO Deleting openstack server with test-km3thpdr-0-n-9c36d536f233
+07:03:21 INFO Cleaning up SSH key files
+07:03:21 INFO Found 0 key files, clean up 0 key files
+07:03:21 INFO Cleaning up openstack keypairs
+07:03:21 INFO Getting runners...
+07:03:22 INFO Getting all openstack servers managed by the charm
+07:03:23 INFO Found following runners: {'test-km3thpdr-0-n-50c3d412090b'}
+07:03:23 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-km3thpdr-0-n-50c3d412090b'}
