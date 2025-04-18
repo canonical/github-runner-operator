@@ -1,0 +1,107 @@
+18:56:06 INFO GitHub token rate limit: Rate(reset=2025-04-18 19:38:23+00:00, remaining=4489, limit=5000)
+18:56:09 INFO Creating 1 runners
+18:56:10 INFO Creating openstack server with test-h77qlymc-0-n-07b753153f9b
+18:56:23 INFO Waiting for runner process to startup: test-h77qlymc-0-n-07b753153f9b
+18:56:30 WARNING NoValidConnectionsError. Unable to SSH into test-h77qlymc-0-n-07b753153f9b with address 10.145.193.114. Error: [Errno None] Unable to connect to port 22 on 10.145.193.114
+18:56:30 WARNING Retrying error in 60 seconds: Failed to SSH to test-h77qlymc-0-n-07b753153f9b during creation possible due to setup not completed
+18:57:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:30 INFO Authentication (publickey) successful!
+18:57:31 INFO Runner startup process found to be healthy on test-h77qlymc-0-n-07b753153f9b
+18:57:31 INFO Waiting for runner process to be running: test-h77qlymc-0-n-07b753153f9b
+18:57:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:31 INFO Authentication (publickey) successful!
+18:57:32 INFO Runner test-h77qlymc-0-n-07b753153f9b found to be healthy
+18:57:32 INFO Runner test-h77qlymc-0-n-07b753153f9b created successfully
+18:57:32 INFO Getting runners...
+18:57:33 INFO Getting all openstack servers managed by the charm
+18:57:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:34 INFO Authentication (publickey) successful!
+18:57:35 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:57:35 INFO Getting runners...
+18:57:36 INFO Getting all openstack servers managed by the charm
+18:57:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:37 INFO Authentication (publickey) successful!
+18:57:37 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:57:37 INFO Getting runners...
+18:57:38 INFO Getting all openstack servers managed by the charm
+18:57:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:40 INFO Authentication (publickey) successful!
+18:57:40 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:57:42 INFO Wait for condition not met, sleeping 10
+18:57:53 INFO Getting runners...
+18:57:54 INFO Getting all openstack servers managed by the charm
+18:57:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:55 INFO Authentication (publickey) successful!
+18:57:56 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:57:56 INFO Getting runners...
+18:57:57 INFO Getting all openstack servers managed by the charm
+18:57:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:58 INFO Authentication (publickey) successful!
+18:57:58 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:58:00 INFO Offline github runners to delete: []:
+18:58:00 INFO Getting all openstack servers managed by the charm
+18:58:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:01 INFO Authentication (publickey) successful!
+18:58:02 INFO Cleaning up SSH key files
+18:58:02 INFO Found 1 key files, clean up 0 key files
+18:58:02 INFO Cleaning up openstack keypairs
+18:58:02 INFO Getting runners...
+18:58:03 INFO Getting all openstack servers managed by the charm
+18:58:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:05 INFO Authentication (publickey) successful!
+18:58:05 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:58:05 INFO Flushing idle runners...
+18:58:06 INFO Getting all openstack servers managed by the charm
+18:58:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:07 INFO Authentication (publickey) successful!
+18:58:07 INFO Attempting to kill runner process on test-h77qlymc-0-n-07b753153f9b if not busy
+18:58:07 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:58:07 INFO Kill process command output, ok: False code 1, out: 2335
+, err: 
+18:58:07 INFO Getting all openstack servers managed by the charm
+18:58:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:08 INFO Authentication (publickey) successful!
+18:58:10 INFO Cleaning up SSH key files
+18:58:10 INFO Found 1 key files, clean up 0 key files
+18:58:10 INFO Cleaning up openstack keypairs
+18:58:10 INFO Getting runners...
+18:58:11 INFO Getting all openstack servers managed by the charm
+18:58:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:12 INFO Authentication (publickey) successful!
+18:58:13 INFO Found following runners: {'test-h77qlymc-0-n-07b753153f9b'}
+18:58:13 INFO Flushing idle and busy runners...
+18:58:13 INFO Getting all openstack servers managed by the charm
+18:58:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:14 INFO Authentication (publickey) successful!
+18:58:14 INFO Attempting to kill all runner process on test-h77qlymc-0-n-07b753153f9b
+18:58:14 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:58:14 INFO Kill process command output, ok: True code 0, out: 1938
+2335
+, err: 
+18:58:14 INFO Getting all openstack servers managed by the charm
+18:58:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:16 INFO Authentication (publickey) successful!
+18:58:17 INFO Cleaning up SSH key files
+18:58:17 INFO Found 1 key files, clean up 0 key files
+18:58:17 INFO Cleaning up openstack keypairs
+18:58:27 INFO Flushing idle and busy runners...
+18:58:28 INFO Getting all openstack servers managed by the charm
+18:58:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:29 INFO Authentication (publickey) successful!
+18:58:29 INFO Attempting to kill all runner process on test-h77qlymc-0-n-07b753153f9b
+18:58:29 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:58:29 INFO Kill process command output, ok: False code 1, out: , err: 
+18:58:29 INFO Getting all openstack servers managed by the charm
+18:58:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:30 INFO Authentication (publickey) successful!
+18:58:31 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:58:31 INFO Authentication (publickey) successful!
+18:58:31 INFO [chan 2] Opened sftp connection (server version 3)
+18:58:31 INFO Running runner removal script for test-h77qlymc-0-n-07b753153f9b
+18:58:33 INFO Deleting openstack server with test-h77qlymc-0-n-07b753153f9b
+18:58:35 INFO Cleaning up SSH key files
+18:58:35 INFO Found 0 key files, clean up 0 key files
+18:58:35 INFO Cleaning up openstack keypairs
+18:58:35 INFO Getting runners...
+18:58:36 INFO Getting all openstack servers managed by the charm
+18:58:38 INFO Found following runners: set()

@@ -1,0 +1,101 @@
+18:24:20 WARNING unexpected facade SSHServer received from the controller
+18:24:20 INFO Adding model github-pr-ed66e-lxd:test-charm-no-runner-9pbb on cloud localhost
+18:24:20 WARNING unexpected facade SSHServer received from the controller
+18:24:20 WARNING unexpected facade SSHSession received from the controller
+18:24:20 WARNING unexpected facade SSHTunneler received from the controller
+18:24:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:22 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [allocating] waiting: waiting for machine
+18:24:53 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [allocating] waiting: waiting for machine
+18:25:23 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [allocating] waiting: waiting for machine
+18:25:54 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [executing] maintenance: Setting up Builder.
+18:26:24 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [executing] maintenance: Setting up Builder.
+18:26:54 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [executing] maintenance: Setting up Builder.
+18:27:25 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [executing] maintenance: Setting up Builder.
+18:28:25 INFO Waiting for model:
+  github-runner-image-builder-nz1i1pg4/0 [idle] blocked: image integration required.
+18:28:43 INFO Deploying local:jammy/github-runner-0
+18:28:43 INFO Waiting for model:
+  test-nz1i1pg4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nz1i1pg4/0 [idle] blocked: image integration required.
+18:29:13 INFO Waiting for model:
+  test-nz1i1pg4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nz1i1pg4/0 [idle] blocked: image integration required.
+18:29:44 INFO Waiting for model:
+  test-nz1i1pg4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nz1i1pg4/0 [idle] blocked: image integration required.
+18:30:14 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:30:44 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:31:15 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:31:45 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:32:15 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:32:46 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:33:16 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:33:46 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:34:16 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:35:17 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:35:47 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:37:18 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:38:19 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:38:50 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:39:20 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:39:50 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nz1i1pg4/0 [executing] active: Building image.
+18:40:20 INFO Waiting for model:
+  test-nz1i1pg4/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-nz1i1pg4/0 [idle] active: 
+18:40:51 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] active: 
+18:40:59 INFO Waiting for model:
+  test-nz1i1pg4/0 [idle] active:
