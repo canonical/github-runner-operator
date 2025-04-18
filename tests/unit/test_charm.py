@@ -58,11 +58,13 @@ def side_effect_fixture(monkeypatch, tmpdir):
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
     monkeypatch.setattr("manager_service.systemd", MagicMock())
 
+
 @pytest.fixture(name="mock_manager_service")
 def mock_manager_service_fixture(monkeypatch):
     mock_manager_service = MagicMock()
     monkeypatch.setattr("charm.manager_service", mock_manager_service)
     return mock_manager_service
+
 
 def raise_runner_error(*args, **kwargs):
     """Stub function to raise RunnerError.
@@ -203,7 +205,11 @@ def test_proxy_setting(harness: Harness):
     ],
 )
 def test_common_install_code(
-    hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch, mock_manager_service
+    hook: str,
+    harness: Harness,
+    exec_command: MagicMock,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_manager_service,
 ):
     """
     arrange: Set up charm.
@@ -331,7 +337,9 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
         pytest.param("upgrade_charm", id="Upgrade"),
     ],
 )
-def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch, mock_manager_service):
+def test_on_install_failure(
+    hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch, mock_manager_service
+):
     """
     arrange: Charm with mock setup_logrotate.
     act:
