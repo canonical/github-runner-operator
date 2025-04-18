@@ -23,10 +23,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.platform_provider import (
-    PlatformProvider,
-    PlatformRunnerState,
-)
+from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)

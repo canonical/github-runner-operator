@@ -25,12 +25,7 @@ from github_runner_manager.configuration.github import (
 )
 from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.types_.github import (
-    JITConfig,
-    JobInfo,
-    RemoveToken,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
