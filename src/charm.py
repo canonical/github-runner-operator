@@ -41,6 +41,7 @@ from ops.framework import StoredState
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
+import manager_service
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -56,6 +57,8 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationError,
+    RunnerManagerApplicationInstallError,
     SubprocessError,
     TokenError,
 )
@@ -248,6 +251,12 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
+            manager_service.install_package()
+        except RunnerManagerApplicationInstallError:
+            logger.error("Failed to install github runner manager package")
+            raise
+
+        try:
             logrotate.setup()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
@@ -301,7 +310,11 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
-        """Handle the configuration change."""
+        """Handle the configuration change.
+
+        Raises:
+            RunnerManagerApplicationError: The runner manager application has encountered issues.
+        """
         state = self._setup_state()
         self._set_reconcile_timer()
 
@@ -327,6 +340,12 @@ class GithubRunnerCharm(CharmBase):
             self._reconcile_openstack_runners(
                 runner_scaler,
             )
+
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            raise
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
@@ -495,7 +514,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one"])
+        self._apt_install(["run-one", "python3-pip"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.

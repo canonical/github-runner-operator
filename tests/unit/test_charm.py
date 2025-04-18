@@ -49,6 +49,23 @@ from event_timer import EventTimer, TimerEnableError
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
 
+@pytest.fixture(name="mock_side_effects", scope="function")
+def side_effect_fixture(monkeypatch, tmpdir):
+    monkeypatch.setattr("charm.pathlib.Path.mkdir", MagicMock())
+    monkeypatch.setattr("charm.pathlib.Path.write_text", MagicMock())
+    monkeypatch.setattr("charm.execute_command", MagicMock())
+    monkeypatch.setattr("manager_service.yaml_safe_dump", MagicMock())
+    monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
+    monkeypatch.setattr("manager_service.systemd", MagicMock())
+
+
+@pytest.fixture(name="mock_manager_service")
+def mock_manager_service_fixture(monkeypatch):
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
+    return mock_manager_service
+
+
 def raise_runner_error(*args, **kwargs):
     """Stub function to raise RunnerError.
 
@@ -188,7 +205,11 @@ def test_proxy_setting(harness: Harness):
     ],
 )
 def test_common_install_code(
-    hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch
+    hook: str,
+    harness: Harness,
+    exec_command: MagicMock,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_manager_service,
 ):
     """
     arrange: Set up charm.
@@ -316,7 +337,9 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
         pytest.param("upgrade_charm", id="Upgrade"),
     ],
 )
-def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_install_failure(
+    hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch, mock_manager_service
+):
     """
     arrange: Charm with mock setup_logrotate.
     act:
@@ -425,47 +448,6 @@ class TestCharm(unittest.TestCase):
         event_timer_mock.ensure_event_timer.side_effect = TimerEnableError("mock error")
         with pytest.raises(TimerEnableError):
             harness.charm.on.update_status.emit()
-
-    @patch("charm.RunnerScaler")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, orm):
-        """
-        arrange: Setup mocked charm.
-        act: Fire config changed event to use openstack-clouds-yaml.
-        assert: Charm is in blocked state.
-        """
-        harness = Harness(GithubRunnerCharm)
-        cloud_yaml = {
-            "clouds": {
-                "microstack": {
-                    "auth": {
-                        "auth_url": secrets.token_hex(16),
-                        "project_name": secrets.token_hex(16),
-                        "project_domain_name": secrets.token_hex(16),
-                        "username": secrets.token_hex(16),
-                        "user_domain_name": secrets.token_hex(16),
-                        "password": secrets.token_hex(16),
-                    },
-                    "region_name": secrets.token_hex(16),
-                }
-            }
-        }
-        harness.update_config(
-            {
-                PATH_CONFIG_NAME: "mockorg/repo",
-                TOKEN_CONFIG_NAME: "mocktoken",
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
-                OPENSTACK_FLAVOR_CONFIG_NAME: "m1.big",
-            }
-        )
-
-        harness.begin()
-
-        harness.charm.on.config_changed.emit()
-
-        assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
@@ -674,3 +656,41 @@ def test__on_image_relation_joined():
     harness.charm._on_image_relation_joined(MagicMock())
 
     assert harness.get_relation_data(relation_id, harness.charm.unit) == test_auth_data
+
+
+def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
+    """
+    arrange: Setup mocked charm.
+    act: Fire config changed event to use openstack-clouds-yaml.
+    assert: Charm is in blocked state.
+    """
+    harness = Harness(GithubRunnerCharm)
+    cloud_yaml = {
+        "clouds": {
+            "microstack": {
+                "auth": {
+                    "auth_url": secrets.token_hex(16),
+                    "project_name": secrets.token_hex(16),
+                    "project_domain_name": secrets.token_hex(16),
+                    "username": secrets.token_hex(16),
+                    "user_domain_name": secrets.token_hex(16),
+                    "password": secrets.token_hex(16),
+                },
+                "region_name": secrets.token_hex(16),
+            }
+        }
+    }
+    harness.update_config(
+        {
+            PATH_CONFIG_NAME: "mockorg/repo",
+            TOKEN_CONFIG_NAME: "mocktoken",
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+            OPENSTACK_FLAVOR_CONFIG_NAME: "m1.big",
+        }
+    )
+
+    harness.begin()
+
+    harness.charm.on.config_changed.emit()
+
+    assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")

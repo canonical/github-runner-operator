@@ -1,0 +1,12 @@
+[Unit]
+Description=Runs the github-runner-manager service
+
+[Service]
+Type=simple
+User={{user}}
+Group={{group}}
+ExecStart=github-runner-manager --config-file {{config}} --host {{host}} --port {{port}}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
