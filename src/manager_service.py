@@ -7,9 +7,10 @@ import json
 from pathlib import Path
 
 import jinja2
-import yaml
 from charms.operator_libs_linux.v1 import systemd
+from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
+from yaml import safe_dump as yaml_safe_dump
 
 from charm_state import CharmState
 from errors import (
@@ -28,6 +29,8 @@ GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH = (
     SYSTEMD_SERVICE_PATH / GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE
 )
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
+_INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
+_SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
 
 
 def setup(state: CharmState, app_name: str, unit_name: str) -> None:
@@ -66,9 +69,7 @@ def install_package() -> None:
             ]
         )
     except SubprocessError as err:
-        raise RunnerManagerApplicationInstallError(
-            "Unable to install github-runner-manager package from source"
-        ) from err
+        raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
 
 
 def _enable_service() -> None:
@@ -81,10 +82,8 @@ def _enable_service() -> None:
         systemd.service_enable(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
         if not systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
             systemd.service_start(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
-    except systemd.SystemdError as err:
-        raise RunnerManagerApplicationStartupError(
-            "Unable to enable or start the github-runner-manager application"
-        ) from err
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartupError(_SERVICE_SETUP_ERROR_MESSAGE) from err
 
 
 def _setup_config_file(state: CharmState, app_name: str, unit_name: str) -> Path:
@@ -102,7 +101,7 @@ def _setup_config_file(state: CharmState, app_name: str, unit_name: str) -> Path
     config_dict = json.loads(config.json())
     path = Path(f"~{constants.RUNNER_MANAGER_USER}").expanduser() / "config.yaml"
     with open(path, "w+", encoding="utf-8") as file:
-        yaml.safe_dump(config_dict, file)
+        yaml_safe_dump(config_dict, file)
     return path
 
 

@@ -8,8 +8,10 @@ import unittest.mock
 from pathlib import Path
 
 import pytest
+from github_runner_manager.configuration.github import GitHubOrg
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 
+import charm_state
 import utilities
 from tests.unit.mock import MockGhapiClient
 
@@ -124,3 +126,77 @@ def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
         return patched_retry_decorator
 
     monkeypatch.setattr(utilities, "retry", patched_retry)
+
+
+@pytest.fixture(name="complete_charm_state")
+def complete_charm_state_fixture():
+    """Returns a fixture with a fully populated CharmState."""
+    return charm_state.CharmState(
+        arch="arm64",
+        is_metrics_logging_available=False,
+        proxy_config=charm_state.ProxyConfig(
+            http="http://httpproxy.example.com:3128",
+            https="http://httpsproxy.example.com:3128",
+            no_proxy="127.0.0.1",
+        ),
+        runner_proxy_config=charm_state.ProxyConfig(
+            http="http://runnerhttpproxy.example.com:3128",
+            https="http://runnerhttpsproxy.example.com:3128",
+            no_proxy="10.0.0.1",
+        ),
+        charm_config=charm_state.CharmConfig(
+            dockerhub_mirror="https://docker.example.com",
+            labels=("label1", "label2"),
+            openstack_clouds_yaml=charm_state.OpenStackCloudsYAML(
+                clouds={
+                    "microstack": {
+                        "auth": {
+                            "auth_url": "auth_url",
+                            "project_name": "project_name",
+                            "project_domain_name": "project_domain_name",
+                            "username": "username",
+                            "user_domain_name": "user_domain_name",
+                            "password": "password",
+                        },
+                        "region_name": "region",
+                    }
+                },
+            ),
+            path=GitHubOrg(org="canonical", group="group"),
+            reconcile_interval=5,
+            repo_policy_compliance=charm_state.RepoPolicyComplianceConfig(
+                token="token",
+                url="https://compliance.example.com",
+            ),
+            token="githubtoken",
+            manager_proxy_command="ssh -W %h:%p example.com",
+            use_aproxy=True,
+        ),
+        runner_config=charm_state.OpenstackRunnerConfig(
+            base_virtual_machines=1,
+            max_total_virtual_machines=2,
+            flavor_label_combinations=[
+                charm_state.FlavorLabel(
+                    flavor="flavor",
+                    label="flavorlabel",
+                )
+            ],
+            openstack_network="network",
+            openstack_image=charm_state.OpenstackImage(
+                id="image_id",
+                tags=["arm64", "noble"],
+            ),
+        ),
+        reactive_config=charm_state.ReactiveConfig(
+            mq_uri="mongodb://user:password@localhost:27017",
+        ),
+        ssh_debug_connections=[
+            charm_state.SSHDebugConnection(
+                host="10.10.10.10",
+                port=3000,
+                # Not very realistic
+                rsa_fingerprint="SHA256:rsa",
+                ed25519_fingerprint="SHA256:ed25519",
+            ),
+        ],
+    )

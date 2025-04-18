@@ -57,6 +57,7 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
     SubprocessError,
     TokenError,
@@ -253,6 +254,7 @@ class GithubRunnerCharm(CharmBase):
             manager_service.install_package()
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
+            raise
 
         try:
             logrotate.setup()
@@ -308,7 +310,11 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
-        """Handle the configuration change."""
+        """Handle the configuration change.
+
+        Raises:
+            RunnerManagerApplicationError: The runner manager application has encountered issues.
+        """
         state = self._setup_state()
         self._set_reconcile_timer()
 
@@ -325,8 +331,6 @@ class GithubRunnerCharm(CharmBase):
 
         state = self._setup_state()
 
-        manager_service.setup(state, self.app.name, self.unit.name)
-
         if not self._get_set_image_ready_status():
             return
         if flush_and_reconcile:
@@ -336,6 +340,12 @@ class GithubRunnerCharm(CharmBase):
             self._reconcile_openstack_runners(
                 runner_scaler,
             )
+
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            raise
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
