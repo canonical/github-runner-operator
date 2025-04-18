@@ -21,10 +21,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
 from github_runner_manager.metrics.events import RunnerInstalled, RunnerStart, RunnerStop
-from github_runner_manager.metrics.runner import (
-    PullFileError,
-    ssh_pull_file,
-)
+from github_runner_manager.metrics.runner import PullFileError, ssh_pull_file
 from github_runner_manager.types_.github import JobConclusion
 
 
