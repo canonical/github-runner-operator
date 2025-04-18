@@ -1,0 +1,127 @@
+06:24:21 WARNING unexpected facade SSHServer received from the controller
+06:24:21 INFO Adding model github-pr-ed66e-lxd:test-charm-metrics-failure-gbi7 on cloud localhost
+06:24:22 WARNING unexpected facade SSHServer received from the controller
+06:24:22 WARNING unexpected facade SSHSession received from the controller
+06:24:22 WARNING unexpected facade SSHTunneler received from the controller
+06:24:22 INFO GitHub token rate limit: Rate(reset=2025-04-18 06:48:37+00:00, remaining=4764, limit=5000)
+06:24:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:38 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [allocating] waiting: waiting for machine
+06:25:08 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [allocating] waiting: waiting for machine
+06:25:39 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [allocating] waiting: waiting for machine
+06:26:09 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [executing] maintenance: Setting up Builder.
+06:26:40 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [executing] maintenance: Setting up Builder.
+06:27:10 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [executing] maintenance: Setting up Builder.
+06:27:41 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [executing] maintenance: Setting up Builder.
+06:28:11 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [executing] maintenance: Setting up Builder.
+06:28:41 INFO Waiting for model:
+  github-runner-image-builder-zz43fu8e/0 [idle] blocked: image integration required.
+06:29:10 INFO Deploying local:jammy/github-runner-0
+06:29:10 INFO Waiting for model:
+  test-zz43fu8e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zz43fu8e/0 [idle] blocked: image integration required.
+06:29:41 INFO Waiting for model:
+  test-zz43fu8e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zz43fu8e/0 [idle] blocked: image integration required.
+06:30:11 INFO Waiting for model:
+  test-zz43fu8e/0 [executing] waiting: agent initialising
+  github-runner-image-builder-zz43fu8e/0 [idle] blocked: image integration required.
+06:30:41 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:31:12 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:31:42 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:32:12 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:32:43 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:33:13 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:33:43 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:34:14 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:34:44 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:35:15 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:35:45 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:36:15 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:36:46 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:37:16 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:37:46 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:38:17 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:38:47 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:39:18 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:39:48 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:40:18 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:40:49 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zz43fu8e/0 [executing] active: Building image.
+06:41:19 INFO Waiting for model:
+  test-zz43fu8e/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zz43fu8e/0 [idle] active: 
+06:41:49 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] active: 
+06:42:14 INFO Waiting for model:
+  test-zz43fu8e/0 [executing] active: 
+06:42:44 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] active:
+06:46:31 INFO Waiting for model:
+  test-zz43fu8e/0 [executing] active: 
+06:47:02 INFO Waiting for model:
+  test-zz43fu8e/0 [idle] active: 
+06:47:07 INFO [TEST SETUP] Exposing port 8080 on test-zz43fu8e-0-n-4fbb2f3d4eab
+06:47:07 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.56', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:69:25'}]])
+06:47:11 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-zz43fu8e-0-n-4fbb2f3d4eab
+06:47:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.56', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:69:25'}]])
+06:47:12 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zz43fu8e-0-n-4fbb2f3d4eab.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.56 nc -z localhost 8080'
+06:47:14 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-zz43fu8e-0-n-4fbb2f3d4eab
+06:47:14 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.56', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:69:25'}]])
+06:47:15 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zz43fu8e-0-n-4fbb2f3d4eab.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.56 curl http://localhost:8080'
+06:47:19 INFO Wait for condition not met, sleeping 10
+06:47:52 INFO Waiting for model:
+  test-zz43fu8e/0 [executing] active: 
+06:48:21 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1744958739.0, "event": "runner_installed", "flavor": "test-zz43fu8e", "duration": 86.0}
+{"timestamp": 1744958842.0, "event": "runner_start", "flavor": "test-zz43fu8e", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 103.0, "queue_duration": 1.0}
+{"timestamp": 1744958842.0, "event": "runner_stop", "flavor": "test-zz43fu8e", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1744958872.0389655, "event": "reconciliation", "flavor": "test-zz43fu8e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.27469539642334}
+{"timestamp": 1744958884.422893, "event": "reconciliation", "flavor": "test-zz43fu8e", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.111517429351807}

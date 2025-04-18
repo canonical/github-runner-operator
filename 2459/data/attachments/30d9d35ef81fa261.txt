@@ -1,0 +1,107 @@
+06:24:27 WARNING unexpected facade SSHServer received from the controller
+06:24:27 INFO Adding model github-pr-ed66e-lxd:test-charm-runner-btss on cloud localhost
+06:24:27 WARNING unexpected facade SSHServer received from the controller
+06:24:27 WARNING unexpected facade SSHSession received from the controller
+06:24:27 WARNING unexpected facade SSHTunneler received from the controller
+06:24:29 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:29 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [allocating] waiting: waiting for machine
+06:25:00 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [allocating] waiting: waiting for machine
+06:25:30 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [allocating] waiting: waiting for machine
+06:26:01 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [executing] maintenance: Setting up Builder.
+06:26:31 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [executing] maintenance: Setting up Builder.
+06:27:02 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [executing] maintenance: Setting up Builder.
+06:27:32 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [executing] maintenance: Setting up Builder.
+06:28:02 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [executing] maintenance: Setting up Builder.
+06:28:33 INFO Waiting for model:
+  github-runner-image-builder-lw7lsmrd/0 [idle] blocked: image integration required.
+06:28:52 INFO Deploying local:jammy/github-runner-0
+06:28:52 INFO Waiting for model:
+  test-lw7lsmrd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lw7lsmrd/0 [idle] blocked: image integration required.
+06:29:22 INFO Waiting for model:
+  test-lw7lsmrd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lw7lsmrd/0 [idle] blocked: image integration required.
+06:29:52 INFO Waiting for model:
+  test-lw7lsmrd/0 [executing] waiting: agent initialising
+  github-runner-image-builder-lw7lsmrd/0 [idle] blocked: image integration required.
+06:30:23 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:30:53 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:31:23 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:31:54 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:32:24 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:32:54 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:33:25 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:33:55 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:34:26 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:34:56 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:35:26 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:35:56 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:36:27 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:36:57 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:37:27 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:37:58 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:38:28 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:38:58 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:39:29 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:39:59 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:40:30 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lw7lsmrd/0 [executing] active: Building image.
+06:41:00 INFO Waiting for model:
+  test-lw7lsmrd/0 [executing] maintenance: Reconciling runners
+06:43:32 INFO Waiting for model:
+  test-lw7lsmrd/0 [executing] maintenance: Reconciling runners
+06:44:02 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] active:
+06:44:43 INFO Waiting for model:
+  test-lw7lsmrd/0 [executing] maintenance: Reconciling runners
+06:45:13 INFO Waiting for model:
+  test-lw7lsmrd/0 [idle] active:
