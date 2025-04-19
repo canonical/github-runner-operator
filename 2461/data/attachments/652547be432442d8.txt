@@ -1,0 +1,97 @@
+06:24:33 WARNING unexpected facade SSHServer received from the controller
+06:24:33 INFO Adding model github-pr-ed66e-lxd:test-charm-runner-mi89 on cloud localhost
+06:24:33 WARNING unexpected facade SSHServer received from the controller
+06:24:33 WARNING unexpected facade SSHSession received from the controller
+06:24:33 WARNING unexpected facade SSHTunneler received from the controller
+06:24:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:35 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [allocating] waiting: waiting for machine
+06:25:06 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [allocating] waiting: waiting for machine
+06:25:36 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [allocating] waiting: waiting for machine
+06:26:06 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [executing] maintenance: Setting up Builder.
+06:26:37 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [executing] maintenance: Setting up Builder.
+06:27:07 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [executing] maintenance: Setting up Builder.
+06:27:38 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [executing] maintenance: Setting up Builder.
+06:28:08 INFO Waiting for model:
+  github-runner-image-builder-lhdn4rq9/0 [executing] maintenance: Setting up Builder.
+06:28:54 INFO Deploying local:jammy/github-runner-0
+06:28:54 INFO Waiting for model:
+  test-lhdn4rq9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lhdn4rq9/0 [idle] blocked: image integration required.
+06:29:24 INFO Waiting for model:
+  test-lhdn4rq9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lhdn4rq9/0 [idle] blocked: image integration required.
+06:29:54 INFO Waiting for model:
+  test-lhdn4rq9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lhdn4rq9/0 [idle] blocked: image integration required.
+06:30:25 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:30:55 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:31:25 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:31:55 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:32:26 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:32:56 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:33:27 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:33:57 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:34:27 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:34:58 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:35:28 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:35:58 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:36:28 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:36:59 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:37:29 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:37:59 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:38:29 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:39:00 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lhdn4rq9/0 [executing] active: Building image.
+06:39:30 INFO Waiting for model:
+  test-lhdn4rq9/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-lhdn4rq9/0 [idle] active: 
+06:40:01 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] active: 
+06:46:03 INFO Waiting for model:
+  test-lhdn4rq9/0 [executing] active: 
+06:46:33 INFO Waiting for model:
+  test-lhdn4rq9/0 [idle] active:
+06:47:18 INFO Waiting for model:
+  test-lhdn4rq9/0 [executing] active:

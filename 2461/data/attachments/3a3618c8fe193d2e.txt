@@ -1,0 +1,73 @@
+06:24:25 INFO Creating 1 runners
+06:24:25 INFO Creating openstack server with test-fedg0na1-0-n-4dfe316ec968
+06:24:38 INFO Waiting for runner process to startup: test-fedg0na1-0-n-4dfe316ec968
+06:24:49 WARNING NoValidConnectionsError. Unable to SSH into test-fedg0na1-0-n-4dfe316ec968 with address 10.145.193.161. Error: [Errno None] Unable to connect to port 22 on 10.145.193.161
+06:24:49 WARNING Retrying error in 60 seconds: Failed to SSH to test-fedg0na1-0-n-4dfe316ec968 during creation possible due to setup not completed
+06:25:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:49 INFO Authentication (publickey) successful!
+06:25:50 INFO Runner startup process found to be healthy on test-fedg0na1-0-n-4dfe316ec968
+06:25:50 INFO Waiting for runner process to be running: test-fedg0na1-0-n-4dfe316ec968
+06:25:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:50 INFO Authentication (publickey) successful!
+06:25:51 INFO Runner test-fedg0na1-0-n-4dfe316ec968 found to be healthy
+06:25:51 INFO Runner test-fedg0na1-0-n-4dfe316ec968 created successfully
+06:25:51 INFO Getting runners...
+06:25:52 INFO Getting all openstack servers managed by the charm
+06:25:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:53 INFO Authentication (publickey) successful!
+06:25:53 INFO Found following runners: {'test-fedg0na1-0-n-4dfe316ec968'}
+06:25:53 INFO Getting runners...
+06:25:54 INFO Getting all openstack servers managed by the charm
+06:25:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:55 INFO Authentication (publickey) successful!
+06:25:56 INFO Found following runners: {'test-fedg0na1-0-n-4dfe316ec968'}
+06:25:56 INFO Getting runners...
+06:25:57 INFO Getting all openstack servers managed by the charm
+06:25:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:58 INFO Authentication (publickey) successful!
+06:25:59 INFO Found following runners: {'test-fedg0na1-0-n-4dfe316ec968'}
+06:25:59 INFO Getting all openstack servers managed by the charm
+06:26:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:00 INFO Authentication (publickey) successful!
+06:26:00 INFO Getting runners...
+06:26:01 INFO Getting all openstack servers managed by the charm
+06:26:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:02 INFO Authentication (publickey) successful!
+06:26:03 INFO Found following runners: {'test-fedg0na1-0-n-4dfe316ec968'}
+06:26:04 INFO Offline github runners to delete: []:
+06:26:05 INFO Getting all openstack servers managed by the charm
+06:26:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:06 INFO Authentication (publickey) successful!
+06:26:09 INFO Cleaning up SSH key files
+06:26:09 INFO Found 1 key files, clean up 0 key files
+06:26:09 INFO Cleaning up openstack keypairs
+06:26:09 INFO Getting runners...
+06:26:10 INFO Getting all openstack servers managed by the charm
+06:26:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:11 INFO Authentication (publickey) successful!
+06:26:12 INFO Found following runners: {'test-fedg0na1-0-n-4dfe316ec968'}
+06:26:12 INFO Flushing idle runners...
+06:26:12 INFO Getting all openstack servers managed by the charm
+06:26:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:13 INFO Authentication (publickey) successful!
+06:26:13 INFO Attempting to kill runner process on test-fedg0na1-0-n-4dfe316ec968 if not busy
+06:26:13 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:26:14 INFO Kill process command output, ok: True code 0, out: 1833
+, err: 
+06:26:14 INFO Getting all openstack servers managed by the charm
+06:26:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:15 INFO Authentication (publickey) successful!
+06:26:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:15 INFO Authentication (publickey) successful!
+06:26:15 INFO [chan 2] Opened sftp connection (server version 3)
+06:26:15 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.161, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:26:15 WARNING Failed to pull metrics for test-fedg0na1-0-n-4dfe316ec968: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:26:15 INFO Running runner removal script for test-fedg0na1-0-n-4dfe316ec968
+06:26:17 INFO Deleting openstack server with test-fedg0na1-0-n-4dfe316ec968
+06:26:19 INFO Cleaning up SSH key files
+06:26:19 INFO Found 0 key files, clean up 0 key files
+06:26:19 INFO Cleaning up openstack keypairs
+06:26:19 INFO Getting runners...
+06:26:20 INFO Getting all openstack servers managed by the charm
+06:26:21 INFO Found following runners: set()

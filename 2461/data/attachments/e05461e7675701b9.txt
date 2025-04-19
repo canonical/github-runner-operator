@@ -1,0 +1,111 @@
+06:26:21 INFO GitHub token rate limit: Rate(reset=2025-04-19 07:24:21+00:00, remaining=4977, limit=5000)
+06:26:24 INFO Creating 1 runners
+06:26:25 INFO Creating openstack server with test-fedg0na1-0-n-52c7d9db9fbf
+06:26:37 INFO Waiting for runner process to startup: test-fedg0na1-0-n-52c7d9db9fbf
+06:26:49 WARNING NoValidConnectionsError. Unable to SSH into test-fedg0na1-0-n-52c7d9db9fbf with address 10.145.193.224. Error: [Errno None] Unable to connect to port 22 on 10.145.193.224
+06:26:49 WARNING Retrying error in 60 seconds: Failed to SSH to test-fedg0na1-0-n-52c7d9db9fbf during creation possible due to setup not completed
+06:27:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:49 INFO Authentication (publickey) successful!
+06:27:50 INFO Runner startup process found to be healthy on test-fedg0na1-0-n-52c7d9db9fbf
+06:27:50 INFO Waiting for runner process to be running: test-fedg0na1-0-n-52c7d9db9fbf
+06:27:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:50 INFO Authentication (publickey) successful!
+06:27:50 INFO Runner test-fedg0na1-0-n-52c7d9db9fbf found to be healthy
+06:27:50 INFO Runner test-fedg0na1-0-n-52c7d9db9fbf created successfully
+06:27:50 INFO Getting runners...
+06:27:51 INFO Getting all openstack servers managed by the charm
+06:27:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:53 INFO Authentication (publickey) successful!
+06:27:53 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:27:53 INFO Getting runners...
+06:27:55 INFO Getting all openstack servers managed by the charm
+06:27:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:56 INFO Authentication (publickey) successful!
+06:27:56 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:27:56 INFO Getting runners...
+06:27:57 INFO Getting all openstack servers managed by the charm
+06:27:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:59 INFO Authentication (publickey) successful!
+06:27:59 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:28:01 INFO Wait for condition not met, sleeping 10
+06:28:12 INFO Getting runners...
+06:28:13 INFO Getting all openstack servers managed by the charm
+06:28:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:15 INFO Authentication (publickey) successful!
+06:28:15 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:28:15 INFO Getting runners...
+06:28:17 INFO Getting all openstack servers managed by the charm
+06:28:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:18 INFO Authentication (publickey) successful!
+06:28:18 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:28:19 INFO Offline github runners to delete: []:
+06:28:20 INFO Getting all openstack servers managed by the charm
+06:28:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:21 INFO Authentication (publickey) successful!
+06:28:22 INFO Cleaning up SSH key files
+06:28:22 INFO Found 1 key files, clean up 0 key files
+06:28:22 INFO Cleaning up openstack keypairs
+06:28:22 INFO Getting runners...
+06:28:23 INFO Getting all openstack servers managed by the charm
+06:28:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:27 INFO Authentication (publickey) successful!
+06:28:27 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:28:27 INFO Flushing idle runners...
+06:28:28 INFO Getting all openstack servers managed by the charm
+06:28:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:29 INFO Authentication (publickey) successful!
+06:28:29 INFO Attempting to kill runner process on test-fedg0na1-0-n-52c7d9db9fbf if not busy
+06:28:29 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:28:29 INFO Kill process command output, ok: False code 1, out: 2331
+, err: 
+06:28:29 INFO Getting all openstack servers managed by the charm
+06:28:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:30 INFO Authentication (publickey) successful!
+06:28:32 INFO Cleaning up SSH key files
+06:28:32 INFO Found 1 key files, clean up 0 key files
+06:28:32 INFO Cleaning up openstack keypairs
+06:28:32 INFO Getting runners...
+06:28:33 INFO Getting all openstack servers managed by the charm
+06:28:34 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:34 INFO Authentication (publickey) successful!
+06:28:34 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:28:34 INFO Flushing idle and busy runners...
+06:28:35 INFO Getting all openstack servers managed by the charm
+06:28:36 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:36 INFO Authentication (publickey) successful!
+06:28:36 INFO Attempting to kill all runner process on test-fedg0na1-0-n-52c7d9db9fbf
+06:28:36 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:28:36 INFO Kill process command output, ok: True code 0, out: 1905
+2331
+, err: 
+06:28:36 INFO Getting all openstack servers managed by the charm
+06:28:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:37 INFO Authentication (publickey) successful!
+06:28:39 INFO Cleaning up SSH key files
+06:28:39 INFO Found 1 key files, clean up 0 key files
+06:28:39 INFO Cleaning up openstack keypairs
+06:28:49 INFO Flushing idle and busy runners...
+06:28:49 INFO Getting all openstack servers managed by the charm
+06:28:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:51 INFO Authentication (publickey) successful!
+06:28:51 INFO Attempting to kill all runner process on test-fedg0na1-0-n-52c7d9db9fbf
+06:28:51 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:28:51 INFO Kill process command output, ok: False code 1, out: , err: 
+06:28:51 INFO Getting all openstack servers managed by the charm
+06:28:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:52 INFO Authentication (publickey) successful!
+06:28:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:28:53 INFO Authentication (publickey) successful!
+06:28:53 INFO [chan 2] Opened sftp connection (server version 3)
+06:28:53 INFO Running runner removal script for test-fedg0na1-0-n-52c7d9db9fbf
+06:28:55 INFO Deleting openstack server with test-fedg0na1-0-n-52c7d9db9fbf
+06:28:58 INFO Cleaning up SSH key files
+06:28:58 INFO Found 0 key files, clean up 0 key files
+06:28:58 INFO Cleaning up openstack keypairs
+06:28:58 INFO Getting runners...
+06:28:59 INFO Getting all openstack servers managed by the charm
+06:29:00 INFO Found following runners: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:29:00 WARNING Found runner instance on cloud but not registered on GitHub: {'test-fedg0na1-0-n-52c7d9db9fbf'}
+06:29:00 INFO Getting runners...
+06:29:01 INFO Getting all openstack servers managed by the charm
+06:29:02 INFO Found following runners: set()

@@ -1,0 +1,41 @@
+06:44:09 INFO GitHub token rate limit: Rate(reset=2025-04-19 07:24:19+00:00, remaining=4764, limit=5000)
+06:46:46 INFO Waiting for model:
+  test-daxrjfwp/0 [executing] active: 
+06:47:16 INFO Waiting for model:
+  test-daxrjfwp/0 [idle] active: 
+06:47:23 INFO Wait for condition not met, sleeping 10
+06:47:57 INFO Waiting for model:
+  test-daxrjfwp/0 [executing] active: 
+06:48:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745045156.0, "event": "runner_installed", "flavor": "test-daxrjfwp", "duration": 88.0}
+{"timestamp": 1745045248.0, "event": "runner_start", "flavor": "test-daxrjfwp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 92.0, "queue_duration": 3.0}
+{"timestamp": 1745045251.0, "event": "runner_stop", "flavor": "test-daxrjfwp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745045275.9280481, "event": "reconciliation", "flavor": "test-daxrjfwp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.668230295181274}
+{"timestamp": 1745045289.8039694, "event": "reconciliation", "flavor": "test-daxrjfwp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.649070978164673}
+06:48:28 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-e2mr  github-pr-ed66e-lxd  localhost/localhost  3.6.5    unsupported  06:48:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-daxrjfwp           active      1  github-runner-image-builder  latest/edge   68  no       
+test-daxrjfwp                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-daxrjfwp/0*  active    idle   0        10.175.204.15          
+test-daxrjfwp/0*                         active    idle   1        10.175.204.232         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.175.204.15   juju-f85c17-0  ubuntu@22.04      Running
+1        started  10.175.204.232  juju-f85c17-1  ubuntu@22.04      Running
+
+06:48:28 INFO Juju error logs:
+
+machine-0: 06:25:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-daxrjfwp-0: 06:25:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-daxrjfwp-0: 06:26:23 ERROR unit.github-runner-image-builder-daxrjfwp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-daxrjfwp-0: 06:29:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:48:28 INFO Forgetting model main...

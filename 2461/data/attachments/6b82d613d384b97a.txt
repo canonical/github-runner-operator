@@ -1,0 +1,87 @@
+06:24:36 WARNING unexpected facade SSHServer received from the controller
+06:24:36 INFO Adding model github-pr-ed66e-lxd:test-charm-no-runner-gso8 on cloud localhost
+06:24:37 WARNING unexpected facade SSHServer received from the controller
+06:24:37 WARNING unexpected facade SSHSession received from the controller
+06:24:37 WARNING unexpected facade SSHTunneler received from the controller
+06:24:38 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:39 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [allocating] waiting: waiting for machine
+06:25:09 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [allocating] waiting: waiting for machine
+06:25:40 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [allocating] waiting: waiting for machine
+06:26:10 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [executing] maintenance: Setting up Builder.
+06:26:40 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [executing] maintenance: Setting up Builder.
+06:27:11 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [executing] maintenance: Setting up Builder.
+06:27:41 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [executing] maintenance: Setting up Builder.
+06:28:12 INFO Waiting for model:
+  github-runner-image-builder-fvleg8mq/0 [executing] maintenance: Setting up Builder.
+06:28:49 INFO Deploying local:jammy/github-runner-0
+06:28:49 INFO Waiting for model:
+  test-fvleg8mq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fvleg8mq/0 [idle] blocked: image integration required.
+06:29:19 INFO Waiting for model:
+  test-fvleg8mq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fvleg8mq/0 [idle] blocked: image integration required.
+06:29:49 INFO Waiting for model:
+  test-fvleg8mq/0 [executing] waiting: agent initialising
+  github-runner-image-builder-fvleg8mq/0 [idle] blocked: image integration required.
+06:30:20 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:30:50 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:31:20 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:31:51 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:32:21 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:33:21 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:34:22 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:34:52 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:35:23 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:35:53 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:36:23 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:37:54 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:38:25 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fvleg8mq/0 [executing] active: Building image.
+06:38:55 INFO Waiting for model:
+  test-fvleg8mq/0 [executing] maintenance: Reconciling runners
+06:39:15 INFO Waiting for model:
+  test-fvleg8mq/0 [idle] active:
