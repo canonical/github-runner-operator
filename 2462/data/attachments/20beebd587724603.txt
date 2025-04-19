@@ -1,0 +1,115 @@
+18:23:24 WARNING unexpected facade SSHServer received from the controller
+18:23:24 INFO Adding model github-pr-ed66e-lxd:test-charm-metrics-failure-2cvy on cloud localhost
+18:23:25 WARNING unexpected facade SSHServer received from the controller
+18:23:25 WARNING unexpected facade SSHSession received from the controller
+18:23:25 WARNING unexpected facade SSHTunneler received from the controller
+18:23:25 INFO GitHub token rate limit: Rate(reset=2025-04-19 19:23:10+00:00, remaining=4997, limit=5000)
+18:23:40 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:23:40 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [allocating] waiting: waiting for machine
+18:24:10 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [allocating] waiting: waiting for machine
+18:24:41 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [allocating] waiting: agent initialising
+18:25:11 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [executing] maintenance: Setting up Builder.
+18:25:42 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [executing] maintenance: Setting up Builder.
+18:26:12 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [executing] maintenance: Setting up Builder.
+18:26:42 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [executing] maintenance: Setting up Builder.
+18:27:13 INFO Waiting for model:
+  github-runner-image-builder-uyp2ifaf/0 [idle] blocked: image integration required.
+18:27:36 INFO Deploying local:jammy/github-runner-0
+18:27:36 INFO Waiting for model:
+  test-uyp2ifaf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uyp2ifaf/0 [idle] blocked: image integration required.
+18:28:06 INFO Waiting for model:
+  test-uyp2ifaf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uyp2ifaf/0 [idle] blocked: image integration required.
+18:28:37 INFO Waiting for model:
+  test-uyp2ifaf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uyp2ifaf/0 [executing] blocked: image integration required.
+18:29:07 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:29:37 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:30:08 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:30:38 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:31:08 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:31:39 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:32:09 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:32:39 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:33:09 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:33:40 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:34:10 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:34:41 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:35:11 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:35:41 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:36:12 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:36:42 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:37:13 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:37:43 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:38:14 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:38:44 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:39:14 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uyp2ifaf/0 [executing] active: Building image.
+18:39:45 INFO Waiting for model:
+  test-uyp2ifaf/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-uyp2ifaf/0 [idle] active: 
+18:40:15 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] active: 
+18:40:38 INFO Waiting for model:
+  test-uyp2ifaf/0 [executing] maintenance: Reconciling runners
+18:44:58 INFO Waiting for model:
+  test-uyp2ifaf/0 [executing] active: 
+18:45:28 INFO Waiting for model:
+  test-uyp2ifaf/0 [idle] active: 
+18:45:33 INFO [TEST SETUP] Exposing port 8080 on test-uyp2ifaf-0-n-bdee7262ca3c
+18:45:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:75:48:b1'}]])
+18:45:37 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-uyp2ifaf-0-n-bdee7262ca3c
+18:45:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:75:48:b1'}]])
+18:45:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uyp2ifaf-0-n-bdee7262ca3c.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.199 nc -z localhost 8080'
+18:45:39 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-uyp2ifaf-0-n-bdee7262ca3c
+18:45:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.199', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:75:48:b1'}]])
+18:45:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-uyp2ifaf-0-n-bdee7262ca3c.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.199 curl http://localhost:8080'
