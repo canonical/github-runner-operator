@@ -1,0 +1,415 @@
+18:23:28 WARNING unexpected facade SSHServer received from the controller
+18:23:28 INFO Adding model github-pr-ed66e-lxd:test-charm-fork-path-change-lnrk on cloud localhost
+18:23:28 WARNING unexpected facade SSHServer received from the controller
+18:23:28 WARNING unexpected facade SSHSession received from the controller
+18:23:28 WARNING unexpected facade SSHTunneler received from the controller
+18:23:30 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:23:30 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [allocating] waiting: waiting for machine
+18:24:00 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [allocating] waiting: waiting for machine
+18:24:31 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [allocating] waiting: waiting for machine
+18:25:01 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [executing] maintenance: Setting up Builder.
+18:25:31 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [executing] maintenance: Setting up Builder.
+18:26:02 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [executing] maintenance: Setting up Builder.
+18:26:32 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [executing] maintenance: Setting up Builder.
+18:27:03 INFO Waiting for model:
+  github-runner-image-builder-dwgqk275/0 [executing] maintenance: Setting up Builder.
+18:27:42 INFO Deploying local:jammy/github-runner-0
+18:27:42 INFO Waiting for model:
+  test-dwgqk275/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwgqk275/0 [idle] blocked: image integration required.
+18:28:12 INFO Waiting for model:
+  test-dwgqk275/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwgqk275/0 [idle] blocked: image integration required.
+18:28:42 INFO Waiting for model:
+  test-dwgqk275/0 [executing] waiting: agent initialising
+  github-runner-image-builder-dwgqk275/0 [idle] blocked: image integration required.
+18:29:13 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:29:43 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:30:13 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:30:44 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:31:14 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:31:44 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:32:15 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:32:45 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:33:15 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:33:46 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:34:16 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:34:46 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:35:17 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:35:47 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:37:19 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:38:19 INFO Waiting for model:
+  test-dwgqk275/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwgqk275/0 [executing] active: Building image.
+18:38:50 INFO Waiting for model:
+  test-dwgqk275/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-dwgqk275/0 [idle] active: 
+18:39:20 INFO Waiting for model:
+  test-dwgqk275/0 [idle] active: 
+18:39:27 INFO GitHub token rate limit: Rate(reset=2025-04-20 19:38:48+00:00, remaining=4965, limit=5000)
+18:39:39 INFO test_path_config_change
+18:39:39 INFO Waiting for model:
+  test-dwgqk275/0 [idle] active: 
+18:40:09 INFO Waiting for model:
+  test-dwgqk275/0 [executing] maintenance: Reconciling runners
+18:40:39 INFO Waiting for model:
+  test-dwgqk275/0 [idle] active: 
+18:40:45 INFO Ensure there is a runner (this calls reconcile)
+18:43:06 INFO Waiting for model:
+  test-dwgqk275/0 [executing] maintenance: Reconciling runners
+18:43:36 INFO Waiting for model:
+  test-dwgqk275/0 [idle] active: 
+18:43:37 INFO Reconciling (again)
+18:44:38 INFO Waiting for model:
+  test-dwgqk275/0 [executing] active: 
+18:45:08 INFO Waiting for model:
+  test-dwgqk275/0 [idle] active: 
+18:45:11 INFO runners: ['test-dwgqk275-0-n-9623446014a9']
+18:45:12 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-0ff57ade4d9c"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-4272068bde1c"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-4426807c2ae9"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-55578f42c3f8"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-5a07b5b6d89d"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-6219f353779a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-8fc2a580a899"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-a1d42d99df6c"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-c5ad520a4637"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-d7e58ba2b0bf"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-09e44e5847fe"), SelfHostedActionsRunner(name="test-bydw7uul-0-n-fc6a18c63490"), SelfHostedActionsRunner(name="test-gfoezt7o-0-n-848dec71112c"), SelfHostedActionsRunner(name="test-kj0bjray-0-n-05f286862e78"), SelfHostedActionsRunner(name="test-lxkfcb9u-0-n-36366fd53bf0"), SelfHostedActionsRunner(name="test-qe5m96sr-0-n-51396e4c6018"), SelfHostedActionsRunner(name="test-stw4f0nx-0-n-aa2cc9917910"), SelfHostedActionsRunner(name="test-v7oib4s5-0-n-38f31e0c590c"), SelfHostedActionsRunner(name="test-xikhsa7s-0-n-6cd0cb8a8778"), SelfHostedActionsRunner(name="test-yb62omza-0-n-da41a20618bc")]
+18:45:13 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-lnrk  github-pr-ed66e-lxd  localhost/localhost  3.6.5    unsupported  18:45:13Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-dwgqk275           active      1  github-runner-image-builder  latest/edge   68  no       
+test-dwgqk275                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dwgqk275/0*  active    idle   0        10.216.237.189         
+test-dwgqk275/0*                         active    idle   1        10.216.237.251         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.216.237.189  juju-83752d-0  ubuntu@22.04      Running
+1        started  10.216.237.251  juju-83752d-1  ubuntu@22.04      Running
+
+18:45:13 INFO Juju error logs:
+
+machine-0: 18:24:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-dwgqk275-0: 18:24:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-dwgqk275-0: 18:25:05 ERROR unit.github-runner-image-builder-dwgqk275/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:28:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dwgqk275-0: 18:28:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-dwgqk275-0: 18:44:03 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:07 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:07 ERROR unit.test-dwgqk275/0.juju-log Failed to get SSH connection while removing test-dwgqk275-0-n-9623446014a9
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 315, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+unit-test-dwgqk275-0: 18:44:09 ERROR unit.test-dwgqk275/0.juju-log Invalid pulled metrics. No runner_installed information for test-dwgqk275-0-n-9623446014a9.
+unit-test-dwgqk275-0: 18:44:09 ERROR unit.test-dwgqk275/0.juju-log No metrics returned after deleting test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:14 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:17 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:21 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:25 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:25 ERROR unit.test-dwgqk275/0.juju-log Failed to get SSH connection while removing test-dwgqk275-0-n-9623446014a9
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 315, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+unit-test-dwgqk275-0: 18:44:29 ERROR unit.test-dwgqk275/0.juju-log Invalid pulled metrics. No runner_installed information for test-dwgqk275-0-n-9623446014a9.
+unit-test-dwgqk275-0: 18:44:29 ERROR unit.test-dwgqk275/0.juju-log No metrics returned after deleting test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:34 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:37 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:41 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:44 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:44 ERROR unit.test-dwgqk275/0.juju-log Failed to get SSH connection while removing test-dwgqk275-0-n-9623446014a9
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 315, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+unit-test-dwgqk275-0: 18:44:46 ERROR unit.test-dwgqk275/0.juju-log Invalid pulled metrics. No runner_installed information for test-dwgqk275-0-n-9623446014a9.
+unit-test-dwgqk275-0: 18:44:46 ERROR unit.test-dwgqk275/0.juju-log No metrics returned after deleting test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:51 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+unit-test-dwgqk275-0: 18:44:53 ERROR unit.test-dwgqk275/0.juju-log Unable to get SSH connection for instance test-dwgqk275-0-n-9623446014a9, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwgqk275-0-n-9623446014a9, key path: /home/runner-manager/.ssh/test-dwgqk275-0-n-9623446014a9.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwgqk275-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwgqk275-0-n-9623446014a9
+
+18:45:13 INFO Forgetting model main...

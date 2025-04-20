@@ -1,0 +1,128 @@
+18:52:18 WARNING unexpected facade SSHServer received from the controller
+18:52:18 INFO Adding model github-pr-ed66e-lxd:test-reactive-xut9 on cloud localhost
+18:52:18 WARNING unexpected facade SSHServer received from the controller
+18:52:18 WARNING unexpected facade SSHSession received from the controller
+18:52:18 WARNING unexpected facade SSHTunneler received from the controller
+18:52:19 INFO GitHub token rate limit: Rate(reset=2025-04-20 18:54:23+00:00, remaining=4787, limit=5000)
+18:52:23 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:52:24 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [allocating] waiting: waiting for machine
+18:52:54 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [allocating] waiting: waiting for machine
+18:53:24 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [allocating] waiting: waiting for machine
+18:53:54 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [executing] maintenance: Setting up Builder.
+18:54:25 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [executing] maintenance: Setting up Builder.
+18:54:55 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [executing] maintenance: Setting up Builder.
+18:55:25 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [executing] maintenance: Setting up Builder.
+18:55:56 INFO Waiting for model:
+  github-runner-image-builder-rojm31tw/0 [executing] maintenance: Setting up Builder.
+18:56:41 INFO Deploying local:jammy/github-runner-0
+18:56:41 INFO Waiting for model:
+  test-rojm31tw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rojm31tw/0 [idle] blocked: image integration required.
+18:57:11 INFO Waiting for model:
+  test-rojm31tw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rojm31tw/0 [idle] blocked: image integration required.
+18:57:42 INFO Waiting for model:
+  test-rojm31tw/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rojm31tw/0 [idle] blocked: image integration required.
+18:58:12 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+18:58:42 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+18:59:13 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+18:59:43 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:00:13 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:00:44 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:01:14 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:01:44 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:02:15 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:02:45 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:03:16 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:03:46 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:04:16 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:04:47 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:05:17 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:05:48 INFO Waiting for model:
+  test-rojm31tw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rojm31tw/0 [executing] active: Building image.
+19:06:18 INFO Waiting for model:
+  test-rojm31tw/0 [executing] maintenance: Reconciling runners
+19:06:35 INFO Deploying ch:amd64/jammy/mongodb-212
+19:06:36 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:07:06 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+19:07:37 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+19:08:07 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+19:08:32 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:08:32 INFO Waiting for model:
+  test-rojm31tw/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:09:03 INFO Waiting for model:
+  test-rojm31tw/0 [idle] active: 
+  mongodb/0 [idle] active: 
+19:09:29 INFO Waiting for model:
+  test-rojm31tw/0 [executing] maintenance: Reconciling runners
+19:10:03 INFO Wait for condition not met, sleeping 10
+19:10:48 INFO Waiting for model:
+  test-rojm31tw/0 [idle] active: 
+19:11:04 INFO Wait for condition not met, sleeping 60
+19:12:28 INFO Waiting for model:
+  test-rojm31tw/0 [idle] active: 
+19:12:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745176247.6303923, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 32.48203468322754}
+{"timestamp": 1745176297.0, "event": "runner_installed", "flavor": "test-rojm31tw", "duration": 80.0}
+{"timestamp": 1745176320.0, "event": "runner_start", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 23.0, "queue_duration": 115.0}
+{"timestamp": 1745176323.0, "event": "runner_stop", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745176347.436121, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.885980129241943}
+
+19:12:45 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745176247.6303923, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 32.48203468322754}
+{"timestamp": 1745176297.0, "event": "runner_installed", "flavor": "test-rojm31tw", "duration": 80.0}
+{"timestamp": 1745176320.0, "event": "runner_start", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 23.0, "queue_duration": 115.0}
+{"timestamp": 1745176323.0, "event": "runner_stop", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745176347.436121, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.885980129241943}
+
+19:12:46 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745176247.6303923, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 32.48203468322754}
+{"timestamp": 1745176297.0, "event": "runner_installed", "flavor": "test-rojm31tw", "duration": 80.0}
+{"timestamp": 1745176320.0, "event": "runner_start", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 23.0, "queue_duration": 115.0}
+{"timestamp": 1745176323.0, "event": "runner_stop", "flavor": "test-rojm31tw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745176347.436121, "event": "reconciliation", "flavor": "test-rojm31tw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.885980129241943}
+19:13:06 INFO Waiting for model:
+  test-rojm31tw/0 [executing] maintenance: Reconciling runners
+19:13:36 INFO Waiting for model:
+  test-rojm31tw/0 [idle] active:
