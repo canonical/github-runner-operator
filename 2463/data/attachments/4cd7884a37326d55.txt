@@ -1,0 +1,99 @@
+06:24:20 WARNING unexpected facade SSHServer received from the controller
+06:24:20 INFO Adding model github-pr-ed66e-lxd:test-charm-no-runner-pip0 on cloud localhost
+06:24:21 WARNING unexpected facade SSHServer received from the controller
+06:24:21 WARNING unexpected facade SSHSession received from the controller
+06:24:21 WARNING unexpected facade SSHTunneler received from the controller
+06:24:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:23 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [allocating] waiting: waiting for machine
+06:24:53 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [allocating] waiting: waiting for machine
+06:25:23 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [allocating] waiting: waiting for machine
+06:25:54 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [executing] maintenance: Setting up Builder.
+06:26:24 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [executing] maintenance: Setting up Builder.
+06:26:54 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [executing] maintenance: Setting up Builder.
+06:27:25 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [executing] maintenance: Setting up Builder.
+06:27:55 INFO Waiting for model:
+  github-runner-image-builder-dfb33i3l/0 [executing] maintenance: Setting up Builder.
+06:28:32 INFO Deploying local:jammy/github-runner-0
+06:28:32 INFO Waiting for model:
+  test-dfb33i3l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dfb33i3l/0 [idle] blocked: image integration required.
+06:29:02 INFO Waiting for model:
+  test-dfb33i3l/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dfb33i3l/0 [idle] blocked: image integration required.
+06:29:32 INFO Waiting for model:
+  test-dfb33i3l/0 [executing] waiting: agent initialising
+  github-runner-image-builder-dfb33i3l/0 [idle] blocked: image integration required.
+06:30:02 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:30:33 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:31:03 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:31:33 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:32:03 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:32:34 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:33:04 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:33:34 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:34:05 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:34:35 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:35:05 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:35:36 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:36:06 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:36:36 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:37:07 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:37:37 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:38:07 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:38:38 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:39:08 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dfb33i3l/0 [executing] active: Building image.
+06:40:09 INFO Waiting for model:
+  test-dfb33i3l/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-dfb33i3l/0 [idle] active: 
+06:40:39 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] active: 
+06:40:44 INFO Waiting for model:
+  test-dfb33i3l/0 [idle] active:

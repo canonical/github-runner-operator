@@ -1,0 +1,80 @@
+07:02:18 INFO Creating 2 runners
+07:03:40 INFO Getting runners...
+07:03:41 INFO Getting all openstack servers managed by the charm
+07:03:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:43 INFO Authentication (publickey) successful!
+07:03:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:43 INFO Authentication (publickey) successful!
+07:03:44 INFO Found following runners: {'test-gs72ld4r-0-n-0532f47262f1', 'test-gs72ld4r-0-n-2d55f9d0bd7f'}
+07:03:44 INFO Getting runners...
+07:03:45 INFO Getting all openstack servers managed by the charm
+07:03:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:46 INFO Authentication (publickey) successful!
+07:03:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:47 INFO Authentication (publickey) successful!
+07:03:47 INFO Found following runners: {'test-gs72ld4r-0-n-0532f47262f1', 'test-gs72ld4r-0-n-2d55f9d0bd7f'}
+07:03:47 INFO Flushing idle runners...
+07:03:48 INFO Getting all openstack servers managed by the charm
+07:03:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:49 INFO Authentication (publickey) successful!
+07:03:49 INFO Attempting to kill runner process on test-gs72ld4r-0-n-0532f47262f1 if not busy
+07:03:49 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:03:49 INFO Kill process command output, ok: True code 0, out: 1934
+, err: 
+07:03:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:49 INFO Authentication (publickey) successful!
+07:03:49 INFO Attempting to kill runner process on test-gs72ld4r-0-n-2d55f9d0bd7f if not busy
+07:03:49 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:03:49 INFO Kill process command output, ok: True code 0, out: 1824
+, err: 
+07:03:49 INFO Getting all openstack servers managed by the charm
+07:03:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:51 INFO Authentication (publickey) successful!
+07:03:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:51 INFO Authentication (publickey) successful!
+07:03:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:52 INFO Authentication (publickey) successful!
+07:03:52 INFO [chan 2] Opened sftp connection (server version 3)
+07:03:52 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.130, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:03:52 WARNING Failed to pull metrics for test-gs72ld4r-0-n-0532f47262f1: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:03:52 INFO Running runner removal script for test-gs72ld4r-0-n-0532f47262f1
+07:03:53 INFO Deleting openstack server with test-gs72ld4r-0-n-0532f47262f1
+07:03:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:03:55 INFO Authentication (publickey) successful!
+07:03:55 INFO [chan 2] Opened sftp connection (server version 3)
+07:03:55 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.179, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:03:55 WARNING Failed to pull metrics for test-gs72ld4r-0-n-2d55f9d0bd7f: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:03:55 INFO Running runner removal script for test-gs72ld4r-0-n-2d55f9d0bd7f
+07:03:57 INFO Deleting openstack server with test-gs72ld4r-0-n-2d55f9d0bd7f
+07:03:59 INFO Cleaning up SSH key files
+07:03:59 INFO Found 0 key files, clean up 0 key files
+07:03:59 INFO Cleaning up openstack keypairs
+07:03:59 INFO Getting runners...
+07:04:00 INFO Getting all openstack servers managed by the charm
+07:04:01 ERROR Unable to get SSH connection for instance test-gs72ld4r-0-n-2d55f9d0bd7f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-gs72ld4r-0-n-2d55f9d0bd7f, key path: /home/ubuntu/.ssh/test-gs72ld4r-0-n-2d55f9d0bd7f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-gs72ld4r-0-n-2d55f9d0bd7f
+07:04:01 INFO Found following runners: {'test-gs72ld4r-0-n-2d55f9d0bd7f'}
+07:04:01 WARNING Found runner instance on cloud but not registered on GitHub: {'test-gs72ld4r-0-n-2d55f9d0bd7f'}
+07:04:01 INFO Getting runners...
+07:04:02 INFO Getting all openstack servers managed by the charm
+07:04:03 INFO Found following runners: set()

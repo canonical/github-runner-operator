@@ -1,0 +1,139 @@
+06:24:42 INFO Adding model github-pr-ed66e-lxd:test-charm-upgrade-36kf on cloud localhost
+06:24:42 WARNING unexpected facade AgentLifeFlag received from the controller
+06:24:42 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:24:42 WARNING unexpected facade SecretsDrain received from the controller
+06:24:44 INFO Deploying ch:amd64/github-runner-image-builder-68
+06:24:44 INFO Waiting for model:
+  github-runner-image-builder-yb62omza (not enough units yet - 0/1)
+06:25:14 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [allocating] waiting: waiting for machine
+06:25:44 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [executing] maintenance: Setting up Builder.
+06:26:14 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [executing] maintenance: Setting up Builder.
+06:26:44 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [executing] maintenance: Setting up Builder.
+06:27:14 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [executing] maintenance: Setting up Builder.
+06:27:44 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [executing] maintenance: Setting up Builder.
+06:28:14 INFO Waiting for model:
+  github-runner-image-builder-yb62omza/0 [idle] blocked: image integration required.
+06:28:43 INFO Deploying local:jammy/github-runner-0
+06:28:44 INFO Waiting for model:
+  test-yb62omza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yb62omza/0 [idle] blocked: image integration required.
+06:29:14 INFO Waiting for model:
+  test-yb62omza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yb62omza/0 [idle] blocked: image integration required.
+06:29:44 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yb62omza/0 [idle] blocked: image integration required.
+06:30:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:30:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:31:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:31:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:32:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:32:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:33:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:33:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:34:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:34:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:35:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:35:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:36:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:36:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:37:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:37:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:38:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:38:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:39:14 INFO Waiting for model:
+  test-yb62omza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yb62omza/0 [executing] active: Building image.
+06:39:44 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-yb62omza/0 [idle] active: 
+06:40:14 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+06:40:44 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+06:41:14 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+06:41:44 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+06:42:14 INFO Waiting for model:
+  test-yb62omza/0 [executing] maintenance: Reconciling runners
+06:42:44 INFO Waiting for model:
+  test-yb62omza/0 [idle] active: 
+06:43:50 INFO Waiting for model:
+  test-yb62omza/0 [executing] active: 
+06:44:20 INFO Waiting for model:
+  test-yb62omza/0 [idle] active:
+06:44:52 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-36kf  github-pr-ed66e-lxd  localhost/localhost  3.1.10   unsupported  06:44:52Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yb62omza           active      1  github-runner-image-builder  latest/edge   68  no       
+test-yb62omza                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-yb62omza/0*  active    idle   0        10.186.50.238          
+test-yb62omza/0*                         active    idle   1        10.186.50.231          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.186.50.238  juju-48240f-0  ubuntu@22.04      Running
+1        started  10.186.50.231  juju-48240f-1  ubuntu@22.04      Running
+
+06:44:52 INFO Juju error logs:
+
+machine-0: 06:25:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:31 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-yb62omza-0: 06:25:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yb62omza-0: 06:26:09 ERROR unit.github-runner-image-builder-yb62omza/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:28 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:29:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yb62omza-0: 06:29:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:44:53 INFO Forgetting model main...

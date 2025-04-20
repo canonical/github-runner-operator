@@ -1,0 +1,149 @@
+06:24:25 WARNING unexpected facade SSHServer received from the controller
+06:24:25 INFO Adding model github-pr-ed66e-lxd:test-charm-fork-repo-cl50 on cloud localhost
+06:24:26 WARNING unexpected facade SSHServer received from the controller
+06:24:26 WARNING unexpected facade SSHSession received from the controller
+06:24:26 WARNING unexpected facade SSHTunneler received from the controller
+06:24:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:27 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [allocating] waiting: waiting for machine
+06:24:58 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [allocating] waiting: waiting for machine
+06:25:28 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [allocating] waiting: waiting for machine
+06:25:58 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:26:29 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:26:59 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:27:30 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:28:00 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:28:30 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [executing] maintenance: Setting up Builder.
+06:29:00 INFO Waiting for model:
+  github-runner-image-builder-jle2a1sf/0 [idle] blocked: image integration required.
+06:29:27 INFO Deploying local:jammy/github-runner-0
+06:29:28 INFO Waiting for model:
+  test-jle2a1sf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jle2a1sf/0 [idle] blocked: image integration required.
+06:29:58 INFO Waiting for model:
+  test-jle2a1sf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jle2a1sf/0 [idle] blocked: image integration required.
+06:30:28 INFO Waiting for model:
+  test-jle2a1sf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jle2a1sf/0 [idle] blocked: image integration required.
+06:30:59 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:31:29 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:31:59 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:32:29 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:33:00 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:33:30 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:34:00 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:34:31 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:35:01 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:35:31 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:36:02 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:36:32 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:37:02 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:37:33 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:38:03 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:38:33 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:39:04 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:39:34 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:40:04 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:40:35 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:41:05 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:41:35 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:42:05 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jle2a1sf/0 [executing] active: Building image.
+06:42:35 INFO Waiting for model:
+  test-jle2a1sf/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-jle2a1sf/0 [idle] active: 
+06:43:06 INFO GitHub token rate limit: Rate(reset=2025-04-20 07:42:14+00:00, remaining=4958, limit=5000)
+06:47:03 INFO Waiting for model:
+  test-jle2a1sf/0 [executing] maintenance: Reconciling runners
+06:47:33 INFO Waiting for model:
+  test-jle2a1sf/0 [idle] active: 
+06:47:38 INFO [TEST SETUP] Exposing port 8080 on test-jle2a1sf-0-n-49189d80cce0
+06:47:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.23', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:22:ff:9e'}]])
+06:47:42 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-jle2a1sf-0-n-49189d80cce0
+06:47:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.23', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:22:ff:9e'}]])
+06:47:43 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jle2a1sf-0-n-49189d80cce0.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.23 nc -z localhost 8080'
+06:47:44 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-jle2a1sf-0-n-49189d80cce0
+06:47:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.23', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:22:ff:9e'}]])
+06:47:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jle2a1sf-0-n-49189d80cce0.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.23 curl http://localhost:8080'
+06:47:49 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-cl50  github-pr-ed66e-lxd  localhost/localhost  3.6.5    unsupported  06:47:49Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-jle2a1sf           active      1  github-runner-image-builder  latest/edge   68  no       
+test-jle2a1sf                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-jle2a1sf/0*  active    idle   0        10.65.110.65              
+test-jle2a1sf/0*                         active    idle   1        10.65.110.53    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.65.110.65  juju-bc85d8-0  ubuntu@22.04      Running
+1        started  10.65.110.53  juju-bc85d8-1  ubuntu@22.04      Running
+
+06:47:49 INFO Juju error logs:
+
+machine-0: 06:25:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-jle2a1sf-0: 06:25:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-jle2a1sf-0: 06:26:41 ERROR unit.github-runner-image-builder-jle2a1sf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:30:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:30:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jle2a1sf-0: 06:30:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:47:49 INFO Forgetting model main...
