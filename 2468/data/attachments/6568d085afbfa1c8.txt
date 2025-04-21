@@ -1,0 +1,264 @@
+07:15:17 INFO Waiting for model:
+  test-ymqy1ghw/0 [executing] active: 
+07:15:47 INFO Waiting for model:
+  test-ymqy1ghw/0 [idle] active:
+07:16:12 INFO Waiting for model:
+  test-ymqy1ghw/0 [executing] active: 
+07:16:42 INFO Waiting for model:
+  test-ymqy1ghw/0 [idle] active: 
+07:16:47 INFO Wait for condition not met, sleeping 10
+07:16:59 INFO Wait for condition not met, sleeping 10
+07:17:10 INFO Wait for condition not met, sleeping 10
+07:17:20 INFO Wait for condition not met, sleeping 10
+07:17:30 INFO Wait for condition not met, sleeping 10
+07:17:41 INFO Wait for condition not met, sleeping 10
+07:17:52 INFO Wait for condition not met, sleeping 10
+07:18:02 INFO Wait for condition not met, sleeping 10
+07:18:12 INFO Wait for condition not met, sleeping 10
+07:18:23 INFO Wait for condition not met, sleeping 10
+07:18:33 INFO Wait for condition not met, sleeping 10
+07:18:44 INFO Wait for condition not met, sleeping 10
+07:19:37 INFO Waiting for model:
+  test-ymqy1ghw/0 [executing] active: 
+07:20:08 INFO Waiting for model:
+  test-ymqy1ghw/0 [executing] maintenance: Reconciling runners
+07:20:29 INFO Wait for condition not met, sleeping 60
+07:21:29 INFO Wait for condition not met, sleeping 60
+07:22:30 INFO Wait for condition not met, sleeping 60
+07:23:30 INFO Wait for condition not met, sleeping 60
+07:24:31 INFO Wait for condition not met, sleeping 60
+07:25:31 INFO Wait for condition not met, sleeping 60
+07:26:32 INFO Wait for condition not met, sleeping 60
+07:27:32 INFO Wait for condition not met, sleeping 60
+07:28:33 INFO Wait for condition not met, sleeping 60
+07:29:34 INFO Wait for condition not met, sleeping 60
+07:30:36 INFO Wait for condition not met, sleeping 10
+07:31:03 INFO Waiting for model:
+  test-ymqy1ghw/0 [idle] active:
+07:31:34 INFO Waiting for model:
+  test-ymqy1ghw/0 [idle] active: 
+07:31:51 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-x57x  github-pr-ed66e-lxd  localhost/localhost  3.6.5    unsupported  07:31:51Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ymqy1ghw           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-ymqy1ghw                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-ymqy1ghw/0*  active    idle   0        10.184.206.102             
+mongodb/0*                               active    idle   2        10.184.206.32   27017/tcp  Primary
+test-ymqy1ghw/0*                         active    idle   1        10.184.206.169             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.184.206.102  juju-68186e-0  ubuntu@22.04      Running
+1        started  10.184.206.169  juju-68186e-1  ubuntu@22.04      Running
+2        started  10.184.206.32   juju-68186e-2  ubuntu@22.04      Running
+
+07:31:51 INFO Juju error logs:
+
+machine-0: 06:51:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:51:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ymqy1ghw-0: 06:51:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ymqy1ghw-0: 06:52:01 ERROR unit.github-runner-image-builder-ymqy1ghw/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:55:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:55:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ymqy1ghw-0: 06:55:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 07:05:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 07:05:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 07:05:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 07:06:16 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 07:06:16 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-ymqy1ghw-0: 07:09:07 ERROR unit.test-ymqy1ghw/0.juju-log SSH connection failure with test-ymqy1ghw-0-r-c42a0d59d789 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 463, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 317, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-ymqy1ghw-0-r-c42a0d59d789
+unit-test-ymqy1ghw-0: 07:09:12 ERROR unit.test-ymqy1ghw/0.juju-log SSH connection failure with test-ymqy1ghw-0-r-c42a0d59d789 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 463, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 317, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-ymqy1ghw-0-r-c42a0d59d789
+unit-test-ymqy1ghw-0: 07:09:22 ERROR unit.test-ymqy1ghw/0.juju-log SSH connection failure with test-ymqy1ghw-0-r-c42a0d59d789 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 463, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 317, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-ymqy1ghw-0-r-c42a0d59d789
+unit-test-ymqy1ghw-0: 07:09:22 ERROR unit.test-ymqy1ghw/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-ymqy1ghw-0-r-c42a0d59d789
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 463, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 317, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-ymqy1ghw-0-r-c42a0d59d789
+unit-test-ymqy1ghw-0: 07:19:36 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:19:41 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:19:49 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:19:49 ERROR unit.test-ymqy1ghw/0.juju-log Failed to get SSH connection while removing test-ymqy1ghw-0-r-5ca8bd656978
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 315, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+unit-test-ymqy1ghw-0: 07:19:51 ERROR unit.test-ymqy1ghw/0.juju-log Invalid pulled metrics. No runner_installed information for test-ymqy1ghw-0-r-5ca8bd656978.
+unit-test-ymqy1ghw-0: 07:19:51 ERROR unit.test-ymqy1ghw/0.juju-log No metrics returned after deleting test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:19:56 ERROR unit.test-ymqy1ghw/0.juju-log Health check failed due to unable to find keyfile for test-ymqy1ghw-0-r-5ca8bd656978
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 463, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+unit-test-ymqy1ghw-0: 07:19:57 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:19:57 ERROR unit.test-ymqy1ghw/0.juju-log Failed to get SSH connection while removing test-ymqy1ghw-0-r-5ca8bd656978
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 315, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+unit-test-ymqy1ghw-0: 07:19:59 ERROR unit.test-ymqy1ghw/0.juju-log Invalid pulled metrics. No runner_installed information for test-ymqy1ghw-0-r-5ca8bd656978.
+unit-test-ymqy1ghw-0: 07:19:59 ERROR unit.test-ymqy1ghw/0.juju-log No metrics returned after deleting test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:20:04 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+unit-test-ymqy1ghw-0: 07:20:07 ERROR unit.test-ymqy1ghw/0.juju-log Unable to get SSH connection for instance test-ymqy1ghw-0-r-5ca8bd656978, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 116, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 313, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-ymqy1ghw-0-r-5ca8bd656978, key path: /home/runner-manager/.ssh/test-ymqy1ghw-0-r-5ca8bd656978.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-ymqy1ghw-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-ymqy1ghw-0-r-5ca8bd656978
+
+07:31:51 INFO Forgetting model main...

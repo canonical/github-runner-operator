@@ -1,0 +1,57 @@
+06:59:46 INFO Creating 1 runners
+06:59:47 INFO Creating openstack server with test-lgv38x31-0-n-c1267c0635f2
+06:59:59 INFO Waiting for runner process to startup: test-lgv38x31-0-n-c1267c0635f2
+07:00:06 WARNING NoValidConnectionsError. Unable to SSH into test-lgv38x31-0-n-c1267c0635f2 with address 10.145.193.21. Error: [Errno None] Unable to connect to port 22 on 10.145.193.21
+07:00:06 WARNING Retrying error in 60 seconds: Failed to SSH to test-lgv38x31-0-n-c1267c0635f2 during creation possible due to setup not completed
+07:01:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:07 INFO Authentication (publickey) successful!
+07:01:07 INFO Runner startup process found to be healthy on test-lgv38x31-0-n-c1267c0635f2
+07:01:07 INFO Waiting for runner process to be running: test-lgv38x31-0-n-c1267c0635f2
+07:01:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:08 INFO Authentication (publickey) successful!
+07:01:08 INFO Runner test-lgv38x31-0-n-c1267c0635f2 found to be healthy
+07:01:08 INFO Runner test-lgv38x31-0-n-c1267c0635f2 created successfully
+07:01:08 INFO Getting runners...
+07:01:09 INFO Getting all openstack servers managed by the charm
+07:01:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:10 INFO Authentication (publickey) successful!
+07:01:11 INFO Found following runners: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:11 INFO Getting runners...
+07:01:12 INFO Getting all openstack servers managed by the charm
+07:01:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:13 INFO Authentication (publickey) successful!
+07:01:14 INFO Found following runners: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:14 INFO Getting runners...
+07:01:15 INFO Getting all openstack servers managed by the charm
+07:01:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:16 INFO Authentication (publickey) successful!
+07:01:17 INFO Found following runners: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:18 INFO Wait for condition not met, sleeping 10
+07:01:30 INFO Getting runners...
+07:01:31 INFO Getting all openstack servers managed by the charm
+07:01:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:32 INFO Authentication (publickey) successful!
+07:01:33 INFO Found following runners: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:33 WARNING Found runner instance on cloud but not registered on GitHub: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:33 INFO Getting runners...
+07:01:34 INFO Getting all openstack servers managed by the charm
+07:01:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:37 INFO Authentication (publickey) successful!
+07:01:37 INFO Found following runners: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:37 WARNING Found runner instance on cloud but not registered on GitHub: {'test-lgv38x31-0-n-c1267c0635f2'}
+07:01:38 INFO Offline github runners to delete: []:
+07:01:39 INFO Getting all openstack servers managed by the charm
+07:01:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:40 INFO Authentication (publickey) successful!
+07:01:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:01:41 INFO Authentication (publickey) successful!
+07:01:41 INFO [chan 2] Opened sftp connection (server version 3)
+07:01:41 INFO Running runner removal script for test-lgv38x31-0-n-c1267c0635f2
+07:01:41 INFO Deleting openstack server with test-lgv38x31-0-n-c1267c0635f2
+07:01:44 INFO Cleaning up SSH key files
+07:01:44 INFO Found 0 key files, clean up 0 key files
+07:01:44 INFO Cleaning up openstack keypairs
+07:01:44 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+07:01:44 INFO Getting runners...
+07:01:45 INFO Getting all openstack servers managed by the charm
+07:01:46 INFO Found following runners: set()

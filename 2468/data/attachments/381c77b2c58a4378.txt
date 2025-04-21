@@ -1,0 +1,108 @@
+06:25:02 WARNING unexpected facade SSHServer received from the controller
+06:25:02 INFO Adding model github-pr-ed66e-lxd:test-charm-metrics-failure-zhol on cloud localhost
+06:25:03 WARNING unexpected facade SSHServer received from the controller
+06:25:03 WARNING unexpected facade SSHSession received from the controller
+06:25:03 WARNING unexpected facade SSHTunneler received from the controller
+06:25:03 INFO GitHub token rate limit: Rate(reset=2025-04-21 06:26:28+00:00, remaining=3955, limit=5000)
+06:25:19 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:19 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [allocating] waiting: waiting for machine
+06:25:49 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [allocating] waiting: waiting for machine
+06:26:20 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [allocating] waiting: agent initialising
+06:26:50 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [executing] maintenance: Setting up Builder.
+06:27:20 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [executing] maintenance: Setting up Builder.
+06:27:51 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [executing] maintenance: Setting up Builder.
+06:28:21 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [executing] maintenance: Setting up Builder.
+06:28:51 INFO Waiting for model:
+  github-runner-image-builder-l33wwck0/0 [idle] blocked: image integration required.
+06:29:23 INFO Deploying local:jammy/github-runner-0
+06:29:23 INFO Waiting for model:
+  test-l33wwck0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l33wwck0/0 [idle] blocked: image integration required.
+06:29:53 INFO Waiting for model:
+  test-l33wwck0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l33wwck0/0 [idle] blocked: image integration required.
+06:30:24 INFO Waiting for model:
+  test-l33wwck0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-l33wwck0/0 [idle] blocked: image integration required.
+06:30:54 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:31:24 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:31:54 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:32:25 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:32:55 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:33:25 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:33:55 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:34:26 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:34:56 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:35:26 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:35:57 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:36:27 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:36:57 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:37:28 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:37:58 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:38:28 INFO Waiting for model:
+  test-l33wwck0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l33wwck0/0 [executing] active: Building image.
+06:38:58 INFO Waiting for model:
+  test-l33wwck0/0 [executing] maintenance: Reconciling runners
+06:39:32 INFO Waiting for model:
+  test-l33wwck0/0 [executing] maintenance: Reconciling runners
+06:43:42 INFO Waiting for model:
+  test-l33wwck0/0 [executing] active: 
+06:44:13 INFO Waiting for model:
+  test-l33wwck0/0 [idle] active: 
+06:44:16 INFO [TEST SETUP] Exposing port 8080 on test-l33wwck0-0-n-d8dbfb2494e5
+06:44:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.209', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:53:aa:57'}]])
+06:44:20 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-l33wwck0-0-n-d8dbfb2494e5
+06:44:20 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.209', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:53:aa:57'}]])
+06:44:21 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-l33wwck0-0-n-d8dbfb2494e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.209 nc -z localhost 8080'
+06:44:23 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-l33wwck0-0-n-d8dbfb2494e5
+06:44:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.209', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:53:aa:57'}]])
+06:44:24 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-l33wwck0-0-n-d8dbfb2494e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.209 curl http://localhost:8080'
+06:44:28 INFO Wait for condition not met, sleeping 10
+06:44:39 INFO Wait for condition not met, sleeping 60
+06:46:03 INFO Waiting for model:
+  test-l33wwck0/0 [executing] active: 
+06:46:33 INFO Waiting for model:
+  test-l33wwck0/0 [idle] active: 
+06:46:36 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745217777.0, "event": "runner_installed", "flavor": "test-l33wwck0", "duration": 99.0}
+{"timestamp": 1745217871.0, "event": "runner_start", "flavor": "test-l33wwck0", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 94.0, "queue_duration": 1.0}
+{"timestamp": 1745217871.0, "event": "runner_stop", "flavor": "test-l33wwck0", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1745217962.5299547, "event": "reconciliation", "flavor": "test-l33wwck0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.50184941291809}
+{"timestamp": 1745217979.2397995, "event": "reconciliation", "flavor": "test-l33wwck0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.657354354858398}

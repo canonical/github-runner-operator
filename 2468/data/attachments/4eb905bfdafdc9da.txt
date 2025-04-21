@@ -1,0 +1,136 @@
+06:25:14 INFO Adding model github-pr-ed66e-lxd:test-charm-upgrade-jky0 on cloud localhost
+06:25:14 WARNING unexpected facade AgentLifeFlag received from the controller
+06:25:14 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:25:14 WARNING unexpected facade SecretsDrain received from the controller
+06:25:16 INFO Deploying ch:amd64/github-runner-image-builder-68
+06:25:16 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o (not enough units yet - 0/1)
+06:25:46 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [allocating] waiting: waiting for machine
+06:26:16 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:26:46 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:27:16 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:27:46 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:28:16 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:28:46 INFO Waiting for model:
+  github-runner-image-builder-hbwy1v1o/0 [executing] maintenance: Setting up Builder.
+06:29:22 INFO Deploying local:jammy/github-runner-0
+06:29:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hbwy1v1o/0 [idle] blocked: image integration required.
+06:29:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hbwy1v1o/0 [idle] blocked: image integration required.
+06:30:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hbwy1v1o/0 [idle] blocked: image integration required.
+06:30:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:31:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:31:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:32:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:32:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:33:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:34:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:34:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:35:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:35:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:36:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:36:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:37:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:37:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:38:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:38:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:39:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hbwy1v1o/0 [executing] active: Building image.
+06:39:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-hbwy1v1o/0 [idle] active: 
+06:40:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+06:40:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+06:41:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+06:41:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+06:42:22 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] maintenance: Reconciling runners
+06:42:52 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] active: 
+06:43:56 INFO Waiting for model:
+  test-hbwy1v1o/0 [executing] active: 
+06:44:26 INFO Waiting for model:
+  test-hbwy1v1o/0 [idle] active:
+06:44:57 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-jky0  github-pr-ed66e-lxd  localhost/localhost  3.1.10   unsupported  06:44:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-hbwy1v1o           active      1  github-runner-image-builder  latest/edge   68  no       
+test-hbwy1v1o                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hbwy1v1o/0*  active    idle   0        10.166.109.143         
+test-hbwy1v1o/0*                         active    idle   1        10.166.109.147         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.166.109.143  juju-5763c3-0  ubuntu@22.04      Running
+1        started  10.166.109.147  juju-5763c3-1  ubuntu@22.04      Running
+
+06:44:58 INFO Juju error logs:
+
+machine-0: 06:26:03 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:26:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-hbwy1v1o-0: 06:26:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-hbwy1v1o-0: 06:26:39 ERROR unit.github-runner-image-builder-hbwy1v1o/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:30:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:30:09 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:30:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hbwy1v1o-0: 06:30:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:44:59 INFO Forgetting model main...

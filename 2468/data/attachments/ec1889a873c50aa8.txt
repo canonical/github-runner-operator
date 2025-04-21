@@ -1,0 +1,47 @@
+07:05:18 INFO Waiting for model:
+  test-q82dhjbh/0 [executing] active: 
+07:05:49 INFO Waiting for model:
+  test-q82dhjbh/0 [idle] active:
+07:06:49 INFO Waiting for model:
+  test-q82dhjbh/0 [executing] active: 
+07:07:19 INFO Waiting for model:
+  test-q82dhjbh/0 [idle] active: 
+07:07:22 INFO [TEST SETUP] Exposing port 8080 on test-q82dhjbh-0-n-fac033b516b1
+07:07:22 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4f:91:8b'}]])
+07:07:25 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-q82dhjbh-0-n-fac033b516b1
+07:07:25 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4f:91:8b'}]])
+07:07:26 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q82dhjbh-0-n-fac033b516b1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 nc -z localhost 8080'
+07:07:28 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-q82dhjbh-0-n-fac033b516b1
+07:07:28 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4f:91:8b'}]])
+07:07:29 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q82dhjbh-0-n-fac033b516b1.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 curl http://localhost:8080'
+07:07:31 INFO Wait for condition not met, sleeping 10
+07:08:03 INFO Waiting for model:
+  test-q82dhjbh/0 [executing] maintenance: Reconciling runners
+07:08:32 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-gmcj  github-pr-ed66e-lxd  localhost/localhost  3.6.5    unsupported  07:08:31Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-q82dhjbh           active      1  github-runner-image-builder  latest/edge   68  no       
+test-q82dhjbh                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-q82dhjbh/0*  active    idle   0        10.62.44.237              
+test-q82dhjbh/0*                         active    idle   1        10.62.44.9      8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.62.44.237  juju-77e2fe-0  ubuntu@22.04      Running
+1        started  10.62.44.9    juju-77e2fe-1  ubuntu@22.04      Running
+
+07:08:32 INFO Juju error logs:
+
+machine-0: 06:38:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:38:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-q82dhjbh-0: 06:38:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-q82dhjbh-0: 06:39:31 ERROR unit.github-runner-image-builder-q82dhjbh/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:43:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:43:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-q82dhjbh-0: 06:43:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+07:08:32 INFO Forgetting model main...
