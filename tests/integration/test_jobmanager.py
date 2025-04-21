@@ -193,8 +193,7 @@ async def test_jobmanager(
         "OK"
     )
 
-    # At this point the openstack instance is spawned. We need to be able to access it.
-    # first wait a bit so there is a server. 60 seconds is something reasonable...
+    # At this point the openstack instance will be spawned.
     unit = app.units[0]
 
     async def _prepare_runner() -> bool:
@@ -205,7 +204,7 @@ async def test_jobmanager(
 
     await wait_for(_prepare_runner, check_interval=10, timeout=600)
 
-    # We want to hear from the builder-agent at least one.
+    # We want to hear from the builder-agent the runs in the instance at least once.
     httpserver.expect_oneshot_request(
         **base_builder_agent_health_request | json_idle
     ).respond_with_data("OK")
@@ -216,7 +215,8 @@ async def test_jobmanager(
 
     httpserver.check_assertions()
 
-    # Ok, at this point, we want to tell the builder-agent to execute some random thing.
+    # Ok, at this point, we want to tell the builder-agent to execute some command,
+    # specifically a sleep so we can check that it goes over executing and finished statuses.
     await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
     httpserver.expect_oneshot_request(

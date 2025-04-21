@@ -215,7 +215,7 @@ class OpenstackCloud:
         instance_id: InstanceID,
         server_config: OpenStackServerConfig,
         cloud_init: str,
-        ingress_tcp_ports_to_open: list[int] | None = None,
+        ingress_tcp_ports: list[int] | None = None,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
@@ -224,7 +224,7 @@ class OpenstackCloud:
             instance_id: The instance ID to form the instance name.
             server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
-            ingress_tcp_ports_to_open: Ports to be allowed to connect to the new instance.
+            ingress_tcp_ports: Ports to be allowed to connect to the new instance.
 
         Raises:
             OpenStackError: Unable to create OpenStack server.
@@ -235,7 +235,7 @@ class OpenstackCloud:
         logger.info("Creating openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports_to_open)
+            security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
             # there is a race condition in here in the reactive case.
             # When a key is created in the file system but the instance is
             # not yet in openstack, the reconcile can remove that key.
@@ -608,7 +608,7 @@ class OpenstackCloud:
 
     @staticmethod
     def _ensure_security_group(
-        conn: OpenstackConnection, ingress_tcp_ports_to_open: list[int] | None
+        conn: OpenstackConnection, ingress_tcp_ports: list[int] | None
     ) -> OpenstackSecurityGroup:
         """Ensure runner security group exists.
 
@@ -619,7 +619,7 @@ class OpenstackCloud:
 
         Args:
             conn: The connection object to access OpenStack cloud.
-            ingress_tcp_ports_to_open: Ports to create an ingress rule for.
+            ingress_tcp_ports: Ports to create an ingress rule for.
 
         Returns:
             The security group with the rules for runners.
@@ -634,7 +634,7 @@ class OpenstackCloud:
                 description="For servers managed by the github-runner charm.",
             )
 
-        missing_rules = get_missing_security_rules(security_group, ingress_tcp_ports_to_open)
+        missing_rules = get_missing_security_rules(security_group, ingress_tcp_ports)
 
         for missing_rule_name, missing_rule in missing_rules.items():
             conn.create_security_group_rule(secgroup_name_or_id=security_group.id, **missing_rule)
@@ -648,13 +648,13 @@ class OpenstackCloud:
 
 
 def get_missing_security_rules(
-    security_group: OpenstackSecurityGroup, ingress_tcp_ports_to_open: list[int] | None
+    security_group: OpenstackSecurityGroup, ingress_tcp_ports: list[int] | None
 ) -> dict[str, SecurityRuleDict]:
     """Get security rules to add to the security group.
 
     Args:
         security_group: The security group where rules will be added.
-        ingress_tcp_ports_to_open: Ports to create an ingress rule for.
+        ingress_tcp_ports: Ports to create an ingress rule for.
 
     Returns:
         A dictionary with the rules that should be added to the security group.
@@ -663,8 +663,8 @@ def get_missing_security_rules(
 
     # We do not want to mess with the default security rules, so the deepcopy.
     expected_rules = copy.deepcopy(DEFAULT_SECURITY_RULES)
-    if ingress_tcp_ports_to_open:
-        for tcp_port in ingress_tcp_ports_to_open:
+    if ingress_tcp_ports:
+        for tcp_port in ingress_tcp_ports:
             expected_rules[f"tcp{tcp_port}"] = {
                 "protocol": "tcp",
                 "port_range_min": tcp_port,

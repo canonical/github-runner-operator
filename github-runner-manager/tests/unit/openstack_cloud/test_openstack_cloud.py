@@ -123,9 +123,9 @@ def test_raises_openstack_error(
 )
 def test_missing_security_rules(security_rules, extra_ports, expected_missing_rules):
     """
-    arrange: Mock OpenstackCloud and openstack.connect to raise an Openstack api exception.
-    act: Call a public method which connects to Openstack.
-    assert: OpenStackError is raised.
+    arrange: Create an OpenstackSecurityGroup with a list of rules.
+    act: Call get_missing_security_rules with possibly extra ports to open.
+    assert: If there are missing security rules, they will be returned so they can be added.
     """
     security_group = OpenstackSecurityGroup()
     security_group.security_group_rules = security_rules

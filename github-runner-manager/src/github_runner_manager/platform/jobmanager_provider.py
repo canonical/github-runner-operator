@@ -100,11 +100,15 @@ class JobManagerPlatform(PlatformProvider):
                     label = "undefined"
                     if labels:
                         label = labels[0]
-                    command_to_run = f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} builder-agent"  # noqa  # pylint: disable=line-too-long
+                    command_to_run = (
+                        f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
+                        f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
+                        "builder-agent"
+                    )
                     return (
                         RunnerContext(
                             shell_run_script=command_to_run,
-                            ingress_tcp_ports_to_open=[8080],
+                            ingress_tcp_ports=[8080],
                         ),
                         SelfHostedRunner(
                             busy=False,

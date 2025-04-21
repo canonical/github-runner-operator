@@ -187,8 +187,8 @@ class RunnerContext:
 
     Attributes:
         shell_run_script: Script to run the platform agent.
-        ingress_tcp_ports_to_open: Ports to be opened in the cloud provider.
+        ingress_tcp_ports: Ports to be opened in the cloud provider.
     """
 
     shell_run_script: str
-    ingress_tcp_ports_to_open: list[int] = field(default_factory=lambda: [])
+    ingress_tcp_ports: list[int] = field(default_factory=lambda: [])

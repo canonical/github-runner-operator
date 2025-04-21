@@ -108,7 +108,10 @@ class GitHubRunnerPlatform(PlatformProvider):
         token, runner = self._client.get_runner_registration_jittoken(
             self._path, instance_id, labels
         )
-        command_to_run = f'su - ubuntu -c "cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig { token }"'  # noqa  # pylint: disable=line-too-long
+        command_to_run = (
+            "su - ubuntu -c "
+            f'"cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {token}"'
+        )
         return RunnerContext(shell_run_script=command_to_run), runner
 
     def get_removal_token(self) -> str:
