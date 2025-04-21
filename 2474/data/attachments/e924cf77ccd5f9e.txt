@@ -1,0 +1,152 @@
+18:24:36 WARNING unexpected facade SSHServer received from the controller
+18:24:36 INFO Adding model github-pr-ed66e-lxd:test-reactive-rnw4 on cloud localhost
+18:24:36 WARNING unexpected facade SSHServer received from the controller
+18:24:36 WARNING unexpected facade SSHSession received from the controller
+18:24:36 WARNING unexpected facade SSHTunneler received from the controller
+18:24:37 INFO GitHub token rate limit: Rate(reset=2025-04-21 19:16:16+00:00, remaining=4996, limit=5000)
+18:24:41 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:42 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [allocating] waiting: waiting for machine
+18:25:12 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [allocating] waiting: waiting for machine
+18:25:43 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [allocating] waiting: agent initialising
+18:26:13 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [executing] maintenance: Setting up Builder.
+18:26:44 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [executing] maintenance: Setting up Builder.
+18:27:14 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [executing] maintenance: Setting up Builder.
+18:27:45 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [executing] maintenance: Setting up Builder.
+18:28:15 INFO Waiting for model:
+  github-runner-image-builder-midnwp4j/0 [idle] blocked: image integration required.
+18:28:45 INFO Deploying local:jammy/github-runner-0
+18:28:45 INFO Waiting for model:
+  test-midnwp4j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-midnwp4j/0 [idle] blocked: image integration required.
+18:29:15 INFO Waiting for model:
+  test-midnwp4j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-midnwp4j/0 [idle] blocked: image integration required.
+18:29:45 INFO Waiting for model:
+  test-midnwp4j/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-midnwp4j/0 [idle] blocked: image integration required.
+18:30:15 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:30:46 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:31:16 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:31:46 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:32:16 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:32:47 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:33:17 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:34:18 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:34:48 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:36:49 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:37:19 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:38:19 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:38:49 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:39:20 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:39:50 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:40:21 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:40:51 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:41:21 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:41:52 INFO Waiting for model:
+  test-midnwp4j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-midnwp4j/0 [executing] active: Building image.
+18:42:22 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active: 
+18:42:35 INFO Deploying ch:amd64/jammy/mongodb-212
+18:42:35 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+18:43:06 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+18:43:36 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+18:44:06 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+18:44:37 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:44:37 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:45:07 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:45:39 INFO Waiting for model:
+  test-midnwp4j/0 [executing] active: 
+18:46:09 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active:
+18:46:14 INFO Wait for condition not met, sleeping 10
+18:47:06 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active: 
+18:47:22 INFO Wait for condition not met, sleeping 60
+18:48:53 INFO Waiting for model:
+  test-midnwp4j/0 [idle] active: 
+18:49:09 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745261223.6846473, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.69170093536377}
+{"timestamp": 1745261279.0, "event": "runner_installed", "flavor": "test-midnwp4j", "duration": 90.0}
+{"timestamp": 1745261283.0, "event": "runner_start", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 106.0}
+{"timestamp": 1745261286.0, "event": "runner_stop", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745261332.860814, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.494130849838257}
+
+18:49:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745261223.6846473, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.69170093536377}
+{"timestamp": 1745261279.0, "event": "runner_installed", "flavor": "test-midnwp4j", "duration": 90.0}
+{"timestamp": 1745261283.0, "event": "runner_start", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 106.0}
+{"timestamp": 1745261286.0, "event": "runner_stop", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745261332.860814, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.494130849838257}
+
+18:49:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745261223.6846473, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 36.69170093536377}
+{"timestamp": 1745261279.0, "event": "runner_installed", "flavor": "test-midnwp4j", "duration": 90.0}
+{"timestamp": 1745261283.0, "event": "runner_start", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 106.0}
+{"timestamp": 1745261286.0, "event": "runner_stop", "flavor": "test-midnwp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745261332.860814, "event": "reconciliation", "flavor": "test-midnwp4j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.494130849838257}
+18:49:35 INFO Waiting for model:
+  test-midnwp4j/0 [executing] maintenance: Reconciling runners

@@ -1,0 +1,57 @@
+18:29:36 INFO Creating 1 runners
+18:29:37 INFO Creating openstack server with test-nirwz41x-0-n-d66a64b505d6
+18:29:55 INFO Waiting for runner process to startup: test-nirwz41x-0-n-d66a64b505d6
+18:29:59 WARNING NoValidConnectionsError. Unable to SSH into test-nirwz41x-0-n-d66a64b505d6 with address 10.145.193.133. Error: [Errno None] Unable to connect to port 22 on 10.145.193.133
+18:29:59 WARNING Retrying error in 60 seconds: Failed to SSH to test-nirwz41x-0-n-d66a64b505d6 during creation possible due to setup not completed
+18:30:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:59 INFO Authentication (publickey) successful!
+18:31:00 INFO Runner startup process found to be healthy on test-nirwz41x-0-n-d66a64b505d6
+18:31:00 INFO Waiting for runner process to be running: test-nirwz41x-0-n-d66a64b505d6
+18:31:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:00 INFO Authentication (publickey) successful!
+18:31:01 INFO Runner test-nirwz41x-0-n-d66a64b505d6 found to be healthy
+18:31:01 INFO Runner test-nirwz41x-0-n-d66a64b505d6 created successfully
+18:31:01 INFO Getting runners...
+18:31:02 INFO Getting all openstack servers managed by the charm
+18:31:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:04 INFO Authentication (publickey) successful!
+18:31:04 INFO Found following runners: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:04 INFO Getting runners...
+18:31:05 INFO Getting all openstack servers managed by the charm
+18:31:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:07 INFO Authentication (publickey) successful!
+18:31:08 INFO Found following runners: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:08 INFO Getting runners...
+18:31:09 INFO Getting all openstack servers managed by the charm
+18:31:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:12 INFO Authentication (publickey) successful!
+18:31:12 INFO Found following runners: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:14 INFO Wait for condition not met, sleeping 10
+18:31:25 INFO Getting runners...
+18:31:26 INFO Getting all openstack servers managed by the charm
+18:31:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:28 INFO Authentication (publickey) successful!
+18:31:29 INFO Found following runners: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:29 WARNING Found runner instance on cloud but not registered on GitHub: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:29 INFO Getting runners...
+18:31:30 INFO Getting all openstack servers managed by the charm
+18:31:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:33 INFO Authentication (publickey) successful!
+18:31:33 INFO Found following runners: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:33 WARNING Found runner instance on cloud but not registered on GitHub: {'test-nirwz41x-0-n-d66a64b505d6'}
+18:31:34 INFO Offline github runners to delete: []:
+18:31:35 INFO Getting all openstack servers managed by the charm
+18:31:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:37 INFO Authentication (publickey) successful!
+18:31:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:38 INFO Authentication (publickey) successful!
+18:31:38 INFO [chan 2] Opened sftp connection (server version 3)
+18:31:38 INFO Running runner removal script for test-nirwz41x-0-n-d66a64b505d6
+18:31:38 INFO Deleting openstack server with test-nirwz41x-0-n-d66a64b505d6
+18:31:42 INFO Cleaning up SSH key files
+18:31:42 INFO Found 0 key files, clean up 0 key files
+18:31:42 INFO Cleaning up openstack keypairs
+18:31:43 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+18:31:43 INFO Getting runners...
+18:31:44 INFO Getting all openstack servers managed by the charm
+18:31:46 INFO Found following runners: set()
