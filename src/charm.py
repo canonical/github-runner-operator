@@ -264,6 +264,21 @@ class GithubRunnerCharm(CharmBase):
 
         return True
 
+    def _setup_service(self, state: CharmState) -> None:
+        """Set up services.
+
+        Args:
+            state: The charm state.
+
+        Raise:
+            RunnerManagerApplicationError: Issue with the github-runner-manager service.
+        """
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            raise
+
     @catch_charm_errors
     def _on_install(self, _: InstallEvent) -> None:
         """Handle the installation of charm."""
@@ -310,11 +325,7 @@ class GithubRunnerCharm(CharmBase):
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
-        """Handle the configuration change.
-
-        Raises:
-            RunnerManagerApplicationError: The runner manager application has encountered issues.
-        """
+        """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
 
@@ -341,11 +352,9 @@ class GithubRunnerCharm(CharmBase):
                 runner_scaler,
             )
 
-        try:
-            manager_service.setup(state, self.app.name, self.unit.name)
-        except RunnerManagerApplicationError:
-            logging.exception("Unable to setup the github-runner-manager service")
-            raise
+        # Currently this is an experimental service, therefore placing it after the reconcile to
+        # prevent it interfering the with the current reconcile method.
+        self._setup_service(state)
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:

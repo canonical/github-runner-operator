@@ -28,6 +28,8 @@ GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE = "github-runner-manager.service"
 GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH = (
     SYSTEMD_SERVICE_PATH / GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE
 )
+GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
+JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
@@ -65,7 +67,8 @@ def install_package() -> None:
                 "--prefix",
                 "/usr",
                 "--ignore-installed",
-                f"./{GITHUB_RUNNER_MANAGER_SERVICE_NAME}",
+                GITHUB_RUNNER_MANAGER_PACKAGE_PATH,
+                JOB_MANAGER_PACKAGE_PATH,
             ]
         )
     except SubprocessError as err:
