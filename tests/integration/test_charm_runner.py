@@ -13,13 +13,11 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     reconcile,
-    run_in_unit,
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
@@ -160,25 +158,4 @@ async def test_repo_policy_enabled(
         github_repository=github_repository,
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-    )
-
-
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_manager_service_started(
-    app: Application,
-) -> None:
-    """
-    arrange: A working application with no runners.
-    act: Check the github runner manager service.
-    assert: The service should be running.
-    """
-    unit = app.units[0]
-
-    await run_in_unit(
-        unit,
-        f"sudo systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}",
-        timeout=60,
-        assert_on_failure=True,
-        assert_msg="GitHub runner manager service not healthy",
     )

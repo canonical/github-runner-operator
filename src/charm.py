@@ -328,6 +328,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
+        self._setup_service(state)
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
@@ -351,10 +352,6 @@ class GithubRunnerCharm(CharmBase):
             self._reconcile_openstack_runners(
                 runner_scaler,
             )
-
-        # Currently this is an experimental service, therefore placing it after the reconcile to
-        # prevent it interfering the with the current reconcile method.
-        self._setup_service(state)
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
