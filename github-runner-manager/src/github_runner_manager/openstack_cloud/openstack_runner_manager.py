@@ -156,9 +156,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
 
-        logger.info("Waiting for runner process to be running: %s", instance.instance_id)
-        self._wait_runner_running(instance)
-
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
 
