@@ -19,9 +19,7 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import (
-    HealthState,
-)
+from github_runner_manager.manager.cloud_runner_manager import HealthState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
