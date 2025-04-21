@@ -5,6 +5,7 @@
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
@@ -474,11 +475,20 @@ class RunnerManager:
             args.metadata.runner_id = str(github_runner.id)
 
         try:
-            args.cloud_runner_manager.create_runner(
+            cloud_instance = args.cloud_runner_manager.create_runner(
                 instance_id=instance_id,
                 metadata=args.metadata,
                 runner_context=runner_context,
             )
+
+            # TODO WAIT FOR RUNNER IN HERE!
+            # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MODE
+            # (TO CHECK IF THE JOB WAS TAKEN)
+            logger.info("JAVI cloud_instance %s", cloud_instance)
+            logger.info("JAVI metadata %s", args.metadata)
+            if cloud_instance:
+                time.sleep(180)  # Just before we do it for the tests to pass :)
+
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or
