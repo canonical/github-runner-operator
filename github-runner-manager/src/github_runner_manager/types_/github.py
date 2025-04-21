@@ -68,6 +68,7 @@ class SelfHostedRunner(BaseModel):
         status: The Github runner status.
         instance_id: InstanceID of the runner.
         metadata: Runner metadata.
+        deletable: TODO
     """
 
     busy: bool
@@ -76,6 +77,7 @@ class SelfHostedRunner(BaseModel):
     status: GitHubRunnerStatus
     instance_id: InstanceID
     metadata: RunnerMetadata
+    deletable: bool = False
 
     @classmethod
     def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":

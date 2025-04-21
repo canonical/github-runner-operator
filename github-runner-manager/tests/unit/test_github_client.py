@@ -543,3 +543,21 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
         instance_id=instance_id,
         metadata=RunnerMetadata(platform_name="github", runner_id=18),
     )
+
+
+def test_get_runner_info(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+    raw_runner = {
+        "id": 588,
+        "name": "test-r1601frq-0-n-99e88ff9d9ce",
+        "os": "linux",
+        "status": "offline",
+        "busy": False,
+        "labels": [
+            {"id": 0, "name": "openstack_test", "type": "read-only"},
+            {"id": 0, "name": "linux", "type": "read-only"},
+            {"id": 0, "name": "self-hosted", "type": "read-only"},
+            {"id": 0, "name": "test-89be82ae89d6", "type": "read-only"},
+        ],
+    }
+    assert raw_runner
+    # TODO JAVI PENDING TO WRITE THESE TESTS

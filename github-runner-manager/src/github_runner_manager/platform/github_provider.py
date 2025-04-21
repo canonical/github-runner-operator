@@ -11,13 +11,14 @@ from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
-from github_runner_manager.github_client import GithubClient
+from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
     PlatformProvider,
     PlatformRunnerState,
+    RunnerNotFoundError,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
@@ -57,6 +58,32 @@ class GitHubRunnerPlatform(PlatformProvider):
             path=github_configuration.path,
             github_client=GithubClient(github_configuration.token),
         )
+
+    def get_runner(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Get info on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Raises:
+            RunnerNotFoundError: Work in progress.
+
+        Returns:
+            TODO
+        """
+        try:
+            runner = self._client.get_runner_info(
+                self._path, self._prefix, int(metadata.runner_id)
+            )
+        except GithubRunnerNotFoundError:
+            raise RunnerNotFoundError from GithubRunnerNotFoundError
+
+        return runner
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

@@ -46,7 +46,7 @@ class TokenError(PlatformClientError):
 
 
 class JobNotFoundError(PlatformClientError):
-    """Represents an error when the job could not be found on GitHub."""
+    """Represents an error when the job could not be found on the platform."""
 
 
 class CloudError(Exception):

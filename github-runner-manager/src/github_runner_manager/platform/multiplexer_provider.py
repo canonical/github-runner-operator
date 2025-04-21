@@ -54,6 +54,22 @@ class MultiplexerPlatform(PlatformProvider):
         jobmanager_platform = JobManagerPlatform.build()
         return cls({"github": github_platform, "jobmanager": jobmanager_platform})
 
+    def get_runner(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Get info on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Returns:
+            Platform Runner information.
+        """
+        return self._get_provider(metadata).get_runner(metadata, instance_id)
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
