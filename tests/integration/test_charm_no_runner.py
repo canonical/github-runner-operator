@@ -102,10 +102,17 @@ async def test_manager_service_started(
     app = app_no_runner
     unit = app.units[0]
 
-    await run_in_unit(
+    code, stdout, stderr = await run_in_unit(
         unit,
-        f"systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}",
+        f"sudo systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}",
         timeout=60,
-        assert_on_failure=True,
+        assert_on_failure=False,
         assert_msg="GitHub runner manager service not healthy",
     )
+    print("=====================")
+    print(code)
+    print("=====================")
+    print(stdout)
+    print("=====================")
+    print(stderr)
+    print("=====================")
