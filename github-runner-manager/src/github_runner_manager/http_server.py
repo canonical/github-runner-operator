@@ -6,8 +6,10 @@
 The HTTP server for request to the github-runner-manager.
 """
 
+import dataclasses
 import getpass
 import grp
+import json
 import os
 from dataclasses import dataclass
 from threading import Lock
@@ -38,13 +40,28 @@ def get_health() -> tuple[str, int]:
     return ("", 204)
 
 
+@app.route("/runner/check", methods=["GET"])
+def check_runner() -> tuple[str, int]:
+    """Check the runners.
+
+    Returns:
+        Information on the runners in JSON format.
+    """
+    app_config = app.config[APP_CONFIG_NAME]
+
+    lock = get_lock()
+    with lock:
+        app.logger.info("Checking runners...")
+        runner_scaler = _get_runner_scaler(app)
+        runner_info = runner_scaler.get_runner_info()
+    return (json.dumps(dataclasses.asdict(runner_info)), 200)
+
+
 @app.route("/runner/flush", methods=["POST"])
 def flush_runner() -> tuple[str, int]:
     """Flush the runners.
 
-    The logic of this function will be implemented in a future PR.
-
-    HTTP header args:
+    HTTP path args:
         flush-busy(bool): Whether to flush busy runners.
 
     Returns:
@@ -58,13 +75,9 @@ def flush_runner() -> tuple[str, int]:
         flush_busy = True
 
     lock = get_lock()
-
-    lock_state = "locked" if lock.locked() else "unlocked"
-    app.logger.info("Attempting to acquire the lock: %s", lock_state)
     with lock:
         app.logger.info("Flushing runners...")
-        user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
-        runner_scaler: RunnerScaler = RunnerScaler.build(app_config, user)
+        runner_scaler = _get_runner_scaler(app_config)
         app.logger.info("Flushing busy: %s", flush_busy)
         flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
         num_flushed = runner_scaler.flush(flush_mode)
@@ -82,6 +95,8 @@ def get_lock() -> Lock:
         The lock.
     """
     if _lock is not None:
+        lock_state = "locked" if _lock.locked() else "unlocked"
+        app.logger.info("Attempting to acquire the lock: %s", lock_state)
         return _lock
     raise LockError("Lock not configured")
 
@@ -99,6 +114,19 @@ class FlaskArgs:
     host: str
     port: int
     debug: bool
+
+
+def _get_runner_scaler(app_config: ApplicationConfiguration) -> RunnerScaler:
+    """Get runner scaler.
+
+    Args:
+        app_config: The configuration of github-runner-manager.
+
+    Returns:
+        The RunnerScaler object.
+    """
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+    return RunnerScaler.build(app_config, user)
 
 
 def start_http_server(
