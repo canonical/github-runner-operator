@@ -66,7 +66,9 @@ async def image_builder_config_fixture(
 
 @pytest.fixture(scope="session")
 def httpserver_listen_port() -> int:
-    # Be sure not to use the listening port of the builder-agent.
+    # Do not use the listening port of the builder-agent, as it
+    # will interfere with the tunnel from the runner to the
+    # mock jobmanager.
     return 8000
 
 
@@ -247,6 +249,13 @@ async def _prepare_runner_tunnel_for_builder_agent(
 ) -> bool:
     """Prepare the runner tunner so the builder-agent can access the fake jobmanager.
 
+    This function will change the address of the traffic going to the jobmanager_address
+    and jobmanager_port to the jobmanager_port in the address 127.0.0.1 inside the runner.
+    A reverse tunnel will be then created that will listen in the runner in the
+    address 127.0.0.1 and the port jobmanager_port and will send the traffic to the
+    fake jobmanager http server. This is required as the runner may be unable to send traffic
+    directly to the fake http server running in this test.
+
     This function return False if the tunnel could not be prepared and
     retrying is possible.
     """
@@ -254,8 +263,7 @@ async def _prepare_runner_tunnel_for_builder_agent(
     try:
         server = instance_helper.get_single_runner(unit)
     except AssertionError:
-        # No runner or two runners
-        logger.info("no runner or two runners in unit, return False")
+        logger.info("no runner or two or more runners in unit, return False")
         return False
     network_address_list = server.addresses.values()
     if not network_address_list:
