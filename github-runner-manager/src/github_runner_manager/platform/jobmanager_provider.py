@@ -93,8 +93,7 @@ class JobManagerPlatform(PlatformProvider):
                 response = api_instance.v1_jobs_job_id_token_post(
                     int(metadata.runner_id), jobrequest
                 )
-                if response.token:
-                    token = response.token
+                if token := response.token:
                     jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
                     # For now, use the first label
                     label = "undefined"
