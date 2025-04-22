@@ -1,0 +1,109 @@
+06:24:54 WARNING unexpected facade SSHServer received from the controller
+06:24:54 INFO Adding model github-pr-ed66e-lxd:test-charm-metrics-failure-mazn on cloud localhost
+06:24:55 WARNING unexpected facade SSHServer received from the controller
+06:24:55 WARNING unexpected facade SSHSession received from the controller
+06:24:55 WARNING unexpected facade SSHTunneler received from the controller
+06:24:55 INFO GitHub token rate limit: Rate(reset=2025-04-22 07:10:26+00:00, remaining=4994, limit=5000)
+06:25:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:11 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [allocating] waiting: waiting for machine
+06:25:42 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [allocating] waiting: waiting for machine
+06:26:12 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [allocating] waiting: agent initialising
+06:26:43 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [executing] maintenance: Setting up Builder.
+06:27:13 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [executing] maintenance: Setting up Builder.
+06:27:44 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [executing] maintenance: Setting up Builder.
+06:28:14 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [executing] maintenance: Setting up Builder.
+06:28:44 INFO Waiting for model:
+  github-runner-image-builder-jgah9p6c/0 [executing] maintenance: Setting up Builder.
+06:29:29 INFO Deploying local:jammy/github-runner-0
+06:29:29 INFO Waiting for model:
+  test-jgah9p6c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jgah9p6c/0 [idle] blocked: image integration required.
+06:29:59 INFO Waiting for model:
+  test-jgah9p6c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jgah9p6c/0 [idle] blocked: image integration required.
+06:30:30 INFO Waiting for model:
+  test-jgah9p6c/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-jgah9p6c/0 [idle] blocked: image integration required.
+06:31:00 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:31:30 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:32:00 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:32:31 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:33:01 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:33:31 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:34:01 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:34:32 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:35:02 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:35:32 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:36:03 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:36:33 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:37:04 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:37:34 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:38:04 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:38:34 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:39:05 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jgah9p6c/0 [executing] active: Building image.
+06:39:35 INFO Waiting for model:
+  test-jgah9p6c/0 [executing] maintenance: Reconciling runners
+06:40:13 INFO Waiting for model:
+  test-jgah9p6c/0 [executing] active:
+06:44:27 INFO Waiting for model:
+  test-jgah9p6c/0 [executing] active: 
+06:44:57 INFO Waiting for model:
+  test-jgah9p6c/0 [idle] active: 
+06:45:04 INFO [TEST SETUP] Exposing port 8080 on test-jgah9p6c-0-n-00d7ee94c493
+06:45:04 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.9', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:82:f6:28'}]])
+06:45:08 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-jgah9p6c-0-n-00d7ee94c493
+06:45:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.9', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:82:f6:28'}]])
+06:45:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jgah9p6c-0-n-00d7ee94c493.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.9 nc -z localhost 8080'
+06:45:11 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-jgah9p6c-0-n-00d7ee94c493
+06:45:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.9', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:82:f6:28'}]])
+06:45:12 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-jgah9p6c-0-n-00d7ee94c493.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.9 curl http://localhost:8080'
+06:45:16 INFO Wait for condition not met, sleeping 10
+06:45:27 INFO Wait for condition not met, sleeping 60
+06:46:50 INFO Waiting for model:
+  test-jgah9p6c/0 [executing] active: 
+06:47:19 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745304221.0, "event": "runner_installed", "flavor": "test-jgah9p6c", "duration": 84.0}
+{"timestamp": 1745304320.0, "event": "runner_start", "flavor": "test-jgah9p6c", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 99.0, "queue_duration": 2.0}
+{"timestamp": 1745304320.0, "event": "runner_stop", "flavor": "test-jgah9p6c", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1745304410.0123994, "event": "reconciliation", "flavor": "test-jgah9p6c", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.76551103591919}
+{"timestamp": 1745304423.1690526, "event": "reconciliation", "flavor": "test-jgah9p6c", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.841682195663452}

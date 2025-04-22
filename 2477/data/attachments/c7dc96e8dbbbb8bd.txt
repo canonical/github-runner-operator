@@ -1,0 +1,60 @@
+06:31:24 INFO Creating 2 runners
+06:32:46 INFO Getting runners...
+06:32:47 INFO Getting all openstack servers managed by the charm
+06:32:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:49 INFO Authentication (publickey) successful!
+06:32:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:50 INFO Authentication (publickey) successful!
+06:32:50 INFO Found following runners: {'test-aai7vvf7-0-n-1054dec53685', 'test-aai7vvf7-0-n-655598f15e20'}
+06:32:50 INFO Getting runners...
+06:32:52 INFO Getting all openstack servers managed by the charm
+06:32:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:54 INFO Authentication (publickey) successful!
+06:32:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:54 INFO Authentication (publickey) successful!
+06:32:55 INFO Found following runners: {'test-aai7vvf7-0-n-1054dec53685', 'test-aai7vvf7-0-n-655598f15e20'}
+06:32:55 INFO Flushing idle runners...
+06:32:55 INFO Getting all openstack servers managed by the charm
+06:32:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:57 INFO Authentication (publickey) successful!
+06:32:58 INFO Attempting to kill runner process on test-aai7vvf7-0-n-1054dec53685 if not busy
+06:32:58 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:32:58 INFO Kill process command output, ok: True code 0, out: 1932
+, err: 
+06:32:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:32:58 INFO Authentication (publickey) successful!
+06:32:58 INFO Attempting to kill runner process on test-aai7vvf7-0-n-655598f15e20 if not busy
+06:32:58 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:32:58 INFO Kill process command output, ok: True code 0, out: 1928
+, err: 
+06:32:58 INFO Getting all openstack servers managed by the charm
+06:33:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:00 INFO Authentication (publickey) successful!
+06:33:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:01 INFO Authentication (publickey) successful!
+06:33:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:01 INFO Authentication (publickey) successful!
+06:33:02 INFO [chan 2] Opened sftp connection (server version 3)
+06:33:02 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.24, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:33:02 WARNING Failed to pull metrics for test-aai7vvf7-0-n-1054dec53685: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:33:02 INFO Running runner removal script for test-aai7vvf7-0-n-1054dec53685
+06:33:03 INFO Deleting openstack server with test-aai7vvf7-0-n-1054dec53685
+06:33:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:05 INFO Authentication (publickey) successful!
+06:33:05 INFO [chan 2] Opened sftp connection (server version 3)
+06:33:05 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.88, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:33:05 WARNING Failed to pull metrics for test-aai7vvf7-0-n-655598f15e20: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:33:05 INFO Running runner removal script for test-aai7vvf7-0-n-655598f15e20
+06:33:07 INFO Deleting openstack server with test-aai7vvf7-0-n-655598f15e20
+06:33:11 INFO Cleaning up SSH key files
+06:33:11 INFO Found 0 key files, clean up 0 key files
+06:33:11 INFO Cleaning up openstack keypairs
+06:33:11 INFO Getting runners...
+06:33:12 INFO Getting all openstack servers managed by the charm
+06:33:14 INFO Found following runners: {'test-aai7vvf7-0-n-655598f15e20'}
+06:33:14 WARNING Found runner instance on cloud but not registered on GitHub: {'test-aai7vvf7-0-n-655598f15e20'}
+06:33:14 INFO Getting runners...
+06:33:15 INFO Getting all openstack servers managed by the charm
+06:33:17 INFO Found following runners: set()

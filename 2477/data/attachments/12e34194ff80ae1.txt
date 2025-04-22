@@ -1,0 +1,145 @@
+06:25:11 INFO Adding model github-pr-ed66e-lxd:test-charm-scheduled-events-c0xz on cloud localhost
+06:25:11 WARNING unexpected facade AgentLifeFlag received from the controller
+06:25:11 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:25:11 WARNING unexpected facade SecretsDrain received from the controller
+06:25:14 INFO Deploying ch:amd64/github-runner-image-builder-68
+06:25:14 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl (not enough units yet - 0/1)
+06:25:44 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [allocating] waiting: waiting for machine
+06:26:14 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [executing] maintenance: Setting up Builder.
+06:26:44 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [executing] maintenance: Setting up Builder.
+06:27:14 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [executing] maintenance: Setting up Builder.
+06:27:44 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [executing] maintenance: Setting up Builder.
+06:28:14 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [executing] maintenance: Setting up Builder.
+06:28:54 INFO Deploying local:jammy/github-runner-0
+06:28:54 INFO Waiting for model:
+  test-oanrroyl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oanrroyl/0 [idle] blocked: image integration required.
+06:29:24 INFO Waiting for model:
+  test-oanrroyl/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oanrroyl/0 [idle] blocked: image integration required.
+06:29:54 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-oanrroyl/0 [executing] blocked: image integration required.
+06:30:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:30:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:31:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:31:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:32:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:32:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:33:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:33:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:34:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:34:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:35:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:35:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:36:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:37:55 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:38:26 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:38:56 INFO Waiting for model:
+  test-oanrroyl/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oanrroyl/0 [executing] active: Building image.
+06:39:26 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-oanrroyl/0 [idle] active: 
+06:39:56 INFO Waiting for model:
+  test-oanrroyl/0 [idle] active: 
+06:40:03 INFO Waiting for model:
+  test-oanrroyl/0 [idle] active: 
+06:40:33 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:41:03 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:41:33 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:42:04 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:42:34 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:43:18 INFO Waiting for model:
+  test-oanrroyl/0 [executing] active:
+06:43:37 INFO Wait for condition not met, sleeping 3
+06:43:40 INFO Wait for 10 minutes
+06:53:40 INFO Waiting for model:
+  github-runner-image-builder-oanrroyl/0 [idle] active: 
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:54:10 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:54:41 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:55:11 INFO Waiting for model:
+  test-oanrroyl/0 [executing] maintenance: Reconciling runners
+06:55:36 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-c0xz  github-pr-ed66e-lxd  localhost/localhost  3.1.10   unsupported  06:55:36Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-oanrroyl           active      1  github-runner-image-builder  latest/edge   68  no       
+test-oanrroyl                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-oanrroyl/0*  active    idle   0        10.26.20.160           
+test-oanrroyl/0*                         active    idle   1        10.26.20.39            
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.26.20.160  juju-a36cd8-0  ubuntu@22.04      Running
+1        started  10.26.20.39   juju-a36cd8-1  ubuntu@22.04      Running
+
+06:55:36 INFO Juju error logs:
+
+machine-0: 06:25:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:55 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-oanrroyl-0: 06:25:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-oanrroyl-0: 06:26:28 ERROR unit.github-runner-image-builder-oanrroyl/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:29:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:35 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-oanrroyl-0: 06:29:35 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:55:37 INFO Forgetting model main...
