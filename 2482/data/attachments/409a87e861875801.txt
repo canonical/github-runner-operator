@@ -1,0 +1,192 @@
+18:26:50 INFO GitHub token rate limit: Rate(reset=2025-04-22 18:48:25+00:00, remaining=4956, limit=5000)
+18:26:53 INFO Creating 1 runners
+18:26:53 INFO Creating openstack server with test-a1c9lgjk-0-n-03ae529e2068
+18:27:06 INFO Waiting for runner process to startup: test-a1c9lgjk-0-n-03ae529e2068
+18:27:18 WARNING NoValidConnectionsError. Unable to SSH into test-a1c9lgjk-0-n-03ae529e2068 with address 10.145.193.217. Error: [Errno None] Unable to connect to port 22 on 10.145.193.217
+18:27:18 WARNING Retrying error in 60 seconds: Failed to SSH to test-a1c9lgjk-0-n-03ae529e2068 during creation possible due to setup not completed
+18:28:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:18 INFO Authentication (publickey) successful!
+18:28:19 INFO Runner startup process found to be healthy on test-a1c9lgjk-0-n-03ae529e2068
+18:28:19 INFO Waiting for runner process to be running: test-a1c9lgjk-0-n-03ae529e2068
+18:28:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:19 INFO Authentication (publickey) successful!
+18:28:19 INFO Runner test-a1c9lgjk-0-n-03ae529e2068 found to be healthy
+18:28:19 INFO Runner test-a1c9lgjk-0-n-03ae529e2068 created successfully
+18:28:19 INFO Getting runners...
+18:28:21 INFO Getting all openstack servers managed by the charm
+18:28:22 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:23 INFO Authentication (publickey) successful!
+18:28:23 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:23 INFO Getting runners...
+18:28:24 INFO Getting all openstack servers managed by the charm
+18:28:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:25 INFO Authentication (publickey) successful!
+18:28:26 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:26 INFO Getting runners...
+18:28:27 INFO Getting all openstack servers managed by the charm
+18:28:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:28 INFO Authentication (publickey) successful!
+18:28:29 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:31 INFO Wait for condition not met, sleeping 10
+18:28:42 INFO Getting runners...
+18:28:43 INFO Getting all openstack servers managed by the charm
+18:28:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:44 INFO Authentication (publickey) successful!
+18:28:45 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:45 INFO Getting runners...
+18:28:46 INFO Getting all openstack servers managed by the charm
+18:28:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:47 INFO Authentication (publickey) successful!
+18:28:48 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:49 INFO Offline github runners to delete: []:
+18:28:49 INFO Getting all openstack servers managed by the charm
+18:28:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:51 INFO Authentication (publickey) successful!
+18:28:53 INFO Cleaning up SSH key files
+18:28:53 INFO Found 1 key files, clean up 0 key files
+18:28:53 INFO Cleaning up openstack keypairs
+18:28:53 INFO Getting runners...
+18:28:54 INFO Getting all openstack servers managed by the charm
+18:28:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:56 INFO Authentication (publickey) successful!
+18:28:56 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:28:56 INFO Flushing idle runners...
+18:28:57 INFO Getting all openstack servers managed by the charm
+18:28:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:58 INFO Authentication (publickey) successful!
+18:28:58 INFO Attempting to kill runner process on test-a1c9lgjk-0-n-03ae529e2068 if not busy
+18:28:58 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:28:58 INFO Kill process command output, ok: False code 1, out: 2331
+, err: 
+18:28:58 INFO Getting all openstack servers managed by the charm
+18:28:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:59 INFO Authentication (publickey) successful!
+18:29:01 INFO Cleaning up SSH key files
+18:29:01 INFO Found 1 key files, clean up 0 key files
+18:29:01 INFO Cleaning up openstack keypairs
+18:29:02 INFO Getting runners...
+18:29:03 INFO Getting all openstack servers managed by the charm
+18:29:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:04 INFO Authentication (publickey) successful!
+18:29:05 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:29:05 INFO Flushing idle and busy runners...
+18:29:05 INFO Getting all openstack servers managed by the charm
+18:29:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:07 INFO Authentication (publickey) successful!
+18:29:07 INFO Attempting to kill all runner process on test-a1c9lgjk-0-n-03ae529e2068
+18:29:07 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:29:07 INFO Kill process command output, ok: True code 0, out: 1933
+2331
+, err: 
+18:29:07 INFO Getting all openstack servers managed by the charm
+18:29:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:08 INFO Authentication (publickey) successful!
+18:29:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:29:09 INFO Authentication (publickey) successful!
+18:29:09 INFO [chan 2] Opened sftp connection (server version 3)
+18:29:09 INFO Running runner removal script for test-a1c9lgjk-0-n-03ae529e2068
+18:29:11 WARNING Unable to run removal script on instance test-a1c9lgjk-0-n-03ae529e2068, exit code: 1, stdout: 
+# Runner removal
+
+, stderr: ldd: ./bin/libcoreclr.so: No such file or directory
+ldd: ./bin/libSystem.Security.Cryptography.Native.OpenSsl.so: No such file or directory
+ldd: ./bin/libSystem.IO.Compression.Native.so: No such file or directory
+Failed: Removing runner from the server
+Runner test-a1c9lgjk-0-n-03ae529e2068 is currently running a job and cannot be deleted.
+
+18:29:11 WARNING Unable to run github runner removal script for test-a1c9lgjk-0-n-03ae529e2068
+Stack (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/bin/pytest", line 8, in <module>
+    sys.exit(console_main())
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 330, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 283, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 337, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/main.py", line 362, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 113, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 132, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 241, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 341, in from_call
+    result: TResult | None = func()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 242, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/runner.py", line 174, in pytest_runtest_call
+    item.runtest()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/python.py", line 1627, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_hooks.py", line 513, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pluggy/_callers.py", line 103, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/_pytest/python.py", line 159, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/pytest_asyncio/plugin.py", line 529, in inner
+    _loop.run_until_complete(task)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/nest_asyncio.py", line 92, in run_until_complete
+    self._run_once()
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/nest_asyncio.py", line 133, in _run_once
+    handle._run()
+  File "/usr/lib/python3.10/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/usr/lib/python3.10/asyncio/tasks.py", line 232, in __step
+    result = coro.send(None)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/tests/integration/test_runner_manager_openstack.py", line 410, in test_runner_flush_busy_lifecycle
+    runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 244, in flush_runners
+    stats = self._cloud.flush_runners(remove_token, busy)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 266, in flush_runners
+    return self.cleanup(remove_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 290, in cleanup
+    pulled_metrics = self._delete_runner(runner, remove_token)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 324, in _delete_runner
+    logger.warning(
+18:29:11 INFO Deleting openstack server with test-a1c9lgjk-0-n-03ae529e2068
+18:29:13 INFO Cleaning up SSH key files
+18:29:13 INFO Found 0 key files, clean up 0 key files
+18:29:13 INFO Cleaning up openstack keypairs
+18:29:23 INFO Flushing idle and busy runners...
+18:29:24 INFO Getting all openstack servers managed by the charm
+18:29:24 INFO Getting all openstack servers managed by the charm
+18:29:26 INFO Cleaning up SSH key files
+18:29:26 INFO Found 0 key files, clean up 0 key files
+18:29:26 INFO Cleaning up openstack keypairs
+18:29:26 INFO Getting runners...
+18:29:27 INFO Getting all openstack servers managed by the charm
+18:29:28 INFO Found following runners: {'test-a1c9lgjk-0-n-03ae529e2068'}
+18:29:28 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a1c9lgjk-0-n-03ae529e2068'}
