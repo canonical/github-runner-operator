@@ -35,15 +35,24 @@ logger = logging.getLogger(__name__)
 @pytest.mark.parametrize(
     "public_method, args",
     [
-        pytest.param("launch_instance", (FAKE_ARG,) * 4, id="launch_instance"),
-        pytest.param("get_instance", (FAKE_ARG,), id="get_instance"),
-        pytest.param("delete_instance", (FAKE_ARG,), id="delete_instance"),
-        pytest.param("get_instances", (), id="get_instances"),
-        pytest.param("cleanup", (), id="cleanup"),
+        pytest.param(
+            "launch_instance",
+            {
+                "metadata": FAKE_ARG,
+                "instance_id": FAKE_ARG,
+                "server_config": FAKE_ARG,
+                "cloud_init": FAKE_ARG,
+            },
+            id="launch_instance",
+        ),
+        pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
+        pytest.param("delete_instance", {"instance_id": FAKE_ARG}, id="delete_instance"),
+        pytest.param("get_instances", {}, id="get_instances"),
+        pytest.param("cleanup", {}, id="cleanup"),
     ],
 )
 def test_raises_openstack_error(
-    public_method: str, args: tuple[Any, ...], monkeypatch: pytest.MonkeyPatch
+    public_method: str, args: dict[Any, Any], monkeypatch: pytest.MonkeyPatch
 ):
     """
     arrange: Mock OpenstackCloud and openstack.connect to raise an Openstack api exception.
@@ -75,7 +84,7 @@ def test_raises_openstack_error(
             openstack_connect_mock,
         )
         with pytest.raises(OpenStackError) as innerexc:
-            getattr(cloud, public_method)(*args)
+            getattr(cloud, public_method)(**args)
         assert "Failed OpenStack API call" in str(innerexc.value)
 
 

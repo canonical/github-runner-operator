@@ -209,8 +209,10 @@ class OpenstackCloud:
 
     @_catch_openstack_errors
     # Pending to review the list of arguments
-    def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    def launch_instance(
         self,
+        *,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
         server_config: OpenStackServerConfig,
@@ -236,9 +238,6 @@ class OpenstackCloud:
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
-            # there is a race condition in here in the reactive case.
-            # When a key is created in the file system but the instance is
-            # not yet in openstack, the reconcile can remove that key.
             keypair = self._setup_keypair(conn, instance_id)
             meta = metadata.as_dict()
             meta["prefix"] = self.prefix
