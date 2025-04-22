@@ -17,7 +17,7 @@ from threading import Lock
 from flask import Flask, request
 
 from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
-from github_runner_manager.errors import LockError
+from github_runner_manager.errors import CloudError, LockError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 
@@ -52,8 +52,13 @@ def check_runner() -> tuple[str, int]:
     lock = get_lock()
     with lock:
         app.logger.info("Checking runners...")
-        runner_scaler = _get_runner_scaler(app)
-        runner_info = runner_scaler.get_runner_info()
+        runner_scaler = _get_runner_scaler(app_config)
+        try:
+            runner_info = runner_scaler.get_runner_info()
+        except CloudError as err:
+            app.logger.exception("Cloud error encountered while getting runner info")
+            return (str(err), 500)
+
     return (json.dumps(dataclasses.asdict(runner_info)), 200)
 
 
@@ -80,7 +85,11 @@ def flush_runner() -> tuple[str, int]:
         runner_scaler = _get_runner_scaler(app_config)
         app.logger.info("Flushing busy: %s", flush_busy)
         flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
-        num_flushed = runner_scaler.flush(flush_mode)
+        try:
+            num_flushed = runner_scaler.flush(flush_mode)
+        except CloudError as err:
+            app.logger.exception("Cloud error encountered while flushing runners")
+            return (str(err), 500)
         app.logger.info("Flushed %s runners", num_flushed)
     return ("", 204)
 
