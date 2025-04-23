@@ -113,6 +113,17 @@ jobs:
   #   runs-on: [self-hosted, X64, staging]
   #   steps:
   #     - run: echo hello
+  self-host-large:
+    name: self-hosted large
+    runs-on: [self-hosted, X64, large, jammy]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    steps:
+      - run: echo hello
+      - name: tmate ssh
+        uses: canonical/action-tmate@main
   self-host:
     name: self-hosted edge
     runs-on: [self-hosted, X64, edge, jammy]
