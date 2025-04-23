@@ -1,0 +1,144 @@
+06:53:13 WARNING unexpected facade SSHServer received from the controller
+06:53:13 INFO Adding model github-pr-ed66e-lxd:test-reactive-u463 on cloud localhost
+06:53:13 WARNING unexpected facade SSHServer received from the controller
+06:53:13 WARNING unexpected facade SSHSession received from the controller
+06:53:13 WARNING unexpected facade SSHTunneler received from the controller
+06:53:14 INFO GitHub token rate limit: Rate(reset=2025-04-23 07:12:51+00:00, remaining=4722, limit=5000)
+06:53:18 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:53:18 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [allocating] waiting: waiting for machine
+06:53:49 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [allocating] waiting: waiting for machine
+06:54:19 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [allocating] waiting: agent initialising
+06:54:49 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [executing] maintenance: Setting up Builder.
+06:55:20 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [executing] maintenance: Setting up Builder.
+06:55:50 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [executing] maintenance: Setting up Builder.
+06:56:21 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [executing] maintenance: Setting up Builder.
+06:56:51 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [executing] maintenance: Setting up Builder.
+06:57:21 INFO Waiting for model:
+  github-runner-image-builder-kcjp3xki/0 [idle] blocked: image integration required.
+06:57:46 INFO Deploying local:jammy/github-runner-0
+06:57:46 INFO Waiting for model:
+  test-kcjp3xki/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kcjp3xki/0 [idle] blocked: image integration required.
+06:58:16 INFO Waiting for model:
+  test-kcjp3xki/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kcjp3xki/0 [idle] blocked: image integration required.
+06:58:46 INFO Waiting for model:
+  test-kcjp3xki/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kcjp3xki/0 [executing] blocked: image integration required.
+06:59:17 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+06:59:47 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:00:17 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:00:47 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:01:18 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:01:48 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:02:18 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:02:49 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:03:19 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:03:49 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:04:19 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:04:50 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:05:20 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:05:50 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:06:20 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:06:50 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:07:21 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:07:51 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:08:21 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:08:52 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kcjp3xki/0 [executing] active: Building image.
+07:09:22 INFO Waiting for model:
+  test-kcjp3xki/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-kcjp3xki/0 [idle] active: 
+07:09:48 INFO Deploying ch:amd64/jammy/mongodb-212
+07:09:49 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:10:19 INFO Waiting for model:
+  mongodb/0 [allocating] waiting: waiting for machine
+07:10:50 INFO Waiting for model:
+  mongodb/0 [executing] maintenance: installing MongoDB
+07:11:20 INFO Waiting for model:
+  mongodb/0 [executing] active: 
+07:11:42 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:11:42 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:12:13 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] active: 
+  mongodb/0 [idle] active: 
+07:12:40 INFO Waiting for model:
+  test-kcjp3xki/0 [executing] active: 
+07:13:10 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] active:
+07:13:14 INFO Wait for condition not met, sleeping 10
+07:13:58 INFO Waiting for model:
+  test-kcjp3xki/0 [executing] active: 
+07:14:15 INFO Wait for condition not met, sleeping 60
+07:15:15 INFO Wait for condition not met, sleeping 60
+07:16:39 INFO Waiting for model:
+  test-kcjp3xki/0 [idle] active: 
+07:16:55 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745392437.6567607, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 30.597566604614258}
+{"timestamp": 1745392508.0, "event": "runner_installed", "flavor": "test-kcjp3xki", "duration": 99.0}
+{"timestamp": 1745392512.0, "event": "runner_start", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 115.0}
+{"timestamp": 1745392515.0, "event": "runner_stop", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745392598.894272, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.941385746002197}
+
+07:16:56 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745392437.6567607, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 30.597566604614258}
+{"timestamp": 1745392508.0, "event": "runner_installed", "flavor": "test-kcjp3xki", "duration": 99.0}
+{"timestamp": 1745392512.0, "event": "runner_start", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 115.0}
+{"timestamp": 1745392515.0, "event": "runner_stop", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745392598.894272, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.941385746002197}
+
+07:16:57 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745392437.6567607, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 30.597566604614258}
+{"timestamp": 1745392508.0, "event": "runner_installed", "flavor": "test-kcjp3xki", "duration": 99.0}
+{"timestamp": 1745392512.0, "event": "runner_start", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 115.0}
+{"timestamp": 1745392515.0, "event": "runner_stop", "flavor": "test-kcjp3xki", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745392598.894272, "event": "reconciliation", "flavor": "test-kcjp3xki", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.941385746002197}
+07:17:16 INFO Waiting for model:
+  test-kcjp3xki/0 [executing] maintenance: Reconciling runners
