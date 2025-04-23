@@ -6,44 +6,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  reactive-focal-large-long-label:
-    name: reactive focal large with long label
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-large]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  reactive-focal-large:
-    name: reactive focal large
-    runs-on: [self-hosted, reactive, large, focal, amd64]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  reactive-focal-medium-long-label:
-    name: reactive focal medium with long label
-    runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-medium]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-  reactive-focal-medium:
-    name: reactive focal medium
-    runs-on: [self-hosted, reactive, medium, focal, amd64]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      
-
+  # reactive-focal-large-long-label:
+  #   name: reactive focal large with long label
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-large]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # reactive-focal-large:
+  #   name: reactive focal large
+  #   runs-on: [self-hosted, reactive, large, focal, amd64]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # reactive-focal-medium-long-label:
+  #   name: reactive focal medium with long label
+  #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-medium]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  # reactive-focal-medium:
+  #   name: reactive focal medium
+  #   runs-on: [self-hosted, reactive, medium, focal, amd64]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
   # tiobe-noble:
   #   name: tiobe noble 
   #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-noble-tiobe]
@@ -115,15 +113,15 @@ jobs:
   #   runs-on: [self-hosted, X64, staging]
   #   steps:
   #     - run: echo hello
-  # self-host:
-  #   name: self-hosted edge
-  #   runs-on: [self-hosted, X64, edge, jammy]
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       index: [0, 1, 2]
-  #   steps:
-      # - run: echo hello
+  self-host:
+    name: self-hosted edge
+    runs-on: [self-hosted, X64, edge, jammy]
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    steps:
+      - run: echo hello
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
     #   - run: docker pull jujusolutions/charm-base:ubuntu-20.04
