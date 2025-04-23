@@ -5,19 +5,24 @@ import secrets
 from contextlib import closing
 from datetime import datetime, timezone
 from random import randint
-from unittest.mock import MagicMock
+from unittest.mock import ANY, MagicMock
 
 import pytest
 from kombu import Connection, Message
 from kombu.exceptions import KombuError
+from pydantic import HttpUrl
 
+from github_runner_manager.manager.models import RunnerMetadata
+from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.reactive import consumer
 from github_runner_manager.reactive.consumer import JobError, Labels, get_queue_size
 from github_runner_manager.reactive.types_ import QueueConfig
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 IN_MEMORY_URI = "memory://"
-FAKE_JOB_URL = "https://api.github.com/repos/fakeuser/gh-runner-test/actions/runs/8200803099"
+FAKE_JOB_ID = "8200803099"
+FAKE_JOB_URL = f"https://api.github.com/repos/fakeuser/gh-runner-test/actions/runs/{FAKE_JOB_ID}"
 
 
 @pytest.fixture(name="queue_config")
@@ -57,20 +62,103 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
     _put_in_queue(job_details.json(), queue_config.queue_name)
 
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
-    github_client_mock = MagicMock(spec=consumer.GithubClient)
-    github_client_mock.get_job_info.side_effect = [
-        _create_job_info(JobStatus.QUEUED),
-        _create_job_info(JobStatus.IN_PROGRESS),
-    ]
+    github_platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    github_platform_mock.check_job_been_picked_up.side_effect = [False, True]
 
     consumer.consume(
         queue_config=queue_config,
         runner_manager=runner_manager_mock,
-        github_client=github_client_mock,
+        platform_provider=github_platform_mock,
         supported_labels=supported_labels,
     )
 
-    runner_manager_mock.create_runners.assert_called_once_with(1, reactive=True)
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
+
+    _assert_queue_is_empty(queue_config.queue_name)
+
+
+def test_consume_job_manager(queue_config: QueueConfig):
+    """
+    arrange: New Job created in the queue with a format matching the jobmanager.
+    act: Call consume.
+    assert: A runner in created with the correct metadata
+    """
+    labels = {"label1"}
+
+    job_id = "5"
+    job_url = f"https://jobmanager.example.com/subpath/v1/jobs/{job_id}"
+
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=job_url,
+    )
+    _put_in_queue(job_details.json(), queue_config.queue_name)
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    platform_mock = MagicMock(spec=PlatformProvider)
+    platform_mock.check_job_been_picked_up.side_effect = [False, True]
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_mock,
+        supported_labels=labels,
+    )
+
+    expected_metadata = RunnerMetadata(
+        platform_name="jobmanager", url="https://jobmanager.example.com/subpath/", runner_id=job_id
+    )
+    runner_manager_mock.create_runners.assert_called_once_with(
+        1, metadata=expected_metadata, reactive=True
+    )
+
+    _assert_queue_is_empty(queue_config.queue_name)
+
+
+def test_consume_after_in_progress(queue_config: QueueConfig):
+    """
+    arrange: Two jobs, the first one in progress and the second one queued.
+    act: Call consume.
+    assert: The first one is acked and the second one is run. That is, the queue
+            is empty at the end.
+    """
+    labels = {"label", "label"}
+    job_details_in_progress = consumer.JobDetails(
+        labels=labels,
+        url=FAKE_JOB_URL,
+    )
+
+    other_job_url = FAKE_JOB_URL + "1"
+    job_details_queued = consumer.JobDetails(
+        labels=labels,
+        url=other_job_url,
+    )
+    _put_in_queue(job_details_in_progress.json(), queue_config.queue_name)
+    _put_in_queue(job_details_queued.json(), queue_config.queue_name)
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    platform_provider_mock = MagicMock(spec=PlatformProvider)
+
+    job_picked_up_for_queued_iter = iter([False, True])
+
+    def _check_job_been_picked_up(metadata: RunnerMetadata, job_url: HttpUrl):
+        """Check if a job has been picked up."""
+        # For the in progress job, return in progress
+        if job_url == FAKE_JOB_URL:
+            return True
+        # For the queued job, first return it as queued and then as in progress
+        return next(job_picked_up_for_queued_iter)
+
+    platform_provider_mock.check_job_been_picked_up.side_effect = _check_job_been_picked_up
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_provider_mock,
+        supported_labels=labels,
+    )
+
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
 
@@ -89,13 +177,13 @@ def test_consume_reject_if_job_gets_not_picked_up(queue_config: QueueConfig):
     _put_in_queue(job_details.json(), queue_config.queue_name)
 
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
-    github_client_mock = MagicMock(spec=consumer.GithubClient)
-    github_client_mock.get_job_info.return_value = _create_job_info(JobStatus.QUEUED)
+    github_platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    github_platform_mock.check_job_been_picked_up.return_value = False
 
     consumer.consume(
         queue_config=queue_config,
         runner_manager=runner_manager_mock,
-        github_client=github_client_mock,
+        platform_provider=github_platform_mock,
         supported_labels=labels,
     )
 
@@ -118,13 +206,13 @@ def test_consume_reject_if_spawning_failed(queue_config: QueueConfig):
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
     runner_manager_mock.create_runners.return_value = tuple()
 
-    github_client_mock = MagicMock(spec=consumer.GithubClient)
-    github_client_mock.get_job_info.return_value = _create_job_info(JobStatus.QUEUED)
+    github_platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    github_platform_mock.check_job_been_picked_up.side_effect = [False]
 
     consumer.consume(
         queue_config=queue_config,
         runner_manager=runner_manager_mock,
-        github_client=github_client_mock,
+        platform_provider=github_platform_mock,
         supported_labels=labels,
     )
 
@@ -141,8 +229,8 @@ def test_consume_raises_queue_error(monkeypatch: pytest.MonkeyPatch, queue_confi
     with pytest.raises(consumer.QueueError) as exc_info:
         consumer.consume(
             queue_config=queue_config,
-            runner_manager=MagicMock(spec=consumer.RunnerManager),
-            github_client=MagicMock(spec=consumer.GithubClient),
+            runner_manager=MagicMock(spec=GitHubRunnerPlatform),
+            platform_provider=MagicMock(spec=GitHubRunnerPlatform),
             supported_labels={"label1", "label2"},
         )
     assert "Error when communicating with the queue" in str(exc_info.value)
@@ -208,14 +296,14 @@ def test_job_details_validation_error(job_str: str, queue_config: QueueConfig):
     _put_in_queue(job_str, queue_name)
 
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
-    github_client_mock = MagicMock(spec=consumer.GithubClient)
-    github_client_mock.get_job_info.return_value = _create_job_info(JobStatus.IN_PROGRESS)
+    github_platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    github_platform_mock.check_job_been_picked_up.return_value = True
 
     with pytest.raises(JobError) as exc_info:
         consumer.consume(
             queue_config=queue_config,
             runner_manager=runner_manager_mock,
-            github_client=github_client_mock,
+            platform_provider=github_platform_mock,
             supported_labels={"label1", "label2"},
         )
     assert "Invalid job details" in str(exc_info.value)
@@ -246,18 +334,16 @@ def test_consume_reject_if_labels_not_supported(
         url=FAKE_JOB_URL,
     )
     _put_in_queue(job_details.json(), queue_config.queue_name)
+    _put_in_queue(consumer.END_PROCESSING_PAYLOAD, queue_config.queue_name)
 
     runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
-    github_client_mock = MagicMock(spec=consumer.GithubClient)
-    github_client_mock.get_job_info.side_effect = [
-        _create_job_info(JobStatus.QUEUED),
-        _create_job_info(JobStatus.IN_PROGRESS),
-    ]
+    github_platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    github_platform_mock.check_job_been_picked_up.side_effect = [False, True]
 
     consumer.consume(
         queue_config=queue_config,
         runner_manager=runner_manager_mock,
-        github_client=github_client_mock,
+        platform_provider=github_platform_mock,
         supported_labels=supported_labels,
     )
 

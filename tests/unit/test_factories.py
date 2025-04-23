@@ -37,7 +37,11 @@ def complete_charm_state():
             http="http://httpproxy.example.com:3128",
             https="http://httpsproxy.example.com:3128",
             no_proxy="127.0.0.1",
-            use_aproxy=False,
+        ),
+        runner_proxy_config=charm_state.ProxyConfig(
+            http="http://runnerhttpproxy.example.com:3128",
+            https="http://runnerhttpsproxy.example.com:3128",
+            no_proxy="10.0.0.1",
         ),
         charm_config=charm_state.CharmConfig(
             dockerhub_mirror="https://docker.example.com",
@@ -64,6 +68,8 @@ def complete_charm_state():
                 url="https://compliance.example.com",
             ),
             token="githubtoken",
+            manager_proxy_command="ssh -W %h:%p example.com",
+            use_aproxy=True,
         ),
         runner_config=charm_state.OpenstackRunnerConfig(
             base_virtual_machines=1,
@@ -103,7 +109,7 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
     """
     state = complete_charm_state
 
-    app_configuration = factories.create_application_configuration(state, "app_name")
+    app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
 
     assert app_configuration == ApplicationConfiguration(
         name="app_name",
@@ -112,12 +118,18 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         service_config=SupportServiceConfig(
+            manager_proxy_command="ssh -W %h:%p example.com",
             proxy_config=ProxyConfig(
                 http="http://httpproxy.example.com:3128",
                 https="http://httpsproxy.example.com:3128",
                 no_proxy="127.0.0.1",
-                use_aproxy=False,
             ),
+            runner_proxy_config=ProxyConfig(
+                http="http://runnerhttpproxy.example.com:3128",
+                https="http://runnerhttpsproxy.example.com:3128",
+                no_proxy="10.0.0.1",
+            ),
+            use_aproxy=True,
             dockerhub_mirror="https://docker.example.com",
             ssh_debug_connections=[
                 SSHDebugConnection(
@@ -125,6 +137,9 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
                     port=3000,
                     rsa_fingerprint="SHA256:rsa",
                     ed25519_fingerprint="SHA256:ed25519",
+                    use_runner_http_proxy=False,
+                    local_proxy_host="127.0.0.1",
+                    local_proxy_port=3129,
                 )
             ],
             repo_policy_compliance=RepoPolicyComplianceConfig(
@@ -135,14 +150,8 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[
                 NonReactiveCombination(
-                    image=Image(
-                        name="image_id",
-                        labels=["arm64", "noble"],
-                    ),
-                    flavor=Flavor(
-                        name="flavor",
-                        labels=["flavorlabel"],
-                    ),
+                    image=Image(name="image_id", labels=["arm64", "noble"]),
+                    flavor=Flavor(name="flavor", labels=["flavorlabel"]),
                     base_virtual_machines=1,
                 )
             ]
@@ -161,10 +170,21 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
                 queue_name="app_name",
             ),
             max_total_virtual_machines=2,
-            images=[
-                Image(name="image_id", labels=["arm64", "noble"]),
-            ],
+            images=[Image(name="image_id", labels=["arm64", "noble"])],
             flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
+        ),
+        openstack_configuration=OpenStackConfiguration(
+            vm_prefix="unit_name",
+            network="network",
+            credentials=OpenStackCredentials(
+                auth_url="auth_url",
+                project_name="project_name",
+                username="username",
+                password="password",
+                user_domain_name="user_domain_name",
+                project_domain_name="project_domain_name",
+                region_name="region",
+            ),
         ),
     )
 

@@ -27,7 +27,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.1/stable
-      pre-run-script: scripts/setup-lxd.sh
+      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.1
       modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
@@ -41,7 +41,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-lxd.sh
+      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_runner_manager_openstack"]'
@@ -54,10 +54,10 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-lxd.sh
+      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive", "test_jobmanager"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint

@@ -10,18 +10,18 @@ from fabric import Connection as SSHConnection
 from invoke.runners import Result
 
 from github_runner_manager.errors import IssueMetricEventError
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.cloud_runner_manager import (
+    PostJobMetrics,
+    PostJobStatus,
+    PreJobMetrics,
+    RunnerMetrics,
+)
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
 from github_runner_manager.metrics.events import RunnerInstalled, RunnerStart, RunnerStop
-from github_runner_manager.metrics.runner import (
-    PostJobMetrics,
-    PreJobMetrics,
-    PullFileError,
-    RunnerMetrics,
-    ssh_pull_file,
-)
+from github_runner_manager.metrics.runner import PullFileError, ssh_pull_file
 from github_runner_manager.types_.github import JobConclusion
 
 
@@ -60,8 +60,9 @@ def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
             repository="org1/repository1",
             event="push",
         ),
-        post_job=PostJobMetrics(timestamp=3, status=runner_metrics.PostJobStatus.NORMAL),
+        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
         instance_id=instance_id,
+        metadata=RunnerMetadata(),
     )
 
 
@@ -168,9 +169,7 @@ def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
     """
     runner_name = InstanceID.build("prefix")
     runner_metrics_data = _create_metrics_data(runner_name)
-    runner_metrics_data.post_job = PostJobMetrics(
-        timestamp=0, status=runner_metrics.PostJobStatus.NORMAL
-    )
+    runner_metrics_data.post_job = PostJobMetrics(timestamp=0, status=PostJobStatus.NORMAL)
     flavor = secrets.token_hex(16)
     job_metrics = metrics_type.GithubJobMetrics(
         queue_duration=3600, conclusion=JobConclusion.SUCCESS

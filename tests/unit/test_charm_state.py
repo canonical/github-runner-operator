@@ -23,13 +23,16 @@ from charm_state import (
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_HTTP_PROXY_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
+    USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
     Arch,
     CharmConfig,
@@ -45,36 +48,6 @@ from charm_state import (
 )
 from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
-
-
-def test_github_repo_path():
-    """
-    arrange: Create a GithubRepo instance with owner and repo attributes.
-    act: Call the path method of the GithubRepo instance with a mock.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    owner = "test_owner"
-    repo = "test_repo"
-    github_repo = GitHubRepo(owner=owner, repo=repo)
-
-    path = github_repo.path()
-
-    assert path == f"{owner}/{repo}"
-
-
-def test_github_org_path():
-    """
-    arrange: Create a GithubOrg instance with org and group attributes.
-    act: Call the path method of the GithubOrg instance.
-    assert: Verify that the returned path is constructed correctly.
-    """
-    org = "test_org"
-    group = "test_group"
-    github_org = GitHubOrg(org=org, group=group)
-
-    path = github_org.path()
-
-    assert path == org
 
 
 def test_github_config_from_charm_invalud_path():
@@ -435,6 +408,7 @@ def test_charm_config_from_charm_valid():
         ),
         LABELS_CONFIG_NAME: "label1,label2,label3",
         TOKEN_CONFIG_NAME: "abc123",
+        MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME: "bash -c 'openssl s_client -quiet -connect example.com:2222 -servername %h 2>/dev/null'",
     }
 
     result = CharmConfig.from_charm(mock_charm)
@@ -445,6 +419,7 @@ def test_charm_config_from_charm_valid():
     assert result.openstack_clouds_yaml == test_openstack_config
     assert result.labels == ("label1", "label2", "label3")
     assert result.token == "abc123"
+    assert "openssl s_client" in result.manager_proxy_command
 
 
 def test_openstack_image_from_charm_no_connections():
@@ -509,46 +484,6 @@ def test_openstack_image_from_charm():
 
 
 @pytest.mark.parametrize(
-    "http, https, use_aproxy, expected_address",
-    [
-        ("http://proxy.example.com", None, True, "proxy.example.com"),
-        (None, "https://secureproxy.example.com", True, "secureproxy.example.com"),
-        (None, None, False, None),
-        ("http://proxy.example.com", None, False, None),
-    ],
-)
-def test_apropy_address(
-    http: str | None, https: str | None, use_aproxy: bool, expected_address: str | None
-):
-    """
-    arrange: Create a ProxyConfig instance with specified HTTP, HTTPS, and aproxy settings.
-    act: Access the aproxy_address property of the ProxyConfig instance.
-    assert: Verify that the property returns the expected apropy address.
-    """
-    proxy_config = ProxyConfig(http=http, https=https, use_aproxy=use_aproxy)
-
-    result = proxy_config.aproxy_address
-
-    assert result == expected_address
-
-
-def test_check_use_aproxy():
-    """
-    arrange: Create a dictionary of values representing a proxy configuration with use_aproxy set\
-        to True but neither http nor https provided.
-    act: Call the check_use_aproxy method with the provided values.
-    assert: Verify that the method raises a ValueError with the expected message.
-    """
-    values = {"http": None, "https": None}
-    use_aproxy = True
-
-    with pytest.raises(ValueError) as exc_info:
-        ProxyConfig.check_use_aproxy(use_aproxy, values)
-
-    assert str(exc_info.value) == "aproxy requires http or https to be set"
-
-
-@pytest.mark.parametrize(
     "http, https, expected_result",
     [
         ("http://proxy.example.com", None, True),  # Test with only http set
@@ -593,7 +528,7 @@ def test_proxy_config_from_charm(
     mock_charm.config[USE_APROXY_CONFIG_NAME] = False
     monkeypatch.setattr(charm_state, "get_env_var", MagicMock(side_effect=[http, https, no_proxy]))
 
-    result = charm_state._build_proxy_config_from_charm(mock_charm)
+    result = charm_state._build_proxy_config_from_charm()
 
     assert result.no_proxy is None
 
@@ -669,13 +604,15 @@ def test_ssh_debug_connection_from_charm_data_not_ready():
     assert not connections
 
 
-def test_ssh_debug_connection_from_charm():
+@pytest.mark.parametrize("use_runner_http_proxy", [True, False])
+def test_ssh_debug_connection_from_charm(use_runner_http_proxy: bool):
     """
     arrange: Mock CharmBase instance with relation data.
     act: Call SSHDebugConnection.from_charm method.
     assert: Verify that the method returns the expected list of SSHDebugConnection instances.
     """
     mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME] = use_runner_http_proxy
     relation_mock = MagicMock()
     unit_mock = MagicMock()
     relation_mock.units = [unit_mock]
@@ -696,6 +633,7 @@ def test_ssh_debug_connection_from_charm():
     assert connections[0].port == 22
     assert connections[0].rsa_fingerprint == "SHA256:abcdef"
     assert connections[0].ed25519_fingerprint == "SHA256:ghijkl"
+    assert connections[0].use_runner_http_proxy == use_runner_http_proxy
 
 
 def test_reactive_config_from_charm():
@@ -1061,3 +999,103 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
 
     assert mock_charm_state_data["charm_config"]["token"] not in caplog.text
     assert charm_state.SENSITIVE_PLACEHOLDER in caplog.text
+
+
+@pytest.mark.parametrize(
+    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy,"
+    "expected_proxy, expected_runner_proxy",
+    [
+        pytest.param(
+            "", "", "", "", False, ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
+        ),
+        pytest.param(
+            "",
+            "",
+            "localhost",
+            "",
+            False,
+            ProxyConfig(),
+            ProxyConfig(),
+            id="No proxy with only no_proxy. No aproxy",
+        ),
+        pytest.param(
+            "http://example.com:3128",
+            "",
+            "",
+            "",
+            False,
+            ProxyConfig(http="http://example.com:3128"),
+            ProxyConfig(http="http://example.com:3128"),
+            id="Only proxy from juju. No aproxy.",
+        ),
+        pytest.param(
+            "http://manager.example.com:3128",
+            "",
+            "",
+            "http://runner.example.com:3128",
+            False,
+            ProxyConfig(http="http://manager.example.com:3128"),
+            ProxyConfig(http="http://runner.example.com:3128"),
+            id="Both juju and runner proxy. No aproxy.",
+        ),
+        pytest.param(
+            "",
+            "",
+            "",
+            "http://runner.example.com:3128",
+            True,
+            ProxyConfig(),
+            ProxyConfig(http="http://runner.example.com:3128"),
+            id="Only proxy in runner. aproxy configured.",
+        ),
+        pytest.param(
+            "http://manager.example.com:3128",
+            "http://securemanager.example.com:3128",
+            "127.0.0.1",
+            "http://runner.example.com:3128",
+            True,
+            ProxyConfig(
+                http="http://manager.example.com:3128",
+                https="http://securemanager.example.com:3128",
+                no_proxy="127.0.0.1",
+            ),
+            ProxyConfig(
+                http="http://runner.example.com:3128",
+            ),
+            id="Proxy in juju and the runner. aproxy configured.",
+        ),
+    ],
+)
+def test_proxy_config(
+    monkeypatch,
+    juju_http: str,
+    juju_https: str,
+    juju_no_proxy: str,
+    runner_http: str,
+    use_aproxy: bool,
+    expected_proxy: ProxyConfig,
+    expected_runner_proxy: ProxyConfig,
+):
+    """
+    arrange: Mock CharmBase and necessary methods.
+    act: Call CharmState.from_charm with the specified config options for the manager proxy,
+       the runner proxy and aproxy.
+    assert: The expected proxies and aproxy information should be populated.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+
+    monkeypatch.setenv("JUJU_CHARM_HTTP_PROXY", juju_http)
+    monkeypatch.setenv("JUJU_CHARM_HTTPS_PROXY", juju_https)
+    monkeypatch.setenv("JUJU_CHARM_NO_PROXY", juju_no_proxy)
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = use_aproxy
+    mock_charm.config[RUNNER_HTTP_PROXY_CONFIG_NAME] = runner_http
+
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+    mock_database = MagicMock(spec=DatabaseRequires)
+    mock_database.relations = []
+
+    charm_state = CharmState.from_charm(mock_charm, mock_database)
+
+    assert charm_state.charm_config.use_aproxy == use_aproxy
+    assert charm_state.proxy_config == expected_proxy
+    assert charm_state.runner_proxy_config == expected_runner_proxy

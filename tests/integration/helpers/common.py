@@ -24,6 +24,7 @@ from juju.application import Application
 from juju.model import Model
 from juju.unit import Unit
 
+from charm import UPGRADE_MSG
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -131,7 +132,7 @@ async def deploy_github_runner_charm(
             "juju-http-proxy": http_proxy,
             "juju-https-proxy": https_proxy,
             "juju-no-proxy": no_proxy,
-            "logging-config": "<root>=INFO;unit=DEBUG",
+            "logging-config": "<root>=INFO;unit=INFO",
         }
     )
 
@@ -392,10 +393,10 @@ async def is_upgrade_charm_event_emitted(unit: Unit) -> bool:
     unit_name_without_slash = unit.name.replace("/", "-")
     juju_unit_log_file = f"/var/log/juju/unit-{unit_name_without_slash}.log"
     ret_code, stdout, stderr = await run_in_unit(
-        unit=unit, command=f"cat {juju_unit_log_file} | grep 'Emitting Juju event upgrade_charm.'"
+        unit=unit, command=f"cat {juju_unit_log_file} | grep '{UPGRADE_MSG}'"
     )
     assert ret_code == 0, f"Failed to read the log file: {stderr}"
-    return stdout is not None and "Emitting Juju event upgrade_charm." in stdout
+    return stdout is not None and UPGRADE_MSG in stdout
 
 
 async def get_file_content(unit: Unit, filepath: pathlib.Path) -> str:

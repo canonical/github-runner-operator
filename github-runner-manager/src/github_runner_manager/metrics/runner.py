@@ -8,19 +8,20 @@ import json
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
 from json import JSONDecodeError
 from typing import Optional, Type
 
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
-from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
+from pydantic import ValidationError
 
-from github_runner_manager.errors import (
-    IssueMetricEventError,
-    RunnerMetricsError,
-    SSHError,
+from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerInstance,
+    PostJobMetrics,
+    PreJobMetrics,
+    RunnerMetrics,
 )
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
@@ -38,81 +39,6 @@ MAX_METRICS_FILE_SIZE = 1024
 
 class PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
-
-
-class PreJobMetrics(BaseModel):
-    """Metrics for the pre-job phase of a runner.
-
-    Attributes:
-        timestamp: The UNIX time stamp of the time at which the event was originally issued.
-        workflow: The workflow name.
-        workflow_run_id: The workflow run id.
-        repository: The repository path in the format '<owner>/<repo>'.
-        event: The github event.
-    """
-
-    timestamp: NonNegativeFloat
-    workflow: str
-    workflow_run_id: str
-    repository: str = Field(None, regex=r"^.+/.+$")
-    event: str
-
-
-class PostJobStatus(str, Enum):
-    """The status of the post-job phase of a runner.
-
-    Attributes:
-        NORMAL: Represents a normal post-job.
-        ABNORMAL: Represents an error with post-job.
-        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
-    """
-
-    NORMAL = "normal"
-    ABNORMAL = "abnormal"
-    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
-
-
-class CodeInformation(BaseModel):
-    """Information about a status code.
-
-    Attributes:
-        code: The status code.
-    """
-
-    code: int
-
-
-class PostJobMetrics(BaseModel):
-    """Metrics for the post-job phase of a runner.
-
-    Attributes:
-        timestamp: The UNIX time stamp of the time at which the event was originally issued.
-        status: The status of the job.
-        status_info: More information about the status.
-    """
-
-    timestamp: NonNegativeFloat
-    status: PostJobStatus
-    status_info: Optional[CodeInformation]
-
-
-class RunnerMetrics(BaseModel):
-    """Metrics for a runner.
-
-    Attributes:
-        installation_start_timestamp: The UNIX time stamp of the time at which the runner
-            installation started.
-        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
-        pre_job: The metrics for the pre-job phase.
-        post_job: The metrics for the post-job phase.
-        instance_id: The name of the runner.
-    """
-
-    installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
-    pre_job: PreJobMetrics | None
-    post_job: PostJobMetrics | None
-    instance_id: InstanceID
 
 
 def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "PulledMetrics":
@@ -229,17 +155,18 @@ class PulledMetrics:
     post_job_metrics: str | None = None
 
     def to_runner_metrics(
-        self, instance_id: InstanceID, installation_start: datetime
+        self, instance: CloudRunnerInstance, installation_start: datetime
     ) -> RunnerMetrics | None:
         """.
 
         Args:
-           instance_id: InstanceID of the runner.
+           instance: Cloud runner instance.
            installation_start: Creation time of the runner.
 
         Returns:
            The RunnerMetrics object for the runner or None if it can not be built.
         """
+        instance_id = instance.instance_id
         if self.runner_installed is None:
             logger.error(
                 "Invalid pulled metrics. No runner_installed information for %s.", instance_id
@@ -285,6 +212,7 @@ class PulledMetrics:
                     PostJobMetrics(**post_job_metrics) if post_job_metrics else None
                 ),
                 instance_id=instance_id,
+                metadata=instance.metadata,
             )
         except ValueError:
             logger.exception(

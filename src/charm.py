@@ -24,9 +24,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
-from github_runner_manager.manager.runner_manager import (
-    FlushMode,
-)
+from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from ops.charm import (
     ActionEvent,
@@ -79,6 +77,7 @@ FAILED_TO_RECONCILE_RUNNERS_MSG = "Failed to reconcile runners"
 FAILED_RECONCILE_ACTION_ERR_MSG = (
     "Failed to reconcile runners. Look at the juju logs for more information."
 )
+UPGRADE_MSG = "Upgrading github-runner charm."
 
 
 logger = logging.getLogger(__name__)
@@ -205,9 +204,6 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
-        self.framework.observe(
-            self.on.update_dependencies_action, self._on_update_dependencies_action
-        )
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
@@ -300,7 +296,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
-        logger.info("Reinstalling dependencies...")
+        logger.info(UPGRADE_MSG)
         self._common_install_code()
 
     @catch_charm_errors
@@ -431,16 +427,6 @@ class GithubRunnerCharm(CharmBase):
             return
         self.unit.status = ActiveStatus()
         event.set_results({"delta": {"virtual-machines": delta}})
-
-    @catch_action_errors
-    def _on_update_dependencies_action(self, event: ActionEvent) -> None:
-        """Handle the action of updating dependencies and flushing runners if needed.
-
-        Args:
-            event: Action event of updating dependencies.
-        """
-        # No dependencies managed by the charm for OpenStack-based runners.
-        event.set_results({"flush": False})
 
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:

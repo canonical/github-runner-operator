@@ -23,14 +23,9 @@ from github_runner_manager.configuration.github import (
     GitHubPath,
     GitHubRepo,
 )
-from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
+from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.types_.github import (
-    JITConfig,
-    JobInfo,
-    RemoveToken,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +55,7 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
 
         Raises:
             TokenError: If there was an error with the provided token.
-            GithubApiError: If there was an unexpected error using the GitHub API.
+            PlatformApiError: If there was an unexpected error using the GitHub API.
 
         Returns:
             The decorated function.
@@ -74,9 +69,9 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
-            raise GithubApiError from exc
+            raise PlatformApiError from exc
         except RequestException as exc:
-            raise GithubApiError from exc
+            raise PlatformApiError from exc
 
     return wrapper
 
@@ -237,8 +232,8 @@ class GithubClient:
                 if group["name"] == org.group:
                     return group["id"]
         except TypeError as exc:
-            raise GithubApiError(f"Cannot get runner_group_id for group {org.group}.") from exc
-        raise GithubApiError(
+            raise PlatformApiError(f"Cannot get runner_group_id for group {org.group}.") from exc
+        raise PlatformApiError(
             f"Cannot get runner_group_id for group {org.group}."
             " The group does not exist or there are more than 100 groups."
         )

@@ -7,7 +7,7 @@ import logging
 import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import reduce
 from pathlib import Path
 from typing import Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
@@ -24,9 +24,10 @@ from openstack.network.v2.security_group import SecurityGroup as OpenstackSecuri
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
+from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,11 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
+
+# Keypairs younger than this value should not be deleted to avoid a race condition where
+# the openstack server is in construction but not yet returned by the API, and the keypair gets
+# deleted.
+_MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
 
 
 @dataclass
@@ -48,6 +54,7 @@ class OpenstackInstance:
             OpenstackCloud.
         server_id: ID of server assigned by OpenStack.
         status: Status of the server.
+        metadata: Medatada of the server.
     """
 
     addresses: list[str]
@@ -55,6 +62,7 @@ class OpenstackInstance:
     instance_id: InstanceID
     server_id: str
     status: str
+    metadata: RunnerMetadata
 
     def __init__(self, server: OpenstackServer, prefix: str):
         """Construct the object.
@@ -72,6 +80,8 @@ class OpenstackInstance:
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
+        # To be backwards compatible, we need a default RunnerMetadata.
+        self.metadata = RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata()
 
 
 P = ParamSpec("P")
@@ -148,7 +158,13 @@ class OpenstackCloud:
     instance_id. It is the same as the server name.
     """
 
-    def __init__(self, credentials: OpenStackCredentials, prefix: str, system_user: str):
+    def __init__(
+        self,
+        credentials: OpenStackCredentials,
+        prefix: str,
+        system_user: str,
+        proxy_command: str | None = None,
+    ):
         """Create the object.
 
         Args:
@@ -156,25 +172,29 @@ class OpenstackCloud:
             prefix: Prefix attached to names of resource managed by this instance. Used for
                 identifying which resource belongs to this instance.
             system_user: The system user to own the key files.
+            proxy_command: The gateway argument for fabric Connection. Similar to ProxyCommand in
+                ssh-config.
         """
         self._credentials = credentials
         self.prefix = prefix
         self._system_user = system_user
         self._ssh_key_dir = Path(f"~{system_user}").expanduser() / ".ssh"
+        self._proxy_command = proxy_command
 
     @_catch_openstack_errors
-    # Ignore "Too many arguments" as 6 args should be fine. Move to a dataclass if new args are
-    # added.
-    def launch_instance(  # pylint: disable=too-many-arguments, too-many-positional-arguments
-        self, instance_id: InstanceID, image: str, flavor: str, network: str, cloud_init: str
+    def launch_instance(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+        server_config: OpenStackServerConfig,
+        cloud_init: str,
     ) -> OpenstackInstance:
         """Create an OpenStack instance.
 
         Args:
+            metadata: Metadata for the runner.
             instance_id: The instance ID to form the instance name.
-            image: The image used to create the instance.
-            flavor: The flavor used to create the instance.
-            network: The network used to create the instance.
+            server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
 
         Raises:
@@ -187,20 +207,25 @@ class OpenstackCloud:
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn)
+            # there is a race condition in here in the reactive case.
+            # When a key is created in the file system but the instance is
+            # not yet in openstack, the reconcile can remove that key.
             keypair = self._setup_keypair(conn, instance_id)
-
+            meta = metadata.as_dict()
+            meta["prefix"] = self.prefix
             try:
                 server = conn.create_server(
                     name=instance_id.name,
-                    image=image,
+                    image=server_config.image,
                     key_name=keypair.name,
-                    flavor=flavor,
-                    network=network,
+                    flavor=server_config.flavor,
+                    network=server_config.network,
                     security_groups=[security_group.id],
                     userdata=cloud_init,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=True,
+                    meta=meta,
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)
@@ -298,6 +323,7 @@ class OpenstackCloud:
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
+                    gateway=self._proxy_command,
                 )
                 result = connection.run(
                     f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
@@ -342,11 +368,12 @@ class OpenstackCloud:
         logger.info("Getting all openstack servers managed by the charm")
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            instance_list = self._get_openstack_instances(conn)
+            instance_list = list(self._get_openstack_instances(conn))
             server_names = set(server.name for server in instance_list)
 
             server_list = [
-                OpenstackCloud._get_and_ensure_unique_server(conn, name) for name in server_names
+                OpenstackCloud._get_and_ensure_unique_server(conn, name, instance_list)
+                for name in server_names
             ]
             return tuple(
                 OpenstackInstance(server, self.prefix)
@@ -359,18 +386,38 @@ class OpenstackCloud:
         """Cleanup unused key files and openstack keypairs."""
         with _get_openstack_connection(credentials=self._credentials) as conn:
             instances = self._get_openstack_instances(conn)
-            exclude_list = [server.name for server in instances]
-            self._cleanup_key_files(exclude_list)
-            self._cleanup_openstack_keypairs(conn, exclude_list)
+            exclude_keyfiles_set = {
+                self._get_key_path(InstanceID.build_from_name(self.prefix, server.name))
+                for server in instances
+            }
+            exclude_keyfiles_set |= set(self._get_fresh_keypair_files())
+            self._cleanup_key_files(exclude_keyfiles_set)
+            # we implicitly assume that the mapping keyfile -> openstack key name
+            # is done using the filename
+            exclude_key_set = set(
+                keyfile.name.removesuffix(".key") for keyfile in exclude_keyfiles_set
+            )
+            self._cleanup_openstack_keypairs(conn, exclude_key_set)
 
-    def _cleanup_key_files(self, exclude_instances: Iterable[str]) -> None:
-        """Delete all SSH key files except the specified instances.
+    def _get_fresh_keypair_files(self) -> Iterable[Path]:
+        """Get the keypair files that are younger than the minimum age."""
+        now_ts = datetime.now(timezone.utc).timestamp()
+        for path in self._ssh_key_dir.iterdir():
+            if (
+                path.is_file()
+                and InstanceID.name_has_prefix(self.prefix, path.name)
+                and path.name.endswith(".key")
+                and path.stat().st_mtime >= now_ts - _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION
+            ):
+                yield path
+
+    def _cleanup_key_files(self, exclude_key_files: set[Path]) -> None:
+        """Delete all SSH key files except the specified instances or the ones with young age.
 
         Args:
-            exclude_instances: The keys of these instance will not be deleted.
+            exclude_key_files: These key files will not be deleted.
         """
         logger.info("Cleaning up SSH key files")
-        exclude_filename = set(self._get_key_path(instance) for instance in exclude_instances)
 
         total = 0
         deleted = 0
@@ -382,28 +429,27 @@ class OpenstackCloud:
                 and path.name.endswith(".key")
             ):
                 total += 1
-                if path in exclude_filename:
+                if path in exclude_key_files:
                     continue
                 path.unlink()
                 deleted += 1
         logger.info("Found %s key files, clean up %s key files", total, deleted)
 
     def _cleanup_openstack_keypairs(
-        self, conn: OpenstackConnection, exclude_instances: Iterable[str]
+        self, conn: OpenstackConnection, exclude_keys: set[str]
     ) -> None:
-        """Delete all OpenStack keypairs except the specified instances.
+        """Delete all OpenStack keypairs except the specified instances or the ones with young age.
 
         Args:
             conn: The Openstack connection instance.
-            exclude_instances: The keys of these instance will not be deleted.
+            exclude_keys: These keys will not be deleted.
         """
         logger.info("Cleaning up openstack keypairs")
-        exclude_instance_set = set(exclude_instances)
         keypairs = conn.list_keypairs()
         for key in keypairs:
             # The `name` attribute is of resource.Body type.
             if key.name and InstanceID.name_has_prefix(self.prefix, key.name):
-                if str(key.name) in exclude_instance_set:
+                if str(key.name) in exclude_keys:
                     continue
                 try:
                     self._delete_keypair(conn, InstanceID.build_from_name(self.prefix, key.name))
@@ -430,7 +476,7 @@ class OpenstackCloud:
 
     @staticmethod
     def _get_and_ensure_unique_server(
-        conn: OpenstackConnection, name: str
+        conn: OpenstackConnection, name: str, all_servers: list[OpenstackServer] | None = None
     ) -> OpenstackServer | None:
         """Get the latest server of the name and ensure it is unique.
 
@@ -440,11 +486,16 @@ class OpenstackCloud:
         Args:
             conn: The connection to OpenStack.
             name: The name of the OpenStack name.
+            all_servers: Optionally the list of servers to not request it to openstack again.
 
         Returns:
             A server with the name.
         """
-        servers: list[OpenstackServer] = conn.search_servers(name)
+        servers: list[OpenstackServer]
+        if not all_servers:
+            servers = conn.search_servers(name)
+        else:
+            servers = [server for server in all_servers if server.name == name]
 
         if not servers:
             return None
