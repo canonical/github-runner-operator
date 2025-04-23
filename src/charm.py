@@ -264,21 +264,6 @@ class GithubRunnerCharm(CharmBase):
 
         return True
 
-    def _setup_service(self, state: CharmState) -> None:
-        """Set up services.
-
-        Args:
-            state: The charm state.
-
-        Raise:
-            RunnerManagerApplicationError: Issue with the github-runner-manager service.
-        """
-        try:
-            manager_service.setup(state, self.app.name, self.unit.name)
-        except RunnerManagerApplicationError:
-            logging.exception("Unable to setup the github-runner-manager service")
-            raise
-
     @catch_charm_errors
     def _on_install(self, _: InstallEvent) -> None:
         """Handle the installation of charm."""
@@ -458,6 +443,21 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
+
+    def _setup_service(self, state: CharmState) -> None:
+        """Set up services.
+
+        Args:
+            state: The charm state.
+
+        Raise:
+            RunnerManagerApplicationError: Issue with the github-runner-manager service.
+        """
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            raise
 
     @staticmethod
     def _log_juju_processes() -> None:
