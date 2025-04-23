@@ -1,7 +1,9 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import copy
 import datetime
 import itertools
+import logging
 import os
 from pathlib import Path
 from typing import Any
@@ -12,30 +14,45 @@ import openstack
 import pytest
 from openstack.compute.v2.keypair import Keypair
 from openstack.connection import Connection
+from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
+from openstack.network.v2.security_group_rule import SecurityGroupRule
 
 from github_runner_manager.errors import OpenStackError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
     _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
+    DEFAULT_SECURITY_RULES,
     OpenstackCloud,
     OpenStackCredentials,
+    get_missing_security_rules,
 )
 
 FAKE_ARG = "fake"
 FAKE_PREFIX = "fake_prefix"
 
+logger = logging.getLogger(__name__)
+
 
 @pytest.mark.parametrize(
     "public_method, args",
     [
-        pytest.param("launch_instance", (FAKE_ARG,) * 4, id="launch_instance"),
-        pytest.param("get_instance", (FAKE_ARG,), id="get_instance"),
-        pytest.param("delete_instance", (FAKE_ARG,), id="delete_instance"),
-        pytest.param("get_instances", (), id="get_instances"),
-        pytest.param("cleanup", (), id="cleanup"),
+        pytest.param(
+            "launch_instance",
+            {
+                "metadata": FAKE_ARG,
+                "instance_id": FAKE_ARG,
+                "server_config": FAKE_ARG,
+                "cloud_init": FAKE_ARG,
+            },
+            id="launch_instance",
+        ),
+        pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
+        pytest.param("delete_instance", {"instance_id": FAKE_ARG}, id="delete_instance"),
+        pytest.param("get_instances", {}, id="get_instances"),
+        pytest.param("cleanup", {}, id="cleanup"),
     ],
 )
 def test_raises_openstack_error(
-    public_method: str, args: tuple[Any, ...], monkeypatch: pytest.MonkeyPatch
+    public_method: str, args: dict[Any, Any], monkeypatch: pytest.MonkeyPatch
 ):
     """
     arrange: Mock OpenstackCloud and openstack.connect to raise an Openstack api exception.
@@ -67,8 +84,63 @@ def test_raises_openstack_error(
             openstack_connect_mock,
         )
         with pytest.raises(OpenStackError) as innerexc:
-            getattr(cloud, public_method)(*args)
+            getattr(cloud, public_method)(**args)
         assert "Failed OpenStack API call" in str(innerexc.value)
+
+
+@pytest.mark.parametrize(
+    "security_rules, extra_ports, expected_missing_rules",
+    [
+        pytest.param(
+            [],
+            None,
+            copy.deepcopy(DEFAULT_SECURITY_RULES),
+            id="Empty security group. All rules required.",
+        ),
+        pytest.param(
+            [],
+            [8080],
+            copy.deepcopy(DEFAULT_SECURITY_RULES)
+            | {
+                "tcp8080": {
+                    "direction": "ingress",
+                    "ethertype": "IPv4",
+                    "port_range_max": 8080,
+                    "port_range_min": 8080,
+                    "protocol": "tcp",
+                }
+            },
+            id="Empty security group. Extra port required",
+        ),
+        pytest.param(
+            [SecurityGroupRule(**value) for (name, value) in DEFAULT_SECURITY_RULES.items()],
+            None,
+            {},
+            id="Nothing to add",
+        ),
+        pytest.param(
+            [
+                SecurityGroupRule(**value)
+                for (name, value) in DEFAULT_SECURITY_RULES.items()
+                if name != "ssh"
+            ],
+            None,
+            {"ssh": DEFAULT_SECURITY_RULES["ssh"]},
+            id="Missing ssh rule",
+        ),
+    ],
+)
+def test_missing_security_rules(security_rules, extra_ports, expected_missing_rules):
+    """
+    arrange: Create an OpenstackSecurityGroup with a list of rules.
+    act: Call get_missing_security_rules with possibly extra ports to open.
+    assert: If there are missing security rules, they will be returned so they can be added.
+    """
+    security_group = OpenstackSecurityGroup()
+    security_group.security_group_rules = security_rules
+
+    missing = get_missing_security_rules(security_group, extra_ports)
+    assert missing == expected_missing_rules
 
 
 def test_keypair_cleanup_freshly_created_keypairs(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
