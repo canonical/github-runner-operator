@@ -23,10 +23,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.platform_provider import (
-    PlatformProvider,
-    PlatformRunnerState,
-)
+from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -468,7 +465,7 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_token, github_runner = args.platform_provider.get_runner_token(
+        runner_context, github_runner = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
@@ -478,7 +475,9 @@ class RunnerManager:
 
         try:
             args.cloud_runner_manager.create_runner(
-                instance_id=instance_id, metadata=args.metadata, runner_token=runner_token
+                instance_id=instance_id,
+                metadata=args.metadata,
+                runner_context=runner_context,
             )
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners

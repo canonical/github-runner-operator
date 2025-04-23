@@ -6,9 +6,7 @@
 from dataclasses import dataclass
 
 from github_runner_manager.configuration import SupportServiceConfig
-from github_runner_manager.openstack_cloud.configuration import (
-    OpenStackCredentials,
-)
+from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 
 
 @dataclass

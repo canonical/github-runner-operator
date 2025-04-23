@@ -45,7 +45,6 @@ from tests.integration.helpers.common import (
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
 
-IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS = 25 * 60
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
 
 # The following line is required because we are using request.getfixturevalue in conjunction
@@ -395,9 +394,6 @@ async def image_builder_fixture(
             revision=68,
             config=image_builder_config,
         )
-        await model.wait_for_idle(
-            apps=[app.name], status="blocked", timeout=IMAGE_BUILDER_DEPLOY_TIMEOUT_IN_SECONDS
-        )
     else:
         app = model.applications[image_builder_app_name]
     yield app
@@ -703,7 +699,6 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
     """Deploy MongoDB."""
     if not existing_app_suffix:
         mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
-        await model.wait_for_idle(apps=[MONGODB_APP_NAME], status=ACTIVE)
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
@@ -712,8 +707,8 @@ async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Appl
 @pytest_asyncio.fixture(scope="module", name="app_for_reactive")
 async def app_for_reactive_fixture(
     model: Model,
-    app_openstack_runner: Application,
     mongodb: Application,
+    app_openstack_runner: Application,
     existing_app_suffix: Optional[str],
 ) -> Application:
     """Application for testing reactive."""

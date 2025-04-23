@@ -31,7 +31,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud import health_checks
@@ -42,10 +42,7 @@ from github_runner_manager.openstack_cloud.constants import (
     RUNNER_WORKER_PROCESS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
-from github_runner_manager.openstack_cloud.openstack_cloud import (
-    OpenstackCloud,
-    OpenstackInstance,
-)
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 from github_runner_manager.utilities import retry, set_env_var
 
@@ -127,14 +124,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return self._config.prefix
 
     def create_runner(
-        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_token: The token for the runner.
+            runner_context: Context data for spawning the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -146,13 +146,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
 
-        cloud_init = self._generate_cloud_init(runner_token=runner_token)
+        cloud_init = self._generate_cloud_init(runner_context=runner_context)
         try:
             instance = self._openstack_cloud.launch_instance(
                 metadata=metadata,
                 instance_id=instance_id,
                 server_config=server_config,
                 cloud_init=cloud_init,
+                ingress_tcp_ports=runner_context.ingress_tcp_ports,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
@@ -369,19 +370,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, runner_token: str) -> str:
+    def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            runner_token: The JIT GitHub runner registration token.
+            runner_context: Context for the runner.
 
         Returns:
             The cloud init userdata for openstack instance.
         """
-        jinja = jinja2.Environment(
-            loader=jinja2.PackageLoader("github_runner_manager", "templates"), autoescape=True
+        # We do not autoscape, the reason is that we are not generating html or xml
+        jinja = jinja2.Environment(  # nosec
+            loader=jinja2.PackageLoader("github_runner_manager", "templates")
         )
 
         service_config = self._config.service_config
@@ -422,7 +424,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            jittoken=runner_token,
+            run_script=runner_context.shell_run_script,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
