@@ -5,6 +5,7 @@
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
@@ -23,8 +24,12 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerState
-from github_runner_manager.types_.github import SelfHostedRunner
+from github_runner_manager.platform.platform_provider import (
+    PlatformProvider,
+    PlatformRunnerState,
+    RunnerNotFoundError,
+)
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -474,11 +479,37 @@ class RunnerManager:
             args.metadata.runner_id = str(github_runner.id)
 
         try:
-            args.cloud_runner_manager.create_runner(
+            cloud_instance = args.cloud_runner_manager.create_runner(
                 instance_id=instance_id,
                 metadata=args.metadata,
                 runner_context=runner_context,
             )
+
+            # TODO WAIT FOR RUNNER ONLINE IN HERE!
+            # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MODE
+            # (TO CHECK IF THE JOB WAS TAKEN)
+
+            logger.info("JAVI cloud_instance %s", cloud_instance)
+            logger.info("JAVI metadata %s", args.metadata)
+            # TODO something like 1min, 1min, 2min, 4min and 8min could be nice.
+            for _ in range(5):
+                try:
+                    runner = args.platform_provider.get_runner(args.metadata, instance_id)
+                except RunnerNotFoundError:
+                    # TODO SHOULD WE RAISE RunnerError in here? We expect a runner to be in the
+                    # platform, and we will save time...
+                    logger.error("JAVI Runner not found")
+                logger.info("JAVI github runner %s", runner)
+                if runner.status == GitHubRunnerStatus.ONLINE:
+                    logger.info("JAVI nice! runner online!")
+                    break
+                time.sleep(60)
+            else:
+                logger.info("JAVI grrr runner never got online!")
+                raise RunnerError("Runner did not get online")
+
+            logger.info("JAVI after runner created and waited")
+
         except RunnerError:
             # try to clean the runner in GitHub. This is necessary, as for reactive runners
             # we do not know in the clean up if the runner is offline because if failed or

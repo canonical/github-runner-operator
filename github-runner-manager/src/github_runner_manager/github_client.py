@@ -13,6 +13,9 @@ from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
 import requests
+
+# HTTP404NotFoundError is not found by pylint
+from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from requests import RequestException
@@ -28,6 +31,11 @@ from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
+
+
+class GithubRunnerNotFoundError(Exception):
+    """Represents an error when the runner could not be found on GitHub."""
+
 
 # Parameters of the function decorated with retry
 ParamT = ParamSpec("ParamT")
@@ -87,6 +95,42 @@ class GithubClient:
         """
         self._token = token
         self._client = GhApi(token=self._token)
+
+    @catch_http_errors
+    def get_runner_info(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
+        """TODO.
+
+        https://docs.github.com/en/rest/actions/self-hosted-runners?
+        apiVersion=2022-11-28#get-a-self-hosted-runner-for-an-organization
+        /orgs/{org}/actions/runners/{runner_id}
+        https://docs.github.com/en/rest/actions/self-hosted-runners?
+        apiVersion=2022-11-28#get-a-self-hosted-runner-for-a-repository
+        /repos/{owner}/{repo}/actions/runners/{runner_id}
+
+        Args:
+            path: TODO
+            prefix: TODO
+            runner_id: TODO
+
+        Raises:
+            GithubRunnerNotFoundError: TODO
+
+        Returns:
+            TODO
+        """
+        try:
+            if isinstance(path, GitHubRepo):
+                raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
+                    path.owner, path.repo, runner_id
+                )
+            else:
+                raw_runner = self._client.actions.get_self_hosted_runner_for_org(
+                    path.org, runner_id
+                )
+        except HTTP404NotFoundError as err:
+            raise GithubRunnerNotFoundError from err
+        instance_id = InstanceID.build_from_name(prefix, raw_runner["name"])
+        return SelfHostedRunner.build_from_github(raw_runner, instance_id)
 
     @catch_http_errors
     def get_runner_github_info(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:

@@ -40,6 +40,55 @@ class JobManagerPlatform(PlatformProvider):
         """
         return cls()
 
+    def get_runner(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Get info on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Raises:
+            PlatformApiError: TODO
+
+        Returns:
+           The runner in the jobmanager.
+        """
+        configuration = jobmanager_client.Configuration(host=metadata.url)
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            # response = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
+            try:
+                response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
+            # HANDLE JOB NOT FOUND
+            except ApiException as exc:
+                logger.exception("Error calling jobmanager api.")
+                raise PlatformApiError("API error") from exc
+
+        # response.status one of: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
+        # response.deletable
+
+        busy = response.status == "FAILED"
+        status = (
+            GitHubRunnerStatus.OFFLINE
+            if response.status == "FAILED"
+            else GitHubRunnerStatus.ONLINE
+        )
+        return SelfHostedRunner(
+            busy=busy,
+            id=int(metadata.runner_id),
+            metadata=metadata,
+            # TODO unfortunately, we only have one label.
+            labels=[response.label],
+            # status
+            status=status,
+            instance_id=instance_id,
+            deletable=response.deletable,
+        )
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:

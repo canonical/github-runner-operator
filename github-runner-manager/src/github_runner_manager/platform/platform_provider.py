@@ -25,8 +25,25 @@ class JobNotFoundError(PlatformError):
     """Represents an error when the job could not be found on the platform."""
 
 
+class RunnerNotFoundError(PlatformError):
+    """Represents an error when the runner could not be found on the platform."""
+
+
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
+
+    @abc.abstractmethod
+    def get_runner(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> SelfHostedRunner:
+        """Get info on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+        """
 
     @abc.abstractmethod
     def get_runners(

@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 import fabric
-import invoke
 import jinja2
 import paramiko
 from fabric import Connection as SSHConnection
@@ -26,7 +25,6 @@ from github_runner_manager.errors import (
     SSHError,
 )
 from github_runner_manager.manager.cloud_runner_manager import (
-    CloudInitStatus,
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
@@ -157,11 +155,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
-
-        logger.info("Waiting for runner process to startup: %s", instance.instance_id)
-        self._wait_runner_startup(instance)
-        logger.info("Waiting for runner process to be running: %s", instance.instance_id)
-        self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
@@ -507,47 +500,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             result.stdout,
             result.stderr,
         )
-
-    @retry(tries=10, delay=60, local_logger=logger)
-    def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
-        """Wait until runner is startup.
-
-        Args:
-            instance: The runner instance.
-
-        Raises:
-            RunnerStartError: The runner startup process was not found on the runner.
-        """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SSHError as err:
-            raise RunnerStartError(
-                f"Failed to SSH to {instance.instance_id} during creation possible due to setup "
-                "not completed"
-            ) from err
-
-        logger.debug("Running `cloud-init status` on instance %s.", instance.instance_id)
-        result: invoke.runners.Result = ssh_conn.run("cloud-init status", warn=True, timeout=60)
-        if not result.ok:
-            logger.warning(
-                "cloud-init status command failed on %s: %s.", instance.instance_id, result.stderr
-            )
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
-        # A short running job may have already completed and exited the runner, hence check the
-        # condition via cloud-init status check.
-        if CloudInitStatus.DONE in result.stdout:
-            return
-        logger.debug("Running `ps aux` on instance %s.", instance.instance_id)
-        result = ssh_conn.run("ps aux", warn=True, timeout=60, hide=True)
-        if not result.ok:
-            logger.warning("SSH run of `ps aux` failed on %s", instance.instance_id)
-            raise RunnerStartError(f"Unable to SSH run `ps aux` on {instance.instance_id}")
-        # Runner startup process is the parent process of runner.Listener and runner.Worker which
-        # starts up much faster.
-        if RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("Runner startup process not found on %s", instance.instance_id)
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
-        logger.info("Runner startup process found to be healthy on %s", instance.instance_id)
 
     @retry(tries=5, delay=60, local_logger=logger)
     def _wait_runner_running(self, instance: OpenstackInstance) -> None:
