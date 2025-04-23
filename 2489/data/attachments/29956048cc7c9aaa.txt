@@ -1,0 +1,107 @@
+18:59:03 INFO GitHub token rate limit: Rate(reset=2025-04-23 19:17:17+00:00, remaining=4228, limit=5000)
+18:59:06 INFO Creating 1 runners
+18:59:06 INFO Creating openstack server with test-nheohmu8-0-n-c37bcf3eadb7
+18:59:25 INFO Waiting for runner process to startup: test-nheohmu8-0-n-c37bcf3eadb7
+18:59:32 WARNING NoValidConnectionsError. Unable to SSH into test-nheohmu8-0-n-c37bcf3eadb7 with address 10.145.193.61. Error: [Errno None] Unable to connect to port 22 on 10.145.193.61
+18:59:32 WARNING Retrying error in 60 seconds: Failed to SSH to test-nheohmu8-0-n-c37bcf3eadb7 during creation possible due to setup not completed
+19:00:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:32 INFO Authentication (publickey) successful!
+19:00:33 INFO Runner startup process found to be healthy on test-nheohmu8-0-n-c37bcf3eadb7
+19:00:33 INFO Waiting for runner process to be running: test-nheohmu8-0-n-c37bcf3eadb7
+19:00:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:33 INFO Authentication (publickey) successful!
+19:00:34 INFO Runner test-nheohmu8-0-n-c37bcf3eadb7 found to be healthy
+19:00:34 INFO Runner test-nheohmu8-0-n-c37bcf3eadb7 created successfully
+19:00:34 INFO Getting runners...
+19:00:35 INFO Getting all openstack servers managed by the charm
+19:00:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:37 INFO Authentication (publickey) successful!
+19:00:37 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:00:37 INFO Getting runners...
+19:00:38 INFO Getting all openstack servers managed by the charm
+19:00:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:40 INFO Authentication (publickey) successful!
+19:00:41 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:00:41 INFO Getting runners...
+19:00:42 INFO Getting all openstack servers managed by the charm
+19:00:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:00:43 INFO Authentication (publickey) successful!
+19:00:44 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:00:46 INFO Wait for condition not met, sleeping 10
+19:00:57 INFO Getting runners...
+19:00:58 INFO Getting all openstack servers managed by the charm
+19:00:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:00 INFO Authentication (publickey) successful!
+19:01:00 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:01:00 INFO Getting runners...
+19:01:01 INFO Getting all openstack servers managed by the charm
+19:01:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:03 INFO Authentication (publickey) successful!
+19:01:03 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:01:04 INFO Offline github runners to delete: []:
+19:01:05 INFO Getting all openstack servers managed by the charm
+19:01:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:06 INFO Authentication (publickey) successful!
+19:01:08 INFO Cleaning up SSH key files
+19:01:08 INFO Found 1 key files, clean up 0 key files
+19:01:08 INFO Cleaning up openstack keypairs
+19:01:08 INFO Getting runners...
+19:01:09 INFO Getting all openstack servers managed by the charm
+19:01:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:11 INFO Authentication (publickey) successful!
+19:01:11 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:01:11 INFO Flushing idle runners...
+19:01:12 INFO Getting all openstack servers managed by the charm
+19:01:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:13 INFO Authentication (publickey) successful!
+19:01:14 INFO Attempting to kill runner process on test-nheohmu8-0-n-c37bcf3eadb7 if not busy
+19:01:14 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:01:14 INFO Kill process command output, ok: False code 1, out: 2335
+, err: 
+19:01:14 INFO Getting all openstack servers managed by the charm
+19:01:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:15 INFO Authentication (publickey) successful!
+19:01:17 INFO Cleaning up SSH key files
+19:01:17 INFO Found 1 key files, clean up 0 key files
+19:01:17 INFO Cleaning up openstack keypairs
+19:01:17 INFO Getting runners...
+19:01:18 INFO Getting all openstack servers managed by the charm
+19:01:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:19 INFO Authentication (publickey) successful!
+19:01:20 INFO Found following runners: {'test-nheohmu8-0-n-c37bcf3eadb7'}
+19:01:20 INFO Flushing idle and busy runners...
+19:01:20 INFO Getting all openstack servers managed by the charm
+19:01:22 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:22 INFO Authentication (publickey) successful!
+19:01:22 INFO Attempting to kill all runner process on test-nheohmu8-0-n-c37bcf3eadb7
+19:01:22 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+19:01:22 INFO Kill process command output, ok: True code 0, out: 1938
+2335
+, err: 
+19:01:22 INFO Getting all openstack servers managed by the charm
+19:01:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:24 INFO Authentication (publickey) successful!
+19:01:26 INFO Cleaning up SSH key files
+19:01:26 INFO Found 1 key files, clean up 0 key files
+19:01:26 INFO Cleaning up openstack keypairs
+19:01:36 INFO Flushing idle and busy runners...
+19:01:36 INFO Getting all openstack servers managed by the charm
+19:01:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:37 INFO Authentication (publickey) successful!
+19:01:38 INFO Attempting to kill all runner process on test-nheohmu8-0-n-c37bcf3eadb7
+19:01:38 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+19:01:38 INFO Kill process command output, ok: False code 1, out: , err: 
+19:01:38 INFO Getting all openstack servers managed by the charm
+19:01:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:39 INFO Authentication (publickey) successful!
+19:01:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:40 INFO Authentication (publickey) successful!
+19:01:40 INFO [chan 2] Opened sftp connection (server version 3)
+19:01:40 INFO Running runner removal script for test-nheohmu8-0-n-c37bcf3eadb7
+19:01:42 INFO Deleting openstack server with test-nheohmu8-0-n-c37bcf3eadb7
+19:01:44 INFO Cleaning up SSH key files
+19:01:44 INFO Found 0 key files, clean up 0 key files
+19:01:44 INFO Cleaning up openstack keypairs
+19:01:45 INFO Getting runners...
+19:01:46 INFO Getting all openstack servers managed by the charm
+19:01:47 INFO Found following runners: set()

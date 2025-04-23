@@ -1,0 +1,124 @@
+18:25:22 INFO Adding model github-pr-0c16d-lxd:test-charm-upgrade-22ir on cloud localhost
+18:25:23 WARNING unexpected facade AgentLifeFlag received from the controller
+18:25:23 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:25:23 WARNING unexpected facade SecretsDrain received from the controller
+18:25:24 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:25:48 INFO Deploying local:jammy/github-runner-0
+18:25:48 INFO Waiting for model:
+  test-lnkpaswy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lnkpaswy/0 [allocating] waiting: waiting for machine
+18:26:18 INFO Waiting for model:
+  test-lnkpaswy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lnkpaswy/0 [allocating] waiting: waiting for machine
+18:26:48 INFO Waiting for model:
+  test-lnkpaswy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lnkpaswy/0 [executing] maintenance: Setting up Builder.
+18:27:18 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lnkpaswy/0 [executing] maintenance: Setting up Builder.
+18:27:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] maintenance: Setting up Builder.
+18:28:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] maintenance: Setting up Builder.
+18:28:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] maintenance: Setting up Builder.
+18:29:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] blocked: image integration required.
+18:29:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:30:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:30:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:31:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:31:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:32:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:32:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:33:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:33:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:34:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:34:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lnkpaswy/0 [executing] active: 
+18:37:18 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-lnkpaswy/0 [idle] active: 
+18:37:48 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: Reconciling runners
+18:38:18 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: Reconciling runners
+18:38:48 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: Reconciling runners
+18:39:18 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] maintenance: Reconciling runners
+18:39:48 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] active: 
+18:40:59 INFO Waiting for model:
+  test-lnkpaswy/0 [executing] active: 
+18:41:29 INFO Waiting for model:
+  test-lnkpaswy/0 [idle] active:
+18:42:01 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-22ir  github-pr-0c16d-lxd  localhost/localhost  3.1.10   unsupported  18:42:01Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-lnkpaswy           active      1  github-runner-image-builder  latest/edge   68  no       
+test-lnkpaswy                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-lnkpaswy/0*  active    idle   0        10.235.27.178          
+test-lnkpaswy/0*                         active    idle   1        10.235.27.168          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.235.27.178  juju-792ae5-0  ubuntu@22.04      Running
+1        started  10.235.27.168  juju-792ae5-1  ubuntu@22.04      Running
+
+18:42:01 INFO Juju error logs:
+
+machine-0: 18:26:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:20 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-lnkpaswy-0: 18:26:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:57 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:26:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-lnkpaswy-0: 18:26:57 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-lnkpaswy-0: 18:27:14 ERROR unit.github-runner-image-builder-lnkpaswy/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:42:02 INFO Forgetting model main...
