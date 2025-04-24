@@ -237,8 +237,9 @@ def _spawn_runner(
         logger.error("Failed to spawn a runner. Will reject the message.")
         msg.reject(requeue=True)
         return
-    # TODO JAVI REDUCE NUMBER OF CALLS TO ~5.
-    for _ in range(10):
+
+    # TODO EXPLAIN THE 5. WE WANT A MESSAGE BACK AS QUICK AS POSSIBLE SO A RUNNER CAN BE SPAWNED
+    for _ in range(5):
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             msg.ack()
             break

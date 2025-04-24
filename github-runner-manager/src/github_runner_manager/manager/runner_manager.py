@@ -33,6 +33,9 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
 
 logger = logging.getLogger(__name__)
 
+# TODO this deserves a comment
+RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
+
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
 
@@ -484,37 +487,49 @@ class RunnerManager:
                 metadata=args.metadata,
                 runner_context=runner_context,
             )
-
-            # TODO WAIT FOR RUNNER ONLINE IN HERE!
-            # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MODE
-            # (TO CHECK IF THE JOB WAS TAKEN)
-
             logger.info("JAVI cloud_instance %s", cloud_instance)
             logger.info("JAVI metadata %s", args.metadata)
-            # TODO something like 1min, 1min, 2min, 4min and 8min could be nice.
-            for _ in range(5):
-                try:
-                    runner = args.platform_provider.get_runner(args.metadata, instance_id)
-                except RunnerNotFoundError:
-                    # TODO SHOULD WE RAISE RunnerError in here? We expect a runner to be in the
-                    # platform, and we will save time...
-                    logger.error("JAVI Runner not found")
-                logger.info("JAVI github runner %s", runner)
-                if runner.status == GitHubRunnerStatus.ONLINE:
-                    logger.info("JAVI nice! runner online!")
-                    break
-                time.sleep(60)
-            else:
-                logger.info("JAVI grrr runner never got online!")
-                raise RunnerError("Runner did not get online")
+
+            # TODO WAIT FOR RUNNER ONLINE IN HERE!
+            # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MOD
+            # (TO CHECK IF THE JOB WAS TAKEN)
+            RunnerManager._wait_for_runner_online(
+                platform_provider=args.platform_provider,
+                instance_id=instance_id,
+                metadata=args.metadata,
+            )
 
             logger.info("JAVI after runner created and waited")
 
         except RunnerError:
-            # try to clean the runner in GitHub. This is necessary, as for reactive runners
-            # we do not know in the clean up if the runner is offline because if failed or
-            # because it is being created.
-            logger.warning("Deleting runner %s from platform", instance_id)
+            logger.warning("Deleting runner %s from platform after creation failed", instance_id)
             args.platform_provider.delete_runners([github_runner])
             raise
         return instance_id
+
+    @staticmethod
+    def _wait_for_runner_online(
+        platform_provider: PlatformProvider,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+    ) -> None:
+        """TODO."""
+        for wait_time in RUNNER_CREATION_WAITING_TIMES:
+            time.sleep(wait_time)
+            try:
+                runner = platform_provider.get_runner(metadata, instance_id)
+            except RunnerNotFoundError:
+                # TODO SHOULD WE RAISE RunnerError in here? We expect a runner to be in the
+                # platform, and we will save time...
+                logger.error("JAVI Runner not found")
+                break
+            logger.info("JAVI github runner %s", runner)
+            # TODO REVIEW THE ONLINE THING FOR JOBMANAGER. WHAT IS ONLINE
+            # AND OFFLINE IN THAT CASE?
+            if runner.status == GitHubRunnerStatus.ONLINE or runner.deletable:
+                logger.info("JAVI nice! runner online!")
+                break
+            time.sleep(60)
+        else:
+            logger.info("JAVI grrr runner never got online!")
+            raise RunnerError("Runner did not get online")

@@ -82,7 +82,7 @@ class JobManagerPlatform(PlatformProvider):
             id=int(metadata.runner_id),
             metadata=metadata,
             # TODO unfortunately, we only have one label.
-            labels=[response.label],
+            labels=[SelfHostedRunnerLabel(response.label)],
             # status
             status=status,
             instance_id=instance_id,
