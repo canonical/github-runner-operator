@@ -1,0 +1,261 @@
+18:24:34 WARNING unexpected facade SSHServer received from the controller
+18:24:34 INFO Adding model github-pr-0c16d-lxd:test-jobmanager-vdcz on cloud localhost
+18:24:34 WARNING unexpected facade SSHServer received from the controller
+18:24:34 WARNING unexpected facade SSHSession received from the controller
+18:24:34 WARNING unexpected facade SSHTunneler received from the controller
+18:24:36 INFO Deploying ch:amd64/jammy/mongodb-212
+18:24:38 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:59 INFO Deploying local:jammy/github-runner-0
+18:24:59 INFO Waiting for model:
+  test-d39dfz2o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d39dfz2o/0 [allocating] waiting: waiting for machine
+18:25:30 INFO Waiting for model:
+  test-d39dfz2o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d39dfz2o/0 [allocating] waiting: waiting for machine
+18:26:00 INFO Waiting for model:
+  test-d39dfz2o/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-d39dfz2o/0 [allocating] waiting: waiting for machine
+18:26:31 INFO Waiting for model:
+  test-d39dfz2o/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-d39dfz2o/0 [allocating] waiting: waiting for machine
+18:27:01 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [allocating] waiting: waiting for machine
+18:27:31 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] maintenance: Setting up Builder.
+18:28:01 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] maintenance: Setting up Builder.
+18:28:32 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] maintenance: Setting up Builder.
+18:29:02 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] maintenance: Setting up Builder.
+18:29:32 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] maintenance: Setting up Builder.
+18:30:03 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] blocked: image integration required.
+18:30:33 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:31:03 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:31:34 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:32:04 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:32:34 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:33:05 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:33:35 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:34:06 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:34:36 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:35:07 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:35:37 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:36:08 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:36:38 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:37:08 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:37:39 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:38:09 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:38:39 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:39:09 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:39:40 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:40:10 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:40:40 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:41:10 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:41:41 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:42:11 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:42:41 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:43:11 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:43:41 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:44:11 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:45:12 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-d39dfz2o/0 [executing] active: Building image.
+18:45:42 INFO Waiting for model:
+  test-d39dfz2o/0 [executing] maintenance: Reconciling runners
+18:46:02 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:46:02 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:46:32 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] active: 
+  mongodb/0 [executing] active: Primary
+18:47:16 INFO Waiting for model:
+  test-d39dfz2o/0 [executing] active: 
+18:47:46 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] active:
+18:47:56 INFO IP Address to use as the fake jobmanager: 10.145.216.26
+18:47:56 INFO Waiting for first check job status.
+18:47:56 INFO server log: [(<Request 'http://10.145.216.26:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>)] 
+18:47:56 INFO Waiting for get token.
+18:47:56 INFO 10.17.190.200 - - [24/Apr/2025 18:47:56] "GET /v1/jobs/99 HTTP/1.1" 200 -
+18:47:56 INFO 10.17.190.200 - - [24/Apr/2025 18:47:56] "POST /v1/jobs/99/token HTTP/1.1" 200 -
+18:47:56 INFO server log: [(<Request 'http://10.145.216.26:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>)] 
+18:47:56 INFO trying to prepare tunnel for builder agent
+18:47:58 INFO no runner or two or more runners in unit, return False
+18:47:58 INFO Wait for condition not met, sleeping 10
+18:48:08 INFO trying to prepare tunnel for builder agent
+18:48:10 INFO no addresses yet, return False
+18:48:10 INFO Wait for condition not met, sleeping 10
+18:48:20 INFO trying to prepare tunnel for builder agent
+18:48:21 INFO no addresses yet, return False
+18:48:21 INFO Wait for condition not met, sleeping 10
+18:48:31 INFO trying to prepare tunnel for builder agent
+18:48:35 INFO no addresses yet, return False
+18:48:35 INFO Wait for condition not met, sleeping 10
+18:48:45 INFO trying to prepare tunnel for builder agent
+18:48:45 INFO no addresses yet, return False
+18:48:45 INFO Wait for condition not met, sleeping 10
+18:48:55 INFO trying to prepare tunnel for builder agent
+18:48:56 INFO no addresses yet, return False
+18:48:56 INFO Wait for condition not met, sleeping 10
+18:49:06 INFO trying to prepare tunnel for builder agent
+18:49:06 INFO no addresses yet, return False
+18:49:06 INFO Wait for condition not met, sleeping 10
+18:49:16 INFO trying to prepare tunnel for builder agent
+18:49:18 INFO [TEST SETUP] Run command 'echo hello' on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:49:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:49:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 'echo hello''
+18:49:27 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.213 port 22: Connection refused
+'
+18:49:27 INFO cannot ssh yet, return False
+18:49:27 INFO Wait for condition not met, sleeping 10
+18:49:37 INFO trying to prepare tunnel for builder agent
+18:49:39 INFO [TEST SETUP] Run command 'echo hello' on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:49:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:49:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 'echo hello''
+18:49:42 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.213' (ED25519) to the list of known hosts.
+'
+18:50:42 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.26 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:50:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:50:43 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.26 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+18:50:44 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.26 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+18:50:44 INFO [TEST SETUP] Exposing port 8000 on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:50:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:50:45 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.26:8000 -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.213 &
+18:50:46 INFO ssh tunnel result 0 None None
+18:50:48 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:50:48 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:50:49 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 nc -z localhost 8000'
+18:50:50 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+18:50:50 INFO Waiting for builder-agent to contact us.
+18:51:12 INFO 10.17.190.200 - - [24/Apr/2025 18:51:12] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:12 INFO server log: [(<Request 'http://10.145.216.26:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:51:13 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-d39dfz2o-0-r-c9fc9b9ac2bf
+18:51:13 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:20:9d'}]])
+18:51:14 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-d39dfz2o-0-r-c9fc9b9ac2bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+18:51:15 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  20858  30674 --:--:-- --:--:-- --:--:-- 42000
+'
+18:51:15 INFO Waiting for builder-agent to contact us.
+18:51:17 INFO 10.17.190.200 - - [24/Apr/2025 18:51:17] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:22 INFO 10.17.190.200 - - [24/Apr/2025 18:51:22] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:27 INFO 10.17.190.200 - - [24/Apr/2025 18:51:27] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:32 INFO 10.17.190.200 - - [24/Apr/2025 18:51:32] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:37 INFO 10.17.190.200 - - [24/Apr/2025 18:51:37] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:42 INFO 10.17.190.200 - - [24/Apr/2025 18:51:42] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:47 INFO 10.17.190.200 - - [24/Apr/2025 18:51:47] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:47 INFO server log after executing: [(<Request 'http://10.145.216.26:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.26:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)]
+18:51:52 INFO 10.17.190.200 - - [24/Apr/2025 18:51:52] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:51:57 INFO 10.17.190.200 - - [24/Apr/2025 18:51:57] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:52:14 INFO Waiting for model:
+  test-d39dfz2o/0 [executing] active: 
+18:52:45 INFO Waiting for model:
+  test-d39dfz2o/0 [idle] active: 
+18:52:46 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-vdcz  github-pr-0c16d-lxd  localhost/localhost  3.6.5    unsupported  18:52:46Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-d39dfz2o           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-d39dfz2o                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-d39dfz2o/0*  active    idle   1        10.17.190.133              
+mongodb/0*                               active    idle   0        10.17.190.219   27017/tcp  Primary
+test-d39dfz2o/0*                         active    idle   2        10.17.190.200              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.17.190.219  juju-d701a0-0  ubuntu@22.04      Running
+1        started  10.17.190.133  juju-d701a0-1  ubuntu@22.04      Running
+2        started  10.17.190.200  juju-d701a0-2  ubuntu@22.04      Running
+
+18:52:46 INFO Juju error logs:
+
+machine-0: 18:26:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:26:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:26:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:26:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-d39dfz2o-0: 18:26:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:26:34 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:26:34 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 18:27:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-d39dfz2o-0: 18:27:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-d39dfz2o-0: 18:27:46 ERROR unit.github-runner-image-builder-d39dfz2o/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:52:46 INFO Forgetting model main...

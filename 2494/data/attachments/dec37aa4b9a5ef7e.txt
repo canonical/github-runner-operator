@@ -1,0 +1,127 @@
+18:24:28 WARNING unexpected facade SSHServer received from the controller
+18:24:28 INFO Adding model github-pr-0c16d-lxd:test-charm-metrics-failure-2d4j on cloud localhost
+18:24:28 WARNING unexpected facade SSHServer received from the controller
+18:24:28 WARNING unexpected facade SSHSession received from the controller
+18:24:28 WARNING unexpected facade SSHTunneler received from the controller
+18:24:29 INFO GitHub token rate limit: Rate(reset=2025-04-24 18:36:46+00:00, remaining=4961, limit=5000)
+18:24:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:00 INFO Deploying local:jammy/github-runner-0
+18:25:00 INFO Waiting for model:
+  test-n1n31ey1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n1n31ey1/0 [allocating] waiting: waiting for machine
+18:25:30 INFO Waiting for model:
+  test-n1n31ey1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n1n31ey1/0 [allocating] waiting: waiting for machine
+18:26:00 INFO Waiting for model:
+  test-n1n31ey1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n1n31ey1/0 [allocating] waiting: agent initialising
+18:26:31 INFO Waiting for model:
+  test-n1n31ey1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:27:01 INFO Waiting for model:
+  test-n1n31ey1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:27:31 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:28:02 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:28:32 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:29:02 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] maintenance: Setting up Builder.
+18:29:33 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:30:03 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:30:34 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:31:04 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:31:35 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:32:05 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:32:35 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:33:05 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:33:35 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:34:06 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:34:36 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:35:07 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:35:37 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:36:07 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:36:37 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:37:08 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:37:38 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:38:08 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:38:38 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n1n31ey1/0 [executing] active: Building image.
+18:39:09 INFO Waiting for model:
+  test-n1n31ey1/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-n1n31ey1/0 [idle] active: 
+18:39:39 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] active: 
+18:39:57 INFO Waiting for model:
+  test-n1n31ey1/0 [executing] active: 
+18:40:27 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] active:
+18:44:17 INFO Waiting for model:
+  test-n1n31ey1/0 [executing] maintenance: Reconciling runners
+18:44:47 INFO Waiting for model:
+  test-n1n31ey1/0 [idle] active: 
+18:44:55 INFO [TEST SETUP] Exposing port 8080 on test-n1n31ey1-0-n-fa8bd1ccd78a
+18:44:55 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.30', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4e:3f:20'}]])
+18:44:57 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-n1n31ey1-0-n-fa8bd1ccd78a.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.30 &
+18:44:58 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.30' (ED25519) to the list of known hosts.
+
+18:44:59 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-n1n31ey1-0-n-fa8bd1ccd78a
+18:44:59 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.30', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4e:3f:20'}]])
+18:45:00 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-n1n31ey1-0-n-fa8bd1ccd78a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.30 nc -z localhost 8080'
+18:45:01 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:45:02 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-n1n31ey1-0-n-fa8bd1ccd78a
+18:45:02 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.30', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4e:3f:20'}]])
+18:45:03 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-n1n31ey1-0-n-fa8bd1ccd78a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.30 curl http://localhost:8080'
+18:45:04 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  84627      0 --:--:-- --:--:-- --:--:--  101k
+'
