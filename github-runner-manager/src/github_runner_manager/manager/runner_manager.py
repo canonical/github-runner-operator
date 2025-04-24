@@ -529,7 +529,7 @@ class RunnerManager:
             if runner.status == GitHubRunnerStatus.ONLINE or runner.deletable:
                 logger.info("JAVI nice! runner online!")
                 break
-            time.sleep(60)
+            time.sleep(wait_time)
         else:
             logger.info("JAVI grrr runner never got online!")
             raise RunnerError("Runner did not get online")
