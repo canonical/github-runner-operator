@@ -77,9 +77,7 @@ class GitHubRunnerPlatform(PlatformProvider):
             TODO
         """
         try:
-            runner = self._client.get_runner_info(
-                self._path, self._prefix, int(metadata.runner_id)
-            )
+            runner = self._client.get_runner(self._path, self._prefix, int(metadata.runner_id))
         except GithubRunnerNotFoundError:
             raise RunnerNotFoundError from GithubRunnerNotFoundError
 
@@ -96,7 +94,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             Information on the runners.
         """
-        runner_list = self._client.get_runner_github_info(self._path, self._prefix)
+        runner_list = self._client.list_runners(self._path, self._prefix)
 
         if states is None:
             return tuple(runner_list)

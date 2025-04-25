@@ -84,7 +84,7 @@ class SelfHostedRunner(BaseModel):
         """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
 
         Args:
-            github_dict: GitHub dictionary from the list_self_hosted_runners endpoint.
+            github_dict: GitHub dictionary from the list_runners endpoint.
             instance_id: InstanceID for the runner.
 
         Returns:

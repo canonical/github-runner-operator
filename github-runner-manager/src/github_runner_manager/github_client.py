@@ -97,26 +97,20 @@ class GithubClient:
         self._client = GhApi(token=self._token)
 
     @catch_http_errors
-    def get_runner_info(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
-        """TODO.
-
-        https://docs.github.com/en/rest/actions/self-hosted-runners?
-        apiVersion=2022-11-28#get-a-self-hosted-runner-for-an-organization
-        /orgs/{org}/actions/runners/{runner_id}
-        https://docs.github.com/en/rest/actions/self-hosted-runners?
-        apiVersion=2022-11-28#get-a-self-hosted-runner-for-a-repository
-        /repos/{owner}/{repo}/actions/runners/{runner_id}
+    def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
+        """Get a specific self-hosted runner information under a repo or org.
 
         Args:
-            path: TODO
-            prefix: TODO
-            runner_id: TODO
+            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+                name.
+            prefix: Build the InstanceID with this prefix.
+            runner_id: Runner id to get the self hosted runner.
 
         Raises:
-            GithubRunnerNotFoundError: TODO
+            GithubRunnerNotFoundError: If the runner is not found.
 
         Returns:
-            TODO
+            The information for the requested runner.
         """
         try:
             if isinstance(path, GitHubRepo):
@@ -133,8 +127,8 @@ class GithubClient:
         return SelfHostedRunner.build_from_github(raw_runner, instance_id)
 
     @catch_http_errors
-    def get_runner_github_info(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
-        """Get runner information on GitHub under a repo or org.
+    def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
+        """Get all runners information on GitHub under a repo or org.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization

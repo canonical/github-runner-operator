@@ -270,10 +270,10 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
-def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: A mocked Github Client that returns two runners, one for the requested prefix.
-    act: Call get_runner_github_info with the prefix.
+    act: Call list_runners with the prefix.
     assert: A correct runners is returned, the one matching the prefix.
     """
     response = {
@@ -316,7 +316,7 @@ def test_get_runner_github_info(github_client: GithubClient, monkeypatch: pytest
     monkeypatch.setattr(github_runner_manager.github_client, "pages", pages)
 
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    runners = github_client.get_runner_github_info(path=github_repo, prefix="current-unit-0")
+    runners = github_client.list_runners(path=github_repo, prefix="current-unit-0")
 
     assert len(runners) == 1
     runner0 = runners[0]
@@ -545,7 +545,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
     )
 
 
-def test_get_runner_info(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+def test_get_runner(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
     raw_runner = {
         "id": 588,
         "name": "test-r1601frq-0-n-99e88ff9d9ce",
