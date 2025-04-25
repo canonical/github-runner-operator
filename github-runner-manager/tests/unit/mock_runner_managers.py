@@ -18,11 +18,13 @@ from github_runner_manager.manager.cloud_runner_manager import (
 )
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.platform.github_provider import (
+    PlatformRunnerState,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
-    RunnerNotFoundError,
+    PlatformRunnerHealth,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -426,39 +428,28 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         self.state = state
         self.path = path
 
-    def get_runner(
+    def get_runner_health(
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
-    ) -> SelfHostedRunner:
+    ) -> PlatformRunnerHealth:
         """Get info on self-hosted runner.
 
         Args:
             metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
 
-        Raises:
-            RunnerNotFoundError: TODO
-
         Returns:
-            TODO
+            Information about the health of the runner
         """
         if instance_id in self.state.runners:
             runner = self.state.runners[instance_id]
-            return SelfHostedRunner(
+            return PlatformRunnerHealth(
+                online=runner.github_state != PlatformRunnerState.OFFLINE,
                 busy=runner.github_state == PlatformRunnerState.BUSY,
-                id=int(metadata.runner_id),
-                labels=[],
-                instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
-                status=(
-                    GitHubRunnerStatus.OFFLINE
-                    if runner.github_state == PlatformRunnerState.OFFLINE
-                    else GitHubRunnerStatus.ONLINE
-                ),
-                metadata=metadata,
+                deletable=False,
             )
-
-        raise RunnerNotFoundError
+        return PlatformRunnerHealth(online=False, busy=False, deletable=True)
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]

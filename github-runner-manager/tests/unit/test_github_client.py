@@ -11,12 +11,15 @@ from urllib.error import HTTPError
 
 import pytest
 import requests
+
+# HTTP404NotFoundError is not found by pylint
+from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
 from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
-from github_runner_manager.github_client import GithubClient
+from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -545,10 +548,33 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
     )
 
 
-def test_get_runner(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize(
+    "github_repo",
+    [
+        pytest.param(
+            GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16)), id="Org runner"
+        ),
+        pytest.param(
+            GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16)), id="Repo runner"
+        ),
+    ],
+)
+def test_get_runner(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+    github_repo: GitHubOrg | GitHubRepo,
+):
+    """
+    arrange: A mocked GhAPI Client that returns a runner based on the github repo or org.
+    act: Call get_runner in GithubClient.
+    assert: The runner is returned correctly returned.
+    """
+    prefix = "unit-0"
+    runner_id = 1
+
     raw_runner = {
-        "id": 588,
-        "name": "test-r1601frq-0-n-99e88ff9d9ce",
+        "id": runner_id,
+        "name": f"{prefix}-99e88ff9d9ce",
         "os": "linux",
         "status": "offline",
         "busy": False,
@@ -559,5 +585,34 @@ def test_get_runner(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch
             {"id": 0, "name": "test-89be82ae89d6", "type": "read-only"},
         ],
     }
-    assert raw_runner
-    # TODO JAVI PENDING TO WRITE THESE TESTS
+
+    if isinstance(github_repo, GitHubRepo):
+        mocked_ghapi_function = github_client._client.actions.get_self_hosted_runner_for_repo
+    else:
+        mocked_ghapi_function = github_client._client.actions.get_self_hosted_runner_for_org
+    mocked_ghapi_function.return_value = raw_runner
+
+    github_runner = github_client.get_runner(github_repo, prefix, runner_id)
+
+    assert github_runner
+    assert github_runner.id == runner_id
+    assert github_runner.metadata.runner_id == str(runner_id)
+
+
+def test_get_runner_not_found(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A mocked GhApi Github Client that raises 404 when a runner is requested.
+    act: Call get_runner in GithubClient.
+    assert: The exception GithubRunnerNotFoundError is raised.
+    """
+    path = GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16))
+    prefix = "unit-0"
+    runner_id = 1
+    github_client._client.actions.get_self_hosted_runner_for_org.side_effect = (
+        HTTP404NotFoundError("", {}, None)
+    )
+    with pytest.raises(GithubRunnerNotFoundError):
+        _ = github_client.get_runner(path, prefix, runner_id)

@@ -17,6 +17,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerContext, Runn
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
 )
 from github_runner_manager.types_.github import (
@@ -40,12 +41,12 @@ class JobManagerPlatform(PlatformProvider):
         """
         return cls()
 
-    def get_runner(
+    def get_runner_health(
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
-    ) -> SelfHostedRunner:
-        """Get info on self-hosted runner.
+    ) -> PlatformRunnerHealth:
+        """Get health information on self-hosted runner.
 
         Args:
             metadata: Metadata for the runner.
@@ -55,7 +56,7 @@ class JobManagerPlatform(PlatformProvider):
             PlatformApiError: TODO
 
         Returns:
-           The runner in the jobmanager.
+           The health of the runner in the jobmanager.
         """
         configuration = jobmanager_client.Configuration(host=metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
@@ -69,25 +70,11 @@ class JobManagerPlatform(PlatformProvider):
                 raise PlatformApiError("API error") from exc
 
         # response.status one of: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
-        # response.deletable
+        online = response.status in ["PENDING", "IN_PROGRESS", "COMPLETED"]
+        deletable = response.deletable
+        busy = not deletable or response.status in ["PENDING", "IN_PROGRESS"]
 
-        busy = response.status == "FAILED"
-        status = (
-            GitHubRunnerStatus.OFFLINE
-            if response.status == "FAILED"
-            else GitHubRunnerStatus.ONLINE
-        )
-        return SelfHostedRunner(
-            busy=busy,
-            id=int(metadata.runner_id),
-            metadata=metadata,
-            # TODO unfortunately, we only have one label.
-            labels=[SelfHostedRunnerLabel(response.label)],
-            # status
-            status=status,
-            instance_id=instance_id,
-            deletable=response.deletable,
-        )
+        return PlatformRunnerHealth(online=online, deletable=deletable, busy=busy)
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

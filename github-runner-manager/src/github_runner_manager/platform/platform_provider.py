@@ -25,20 +25,16 @@ class JobNotFoundError(PlatformError):
     """Represents an error when the job could not be found on the platform."""
 
 
-class RunnerNotFoundError(PlatformError):
-    """Represents an error when the runner could not be found on the platform."""
-
-
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
     @abc.abstractmethod
-    def get_runner(
+    def get_runner_health(
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
-    ) -> SelfHostedRunner:
-        """Get info on self-hosted runner.
+    ) -> "PlatformRunnerHealth":
+        """Get health information on self-hosted runner.
 
         Args:
             metadata: Metadata for the runner.
@@ -105,6 +101,21 @@ class PlatformProvider(abc.ABC):
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.
         """
+
+
+@dataclass
+class PlatformRunnerHealth:
+    """TODO.
+
+    Attributes:
+        online: TODO
+        busy: TODO
+        deletable: TODO
+    """
+
+    online: bool
+    busy: bool
+    deletable: bool
 
 
 # Pending to review the coupling of this class with GitHub

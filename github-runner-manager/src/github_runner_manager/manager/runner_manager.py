@@ -27,9 +27,8 @@ from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerState,
-    RunnerNotFoundError,
 )
-from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
+from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -516,18 +515,12 @@ class RunnerManager:
         """TODO."""
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
             time.sleep(wait_time)
-            try:
-                runner = platform_provider.get_runner(metadata, instance_id)
-            except RunnerNotFoundError:
-                # TODO SHOULD WE RAISE RunnerError in here? We expect a runner to be in the
-                # platform, and we will save time...
-                logger.error("JAVI Runner not found")
-                break
-            logger.info("JAVI github runner %s", runner)
+            runner_health = platform_provider.get_runner_health(metadata, instance_id)
+            logger.info("JAVI github runner health %s", runner_health)
             # TODO REVIEW THE ONLINE THING FOR JOBMANAGER. WHAT IS ONLINE
             # AND OFFLINE IN THAT CASE?
-            if runner.status == GitHubRunnerStatus.ONLINE or runner.deletable:
-                logger.info("JAVI nice! runner online!")
+            if runner_health.online or runner_health.deletable:
+                logger.info("JAVI nice! runner online or deletable!. No need to wait!")
                 break
         else:
             logger.info("JAVI grrr runner never got online!")

@@ -17,10 +17,10 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
-    RunnerNotFoundError,
 )
-from github_runner_manager.types_.github import SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -59,29 +59,27 @@ class GitHubRunnerPlatform(PlatformProvider):
             github_client=GithubClient(github_configuration.token),
         )
 
-    def get_runner(
+    def get_runner_health(
         self,
         metadata: RunnerMetadata,
         instance_id: InstanceID,
-    ) -> SelfHostedRunner:
+    ) -> PlatformRunnerHealth:
         """Get info on self-hosted runner.
 
         Args:
             metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
 
-        Raises:
-            RunnerNotFoundError: Work in progress.
-
         Returns:
-            TODO
+            Information about the health status of the runner.
         """
         try:
             runner = self._client.get_runner(self._path, self._prefix, int(metadata.runner_id))
-        except GithubRunnerNotFoundError:
-            raise RunnerNotFoundError from GithubRunnerNotFoundError
+            online = runner.status == GitHubRunnerStatus.ONLINE
+            return PlatformRunnerHealth(online=online, busy=runner.busy, deletable=False)
 
-        return runner
+        except GithubRunnerNotFoundError:
+            return PlatformRunnerHealth(online=False, busy=False, deletable=True)
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
