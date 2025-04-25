@@ -236,9 +236,11 @@ def test_create_runner(
     runner_healthy: PlatformRunnerHealth,
 ):
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Given a specific pattern for creation waiting times and a list of.
+        PlatformRunnerHealth objects being the last one a healthy runner.
+    act: call runner_manager.create_runners.
+    assert: The runner manager will create the runner and make requests to check the health
+        until it gets a healthy state.
     """
     monkeypatch.setattr(
         runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", creation_waiting_times
@@ -264,8 +266,8 @@ def test_create_runner(
     )
 
     (instance_id,) = runner_manager.create_runners(1, RunnerMetadata(), True)
-    assert instance_id
 
+    assert instance_id
     cloud_runner_manager.create_runner.assert_called_once()
     # The method to get the runner health was called three times
     # until the runner was online.
@@ -275,11 +277,13 @@ def test_create_runner(
 
 def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: TODO.
-    act: TODO.
-    assert: TODO.
+    arrange: Given a specific pattern for creation waiting times and a list of.
+        PlatformRunnerHealth objects where none is healthy
+    act: call runner_manager.create_runners.
+    assert: The runner manager will create the runner, it will check for the health state,
+       but the runner will not get into healthy state and the platform api for deleting
+       the runner will be called.
     """
-    # Wait and retry for three times.
     runner_creation_waiting_times = (0, 0)
     monkeypatch.setattr(
         runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", runner_creation_waiting_times
