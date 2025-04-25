@@ -4,6 +4,7 @@
 """Manage the service of github-runner-manager."""
 
 import json
+import logging
 from pathlib import Path
 
 import jinja2
@@ -28,11 +29,15 @@ GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE = "github-runner-manager.service"
 GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH = (
     SYSTEMD_SERVICE_PATH / GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE
 )
+GITHUB_RUNNER_MANAGER_PACKAGE = "github_runner_manager"
+JOB_MANAGER_PACKAGE = "jobmanager_client"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
+
+logger = logging.getLogger(__name__)
 
 
 def setup(state: CharmState, app_name: str, unit_name: str) -> None:
@@ -54,8 +59,22 @@ def install_package() -> None:
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
+    logger.info("Upgrading pip")
     try:
         execute_command(["python3", "-m", "pip", "install", "--upgrade", "pip"])
+    except SubprocessError as err:
+        raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
+
+    logger.info("Uninstalling previous version of packages")
+    try:
+        execute_command(["python3", "-m", "pip", "uninstall", GITHUB_RUNNER_MANAGER_PACKAGE])
+        execute_command(["python3", "-m", "pip", "uninstall", JOB_MANAGER_PACKAGE])
+    except SubprocessError:
+        logger.info(
+            "Unable to uninstall existing packages, likely due to previous version not installed"
+        )
+
+    try:
         # Use `--prefix` to install the package in a location (/usr) all user can use and
         # `--ignore-installed` to force all dependencies be to installed under /usr.
         execute_command(
