@@ -1,0 +1,95 @@
+18:24:54 WARNING unexpected facade SSHServer received from the controller
+18:24:54 INFO Adding model github-pr-223ed-lxd:test-charm-no-runner-usrz on cloud localhost
+18:24:55 WARNING unexpected facade SSHServer received from the controller
+18:24:55 WARNING unexpected facade SSHSession received from the controller
+18:24:55 WARNING unexpected facade SSHTunneler received from the controller
+18:24:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:15 INFO Deploying local:jammy/github-runner-0
+18:25:15 INFO Waiting for model:
+  test-epp38nrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-epp38nrx/0 [allocating] waiting: waiting for machine
+18:25:45 INFO Waiting for model:
+  test-epp38nrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-epp38nrx/0 [allocating] waiting: waiting for machine
+18:26:15 INFO Waiting for model:
+  test-epp38nrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:26:46 INFO Waiting for model:
+  test-epp38nrx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:27:16 INFO Waiting for model:
+  test-epp38nrx/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:27:47 INFO Waiting for model:
+  test-epp38nrx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:28:17 INFO Waiting for model:
+  test-epp38nrx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:28:47 INFO Waiting for model:
+  test-epp38nrx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-epp38nrx/0 [executing] maintenance: Setting up Builder.
+18:29:17 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:29:47 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:30:17 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:30:48 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:31:18 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:31:49 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:32:19 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:32:49 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:33:19 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:33:49 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:34:19 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:34:49 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:35:19 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:35:50 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:36:20 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:36:50 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:37:21 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:37:51 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:38:21 INFO Waiting for model:
+  test-epp38nrx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-epp38nrx/0 [executing] active: Building image.
+18:38:51 INFO Waiting for model:
+  test-epp38nrx/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-epp38nrx/0 [idle] active: 
+18:39:22 INFO Waiting for model:
+  test-epp38nrx/0 [idle] active: 
+18:39:29 INFO Waiting for model:
+  test-epp38nrx/0 [idle] active:

@@ -1,0 +1,116 @@
+18:24:36 WARNING unexpected facade SSHServer received from the controller
+18:24:36 INFO Adding model github-pr-223ed-lxd:test-charm-metrics-failure-6h15 on cloud localhost
+18:24:36 WARNING unexpected facade SSHServer received from the controller
+18:24:36 WARNING unexpected facade SSHSession received from the controller
+18:24:36 WARNING unexpected facade SSHTunneler received from the controller
+18:24:37 INFO GitHub token rate limit: Rate(reset=2025-04-25 18:49:43+00:00, remaining=4969, limit=5000)
+18:24:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:10 INFO Deploying local:jammy/github-runner-0
+18:25:10 INFO Waiting for model:
+  test-b34kyzwa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b34kyzwa/0 [allocating] waiting: waiting for machine
+18:25:40 INFO Waiting for model:
+  test-b34kyzwa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b34kyzwa/0 [allocating] waiting: waiting for machine
+18:26:10 INFO Waiting for model:
+  test-b34kyzwa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:26:41 INFO Waiting for model:
+  test-b34kyzwa/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:27:11 INFO Waiting for model:
+  test-b34kyzwa/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:27:41 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:28:11 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:28:41 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] maintenance: Setting up Builder.
+18:29:11 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:29:42 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:30:12 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:30:43 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:31:13 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:31:44 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:32:14 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:32:45 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:33:15 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:33:45 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:34:16 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:34:46 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:35:16 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:35:46 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:36:16 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:36:46 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:37:16 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:37:47 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b34kyzwa/0 [executing] active: Building image.
+18:38:17 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] active: 
+18:38:48 INFO Waiting for model:
+  test-b34kyzwa/0 [executing] active:
+18:42:52 INFO Waiting for model:
+  test-b34kyzwa/0 [executing] maintenance: Reconciling runners
+18:43:22 INFO Waiting for model:
+  test-b34kyzwa/0 [idle] active: 
+18:43:34 INFO [TEST SETUP] Exposing port 8080 on test-b34kyzwa-0-n-b3a214ce3d7f
+18:43:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.228', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:6e:e5'}]])
+18:43:35 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-b34kyzwa-0-n-b3a214ce3d7f.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.228 &
+18:43:36 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.228' (ED25519) to the list of known hosts.
+
+18:43:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-b34kyzwa-0-n-b3a214ce3d7f
+18:43:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.228', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:6e:e5'}]])
+18:43:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-b34kyzwa-0-n-b3a214ce3d7f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.228 nc -z localhost 8080'
+18:43:40 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:43:40 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-b34kyzwa-0-n-b3a214ce3d7f
+18:43:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.228', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ae:6e:e5'}]])
+18:43:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-b34kyzwa-0-n-b3a214ce3d7f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.228 curl http://localhost:8080'
+18:43:42 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  87489      0 --:--:-- --:--:-- --:--:--  101k
+'

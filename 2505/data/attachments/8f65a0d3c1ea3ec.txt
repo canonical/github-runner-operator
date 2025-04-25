@@ -1,0 +1,57 @@
+18:53:03 INFO Creating 1 runners
+18:53:04 INFO Creating openstack server with test-fgl02kc6-0-n-2d0f6a5310f5
+18:53:17 INFO Waiting for runner process to startup: test-fgl02kc6-0-n-2d0f6a5310f5
+18:53:28 WARNING NoValidConnectionsError. Unable to SSH into test-fgl02kc6-0-n-2d0f6a5310f5 with address 10.145.193.78. Error: [Errno None] Unable to connect to port 22 on 10.145.193.78
+18:53:28 WARNING Retrying error in 60 seconds: Failed to SSH to test-fgl02kc6-0-n-2d0f6a5310f5 during creation possible due to setup not completed
+18:54:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:28 INFO Authentication (publickey) successful!
+18:54:29 INFO Runner startup process found to be healthy on test-fgl02kc6-0-n-2d0f6a5310f5
+18:54:29 INFO Waiting for runner process to be running: test-fgl02kc6-0-n-2d0f6a5310f5
+18:54:29 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:29 INFO Authentication (publickey) successful!
+18:54:30 INFO Runner test-fgl02kc6-0-n-2d0f6a5310f5 found to be healthy
+18:54:30 INFO Runner test-fgl02kc6-0-n-2d0f6a5310f5 created successfully
+18:54:30 INFO Getting runners...
+18:54:31 INFO Getting all openstack servers managed by the charm
+18:54:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:32 INFO Authentication (publickey) successful!
+18:54:33 INFO Found following runners: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:33 INFO Getting runners...
+18:54:34 INFO Getting all openstack servers managed by the charm
+18:54:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:35 INFO Authentication (publickey) successful!
+18:54:36 INFO Found following runners: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:36 INFO Getting runners...
+18:54:37 INFO Getting all openstack servers managed by the charm
+18:54:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:38 INFO Authentication (publickey) successful!
+18:54:39 INFO Found following runners: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:41 INFO Wait for condition not met, sleeping 10
+18:54:52 INFO Getting runners...
+18:54:53 INFO Getting all openstack servers managed by the charm
+18:54:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:54 INFO Authentication (publickey) successful!
+18:54:55 INFO Found following runners: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:55 WARNING Found runner instance on cloud but not registered on GitHub: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:55 INFO Getting runners...
+18:54:56 INFO Getting all openstack servers managed by the charm
+18:54:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:57 INFO Authentication (publickey) successful!
+18:54:57 INFO Found following runners: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:57 WARNING Found runner instance on cloud but not registered on GitHub: {'test-fgl02kc6-0-n-2d0f6a5310f5'}
+18:54:59 INFO Offline github runners to delete: []:
+18:54:59 INFO Getting all openstack servers managed by the charm
+18:55:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:55:00 INFO Authentication (publickey) successful!
+18:55:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:55:01 INFO Authentication (publickey) successful!
+18:55:01 INFO [chan 2] Opened sftp connection (server version 3)
+18:55:01 INFO Running runner removal script for test-fgl02kc6-0-n-2d0f6a5310f5
+18:55:02 INFO Deleting openstack server with test-fgl02kc6-0-n-2d0f6a5310f5
+18:55:04 INFO Cleaning up SSH key files
+18:55:04 INFO Found 0 key files, clean up 0 key files
+18:55:04 INFO Cleaning up openstack keypairs
+18:55:05 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+18:55:05 INFO Getting runners...
+18:55:06 INFO Getting all openstack servers managed by the charm
+18:55:07 INFO Found following runners: set()

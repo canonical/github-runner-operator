@@ -1,0 +1,56 @@
+18:44:03 INFO Waiting for model:
+  test-epp38nrx/0 [executing] maintenance: Reconciling runners
+18:44:33 INFO Waiting for model:
+  test-epp38nrx/0 [idle] active: 
+18:45:15 INFO Waiting for model:
+  test-epp38nrx/0 [executing] active: 
+18:45:45 INFO Waiting for model:
+  test-epp38nrx/0 [idle] active:
+18:45:48 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-usrz  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  18:45:48Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-epp38nrx           active      1  github-runner-image-builder  latest/edge   68  no       
+test-epp38nrx                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-epp38nrx/0*  active    idle   0        10.65.157.178          
+test-epp38nrx/0*                         active    idle   1        10.65.157.42           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.65.157.178  juju-389ec5-0  ubuntu@22.04      Running
+1        started  10.65.157.42   juju-389ec5-1  ubuntu@22.04      Running
+
+18:45:48 INFO Juju error logs:
+
+machine-0: 18:26:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-epp38nrx-0: 18:26:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-epp38nrx-0: 18:26:44 ERROR unit.github-runner-image-builder-epp38nrx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:27:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-epp38nrx-0: 18:27:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-epp38nrx-0: 18:45:14 ERROR unit.test-epp38nrx/0.juju-log Unable to get SSH connection for instance test-epp38nrx-0-n-d2efd89eedd6, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-epp38nrx-0-n-d2efd89eedd6, key path: /home/runner-manager/.ssh/test-epp38nrx-0-n-d2efd89eedd6.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-epp38nrx-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-epp38nrx-0-n-d2efd89eedd6
+
+18:45:48 INFO Forgetting model main...
