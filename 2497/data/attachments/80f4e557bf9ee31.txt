@@ -1,0 +1,54 @@
+06:48:55 INFO Waiting for model:
+  test-t9cg4hvs/0 [executing] maintenance: Reconciling runners
+06:52:11 INFO Waiting for model:
+  test-t9cg4hvs/0 [executing] maintenance: Reconciling runners
+06:52:42 INFO Waiting for model:
+  test-t9cg4hvs/0 [idle] active: 
+06:52:46 INFO Wait for condition not met, sleeping 30
+06:53:31 INFO [TEST SETUP] Run command pkill -9 run.sh on test-t9cg4hvs-0-n-e42613123165
+06:53:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.110', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e2:bf:15'}]])
+06:53:32 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-t9cg4hvs-0-n-e42613123165.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.110 pkill -9 run.sh'
+06:53:33 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.110' (ED25519) to the list of known hosts.
+'
+06:53:38 INFO Runner test-t9cg4hvs-0-n-e42613123165 status: online
+06:53:38 INFO Runner still marked as online, waiting for it to be marked offline
+06:55:03 INFO Waiting for model:
+  test-t9cg4hvs/0 [executing] active: 
+06:55:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745563734.2855644, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.034279584884644}
+{"timestamp": 1745563745.9931235, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.714221000671387}
+{"timestamp": 1745563911.0574856, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 134.40993237495422}
+{"timestamp": 1745563929.6483297, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 17.536839723587036}
+{"timestamp": 1745563948.0940678, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 16.386687755584717}
+{"timestamp": 1745563870.0, "event": "runner_installed", "flavor": "test-t9cg4hvs", "duration": 82.0}
+{"timestamp": 1745563970.0, "event": "runner_start", "flavor": "test-t9cg4hvs", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 100.0, "queue_duration": 3.0}
+{"timestamp": 1745564013.0, "event": "runner_stop", "flavor": "test-t9cg4hvs", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 43.0, "job_conclusion": "cancelled"}
+{"timestamp": 1745564103.077064, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.659462213516235}
+{"timestamp": 1745564117.894294, "event": "reconciliation", "flavor": "test-t9cg4hvs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.73238754272461}
+06:55:36 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-bxym  github-pr-0c16d-lxd  localhost/localhost  3.6.5    unsupported  06:55:36Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-t9cg4hvs           active      1  github-runner-image-builder  latest/edge   68  no       
+test-t9cg4hvs                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-t9cg4hvs/0*  active    idle   0        10.54.156.136             
+test-t9cg4hvs/0*                         active    idle   1        10.54.156.161   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.54.156.136  juju-c27146-0  ubuntu@22.04      Running
+1        started  10.54.156.161  juju-c27146-1  ubuntu@22.04      Running
+
+06:55:36 INFO Juju error logs:
+
+machine-0: 06:26:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-t9cg4hvs-0: 06:26:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:26:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t9cg4hvs-0: 06:26:41 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-t9cg4hvs-0: 06:26:59 ERROR unit.github-runner-image-builder-t9cg4hvs/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:55:36 INFO Forgetting model main...
