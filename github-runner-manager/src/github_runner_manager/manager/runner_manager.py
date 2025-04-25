@@ -492,7 +492,7 @@ class RunnerManager:
             # TODO WAIT FOR RUNNER ONLINE IN HERE!
             # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MOD
             # (TO CHECK IF THE JOB WAS TAKEN)
-            RunnerManager._wait_for_runner_online(
+            RunnerManager.wait_for_runner_online(
                 platform_provider=args.platform_provider,
                 instance_id=instance_id,
                 metadata=args.metadata,
@@ -507,15 +507,27 @@ class RunnerManager:
         return instance_id
 
     @staticmethod
-    def _wait_for_runner_online(
+    def wait_for_runner_online(
         platform_provider: PlatformProvider,
         instance_id: InstanceID,
         metadata: RunnerMetadata,
     ) -> None:
-        """TODO."""
+        """TODO.
+
+        Args:
+            platform_provider: TODO
+            instance_id: TODO
+            metadata: TODO
+
+        Raises:
+            RunnerError: If runner did not come online.
+
+        """
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
             time.sleep(wait_time)
-            runner_health = platform_provider.get_runner_health(metadata, instance_id)
+            runner_health = platform_provider.get_runner_health(
+                metadata=metadata, instance_id=instance_id
+            )
             logger.info("JAVI github runner health %s", runner_health)
             # TODO REVIEW THE ONLINE THING FOR JOBMANAGER. WHAT IS ONLINE
             # AND OFFLINE IN THAT CASE?
