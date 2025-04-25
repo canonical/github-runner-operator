@@ -12,15 +12,36 @@ from urllib.parse import urljoin
 
 import requests
 
-from errors import RunnerManagerServiceResponseError
+from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceResponseError
 
 logger = logging.getLogger(__name__)
 
 
 def catch_requests_errors(func: Callable) -> Callable:
+    """Decorate for handling requests errors.
+
+    Args:
+        func: The function to decorate.
+
+    Returns:
+        The decorated function.
+    """
 
     @functools.wraps(func)
-    def func_with_error_handling(*args, **kwargs):
+    def func_with_error_handling(*args: Any, **kwargs: Any) -> Any:
+        """Add requests error handling to the function.
+
+        Args:
+            args: The arguments of the function.
+            kwargs: The keyword arguments of the function.
+
+        Raises:
+            RunnerManagerServiceResponseError: Error in the response from the manager service.
+            RunnerManagerServiceConnectionError: Error in connecting to the manager service.
+
+        Returns:
+            The return value of the function.
+        """
         try:
             return func(*args, **kwargs)
         except requests.HTTPError as err:
@@ -33,7 +54,7 @@ def catch_requests_errors(func: Callable) -> Callable:
                 f"{err.response.status_code: err.response.text}"
             ) from err
         except requests.ConnectionError as err:
-            raise RunnerManagerServiceResponseError(
+            raise RunnerManagerServiceConnectionError(
                 "Failed request due to connection failure"
             ) from err
 
@@ -67,7 +88,7 @@ class GitHubRunnerManagerClient:
         self._requests = requests.Session()
         self._base_url = f"http://{self._host}:{self._port}"
 
-    def _request(self, method: str, path: str, *args: Any, **kwargs: Any):
+    def _request(self, method: str, path: str, *args: Any, **kwargs: Any) -> requests.Response:
         """Make a HTTP request to the manager service.
 
         This uses the requests library, additional arguments can be passed by `args` and `kwargs`.

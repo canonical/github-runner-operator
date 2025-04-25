@@ -4,8 +4,6 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-import requests
-
 from manager_client import GitHubRunnerManagerClient
 from utilities import execute_command, remove_residual_venv_dirs
 
