@@ -46,14 +46,14 @@ class JobManagerPlatform(PlatformProvider):
         metadata: RunnerMetadata,
         instance_id: InstanceID,
     ) -> PlatformRunnerHealth:
-        """Get health information on self-hosted runner.
+        """Get health information on jobmanager runner.
 
         Args:
             metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
 
         Raises:
-            PlatformApiError: TODO
+            PlatformApiError: If there was an error calling the jobmanager client.
 
         Returns:
            The health of the runner in the jobmanager.
@@ -61,20 +61,22 @@ class JobManagerPlatform(PlatformProvider):
         configuration = jobmanager_client.Configuration(host=metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.DefaultApi(api_client)
-            # response = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
             try:
                 response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
-            # HANDLE JOB NOT FOUND
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
 
-        # response.status one of: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
-        # TODO review this. I do not know what to use :(
-        online = response.status not in ["PENDING", "FAILED"]
-        busy = response.status in ["IN_PROGRESS"]
+        # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
+        # We should review the jobmanager for any change in their statuses.
+        # Any other state besides PENDING means that no more waiting should be done
+        # for the runner, so it is equivalent to online, although the jobmanager does
+        # not provide an exact match with "online".
+        online = response.status not in [JobStatus.PENDING]
+        # busy is complex in the jobmanager, as a completed job that is not deletable is really
+        # busy. As so, every job that is not deletable is considered busy.
+        busy = not response.deletable
         deletable = response.deletable
-        # TODO review this.
 
         return PlatformRunnerHealth(
             instance_id=instance_id,

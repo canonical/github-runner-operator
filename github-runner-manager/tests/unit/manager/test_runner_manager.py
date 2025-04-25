@@ -194,16 +194,54 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     github_provider.delete_runners.assert_called_once_with([github_runner])
 
 
-def test_create_runner(monkeypatch: pytest.MonkeyPatch):
+@pytest.mark.parametrize(
+    "creation_waiting_times,runner_unhealthy,runner_healthy",
+    [
+        pytest.param(
+            (0,),
+            None,
+            PlatformRunnerHealth(
+                instance_id=MagicMock(),
+                metadata=MagicMock(),
+                online=True,
+                busy=False,
+                deletable=False,
+            ),
+            id="online runner",
+        ),
+        pytest.param(
+            (0, 0),
+            PlatformRunnerHealth(
+                instance_id=MagicMock(),
+                metadata=MagicMock(),
+                online=False,
+                busy=True,
+                deletable=False,
+            ),
+            PlatformRunnerHealth(
+                instance_id=MagicMock(),
+                metadata=MagicMock(),
+                online=False,
+                busy=False,
+                deletable=True,
+            ),
+            id="deletable runner",
+        ),
+    ],
+)
+def test_create_runner(
+    monkeypatch: pytest.MonkeyPatch,
+    creation_waiting_times: tuple[int, ...],
+    runner_unhealthy: PlatformRunnerHealth | None,
+    runner_healthy: PlatformRunnerHealth,
+):
     """
     arrange: TODO.
     act: TODO.
     assert: TODO.
     """
-    # Wait and retry for three times.
-    runner_creation_waiting_times = (0, 0, 0)
     monkeypatch.setattr(
-        runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", runner_creation_waiting_times
+        runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", creation_waiting_times
     )
 
     cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
@@ -214,19 +252,9 @@ def test_create_runner(monkeypatch: pytest.MonkeyPatch):
     github_runner = MagicMock()
     platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
 
-    health_offline = PlatformRunnerHealth(
-        instance_id=MagicMock(), metadata=MagicMock(), online=False, busy=False, deletable=False
-    )
-
-    health_online = PlatformRunnerHealth(
-        instance_id=MagicMock(), metadata=MagicMock(), online=True, busy=False, deletable=False
-    )
-
-    platform_provider.get_runner_health.side_effect = (
-        health_offline,
-        health_offline,
-        health_online,
-    )
+    platform_provider.get_runner_health.side_effect = tuple(
+        runner_unhealthy for _ in range(len(creation_waiting_times) - 1)
+    ) + (runner_healthy,)
 
     runner_manager = RunnerManager(
         "managername",
@@ -236,13 +264,13 @@ def test_create_runner(monkeypatch: pytest.MonkeyPatch):
     )
 
     (instance_id,) = runner_manager.create_runners(1, RunnerMetadata(), True)
+    assert instance_id
 
     cloud_runner_manager.create_runner.assert_called_once()
     # The method to get the runner health was called three times
     # until the runner was online.
-    assert platform_provider.get_runner_health.call_count == 3
-    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=instance_id)
-    assert instance_id
+    assert platform_provider.get_runner_health.call_count == len(creation_waiting_times)
+    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
 
 
 def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
@@ -265,7 +293,6 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     github_runner = MagicMock()
     platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
 
-    # TODO REVIEW SPEC FOR RUNNER HEALTH WITH DATACLASS
     health_offline = PlatformRunnerHealth(
         instance_id=MagicMock(), metadata=MagicMock(), online=False, busy=False, deletable=False
     )
@@ -282,14 +309,10 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
         labels=["label1", "label2"],
     )
 
-    # No runner returned
     () = runner_manager.create_runners(1, RunnerMetadata(), True)
 
     # The runner was started even if it failed.
     cloud_runner_manager.create_runner.assert_called_once()
-    # The method to get the runner health was called two times
     assert platform_provider.get_runner_health.call_count == 2
     platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
-
-    # The runner was deleted in the platform
     platform_provider.delete_runners.assert_called_once_with([ANY])

@@ -274,7 +274,7 @@ async def test_jobmanager(
 
     httpserver.check_assertions()
 
-    # TODO CHECK NO ELEMENTS IN THE QUEUE AT THIS POINT.
+    assert_queue_is_empty(mongodb_uri, app.name)
 
     # The reconcile loop is still not adapted and will badly kill the instance as the ssh
     # health check will mark the instance as unhealthy.

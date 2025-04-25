@@ -68,7 +68,8 @@ class SelfHostedRunner(BaseModel):
         status: The Github runner status.
         instance_id: InstanceID of the runner.
         metadata: Runner metadata.
-        deletable: TODO
+        deletable: Deletable runner. In GitHub, this is equivalent as the runner not
+            existing in GitHub, as that runner cannot get jobs.
     """
 
     busy: bool

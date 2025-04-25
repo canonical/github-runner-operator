@@ -64,7 +64,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         metadata: RunnerMetadata,
         instance_id: InstanceID,
     ) -> PlatformRunnerHealth:
-        """Get info on self-hosted runner.
+        """Get information on the health of a github runner.
 
         Args:
             metadata: Metadata for the runner.

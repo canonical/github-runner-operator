@@ -105,14 +105,20 @@ class PlatformProvider(abc.ABC):
 
 @dataclass
 class PlatformRunnerHealth:
-    """TODO.
+    """Information about the health of a platform runner.
+
+    A runner can be online if it is connected to the platform. If the platform
+    does not provide that information, any runner that has connected to the platform
+    should be considered online. It is deletable if there is no risk in deleting the
+    compute instance, and busy if it is currently executing a job in the platform
+    manager.
 
     Attributes:
-        instance_id: TODO
-        metadata: TODO
-        online: TODO
-        busy: TODO
-        deletable: TODO
+        instance_id: InstanceID of the runner.
+        metadata: Metadata of the runner.
+        online: Whether the runner is online.
+        busy: Whether the runner is busy.
+        deletable: Whether the runner is deletable.
     """
 
     instance_id: InstanceID

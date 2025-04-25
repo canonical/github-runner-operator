@@ -326,10 +326,14 @@ class MockCloudRunnerManager(CloudRunnerManager):
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
             runner_context: Context for the runner.
+
+        Returns:
+            The CloudRunnerInstance for the runner
         """
         name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
         self.state.runners[instance_id] = runner
+        return runner.to_cloud_runner()
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -451,7 +455,9 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                 busy=runner.github_state == PlatformRunnerState.BUSY,
                 deletable=False,
             )
-        return PlatformRunnerHealth(online=False, busy=False, deletable=True)
+        return PlatformRunnerHealth(
+            instance_id=instance_id, metadata=metadata, online=False, busy=False, deletable=True
+        )
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]

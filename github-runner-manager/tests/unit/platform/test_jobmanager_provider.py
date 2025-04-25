@@ -129,9 +129,9 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
 @pytest.mark.parametrize(
     "job_status,job_deletable,expected_online,expected_busy,expected_deletable",
     [
-        pytest.param("PENDING", False, False, False, False, id="pending runner"),
+        pytest.param("PENDING", False, False, True, False, id="pending runner"),
         pytest.param("IN_PROGRESS", False, True, True, False, id="in progress runner"),
-        pytest.param("COMPLETED", False, True, False, False, id="completed not deletable runner"),
+        pytest.param("COMPLETED", False, True, True, False, id="completed not deletabule runner"),
         pytest.param("COMPLETED", True, True, False, True, id="completed and deletable runner"),
     ],
 )

@@ -32,7 +32,9 @@ from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
-# TODO this deserves a comment
+# After a runner is created, there will be as many health checks as
+# elements in this variable. The elements in the tuple represent
+# the time waiting before each health check against the platform provider.
 RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
@@ -486,19 +488,15 @@ class RunnerManager:
                 metadata=args.metadata,
                 runner_context=runner_context,
             )
-            logger.info("JAVI cloud_instance %s", cloud_instance)
-            logger.info("JAVI metadata %s", args.metadata)
 
-            # TODO WAIT FOR RUNNER ONLINE IN HERE!
-            # TODO THIS CODE SHOULD DISAPPEAR AND ONLY WAIT FOR THE RUNNER IN REACTIVE MOD
-            # (TO CHECK IF THE JOB WAS TAKEN)
+            # This wait should be deleted to make the runner creation as
+            # quick as possible. The waiting should only be done in the
+            # reactive case, before checking that a job was taken.
             RunnerManager.wait_for_runner_online(
                 platform_provider=args.platform_provider,
-                instance_id=instance_id,
-                metadata=args.metadata,
+                instance_id=cloud_instance.instance_id,
+                metadata=cloud_instance.metadata,
             )
-
-            logger.info("JAVI after runner created and waited")
 
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
@@ -512,15 +510,20 @@ class RunnerManager:
         instance_id: InstanceID,
         metadata: RunnerMetadata,
     ) -> None:
-        """TODO.
+        """Wait until the runner is online.
+
+        The constant RUNNER_CREATION_WAITING_TIMES defines the time before calling
+        the platform provider to check if the runner is online. Besides online runner,
+        deletable runner will also be equivalent to online, as no more waiting should
+        be needed.
 
         Args:
-            platform_provider: TODO
-            instance_id: TODO
-            metadata: TODO
+            platform_provider: Platform provider to use for health checks.
+            instance_id: InstanceID for the runner to wait for.
+            metadata: Metadata for the runner to wait for.
 
         Raises:
-            RunnerError: If runner did not come online.
+            RunnerError: If the runner did not come online after the specified time.
 
         """
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
@@ -528,12 +531,7 @@ class RunnerManager:
             runner_health = platform_provider.get_runner_health(
                 metadata=metadata, instance_id=instance_id
             )
-            logger.info("JAVI github runner health %s", runner_health)
-            # TODO REVIEW THE ONLINE THING FOR JOBMANAGER. WHAT IS ONLINE
-            # AND OFFLINE IN THAT CASE?
             if runner_health.online or runner_health.deletable:
-                logger.info("JAVI nice! runner online or deletable!. No need to wait!")
                 break
         else:
-            logger.info("JAVI grrr runner never got online!")
-            raise RunnerError("Runner did not get online")
+            raise RunnerError(f"Runner {instance_id} did not get online")
