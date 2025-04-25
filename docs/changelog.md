@@ -2,7 +2,7 @@
 
 ### 2025-04-22
 
-- Add how-to langing page.
+- Add how-to landing page.
 
 ### 2025-04-15
 
