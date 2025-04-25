@@ -70,11 +70,11 @@ class JobManagerPlatform(PlatformProvider):
                 raise PlatformApiError("API error") from exc
 
         # response.status one of: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
-        # TODO review this.
+        # TODO review this. I do not know what to use :(
         online = response.status not in ["PENDING", "FAILED"]
+        busy = response.status in ["IN_PROGRESS"]
         deletable = response.deletable
         # TODO review this.
-        busy = not deletable or response.status in ["IN_PROGRESS"]
 
         return PlatformRunnerHealth(
             instance_id=instance_id,
