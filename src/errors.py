@@ -70,3 +70,15 @@ class RunnerManagerApplicationInstallError(RunnerManagerApplicationError):
 
 class RunnerManagerApplicationStartupError(RunnerManagerApplicationError):
     """Represents an error raised when github-runner-manager application start up failed."""
+
+
+class RunnerManagerServiceError(Exception):
+    """Represents an error raised with request to github-runner-manager service."""
+
+
+class RunnerManagerServiceConnectionError(RunnerManagerServiceError):
+    """Represents a connection failure to the github-runner-manager service."""
+
+
+class RunnerManagerServiceResponseError(RunnerManagerServiceError):
+    """Represents a issue with the response to github-runner-manager service."""

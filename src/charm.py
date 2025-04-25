@@ -4,6 +4,8 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+import requests
+
 from manager_client import GitHubRunnerManagerClient
 from utilities import execute_command, remove_residual_venv_dirs
 
@@ -60,6 +62,7 @@ from errors import (
     MissingMongoDBError,
     RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
+    RunnerManagerServiceError,
     SubprocessError,
     TokenError,
 )
@@ -319,7 +322,14 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
-        self._setup_service(state)
+        try:
+            self._setup_service(state)
+        except RunnerManagerApplicationError:
+            logger.exception("Unable to start the runner manager service")
+            # Usage of the runner manager service is experiential.
+            # Not blocking the reconcile for now.
+            # In the future, the charm should be set to block state if the runner manager service
+            # cannot start due to config issues.
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
@@ -378,7 +388,12 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        info = self._manager_client.check_runner()
+        try:
+            info = self._manager_client.check_runner()
+        except RunnerManagerServiceError as err:
+            logger.exception("Failed check runner request")
+            event.fail(f"Failed check runner request: {str(err)}")
+            return
         event.set_results(info)
 
     @catch_action_errors

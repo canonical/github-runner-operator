@@ -4,14 +4,40 @@
 """Client to interact with the service of github-runner-manager."""
 
 import enum
+import functools
 import json
 import logging
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import urljoin
 
 import requests
 
+from errors import RunnerManagerServiceResponseError
+
 logger = logging.getLogger(__name__)
+
+
+def catch_requests_errors(func: Callable) -> Callable:
+
+    @functools.wraps(func)
+    def func_with_error_handling(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except requests.HTTPError as err:
+            if err.response is None:
+                raise RunnerManagerServiceResponseError("Failed request with no response") from err
+            logger.error(
+                "Failed request with code %s: %s", err.response.status_code, err.response.text
+            )
+            raise RunnerManagerServiceResponseError(
+                f"{err.response.status_code: err.response.text}"
+            ) from err
+        except requests.ConnectionError as err:
+            raise RunnerManagerServiceResponseError(
+                "Failed request due to connection failure"
+            ) from err
+
+    return func_with_error_handling
 
 
 class _HTTPMethod(str, enum.Enum):
@@ -57,35 +83,22 @@ class GitHubRunnerManagerClient:
         response.raise_for_status()
         return response
 
+    @catch_requests_errors
     def check_runner(self) -> dict[str, str]:
         """Request to check the state of runner.
-
-        Raises:
-            HTTPError: HTTP error encountered.
 
         Returns:
             The information on the runners.
         """
-        try:
-            response = self._request(_HTTPMethod.GET, "/runner/check")
-        except requests.HTTPError as err:
-            if err.response is not None:
-                logger.error("Check runner encountered error: %s", err.response.text)
-            raise
+        response = self._request(_HTTPMethod.GET, "/runner/check")
         return json.loads(response.text)
 
+    @catch_requests_errors
     def flush_runner(self, busy: bool = True) -> None:
         """Request to flush the runners.
 
         Args:
             busy: Whether to flush the busy runners.
-        Raises:
-            HTTPError: HTTP error encountered.
         """
         params = {"flush-busy": str(busy)}
-        try:
-            self._request(_HTTPMethod.POST, "/runner/flush", params=params)
-        except requests.HTTPError as err:
-            if err.response is not None:
-                logger.error("Check runner encountered error: %s", err.response.text)
-            raise
+        self._request(_HTTPMethod.POST, "/runner/flush", params=params)
