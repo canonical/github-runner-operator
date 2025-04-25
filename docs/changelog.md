@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-04-25
+
+- Add a visualization of the share of jobs started per application.
+
 ### 20250-04-15
 
 - Fix a race condition where keypairs were being deleted even though the server was being built, potentially killing active github action runs.
