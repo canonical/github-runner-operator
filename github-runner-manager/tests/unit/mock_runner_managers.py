@@ -445,6 +445,8 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         if instance_id in self.state.runners:
             runner = self.state.runners[instance_id]
             return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
                 online=runner.github_state != PlatformRunnerState.OFFLINE,
                 busy=runner.github_state == PlatformRunnerState.BUSY,
                 deletable=False,

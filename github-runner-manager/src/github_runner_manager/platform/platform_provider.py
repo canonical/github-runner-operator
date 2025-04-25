@@ -108,11 +108,15 @@ class PlatformRunnerHealth:
     """TODO.
 
     Attributes:
+        instance_id: TODO
+        metadata: TODO
         online: TODO
         busy: TODO
         deletable: TODO
     """
 
+    instance_id: InstanceID
+    metadata: RunnerMetadata
     online: bool
     busy: bool
     deletable: bool

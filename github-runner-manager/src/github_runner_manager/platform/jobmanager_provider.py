@@ -70,11 +70,19 @@ class JobManagerPlatform(PlatformProvider):
                 raise PlatformApiError("API error") from exc
 
         # response.status one of: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
-        online = response.status in ["PENDING", "IN_PROGRESS", "COMPLETED"]
+        # TODO review this.
+        online = response.status not in ["PENDING", "FAILED"]
         deletable = response.deletable
-        busy = not deletable or response.status in ["PENDING", "IN_PROGRESS"]
+        # TODO review this.
+        busy = not deletable or response.status in ["IN_PROGRESS"]
 
-        return PlatformRunnerHealth(online=online, deletable=deletable, busy=busy)
+        return PlatformRunnerHealth(
+            instance_id=instance_id,
+            metadata=metadata,
+            online=online,
+            deletable=deletable,
+            busy=busy,
+        )
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

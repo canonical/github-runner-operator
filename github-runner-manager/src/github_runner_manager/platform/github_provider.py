@@ -76,10 +76,22 @@ class GitHubRunnerPlatform(PlatformProvider):
         try:
             runner = self._client.get_runner(self._path, self._prefix, int(metadata.runner_id))
             online = runner.status == GitHubRunnerStatus.ONLINE
-            return PlatformRunnerHealth(online=online, busy=runner.busy, deletable=False)
+            return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
+                online=online,
+                busy=runner.busy,
+                deletable=False,
+            )
 
         except GithubRunnerNotFoundError:
-            return PlatformRunnerHealth(online=False, busy=False, deletable=True)
+            return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
+                online=False,
+                busy=False,
+                deletable=True,
+            )
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

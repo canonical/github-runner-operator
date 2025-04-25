@@ -2,7 +2,7 @@
 #  See LICENSE file for licensing details.
 
 
-"""Test for the github provider module."""
+"""Test for the jobmanager provider module."""
 
 from unittest.mock import MagicMock
 
