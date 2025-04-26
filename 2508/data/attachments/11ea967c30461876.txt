@@ -1,0 +1,77 @@
+06:24:19 INFO Creating 1 runners
+06:24:20 INFO Creating openstack server with test-cpwqconb-0-n-ba2970bd8f6d
+06:24:49 INFO Waiting for runner process to startup: test-cpwqconb-0-n-ba2970bd8f6d
+06:24:54 WARNING NoValidConnectionsError. Unable to SSH into test-cpwqconb-0-n-ba2970bd8f6d with address 10.145.193.112. Error: [Errno None] Unable to connect to port 22 on 10.145.193.112
+06:24:54 WARNING Retrying error in 60 seconds: Failed to SSH to test-cpwqconb-0-n-ba2970bd8f6d during creation possible due to setup not completed
+06:25:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:54 INFO Authentication (publickey) successful!
+06:25:55 INFO Runner startup process found to be healthy on test-cpwqconb-0-n-ba2970bd8f6d
+06:25:55 INFO Waiting for runner process to be running: test-cpwqconb-0-n-ba2970bd8f6d
+06:25:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:55 INFO Authentication (publickey) successful!
+06:25:56 INFO Runner test-cpwqconb-0-n-ba2970bd8f6d found to be healthy
+06:25:56 INFO Runner test-cpwqconb-0-n-ba2970bd8f6d created successfully
+06:25:56 INFO Getting runners...
+06:25:57 INFO Getting all openstack servers managed by the charm
+06:25:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:25:58 INFO Authentication (publickey) successful!
+06:25:59 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:25:59 INFO Getting runners...
+06:26:00 INFO Getting all openstack servers managed by the charm
+06:26:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:01 INFO Authentication (publickey) successful!
+06:26:01 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:01 INFO Getting runners...
+06:26:02 INFO Getting all openstack servers managed by the charm
+06:26:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:04 INFO Authentication (publickey) successful!
+06:26:05 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:05 INFO Getting all openstack servers managed by the charm
+06:26:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:06 INFO Authentication (publickey) successful!
+06:26:06 INFO Getting runners...
+06:26:07 INFO Getting all openstack servers managed by the charm
+06:26:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:09 INFO Authentication (publickey) successful!
+06:26:09 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:11 INFO Offline github runners to delete: []:
+06:26:11 INFO Getting all openstack servers managed by the charm
+06:26:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:12 INFO Authentication (publickey) successful!
+06:26:15 INFO Cleaning up SSH key files
+06:26:15 INFO Found 1 key files, clean up 0 key files
+06:26:15 INFO Cleaning up openstack keypairs
+06:26:15 INFO Getting runners...
+06:26:16 INFO Getting all openstack servers managed by the charm
+06:26:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:17 INFO Authentication (publickey) successful!
+06:26:17 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:17 INFO Flushing idle runners...
+06:26:18 INFO Getting all openstack servers managed by the charm
+06:26:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:19 INFO Authentication (publickey) successful!
+06:26:19 INFO Attempting to kill runner process on test-cpwqconb-0-n-ba2970bd8f6d if not busy
+06:26:19 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:26:19 INFO Kill process command output, ok: True code 0, out: 1929
+, err: 
+06:26:19 INFO Getting all openstack servers managed by the charm
+06:26:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:20 INFO Authentication (publickey) successful!
+06:26:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:21 INFO Authentication (publickey) successful!
+06:26:21 INFO [chan 2] Opened sftp connection (server version 3)
+06:26:21 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.112, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:26:21 WARNING Failed to pull metrics for test-cpwqconb-0-n-ba2970bd8f6d: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:26:21 INFO Running runner removal script for test-cpwqconb-0-n-ba2970bd8f6d
+06:26:23 INFO Deleting openstack server with test-cpwqconb-0-n-ba2970bd8f6d
+06:26:25 INFO Cleaning up SSH key files
+06:26:25 INFO Found 0 key files, clean up 0 key files
+06:26:25 INFO Cleaning up openstack keypairs
+06:26:25 INFO Getting runners...
+06:26:26 INFO Getting all openstack servers managed by the charm
+06:26:27 INFO Found following runners: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:27 WARNING Found runner instance on cloud but not registered on GitHub: {'test-cpwqconb-0-n-ba2970bd8f6d'}
+06:26:27 INFO Getting runners...
+06:26:29 INFO Getting all openstack servers managed by the charm
+06:26:32 INFO Found following runners: set()

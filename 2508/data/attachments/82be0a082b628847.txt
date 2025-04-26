@@ -1,0 +1,122 @@
+06:24:31 WARNING unexpected facade SSHServer received from the controller
+06:24:31 INFO Adding model github-pr-223ed-lxd:test-charm-metrics-failure-irke on cloud localhost
+06:24:31 WARNING unexpected facade SSHServer received from the controller
+06:24:31 WARNING unexpected facade SSHSession received from the controller
+06:24:31 WARNING unexpected facade SSHTunneler received from the controller
+06:24:31 INFO GitHub token rate limit: Rate(reset=2025-04-26 06:50:26+00:00, remaining=4966, limit=5000)
+06:24:46 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:05 INFO Deploying local:jammy/github-runner-0
+06:25:05 INFO Waiting for model:
+  test-eridvj6x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eridvj6x/0 [allocating] waiting: waiting for machine
+06:25:35 INFO Waiting for model:
+  test-eridvj6x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eridvj6x/0 [allocating] waiting: waiting for machine
+06:26:06 INFO Waiting for model:
+  test-eridvj6x/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eridvj6x/0 [allocating] waiting: waiting for machine
+06:26:36 INFO Waiting for model:
+  test-eridvj6x/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-eridvj6x/0 [executing] maintenance: Setting up Builder.
+06:27:06 INFO Waiting for model:
+  test-eridvj6x/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eridvj6x/0 [executing] maintenance: Setting up Builder.
+06:27:37 INFO Waiting for model:
+  test-eridvj6x/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eridvj6x/0 [executing] maintenance: Setting up Builder.
+06:28:07 INFO Waiting for model:
+  test-eridvj6x/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eridvj6x/0 [executing] maintenance: Setting up Builder.
+06:28:37 INFO Waiting for model:
+  test-eridvj6x/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eridvj6x/0 [executing] maintenance: Setting up Builder.
+06:29:07 INFO Waiting for model:
+  test-eridvj6x/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Waiting for first image.
+06:29:37 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:30:08 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:30:38 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:31:09 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:31:39 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:32:09 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:32:39 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:33:09 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:33:39 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:34:09 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:34:39 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:35:10 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:35:40 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:37:11 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:37:41 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:38:11 INFO Waiting for model:
+  test-eridvj6x/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: Building image.
+06:38:42 INFO Waiting for model:
+  test-eridvj6x/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-eridvj6x/0 [executing] active: 
+06:39:12 INFO Waiting for model:
+  test-eridvj6x/0 [idle] active: 
+06:39:44 INFO Waiting for model:
+  test-eridvj6x/0 [executing] active:
+06:45:21 INFO Waiting for model:
+  test-eridvj6x/0 [executing] active: 
+06:45:51 INFO Waiting for model:
+  test-eridvj6x/0 [idle] active: 
+06:45:59 INFO [TEST SETUP] Exposing port 8080 on test-eridvj6x-0-n-cc74419bc671
+06:45:59 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3d:f2:bc'}]])
+06:46:00 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-eridvj6x-0-n-cc74419bc671.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.235 &
+06:46:01 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.235' (ED25519) to the list of known hosts.
+
+06:46:02 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-eridvj6x-0-n-cc74419bc671
+06:46:02 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3d:f2:bc'}]])
+06:46:03 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eridvj6x-0-n-cc74419bc671.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.235 nc -z localhost 8080'
+06:46:04 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:46:05 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-eridvj6x-0-n-cc74419bc671
+06:46:05 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3d:f2:bc'}]])
+06:46:06 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eridvj6x-0-n-cc74419bc671.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.235 curl http://localhost:8080'
+06:46:07 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  58590      0 --:--:-- --:--:-- --:--:-- 69000
+'

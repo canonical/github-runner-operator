@@ -1,0 +1,143 @@
+06:24:28 WARNING unexpected facade SSHServer received from the controller
+06:24:28 INFO Adding model github-pr-223ed-lxd:test-charm-fork-repo-6np5 on cloud localhost
+06:24:28 WARNING unexpected facade SSHServer received from the controller
+06:24:28 WARNING unexpected facade SSHSession received from the controller
+06:24:28 WARNING unexpected facade SSHTunneler received from the controller
+06:24:30 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:24:48 INFO Deploying local:jammy/github-runner-0
+06:24:49 INFO Waiting for model:
+  test-evrwfwwq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-evrwfwwq/0 [allocating] waiting: waiting for machine
+06:25:19 INFO Waiting for model:
+  test-evrwfwwq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-evrwfwwq/0 [allocating] waiting: waiting for machine
+06:25:49 INFO Waiting for model:
+  test-evrwfwwq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-evrwfwwq/0 [allocating] waiting: waiting for machine
+06:26:19 INFO Waiting for model:
+  test-evrwfwwq/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] maintenance: Setting up Builder.
+06:26:50 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] maintenance: Setting up Builder.
+06:27:20 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] maintenance: Setting up Builder.
+06:27:50 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] maintenance: Setting up Builder.
+06:28:20 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] maintenance: Setting up Builder.
+06:28:50 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] blocked: image integration required.
+06:29:20 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:29:51 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:30:21 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:30:52 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:31:22 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:31:52 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:32:23 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:32:53 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:33:23 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:33:53 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:34:53 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:35:24 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-evrwfwwq/0 [executing] active: Building image.
+06:37:55 INFO Waiting for model:
+  test-evrwfwwq/0 [executing] maintenance: Reconciling runners
+06:38:24 INFO GitHub token rate limit: Rate(reset=2025-04-26 07:00:59+00:00, remaining=4966, limit=5000)
+06:42:20 INFO Waiting for model:
+  test-evrwfwwq/0 [executing] active: 
+06:42:50 INFO Waiting for model:
+  test-evrwfwwq/0 [idle] active: 
+06:42:59 INFO [TEST SETUP] Exposing port 8080 on test-evrwfwwq-0-n-29d3d1ca644f
+06:42:59 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c1:e0:c1'}]])
+06:43:00 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-evrwfwwq-0-n-29d3d1ca644f.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.38 &
+06:43:01 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.38' (ED25519) to the list of known hosts.
+
+06:43:03 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-evrwfwwq-0-n-29d3d1ca644f
+06:43:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c1:e0:c1'}]])
+06:43:04 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-evrwfwwq-0-n-29d3d1ca644f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.38 nc -z localhost 8080'
+06:43:05 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:43:06 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-evrwfwwq-0-n-29d3d1ca644f
+06:43:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:c1:e0:c1'}]])
+06:43:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-evrwfwwq-0-n-29d3d1ca644f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.38 curl http://localhost:8080'
+06:43:08 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  79707      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:43:11 INFO Wait for condition not met, sleeping 10
+06:43:28 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-6np5  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  06:43:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-evrwfwwq           active      1  github-runner-image-builder  latest/edge   68  no       
+test-evrwfwwq                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-evrwfwwq/0*  active    idle   0        10.19.123.96              
+test-evrwfwwq/0*                         active    idle   1        10.19.123.126   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.19.123.96   juju-ec513c-0  ubuntu@22.04      Running
+1        started  10.19.123.126  juju-ec513c-1  ubuntu@22.04      Running
+
+06:43:28 INFO Juju error logs:
+
+machine-1: 06:25:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-evrwfwwq-0: 06:25:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 06:26:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-evrwfwwq-0: 06:26:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-evrwfwwq-0: 06:26:46 ERROR unit.github-runner-image-builder-evrwfwwq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:43:28 INFO Forgetting model main...
