@@ -1,0 +1,242 @@
+18:24:17 WARNING unexpected facade SSHServer received from the controller
+18:24:17 INFO Adding model github-pr-223ed-lxd:test-jobmanager-tlxg on cloud localhost
+18:24:18 WARNING unexpected facade SSHServer received from the controller
+18:24:18 WARNING unexpected facade SSHSession received from the controller
+18:24:18 WARNING unexpected facade SSHTunneler received from the controller
+18:24:19 INFO Deploying ch:amd64/jammy/mongodb-212
+18:24:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:24:41 INFO Deploying local:jammy/github-runner-0
+18:24:42 INFO Waiting for model:
+  test-e2lbmi6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e2lbmi6r/0 [allocating] waiting: waiting for machine
+18:25:12 INFO Waiting for model:
+  test-e2lbmi6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e2lbmi6r/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  test-e2lbmi6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e2lbmi6r/0 [allocating] waiting: waiting for machine
+18:26:13 INFO Waiting for model:
+  test-e2lbmi6r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-e2lbmi6r/0 [allocating] waiting: waiting for machine
+18:26:43 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [allocating] waiting: agent initialising
+18:27:13 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] maintenance: Setting up Builder.
+18:27:44 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] maintenance: Setting up Builder.
+18:28:14 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] maintenance: Setting up Builder.
+18:28:45 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] maintenance: Setting up Builder.
+18:29:15 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] maintenance: Setting up Builder.
+18:29:45 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:30:16 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:30:46 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:31:16 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:31:46 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:32:17 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:32:47 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:33:17 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:34:18 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:34:48 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:36:19 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:36:49 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:37:19 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:37:50 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:38:20 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:38:50 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:39:20 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e2lbmi6r/0 [executing] active: Building image.
+18:39:50 INFO Waiting for model:
+  test-e2lbmi6r/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-e2lbmi6r/0 [idle] active: 
+18:40:20 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:40:20 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:40:50 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:41:30 INFO Waiting for model:
+  test-e2lbmi6r/0 [executing] maintenance: Reconciling runners
+18:42:00 INFO Waiting for model:
+  test-e2lbmi6r/0 [idle] active:
+18:42:06 INFO IP Address to use as the fake jobmanager: 10.145.216.245
+18:42:06 INFO Waiting for first check job status.
+18:42:07 INFO 10.247.175.106 - - [27/Apr/2025 18:42:07] "GET /v1/jobs/99 HTTP/1.1" 200 -
+18:42:07 INFO server log: [(<Request 'http://10.145.216.245:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>)] 
+18:42:07 INFO Waiting for get token.
+18:42:07 INFO 10.247.175.106 - - [27/Apr/2025 18:42:07] "POST /v1/jobs/99/token HTTP/1.1" 200 -
+18:42:07 INFO server log: [(<Request 'http://10.145.216.245:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>)] 
+18:42:07 INFO trying to prepare tunnel for builder agent
+18:42:08 INFO no runner or two or more runners in unit, return False
+18:42:08 INFO Wait for condition not met, sleeping 10
+18:42:18 INFO trying to prepare tunnel for builder agent
+18:42:19 INFO no addresses yet, return False
+18:42:19 INFO Wait for condition not met, sleeping 10
+18:42:29 INFO trying to prepare tunnel for builder agent
+18:42:29 INFO no addresses yet, return False
+18:42:29 INFO Wait for condition not met, sleeping 10
+18:42:39 INFO trying to prepare tunnel for builder agent
+18:42:39 INFO no addresses yet, return False
+18:42:39 INFO Wait for condition not met, sleeping 10
+18:42:49 INFO trying to prepare tunnel for builder agent
+18:42:50 INFO no addresses yet, return False
+18:42:50 INFO Wait for condition not met, sleeping 10
+18:43:00 INFO trying to prepare tunnel for builder agent
+18:43:00 INFO no addresses yet, return False
+18:43:00 INFO Wait for condition not met, sleeping 10
+18:43:10 INFO trying to prepare tunnel for builder agent
+18:43:11 INFO no addresses yet, return False
+18:43:11 INFO Wait for condition not met, sleeping 10
+18:43:21 INFO trying to prepare tunnel for builder agent
+18:43:21 INFO no addresses yet, return False
+18:43:21 INFO Wait for condition not met, sleeping 10
+18:43:31 INFO trying to prepare tunnel for builder agent
+18:43:32 INFO no addresses yet, return False
+18:43:32 INFO Wait for condition not met, sleeping 10
+18:43:42 INFO trying to prepare tunnel for builder agent
+18:43:42 INFO no addresses yet, return False
+18:43:42 INFO Wait for condition not met, sleeping 10
+18:43:52 INFO trying to prepare tunnel for builder agent
+18:43:52 INFO no addresses yet, return False
+18:43:52 INFO Wait for condition not met, sleeping 10
+18:44:02 INFO trying to prepare tunnel for builder agent
+18:44:03 INFO no addresses yet, return False
+18:44:03 INFO Wait for condition not met, sleeping 10
+18:44:13 INFO trying to prepare tunnel for builder agent
+18:44:15 INFO [TEST SETUP] Run command 'echo hello' on test-e2lbmi6r-0-r-08997ca39eec
+18:44:15 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:44:16 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.214 'echo hello''
+18:44:20 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.214 port 22: Connection refused
+'
+18:44:20 INFO cannot ssh yet, return False
+18:44:20 INFO Wait for condition not met, sleeping 10
+18:44:30 INFO trying to prepare tunnel for builder agent
+18:44:32 INFO [TEST SETUP] Run command 'echo hello' on test-e2lbmi6r-0-r-08997ca39eec
+18:44:32 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:44:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.214 'echo hello''
+18:44:36 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.214' (ED25519) to the list of known hosts.
+'
+18:45:42 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.245 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-e2lbmi6r-0-r-08997ca39eec
+18:45:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:45:43 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.214 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.245 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+18:45:44 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.245 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+18:45:44 INFO [TEST SETUP] Exposing port 8000 on test-e2lbmi6r-0-r-08997ca39eec
+18:45:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:45:45 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.245:8000 -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.214 &
+18:45:46 INFO ssh tunnel result 0 None None
+18:45:48 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-e2lbmi6r-0-r-08997ca39eec
+18:45:48 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:45:49 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.214 nc -z localhost 8000'
+18:45:50 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+18:45:50 INFO Waiting for builder-agent to contact us.
+18:45:51 INFO 10.247.175.106 - - [27/Apr/2025 18:45:51] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:45:51 INFO server log: [(<Request 'http://10.145.216.245:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:45:51 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-e2lbmi6r-0-r-08997ca39eec
+18:45:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.214', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:6c:37'}]])
+18:45:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e2lbmi6r-0-r-08997ca39eec.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.214 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+18:45:53 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  23255  34199 --:--:-- --:--:-- --:--:-- 42000
+'
+18:45:53 INFO Waiting for builder-agent to contact us.
+18:45:56 INFO 10.247.175.106 - - [27/Apr/2025 18:45:56] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:01 INFO 10.247.175.106 - - [27/Apr/2025 18:46:01] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:06 INFO 10.247.175.106 - - [27/Apr/2025 18:46:06] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:11 INFO 10.247.175.106 - - [27/Apr/2025 18:46:11] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:16 INFO 10.247.175.106 - - [27/Apr/2025 18:46:16] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:21 INFO 10.247.175.106 - - [27/Apr/2025 18:46:21] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:26 INFO 10.247.175.106 - - [27/Apr/2025 18:46:26] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:26 INFO server log after executing: [(<Request 'http://10.145.216.245:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.245:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)]
+18:46:31 INFO 10.247.175.106 - - [27/Apr/2025 18:46:31] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:36 INFO 10.247.175.106 - - [27/Apr/2025 18:46:36] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+18:46:56 INFO Waiting for model:
+  test-e2lbmi6r/0 [executing] maintenance: Reconciling runners
+18:47:26 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-tlxg  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  18:47:26Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-e2lbmi6r           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-e2lbmi6r                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-e2lbmi6r/0*  active    idle   1        10.247.175.110             
+mongodb/0*                               active    idle   0        10.247.175.108  27017/tcp  Primary
+test-e2lbmi6r/0*                         active    idle   2        10.247.175.106             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.247.175.108  juju-a976ed-0  ubuntu@22.04      Running
+1        started  10.247.175.110  juju-a976ed-1  ubuntu@22.04      Running
+2        started  10.247.175.106  juju-a976ed-2  ubuntu@22.04      Running
+
+18:47:26 INFO Juju error logs:
+
+machine-0: 18:25:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:25:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:25:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:25:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-e2lbmi6r-0: 18:25:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:26:10 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:26:10 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 18:26:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-e2lbmi6r-0: 18:26:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-e2lbmi6r-0: 18:27:12 ERROR unit.github-runner-image-builder-e2lbmi6r/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:47:26 INFO Forgetting model main...

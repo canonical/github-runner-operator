@@ -1,0 +1,63 @@
+18:29:14 INFO Creating 1 runners
+18:29:15 INFO Creating openstack server with test-yc6uldsa-0-n-2993d881895f
+18:29:29 INFO Waiting for runner process to startup: test-yc6uldsa-0-n-2993d881895f
+18:29:40 WARNING NoValidConnectionsError. Unable to SSH into test-yc6uldsa-0-n-2993d881895f with address 10.145.193.138. Error: [Errno None] Unable to connect to port 22 on 10.145.193.138
+18:29:40 WARNING Retrying error in 60 seconds: Failed to SSH to test-yc6uldsa-0-n-2993d881895f during creation possible due to setup not completed
+18:30:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:40 INFO Authentication (publickey) successful!
+18:30:42 INFO Runner startup process found to be healthy on test-yc6uldsa-0-n-2993d881895f
+18:30:42 INFO Waiting for runner process to be running: test-yc6uldsa-0-n-2993d881895f
+18:30:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:42 INFO Authentication (publickey) successful!
+18:30:42 INFO Runner test-yc6uldsa-0-n-2993d881895f found to be healthy
+18:30:42 INFO Runner test-yc6uldsa-0-n-2993d881895f created successfully
+18:30:42 INFO Getting runners...
+18:30:44 INFO Getting all openstack servers managed by the charm
+18:30:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:46 INFO Authentication (publickey) successful!
+18:30:47 INFO Found following runners: {'test-yc6uldsa-0-n-2993d881895f', 'test-yc6uldsa-0-n-89f412343230'}
+18:30:47 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:30:47 INFO Getting runners...
+18:30:48 INFO Getting all openstack servers managed by the charm
+18:30:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:49 INFO Authentication (publickey) successful!
+18:30:50 INFO Found following runners: {'test-yc6uldsa-0-n-2993d881895f', 'test-yc6uldsa-0-n-89f412343230'}
+18:30:50 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:30:50 INFO Getting runners...
+18:30:51 INFO Getting all openstack servers managed by the charm
+18:30:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:53 INFO Authentication (publickey) successful!
+18:30:54 INFO Found following runners: {'test-yc6uldsa-0-n-2993d881895f', 'test-yc6uldsa-0-n-89f412343230'}
+18:30:54 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:30:56 INFO Wait for condition not met, sleeping 10
+18:31:07 INFO Getting runners...
+18:31:08 INFO Getting all openstack servers managed by the charm
+18:31:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:10 INFO Authentication (publickey) successful!
+18:31:11 INFO Found following runners: {'test-yc6uldsa-0-n-2993d881895f', 'test-yc6uldsa-0-n-89f412343230'}
+18:31:11 WARNING Found runner instance on cloud but not registered on GitHub: {'test-yc6uldsa-0-n-2993d881895f'}
+18:31:11 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:31:11 INFO Getting runners...
+18:31:12 INFO Getting all openstack servers managed by the charm
+18:31:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:14 INFO Authentication (publickey) successful!
+18:31:14 INFO Found following runners: {'test-yc6uldsa-0-n-2993d881895f', 'test-yc6uldsa-0-n-89f412343230'}
+18:31:14 WARNING Found runner instance on cloud but not registered on GitHub: {'test-yc6uldsa-0-n-2993d881895f'}
+18:31:14 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:31:15 INFO Offline github runners to delete: []:
+18:31:16 INFO Getting all openstack servers managed by the charm
+18:31:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:18 INFO Authentication (publickey) successful!
+18:31:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:19 INFO Authentication (publickey) successful!
+18:31:19 INFO [chan 2] Opened sftp connection (server version 3)
+18:31:19 INFO Running runner removal script for test-yc6uldsa-0-n-2993d881895f
+18:31:19 INFO Deleting openstack server with test-yc6uldsa-0-n-2993d881895f
+18:31:24 INFO Cleaning up SSH key files
+18:31:24 INFO Found 0 key files, clean up 0 key files
+18:31:24 INFO Cleaning up openstack keypairs
+18:31:25 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+18:31:25 INFO Getting runners...
+18:31:26 INFO Getting all openstack servers managed by the charm
+18:31:28 INFO Found following runners: {'test-yc6uldsa-0-n-89f412343230'}
+18:31:28 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}

@@ -1,0 +1,59 @@
+18:31:28 INFO Creating 2 runners
+18:32:55 INFO Getting runners...
+18:32:56 INFO Getting all openstack servers managed by the charm
+18:32:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:58 INFO Authentication (publickey) successful!
+18:32:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:32:58 INFO Authentication (publickey) successful!
+18:32:59 INFO Found following runners: {'test-yc6uldsa-0-n-89f412343230', 'test-yc6uldsa-0-n-d94009f9b990', 'test-yc6uldsa-0-n-c1434e8cb54e'}
+18:32:59 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:32:59 INFO Getting runners...
+18:33:00 INFO Getting all openstack servers managed by the charm
+18:33:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:02 INFO Authentication (publickey) successful!
+18:33:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:03 INFO Authentication (publickey) successful!
+18:33:03 INFO Found following runners: {'test-yc6uldsa-0-n-89f412343230', 'test-yc6uldsa-0-n-d94009f9b990', 'test-yc6uldsa-0-n-c1434e8cb54e'}
+18:33:03 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}
+18:33:03 INFO Flushing idle runners...
+18:33:04 INFO Getting all openstack servers managed by the charm
+18:33:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:05 INFO Authentication (publickey) successful!
+18:33:06 INFO Attempting to kill runner process on test-yc6uldsa-0-n-d94009f9b990 if not busy
+18:33:06 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:33:06 INFO Kill process command output, ok: True code 0, out: 1946
+, err: 
+18:33:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:06 INFO Authentication (publickey) successful!
+18:33:06 INFO Attempting to kill runner process on test-yc6uldsa-0-n-c1434e8cb54e if not busy
+18:33:06 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:33:06 INFO Kill process command output, ok: True code 0, out: 1937
+, err: 
+18:33:06 INFO Getting all openstack servers managed by the charm
+18:33:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:08 INFO Authentication (publickey) successful!
+18:33:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:08 INFO Authentication (publickey) successful!
+18:33:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:09 INFO Authentication (publickey) successful!
+18:33:09 INFO [chan 2] Opened sftp connection (server version 3)
+18:33:09 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.29, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:33:09 WARNING Failed to pull metrics for test-yc6uldsa-0-n-d94009f9b990: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:33:09 INFO Running runner removal script for test-yc6uldsa-0-n-d94009f9b990
+18:33:11 INFO Deleting openstack server with test-yc6uldsa-0-n-d94009f9b990
+18:33:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:33:13 INFO Authentication (publickey) successful!
+18:33:13 INFO [chan 2] Opened sftp connection (server version 3)
+18:33:13 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.216, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:33:13 WARNING Failed to pull metrics for test-yc6uldsa-0-n-c1434e8cb54e: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:33:13 INFO Running runner removal script for test-yc6uldsa-0-n-c1434e8cb54e
+18:33:15 INFO Deleting openstack server with test-yc6uldsa-0-n-c1434e8cb54e
+18:33:20 INFO Cleaning up SSH key files
+18:33:20 INFO Found 0 key files, clean up 0 key files
+18:33:20 INFO Cleaning up openstack keypairs
+18:33:20 INFO Getting runners...
+18:33:21 INFO Getting all openstack servers managed by the charm
+18:33:23 INFO Found following runners: {'test-yc6uldsa-0-n-89f412343230'}
+18:33:23 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-yc6uldsa-0-n-89f412343230'}

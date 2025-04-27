@@ -1,0 +1,81 @@
+18:57:38 INFO Waiting for model:
+  test-fwkcc0qn/0 [executing] active: 
+18:58:09 INFO Waiting for model:
+  test-fwkcc0qn/0 [idle] active:
+18:59:10 INFO Waiting for model:
+  test-fwkcc0qn/0 [executing] maintenance: Reconciling runners
+18:59:40 INFO Waiting for model:
+  test-fwkcc0qn/0 [idle] active: 
+18:59:46 INFO [TEST SETUP] Exposing port 8080 on test-fwkcc0qn-0-n-dfb03cdbc01a
+18:59:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.45', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:24:13:d6'}]])
+18:59:47 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-fwkcc0qn-0-n-dfb03cdbc01a.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.45 &
+18:59:48 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.45' (ED25519) to the list of known hosts.
+
+18:59:50 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-fwkcc0qn-0-n-dfb03cdbc01a
+18:59:50 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.45', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:24:13:d6'}]])
+18:59:51 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fwkcc0qn-0-n-dfb03cdbc01a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.45 nc -z localhost 8080'
+18:59:52 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:59:53 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-fwkcc0qn-0-n-dfb03cdbc01a
+18:59:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.45', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:24:13:d6'}]])
+18:59:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fwkcc0qn-0-n-dfb03cdbc01a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.45 curl http://localhost:8080'
+18:59:55 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  15123      0 --:--:-- --:--:-- --:--:-- 15923
+'
+18:59:56 INFO Wait for condition not met, sleeping 10
+19:00:32 INFO Waiting for model:
+  test-fwkcc0qn/0 [executing] active: 
+19:01:02 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-hkti  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  19:01:02Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fwkcc0qn           active      1  github-runner-image-builder  latest/edge   68  no       
+test-fwkcc0qn                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-fwkcc0qn/0*  active    idle   0        10.84.248.10              
+test-fwkcc0qn/0*                         active    idle   1        10.84.248.172   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.84.248.10   juju-0454f0-0  ubuntu@22.04      Running
+1        started  10.84.248.172  juju-0454f0-1  ubuntu@22.04      Running
+
+19:01:02 INFO Juju error logs:
+
+machine-0: 18:25:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fwkcc0qn-0: 18:25:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fwkcc0qn-0: 18:25:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-fwkcc0qn-0: 18:26:16 ERROR unit.github-runner-image-builder-fwkcc0qn/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-fwkcc0qn-0: 18:46:48 ERROR unit.test-fwkcc0qn/0.juju-log Unable to get SSH connection for instance test-fwkcc0qn-0-n-ca2828b05d12, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-fwkcc0qn-0-n-ca2828b05d12, key path: /home/runner-manager/.ssh/test-fwkcc0qn-0-n-ca2828b05d12.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-fwkcc0qn-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-fwkcc0qn-0-n-ca2828b05d12
+
+19:01:02 INFO Forgetting model main...
