@@ -1,0 +1,146 @@
+06:25:13 WARNING unexpected facade SSHServer received from the controller
+06:25:13 INFO Adding model github-pr-223ed-lxd:test-charm-fork-repo-bvxp on cloud localhost
+06:25:13 WARNING unexpected facade SSHServer received from the controller
+06:25:13 WARNING unexpected facade SSHSession received from the controller
+06:25:13 WARNING unexpected facade SSHTunneler received from the controller
+06:25:15 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:31 INFO Deploying local:jammy/github-runner-0
+06:25:32 INFO Waiting for model:
+  test-l9gsmtpi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l9gsmtpi/0 [allocating] waiting: waiting for machine
+06:26:02 INFO Waiting for model:
+  test-l9gsmtpi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l9gsmtpi/0 [allocating] waiting: waiting for machine
+06:26:32 INFO Waiting for model:
+  test-l9gsmtpi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:27:02 INFO Waiting for model:
+  test-l9gsmtpi/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:27:33 INFO Waiting for model:
+  test-l9gsmtpi/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:28:03 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:28:33 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:29:04 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] maintenance: Setting up Builder.
+06:29:34 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:30:04 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:30:35 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:31:05 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:31:36 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:32:06 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:32:36 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:33:07 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:33:37 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:34:08 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:34:38 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:35:08 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:35:39 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:36:09 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:37:10 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:37:41 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:38:11 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:38:42 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-l9gsmtpi/0 [executing] active: Building image.
+06:39:12 INFO Waiting for model:
+  test-l9gsmtpi/0 [executing] maintenance: Reconciling runners
+06:39:36 INFO GitHub token rate limit: Rate(reset=2025-04-27 07:25:11+00:00, remaining=4844, limit=5000)
+06:43:26 INFO Waiting for model:
+  test-l9gsmtpi/0 [executing] active: 
+06:43:56 INFO Waiting for model:
+  test-l9gsmtpi/0 [idle] active: 
+06:44:02 INFO [TEST SETUP] Exposing port 8080 on test-l9gsmtpi-0-n-376620e6afa6
+06:44:02 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.47', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:55:e6:34'}]])
+06:44:03 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-l9gsmtpi-0-n-376620e6afa6.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.47 &
+06:44:04 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.47' (ED25519) to the list of known hosts.
+
+06:44:06 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-l9gsmtpi-0-n-376620e6afa6
+06:44:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.47', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:55:e6:34'}]])
+06:44:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-l9gsmtpi-0-n-376620e6afa6.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.47 nc -z localhost 8080'
+06:44:08 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:44:08 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-l9gsmtpi-0-n-376620e6afa6
+06:44:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.47', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:55:e6:34'}]])
+06:44:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-l9gsmtpi-0-n-376620e6afa6.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.47 curl http://localhost:8080'
+06:44:10 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  77383      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:44:13 INFO Wait for condition not met, sleeping 10
+06:44:28 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-bvxp  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  06:44:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-l9gsmtpi           active      1  github-runner-image-builder  latest/edge   68  no       
+test-l9gsmtpi                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-l9gsmtpi/0*  active    idle   0        10.205.45.19              
+test-l9gsmtpi/0*                         active    idle   1        10.205.45.69    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.205.45.19  juju-527d21-0  ubuntu@22.04      Running
+1        started  10.205.45.69  juju-527d21-1  ubuntu@22.04      Running
+
+06:44:29 INFO Juju error logs:
+
+machine-0: 06:26:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-l9gsmtpi-0: 06:26:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-l9gsmtpi-0: 06:27:15 ERROR unit.github-runner-image-builder-l9gsmtpi/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:27:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-l9gsmtpi-0: 06:27:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:44:29 INFO Forgetting model main...
