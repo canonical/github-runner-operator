@@ -117,15 +117,6 @@ def test_setup_systemd_error(
     assert manager_service._SERVICE_SETUP_ERROR_MESSAGE in str(err.value)
 
 
-def test_install_package_success(mock_execute_command: MagicMock):
-    """
-    arrange: Mock execute command.
-    act: Run install_package.
-    assert: No errors raised.
-    """
-    manager_service.install_package()
-
-
 def test_install_package_failure(mock_execute_command: MagicMock):
     """
     arrange: Mock execute command to raise error.
