@@ -91,9 +91,11 @@ def install_package() -> None:
             [
                 "python3",
                 "-m",
-                "pipx",
+                "pip",
                 "install",
-                "--global",
+                "--prefix",
+                "/usr",
+                "--ignore-installed",
                 GITHUB_RUNNER_MANAGER_PACKAGE_PATH,
                 JOB_MANAGER_PACKAGE_PATH,
             ]
