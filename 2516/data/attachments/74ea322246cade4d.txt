@@ -1,0 +1,36 @@
+07:14:38 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-a4td  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  07:14:38Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ifw419cp           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-ifw419cp                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-ifw419cp/0*  active    idle   1        10.121.169.161             
+mongodb/0*                               active    idle   0        10.121.169.238  27017/tcp  Primary
+test-ifw419cp/0*                         active    idle   2        10.121.169.171             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.121.169.238  juju-8b2552-0  ubuntu@22.04      Running
+1        started  10.121.169.161  juju-8b2552-1  ubuntu@22.04      Running
+2        started  10.121.169.171  juju-8b2552-2  ubuntu@22.04      Running
+
+07:14:38 INFO Juju error logs:
+
+machine-0: 06:59:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:59:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:59:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:59:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:59:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ifw419cp-0: 06:59:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 07:00:09 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 07:00:09 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 07:00:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:00:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ifw419cp-0: 07:00:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ifw419cp-0: 07:01:18 ERROR unit.github-runner-image-builder-ifw419cp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+07:14:38 INFO Forgetting model main...

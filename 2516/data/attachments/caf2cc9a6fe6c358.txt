@@ -1,0 +1,137 @@
+06:47:03 WARNING unexpected facade SSHServer received from the controller
+06:47:03 INFO Adding model github-pr-223ed-lxd:test-jobmanager-gbgx on cloud localhost
+06:47:04 WARNING unexpected facade SSHServer received from the controller
+06:47:04 WARNING unexpected facade SSHSession received from the controller
+06:47:04 WARNING unexpected facade SSHTunneler received from the controller
+06:47:05 INFO Deploying ch:amd64/jammy/mongodb-212
+06:47:07 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:47:28 INFO Deploying local:jammy/github-runner-0
+06:47:28 INFO Waiting for model:
+  test-j28fxwha/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j28fxwha/0 [allocating] waiting: waiting for machine
+06:47:59 INFO Waiting for model:
+  test-j28fxwha/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j28fxwha/0 [allocating] waiting: waiting for machine
+06:48:29 INFO Waiting for model:
+  test-j28fxwha/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j28fxwha/0 [allocating] waiting: waiting for machine
+06:48:59 INFO Waiting for model:
+  test-j28fxwha/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-j28fxwha/0 [allocating] waiting: waiting for machine
+06:49:29 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [allocating] waiting: agent initialising
+06:49:59 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:50:30 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:51:00 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:51:31 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:52:01 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:52:31 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:53:02 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:53:32 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:54:02 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:54:32 INFO Waiting for model:
+  test-j28fxwha/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j28fxwha/0 [executing] maintenance: Setting up Builder.
+06:54:40 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-gbgx  github-pr-223ed-lxd  localhost/localhost  3.6.5    unsupported  06:54:40Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-j28fxwha           error        1  github-runner-image-builder  latest/edge   68  no       hook failed: "install"
+mongodb                               6.0.6    active       1  mongodb                      6/edge       212  no       
+test-j28fxwha                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-j28fxwha/0*  error     idle   1        10.21.160.103              hook failed: "install"
+mongodb/0*                               active    idle   0        10.21.160.48    27017/tcp  Primary
+test-j28fxwha/0*                         blocked   idle   2        10.21.160.180              Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.21.160.48   juju-a7fb8c-0  ubuntu@22.04      Running
+1        started  10.21.160.103  juju-a7fb8c-1  ubuntu@22.04      Running
+2        started  10.21.160.180  juju-a7fb8c-2  ubuntu@22.04      Running
+
+06:54:41 INFO Juju error logs:
+
+machine-0: 06:48:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:48:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:48:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:48:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:48:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-j28fxwha-0: 06:48:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:48:59 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:48:59 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:49:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:49:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-j28fxwha-0: 06:49:26 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-j28fxwha-0: 06:54:39 ERROR unit.github-runner-image-builder-j28fxwha/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/src/proxy.py", line 27, in setup
+    subprocess.run(  # nosec: B603
+  File "/usr/lib/python3.10/subprocess.py", line 505, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/usr/lib/python3.10/subprocess.py", line 1154, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/usr/lib/python3.10/subprocess.py", line 2047, in _communicate
+    self.wait(timeout=self._remaining_time(endtime))
+  File "/usr/lib/python3.10/subprocess.py", line 1209, in wait
+    return self._wait(timeout=timeout)
+  File "/usr/lib/python3.10/subprocess.py", line 1951, in _wait
+    raise TimeoutExpired(self.args, timeout)
+subprocess.TimeoutExpired: Command '['/usr/bin/sudo', 'snap', 'install', 'aproxy', '--channel=latest/edge']' timed out after 299.9999611560001 seconds
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/./src/charm.py", line 229, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/__init__.py", line 348, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/main.py", line 40, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/_main.py", line 558, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/_main.py", line 543, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/_main.py", line 502, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/_main.py", line 530, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/framework.py", line 347, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/framework.py", line 906, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/venv/ops/framework.py", line 996, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/./src/charm.py", line 58, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/./src/charm.py", line 134, in _setup_builder
+    proxy.setup(proxy=state.ProxyConfig.from_env())
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-j28fxwha-0/charm/src/proxy.py", line 35, in setup
+    raise ProxyInstallError from exc
+exceptions.ProxyInstallError
+unit-github-runner-image-builder-j28fxwha-0: 06:54:39 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:54:41 INFO Forgetting model main...

@@ -1,0 +1,105 @@
+06:57:51 WARNING unexpected facade SSHServer received from the controller
+06:57:51 INFO Adding model github-pr-223ed-lxd:test-reactive-a4td on cloud localhost
+06:57:51 WARNING unexpected facade SSHServer received from the controller
+06:57:51 WARNING unexpected facade SSHSession received from the controller
+06:57:51 WARNING unexpected facade SSHTunneler received from the controller
+06:57:52 INFO GitHub token rate limit: Rate(reset=2025-04-28 07:54:04+00:00, remaining=4924, limit=5000)
+06:57:56 INFO Deploying ch:amd64/jammy/mongodb-212
+06:57:58 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:58:26 INFO Deploying local:jammy/github-runner-0
+06:58:26 INFO Waiting for model:
+  test-ifw419cp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ifw419cp/0 [allocating] waiting: waiting for machine
+06:58:56 INFO Waiting for model:
+  test-ifw419cp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ifw419cp/0 [allocating] waiting: waiting for machine
+06:59:26 INFO Waiting for model:
+  test-ifw419cp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ifw419cp/0 [allocating] waiting: waiting for machine
+06:59:57 INFO Waiting for model:
+  test-ifw419cp/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ifw419cp/0 [allocating] waiting: waiting for machine
+07:00:27 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [allocating] waiting: waiting for machine
+07:00:57 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [executing] maintenance: Setting up Builder.
+07:01:28 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [executing] maintenance: Setting up Builder.
+07:01:58 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [executing] maintenance: Setting up Builder.
+07:02:28 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [executing] maintenance: Setting up Builder.
+07:02:59 INFO Waiting for model:
+  test-ifw419cp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ifw419cp/0 [executing] maintenance: Setting up Builder.
+07:03:29 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:03:59 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:04:30 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:05:00 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:05:30 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:06:01 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:06:31 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:07:01 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:07:32 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:08:02 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:08:32 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:09:02 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:09:33 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:10:03 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:10:34 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:11:04 INFO Waiting for model:
+  test-ifw419cp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ifw419cp/0 [executing] active: Building image.
+07:11:35 INFO Waiting for model:
+  test-ifw419cp/0 [executing] maintenance: Reconciling runners
+07:11:51 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:11:51 INFO Waiting for model:
+  test-ifw419cp/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+07:12:22 INFO Waiting for model:
+  test-ifw419cp/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+07:12:54 INFO Waiting for model:
+  test-ifw419cp/0 [executing] active: 
+07:13:24 INFO Waiting for model:
+  test-ifw419cp/0 [idle] active:
+07:13:31 INFO Wait for condition not met, sleeping 10
+07:14:01 INFO Waiting for model:
+  test-ifw419cp/0 [executing] active: 
+07:14:32 INFO Waiting for model:
+  test-ifw419cp/0 [idle] active:

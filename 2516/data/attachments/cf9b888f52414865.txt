@@ -1,0 +1,107 @@
+06:32:15 INFO GitHub token rate limit: Rate(reset=2025-04-28 06:54:02+00:00, remaining=4969, limit=5000)
+06:32:17 INFO Creating 1 runners
+06:32:18 INFO Creating openstack server with test-yb1q51f6-0-n-128317c058cb
+06:32:31 INFO Waiting for runner process to startup: test-yb1q51f6-0-n-128317c058cb
+06:32:38 WARNING NoValidConnectionsError. Unable to SSH into test-yb1q51f6-0-n-128317c058cb with address 10.145.193.10. Error: [Errno None] Unable to connect to port 22 on 10.145.193.10
+06:32:38 WARNING Retrying error in 60 seconds: Failed to SSH to test-yb1q51f6-0-n-128317c058cb during creation possible due to setup not completed
+06:33:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:38 INFO Authentication (publickey) successful!
+06:33:39 INFO Runner startup process found to be healthy on test-yb1q51f6-0-n-128317c058cb
+06:33:39 INFO Waiting for runner process to be running: test-yb1q51f6-0-n-128317c058cb
+06:33:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:39 INFO Authentication (publickey) successful!
+06:33:40 INFO Runner test-yb1q51f6-0-n-128317c058cb found to be healthy
+06:33:40 INFO Runner test-yb1q51f6-0-n-128317c058cb created successfully
+06:33:40 INFO Getting runners...
+06:33:41 INFO Getting all openstack servers managed by the charm
+06:33:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:42 INFO Authentication (publickey) successful!
+06:33:42 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:33:42 INFO Getting runners...
+06:33:44 INFO Getting all openstack servers managed by the charm
+06:33:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:45 INFO Authentication (publickey) successful!
+06:33:45 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:33:45 INFO Getting runners...
+06:33:46 INFO Getting all openstack servers managed by the charm
+06:33:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:33:47 INFO Authentication (publickey) successful!
+06:33:48 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:33:50 INFO Wait for condition not met, sleeping 10
+06:34:01 INFO Getting runners...
+06:34:02 INFO Getting all openstack servers managed by the charm
+06:34:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:03 INFO Authentication (publickey) successful!
+06:34:04 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:34:04 INFO Getting runners...
+06:34:05 INFO Getting all openstack servers managed by the charm
+06:34:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:07 INFO Authentication (publickey) successful!
+06:34:08 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:34:09 INFO Offline github runners to delete: []:
+06:34:09 INFO Getting all openstack servers managed by the charm
+06:34:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:10 INFO Authentication (publickey) successful!
+06:34:12 INFO Cleaning up SSH key files
+06:34:12 INFO Found 1 key files, clean up 0 key files
+06:34:12 INFO Cleaning up openstack keypairs
+06:34:12 INFO Getting runners...
+06:34:13 INFO Getting all openstack servers managed by the charm
+06:34:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:15 INFO Authentication (publickey) successful!
+06:34:15 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:34:15 INFO Flushing idle runners...
+06:34:16 INFO Getting all openstack servers managed by the charm
+06:34:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:17 INFO Authentication (publickey) successful!
+06:34:17 INFO Attempting to kill runner process on test-yb1q51f6-0-n-128317c058cb if not busy
+06:34:17 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:34:17 INFO Kill process command output, ok: False code 1, out: 2340
+, err: 
+06:34:17 INFO Getting all openstack servers managed by the charm
+06:34:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:20 INFO Authentication (publickey) successful!
+06:34:22 INFO Cleaning up SSH key files
+06:34:22 INFO Found 1 key files, clean up 0 key files
+06:34:22 INFO Cleaning up openstack keypairs
+06:34:22 INFO Getting runners...
+06:34:23 INFO Getting all openstack servers managed by the charm
+06:34:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:24 INFO Authentication (publickey) successful!
+06:34:25 INFO Found following runners: {'test-yb1q51f6-0-n-128317c058cb'}
+06:34:25 INFO Flushing idle and busy runners...
+06:34:25 INFO Getting all openstack servers managed by the charm
+06:34:26 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:27 INFO Authentication (publickey) successful!
+06:34:27 INFO Attempting to kill all runner process on test-yb1q51f6-0-n-128317c058cb
+06:34:27 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:34:27 INFO Kill process command output, ok: True code 0, out: 1946
+2340
+, err: 
+06:34:27 INFO Getting all openstack servers managed by the charm
+06:34:28 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:28 INFO Authentication (publickey) successful!
+06:34:30 INFO Cleaning up SSH key files
+06:34:30 INFO Found 1 key files, clean up 0 key files
+06:34:30 INFO Cleaning up openstack keypairs
+06:34:40 INFO Flushing idle and busy runners...
+06:34:41 INFO Getting all openstack servers managed by the charm
+06:34:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:43 INFO Authentication (publickey) successful!
+06:34:43 INFO Attempting to kill all runner process on test-yb1q51f6-0-n-128317c058cb
+06:34:43 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+06:34:44 INFO Kill process command output, ok: False code 1, out: , err: 
+06:34:44 INFO Getting all openstack servers managed by the charm
+06:34:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:45 INFO Authentication (publickey) successful!
+06:34:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:46 INFO Authentication (publickey) successful!
+06:34:46 INFO [chan 2] Opened sftp connection (server version 3)
+06:34:46 INFO Running runner removal script for test-yb1q51f6-0-n-128317c058cb
+06:34:48 INFO Deleting openstack server with test-yb1q51f6-0-n-128317c058cb
+06:34:51 INFO Cleaning up SSH key files
+06:34:51 INFO Found 0 key files, clean up 0 key files
+06:34:51 INFO Cleaning up openstack keypairs
+06:34:52 INFO Getting runners...
+06:34:53 INFO Getting all openstack servers managed by the charm
+06:34:54 INFO Found following runners: set()
