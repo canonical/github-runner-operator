@@ -1,5 +1,10 @@
 # Changelog
 
+### 2025-04-29
+
+- For reactive runners, once the runner is spawned and online, the number of checks to see if the job has been picked up
+  before acknowledging the webrouter message is reduced -from up to 10 checks to 5, and from up to 5 minutes to 2.5 minutes.
+
 ### 2025-04-22
 
 - Add how-to landing page.
