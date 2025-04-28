@@ -119,11 +119,20 @@ def test_check_runner(client: FlaskClient, lock: Lock, mock_runner_scaler: Magic
     assert: Returns the correct status code and content.
     """
     app.config["lock"] = lock
-    mock_runner_scaler.get_runner_info.return_value = RunnerInfo(online=1,busy=0, offline=0, unknown=0, runners=["mock_runner"], busy_runners=[])
+    mock_runner_scaler.get_runner_info.return_value = RunnerInfo(
+        online=1, busy=0, offline=0, unknown=0, runners=("mock_runner",), busy_runners=tuple()
+    )
 
     response = client.get("/runner/check")
 
     assert response.status_code == 200
     assert not lock.locked()
-    assert json.loads(response.text) == {'online': 1, 'busy': 0, 'offline': 0, 'unknown': 0, 'runners': ['mock_runner'], 'busy_runners': []}
+    assert json.loads(response.text) == {
+        "online": 1,
+        "busy": 0,
+        "offline": 0,
+        "unknown": 0,
+        "runners": ["mock_runner"],
+        "busy_runners": [],
+    }
     mock_runner_scaler.get_runner_info.assert_called_once()
