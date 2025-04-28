@@ -528,9 +528,13 @@ class RunnerManager:
         """
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
             time.sleep(wait_time)
-            runner_health = platform_provider.get_runner_health(
-                metadata=metadata, instance_id=instance_id
-            )
+            try:
+                runner_health = platform_provider.get_runner_health(
+                    metadata=metadata, instance_id=instance_id
+                )
+            except PlatformApiError as exc:
+                logger.error("Error getting the runner health: %s", exc)
+                continue
             if runner_health.online or runner_health.deletable:
                 break
         else:

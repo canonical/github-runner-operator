@@ -238,8 +238,6 @@ def _spawn_runner(
         msg.reject(requeue=True)
         return
 
-    # A smaller value can be advantageous, as more runners can be spawned if
-    # there are many jobs.
     for _ in range(5):
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             msg.ack()
