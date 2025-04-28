@@ -1,0 +1,64 @@
+18:42:50 INFO Creating 1 runners
+18:42:51 INFO Creating openstack server with test-a8gj90bt-0-n-62fef46756a4
+18:43:04 INFO Waiting for runner process to startup: test-a8gj90bt-0-n-62fef46756a4
+18:43:15 WARNING NoValidConnectionsError. Unable to SSH into test-a8gj90bt-0-n-62fef46756a4 with address 10.145.193.51. Error: [Errno None] Unable to connect to port 22 on 10.145.193.51
+18:43:15 WARNING Retrying error in 60 seconds: Failed to SSH to test-a8gj90bt-0-n-62fef46756a4 during creation possible due to setup not completed
+18:44:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:15 INFO Authentication (publickey) successful!
+18:44:17 INFO Runner startup process found to be healthy on test-a8gj90bt-0-n-62fef46756a4
+18:44:17 INFO Waiting for runner process to be running: test-a8gj90bt-0-n-62fef46756a4
+18:44:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:17 INFO Authentication (publickey) successful!
+18:44:17 INFO Runner test-a8gj90bt-0-n-62fef46756a4 found to be healthy
+18:44:17 INFO Runner test-a8gj90bt-0-n-62fef46756a4 created successfully
+18:44:17 INFO Getting runners...
+18:44:18 INFO Getting all openstack servers managed by the charm
+18:44:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:20 INFO Authentication (publickey) successful!
+18:44:20 INFO Found following runners: {'test-a8gj90bt-0-n-62fef46756a4', 'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:20 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:20 INFO Getting runners...
+18:44:21 INFO Getting all openstack servers managed by the charm
+18:44:23 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:23 INFO Authentication (publickey) successful!
+18:44:24 INFO Found following runners: {'test-a8gj90bt-0-n-62fef46756a4', 'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:24 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:24 INFO Getting runners...
+18:44:25 INFO Getting all openstack servers managed by the charm
+18:44:26 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:26 INFO Authentication (publickey) successful!
+18:44:27 INFO Found following runners: {'test-a8gj90bt-0-n-62fef46756a4', 'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:27 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:28 INFO Wait for condition not met, sleeping 10
+18:44:39 INFO Wait for condition not met, sleeping 10
+18:44:50 INFO Getting runners...
+18:44:51 INFO Getting all openstack servers managed by the charm
+18:44:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:53 INFO Authentication (publickey) successful!
+18:44:53 INFO Found following runners: {'test-a8gj90bt-0-n-62fef46756a4', 'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:53 WARNING Found runner instance on cloud but not registered on GitHub: {'test-a8gj90bt-0-n-62fef46756a4'}
+18:44:53 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:53 INFO Getting runners...
+18:44:54 INFO Getting all openstack servers managed by the charm
+18:44:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:56 INFO Authentication (publickey) successful!
+18:44:56 INFO Found following runners: {'test-a8gj90bt-0-n-62fef46756a4', 'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:56 WARNING Found runner instance on cloud but not registered on GitHub: {'test-a8gj90bt-0-n-62fef46756a4'}
+18:44:56 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:44:57 INFO Offline github runners to delete: []:
+18:44:58 INFO Getting all openstack servers managed by the charm
+18:44:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:44:59 INFO Authentication (publickey) successful!
+18:45:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:45:00 INFO Authentication (publickey) successful!
+18:45:00 INFO [chan 2] Opened sftp connection (server version 3)
+18:45:00 INFO Running runner removal script for test-a8gj90bt-0-n-62fef46756a4
+18:45:01 INFO Deleting openstack server with test-a8gj90bt-0-n-62fef46756a4
+18:45:04 INFO Cleaning up SSH key files
+18:45:04 INFO Found 0 key files, clean up 0 key files
+18:45:04 INFO Cleaning up openstack keypairs
+18:45:04 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1}
+18:45:04 INFO Getting runners...
+18:45:05 INFO Getting all openstack servers managed by the charm
+18:45:06 INFO Found following runners: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}
+18:45:06 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-a8gj90bt-0-n-f2edd4c2ec5a'}

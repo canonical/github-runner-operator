@@ -1,0 +1,175 @@
+19:03:55 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] active:
+19:07:23 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] active: 
+19:07:53 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] active: 
+19:08:00 INFO Wait for condition not met, sleeping 30
+19:08:43 INFO [TEST SETUP] Run command pkill -9 run.sh on test-dwhsapa0-0-n-f7028bacf83f
+19:08:43 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.170', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:99:72'}]])
+19:08:44 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dwhsapa0-0-n-f7028bacf83f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.170 pkill -9 run.sh'
+19:08:45 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.170' (ED25519) to the list of known hosts.
+'
+19:08:49 INFO Runner test-dwhsapa0-0-n-f7028bacf83f status: online
+19:08:49 INFO Runner still marked as online, waiting for it to be marked offline
+19:10:15 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] maintenance: Reconciling runners
+19:10:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745867034.7523065, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.2540442943573}
+{"timestamp": 1745867050.2898657, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.396560907363892}
+{"timestamp": 1745867223.9870574, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 141.7410590648651}
+{"timestamp": 1745867242.9050949, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 17.64760947227478}
+{"timestamp": 1745867261.7532153, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 17.60522198677063}
+{"timestamp": 1745867181.0, "event": "runner_installed", "flavor": "test-dwhsapa0", "duration": 84.0}
+{"timestamp": 1745867284.0, "event": "runner_start", "flavor": "test-dwhsapa0", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 103.0, "queue_duration": 3.0}
+{"timestamp": 1745867325.0, "event": "runner_stop", "flavor": "test-dwhsapa0", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1745867414.169833, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.47279930114746}
+{"timestamp": 1745867428.6682277, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.410000085830688}
+19:10:47 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-zk53  github-pr-5776f-lxd  localhost/localhost  3.6.5    unsupported  19:10:47Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-dwhsapa0           active      1  github-runner-image-builder  latest/edge   68  no       
+test-dwhsapa0                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-dwhsapa0/0*  active    idle   0        10.244.16.218             
+test-dwhsapa0/0*                         active    idle   1        10.244.16.164   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.244.16.218  juju-612434-0  ubuntu@22.04      Running
+1        started  10.244.16.164  juju-612434-1  ubuntu@22.04      Running
+
+19:10:47 INFO Juju error logs:
+
+machine-0: 18:43:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-dwhsapa0-0: 18:43:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-dwhsapa0-0: 18:44:39 ERROR unit.github-runner-image-builder-dwhsapa0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:45:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:45:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dwhsapa0-0: 18:45:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-dwhsapa0-0: 19:02:48 ERROR unit.test-dwhsapa0/0.juju-log Unable to get SSH connection for instance test-dwhsapa0-0-n-651e11bf7e37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwhsapa0-0-n-651e11bf7e37
+unit-test-dwhsapa0-0: 19:02:51 ERROR unit.test-dwhsapa0/0.juju-log Unable to get SSH connection for instance test-dwhsapa0-0-n-651e11bf7e37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwhsapa0-0-n-651e11bf7e37
+unit-test-dwhsapa0-0: 19:02:54 ERROR unit.test-dwhsapa0/0.juju-log Failed to get SSH connection while removing test-dwhsapa0-0-n-651e11bf7e37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 319, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+unit-test-dwhsapa0-0: 19:02:56 ERROR unit.test-dwhsapa0/0.juju-log Invalid pulled metrics. No runner_installed information for test-dwhsapa0-0-n-651e11bf7e37.
+unit-test-dwhsapa0-0: 19:02:58 ERROR unit.test-dwhsapa0/0.juju-log Unable to get SSH connection for instance test-dwhsapa0-0-n-651e11bf7e37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwhsapa0-0-n-651e11bf7e37
+unit-test-dwhsapa0-0: 19:03:02 ERROR unit.test-dwhsapa0/0.juju-log Unable to get SSH connection for instance test-dwhsapa0-0-n-651e11bf7e37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwhsapa0-0-n-651e11bf7e37
+unit-test-dwhsapa0-0: 19:03:06 ERROR unit.test-dwhsapa0/0.juju-log Unable to get SSH connection for instance test-dwhsapa0-0-n-651e11bf7e37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-dwhsapa0-0-n-651e11bf7e37
+unit-test-dwhsapa0-0: 19:03:06 ERROR unit.test-dwhsapa0/0.juju-log Failed to get SSH connection while removing test-dwhsapa0-0-n-651e11bf7e37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 319, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-dwhsapa0-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-dwhsapa0-0-n-651e11bf7e37, key path: /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key
+unit-test-dwhsapa0-0: 19:03:08 ERROR unit.test-dwhsapa0/0.juju-log Invalid pulled metrics. No runner_installed information for test-dwhsapa0-0-n-651e11bf7e37.
+unit-test-dwhsapa0-0: 19:03:08 ERROR unit.test-dwhsapa0/0.juju-log No metrics returned after deleting test-dwhsapa0-0-n-651e11bf7e37
+
+19:10:47 INFO Forgetting model main...

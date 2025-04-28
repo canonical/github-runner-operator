@@ -1,0 +1,123 @@
+18:42:38 WARNING unexpected facade SSHServer received from the controller
+18:42:38 INFO Adding model github-pr-5776f-lxd:test-charm-metrics-failure-zk53 on cloud localhost
+18:42:38 WARNING unexpected facade SSHServer received from the controller
+18:42:38 WARNING unexpected facade SSHSession received from the controller
+18:42:38 WARNING unexpected facade SSHTunneler received from the controller
+18:42:39 INFO GitHub token rate limit: Rate(reset=2025-04-28 19:33:32+00:00, remaining=4920, limit=5000)
+18:42:53 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:43:11 INFO Deploying local:jammy/github-runner-0
+18:43:12 INFO Waiting for model:
+  test-dwhsapa0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwhsapa0/0 [allocating] waiting: waiting for machine
+18:43:42 INFO Waiting for model:
+  test-dwhsapa0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwhsapa0/0 [allocating] waiting: waiting for machine
+18:44:12 INFO Waiting for model:
+  test-dwhsapa0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:44:43 INFO Waiting for model:
+  test-dwhsapa0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:45:13 INFO Waiting for model:
+  test-dwhsapa0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:45:43 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:46:14 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:46:44 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] maintenance: Setting up Builder.
+18:47:15 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:47:45 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:48:16 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:48:46 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:49:16 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:49:47 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:50:17 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:50:47 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:51:17 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:51:48 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:52:18 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:52:48 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:53:19 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:53:49 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:54:19 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:54:49 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dwhsapa0/0 [executing] active: Building image.
+18:55:19 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] maintenance: Reconciling runners
+18:55:56 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] active: 
+18:56:26 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] active:
+19:00:26 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] maintenance: Reconciling runners
+19:00:56 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] active: 
+19:01:03 INFO [TEST SETUP] Exposing port 8080 on test-dwhsapa0-0-n-651e11bf7e37
+19:01:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.109', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:cf:1f'}]])
+19:01:05 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.109 &
+19:01:06 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.109' (ED25519) to the list of known hosts.
+
+19:01:07 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-dwhsapa0-0-n-651e11bf7e37
+19:01:07 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.109', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:cf:1f'}]])
+19:01:08 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.109 nc -z localhost 8080'
+19:01:09 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:01:10 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-dwhsapa0-0-n-651e11bf7e37
+19:01:10 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.109', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:cf:1f'}]])
+19:01:11 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dwhsapa0-0-n-651e11bf7e37.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.109 curl http://localhost:8080'
+19:01:12 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  67980      0 --:--:-- --:--:-- --:--:--  101k
+'
+19:01:15 INFO Wait for condition not met, sleeping 10
+19:01:26 INFO Wait for condition not met, sleeping 60
+19:02:59 INFO Waiting for model:
+  test-dwhsapa0/0 [executing] active: 
+19:03:29 INFO Waiting for model:
+  test-dwhsapa0/0 [idle] active: 
+19:03:35 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745866758.0, "event": "runner_installed", "flavor": "test-dwhsapa0", "duration": 79.0}
+{"timestamp": 1745866879.0, "event": "runner_start", "flavor": "test-dwhsapa0", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 121.0, "queue_duration": 1.0}
+{"timestamp": 1745866879.0, "event": "runner_stop", "flavor": "test-dwhsapa0", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1745866979.002785, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.56532120704651}
+{"timestamp": 1745866998.995859, "event": "reconciliation", "flavor": "test-dwhsapa0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.799160718917847}

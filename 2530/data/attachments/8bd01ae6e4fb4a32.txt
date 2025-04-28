@@ -1,0 +1,43 @@
+19:12:48 INFO GitHub token rate limit: Rate(reset=2025-04-28 19:33:32+00:00, remaining=4405, limit=5000)
+19:15:42 INFO Waiting for model:
+  test-xse99k25/0 [executing] active: 
+19:16:13 INFO Waiting for model:
+  test-xse99k25/0 [idle] active: 
+19:16:25 INFO Wait for condition not met, sleeping 10
+19:17:05 INFO Waiting for model:
+  test-xse99k25/0 [executing] active: 
+19:17:35 INFO Waiting for model:
+  test-xse99k25/0 [idle] active: 
+19:17:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1745867690.0, "event": "runner_installed", "flavor": "test-xse99k25", "duration": 95.0}
+{"timestamp": 1745867789.0, "event": "runner_start", "flavor": "test-xse99k25", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 99.0, "queue_duration": 2.0}
+{"timestamp": 1745867792.0, "event": "runner_stop", "flavor": "test-xse99k25", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1745867824.012309, "event": "reconciliation", "flavor": "test-xse99k25", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.636876821517944}
+{"timestamp": 1745867840.649618, "event": "reconciliation", "flavor": "test-xse99k25", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.731651306152344}
+19:17:39 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-0ap0  github-pr-5776f-lxd  localhost/localhost  3.6.5    unsupported  19:17:39Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-xse99k25           active      1  github-runner-image-builder  latest/edge   68  no       
+test-xse99k25                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-xse99k25/0*  active    idle   0        10.217.214.144         
+test-xse99k25/0*                         active    idle   1        10.217.214.22          
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.217.214.144  juju-f4817d-0  ubuntu@22.04      Running
+1        started  10.217.214.22   juju-f4817d-1  ubuntu@22.04      Running
+
+19:17:40 INFO Juju error logs:
+
+machine-0: 18:56:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:56:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-xse99k25-0: 18:56:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:56:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-xse99k25-0: 18:56:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-xse99k25-0: 18:56:57 ERROR unit.github-runner-image-builder-xse99k25/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+19:17:40 INFO Forgetting model main...
