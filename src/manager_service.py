@@ -89,8 +89,6 @@ def install_package() -> None:
         # `--ignore-installed` to force all dependencies be to installed under /usr.
         execute_command(
             [
-                "python3",
-                "-m",
                 "pipx",
                 "install",
                 "--global",
