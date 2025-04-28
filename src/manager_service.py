@@ -5,18 +5,19 @@
 
 import json
 import logging
+import textwrap
 from pathlib import Path
 
-import jinja2
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
+from github_runner_manager.configuration.base import ApplicationConfiguration
 from yaml import safe_dump as yaml_safe_dump
 
 from charm_state import CharmState
 from errors import (
     RunnerManagerApplicationInstallError,
-    RunnerManagerApplicationStartupError,
+    RunnerManagerApplicationStartError,
     SubprocessError,
 )
 from factories import create_application_configuration
@@ -34,8 +35,10 @@ JOB_MANAGER_PACKAGE = "jobmanager_client"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
+
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
+_SERVICE_STOP_ERROR_MESSAGE = "Unable to stop the github-runner-manager application"
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +51,8 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
         app_name: The Juju application name.
         unit_name: The Juju unit.
     """
-    config_file = _setup_config_file(state, app_name, unit_name)
+    config = create_application_configuration(state, app_name, unit_name)
+    config_file = _setup_config_file(config)
     _setup_service_file(config_file)
     _enable_service()
 
@@ -59,6 +63,12 @@ def install_package() -> None:
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationInstallError(_SERVICE_STOP_ERROR_MESSAGE) from err
+
     logger.info("Upgrading pip")
     try:
         execute_command(["python3", "-m", "pip", "install", "--upgrade", "pip"])
@@ -98,25 +108,22 @@ def _enable_service() -> None:
     """Enable the github runner manager service.
 
     Raises:
-        RunnerManagerApplicationStartupError: Unable to startup the service.
+        RunnerManagerApplicationStartError: Unable to startup the service.
     """
     try:
         systemd.service_enable(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
         if not systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
             systemd.service_start(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
     except SystemdError as err:
-        raise RunnerManagerApplicationStartupError(_SERVICE_SETUP_ERROR_MESSAGE) from err
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
 
 
-def _setup_config_file(state: CharmState, app_name: str, unit_name: str) -> Path:
+def _setup_config_file(config: ApplicationConfiguration) -> Path:
     """Write the configuration to file.
 
     Args:
-        state: The charm state.
-        app_name: The Juju application name.
-        unit_name: The Juju unit.
+        config: The application configuration.
     """
-    config = create_application_configuration(state, app_name, unit_name)
     # Directly converting to `dict` will have the value be Python objects rather than string
     # representations. The values needs to be string representations to be converted to YAML file.
     # No easy way to directly convert to YAML file, so json module is used.
@@ -133,14 +140,21 @@ def _setup_service_file(config_file: Path) -> None:
     Args:
         config_file: The configuration file for the service.
     """
-    jinja = jinja2.Environment(loader=jinja2.FileSystemLoader("templates"), autoescape=True)
+    service_file_content = textwrap.dedent(
+        f"""\
+        [Unit]
+        Description=Runs the github-runner-manager service
 
-    service_file_content = jinja.get_template("github-runner-manager.service.j2").render(
-        user=constants.RUNNER_MANAGER_USER,
-        group=constants.RUNNER_MANAGER_GROUP,
-        config=str(config_file),
-        host=GITHUB_RUNNER_MANAGER_ADDRESS,
-        port=GITHUB_RUNNER_MANAGER_PORT,
+        [Service]
+        Type=simple
+        User={constants.RUNNER_MANAGER_USER}
+        Group={constants.RUNNER_MANAGER_GROUP}
+        ExecStart=github-runner-manager --config-file {str(config_file)} --host \
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT}
+        Restart=on-failure
+
+        [Install]
+        WantedBy=multi-user.target
+        """
     )
-
     GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH.write_text(service_file_content, "utf-8")

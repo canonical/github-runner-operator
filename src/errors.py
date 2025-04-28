@@ -68,8 +68,8 @@ class RunnerManagerApplicationInstallError(RunnerManagerApplicationError):
     """Represents an error raised when github-runner-manager application installation failed."""
 
 
-class RunnerManagerApplicationStartupError(RunnerManagerApplicationError):
-    """Represents an error raised when github-runner-manager application start up failed."""
+class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application start failed."""
 
 
 class RunnerManagerServiceError(Exception):
