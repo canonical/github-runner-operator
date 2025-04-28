@@ -12,7 +12,7 @@ import manager_service
 from charm_state import CharmState
 from errors import (
     RunnerManagerApplicationInstallError,
-    RunnerManagerApplicationStartupError,
+    RunnerManagerApplicationStartError,
     SubprocessError,
 )
 from manager_service import SystemdError
@@ -111,7 +111,7 @@ def test_setup_systemd_error(
     """
     mock_systemd.service_enable.side_effect = SystemdError("Mock error")
 
-    with pytest.raises(RunnerManagerApplicationStartupError) as err:
+    with pytest.raises(RunnerManagerApplicationStartError) as err:
         manager_service.setup(complete_charm_state, "mock_app", "mock_unit")
 
     assert manager_service._SERVICE_SETUP_ERROR_MESSAGE in str(err.value)
