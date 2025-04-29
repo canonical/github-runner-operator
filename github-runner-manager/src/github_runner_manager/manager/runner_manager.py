@@ -25,6 +25,7 @@ from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.platform_provider import (
+    DeleteRunnerBusyError,
     PlatformProvider,
     PlatformRunnerState,
 )
@@ -219,11 +220,27 @@ class RunnerManager:
             Stats on metrics events issued during the deletion of runners.
         """
         logger.info("Deleting %s number of runners", num)
-        runners_list = self.get_runners()[:num]
-        runner_names = [runner.name for runner in runners_list]
-        logger.info("Deleting runners: %s", runner_names)
+
+        # TODO PENDING TO REMOVE THIS FROM THE CLOUD.
         remove_token = self._platform.get_removal_token()
-        return self._delete_runners(runners=runners_list, remove_token=remove_token)
+
+        extracted_runner_metrics = []
+        cloud_runners = self._cloud.get_runners_javi()
+        runners_health = self._platform.get_runners_health(cloud_runners)
+        for runner_health in runners_health:
+            instance_id = runner_health.instance_id
+            try:
+                self._platform.delete_runner(runner_health)
+            except DeleteRunnerBusyError:
+                logger.warning("Deleting busy runner %s", instance_id)
+            runner_metric = self._cloud.delete_runner(
+                instance_id=instance_id, remove_token=remove_token
+            )
+            if not runner_metric:
+                logger.error("No metrics returned after deleting %s", instance_id)
+            else:
+                extracted_runner_metrics.append(runner_metric)
+        return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
