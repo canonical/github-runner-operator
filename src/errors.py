@@ -58,3 +58,15 @@ class SubprocessError(Exception):
 
 class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
+
+
+class RunnerManagerApplicationError(Exception):
+    """Represents an error raised with github-runner-manager application."""
+
+
+class RunnerManagerApplicationInstallError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application installation failed."""
+
+
+class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application start failed."""
