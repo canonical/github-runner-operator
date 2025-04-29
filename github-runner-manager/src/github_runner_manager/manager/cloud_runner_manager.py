@@ -7,7 +7,7 @@ import abc
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Iterable, Iterator, Optional, Sequence, Tuple
+from typing import Iterable, Iterator, Optional, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
@@ -253,13 +253,17 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]:
+    def get_runners(self, states: Sequence[CloudRunnerState]) -> tuple[CloudRunnerInstance, ...]:
         """Get self-hosted runners by state.
 
         Args:
             states: Filter for the runners with these github states. If None all states will be
                 included.
         """
+
+    @abc.abstractmethod
+    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
     def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:

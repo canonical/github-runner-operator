@@ -182,6 +182,19 @@ class RunnerMetadata:
 
 
 @dataclass
+class RunnerIdentity:
+    """TODO.
+
+    Attributes:
+        instance_id: TODO
+        metadata: TODO
+    """
+
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+
+
+@dataclass
 class RunnerContext:
     """Information provided by the platform provider needed to spawn a runner.
 

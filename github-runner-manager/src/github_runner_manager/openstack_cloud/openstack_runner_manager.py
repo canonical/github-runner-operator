@@ -187,6 +187,15 @@ class OpenStackRunnerManager(CloudRunnerManager):
         state_set = set(states)
         return tuple(runner for runner in runners if runner.state in state_set)
 
+    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners.
+
+        Returns:
+            Information on the runner instances.
+        """
+        instances = self._openstack_cloud.get_instances()
+        return [self._build_cloud_runner_instance(instance) for instance in instances]
+
     def _build_cloud_runner_instance(
         self, instance: OpenstackInstance, healthy: bool | None = None
     ) -> CloudRunnerInstance:

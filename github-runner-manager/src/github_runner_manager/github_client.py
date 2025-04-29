@@ -15,7 +15,10 @@ from urllib.error import HTTPError
 import requests
 
 # HTTP404NotFoundError is not found by pylint
-from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
+from fastcore.net import (  # pylint: disable=no-name-in-module
+    HTTP404NotFoundError,
+    HTTP422UnprocessableEntityError,
+)
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from requests import RequestException
@@ -28,6 +31,9 @@ from github_runner_manager.configuration.github import (
 )
 from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.manager.models import InstanceID
+
+# TODO PENDING TO PLACE IN A BETTER PLACE THE EXCEPTIONS
+from github_runner_manager.platform.platform_provider import DeleteRunnerBusyError
 from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
@@ -283,19 +289,25 @@ class GithubClient:
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
-            runner_id: Id of the runner.
+            runner_id: Id of th1e runner.
+
+        Raises:
+            DeleteRunnerBusyError: TODO
         """
-        if isinstance(path, GitHubRepo):
-            self._client.actions.delete_self_hosted_runner_from_repo(
-                owner=path.owner,
-                repo=path.repo,
-                runner_id=runner_id,
-            )
-        if isinstance(path, GitHubOrg):
-            self._client.actions.delete_self_hosted_runner_from_org(
-                org=path.org,
-                runner_id=runner_id,
-            )
+        try:
+            if isinstance(path, GitHubRepo):
+                self._client.actions.delete_self_hosted_runner_from_repo(
+                    owner=path.owner,
+                    repo=path.repo,
+                    runner_id=runner_id,
+                )
+                if isinstance(path, GitHubOrg):
+                    self._client.actions.delete_self_hosted_runner_from_org(
+                        org=path.org,
+                        runner_id=runner_id,
+                    )
+        except HTTP422UnprocessableEntityError as err:
+            raise DeleteRunnerBusyError from err
 
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str

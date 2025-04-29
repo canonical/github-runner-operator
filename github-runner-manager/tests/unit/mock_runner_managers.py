@@ -16,7 +16,12 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.github_provider import (
     PlatformRunnerState,
@@ -357,6 +362,14 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
+    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners.
+
+        Returns:
+            Information on the runner instances.
+        """
+        return list(self.get_runners())
+
     def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
@@ -459,6 +472,22 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             instance_id=instance_id, metadata=metadata, online=False, busy=False, deletable=True
         )
 
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        Args:
+            runner_identities: TODO
+
+        Returns:
+            Health information on the runners.
+        """
+        return [
+            self.get_runner_health(instance_id=identity.instance_id, metadata=identity.metadata)
+            for identity in runner_identities
+        ]
+
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
@@ -529,6 +558,17 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             for instance_id, runner in self.state.runners.items()
             if instance_id.name not in runners_names_to_delete
         }
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
+        """
+        if runner_identity.instance_id in self.state.runners:
+            del self.state.runners[runner_identity.instance_id]
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
