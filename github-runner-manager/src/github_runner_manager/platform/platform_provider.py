@@ -13,7 +13,12 @@ from typing import Iterable  # pylint: disable=unused-import
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -23,6 +28,10 @@ class PlatformError(Exception):
 
 class JobNotFoundError(PlatformError):
     """Represents an error when the job could not be found on the platform."""
+
+
+class DeleteRunnerBusyError(PlatformError):
+    """TODO."""
 
 
 class PlatformProvider(abc.ABC):
@@ -42,6 +51,19 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        TODO should be return the list of the ones that failed?
+        Could we put that info in PlatformRunnerHealth instead?
+
+        Args:
+            runner_identities: TODO
+        """
+
+    @abc.abstractmethod
     def get_runners(
         self, states: "Iterable[PlatformRunnerState] | None" = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -57,6 +79,16 @@ class PlatformProvider(abc.ABC):
 
         Args:
             runners: list of runners to delete.
+        """
+
+    @abc.abstractmethod
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
         """
 
     @abc.abstractmethod

@@ -13,7 +13,12 @@ from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
@@ -86,6 +91,25 @@ class JobManagerPlatform(PlatformProvider):
             busy=busy,
         )
 
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        Args:
+            runner_identities: TODO
+
+        Returns:
+            Health information on the runners.
+        """
+        runners_health = []
+        for identity in runner_identities:
+            health = self.get_runner_health(
+                instance_id=identity.instance_id, metadata=identity.metadata
+            )
+            runners_health.append(health)
+        return runners_health
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -110,7 +134,17 @@ class JobManagerPlatform(PlatformProvider):
             runners: list of runners to delete.
         """
         # TODO for now do not do any work so the reconciliation can work.
-        logger.warning("jobmanager.delete_runners not implemented")
+        logger.info("jobmanager.delete_runners not implemented")
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
+        """
+        logger.debug("No need to delete jobs in the jobmanager.")
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

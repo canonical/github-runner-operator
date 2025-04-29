@@ -6,8 +6,9 @@
 import abc
 import logging
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum, auto
-from typing import Iterable, Iterator, Optional, Sequence, Tuple
+from typing import Iterable, Iterator, Optional, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
@@ -139,6 +140,7 @@ class CloudRunnerInstance:
         metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
+        created_at: TODO CHECK UTZ
     """
 
     name: str
@@ -146,6 +148,7 @@ class CloudRunnerInstance:
     metadata: RunnerMetadata
     health: HealthState
     state: CloudRunnerState
+    created_at: datetime
 
 
 class PreJobMetrics(BaseModel):
@@ -253,7 +256,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]:
+    def get_runners(self, states: Sequence[CloudRunnerState]) -> tuple[CloudRunnerInstance, ...]:
         """Get self-hosted runners by state.
 
         Args:
@@ -262,7 +265,13 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners."""
+
+    @abc.abstractmethod
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str | None = None
+    ) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:

@@ -4,6 +4,7 @@ import hashlib
 import random
 import secrets
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Iterable, Iterator, Sequence
 from unittest.mock import MagicMock
 
@@ -16,7 +17,12 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.github_provider import (
     PlatformRunnerState,
@@ -244,14 +250,14 @@ class MockRunner:
     github_state: PlatformRunnerState
     health: bool
 
-    def __init__(self, name: str):
+    def __init__(self, instance_id: InstanceID):
         """Construct the object.
 
         Args:
-            name: The name of the runner.
+            instance_id: InstanceID of the runner.
         """
-        self.name = name
-        self.instance_id = secrets.token_hex(6)
+        self.name = instance_id.name
+        self.instance_id = instance_id
         self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
         self.github_state = PlatformRunnerState.IDLE
@@ -269,6 +275,7 @@ class MockRunner:
             instance_id=self.instance_id,
             health=self.health,
             state=self.cloud_state,
+            created_at=datetime.now(timezone.utc),
         )
 
 
@@ -330,8 +337,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             The CloudRunnerInstance for the runner
         """
-        name = f"{self.name_prefix}-{instance_id}"
-        runner = MockRunner(name)
+        runner = MockRunner(instance_id)
         self.state.runners[instance_id] = runner
         return runner.to_cloud_runner()
 
@@ -357,7 +363,17 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners.
+
+        Returns:
+            Information on the runner instances.
+        """
+        return list(self.get_runners())
+
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str | None = None
+    ) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -369,8 +385,8 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         runner = self.state.runners.pop(instance_id, None)
         if runner is not None:
-            return iter([MagicMock()])
-        return iter([])
+            return MagicMock()
+        return []
 
     def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
         """Stop all runners.
@@ -459,6 +475,22 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             instance_id=instance_id, metadata=metadata, online=False, busy=False, deletable=True
         )
 
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        Args:
+            runner_identities: TODO
+
+        Returns:
+            Health information on the runners.
+        """
+        return [
+            self.get_runner_health(instance_id=identity.instance_id, metadata=identity.metadata)
+            for identity in runner_identities
+        ]
+
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
@@ -529,6 +561,17 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             for instance_id, runner in self.state.runners.items()
             if instance_id.name not in runners_names_to_delete
         }
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
+        """
+        if runner_identity.instance_id in self.state.runners:
+            del self.state.runners[runner_identity.instance_id]
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
