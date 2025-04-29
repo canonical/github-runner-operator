@@ -23,6 +23,8 @@ def _params_test_get_runner_health():
     runner_id = 3
     metadata = RunnerMetadata(platform_name="github", runner_id=str(runner_id))
     instance_id = InstanceID.build(prefix=prefix)
+    # The parameterized arguments are:
+    # "instance_id,metadata,self_hosted_runner,expected_online,expected_busy,expected_deletable",
     return [
         pytest.param(
             instance_id,
