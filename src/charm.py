@@ -58,7 +58,9 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
+    RunnerManagerServiceError,
     SubprocessError,
     TokenError,
 )
