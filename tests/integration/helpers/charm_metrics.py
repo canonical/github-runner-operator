@@ -8,7 +8,6 @@ import json
 import logging
 from time import sleep
 
-import requests
 from github.Branch import Branch
 from github.GithubException import GithubException
 from github.Repository import Repository
