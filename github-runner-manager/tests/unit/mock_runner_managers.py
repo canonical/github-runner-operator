@@ -4,6 +4,7 @@ import hashlib
 import random
 import secrets
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Iterable, Iterator, Sequence
 from unittest.mock import MagicMock
 
@@ -249,14 +250,14 @@ class MockRunner:
     github_state: PlatformRunnerState
     health: bool
 
-    def __init__(self, name: str):
+    def __init__(self, instance_id: InstanceID):
         """Construct the object.
 
         Args:
-            name: The name of the runner.
+            instance_id: InstanceID of the runner.
         """
-        self.name = name
-        self.instance_id = secrets.token_hex(6)
+        self.name = instance_id.name
+        self.instance_id = instance_id
         self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
         self.github_state = PlatformRunnerState.IDLE
@@ -274,6 +275,7 @@ class MockRunner:
             instance_id=self.instance_id,
             health=self.health,
             state=self.cloud_state,
+            created_at=datetime.now(timezone.utc),
         )
 
 
@@ -335,8 +337,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
         Returns:
             The CloudRunnerInstance for the runner
         """
-        name = f"{self.name_prefix}-{instance_id}"
-        runner = MockRunner(name)
+        runner = MockRunner(instance_id)
         self.state.runners[instance_id] = runner
         return runner.to_cloud_runner()
 
@@ -370,7 +371,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         return list(self.get_runners())
 
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str | None = None
+    ) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -382,8 +385,8 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """
         runner = self.state.runners.pop(instance_id, None)
         if runner is not None:
-            return iter([MagicMock()])
-        return iter([])
+            return MagicMock()
+        return []
 
     def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
         """Stop all runners.

@@ -207,10 +207,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
             instance_id=instance.instance_id,
             health=HealthState.from_value(healthy),
             state=CloudRunnerState.from_openstack_server_status(instance.status),
+            created_at=instance.created_at,
         )
 
     def delete_runner(
-        self, instance_id: InstanceID, remove_token: str
+        self, instance_id: InstanceID, remove_token: str | None = None
     ) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
@@ -307,7 +308,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return extracted_runner_metrics
 
     def _delete_runner(
-        self, instance: OpenstackInstance, remove_token: str
+        self, instance: OpenstackInstance, remove_token: str | None = None
     ) -> runner_metrics.PulledMetrics:
         """Delete self-hosted runners by openstack instance.
 
@@ -320,17 +321,18 @@ class OpenStackRunnerManager(CloudRunnerManager):
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
             pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
 
-            try:
-                logger.info("Running runner removal script for %s", instance.instance_id)
-                OpenStackRunnerManager._run_runner_removal_script(
-                    instance.instance_id.name, ssh_conn, remove_token
-                )
-            except _GithubRunnerRemoveError:
-                logger.warning(
-                    "Unable to run github runner removal script for %s",
-                    instance.instance_id,
-                    stack_info=True,
-                )
+            if remove_token:
+                try:
+                    logger.info("Running runner removal script for %s", instance.instance_id)
+                    OpenStackRunnerManager._run_runner_removal_script(
+                        instance.instance_id.name, ssh_conn, remove_token
+                    )
+                except _GithubRunnerRemoveError:
+                    logger.warning(
+                        "Unable to run github runner removal script for %s",
+                        instance.instance_id,
+                        stack_info=True,
+                    )
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id

@@ -7,9 +7,10 @@ import copy
 import logging
 import time
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum, auto
 from multiprocessing import Pool
-from typing import Iterator, Sequence, Type, cast
+from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, PlatformApiError, RunnerError
@@ -221,9 +222,6 @@ class RunnerManager:
         """
         logger.info("Deleting %s number of runners", num)
 
-        # TODO PENDING TO REMOVE THIS FROM THE CLOUD.
-        remove_token = self._platform.get_removal_token()
-
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners_javi()
         runners_health = self._platform.get_runners_health(cloud_runners)
@@ -233,16 +231,14 @@ class RunnerManager:
                 self._platform.delete_runner(runner_health)
             except DeleteRunnerBusyError:
                 logger.warning("Deleting busy runner %s", instance_id)
-            runner_metric = self._cloud.delete_runner(
-                instance_id=instance_id, remove_token=remove_token
-            )
+            runner_metric = self._cloud.delete_runner(instance_id=instance_id)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", instance_id)
             else:
                 extracted_runner_metrics.append(runner_metric)
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
-    def flush_runners(
+    def flush_runners_old(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
     ) -> IssuedMetricEventsStats:
         """Delete runners according to state.
@@ -270,6 +266,61 @@ class RunnerManager:
         stats = self._cloud.flush_runners(remove_token, busy)
         return self._issue_runner_metrics(metrics=stats)
 
+    def flush_runners(
+        self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
+    ) -> IssuedMetricEventsStats:
+        """Delete runners according to state.
+
+        Args:
+            flush_mode: The type of runners affect by the deletion.
+
+        Returns:
+            Stats on metrics events issued during the deletion of runners.
+        """
+        match flush_mode:
+            case FlushMode.FLUSH_IDLE:
+                logger.info("Flushing idle runners...")
+            case FlushMode.FLUSH_BUSY:
+                logger.info("Flushing idle and busy runners...")
+            case _:
+                logger.critical(
+                    "Unknown flush mode %s encountered, contact developers", flush_mode
+                )
+
+        flush_busy = False
+        if flush_mode == FlushMode.FLUSH_BUSY:
+            flush_busy = True
+
+        extracted_runner_metrics = []
+        cloud_runners = self._cloud.get_runners_javi()
+        logger.debug("clouds runners %s", cloud_runners)
+        runners_health = self._platform.get_runners_health(cloud_runners)
+        logger.debug("runner health %s", runners_health)
+        for runner_health in runners_health:
+            logger.debug("checking %s", runner_health)
+            if runner_health.busy and not flush_busy:
+                logger.debug("busy and not flush_busy")
+                continue
+            try:
+                self._platform.delete_runner(runner_health)
+            except DeleteRunnerBusyError:
+                if not flush_busy:
+                    # This is a race condition, as the runner changed from non busy to busy.
+                    logger.warning(
+                        "Tried to flush busy runner in in flush idle %s. "
+                        "Skipping runner from deletion",
+                        runner_health.instance_id,
+                    )
+                    continue
+
+            runner_metric = self._cloud.delete_runner(runner_health.instance_id)
+            if not runner_metric:
+                logger.error("No metrics returned after deleting %s", runner_health.instance_id)
+            else:
+                extracted_runner_metrics.append(runner_metric)
+        extracted_runner_metrics += list(self._cleanup_javi())
+        return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
+
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources.
 
@@ -280,6 +331,50 @@ class RunnerManager:
         remove_token = self._platform.get_removal_token()
         deleted_runner_metrics = self._cloud.cleanup(remove_token)
         return self._issue_runner_metrics(metrics=deleted_runner_metrics)
+
+    def cleanup_javi(self) -> IssuedMetricEventsStats:
+        """Run cleanup of the runners and other resources.
+
+        Returns:
+            Stats on metrics events issued during the cleanup of runners.
+        """
+        deleted_runner_metrics = self._cleanup_javi()
+        return self._issue_runner_metrics(metrics=iter(deleted_runner_metrics))
+
+    def _cleanup_javi(self) -> Iterable[runner_metrics.RunnerMetrics]:
+        """TODO."""
+        extracted_runner_metrics = []
+        cloud_runners = self._cloud.get_runners()
+        cloud_runners_map = {runner.instance_id: runner for runner in cloud_runners}
+        runners_health = self._platform.get_runners_health(cloud_runners)
+        for runner_health in runners_health:
+            cloud_runner = cloud_runners_map[runner_health.instance_id]
+            now = datetime.now(timezone.utc)
+            runner_should_be_online = (now - cloud_runner.created_at).total_seconds() > 1800
+            if not runner_health.online and not runner_health.busy and runner_should_be_online:
+                logger.warning(
+                    "Removing offline not busy runner that is old: %s %s",
+                    cloud_runner,
+                    runner_health,
+                )
+
+            elif not runner_health.deletable:
+                continue
+
+            try:
+                self._platform.delete_runner(runner_health)
+            except DeleteRunnerBusyError:
+                logger.warning(
+                    "Tried to delete busy runner in cleanup %s", cloud_runner.instance_id
+                )
+                continue
+
+            runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
+            if not runner_metric:
+                logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
+            else:
+                extracted_runner_metrics.append(runner_metric)
+        return extracted_runner_metrics
 
     def _cleanup_github_offline_runners(self) -> None:
         """Run cleanup of github runners in offline state."""

@@ -6,6 +6,7 @@
 import abc
 import logging
 from dataclasses import dataclass
+from datetime import datetime
 from enum import Enum, auto
 from typing import Iterable, Iterator, Optional, Sequence
 
@@ -139,6 +140,7 @@ class CloudRunnerInstance:
         metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
+        created_at: TODO CHECK UTZ
     """
 
     name: str
@@ -146,6 +148,7 @@ class CloudRunnerInstance:
     metadata: RunnerMetadata
     health: HealthState
     state: CloudRunnerState
+    created_at: datetime
 
 
 class PreJobMetrics(BaseModel):
@@ -266,7 +269,9 @@ class CloudRunnerManager(abc.ABC):
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(
+        self, instance_id: InstanceID, remove_token: str | None = None
+    ) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:

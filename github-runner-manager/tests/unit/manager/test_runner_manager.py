@@ -3,6 +3,7 @@
 
 """Unit tests for the the runner_manager."""
 
+from datetime import datetime, timezone
 from unittest.mock import ANY, MagicMock
 
 import pytest
@@ -116,6 +117,7 @@ def test_cleanup_removes_offline_expected_runners(
                 metadata=RunnerMetadata(),
                 health=health,
                 state=cloud_state,
+                created_at=datetime.now(timezone.utc),
             ),
         )
 
