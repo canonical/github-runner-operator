@@ -5,7 +5,6 @@
 
 - Add a visualization of the share of jobs started per application.
 
-
 ### 2025-04-22
 
 - Add how-to landing page.

@@ -2,12 +2,15 @@
 #  See LICENSE file for licensing details.
 
 
-"""Test for the github provider module."""
+"""Test for the jobmanager provider module."""
 
 from unittest.mock import MagicMock
 
 import pytest
 from jobmanager_client.models.job import Job
+from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
+    V1JobsJobIdHealthGet200Response,
+)
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
@@ -121,3 +124,49 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
 
     with pytest.raises(PlatformApiError):
         platform.check_job_been_picked_up(metadata, job_url)
+
+
+@pytest.mark.parametrize(
+    "job_status,job_deletable,expected_online,expected_busy,expected_deletable",
+    [
+        pytest.param("PENDING", False, False, True, False, id="pending runner"),
+        pytest.param("IN_PROGRESS", False, True, True, False, id="in progress runner"),
+        pytest.param("COMPLETED", False, True, True, False, id="completed not deletabule runner"),
+        pytest.param("COMPLETED", True, True, False, True, id="completed and deletable runner"),
+    ],
+)
+def test_get_runner_health(
+    monkeypatch: pytest.MonkeyPatch,
+    job_status: str,
+    job_deletable: bool,
+    expected_online: bool,
+    expected_busy: bool,
+    expected_deletable: bool,
+):
+    """
+    arrange: Given job health information from the jobmanager.
+    act: Call JobManagerPlatform.get_runner_health.
+    assert: Assert the correct health state is reported.
+    """
+    call_api_mock = MagicMock()
+    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
+
+    api_return_value = V1JobsJobIdHealthGet200Response(
+        label="label",
+        status=job_status,
+        deletable=job_deletable,
+    )
+    call_api_mock.side_effect = [api_return_value]
+
+    platform = JobManagerPlatform()
+    instance_id = InstanceID.build(prefix="unit-0")
+    metadata = RunnerMetadata(
+        platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
+    )
+
+    runner_health = platform.get_runner_health(metadata=metadata, instance_id=instance_id)
+
+    assert runner_health
+    assert runner_health.online is expected_online
+    assert runner_health.busy is expected_busy
+    assert runner_health.deletable is expected_deletable

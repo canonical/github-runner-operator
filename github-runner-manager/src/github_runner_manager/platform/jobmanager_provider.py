@@ -17,6 +17,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerContext, Runn
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
 )
 from github_runner_manager.types_.github import (
@@ -39,6 +40,51 @@ class JobManagerPlatform(PlatformProvider):
             New JobManagerPlatform.
         """
         return cls()
+
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> PlatformRunnerHealth:
+        """Get health information on jobmanager runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Raises:
+            PlatformApiError: If there was an error calling the jobmanager client.
+
+        Returns:
+           The health of the runner in the jobmanager.
+        """
+        configuration = jobmanager_client.Configuration(host=metadata.url)
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            try:
+                response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
+            except ApiException as exc:
+                logger.exception("Error calling jobmanager api.")
+                raise PlatformApiError("API error") from exc
+
+        # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
+        # We should review the jobmanager for any change in their statuses.
+        # Any other state besides PENDING means that no more waiting should be done
+        # for the runner, so it is equivalent to online, although the jobmanager does
+        # not provide an exact match with "online".
+        online = response.status not in [JobStatus.PENDING]
+        # busy is complex in the jobmanager, as a completed job that is not deletable is really
+        # busy. As so, every job that is not deletable is considered busy.
+        busy = not response.deletable
+        deletable = response.deletable
+
+        return PlatformRunnerHealth(
+            instance_id=instance_id,
+            metadata=metadata,
+            online=online,
+            deletable=deletable,
+            busy=busy,
+        )
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None

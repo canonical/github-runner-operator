@@ -29,6 +29,7 @@ from github_runner_manager.configuration.github import (
     GitHubRepo,
 )
 from github_runner_manager.errors import CloudError, ReconcileError
+from github_runner_manager.manager import runner_manager as runner_manager_module
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
@@ -116,6 +117,8 @@ def runner_manager_fixture(
         cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
+    # We do not want to wait in the unit tests for machines to be ready.
+    monkeypatch.setattr(runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", (0,))
     return runner_manager
 
 
