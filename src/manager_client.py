@@ -16,6 +16,9 @@ from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceResp
 
 logger = logging.getLogger(__name__)
 
+NO_RESPONSE_ERROR_MESSAGE = "Failed request with no response"
+CONNECTION_ERROR_MESSAGE = "Failed request due to connection failure"
+
 
 def catch_requests_errors(func: Callable) -> Callable:
     """Decorate for handling requests errors.
@@ -46,17 +49,15 @@ def catch_requests_errors(func: Callable) -> Callable:
             return func(*args, **kwargs)
         except requests.HTTPError as err:
             if err.response is None:
-                raise RunnerManagerServiceResponseError("Failed request with no response") from err
+                raise RunnerManagerServiceResponseError(NO_RESPONSE_ERROR_MESSAGE) from err
             logger.error(
                 "Failed request with code %s: %s", err.response.status_code, err.response.text
             )
             raise RunnerManagerServiceResponseError(
-                f"{err.response.status_code: err.response.text}"
+                f"Failed request with code {err.response.status_code}: {err.response.text}"
             ) from err
         except requests.ConnectionError as err:
-            raise RunnerManagerServiceConnectionError(
-                "Failed request due to connection failure"
-            ) from err
+            raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
 
     return func_with_error_handling
 
@@ -88,7 +89,10 @@ class GitHubRunnerManagerClient:
         self._requests = requests.Session()
         self._base_url = f"http://{self._host}:{self._port}"
 
-    def _request(self, method: str, path: str, *args: Any, **kwargs: Any) -> requests.Response:
+    # Issuing request will be tested in integration tests.
+    def _request(
+        self, method: str, path: str, *args: Any, **kwargs: Any
+    ) -> requests.Response:  # pragma: no cover
         """Make a HTTP request to the manager service.
 
         This uses the requests library, additional arguments can be passed by `args` and `kwargs`.
@@ -112,7 +116,9 @@ class GitHubRunnerManagerClient:
             The information on the runners.
         """
         response = self._request(_HTTPMethod.GET, "/runner/check")
-        return json.loads(response.text)
+        raw_runner_info = json.loads(response.text)
+        runner_info = {key.replace("_", "-"): value for key, value in raw_runner_info.items()}
+        return runner_info
 
     @catch_requests_errors
     def flush_runner(self, busy: bool = True) -> None:
