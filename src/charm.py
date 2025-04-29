@@ -261,7 +261,8 @@ class GithubRunnerCharm(CharmBase):
             manager_service.install_package()
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
-            raise
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
 
         try:
             logrotate.setup()
@@ -456,15 +457,13 @@ class GithubRunnerCharm(CharmBase):
 
         Args:
             state: The charm state.
-
-        Raise:
-            RunnerManagerApplicationError: Issue with the github-runner-manager service.
         """
         try:
             manager_service.setup(state, self.app.name, self.unit.name)
         except RunnerManagerApplicationError:
             logging.exception("Unable to setup the github-runner-manager service")
-            raise
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
 
     @staticmethod
     def _log_juju_processes() -> None:
