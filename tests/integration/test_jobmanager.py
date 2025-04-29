@@ -25,9 +25,7 @@ from pytest_httpserver import HTTPServer
 from pytest_operator.plugin import OpsTest
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.charm_metrics import (
-    clear_metrics_log,
-)
+from tests.integration.helpers.charm_metrics import clear_metrics_log
 from tests.integration.helpers.common import reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
