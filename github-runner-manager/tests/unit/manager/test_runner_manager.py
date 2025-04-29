@@ -37,7 +37,7 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
             health,
             False,
             True,
-            id="Non reactive Github runners with any cloud state should be DELETED.",
+            id="Non reactive GitHub runners with any cloud state should be DELETED.",
         )
         for cloud_state in CloudRunnerState
         for health in HealthState
