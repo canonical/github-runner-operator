@@ -57,7 +57,6 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service()
 
 
-# TODO: Use pipx over pip once the version that supports `pipx install --global` lands on apt.
 def install_package() -> None:
     """Install the GitHub runner manager package.
 
