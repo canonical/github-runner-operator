@@ -450,9 +450,6 @@ class GithubRunnerCharm(CharmBase):
 
         Args:
             state: The charm state.
-
-        Raise:
-            RunnerManagerApplicationError: Issue with the github-runner-manager service.
         """
         try:
             manager_service.setup(state, self.app.name, self.unit.name)
