@@ -1,0 +1,57 @@
+07:29:14 INFO Creating 2 runners
+07:30:12 ERROR Socket exception: Connection reset by peer (104)
+07:30:41 INFO Getting runners...
+07:30:43 INFO Getting all openstack servers managed by the charm
+07:30:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:44 INFO Authentication (publickey) successful!
+07:30:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:45 INFO Authentication (publickey) successful!
+07:30:45 INFO Found following runners: {'test-k3vb49i5-0-n-5a273d8ca80d', 'test-k3vb49i5-0-n-4b62a840b209'}
+07:30:45 INFO Getting runners...
+07:30:47 INFO Getting all openstack servers managed by the charm
+07:30:48 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:48 INFO Authentication (publickey) successful!
+07:30:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:49 INFO Authentication (publickey) successful!
+07:30:49 INFO Found following runners: {'test-k3vb49i5-0-n-5a273d8ca80d', 'test-k3vb49i5-0-n-4b62a840b209'}
+07:30:49 INFO Flushing idle runners...
+07:30:50 INFO Getting all openstack servers managed by the charm
+07:30:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:51 INFO Authentication (publickey) successful!
+07:30:52 INFO Attempting to kill runner process on test-k3vb49i5-0-n-5a273d8ca80d if not busy
+07:30:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:30:52 INFO Kill process command output, ok: True code 0, out: 1941
+, err: 
+07:30:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:52 INFO Authentication (publickey) successful!
+07:30:52 INFO Attempting to kill runner process on test-k3vb49i5-0-n-4b62a840b209 if not busy
+07:30:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:30:52 INFO Kill process command output, ok: True code 0, out: 1822
+, err: 
+07:30:52 INFO Getting all openstack servers managed by the charm
+07:30:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:53 INFO Authentication (publickey) successful!
+07:30:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:54 INFO Authentication (publickey) successful!
+07:30:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:55 INFO Authentication (publickey) successful!
+07:30:55 INFO [chan 2] Opened sftp connection (server version 3)
+07:30:55 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.161, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:30:55 WARNING Failed to pull metrics for test-k3vb49i5-0-n-5a273d8ca80d: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:30:55 INFO Running runner removal script for test-k3vb49i5-0-n-5a273d8ca80d
+07:30:57 INFO Deleting openstack server with test-k3vb49i5-0-n-5a273d8ca80d
+07:30:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:30:58 INFO Authentication (publickey) successful!
+07:30:59 INFO [chan 2] Opened sftp connection (server version 3)
+07:30:59 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.61, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:30:59 WARNING Failed to pull metrics for test-k3vb49i5-0-n-4b62a840b209: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:30:59 INFO Running runner removal script for test-k3vb49i5-0-n-4b62a840b209
+07:31:01 INFO Deleting openstack server with test-k3vb49i5-0-n-4b62a840b209
+07:31:03 INFO Cleaning up SSH key files
+07:31:03 INFO Found 0 key files, clean up 0 key files
+07:31:03 INFO Cleaning up openstack keypairs
+07:31:03 INFO Getting runners...
+07:31:05 INFO Getting all openstack servers managed by the charm
+07:31:06 INFO Found following runners: set()

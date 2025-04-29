@@ -1,0 +1,93 @@
+07:44:30 WARNING unexpected facade SSHServer received from the controller
+07:44:30 INFO Adding model github-pr-e4e09-lxd:test-charm-runner-j3j7 on cloud localhost
+07:44:30 WARNING unexpected facade SSHServer received from the controller
+07:44:30 WARNING unexpected facade SSHSession received from the controller
+07:44:30 WARNING unexpected facade SSHTunneler received from the controller
+07:44:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+07:44:55 INFO Deploying local:jammy/github-runner-0
+07:44:55 INFO Waiting for model:
+  test-pqf16oek/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pqf16oek/0 [allocating] waiting: waiting for machine
+07:45:25 INFO Waiting for model:
+  test-pqf16oek/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pqf16oek/0 [allocating] waiting: waiting for machine
+07:45:56 INFO Waiting for model:
+  test-pqf16oek/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pqf16oek/0 [allocating] waiting: waiting for machine
+07:46:26 INFO Waiting for model:
+  test-pqf16oek/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:46:57 INFO Waiting for model:
+  test-pqf16oek/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:47:27 INFO Waiting for model:
+  test-pqf16oek/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:47:57 INFO Waiting for model:
+  test-pqf16oek/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:48:28 INFO Waiting for model:
+  test-pqf16oek/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:48:58 INFO Waiting for model:
+  test-pqf16oek/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pqf16oek/0 [executing] maintenance: Setting up Builder.
+07:49:29 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] blocked: image integration required.
+07:49:59 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:50:29 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:51:00 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:51:30 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:52:00 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:52:30 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:53:00 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:53:31 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:54:01 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:54:31 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:55:02 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:55:32 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:56:02 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:56:32 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:57:02 INFO Waiting for model:
+  test-pqf16oek/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pqf16oek/0 [executing] active: Building image.
+07:57:33 INFO Waiting for model:
+  test-pqf16oek/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pqf16oek/0 [idle] active: 
+07:58:03 INFO Waiting for model:
+  test-pqf16oek/0 [idle] active: 
+08:01:03 INFO Waiting for model:
+  test-pqf16oek/0 [executing] maintenance: Reconciling runners
+08:01:33 INFO Waiting for model:
+  test-pqf16oek/0 [idle] active:
+08:02:15 INFO Waiting for model:
+  test-pqf16oek/0 [executing] maintenance: Reconciling runners
