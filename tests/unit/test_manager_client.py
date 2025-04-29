@@ -43,7 +43,7 @@ def test_check_runner_success(client: GitHubRunnerManagerClient, mock__request: 
     mock__request.return_value = mock_response
 
     info = client.check_runner()
-    # Note that underscore should be replaced with dash, as Juju action results cannot have underscores.
+    # The underscore should be replaced with dash, as Juju action results cannot have underscores.
     assert info == {
         "online": 0,
         "busy": 0,
@@ -58,19 +58,19 @@ def test_check_runner_http_error(
     client: GitHubRunnerManagerClient, mock__request: MagicMock
 ) -> None:
     """
-    arrange: Setup the response for the service to raise HTTPError (status code that is not 200s, 300s).
+    arrange: Setup the response for the service to raise HTTPError with response of 400.
     act: Request for runner information.
     assert: The error value is correct.
     """
     mock_response = MagicMock()
-    mock_response.status_code = 200
+    mock_response.status_code = 400
     mock_response.text = "Mock response"
     mock__request.side_effect = requests.HTTPError("mock error", response=mock_response)
 
     with pytest.raises(RunnerManagerServiceResponseError) as err:
         client.check_runner()
 
-    assert "200" in str(err.value)
+    assert "400" in str(err.value)
     assert "Mock response" in str(err.value)
 
 
