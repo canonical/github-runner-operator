@@ -58,9 +58,7 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
-    RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
-    RunnerManagerServiceError,
     SubprocessError,
     TokenError,
 )
@@ -321,14 +319,6 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
-        try:
-            self._setup_service(state)
-        except RunnerManagerApplicationError:
-            logger.exception("Unable to start the runner manager service")
-            # Usage of the runner manager service is experiential.
-            # Not blocking the reconcile for now.
-            # In the future, the charm should be set to block state if the runner manager service
-            # cannot start due to config issues.
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
