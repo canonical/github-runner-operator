@@ -73,14 +73,10 @@ async def wait_for_workflow_to_start(
                 return False
             try:
                 job: WorkflowJob = jobs[0]
-                logs = requests.get(job.logs_url()).content.decode("utf-8")
+                if runner_name == job.runner_name:
+                    return True
             except GithubException as exc:
                 logger.warning("Github error, %s", exc)
-                if exc.status == 410:
-                    logger.warning("Transient github error, %s", exc)
-                    return False
-            if runner_name in logs:
-                return True
         return False
 
     try:
@@ -136,12 +132,12 @@ async def cancel_workflow_run(
             continue
         try:
             job: WorkflowJob = jobs[0]
-            logs = requests.get(job.logs_url()).content.decode("utf-8")
         except GithubException as exc:
             if exc.status == 410:
                 logger.warning("Transient github error, %s", exc)
                 continue
-        if runner_name in logs:
+            logger.warning("Github error, %s", exc)
+        if runner_name == job.runner_name:
             run.cancel()
 
 
