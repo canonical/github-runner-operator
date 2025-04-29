@@ -13,10 +13,6 @@ class RunnerCreateError(RunnerError):
     """Error for runner creation failure."""
 
 
-class RunnerStartError(RunnerError):
-    """Error for runner start failure."""
-
-
 class MissingServerConfigError(RunnerError):
     """Error for unable to create runner due to missing server configurations."""
 

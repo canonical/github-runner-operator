@@ -21,7 +21,6 @@ from github_runner_manager.errors import (
     OpenStackError,
     OpenstackHealthCheckError,
     RunnerCreateError,
-    RunnerStartError,
     SSHError,
 )
 from github_runner_manager.manager.cloud_runner_manager import (
@@ -500,39 +499,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             result.stdout,
             result.stderr,
         )
-
-    @retry(tries=5, delay=60, local_logger=logger)
-    def _wait_runner_running(self, instance: OpenstackInstance) -> None:
-        """Wait until runner is running.
-
-        Args:
-            instance: The runner instance.
-
-        Raises:
-            RunnerStartError: The runner process was not found on the runner.
-        """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SSHError as err:
-            raise RunnerStartError(
-                f"Failed to SSH connect to {instance.instance_id} openstack runner"
-            ) from err
-
-        try:
-            healthy = health_checks.check_active_runner(
-                ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
-            )
-        except OpenstackHealthCheckError as exc:
-            raise RunnerStartError(
-                f"Failed to check health of runner process on {instance.instance_id}"
-            ) from exc
-        if not healthy:
-            logger.info("Runner %s not considered healthy", instance.instance_id)
-            raise RunnerStartError(
-                f"Runner {instance.instance_id} failed to initialize after starting"
-            )
-
-        logger.info("Runner %s found to be healthy", instance.instance_id)
 
     @staticmethod
     def _run_runner_removal_script(
