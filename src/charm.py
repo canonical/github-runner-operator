@@ -254,7 +254,7 @@ class GithubRunnerCharm(CharmBase):
             manager_service.install_package()
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
-            # Not re-raising error for until the github-runner-manager service replaces the 
+            # Not re-raising error for until the github-runner-manager service replaces the
             # library.
 
         try:
@@ -458,7 +458,7 @@ class GithubRunnerCharm(CharmBase):
             manager_service.setup(state, self.app.name, self.unit.name)
         except RunnerManagerApplicationError:
             logging.exception("Unable to setup the github-runner-manager service")
-            # Not re-raising error for until the github-runner-manager service replaces the 
+            # Not re-raising error for until the github-runner-manager service replaces the
             # library.
 
     @staticmethod
