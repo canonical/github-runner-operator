@@ -4,7 +4,7 @@
 """Module for unit-testing OpenStack runner manager."""
 import logging
 import secrets
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Iterable
 from unittest.mock import ANY, MagicMock
 
@@ -198,9 +198,11 @@ def _params_test_cleanup_extract_metrics():
     The following values are returned:
     runner_installed_metrics,pre_job_metrics,post_job_metrics,result
     """
-    openstack_created_at = datetime.strptime(
-        openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ"
-    ).timestamp()
+    openstack_created_at = (
+        datetime.strptime(openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ")
+        .replace(tzinfo=timezone.utc)
+        .timestamp()
+    )
     openstack_installed_at = openstack_created_at + 20
     pre_job_timestamp = openstack_installed_at + 20
     post_job_timestamp = openstack_installed_at + 20

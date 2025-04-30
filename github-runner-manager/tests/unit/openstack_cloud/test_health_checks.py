@@ -1,6 +1,6 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock
 
 import invoke
@@ -61,7 +61,7 @@ from tests.unit.factories import openstack_factory
         pytest.param(
             openstack_cloud.OpenstackInstance(
                 server=openstack_factory.ServerFactory(
-                    created_at=(datetime.now() - timedelta(hours=2)).strftime(
+                    created_at=(datetime.now(timezone.utc) - timedelta(hours=2)).strftime(
                         "%Y-%m-%dT%H:%M:%SZ"
                     ),
                     status="BUILD",
@@ -74,7 +74,7 @@ from tests.unit.factories import openstack_factory
         pytest.param(
             openstack_cloud.OpenstackInstance(
                 server=openstack_factory.ServerFactory(
-                    created_at=datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ"),
+                    created_at=datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                     status="BUILD",
                 ),
                 prefix="test",
@@ -129,7 +129,8 @@ def test_check_runner(
             id="runner still in installation",
         ),
         pytest.param(
-            datetime.now() - timedelta(hours=INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS + 1),
+            datetime.now(timezone.utc)
+            - timedelta(hours=INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS + 1),
             False,
             False,
             id="runner too long in installation",
