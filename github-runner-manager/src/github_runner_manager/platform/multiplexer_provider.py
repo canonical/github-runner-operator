@@ -4,19 +4,22 @@
 """Multiplexer platform provider to use several providers simultaneously."""
 
 from collections import defaultdict
-from typing import Iterable
 
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
-    PlatformRunnerState,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
@@ -71,27 +74,28 @@ class MultiplexerPlatform(PlatformProvider):
         """
         return self._get_provider(metadata).get_runner_health(metadata, instance_id)
 
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            runner_identities: TODO
 
         Returns:
-            Get the list of runners from all platforms.
+            Health information on the runners.
         """
-        # FIXME. This method should not exist as the jobmanager does not offer a API to
-        # get all runners (at least not for the github-runner). We should delete this method
-        # and instead get all runners from the cloud manager.
-        # A method to delete all runners in the platform that are not in the cloud manager
-        # may also be needed, for example github may need to have this, so there are no runners
-        # in offline/idle state without a cloud instance.
-        runners = ()
-        for platform in self._providers.values():
-            runners += platform.get_runners(states)
-        return runners
+        # TODO would it be better to return them in the same order as the input?
+        runners_health = []
+        identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
+        for identity in runner_identities:
+            identities_by_provider[identity.metadata.platform_name].append(identity)
+        for platform_name, platform_identities in identities_by_provider.items():
+            provider_runners_health = self._providers[platform_name].get_runners_health(
+                platform_identities
+            )
+            runners_health += provider_runners_health
+        return runners_health
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.
@@ -110,6 +114,14 @@ class MultiplexerPlatform(PlatformProvider):
         for platform_name, platform_runners in platform_runners.items():
             self._providers[platform_name].delete_runners(platform_runners)
 
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """Delete runners.
+
+        Args:
+            runner_identity: TODO
+        """
+        self._get_provider(runner_identity.metadata).delete_runner(runner_identity)
+
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
@@ -126,18 +138,6 @@ class MultiplexerPlatform(PlatformProvider):
             The runner token and the runner.
         """
         return self._get_provider(metadata).get_runner_context(metadata, instance_id, labels)
-
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-
-        Returns:
-            The removal token..
-        """
-        # FIXME. This method should not exist. There should be just a method to delete a runner,
-        # For now, the github implementation is just used to not break the reconcile loop.
-        return self._providers["github"].get_removal_token()
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.

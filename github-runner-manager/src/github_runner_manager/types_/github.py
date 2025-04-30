@@ -100,18 +100,6 @@ class SelfHostedRunner(BaseModel):
         return cls.parse_obj(github_dict)
 
 
-class RemoveToken(BaseModel):
-    """Token used for removing GitHub runners.
-
-    Attributes:
-        token: Token for removing GitHub runners.
-        expires_at: Time the token expires at.
-    """
-
-    token: str
-    expires_at: str
-
-
 class JobConclusion(str, Enum):
     """Conclusion of a job on GitHub.
 

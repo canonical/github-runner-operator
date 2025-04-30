@@ -5,7 +5,6 @@
 
 import logging
 from enum import Enum
-from typing import Iterable
 
 import jobmanager_client
 from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
@@ -13,12 +12,16 @@ from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
-    PlatformRunnerState,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -86,22 +89,24 @@ class JobManagerPlatform(PlatformProvider):
             busy=busy,
         )
 
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        This method will disappear in a following PR.
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            runner_identities: TODO
 
         Returns:
-            Empty list of runners, as jobmanager will not implement this functionality.
+            Health information on the runners.
         """
-        # TODO for now return empty so the reconciliation can work.
-        logger.warning("jobmanager.get_runners not implemented")
-        return ()
+        runners_health = []
+        for identity in runner_identities:
+            health = self.get_runner_health(
+                instance_id=identity.instance_id, metadata=identity.metadata
+            )
+            runners_health.append(health)
+        return runners_health
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.
@@ -110,7 +115,17 @@ class JobManagerPlatform(PlatformProvider):
             runners: list of runners to delete.
         """
         # TODO for now do not do any work so the reconciliation can work.
-        logger.warning("jobmanager.delete_runners not implemented")
+        logger.info("jobmanager.delete_runners not implemented")
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
+        """
+        logger.debug("No need to delete jobs in the jobmanager.")
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
@@ -168,16 +183,6 @@ class JobManagerPlatform(PlatformProvider):
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
-
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-
-        Raises:
-            NotImplementedError: Work in progress.
-        """
-        raise NotImplementedError
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.

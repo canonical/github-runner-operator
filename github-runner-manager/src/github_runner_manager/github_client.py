@@ -3,8 +3,7 @@
 
 """GitHub API client.
 
-Migrate to PyGithub in the future. PyGithub is still lacking some API such as
-remove token for runner.
+Migrate to PyGithub in the future. PyGithub is still lacking some API such as get runner groups.
 """
 import functools
 import logging
@@ -15,7 +14,10 @@ from urllib.error import HTTPError
 import requests
 
 # HTTP404NotFoundError is not found by pylint
-from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
+from fastcore.net import (  # pylint: disable=no-name-in-module
+    HTTP404NotFoundError,
+    HTTP422UnprocessableEntityError,
+)
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
 from requests import RequestException
@@ -28,7 +30,10 @@ from github_runner_manager.configuration.github import (
 )
 from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
+
+# TODO PENDING TO PLACE IN A BETTER PLACE THE EXCEPTIONS
+from github_runner_manager.platform.platform_provider import DeleteRunnerBusyError
+from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -184,28 +189,6 @@ class GithubClient:
         return managed_runners_list
 
     @catch_http_errors
-    def get_runner_remove_token(self, path: GitHubPath) -> str:
-        """Get token from GitHub used for removing runners.
-
-        Args:
-            path: The Github org/repo path.
-
-        Returns:
-            The removing token.
-        """
-        token: RemoveToken
-        if isinstance(path, GitHubRepo):
-            token = self._client.actions.create_remove_token_for_repo(
-                owner=path.owner, repo=path.repo
-            )
-        elif isinstance(path, GitHubOrg):
-            token = self._client.actions.create_remove_token_for_org(org=path.org)
-        else:
-            assert_never(token)
-
-        return token["token"]
-
-    @catch_http_errors
     def get_runner_registration_jittoken(
         self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
     ) -> tuple[str, SelfHostedRunner]:
@@ -284,18 +267,24 @@ class GithubClient:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
             runner_id: Id of the runner.
+
+        Raises:
+            DeleteRunnerBusyError: TODO
         """
-        if isinstance(path, GitHubRepo):
-            self._client.actions.delete_self_hosted_runner_from_repo(
-                owner=path.owner,
-                repo=path.repo,
-                runner_id=runner_id,
-            )
-        if isinstance(path, GitHubOrg):
-            self._client.actions.delete_self_hosted_runner_from_org(
-                org=path.org,
-                runner_id=runner_id,
-            )
+        try:
+            if isinstance(path, GitHubRepo):
+                self._client.actions.delete_self_hosted_runner_from_repo(
+                    owner=path.owner,
+                    repo=path.repo,
+                    runner_id=runner_id,
+                )
+                if isinstance(path, GitHubOrg):
+                    self._client.actions.delete_self_hosted_runner_from_org(
+                        org=path.org,
+                        runner_id=runner_id,
+                    )
+        except HTTP422UnprocessableEntityError as err:
+            raise DeleteRunnerBusyError from err
 
     def get_job_info_by_runner_name(
         self, path: GitHubRepo, workflow_run_id: str, runner_name: str
