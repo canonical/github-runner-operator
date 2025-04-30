@@ -10,10 +10,25 @@ from unittest.mock import MagicMock
 from urllib.error import HTTPError
 
 import pytest
+import requests
 
-from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
-from github_runner_manager.github_client import GithubClient
-from github_runner_manager.types_.github import GitHubRepo, JobConclusion, JobInfo, JobStatus
+# HTTP404NotFoundError is not found by pylint
+from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
+from requests import HTTPError as RequestsHTTPError
+
+import github_runner_manager.github_client
+from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
+from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
+from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.types_.github import (
+    GitHubRunnerStatus,
+    JobConclusion,
+    JobInfo,
+    JobStatus,
+    SelfHostedRunner,
+    SelfHostedRunnerLabel,
+)
 
 JobStatsRawData = namedtuple(
     "JobStatsRawData",
@@ -258,18 +273,74 @@ def test_github_api_http_error(github_client: GithubClient, job_stats_raw: JobSt
         )
 
 
+def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A mocked Github Client that returns two runners, one for the requested prefix.
+    act: Call list_runners with the prefix.
+    assert: A correct runners is returned, the one matching the prefix.
+    """
+    response = {
+        "total_count": 2,
+        "runners": [
+            {
+                "id": 311,
+                "name": "current-unit-0-n-e8bc54023ae1",
+                "os": "linux",
+                "status": "offline",
+                "busy": True,
+                "labels": [
+                    {"id": 0, "name": "openstack_test", "type": "read-only"},
+                    {"id": 0, "name": "test-ae7a1fbcd0c1", "type": "read-only"},
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "linux", "type": "read-only"},
+                ],
+            },
+            {
+                "id": 312,
+                "name": "anotherunit-0-n-e8bc54023ae1",
+                "os": "linux",
+                "status": "offline",
+                "busy": True,
+                "labels": [
+                    {"id": 0, "name": "openstack_test", "type": "read-only"},
+                    {"id": 0, "name": "test-ae7a1fbcd0c1", "type": "read-only"},
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "linux", "type": "read-only"},
+                ],
+            },
+        ],
+    }
+
+    github_client._client.last_page.return_value = 1
+    github_client._client.actions.list_self_hosted_runners_for_repo.side_effect = response
+
+    pages = MagicMock()
+    pages.return_value = [response]
+    monkeypatch.setattr(github_runner_manager.github_client, "pages", pages)
+
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    runners = github_client.list_runners(path=github_repo, prefix="current-unit-0")
+
+    assert len(runners) == 1
+    runner0 = runners[0]
+    assert runner0.id == response["runners"][0]["id"]  # type: ignore
+    assert runner0.instance_id.name == response["runners"][0]["name"]  # type: ignore
+    assert runner0.busy == response["runners"][0]["busy"]  # type: ignore
+    assert runner0.status == response["runners"][0]["status"]  # type: ignore
+
+
 def test_catch_http_errors(github_client: GithubClient):
     """
     arrange: A mocked Github Client that raises a 500 HTTPError.
     act: Call  an API endpoint.
-    assert: A GithubApiError is raised.
+    assert: A PlatformApiError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
     github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
         "http://test.com", 500, "", http.client.HTTPMessage(), None
     )
 
-    with pytest.raises(GithubApiError):
+    with pytest.raises(PlatformApiError):
         github_client.get_runner_remove_token(github_repo)
 
 
@@ -286,3 +357,262 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
 
     with pytest.raises(TokenError):
         github_client.get_runner_remove_token(github_repo)
+
+
+def test_get_runner_context_repo(github_client: GithubClient):
+    """
+    arrange: A mocked GitHub client that replies with information about jitconfig for repo.
+    act: Call get_runner_registration_jittoken.
+    assert: The jittoken is extracted from the returned value.
+    """
+    instance_id = InstanceID.build("test-runner")
+    github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
+    github_client._client.actions.generate_runner_jitconfig_for_repo.return_value = {
+        "runner": {
+            "id": 113,
+            "name": instance_id.name,
+            "os": "unknown",
+            "status": "offline",
+            "busy": False,
+            "labels": [
+                {"id": 0, "name": "label1", "type": "read-only"},
+                {"id": 0, "name": "label2", "type": "read-only"},
+            ],
+            "runner_group_id": 1,
+        },
+        "encoded_jit_config": "hugestringinhere",
+    }
+
+    labels = ["label1", "label2"]
+    jittoken, runner = github_client.get_runner_registration_jittoken(
+        path=github_repo, instance_id=instance_id, labels=labels
+    )
+
+    assert jittoken == "hugestringinhere"
+    assert runner == SelfHostedRunner(
+        busy=False,
+        id=113,
+        labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
+        status=GitHubRunnerStatus.OFFLINE,
+        instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=113),
+    )
+
+
+def test_catch_http_errors_from_getting_runner_group_id(
+    github_client: GithubClient, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: A mocked Github Client that raises a 500 HTTPError when getting the runner group id.
+    act: Call
+    assert: A PlatformApiError is raised.
+    """
+    github_repo = GitHubOrg(org="theorg", group="my group name")
+    instance_id = InstanceID.build("test-runner")
+    labels = ["label1", "label2"]
+
+    def _mock_get(url, headers, *args, **kwargs):
+        """Mock for requests.get."""
+
+        class _Response:
+            """Mocked Response for requests.get."""
+
+            def raise_for_status(self):
+                """Mocked raise_for_status.
+
+                Raises:
+                   RequestsHTTPError: HTTPError from requests. This is a fake response.
+                """
+                self.status_code = 500
+                raise RequestsHTTPError("500 Server Error", response=self)  # type: ignore
+
+        return _Response()
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+    with pytest.raises(PlatformApiError):
+        _, _ = github_client.get_runner_registration_jittoken(
+            path=github_repo, instance_id=instance_id, labels=labels
+        )
+
+
+def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest.MonkeyPatch):
+    """
+    arrange: A mocked GitHub client that replies with information about jitconfig for org.
+       The requests library is patched to return information about github runner groups.
+    act: Call get_runner_registration_jittoken for the org.
+    assert: The API for the jittoken is called with the correct arguments, like the runner_group_id
+       and the jittoken is extracted from the returned value.
+    """
+    # The code that this test executes is not covered by integration tests.
+    github_repo = GitHubOrg(org="theorg", group="my group name")
+
+    def _mock_get(url, headers, *args, **kwargs):
+        """Mock for requests.get."""
+
+        class _Response:
+            """Mocked Response for requests.get."""
+
+            @staticmethod
+            def json():
+                """Json response for requests.get mock.
+
+                Returns:
+                   The JSON response from the API.
+                """
+                return {
+                    "total_count": 2,
+                    "runner_groups": [
+                        {
+                            "id": 1,
+                            "name": "Default",
+                            "visibility": "all",
+                            "allows_public_repositories": True,
+                            "default": True,
+                            "workflow_restrictions_read_only": False,
+                            "restricted_to_workflows": False,
+                            "selected_workflows": [],
+                            "runners_url": "https://api.github.com/orgs/theorg/....",
+                            "hosted_runners_url": "https://api.github.com/orgs/theorg/....",
+                            "inherited": False,
+                        },
+                        {
+                            "id": 3,
+                            "name": "my group name",
+                            "visibility": "all",
+                            "allows_public_repositories": True,
+                            "default": False,
+                            "workflow_restrictions_read_only": False,
+                            "restricted_to_workflows": False,
+                            "selected_workflows": [],
+                            "runners_url": "https://api.github.com/orgs/theorg/....",
+                            "hosted_runners_url": "https://api.github.com/orgs/theorg/....",
+                            "inherited": False,
+                        },
+                    ],
+                }
+
+            def raise_for_status(self):
+                """Mocked raise_for_status."""
+                pass
+
+        assert (
+            url
+            == f"https://api.github.com/orgs/{github_repo.org}/actions/runner-groups?per_page=100"
+        )
+        assert headers["Authorization"] == "Bearer token"
+        return _Response()
+
+    monkeypatch.setattr(requests, "get", _mock_get)
+
+    instance_id = InstanceID.build("test-runner")
+
+    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
+        """Mocked generate_runner_jitconfig_for_org."""
+        assert org == "theorg"
+        assert name == instance_id.name
+        assert runner_group_id == 3
+        assert labels == ["label1", "label2"]
+        return {
+            "runner": {
+                "id": 18,
+                "name": instance_id.name,
+                "os": "unknown",
+                "status": "offline",
+                "busy": False,
+                "labels": [
+                    {"id": 0, "name": "self-hosted", "type": "read-only"},
+                    {"id": 0, "name": "X64", "type": "read-only"},
+                ],
+                "runner_group_id": 3,
+            },
+            "encoded_jit_config": "anotherhugetoken",
+        }
+
+    github_client._client.actions.generate_runner_jitconfig_for_org.side_effect = (
+        _mock_generate_runner_jitconfig_for_org
+    )
+
+    labels = ["label1", "label2"]
+    jittoken, github_runner = github_client.get_runner_registration_jittoken(
+        path=github_repo, instance_id=instance_id, labels=labels
+    )
+
+    assert jittoken == "anotherhugetoken"
+    assert github_runner == SelfHostedRunner(
+        busy=False,
+        id=18,
+        labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
+        status=GitHubRunnerStatus.OFFLINE,
+        instance_id=instance_id,
+        metadata=RunnerMetadata(platform_name="github", runner_id=18),
+    )
+
+
+@pytest.mark.parametrize(
+    "github_repo",
+    [
+        pytest.param(
+            GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16)), id="Org runner"
+        ),
+        pytest.param(
+            GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16)), id="Repo runner"
+        ),
+    ],
+)
+def test_get_runner(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+    github_repo: GitHubOrg | GitHubRepo,
+):
+    """
+    arrange: A mocked GhAPI Client that returns a runner based on the github repo or org.
+    act: Call get_runner in GithubClient.
+    assert: The runner is returned correctly returned.
+    """
+    prefix = "unit-0"
+    runner_id = 1
+
+    raw_runner = {
+        "id": runner_id,
+        "name": f"{prefix}-99e88ff9d9ce",
+        "os": "linux",
+        "status": "offline",
+        "busy": False,
+        "labels": [
+            {"id": 0, "name": "openstack_test", "type": "read-only"},
+            {"id": 0, "name": "linux", "type": "read-only"},
+            {"id": 0, "name": "self-hosted", "type": "read-only"},
+            {"id": 0, "name": "test-89be82ae89d6", "type": "read-only"},
+        ],
+    }
+
+    if isinstance(github_repo, GitHubRepo):
+        mocked_ghapi_function = github_client._client.actions.get_self_hosted_runner_for_repo
+    else:
+        mocked_ghapi_function = github_client._client.actions.get_self_hosted_runner_for_org
+    mocked_ghapi_function.return_value = raw_runner
+
+    github_runner = github_client.get_runner(github_repo, prefix, runner_id)
+
+    assert github_runner
+    assert github_runner.id == runner_id
+    assert github_runner.metadata.runner_id == str(runner_id)
+
+
+def test_get_runner_not_found(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A mocked GhApi Github Client that raises 404 when a runner is requested.
+    act: Call get_runner in GithubClient.
+    assert: The exception GithubRunnerNotFoundError is raised.
+    """
+    path = GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16))
+    prefix = "unit-0"
+    runner_id = 1
+    github_client._client.actions.get_self_hosted_runner_for_org.side_effect = (
+        HTTP404NotFoundError("", {}, None)
+    )
+    with pytest.raises(GithubRunnerNotFoundError):
+        _ = github_client.get_runner(path, prefix, runner_id)

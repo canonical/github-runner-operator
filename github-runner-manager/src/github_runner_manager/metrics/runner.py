@@ -3,144 +3,222 @@
 
 """Classes and function to extract the metrics from storage and issue runner metrics events."""
 
+import io
 import json
 import logging
-from enum import Enum
+from dataclasses import dataclass
+from datetime import datetime
 from json import JSONDecodeError
-from pathlib import Path
-from typing import Iterator, Optional, Type
+from typing import Optional, Type
 
-from pydantic import BaseModel, Field, NonNegativeFloat, ValidationError
+import paramiko
+import paramiko.ssh_exception
+from fabric import Connection as SSHConnection
+from pydantic import ValidationError
 
-from github_runner_manager.errors import (
-    CorruptMetricDataError,
-    DeleteMetricsStorageError,
-    IssueMetricEventError,
-    RunnerMetricsError,
+from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
+from github_runner_manager.manager.cloud_runner_manager import (
+    CloudRunnerInstance,
+    PostJobMetrics,
+    PreJobMetrics,
+    RunnerMetrics,
 )
+from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics import events as metric_events
-from github_runner_manager.metrics.storage import MetricsStorage
-from github_runner_manager.metrics.storage import StorageManagerProtocol as MetricsStorageManager
 from github_runner_manager.metrics.type import GithubJobMetrics
+from github_runner_manager.openstack_cloud.constants import (
+    POST_JOB_METRICS_FILE_NAME,
+    PRE_JOB_METRICS_FILE_NAME,
+    RUNNER_INSTALLED_TS_FILE_NAME,
+)
 
 logger = logging.getLogger(__name__)
 
-FILE_SIZE_BYTES_LIMIT = 1024
-PRE_JOB_METRICS_FILE_NAME = "pre-job-metrics.json"
-POST_JOB_METRICS_FILE_NAME = "post-job-metrics.json"
-RUNNER_INSTALLATION_START_TS_FILE_NAME = "runner-installation-start.timestamp"
-RUNNER_INSTALLED_TS_FILE_NAME = "runner-installed.timestamp"
+MAX_METRICS_FILE_SIZE = 1024
 
 
-class PreJobMetrics(BaseModel):
-    """Metrics for the pre-job phase of a runner.
-
-    Attributes:
-        timestamp: The UNIX time stamp of the time at which the event was originally issued.
-        workflow: The workflow name.
-        workflow_run_id: The workflow run id.
-        repository: The repository path in the format '<owner>/<repo>'.
-        event: The github event.
-    """
-
-    timestamp: NonNegativeFloat
-    workflow: str
-    workflow_run_id: str
-    repository: str = Field(None, regex=r"^.+/.+$")
-    event: str
+class PullFileError(Exception):
+    """Represents an error while pulling a file from the runner instance."""
 
 
-class PostJobStatus(str, Enum):
-    """The status of the post-job phase of a runner.
-
-    Attributes:
-        NORMAL: Represents a normal post-job.
-        ABNORMAL: Represents an error with post-job.
-        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
-    """
-
-    NORMAL = "normal"
-    ABNORMAL = "abnormal"
-    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
-
-
-class CodeInformation(BaseModel):
-    """Information about a status code.
-
-    Attributes:
-        code: The status code.
-    """
-
-    code: int
-
-
-class PostJobMetrics(BaseModel):
-    """Metrics for the post-job phase of a runner.
-
-    Attributes:
-        timestamp: The UNIX time stamp of the time at which the event was originally issued.
-        status: The status of the job.
-        status_info: More information about the status.
-    """
-
-    timestamp: NonNegativeFloat
-    status: PostJobStatus
-    status_info: Optional[CodeInformation]
-
-
-class RunnerMetrics(BaseModel):
-    """Metrics for a runner.
-
-    Attributes:
-        installation_start_timestamp: The UNIX time stamp of the time at which the runner
-            installation started.
-        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
-        pre_job: The metrics for the pre-job phase.
-        post_job: The metrics for the post-job phase.
-        runner_name: The name of the runner.
-    """
-
-    installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
-    pre_job: PreJobMetrics | None
-    post_job: PostJobMetrics | None
-    runner_name: str
-
-
-def extract(
-    metrics_storage_manager: MetricsStorageManager, runners: set[str], include: bool = False
-) -> Iterator[RunnerMetrics]:
-    """Extract metrics from runners.
-
-    The metrics are extracted from the metrics storage of the runners.
-    Orphan storages are cleaned up.
-
-    If corrupt data is found, the metrics are not processed further and the storage is moved
-    to a special quarantine directory, as this may indicate that a malicious
-    runner is trying to manipulate the files on the storage.
-
-    In order to avoid DoS attacks, the file size is also checked.
+def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "PulledMetrics":
+    """Pull metrics from runner.
 
     Args:
-        metrics_storage_manager: The metrics storage manager.
-        runners: The runners to include or exclude.
-        include: If true the provided runners are included for metric extraction, else the provided
-            runners are excluded.
+        instance_id: The name of the runner.
+        ssh_conn: The SSH connection to the runner.
 
-    Yields:
-        Extracted runner metrics of a particular runner.
+    Returns:
+        Metrics pulled from the instance.
     """
-    for ms in metrics_storage_manager.list_all():
-        if (include and ms.runner_name in runners) or (
-            not include and ms.runner_name not in runners
-        ):
-            runner_metrics = _extract_storage(
-                metrics_storage_manager=metrics_storage_manager, metrics_storage=ms
+    logger.debug("Pulling metrics for %s", instance_id)
+    pulled_metrics = PulledMetrics()
+
+    try:
+        pulled_metrics.runner_installed = ssh_pull_file(
+            ssh_conn=ssh_conn,
+            remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
+            max_size=MAX_METRICS_FILE_SIZE,
+        )
+        pulled_metrics.pre_job_metrics = ssh_pull_file(
+            ssh_conn=ssh_conn,
+            remote_path=str(PRE_JOB_METRICS_FILE_NAME),
+            max_size=MAX_METRICS_FILE_SIZE,
+        )
+        pulled_metrics.post_job_metrics = ssh_pull_file(
+            ssh_conn=ssh_conn,
+            remote_path=str(POST_JOB_METRICS_FILE_NAME),
+            max_size=MAX_METRICS_FILE_SIZE,
+        )
+    except PullFileError as exc:
+        logger.warning(
+            "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
+            instance_id,
+            exc,
+        )
+    return pulled_metrics
+
+
+def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
+    """Pull file from the runner instance.
+
+    Args:
+        ssh_conn: The SSH connection instance.
+        remote_path: The file path on the runner instance.
+        max_size: If the file is larger than this, it will not be pulled.
+
+    Returns:
+        The content of the file as a string
+
+    Raises:
+        PullFileError: Unable to pull the file from the runner instance.
+        SSHError: Issue with SSH connection.
+    """
+    try:
+        result = ssh_conn.run(f"stat -c %s {remote_path}", warn=True, timeout=60, hide=True)
+    except (
+        TimeoutError,
+        paramiko.ssh_exception.NoValidConnectionsError,
+        paramiko.ssh_exception.SSHException,
+    ) as exc:
+        raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
+    if not result.ok:
+        logger.warning(
+            (
+                "Unable to get file size of %s on instance %s, "
+                "exit code: %s, stdout: %s, stderr: %s"
+            ),
+            remote_path,
+            ssh_conn.host,
+            result.return_code,
+            result.stdout,
+            result.stderr,
+        )
+        raise PullFileError(f"Unable to get file size of {remote_path}")
+
+    stdout = result.stdout
+    try:
+        stdout.strip()
+        size = int(stdout)
+        if size > max_size:
+            raise PullFileError(f"File size of {remote_path} too large {size} > {max_size}")
+    except ValueError as exc:
+        raise PullFileError(f"Invalid file size for {remote_path}: stdout") from exc
+
+    try:
+        file_like_obj = FileLikeLimited(max_size)
+        ssh_conn.get(remote=remote_path, local=file_like_obj)
+        value = file_like_obj.getvalue().decode("utf-8")
+    except (
+        TimeoutError,
+        paramiko.ssh_exception.NoValidConnectionsError,
+        paramiko.ssh_exception.SSHException,
+    ) as exc:
+        raise SSHError(f"Unable to SSH into {ssh_conn.host}") from exc
+    except (OSError, UnicodeDecodeError, FileLimitError) as exc:
+        raise PullFileError(f"Error retrieving file {remote_path}. Error: {exc}") from exc
+    return value
+
+
+@dataclass
+class PulledMetrics:
+    """Metrics pulled from a runner.
+
+    Attributes:
+        runner_installed: String with the runner-installed file.
+        pre_job_metrics: String with the pre-job-metrics file.
+        post_job_metrics: String with the post-job-metrics file.
+    """
+
+    runner_installed: str | None = None
+    pre_job_metrics: str | None = None
+    post_job_metrics: str | None = None
+
+    def to_runner_metrics(
+        self, instance: CloudRunnerInstance, installation_start: datetime
+    ) -> RunnerMetrics | None:
+        """.
+
+        Args:
+           instance: Cloud runner instance.
+           installation_start: Creation time of the runner.
+
+        Returns:
+           The RunnerMetrics object for the runner or None if it can not be built.
+        """
+        instance_id = instance.instance_id
+        if self.runner_installed is None:
+            logger.error(
+                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
             )
-            if not runner_metrics:
-                logger.warning("Not able to issue metrics for runner %s", ms.runner_name)
-            else:
-                yield runner_metrics
+            return None
+
+        pre_job_metrics: dict | None = None
+        post_job_metrics: dict | None = None
+        try:
+            pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
+            post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
+        except (JSONDecodeError, TypeError):
+            logger.exception(
+                "Json Decode error. Corrupt metric data found for runner %s", instance_id
+            )
+
+        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
+            logger.error(
+                "Pre job metrics for runner %s %s are not correct. Value: %s",
+                instance_id,
+                self,
+                pre_job_metrics,
+            )
+            pre_job_metrics = None
+
+        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
+            logger.error(
+                "Post job metrics for runner %s %s are not correct. Value: %s",
+                instance_id,
+                self,
+                post_job_metrics,
+            )
+            post_job_metrics = None
+
+        try:
+            return RunnerMetrics(
+                installation_start_timestamp=installation_start.timestamp(),
+                installed_timestamp=float(self.runner_installed),
+                pre_job=(  # pylint: disable=not-a-mapping
+                    PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
+                ),
+                post_job=(  # pylint: disable=not-a-mapping
+                    PostJobMetrics(**post_job_metrics) if post_job_metrics else None
+                ),
+                instance_id=instance_id,
+                metadata=instance.metadata,
+            )
+        except ValueError:
+            logger.exception(
+                "Error creating RunnerMetrics %s, %s, %s", instance_id, installation_start, self
+            )
+            return None
 
 
 def issue_events(
@@ -180,7 +258,7 @@ def issue_events(
         else:
             logger.debug(
                 "Pre-job metrics not found for runner %s. Will not issue RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
             )
     except (ValidationError, IssueMetricEventError):
         if runner_metrics.installation_start_timestamp and not issued_events:
@@ -188,7 +266,7 @@ def issue_events(
                 "Not able to issue RunnerInstalled metric for runner %s with"
                 " installation_start_timestamp %s."
                 "Will not issue RunnerStart and RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.installation_start_timestamp,
             )
         elif metric_events.RunnerStart not in issued_events:
@@ -196,7 +274,7 @@ def issue_events(
                 "Not able to issue RunnerStart metric for "
                 "runner %s with pre-job metrics %s and job_metrics %s."
                 "Will not issue RunnerStop metric.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.pre_job,
                 job_metrics,
             )
@@ -204,7 +282,7 @@ def issue_events(
             logger.exception(
                 "Not able to issue RunnerStop metric for "
                 "runner %s with pre-job metrics %s, post-job metrics %s and job_metrics %s.",
-                runner_metrics.runner_name,
+                runner_metrics.instance_id,
                 runner_metrics.pre_job,
                 runner_metrics.post_job,
                 job_metrics,
@@ -234,7 +312,7 @@ def _issue_runner_installed(
         duration=runner_metrics.installed_timestamp  # type: ignore
         - runner_metrics.installation_start_timestamp,  # type: ignore
     )
-    logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
 
     return metric_events.RunnerInstalled
@@ -255,7 +333,7 @@ def _issue_runner_start(
     """
     runner_start_event = _create_runner_start(runner_metrics, flavor, job_metrics)
 
-    logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_start_event)
 
     return metric_events.RunnerStart
@@ -276,7 +354,7 @@ def _issue_runner_stop(
     """
     runner_stop_event = _create_runner_stop(runner_metrics, flavor, job_metrics)
 
-    logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.runner_name)
+    logger.debug("Issuing RunnerStop metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_stop_event)
 
     return metric_events.RunnerStop
@@ -314,7 +392,7 @@ def _create_runner_start(
             " Setting idle_duration to zero",
             pre_job_metrics.timestamp,
             runner_metrics.installed_timestamp,
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
         )
     idle_duration = max(pre_job_metrics.timestamp - runner_metrics.installed_timestamp, 0)
 
@@ -322,7 +400,7 @@ def _create_runner_start(
     if job_metrics and job_metrics.queue_duration < 0:
         logger.warning(
             "Queue duration for runner %s is negative: %f. Setting it to zero.",
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
             job_metrics.queue_duration,
         )
     queue_duration = max(job_metrics.queue_duration, 0) if job_metrics else None
@@ -378,7 +456,7 @@ def _create_runner_stop(
             " Setting job_duration to zero",
             post_job_metrics.timestamp,
             pre_job_metrics.timestamp,
-            runner_metrics.runner_name,
+            runner_metrics.instance_id,
         )
     job_duration = max(post_job_metrics.timestamp - pre_job_metrics.timestamp, 0)
 
@@ -395,197 +473,37 @@ def _create_runner_stop(
     )
 
 
-def _extract_storage(
-    metrics_storage_manager: MetricsStorageManager,
-    metrics_storage: MetricsStorage,
-) -> Optional[RunnerMetrics]:
-    """Extract metrics from a metrics storage.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        The extracted metrics if at least the runner installed timestamp is present.
-    """
-    runner_name = metrics_storage.runner_name
-    try:
-        logger.debug("Extracting metrics from metrics storage for runner %s", runner_name)
-        metrics_from_fs = _extract_metrics_from_storage(metrics_storage)
-    except CorruptMetricDataError:
-        logger.exception("Corrupt metric data found for runner %s", runner_name)
-        metrics_storage_manager.move_to_quarantine(runner_name)
-        return None
-
-    logger.debug("Cleaning metrics storage for runner %s", runner_name)
-    _clean_up_storage(
-        metrics_storage_manager=metrics_storage_manager, metrics_storage=metrics_storage
-    )
-    return metrics_from_fs
+class FileLimitError(Exception):
+    """Error returned when a file is too large."""
 
 
-def _extract_metrics_from_storage(metrics_storage: MetricsStorage) -> Optional[RunnerMetrics]:
-    """Extract metrics from metrics storage for a runner.
+class FileLikeLimited(io.BytesIO):
+    """file-like object with a maximum possible size."""
 
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
+    def __init__(self, max_size: int):
+        """Create a new FileLikeLimited object.
 
-    Returns:
-        The extracted metrics if at least the installed timestamp is present.
+        Args:
+            max_size: Maximum allowed size for the file-like object.
+        """
+        self.max_size = max_size
 
-    Raises:
-        CorruptMetricDataError: Raised if one of the files is not valid or too large.
-    """
-    if too_large_files := _inspect_file_sizes(metrics_storage):
-        raise CorruptMetricDataError(
-            f"File size of {too_large_files} is too large. "
-            f"The limit is {FILE_SIZE_BYTES_LIMIT} bytes."
-        )
+    # The type of b is tricky. In Python 3.12 it is a collections.abc.Buffer,
+    # and as so it does not have len (we use Python 3.10). For our purpose this works,
+    # as Fabric sends bytes. If it ever changes, we will catch it in the
+    # integration tests.
+    def write(self, b, /) -> int:  # type: ignore[no-untyped-def]
+        """Write to the internal buffer for the file-like object.
 
-    runner_name = metrics_storage.runner_name
+        Args:
+            b: bytes to write.
 
-    installation_start_timestamp = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=RUNNER_INSTALLATION_START_TS_FILE_NAME
-    )
-    logger.debug("Runner %s installation started at %s", runner_name, installation_start_timestamp)
+        Returns:
+            Number of bytes written.
 
-    installed_timestamp = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=RUNNER_INSTALLED_TS_FILE_NAME
-    )
-    if not installed_timestamp:
-        logger.error(
-            "installed timestamp not found for runner %s, will not extract any metrics.",
-            runner_name,
-        )
-        return None
-    logger.debug("Runner %s installed at %s", runner_name, installed_timestamp)
-
-    pre_job_metrics = _extract_json_file_from_storage(
-        metrics_storage=metrics_storage, filename=PRE_JOB_METRICS_FILE_NAME
-    )
-    if pre_job_metrics:
-
-        logger.debug("Pre-job metrics for runner %s: %s", runner_name, pre_job_metrics)
-
-        post_job_metrics = _extract_json_file_from_storage(
-            metrics_storage=metrics_storage, filename=POST_JOB_METRICS_FILE_NAME
-        )
-        logger.debug("Post-job metrics for runner %s: %s", runner_name, post_job_metrics)
-    else:
-        logger.error(
-            "Pre-job metrics for runner %s not found, stop extracting post-jobs metrics.",
-            runner_name,
-        )
-        post_job_metrics = None
-
-    try:
-        return RunnerMetrics(
-            installation_start_timestamp=(
-                float(installation_start_timestamp) if installation_start_timestamp else None
-            ),
-            installed_timestamp=float(installed_timestamp),
-            pre_job=PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None,
-            post_job=PostJobMetrics(**post_job_metrics) if post_job_metrics else None,
-            runner_name=runner_name,
-        )
-    except ValueError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-
-
-def _inspect_file_sizes(metrics_storage: MetricsStorage) -> tuple[Path, ...]:
-    """Inspect the file sizes of the metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-
-    Returns:
-        A tuple of files whose size is larger than the limit.
-    """
-    files: list[Path] = [
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME),
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME),
-        metrics_storage.path.joinpath(RUNNER_INSTALLATION_START_TS_FILE_NAME),
-    ]
-
-    return tuple(
-        filter(lambda file: file.exists() and file.stat().st_size > FILE_SIZE_BYTES_LIMIT, files)
-    )
-
-
-def _extract_json_file_from_storage(metrics_storage: MetricsStorage, filename: str) -> dict | None:
-    """Extract a particular metric file from metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-        filename: The metrics filename.
-
-    Raises:
-        CorruptMetricDataError: If any errors have been found within the metric.
-
-    Returns:
-        Metrics for the given runner if present.
-    """
-    job_metrics_raw = _extract_file_from_storage(
-        metrics_storage=metrics_storage, filename=filename
-    )
-    if not job_metrics_raw:
-        return None
-
-    try:
-        job_metrics = json.loads(job_metrics_raw)
-    except JSONDecodeError as exc:
-        raise CorruptMetricDataError(str(exc)) from exc
-    if not isinstance(job_metrics, dict):
-        raise CorruptMetricDataError(
-            f"{filename} metrics for runner {metrics_storage.runner_name} is not a JSON object."
-        )
-    return job_metrics
-
-
-def _extract_file_from_storage(metrics_storage: MetricsStorage, filename: str) -> str | None:
-    """Extract a particular file from metrics storage.
-
-    Args:
-        metrics_storage: The metrics storage for a specific runner.
-        filename: The metrics filename.
-
-    Returns:
-        Metrics for the given runner if present.
-    """
-    try:
-        file_content = metrics_storage.path.joinpath(filename).read_text(encoding="utf-8")
-    except FileNotFoundError:
-        logger.exception("%s not found for runner %s", filename, metrics_storage.runner_name)
-        file_content = None
-    return file_content
-
-
-def _clean_up_storage(
-    metrics_storage_manager: MetricsStorageManager, metrics_storage: MetricsStorage
-) -> None:
-    """Clean up the metrics storage.
-
-    Remove all metric files and afterwards the storage.
-
-    Args:
-        metrics_storage_manager: The metrics storage manager.
-        metrics_storage: The metrics storage for a specific runner.
-    """
-    try:
-        metrics_storage.path.joinpath(RUNNER_INSTALLED_TS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(PRE_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-        metrics_storage.path.joinpath(POST_JOB_METRICS_FILE_NAME).unlink(missing_ok=True)
-    except OSError:
-        logger.exception(
-            "Could not remove metric files for runner %s, "
-            "this may lead to duplicate metrics issued",
-            metrics_storage.runner_name,
-        )
-
-    try:
-        metrics_storage_manager.delete(metrics_storage.runner_name)
-    except DeleteMetricsStorageError:
-        logger.exception(
-            "Could not delete metrics storage for runner %s.", metrics_storage.runner_name
-        )
+        Raises:
+            FileLimitError: Raised when what is written to the file is over the allowed size.
+        """
+        if len(self.getvalue()) + len(b) > self.max_size:
+            raise FileLimitError(f"Exceeded allowed max file size {self.max_size})")
+        return super().write(b)

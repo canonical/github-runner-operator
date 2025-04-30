@@ -7,19 +7,28 @@ from dataclasses import dataclass
 from typing import Iterable, Iterator, Sequence
 from unittest.mock import MagicMock
 
+from pydantic import HttpUrl
+
+from github_runner_manager.configuration.github import GitHubPath
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
-    InstanceId,
 )
-from github_runner_manager.manager.github_runner_manager import GitHubRunnerState
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.platform.github_provider import (
+    PlatformRunnerState,
+)
+from github_runner_manager.platform.platform_provider import (
+    JobInfo,
+    PlatformProvider,
+    PlatformRunnerHealth,
+)
 from github_runner_manager.types_.github import (
-    GitHubPath,
     GitHubRunnerStatus,
-    RegistrationToken,
+    JITConfig,
     RemoveToken,
     RunnerApplication,
     SelfHostedRunner,
@@ -122,7 +131,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
@@ -135,7 +144,7 @@ class MockGhapiActions:
         Returns:
             Registration token stub.
         """
-        return RegistrationToken(
+        return JITConfig(
             {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
@@ -222,15 +231,17 @@ class MockRunner:
     Attributes:
         name: The name of the runner.
         instance_id: The instance id of the runner.
+        metadata: Metadata of the server.
         cloud_state: The cloud state of the runner.
         github_state: The github state of the runner.
         health: The health state of the runner.
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
+    metadata: RunnerMetadata
     cloud_state: CloudRunnerState
-    github_state: GitHubRunnerState
+    github_state: PlatformRunnerState
     health: bool
 
     def __init__(self, name: str):
@@ -241,8 +252,9 @@ class MockRunner:
         """
         self.name = name
         self.instance_id = secrets.token_hex(6)
+        self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
-        self.github_state = GitHubRunnerState.IDLE
+        self.github_state = PlatformRunnerState.IDLE
         self.health = True
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
@@ -253,6 +265,7 @@ class MockRunner:
         """
         return CloudRunnerInstance(
             name=self.name,
+            metadata=self.metadata,
             instance_id=self.instance_id,
             health=self.health,
             state=self.cloud_state,
@@ -263,13 +276,13 @@ class MockRunner:
 class SharedMockRunnerManagerState:
     """State shared by mock runner managers.
 
-    For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerManager.
+    For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerPlatform.
 
     Attributes:
         runners: The runners.
     """
 
-    runners: dict[InstanceId, MockRunner]
+    runners: dict[InstanceID, MockRunner]
 
     def __init__(self):
         """Construct the object."""
@@ -301,33 +314,26 @@ class MockCloudRunnerManager(CloudRunnerManager):
         """Get the name prefix of the self-hosted runners."""
         return self.prefix
 
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def create_runner(
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_context: RunnerContext,
+    ) -> None:
         """Create a self-hosted runner.
 
         Args:
-            registration_token: The GitHub registration token for registering runners.
+            instance_id: Instance ID for the runner to create.
+            metadata: Metadata for the runner.
+            runner_context: Context for the runner.
 
         Returns:
-            The instance id of the runner created.
+            The CloudRunnerInstance for the runner
         """
-        name = f"{self.name_prefix}-{secrets.token_hex(6)}"
+        name = f"{self.name_prefix}-{instance_id}"
         runner = MockRunner(name)
-        self.state.runners[runner.instance_id] = runner
-        return runner.instance_id
-
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
-
-        Returns:
-            The runner instance if found else None.
-        """
-        runner = self.state.runners.get(instance_id, None)
-        if runner is not None:
-            return runner.to_cloud_runner()
-        return None
+        self.state.runners[instance_id] = runner
+        return runner.to_cloud_runner()
 
     def get_runners(
         self, states: Sequence[CloudRunnerState] | None = None
@@ -351,7 +357,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
             if runner.cloud_state in state_set
         )
 
-    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -383,11 +389,11 @@ class MockCloudRunnerManager(CloudRunnerManager):
             self.state.runners = {
                 instance_id: runner
                 for instance_id, runner in self.state.runners.items()
-                if runner.github_state == GitHubRunnerState.BUSY
+                if runner.github_state == PlatformRunnerState.BUSY
             }
         return iter([MagicMock()])
 
-    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.
@@ -399,11 +405,11 @@ class MockCloudRunnerManager(CloudRunnerManager):
             Any runner metrics produced during cleanup.
         """
         # Do nothing in mocks.
-        return iter([MagicMock()])
+        return [MagicMock()]
 
 
-class MockGitHubRunnerManager:
-    """Mock of GitHubRunnerManager.
+class MockGitHubRunnerPlatform(PlatformProvider):
+    """Mock of GitHubRunnerPlatform.
 
     Attributes:
         github: The GitHub client.
@@ -426,13 +432,49 @@ class MockGitHubRunnerManager:
         self.state = state
         self.path = path
 
-    def get_registration_token(self) -> str:
-        """Get the registration token for registering runners on GitHub.
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> PlatformRunnerHealth:
+        """Get info on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
 
         Returns:
-            The registration token.
+            Information about the health of the runner
         """
-        return "mock_registration_token"
+        if instance_id in self.state.runners:
+            runner = self.state.runners[instance_id]
+            return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
+                online=runner.github_state != PlatformRunnerState.OFFLINE,
+                busy=runner.github_state == PlatformRunnerState.BUSY,
+                deletable=False,
+            )
+        return PlatformRunnerHealth(
+            instance_id=instance_id, metadata=metadata, online=False, busy=False, deletable=True
+        )
+
+    def get_runner_context(
+        self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
+        """Get the registration JIT token for registering runners on GitHub.
+
+        Args:
+            metadata: Metadata of the server.
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
+
+        Returns:
+            The registration token and the SelfHostedRunner
+        """
+        runner = MagicMock(spec=list(SelfHostedRunner.__fields__.keys()))
+        runner.id = 5
+        return RunnerContext(shell_run_script="fake-agent"), runner
 
     def get_removal_token(self) -> str:
         """Get the remove token for removing runners on GitHub.
@@ -443,46 +485,75 @@ class MockGitHubRunnerManager:
         return "mock_remove_token"
 
     def get_runners(
-        self, github_states: Iterable[GitHubRunnerState] | None = None
+        self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
         """Get the runners.
 
         Args:
-            github_states: The states to filter for.
+            states: The states to filter for.
 
         Returns:
             List of runners.
         """
-        if github_states is None:
-            github_states = [member.value for member in GitHubRunnerState]
+        if states is None:
+            states = [member.value for member in PlatformRunnerState]
 
-        github_state_set = set(github_states)
+        github_state_set = set(states)
+        runner_id = random.randint(1, 1000000)
         return tuple(
             SelfHostedRunner(
-                busy=runner.github_state == GitHubRunnerState.BUSY,
-                id=random.randint(1, 1000000),
+                busy=runner.github_state == PlatformRunnerState.BUSY,
+                id=runner_id,
                 labels=[],
-                os="linux",
-                name=runner.name,
+                instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
-                    if runner.github_state == GitHubRunnerState.OFFLINE
+                    if runner.github_state == PlatformRunnerState.OFFLINE
                     else GitHubRunnerStatus.ONLINE
                 ),
+                metadata=RunnerMetadata(platform_name="github", runner_id=str(runner_id)),
             )
             for runner in self.state.runners.values()
             if runner.github_state in github_state_set
         )
 
-    def delete_runners(self, states: Iterable[GitHubRunnerState]) -> None:
+    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete the runners.
 
         Args:
-            states: The states to filter the runners to delete.
+            runners: Runners to delete
         """
-        github_states = set(states)
+        runners_names_to_delete = {runner.name for runner in runners}
         self.state.runners = {
             instance_id: runner
             for instance_id, runner in self.state.runners.items()
-            if runner.github_state not in github_states
+            if instance_id.name not in runners_names_to_delete
         }
+
+    def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
+        """Check if the job has already been picked up.
+
+        Args:
+            metadata: Metadata of the instance.
+            job_url: The URL of the job.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError
+
+    def get_job_info(
+        self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
+    ) -> JobInfo:
+        """Get the Job info from the provider.
+
+        Args:
+            metadata: Metadata of the runner.
+            repository: repository to get the job from.
+            workflow_run_id: workflow run id of the job.
+            runner: runner to get the job from.
+
+        Raises:
+            NotImplementedError: Work in progress.
+        """
+        raise NotImplementedError

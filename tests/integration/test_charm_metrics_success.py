@@ -10,11 +10,11 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.metrics.runner import PostJobStatus
+from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     clear_metrics_log,
@@ -54,7 +54,7 @@ async def test_charm_issues_runner_installed_metric(
     await instance_helper.ensure_charm_has_runner(app)
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     metrics_log = await get_metrics_log(app.units[0])
@@ -99,7 +99,7 @@ async def test_charm_issues_metrics_after_reconciliation(
     )
 
     # Set the number of virtual machines to 0 to speedup reconciliation
-    await app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(

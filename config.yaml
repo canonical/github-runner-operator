@@ -20,6 +20,7 @@ options:
     type: string
     default: ""
     description: |
+      (Deprecated, use flavor-label-list instead)
       The openstack flavor to use to spawn virtual machines. This controls the hardware resource
       of the virtual machines. See docs for details:
       (https://docs.openstack.org/nova/rocky/user/flavors.html).
@@ -100,7 +101,50 @@ options:
       https://charmhub.io/github-runner/docs/how-to-change-token.
   virtual-machines:
     type: int
-    default: 1
+    default: 0
     description: >-
+      (Deprecated, use base-virtual-machines or max-total-virtual-machines instead)
       The number of virtual machine runners. This charm will spawn or destroy virtual machines
-      runners to match this setting.
+      runners to match this setting. Setting virtual-machines to non-zero and any of
+      base-virtual-machines or max-total-virtual-machines will block the charm.
+  base-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      The number of non-reactive virtual machine runners spawned by the charm per each
+      combination of flavor and base. Currently, if the charm is integrated with MongoDB
+      this config option will be ignored.
+  max-total-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      If the github-runner charm is integrated with MongoDB, the reactive mode will not spawn
+      new virtual machines if there are max-total-virtual-machines of more virtual machines
+      managed by the charm.
+  flavor-label-combinations:
+    type: string
+    default: ""
+    description: >-
+      List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
+      flavor and the label will be a label for the GitHub runner. Only one flavor-label combination
+      is supported at the moment. A valid configuration looks like "m1.small:small".
+  manager-ssh-proxy-command:
+    type: string
+    default: ""
+    description: >-
+      Optional ProxyCommand used by the ssh connection which is used to access the virtual
+      machine runners from the runner manager. It is equivalent to ProxyCommand in ssh-config,
+      but without a shell. For example, a value could be something like:
+      `bash -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
+  runner-http-proxy:
+    type: string
+    default: ""
+    description: >-
+      The HTTP proxy value to use for the runners. If not specified, the model configuration option
+      juju-http-proxy will be used instead.
+  use-runner-proxy-for-tmate:
+    type: boolean
+    default: false
+    description: >-
+      When set to true, the ssh connection from the runner to the tmate-ssh-server will be done
+      using the proxy for the runner.

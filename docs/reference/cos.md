@@ -11,6 +11,7 @@ called "GitHub Self-Hosted Runner Metrics (Long-Term)".
 The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following rows:
 
 - General: Displays general metrics about the charm and runners, such as:
+  - Share of jobs per application: A pie chart showing the share of jobs per application.
   - Lifecycle counters: Tracks the frequency of Runner initialisation, start, stop, and crash events.
   - Available runners: A horizontal bar graph showing the number of runners available (and max expected) during the last reconciliation event. Note: This data is updated after each reconciliation event and is not real-time. 
   - Runners after reconciliation: A time series graph showing the number of runners marked as active/idle, the number of expected runners, and the difference between expected and the former (unknown) during the last reconciliation event over time. Note: This data is updated after each reconciliation event and is not real-time.

@@ -12,7 +12,7 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -37,7 +37,7 @@ async def app_fixture(
 
     yield basic_app
 
-    await basic_app.set_config({VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(basic_app, basic_app.model)
 
 

@@ -13,6 +13,7 @@ from juju.model import Model
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
@@ -51,7 +52,7 @@ async def test_charm_upgrade(
     assert: the charm is upgraded successfully.
     """
     latest_stable_path = tmp_path / "github-runner.charm"
-    latest_stable_revision = 302  # update this value every release to stable.
+    latest_stable_revision = 354  # update this value every release to stable.
     # download the charm
     retcode, stdout, stderr = await ops_test.juju(
         "download",
@@ -85,7 +86,8 @@ async def test_charm_upgrade(
             OPENSTACK_NETWORK_CONFIG_NAME: network_name,
             OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
             USE_APROXY_CONFIG_NAME: "true",
-            VIRTUAL_MACHINES_CONFIG_NAME: 1,
+            VIRTUAL_MACHINES_CONFIG_NAME: 0,
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1,
         },
         wait_idle=False,
     )
@@ -94,7 +96,7 @@ async def test_charm_upgrade(
         apps=[application.name, image_builder.name],
         raise_on_error=False,
         wait_for_active=True,
-        timeout=20 * 60,
+        timeout=25 * 60,
         check_freq=30,
     )
     origin = client.CharmOrigin(

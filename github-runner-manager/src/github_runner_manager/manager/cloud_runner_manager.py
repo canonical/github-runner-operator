@@ -7,19 +7,13 @@ import abc
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from typing import Iterator, Sequence, Tuple
+from typing import Iterable, Iterator, Optional, Sequence, Tuple
 
-from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.types_ import (
-    ProxyConfig,
-    RepoPolicyComplianceConfig,
-    SSHDebugConnection,
-)
-from github_runner_manager.types_.github import GitHubPath
+from pydantic import BaseModel, Field, NonNegativeFloat
+
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 
 logger = logging.getLogger(__name__)
-
-InstanceId = str
 
 
 class HealthState(Enum):
@@ -136,50 +130,99 @@ class CloudInitStatus(str, Enum):
 
 
 @dataclass
-class GitHubRunnerConfig:
-    """Configuration for GitHub runner spawned.
-
-    Attributes:
-        github_path: The GitHub organization or repository for runners to connect to.
-        labels: The labels to add to runners.
-    """
-
-    github_path: GitHubPath
-    labels: list[str]
-
-
-@dataclass
-class SupportServiceConfig:
-    """Configuration for supporting services for runners.
-
-    Attributes:
-        proxy_config: The proxy configuration.
-        dockerhub_mirror: The dockerhub mirror to use for runners.
-        ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_compliance: The configuration of the repo policy compliance service.
-    """
-
-    proxy_config: ProxyConfig | None
-    dockerhub_mirror: str | None
-    ssh_debug_connections: list[SSHDebugConnection] | None
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
-
-
-@dataclass
 class CloudRunnerInstance:
     """Information on the runner on the cloud.
 
     Attributes:
         name: Name of the instance hosting the runner.
         instance_id: ID of the instance.
+        metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
     """
 
     name: str
-    instance_id: InstanceId
+    instance_id: InstanceID
+    metadata: RunnerMetadata
     health: HealthState
     state: CloudRunnerState
+
+
+class PreJobMetrics(BaseModel):
+    """Metrics for the pre-job phase of a runner.
+
+    Attributes:
+        timestamp: The UNIX time stamp of the time at which the event was originally issued.
+        workflow: The workflow name.
+        workflow_run_id: The workflow run id.
+        repository: The repository path in the format '<owner>/<repo>'.
+        event: The github event.
+    """
+
+    timestamp: NonNegativeFloat
+    workflow: str
+    workflow_run_id: str
+    repository: str = Field(None, regex=r"^.+/.+$")
+    event: str
+
+
+class PostJobStatus(str, Enum):
+    """The status of the post-job phase of a runner.
+
+    Attributes:
+        NORMAL: Represents a normal post-job.
+        ABNORMAL: Represents an error with post-job.
+        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
+    """
+
+    NORMAL = "normal"
+    ABNORMAL = "abnormal"
+    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
+
+
+class CodeInformation(BaseModel):
+    """Information about a status code.
+
+    Attributes:
+        code: The status code.
+    """
+
+    code: int
+
+
+class PostJobMetrics(BaseModel):
+    """Metrics for the post-job phase of a runner.
+
+    Attributes:
+        timestamp: The UNIX time stamp of the time at which the event was originally issued.
+        status: The status of the job.
+        status_info: More information about the status.
+    """
+
+    timestamp: NonNegativeFloat
+    status: PostJobStatus
+    status_info: Optional[CodeInformation]
+
+
+class RunnerMetrics(BaseModel):
+    """Metrics for a runner.
+
+    Attributes:
+        instance_id: The name of the runner.
+        metadata: Runner metadata.
+        installation_start_timestamp: The UNIX time stamp of the time at which the runner
+            installation started.
+        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
+        pre_job: The metrics for the pre-job phase.
+        post_job: The metrics for the post-job phase.
+    """
+
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+    installation_start_timestamp: NonNegativeFloat | None
+    installed_timestamp: NonNegativeFloat
+    pre_job: PreJobMetrics | None
+    post_job: PostJobMetrics | None
 
 
 class CloudRunnerManager(abc.ABC):
@@ -195,19 +238,18 @@ class CloudRunnerManager(abc.ABC):
         """Get the name prefix of the self-hosted runners."""
 
     @abc.abstractmethod
-    def create_runner(self, registration_token: str) -> InstanceId:
+    def create_runner(
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_context: RunnerContext,
+    ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            registration_token: The GitHub registration token for registering runners.
-        """
-
-    @abc.abstractmethod
-    def get_runner(self, instance_id: InstanceId) -> CloudRunnerInstance | None:
-        """Get a self-hosted runner by instance id.
-
-        Args:
-            instance_id: The instance id.
+            instance_id: Instance ID for the runner.
+            metadata: Runner Metadata.
+            runner_context: Context information needed to spawn the runner.
         """
 
     @abc.abstractmethod
@@ -220,7 +262,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceId, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
@@ -239,7 +281,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def cleanup(self, remove_token: str) -> Iterator[RunnerMetrics]:
+    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
         """Cleanup runner and resource on the cloud.
 
         Perform health check on runner and delete the runner if it fails.

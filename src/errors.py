@@ -8,12 +8,8 @@ from typing import Union
 
 # we import the errors from the module, these are used in the charm
 from github_runner_manager.errors import (  # noqa: F401  pylint: disable=unused-import
-    CreateMetricsStorageError,
-    DeleteMetricsStorageError,
-    GetMetricsStorageError,
-    GithubClientError,
     GithubMetricsError,
-    MetricsStorageError,
+    PlatformClientError,
     RunnerError,
     TokenError,
 )
@@ -62,3 +58,15 @@ class SubprocessError(Exception):
 
 class LogrotateSetupError(Exception):
     """Represents an error raised when logrotate cannot be setup."""
+
+
+class RunnerManagerApplicationError(Exception):
+    """Represents an error raised with github-runner-manager application."""
+
+
+class RunnerManagerApplicationInstallError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application installation failed."""
+
+
+class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application start failed."""

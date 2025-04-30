@@ -12,22 +12,30 @@ from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError
 
+import requests
+
+# HTTP404NotFoundError is not found by pylint
+from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from requests import RequestException
 from typing_extensions import assert_never
 
-from github_runner_manager.errors import GithubApiError, JobNotFoundError, TokenError
-from github_runner_manager.types_.github import (
+from github_runner_manager.configuration.github import (
     GitHubOrg,
     GitHubPath,
     GitHubRepo,
-    JobInfo,
-    RegistrationToken,
-    RemoveToken,
-    SelfHostedRunner,
 )
+from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
+from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
+
+
+class GithubRunnerNotFoundError(Exception):
+    """Represents an error when the runner could not be found on GitHub."""
+
 
 # Parameters of the function decorated with retry
 ParamT = ParamSpec("ParamT")
@@ -55,7 +63,7 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
 
         Raises:
             TokenError: If there was an error with the provided token.
-            GithubApiError: If there was an unexpected error using the GitHub API.
+            PlatformApiError: If there was an unexpected error using the GitHub API.
 
         Returns:
             The decorated function.
@@ -69,7 +77,9 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
-            raise GithubApiError from exc
+            raise PlatformApiError from exc
+        except RequestException as exc:
+            raise PlatformApiError from exc
 
     return wrapper
 
@@ -87,12 +97,43 @@ class GithubClient:
         self._client = GhApi(token=self._token)
 
     @catch_http_errors
-    def get_runner_github_info(self, path: GitHubPath) -> list[SelfHostedRunner]:
-        """Get runner information on GitHub under a repo or org.
+    def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
+        """Get a specific self-hosted runner information under a repo or org.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            prefix: Build the InstanceID with this prefix.
+            runner_id: Runner id to get the self hosted runner.
+
+        Raises:
+            GithubRunnerNotFoundError: If the runner is not found.
+
+        Returns:
+            The information for the requested runner.
+        """
+        try:
+            if isinstance(path, GitHubRepo):
+                raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
+                    path.owner, path.repo, runner_id
+                )
+            else:
+                raw_runner = self._client.actions.get_self_hosted_runner_for_org(
+                    path.org, runner_id
+                )
+        except HTTP404NotFoundError as err:
+            raise GithubRunnerNotFoundError from err
+        instance_id = InstanceID.build_from_name(prefix, raw_runner["name"])
+        return SelfHostedRunner.build_from_github(raw_runner, instance_id)
+
+    @catch_http_errors
+    def list_runners(self, path: GitHubPath, prefix: str) -> list[SelfHostedRunner]:
+        """Get all runners information on GitHub under a repo or org.
+
+        Args:
+            path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
+                name.
+            prefix: Filter instances related to this prefix and build the InstanceID.
 
         Returns:
             List of runner information.
@@ -132,7 +173,15 @@ class GithubClient:
                 )
                 for item in page["runners"]
             ]
-        return remote_runners_list
+
+        # Filter by prefix and create the SelfHostedRunner instances.
+        managed_runners_list = []
+        for runner in remote_runners_list:
+            if InstanceID.name_has_prefix(prefix, runner["name"]):
+                instance_id = InstanceID.build_from_name(prefix, runner["name"])
+                managed_runner = SelfHostedRunner.build_from_github(runner, instance_id)
+                managed_runners_list.append(managed_runner)
+        return managed_runners_list
 
     @catch_http_errors
     def get_runner_remove_token(self, path: GitHubPath) -> str:
@@ -157,27 +206,75 @@ class GithubClient:
         return token["token"]
 
     @catch_http_errors
-    def get_runner_registration_token(self, path: GitHubPath) -> str:
+    def get_runner_registration_jittoken(
+        self, path: GitHubPath, instance_id: InstanceID, labels: list[str]
+    ) -> tuple[str, SelfHostedRunner]:
         """Get token from GitHub used for registering runners.
 
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
+            instance_id: Instance ID of the runner.
+            labels: Labels for the runner.
 
         Returns:
             The registration token.
         """
-        token: RegistrationToken
+        token: JITConfig
         if isinstance(path, GitHubRepo):
-            token = self._client.actions.create_registration_token_for_repo(
-                owner=path.owner, repo=path.repo
+            # The supposition is that the runner_group_id 1 is the default.
+            # If the repo does not belong to an org, there is no way to get the runner_group_id.
+            token = self._client.actions.generate_runner_jitconfig_for_repo(
+                owner=path.owner,
+                repo=path.repo,
+                name=instance_id.name,
+                runner_group_id=1,
+                labels=labels,
             )
         elif isinstance(path, GitHubOrg):
-            token = self._client.actions.create_registration_token_for_org(org=path.org)
+            # We cannot cache it in here, as we are running in a forked process.
+            # Pending to review.
+            runner_group_id = self._get_runner_group_id(path)
+            token = self._client.actions.generate_runner_jitconfig_for_org(
+                org=path.org,
+                name=instance_id.name,
+                runner_group_id=runner_group_id,
+                labels=labels,
+            )
         else:
             assert_never(token)
 
-        return token["token"]
+        runner = SelfHostedRunner.build_from_github(token["runner"], instance_id)
+        return token["encoded_jit_config"], runner
+
+    def _get_runner_group_id(self, org: GitHubOrg) -> int:
+        """Get runner_group_id from group name for an org.
+
+        Once this function is implemented in the ghapi library, we should
+        use that instead. See https://github.com/AnswerDotAI/ghapi/issues/189.
+
+        No pagination is used, so if there are more than 100 groups, this
+        function could fail.
+        """
+        url = f"https://api.github.com/orgs/{org.org}/actions/runner-groups?per_page=100"
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "Authorization": f"Bearer {self._token}",
+            "X-GitHub-Api-Version": "2022-11-28",
+        }
+        response = requests.get(url, headers=headers, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        try:
+            for group in data["runner_groups"]:
+                if group["name"] == org.group:
+                    return group["id"]
+        except TypeError as exc:
+            raise PlatformApiError(f"Cannot get runner_group_id for group {org.group}.") from exc
+        raise PlatformApiError(
+            f"Cannot get runner_group_id for group {org.group}."
+            " The group does not exist or there are more than 100 groups."
+        )
 
     @catch_http_errors
     def delete_runner(self, path: GitHubPath, runner_id: int) -> None:

@@ -25,8 +25,10 @@ from charm import (
     catch_charm_errors,
 )
 from charm_state import (
+    FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
+    OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
@@ -45,6 +47,23 @@ from errors import (
 from event_timer import EventTimer, TimerEnableError
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
+
+
+@pytest.fixture(name="mock_side_effects", scope="function")
+def side_effect_fixture(monkeypatch, tmpdir):
+    monkeypatch.setattr("charm.pathlib.Path.mkdir", MagicMock())
+    monkeypatch.setattr("charm.pathlib.Path.write_text", MagicMock())
+    monkeypatch.setattr("charm.execute_command", MagicMock())
+    monkeypatch.setattr("manager_service.yaml_safe_dump", MagicMock())
+    monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
+    monkeypatch.setattr("manager_service.systemd", MagicMock())
+
+
+@pytest.fixture(name="mock_manager_service")
+def mock_manager_service_fixture(monkeypatch):
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
+    return mock_manager_service
 
 
 def raise_runner_error(*args, **kwargs):
@@ -143,6 +162,8 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch) -> Harness:
             PATH_CONFIG_NAME: "mock/repo",
             TOKEN_CONFIG_NAME: "mocktoken",
             OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+            OPENSTACK_FLAVOR_CONFIG_NAME: "m1.builder",
+            FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME: "",
         }
     )
     harness.begin()
@@ -184,7 +205,11 @@ def test_proxy_setting(harness: Harness):
     ],
 )
 def test_common_install_code(
-    hook: str, harness: Harness, exec_command: MagicMock, monkeypatch: pytest.MonkeyPatch
+    hook: str,
+    harness: Harness,
+    exec_command: MagicMock,
+    monkeypatch: pytest.MonkeyPatch,
+    mock_manager_service,
 ):
     """
     arrange: Set up charm.
@@ -215,7 +240,7 @@ def test_on_config_changed_failure(harness: Harness):
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
 
 
-def test_on_flush_runners_reconcile_error_fail(harness: Harness):
+def test_on_flush_runners_reconcile_error_fail(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and ReconcileError.
     act: Run flush runner action.
@@ -226,7 +251,7 @@ def test_on_flush_runners_reconcile_error_fail(harness: Harness):
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     mock_event = MagicMock()
     harness.charm._on_flush_runners_action(mock_event)
@@ -248,7 +273,7 @@ def test_on_reconcile_runners_action_reconcile_error_fail(
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     monkeypatch.setattr(
         OpenstackImage,
         "from_charm",
@@ -274,7 +299,7 @@ def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pyt
 
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
     runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     monkeypatch.setattr(
         OpenstackImage,
         "from_charm",
@@ -297,7 +322,7 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_scaler_mock)
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
     mock_event = MagicMock()
 
     harness.charm._on_stop(mock_event)
@@ -312,7 +337,9 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
         pytest.param("upgrade_charm", id="Upgrade"),
     ],
 )
-def test_on_install_failure(hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_install_failure(
+    hook: str, harness: Harness, monkeypatch: pytest.MonkeyPatch, mock_manager_service
+):
     """
     arrange: Charm with mock setup_logrotate.
     act:
@@ -421,46 +448,6 @@ class TestCharm(unittest.TestCase):
         event_timer_mock.ensure_event_timer.side_effect = TimerEnableError("mock error")
         with pytest.raises(TimerEnableError):
             harness.charm.on.update_status.emit()
-
-    @patch("charm.RunnerScaler")
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_config_changed_openstack_clouds_yaml(self, run, wt, mkdir, orm):
-        """
-        arrange: Setup mocked charm.
-        act: Fire config changed event to use openstack-clouds-yaml.
-        assert: Charm is in blocked state.
-        """
-        harness = Harness(GithubRunnerCharm)
-        cloud_yaml = {
-            "clouds": {
-                "microstack": {
-                    "auth": {
-                        "auth_url": secrets.token_hex(16),
-                        "project_name": secrets.token_hex(16),
-                        "project_domain_name": secrets.token_hex(16),
-                        "username": secrets.token_hex(16),
-                        "user_domain_name": secrets.token_hex(16),
-                        "password": secrets.token_hex(16),
-                    },
-                    "region_name": secrets.token_hex(16),
-                }
-            }
-        }
-        harness.update_config(
-            {
-                PATH_CONFIG_NAME: "mockorg/repo",
-                TOKEN_CONFIG_NAME: "mocktoken",
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
-            }
-        )
-
-        harness.begin()
-
-        harness.charm.on.config_changed.emit()
-
-        assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
     @patch("pathlib.Path.mkdir")
     @patch("pathlib.Path.write_text")
@@ -615,7 +602,7 @@ def test__on_image_relation_image_not_ready():
     assert harness.charm.unit.status.name == MaintenanceStatus.name
 
 
-def test__on_image_relation_image_ready():
+def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     """
     arrange: given a charm with OpenStack instance type and a monkeypatched \
         _get_set_image_ready_status that returns True denoting image ready.
@@ -627,14 +614,14 @@ def test__on_image_relation_image_ready():
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
-    runner_manager_mock = MagicMock()
-    harness.charm._get_runner_scaler = MagicMock(return_value=runner_manager_mock)
+    runner_scaler_mock = MagicMock()
+    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     assert harness.charm.unit.status.name == ActiveStatus.name
-    runner_manager_mock.flush.assert_called_once()
-    runner_manager_mock.reconcile.assert_called_once()
+    runner_scaler_mock.flush.assert_called_once()
+    runner_scaler_mock.reconcile.assert_called_once()
 
 
 def test__on_image_relation_joined():
@@ -669,3 +656,41 @@ def test__on_image_relation_joined():
     harness.charm._on_image_relation_joined(MagicMock())
 
     assert harness.get_relation_data(relation_id, harness.charm.unit) == test_auth_data
+
+
+def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
+    """
+    arrange: Setup mocked charm.
+    act: Fire config changed event to use openstack-clouds-yaml.
+    assert: Charm is in blocked state.
+    """
+    harness = Harness(GithubRunnerCharm)
+    cloud_yaml = {
+        "clouds": {
+            "microstack": {
+                "auth": {
+                    "auth_url": secrets.token_hex(16),
+                    "project_name": secrets.token_hex(16),
+                    "project_domain_name": secrets.token_hex(16),
+                    "username": secrets.token_hex(16),
+                    "user_domain_name": secrets.token_hex(16),
+                    "password": secrets.token_hex(16),
+                },
+                "region_name": secrets.token_hex(16),
+            }
+        }
+    }
+    harness.update_config(
+        {
+            PATH_CONFIG_NAME: "mockorg/repo",
+            TOKEN_CONFIG_NAME: "mocktoken",
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: yaml.safe_dump(cloud_yaml),
+            OPENSTACK_FLAVOR_CONFIG_NAME: "m1.big",
+        }
+    )
+
+    harness.begin()
+
+    harness.charm.on.config_changed.emit()
+
+    assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")

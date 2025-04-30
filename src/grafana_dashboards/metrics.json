@@ -24,7 +24,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1085,
+  "id": 51,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -46,57 +46,21 @@
         "type": "loki",
         "uid": "${lokids}"
       },
+      "description": "It counts the number of jobs that have been started per deployed GitHub Runner application and displays the percentage.",
       "fieldConfig": {
         "defaults": {
           "color": {
             "mode": "palette-classic"
           },
           "custom": {
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
+          "unit": "short"
         },
         "overrides": []
       },
@@ -106,19 +70,31 @@
         "x": 0,
         "y": 1
       },
-      "id": 3,
+      "id": 25,
       "options": {
+        "displayLabels": [
+          "percent"
+        ],
         "legend": {
-          "calcs": [],
           "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "placement": "right",
+          "showLegend": true,
+          "values": []
+        },
+        "pieType": "pie",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": true
         },
         "tooltip": {
           "mode": "single",
           "sort": "none"
         }
       },
+      "pluginVersion": "9.5.3",
       "targets": [
         {
           "datasource": {
@@ -126,26 +102,14 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename, event) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event =~ \"runner_start|runner_stop|runner_installed\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
+          "expr": "sum by(flavor) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\"  | event =~ \"runner_start\" | flavor=~\"$flavor\" [$__range]))",
           "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
           "legendFormat": "{{event}}",
-          "queryType": "range",
+          "queryType": "instant",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "${lokids}"
-          },
-          "editorMode": "builder",
-          "expr": "sum by(filename) (sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = `reconciliation` | flavor=~\"$flavor\" | timestamp >= ${__from} | unwrap crashed_runners [$__range]))",
-          "hide": false,
-          "legendFormat": "Crashed",
-          "queryType": "range",
-          "refId": "D"
         }
       ],
-      "title": "Lifecycle Status",
+      "title": "Share of jobs per application",
       "transformations": [
         {
           "id": "renameByRegex",
@@ -169,7 +133,7 @@
           }
         }
       ],
-      "type": "timeseries"
+      "type": "piechart"
     },
     {
       "datasource": {
@@ -804,7 +768,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m])) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap idle_runners[60m])) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap active_runners[60m]))",
+          "expr": "((sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",expected_runners=\"expected_runners\",flavor=\"flavor\" | __error__=\"\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap expected_runners[60m])) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",idle_runners=\"idle_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap idle_runners[60m]))) - sum by(filename)(last_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",active_runners=\"active_runners\",flavor=\"flavor\" | event=\"reconciliation\" | flavor=~\"$flavor\" | unwrap active_runners[60m])))",
           "hide": false,
           "legendFormat": "Unknown",
           "queryType": "range",
@@ -1069,6 +1033,136 @@
         }
       ],
       "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${lokids}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 33
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "code",
+          "expr": "sum by(filename, event) (count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event =~ \"runner_start|runner_stop|runner_installed\" | flavor=~\"$flavor\" | timestamp >= ${__from} [$__range]))",
+          "key": "Q-f7c42eab-69be-43b5-a807-35c071f708a0-0",
+          "legendFormat": "{{event}}",
+          "queryType": "range",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${lokids}"
+          },
+          "editorMode": "builder",
+          "expr": "sum by(filename) (sum_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\", crashed_runners=\"crashed_runners\", timestamp=\"timestamp\", flavor=\"flavor\" | label_format timestamp=\"{{__timestamp__ | unixEpoch | mulf 1000}}\" | event = `reconciliation` | flavor=~\"$flavor\" | timestamp >= ${__from} | unwrap crashed_runners [$__range]))",
+          "hide": false,
+          "legendFormat": "Crashed",
+          "queryType": "range",
+          "refId": "D"
+        }
+      ],
+      "title": "Lifecycle Status",
+      "transformations": [
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_installed",
+            "renamePattern": "Initialized"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_start",
+            "renamePattern": "Started"
+          }
+        },
+        {
+          "id": "renameByRegex",
+          "options": {
+            "regex": "runner_stop",
+            "renamePattern": "Stopped"
+          }
+        }
+      ],
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -1837,8 +1931,7 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green",
-                "value": null
+                "color": "green"
               },
               {
                 "color": "red",
@@ -2134,12 +2227,12 @@
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "GitHub Self-Hosted Runner Metrics",
-  "version": 19,
+  "version": 20,
   "weekStart": ""
 }

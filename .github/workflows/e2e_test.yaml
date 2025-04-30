@@ -2,7 +2,10 @@ name: End-to-End tests
 
 on:
   pull_request:
-  
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   # test option values defined at test/conftest.py are passed on via repository secret
@@ -13,7 +16,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-lxd.sh
+      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_e2e"]'

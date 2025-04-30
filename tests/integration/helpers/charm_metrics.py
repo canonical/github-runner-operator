@@ -8,14 +8,13 @@ import json
 import logging
 from time import sleep
 
-import requests
 from github.Branch import Branch
 from github.GithubException import GithubException
 from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
+from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
 from github_runner_manager.metrics.events import METRICS_LOG_PATH
-from github_runner_manager.metrics.runner import PostJobStatus
 from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
 from juju.unit import Unit
@@ -73,13 +72,10 @@ async def wait_for_workflow_to_start(
                 return False
             try:
                 job: WorkflowJob = jobs[0]
-                logs = requests.get(job.logs_url()).content.decode("utf-8")
+                if runner_name == job.runner_name:
+                    return True
             except GithubException as exc:
-                if exc.status == 410:
-                    logger.warning("Transient github error, %s", exc)
-                    return False
-            if runner_name in logs:
-                return True
+                logger.warning("Github error, %s", exc)
         return False
 
     try:
@@ -135,12 +131,12 @@ async def cancel_workflow_run(
             continue
         try:
             job: WorkflowJob = jobs[0]
-            logs = requests.get(job.logs_url()).content.decode("utf-8")
         except GithubException as exc:
             if exc.status == 410:
                 logger.warning("Transient github error, %s", exc)
                 continue
-        if runner_name in logs:
+            logger.warning("Github error, %s", exc)
+        if runner_name == job.runner_name:
             run.cancel()
 
 
@@ -206,7 +202,7 @@ async def assert_events_after_reconciliation(
             if not reactive_mode:
                 assert metric_log.get("expected_runners") >= 0
             else:
-                assert "expected_runners" not in metric_log
+                assert metric_log.get("expected_runners") == 0
 
 
 async def wait_for_runner_to_be_marked_offline(

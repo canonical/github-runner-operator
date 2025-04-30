@@ -6,13 +6,13 @@
 
 from __future__ import annotations
 
-import dataclasses
 from datetime import datetime
 from enum import Enum
 from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
-from typing_extensions import NotRequired
+
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 
 
 class GitHubRunnerStatus(str, Enum):
@@ -29,7 +29,7 @@ class GitHubRunnerStatus(str, Enum):
 
 # See response schema for
 # https://docs.github.com/en/rest/actions/self-hosted-runners?apiVersion=2022-11-28#list-runner-applications-for-an-organization
-class RunnerApplication(TypedDict, total=False):
+class RunnerApplication(BaseModel):
     """Information on the runner application.
 
     Attributes:
@@ -37,82 +37,70 @@ class RunnerApplication(TypedDict, total=False):
         architecture: Computer Architecture to run the runner application on.
         download_url: URL to download the runner application.
         filename: Filename of the runner application.
-        temp_download_token: A short lived bearer token used to download the
-            runner, if needed.
-        sha256_checksum: SHA256 Checksum of the runner application.
     """
 
     os: Literal["linux", "win", "osx"]
     architecture: Literal["arm", "arm64", "x64"]
     download_url: str
     filename: str
-    temp_download_token: NotRequired[str]
-    sha256_checksum: NotRequired[str]
 
 
 RunnerApplicationList = List[RunnerApplication]
 
 
-class SelfHostedRunnerLabel(TypedDict, total=False):
+class SelfHostedRunnerLabel(BaseModel):
     """A single label of self-hosted runners.
 
     Attributes:
-        id: Unique identifier of the label.
         name: Name of the label.
-        type: Type of label. Read-only labels are applied automatically when
-            the runner is configured.
     """
 
-    id: NotRequired[int]
     name: str
-    type: NotRequired[str]
 
 
-class SelfHostedRunner(TypedDict):
+class SelfHostedRunner(BaseModel):
     """Information on a single self-hosted runner.
 
     Attributes:
         busy: Whether the runner is executing a job.
         id: Unique identifier of the runner.
         labels: Labels of the runner.
-        os: Operation system of the runner.
-        name: Name of the runner.
         status: The Github runner status.
+        instance_id: InstanceID of the runner.
+        metadata: Runner metadata.
+        deletable: Deletable runner. In GitHub, this is equivalent as the runner not
+            existing in GitHub, as that runner cannot get jobs.
     """
 
     busy: bool
     id: int
     labels: list[SelfHostedRunnerLabel]
-    os: str
-    name: str
     status: GitHubRunnerStatus
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+    deletable: bool = False
+
+    @classmethod
+    def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":
+        """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
+
+        Args:
+            github_dict: GitHub dictionary from the list_runners endpoint.
+            instance_id: InstanceID for the runner.
+
+        Returns:
+            A SelfHostedRunner from the input data.
+        # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
+        """
+        github_dict["labels"] = list(github_dict["labels"])
+        github_dict["instance_id"] = instance_id
+        github_dict["metadata"] = RunnerMetadata(
+            platform_name="github", runner_id=github_dict["id"]
+        )
+        return cls.parse_obj(github_dict)
 
 
-class SelfHostedRunnerList(TypedDict):
-    """Information on a collection of self-hosted runners.
-
-    Attributes:
-        total_count: Total number of runners.
-        runners: List of runners.
-    """
-
-    total_count: int
-    runners: list[SelfHostedRunner]
-
-
-class RegistrationToken(TypedDict):
-    """Token used for registering GitHub runners.
-
-    Attributes:
-        token: Token for registering GitHub runners.
-        expires_at: Time the token expires at.
-    """
-
-    token: str
-    expires_at: str
-
-
-class RemoveToken(TypedDict):
+class RemoveToken(BaseModel):
     """Token used for removing GitHub runners.
 
     Attributes:
@@ -187,71 +175,47 @@ class JobInfo(BaseModel):
     status: JobStatus
 
 
-@dataclasses.dataclass
-class GitHubRepo:
-    """Represent GitHub repository.
+class JITConfig(TypedDict, total=True):
+    """JIT Config Token reply from GitHub API.
 
     Attributes:
-        owner: Owner of the GitHub repository.
-        repo: Name of the GitHub repository.
+        encoded_jit_config: The Token that identifies the runner.
+        runner: Information about the runner associated with the JIT token.
     """
 
-    owner: str
-    repo: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return f"{self.owner}/{self.repo}"
+    encoded_jit_config: str
+    runner: "JITConfigRunner"
 
 
-@dataclasses.dataclass
-class GitHubOrg:
-    """Represent GitHub organization.
+class JITConfigRunner(TypedDict, total=True):
+    """Runner Information returned when requesting a JIT token.
 
     Attributes:
-        org: Name of the GitHub organization.
-        group: Runner group to spawn the runners in.
+        id: Id of the runner.
+        status: Status of the runner.
+        name: Name of the runner.
+        os: OS of the runner.
+        busy: Whether the runner is busy.
+        labels: Labels of the runner.
     """
 
-    org: str
-    group: str
-
-    def path(self) -> str:
-        """Return a string representing the path.
-
-        Returns:
-            Path to the GitHub entity.
-        """
-        return self.org
+    id: int
+    status: GitHubRunnerStatus
+    name: str
+    os: str
+    busy: bool
+    labels: "list[JITConfigRunnerLabel]"
 
 
-GitHubPath = GitHubOrg | GitHubRepo
+class JITConfigRunnerLabel(TypedDict, total=True):
+    """Labels for a runner returned when requesting a JIT token.
 
-
-def parse_github_path(path_str: str, runner_group: str) -> GitHubPath:
-    """Parse GitHub path.
-
-    Args:
-        path_str: GitHub path in string format.
-        runner_group: Runner group name for GitHub organization. If the path is
-            a repository this argument is ignored.
-
-    Raises:
-        ValueError: if an invalid path string was given.
-
-    Returns:
-        GithubPath object representing the GitHub repository, or the GitHub
-        organization with runner group information.
+    Attributes:
+        id: ID of the label.
+        name: Name of the label.
+        type: Type of label.
     """
-    if "/" in path_str:
-        paths = tuple(segment for segment in path_str.split("/") if segment)
-        if len(paths) != 2:
-            # TODO: create custom error
-            raise ValueError(f"Invalid path configuration {path_str}")
-        owner, repo = paths
-        return GitHubRepo(owner=owner, repo=repo)
-    return GitHubOrg(org=path_str, group=runner_group)
+
+    id: int
+    name: str
+    type: str
