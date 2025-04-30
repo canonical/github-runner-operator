@@ -14,6 +14,9 @@ import pytest_asyncio
 from github_runner_manager.platform.jobmanager_provider import JobStatus
 from github_runner_manager.reactive.consumer import JobDetails
 from jobmanager_client.models.job import Job
+from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
+    V1JobsJobIdHealthGet200Response,
+)
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
@@ -22,9 +25,7 @@ from pytest_httpserver import HTTPServer
 from pytest_operator.plugin import OpsTest
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.charm_metrics import (
-    clear_metrics_log,
-)
+from tests.integration.helpers.charm_metrics import clear_metrics_log
 from tests.integration.helpers.common import reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
@@ -196,6 +197,23 @@ async def test_jobmanager(
     )
 
     # At this point the openstack instance will be spawned.
+
+    # For the github runner manager, at this point, the jobmanager will return
+    # that the job health is pending and not deletable
+    # '/v1/jobs/{job_id}/health', 'GET',
+    # Returns V1JobsJobIdHealthGet200Response
+    health_response = V1JobsJobIdHealthGet200Response(
+        label="label",
+        cpu_usage="1",
+        ram_usage="1",
+        disk_usage="1",
+        status="PENDING",
+        deletable=False,
+    )
+    httpserver.expect_request(uri=job_path_health, method="GET").respond_with_json(
+        health_response.to_dict()
+    )
+
     unit = app.units[0]
 
     async def _prepare_runner() -> bool:
@@ -214,6 +232,19 @@ async def test_jobmanager(
         logger.info("Waiting for builder-agent to contact us.")
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "builder-agent did not contact us."
+
+    # ok, at this point reply from the jobmanager that the runner is in progress.
+    health_response = V1JobsJobIdHealthGet200Response(
+        label="label",
+        cpu_usage="1",
+        ram_usage="1",
+        disk_usage="1",
+        status="IN_PROGRESS",
+        deletable=False,
+    )
+    httpserver.expect_request(uri=job_path_health, method="GET").respond_with_json(
+        health_response.to_dict()
+    )
 
     httpserver.check_assertions()
 
@@ -240,6 +271,9 @@ async def test_jobmanager(
     assert waiting.result, "builder-agent did not execute or finished."
 
     httpserver.check_assertions()
+
+    assert_queue_is_empty(mongodb_uri, app.name)
+
     # The reconcile loop is still not adapted and will badly kill the instance as the ssh
     # health check will mark the instance as unhealthy.
 

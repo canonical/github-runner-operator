@@ -29,6 +29,19 @@ class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
     @abc.abstractmethod
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> "PlatformRunnerHealth":
+        """Get health information on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+        """
+
+    @abc.abstractmethod
     def get_runners(
         self, states: "Iterable[PlatformRunnerState] | None" = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -88,6 +101,31 @@ class PlatformProvider(abc.ABC):
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.
         """
+
+
+@dataclass
+class PlatformRunnerHealth:
+    """Information about the health of a platform runner.
+
+    A runner can be online if it is connected to the platform. If the platform
+    does not provide that information, any runner that has connected to the platform
+    should be considered online. It is deletable if there is no risk in deleting the
+    compute instance, and busy if it is currently executing a job in the platform
+    manager.
+
+    Attributes:
+        instance_id: InstanceID of the runner.
+        metadata: Metadata of the runner.
+        online: Whether the runner is online.
+        busy: Whether the runner is busy.
+        deletable: Whether the runner is deletable.
+    """
+
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+    online: bool
+    busy: bool
+    deletable: bool
 
 
 # Pending to review the coupling of this class with GitHub

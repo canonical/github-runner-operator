@@ -237,11 +237,14 @@ def _spawn_runner(
         logger.error("Failed to spawn a runner. Will reject the message.")
         msg.reject(requeue=True)
         return
-    for _ in range(10):
+
+    for iteration in range(5):
+        # Do not sleep on the first iteration — the job might already be taken.
+        if iteration != 0:
+            sleep(60)
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             msg.ack()
             break
-        sleep(30)
     else:
         msg.reject(requeue=True)
 

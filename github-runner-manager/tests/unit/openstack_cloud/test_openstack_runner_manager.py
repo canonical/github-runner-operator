@@ -92,8 +92,6 @@ def test_create_runner_with_aproxy(
     runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
-    monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
-    monkeypatch.setattr(runner_manager, "_wait_runner_running", MagicMock(return_value=None))
 
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
@@ -124,8 +122,6 @@ def test_create_runner_without_aproxy(
     runner_context = RunnerContext(shell_run_script=agent_command)
     instance_id = InstanceID.build(prefix=prefix)
     metadata = RunnerMetadata()
-    monkeypatch.setattr(runner_manager, "_wait_runner_startup", MagicMock(return_value=None))
-    monkeypatch.setattr(runner_manager, "_wait_runner_running", MagicMock(return_value=None))
 
     openstack_cloud = MagicMock(spec=OpenstackCloud)
     monkeypatch.setattr(runner_manager, "_openstack_cloud", openstack_cloud)
