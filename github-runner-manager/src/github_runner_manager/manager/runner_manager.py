@@ -216,34 +216,6 @@ class RunnerManager:
                 extracted_runner_metrics.append(runner_metric)
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
-    def flush_runners_old(
-        self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
-    ) -> IssuedMetricEventsStats:
-        """Delete runners according to state.
-
-        Args:
-            flush_mode: The type of runners affect by the deletion.
-
-        Returns:
-            Stats on metrics events issued during the deletion of runners.
-        """
-        match flush_mode:
-            case FlushMode.FLUSH_IDLE:
-                logger.info("Flushing idle runners...")
-            case FlushMode.FLUSH_BUSY:
-                logger.info("Flushing idle and busy runners...")
-            case _:
-                logger.critical(
-                    "Unknown flush mode %s encountered, contact developers", flush_mode
-                )
-
-        busy = False
-        if flush_mode == FlushMode.FLUSH_BUSY:
-            busy = True
-        remove_token = self._platform.get_removal_token()
-        stats = self._cloud.flush_runners(remove_token, busy)
-        return self._issue_runner_metrics(metrics=stats)
-
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
     ) -> IssuedMetricEventsStats:

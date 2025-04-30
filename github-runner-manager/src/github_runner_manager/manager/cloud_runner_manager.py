@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum, auto
-from typing import Iterable, Iterator, Optional, Sequence
+from typing import Optional, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
@@ -268,24 +268,4 @@ class CloudRunnerManager(abc.ABC):
         Args:
             instance_id: The instance id of the runner to delete.
             remove_token: The GitHub remove token.
-        """
-
-    @abc.abstractmethod
-    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
-        """Stop all runners.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
-            busy: If false, only idle runners are removed. If true, both idle and busy runners are
-                removed.
-        """
-
-    @abc.abstractmethod
-    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
-        """Cleanup runner and resource on the cloud.
-
-        Perform health check on runner and delete the runner if it fails.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
         """

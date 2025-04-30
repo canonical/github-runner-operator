@@ -7,7 +7,7 @@ import logging
 import secrets
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 import fabric
 import jinja2
@@ -19,7 +19,6 @@ from github_runner_manager.errors import (
     KeyfileError,
     MissingServerConfigError,
     OpenStackError,
-    OpenstackHealthCheckError,
     RunnerCreateError,
     SSHError,
 )
@@ -31,7 +30,6 @@ from github_runner_manager.manager.cloud_runner_manager import (
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
-from github_runner_manager.openstack_cloud import health_checks
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
     METRICS_EXCHANGE_PATH,
@@ -211,73 +209,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         cloud_instance = self._build_cloud_runner_instance(instance)
         return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
 
-    def flush_runners(
-        self, remove_token: str, busy: bool = False
-    ) -> Iterable[runner_metrics.RunnerMetrics]:
-        """Remove idle and/or busy runners.
-
-        Args:
-            remove_token:
-            busy: If false, only idle runners are removed. If true, both idle and busy runners are
-                removed.
-
-        Returns:
-            Any metrics retrieved from flushed runners.
-        """
-        instance_list = self._openstack_cloud.get_instances()
-        for instance in instance_list:
-            try:
-                logger.debug(
-                    "Checking runner state and flushing %s %s",
-                    instance.server_id,
-                    instance.instance_id,
-                )
-                self._check_state_and_flush(instance, busy)
-            except SSHError:
-                logger.warning(
-                    "Unable to determine state of  %s and kill runner process due to SSH issues",
-                    instance.instance_id,
-                )
-                continue
-        logger.debug("Runners successfully flushed, cleaning up.")
-        return self.cleanup(remove_token)
-
-    def cleanup(self, remove_token: str) -> Iterable[runner_metrics.RunnerMetrics]:
-        """Cleanup runner and resource on the cloud.
-
-        Args:
-            remove_token: The GitHub remove token.
-
-        Returns:
-            Any metrics retrieved from cleanup runners.
-        """
-        logger.debug("Getting runner healths for cleanup.")
-        runners = self._get_runners_health()
-
-        healthy_runner_names = {runner.instance_id for runner in runners.healthy}
-        unhealthy_runner_names = {runner.instance_id for runner in runners.unhealthy}
-        unknown_runner_names = {runner.instance_id for runner in runners.unknown}
-        logger.debug("Healthy runners: %s", healthy_runner_names)
-        logger.debug("Unhealthy runners: %s", unhealthy_runner_names)
-        logger.debug("Unknown health runners: %s", unknown_runner_names)
-
-        logger.debug("Deleting unhealthy runners.")
-        extracted_runner_metrics = []
-        for runner in runners.unhealthy:
-            pulled_metrics = self._delete_runner(runner, remove_token)
-            cloud_runner = self._build_cloud_runner_instance(runner)
-            runner_metric = pulled_metrics.to_runner_metrics(cloud_runner, runner.created_at)
-            if not runner_metric:
-                logger.error("No metrics returned after deleting %s", runner.instance_id)
-            else:
-                extracted_runner_metrics.append(runner_metric)
-        logger.debug("Cleaning up runner resources.")
-        self._openstack_cloud.cleanup()
-        logger.debug("Cleanup completed successfully.")
-
-        logger.debug("Extracting metrics.")
-        return extracted_runner_metrics
-
     def _delete_runner(
         self, instance: OpenstackInstance, remove_token: str | None = None
     ) -> runner_metrics.PulledMetrics:
@@ -319,30 +250,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 "Unable to delete openstack instance for runner %s", instance.instance_id
             )
         return pulled_metrics
-
-    def _get_runners_health(self) -> _RunnerHealth:
-        """Get runners by health state.
-
-        Returns:
-            Runners by health state.
-        """
-        runner_list = self._openstack_cloud.get_instances()
-
-        healthy, unhealthy, unknown = [], [], []
-        for runner in runner_list:
-            try:
-                if health_checks.check_runner(
-                    openstack_cloud=self._openstack_cloud, instance=runner
-                ):
-                    healthy.append(runner)
-                else:
-                    unhealthy.append(runner)
-            except OpenstackHealthCheckError:
-                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, runner.instance_id)
-                unknown.append(runner)
-        return _RunnerHealth(
-            healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
-        )
 
     def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.

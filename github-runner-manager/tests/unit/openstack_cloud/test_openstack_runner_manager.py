@@ -3,10 +3,9 @@
 
 """Module for unit-testing OpenStack runner manager."""
 import logging
-import secrets
 from datetime import datetime, timezone
 from typing import Iterable
-from unittest.mock import ANY, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -131,67 +130,6 @@ def test_create_runner_without_aproxy(
     assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 
 
-@pytest.mark.parametrize(
-    "healthy_count, unhealthy_count, unknown_count",
-    [
-        pytest.param(1, 1, 1, id="one of each"),
-        pytest.param(2, 1, 1, id="two healthy"),
-        pytest.param(1, 2, 1, id="two unhealthy"),
-        pytest.param(1, 1, 2, id="two unknown"),
-        pytest.param(0, 0, 0, id="no runners"),
-        pytest.param(0, 0, 1, id="one unknown"),
-        pytest.param(0, 1, 0, id="one unhealthy"),
-        pytest.param(1, 0, 0, id="one healthy"),
-    ],
-)
-def test_cleanup_ignores_runners_with_health_check_errors(
-    healthy_count: int,
-    unhealthy_count: int,
-    unknown_count,
-    monkeypatch: pytest.MonkeyPatch,
-    runner_manager: OpenStackRunnerManager,
-    runner_metrics_mock: MagicMock,
-):
-    """
-    arrange: Given a combination of healthy/unhealthy/unknown(with a health check error) runners.
-    act: When the cleanup method is called.
-    assert: Only the unhealthy runners are deleted and their metrics are extracted.
-    """
-    prefix = "test"
-    names = [
-        InstanceID(prefix=prefix, reactive=False, suffix=f"{status}{i}").name
-        for status, count in [
-            ("healthy", healthy_count),
-            ("unhealthy", unhealthy_count),
-            (
-                "unknown",
-                unknown_count,
-            ),
-        ]
-        for i in range(count)
-    ]
-    openstack_cloud_mock = _create_openstack_cloud_mock(names)
-    runner_manager._openstack_cloud = openstack_cloud_mock
-    health_checks_mock = _create_health_checks_mock()
-    monkeypatch.setattr(
-        "github_runner_manager.openstack_cloud.openstack_runner_manager.health_checks",
-        health_checks_mock,
-    )
-    runner_manager.cleanup(secrets.token_hex(16))
-
-    assert openstack_cloud_mock.delete_instance.call_count == unhealthy_count
-    for name in names:
-        instance_id = name
-        if instance_id.startswith("unhealthy"):
-            openstack_cloud_mock.delete_instance.assert_any_call(instance_id)
-    unhealthy_ids = {
-        InstanceID.build_from_name(prefix, name) for name in names if "unhealthy" in name
-    }
-    assert runner_metrics_mock.call_count == len(unhealthy_ids)
-    for unhealthy_id in unhealthy_ids:
-        runner_metrics_mock.assert_any_call(unhealthy_id, ANY)
-
-
 def _params_test_cleanup_extract_metrics():
     """Builds parametrized input for the test_cleanup_extract_metrics.
 
@@ -218,75 +156,69 @@ def _params_test_cleanup_extract_metrics():
     }}"""
 
     return [
-        pytest.param(None, None, None, [], id="All None. No metrics returned."),
+        pytest.param(None, None, None, None, id="All None. No metrics returned."),
         pytest.param(
-            "", None, None, [], id="Invalid runner-installed metrics. No metrics returned."
+            "", None, None, None, id="Invalid runner-installed metrics. No metrics returned."
         ),
         pytest.param(
             str(openstack_installed_at),
             None,
             None,
-            [
-                RunnerMetrics(
-                    instance_id=InstanceID(
-                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                    ),
-                    installation_start_timestamp=openstack_created_at,
-                    installed_timestamp=openstack_installed_at,
-                    metadata=RunnerMetadata(),
+            RunnerMetrics(
+                instance_id=InstanceID(
+                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                 ),
-            ],
+                installation_start_timestamp=openstack_created_at,
+                installed_timestamp=openstack_installed_at,
+                metadata=RunnerMetadata(),
+            ),
             id="Only installed_timestamp. Metric returned.",
         ),
         pytest.param(
             str(openstack_installed_at),
             pre_job_metrics_str,
             None,
-            [
-                RunnerMetrics(
-                    instance_id=InstanceID(
-                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                    ),
-                    installation_start_timestamp=openstack_created_at,
-                    installed_timestamp=openstack_installed_at,
-                    pre_job=PreJobMetrics(
-                        timestamp=pre_job_timestamp,
-                        workflow="Workflow Dispatch Tests",
-                        workflow_run_id="13831611664",
-                        repository="canonical/github-runner-operator",
-                        event="workflow_dispatch",
-                    ),
-                    metadata=RunnerMetadata(),
+            RunnerMetrics(
+                instance_id=InstanceID(
+                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                 ),
-            ],
+                installation_start_timestamp=openstack_created_at,
+                installed_timestamp=openstack_installed_at,
+                pre_job=PreJobMetrics(
+                    timestamp=pre_job_timestamp,
+                    workflow="Workflow Dispatch Tests",
+                    workflow_run_id="13831611664",
+                    repository="canonical/github-runner-operator",
+                    event="workflow_dispatch",
+                ),
+                metadata=RunnerMetadata(),
+            ),
             id="installed_timestamp and pre_job_metrics. Metric returned.",
         ),
         pytest.param(
             str(openstack_installed_at),
             pre_job_metrics_str,
             post_job_metrics_str,
-            [
-                RunnerMetrics(
-                    metadata=RunnerMetadata(),
-                    instance_id=InstanceID(
-                        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                    ),
-                    installation_start_timestamp=openstack_created_at,
-                    installed_timestamp=openstack_installed_at,
-                    pre_job=PreJobMetrics(
-                        timestamp=pre_job_timestamp,
-                        workflow="Workflow Dispatch Tests",
-                        workflow_run_id="13831611664",
-                        repository="canonical/github-runner-operator",
-                        event="workflow_dispatch",
-                    ),
-                    post_job=PostJobMetrics(
-                        timestamp=post_job_timestamp,
-                        status=PostJobStatus.NORMAL,
-                        status_info=CodeInformation(code=200),
-                    ),
+            RunnerMetrics(
+                metadata=RunnerMetadata(),
+                instance_id=InstanceID(
+                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
                 ),
-            ],
+                installation_start_timestamp=openstack_created_at,
+                installed_timestamp=openstack_installed_at,
+                pre_job=PreJobMetrics(
+                    timestamp=pre_job_timestamp,
+                    workflow="Workflow Dispatch Tests",
+                    workflow_run_id="13831611664",
+                    repository="canonical/github-runner-operator",
+                    event="workflow_dispatch",
+                ),
+                post_job=PostJobMetrics(
+                    timestamp=post_job_timestamp,
+                    status=PostJobStatus.NORMAL,
+                    status_info=CodeInformation(code=200),
+                ),
+            ),
             id="installed_timestamp, pre_job_metrics and post_job_metrics. Metric returned",
         ),
     ]
@@ -331,33 +263,27 @@ def test_cleanup_extract_metrics(
 
     ssh_pull_file_mock.side_effect = _ssh_pull_file
 
-    names = [InstanceID(prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy").name]
-    openstack_cloud_mock = _create_openstack_cloud_mock(names)
+    instance_id = InstanceID(
+        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
+    ).name
+    openstack_cloud_mock = _create_openstack_cloud_mock(instance_id)
     runner_manager._openstack_cloud = openstack_cloud_mock
-    health_checks_mock = _create_health_checks_mock()
-    monkeypatch.setattr(
-        "github_runner_manager.openstack_cloud.openstack_runner_manager.health_checks",
-        health_checks_mock,
-    )
 
-    runner_metrics = runner_manager.cleanup("remove_token")
+    runner_metrics = runner_manager.delete_runner(instance_id)
 
     assert runner_metrics == result
 
 
-def _create_openstack_cloud_mock(server_names: list[str]) -> MagicMock:
+def _create_openstack_cloud_mock(instance_name: str) -> MagicMock:
     """Create an OpenstackCloud mock which returns servers with a given list of server names."""
     openstack_cloud_mock = MagicMock(spec=OpenstackCloud)
-    openstack_cloud_mock.get_instances.return_value = [
-        openstack_cloud.OpenstackInstance(
-            server=openstack_factory.ServerFactory(
-                status="ACTIVE",
-                name=name,
-            ),
-            prefix=OPENSTACK_INSTANCE_PREFIX,
-        )
-        for name in server_names
-    ]
+    openstack_cloud_mock.get_instance.return_value = openstack_cloud.OpenstackInstance(
+        server=openstack_factory.ServerFactory(
+            status="ACTIVE",
+            name=instance_name,
+        ),
+        prefix=OPENSTACK_INSTANCE_PREFIX,
+    )
     return openstack_cloud_mock
 
 
