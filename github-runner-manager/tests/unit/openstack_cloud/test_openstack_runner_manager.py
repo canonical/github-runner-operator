@@ -130,8 +130,8 @@ def test_create_runner_without_aproxy(
     assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 
 
-def _params_test_cleanup_extract_metrics():
-    """Builds parametrized input for the test_cleanup_extract_metrics.
+def _params_test_delete_extract_metrics():
+    """Builds parametrized input for the test_delete_extract_metrics.
 
     The following values are returned:
     runner_installed_metrics,pre_job_metrics,post_job_metrics,result
@@ -226,9 +226,9 @@ def _params_test_cleanup_extract_metrics():
 
 @pytest.mark.parametrize(
     "runner_installed_metrics,pre_job_metrics,post_job_metrics,result",
-    _params_test_cleanup_extract_metrics(),
+    _params_test_delete_extract_metrics(),
 )
-def test_cleanup_extract_metrics(
+def test_deleete_extract_metrics(
     runner_manager: OpenStackRunnerManager,
     runner_installed_metrics: str | None,
     pre_job_metrics: str | None,
@@ -238,7 +238,7 @@ def test_cleanup_extract_metrics(
 ):
     """
     arrange: Given different values for values of metrics for a runner.
-    act: Cleanup the runner for those metrics.
+    act: Delete the runner for those metrics.
     assert: The expected RunnerMetrics object is obtained, or None if there should not be one.
     """
     ssh_pull_file_mock = MagicMock()
