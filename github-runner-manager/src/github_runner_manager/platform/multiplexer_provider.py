@@ -96,7 +96,7 @@ class MultiplexerPlatform(PlatformProvider):
             provider_runners_health = self._providers[platform_name].get_runners_health(
                 platform_identities
             )
-            runners_health.append(provider_runners_health)
+            runners_health += provider_runners_health
         return runners_health
 
     def get_runners(
