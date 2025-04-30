@@ -92,7 +92,7 @@ class MultiplexerPlatform(PlatformProvider):
         identities_by_provider = {
             identity.metadata.platform_name: identity for identity in runner_identities
         }
-        for platform_name, platform_identities in identities_by_provider.values():
+        for platform_name, platform_identities in identities_by_provider.items():
             provider_runners_health = self._providers[platform_name].get_runners_health(
                 platform_identities
             )
