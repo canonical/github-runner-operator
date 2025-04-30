@@ -1,0 +1,51 @@
+18:39:28 INFO Creating 1 runners
+18:39:29 INFO Creating openstack server with test-q5lkzy84-0-n-f744a4352e1e
+18:39:43 INFO Runner test-q5lkzy84-0-n-f744a4352e1e created successfully
+18:40:44 INFO Getting runners...
+18:40:45 INFO Getting all openstack servers managed by the charm
+18:40:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:40:47 INFO Authentication (publickey) successful!
+18:40:48 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:40:48 INFO Getting runners...
+18:40:49 INFO Getting all openstack servers managed by the charm
+18:40:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:40:50 INFO Authentication (publickey) successful!
+18:40:51 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:40:51 INFO Getting runners...
+18:40:52 INFO Getting all openstack servers managed by the charm
+18:40:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:40:54 INFO Authentication (publickey) successful!
+18:40:54 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:40:56 INFO Wait for condition not met, sleeping 10
+18:41:08 INFO Getting runners...
+18:41:09 INFO Getting all openstack servers managed by the charm
+18:41:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:41:10 INFO Authentication (publickey) successful!
+18:41:11 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:11 WARNING Found runner instance on cloud but not registered on GitHub: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:11 INFO Getting runners...
+18:41:12 INFO Getting all openstack servers managed by the charm
+18:41:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:41:15 INFO Authentication (publickey) successful!
+18:41:15 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:15 WARNING Found runner instance on cloud but not registered on GitHub: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:17 INFO Offline github runners to delete: []:
+18:41:17 INFO Getting all openstack servers managed by the charm
+18:41:18 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:41:18 INFO Authentication (publickey) successful!
+18:41:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:41:19 INFO Authentication (publickey) successful!
+18:41:19 INFO [chan 2] Opened sftp connection (server version 3)
+18:41:19 INFO Running runner removal script for test-q5lkzy84-0-n-f744a4352e1e
+18:41:19 INFO Deleting openstack server with test-q5lkzy84-0-n-f744a4352e1e
+18:41:22 INFO Cleaning up SSH key files
+18:41:22 INFO Found 0 key files, clean up 0 key files
+18:41:22 INFO Cleaning up openstack keypairs
+18:41:23 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+18:41:23 INFO Getting runners...
+18:41:24 INFO Getting all openstack servers managed by the charm
+18:41:25 INFO Found following runners: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:25 WARNING Found runner instance on cloud but not registered on GitHub: {'test-q5lkzy84-0-n-f744a4352e1e'}
+18:41:25 INFO Getting runners...
+18:41:26 INFO Getting all openstack servers managed by the charm
+18:41:27 INFO Found following runners: set()
