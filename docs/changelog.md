@@ -1,5 +1,19 @@
 # Changelog
 
+
+### 2025-04-28
+
+- Add a visualization of the share of jobs started per application.
+
+### 2025-04-22
+
+- Add how-to landing page.
+
+### 2025-04-15
+
+
+- Fix a race condition where keypairs were being deleted even though the server was being built, potentially killing active github action runs.
+
 ### 2025-04-09
 
 - Remove update-dependencies action. This actions is not needed for external cloud providers.

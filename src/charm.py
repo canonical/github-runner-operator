@@ -41,6 +41,7 @@ from ops.framework import StoredState
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
+import manager_service
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -56,6 +57,8 @@ from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationError,
+    RunnerManagerApplicationInstallError,
     SubprocessError,
     TokenError,
 )
@@ -248,6 +251,13 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
+            manager_service.install_package()
+        except RunnerManagerApplicationInstallError:
+            logger.error("Failed to install github runner manager package")
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
+
+        try:
             logrotate.setup()
         except LogrotateSetupError:
             logger.error("Failed to setup logrotate")
@@ -304,6 +314,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
+        self._setup_service(state)
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
@@ -434,6 +445,19 @@ class GithubRunnerCharm(CharmBase):
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
 
+    def _setup_service(self, state: CharmState) -> None:
+        """Set up services.
+
+        Args:
+            state: The charm state.
+        """
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
+
     @staticmethod
     def _log_juju_processes() -> None:
         """Log the running Juju processes.
@@ -495,7 +519,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one"])
+        self._apt_install(["run-one", "python3-pip"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.
