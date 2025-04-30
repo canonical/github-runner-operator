@@ -193,6 +193,26 @@ class PlatformRunnerState(str, Enum):
             state = PlatformRunnerState.IDLE
         return state
 
+    @staticmethod
+    def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerState":
+        """TODO.
+
+        Args:
+            health: TODO
+
+        Returns:
+            The state of runner.
+        """
+        state = PlatformRunnerState.OFFLINE
+
+        if health.deletable:
+            state = PlatformRunnerState.OFFLINE
+        elif health.busy:
+            state = PlatformRunnerState.BUSY
+        elif health.online:
+            state = PlatformRunnerState.IDLE
+        return state
+
 
 @dataclass
 class JobInfo:

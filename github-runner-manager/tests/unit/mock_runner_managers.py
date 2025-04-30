@@ -1,6 +1,7 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import hashlib
+import logging
 import random
 import secrets
 from dataclasses import dataclass
@@ -39,6 +40,8 @@ from github_runner_manager.types_.github import (
     RunnerApplication,
     SelfHostedRunner,
 )
+
+logger = logging.getLogger(__name__)
 
 # Compressed tar file for testing.
 # Python `tarfile` module works on only files.
@@ -464,6 +467,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         """
         if instance_id in self.state.runners:
             runner = self.state.runners[instance_id]
+            logger.info("JAVI mock_platform.get_runner_health %s %s", instance_id, runner)
             return PlatformRunnerHealth(
                 instance_id=instance_id,
                 metadata=metadata,
@@ -486,9 +490,15 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         Returns:
             Health information on the runners.
         """
+        found_identities = []
+        for identity in runner_identities:
+            if identity.instance_id in self.state.runners:
+                runner = self.state.runners[identity.instance_id]
+                if runner.health:
+                    found_identities.append(identity)
         return [
             self.get_runner_health(instance_id=identity.instance_id, metadata=identity.metadata)
-            for identity in runner_identities
+            for identity in found_identities
         ]
 
     def get_runner_context(

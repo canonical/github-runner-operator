@@ -109,6 +109,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             Health information on the runners.
         """
+        logger.info("JAVI github_provider get_runners_health identities %s", runner_identities)
         runners_health = []
         runners = self.get_runners()
         logger.info("JAVI github_provider internal data %s", runners)

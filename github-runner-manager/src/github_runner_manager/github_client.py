@@ -289,7 +289,7 @@ class GithubClient:
         Args:
             path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
                 name.
-            runner_id: Id of th1e runner.
+            runner_id: Id of the runner.
 
         Raises:
             DeleteRunnerBusyError: TODO
