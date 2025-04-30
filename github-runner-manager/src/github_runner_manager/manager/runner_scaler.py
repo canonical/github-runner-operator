@@ -284,7 +284,7 @@ class RunnerScaler:
         try:
             if self._reactive_config is not None:
                 logger.info(
-                    "Reactive configuration detected, going into experimental reactive mode."
+                    "Reactive configuration detected, spawning runners in reactive mode."
                 )
                 reconcile_result = reactive_runner_manager.reconcile(
                     expected_quantity=self._max_quantity,
