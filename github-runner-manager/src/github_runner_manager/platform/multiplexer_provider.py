@@ -9,7 +9,12 @@ from typing import Iterable
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
@@ -71,6 +76,29 @@ class MultiplexerPlatform(PlatformProvider):
         """
         return self._get_provider(metadata).get_runner_health(metadata, instance_id)
 
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        Args:
+            runner_identities: TODO
+
+        Returns:
+            Health information on the runners.
+        """
+        # TODO would it be better to return them in the same order as the input?
+        runners_health = []
+        identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
+        for identity in runner_identities:
+            identities_by_provider[identity.metadata.platform_name].append(identity)
+        for platform_name, platform_identities in identities_by_provider.items():
+            provider_runners_health = self._providers[platform_name].get_runners_health(
+                platform_identities
+            )
+            runners_health += provider_runners_health
+        return runners_health
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -109,6 +137,14 @@ class MultiplexerPlatform(PlatformProvider):
 
         for platform_name, platform_runners in platform_runners.items():
             self._providers[platform_name].delete_runners(platform_runners)
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """Delete runners.
+
+        Args:
+            runner_identity: TODO
+        """
+        self._get_provider(runner_identity.metadata).delete_runner(runner_identity)
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

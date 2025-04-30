@@ -12,7 +12,12 @@ from pydantic import HttpUrl
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
@@ -93,6 +98,47 @@ class GitHubRunnerPlatform(PlatformProvider):
                 deletable=True,
             )
 
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        Args:
+            runner_identities: TODO
+
+        Returns:
+            Health information on the runners.
+        """
+        logger.info("JAVI github_provider get_runners_health identities %s", runner_identities)
+        runners_health = []
+        runners = self.get_runners()
+        logger.info("JAVI github_provider internal data %s", runners)
+        runners_map = {runner.instance_id: runner for runner in runners}
+        for identity in runner_identities:
+            if identity.instance_id in runners_map:
+                runner = runners_map[identity.instance_id]
+                online = runner.status == GitHubRunnerStatus.ONLINE
+                runners_health.append(
+                    PlatformRunnerHealth(
+                        instance_id=runner.instance_id,
+                        metadata=runner.metadata,
+                        online=online,
+                        busy=runner.busy,
+                        deletable=False,
+                    )
+                )
+            else:
+                runners_health.append(
+                    PlatformRunnerHealth(
+                        instance_id=identity.instance_id,
+                        metadata=identity.metadata,
+                        online=False,
+                        busy=False,
+                        deletable=True,
+                    )
+                )
+        return runners_health
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -124,6 +170,17 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         for runner in runners:
             self._client.delete_runner(self._path, runner.id)
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
+        """
+        logger.info("JAVI github_provider::delete_runner %s", runner_identity)
+        self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

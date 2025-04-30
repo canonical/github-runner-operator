@@ -29,7 +29,7 @@ from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
-from github_runner_manager.openstack_cloud import constants, health_checks
+from github_runner_manager.openstack_cloud import constants
 from github_runner_manager.openstack_cloud.models import (
     OpenStackCredentials,
     OpenStackRunnerManagerConfig,
@@ -434,6 +434,7 @@ async def test_runner_normal_lifecycle(
         1. The workflow complete successfully.
         2. The runner should be deleted. The metrics should be recorded.
     """
+    logger.info("JAVI starting test_runner_normal_lifecycle")
     metric_log_path = log_dir_base_path["metric_log"]
     try:
         metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
