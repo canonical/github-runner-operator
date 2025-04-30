@@ -20,7 +20,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
@@ -202,11 +202,13 @@ class RunnerManager:
 
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners()
-        runners_health = self._platform.get_runners_health(cloud_runners)
-        for runner_health in runners_health:
-            instance_id = runner_health.instance_id
+        for cloud_runner in cloud_runners:
+            instance_id = cloud_runner.instance_id
+            metadata = cloud_runner.metadata
             try:
-                self._platform.delete_runner(runner_health)
+                self._platform.delete_runner(
+                    RunnerIdentity(instance_id=instance_id, metadata=metadata)
+                )
             except DeleteRunnerBusyError:
                 logger.warning("Deleting busy runner %s", instance_id)
             runner_metric = self._cloud.delete_runner(instance_id=instance_id)

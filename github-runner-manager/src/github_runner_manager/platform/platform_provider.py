@@ -59,6 +59,8 @@ class PlatformProvider(abc.ABC):
         Args:
             runner_identities: TODO
         """
+        # TODO change the response to a map of identities to health so we can send
+        # some info when the call failed
 
     @abc.abstractmethod
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:

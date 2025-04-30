@@ -188,8 +188,8 @@ async def openstack_runner_manager_fixture(
     )
 
 
-@pytest.fixture(scope="module", name="github_client")
-def github_client_fixture(token: str) -> GithubClient:
+@pytest.fixture(scope="module", name="github_client_for_manager")
+def github_client_for_manager_fixture(token: str) -> GithubClient:
     github_client = GithubClient(token)
     return github_client
 
@@ -199,12 +199,12 @@ def github_platform_fixture(
     token: str,
     prefix: str,
     github_path: GitHubPath,
-    github_client: GithubClient,
+    github_client_for_manager: GithubClient,
 ) -> GitHubRunnerPlatform:
     github_platform = GitHubRunnerPlatform(
         prefix=prefix,
         path=github_path,
-        github_client=github_client,
+        github_client=github_client_for_manager,
     )
     return github_platform
 
@@ -312,7 +312,7 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
 async def test_runner_normal_idle_lifecycle(
     runner_manager: RunnerManager,
     openstack_runner_manager: OpenStackRunnerManager,
-    github_client: GithubClient,
+    github_client_for_manager: GithubClient,
     github_path: GitHubPath,
 ) -> None:
     """
@@ -359,7 +359,7 @@ async def test_runner_normal_idle_lifecycle(
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
 
-    self_hosted_runner = github_client.get_runner(
+    self_hosted_runner = github_client_for_manager.get_runner(
         github_path, runner.instance_id.prefix, int(runner.metadata.runner_id)
     )
     assert self_hosted_runner.status == GitHubRunnerStatus.ONLINE
