@@ -8,9 +8,6 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum, auto
 
-# Pylint exception needed because of typing forward references.
-from typing import Iterable  # pylint: disable=unused-import
-
 from pydantic import HttpUrl
 
 from github_runner_manager.manager.models import (
@@ -61,16 +58,6 @@ class PlatformProvider(abc.ABC):
 
         Args:
             runner_identities: TODO
-        """
-
-    @abc.abstractmethod
-    def get_runners(
-        self, states: "Iterable[PlatformRunnerState] | None" = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        Args:
-            states: Filter the runners for these states. If None, all runners are returned.
         """
 
     @abc.abstractmethod

@@ -124,17 +124,6 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         instance_id=InstanceID.build("invalid"),
         metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
-    github_runners = [
-        github_runner,
-        SelfHostedRunner(
-            id=2,
-            labels=[],
-            status=GitHubRunnerStatus.OFFLINE,
-            busy=True,
-            instance_id=InstanceID.build("unit-0"),
-            metadata=RunnerMetadata(platform_name="github", runner_id="2"),
-        ),
-    ]
 
     def _get_runner_context(instance_id, metadata, labels):
         """Return the runner context."""
@@ -144,7 +133,6 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
 
     github_provider.get_runner_context.side_effect = _get_runner_context
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
-    github_provider.get_runners.return_value = github_runners
 
     _ = runner_manager.create_runners(1, RunnerMetadata(), True)
     github_provider.delete_runners.assert_called_once_with([github_runner])

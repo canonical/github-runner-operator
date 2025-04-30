@@ -4,7 +4,6 @@
 """Multiplexer platform provider to use several providers simultaneously."""
 
 from collections import defaultdict
-from typing import Iterable
 
 from pydantic import HttpUrl
 
@@ -21,7 +20,6 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
-    PlatformRunnerState,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
@@ -98,28 +96,6 @@ class MultiplexerPlatform(PlatformProvider):
             )
             runners_health += provider_runners_health
         return runners_health
-
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        Args:
-            states: Filter the runners for these states. If None, all runners are returned.
-
-        Returns:
-            Get the list of runners from all platforms.
-        """
-        # FIXME. This method should not exist as the jobmanager does not offer a API to
-        # get all runners (at least not for the github-runner). We should delete this method
-        # and instead get all runners from the cloud manager.
-        # A method to delete all runners in the platform that are not in the cloud manager
-        # may also be needed, for example github may need to have this, so there are no runners
-        # in offline/idle state without a cloud instance.
-        runners = ()
-        for platform in self._providers.values():
-            runners += platform.get_runners(states)
-        return runners
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.

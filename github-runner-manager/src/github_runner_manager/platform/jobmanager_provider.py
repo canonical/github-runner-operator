@@ -5,7 +5,6 @@
 
 import logging
 from enum import Enum
-from typing import Iterable
 
 import jobmanager_client
 from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
@@ -23,7 +22,6 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
-    PlatformRunnerState,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -109,23 +107,6 @@ class JobManagerPlatform(PlatformProvider):
             )
             runners_health.append(health)
         return runners_health
-
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        This method will disappear in a following PR.
-
-        Args:
-            states: Filter the runners for these states. If None, all runners are returned.
-
-        Returns:
-            Empty list of runners, as jobmanager will not implement this functionality.
-        """
-        # TODO for now return empty so the reconciliation can work.
-        logger.warning("jobmanager.get_runners not implemented")
-        return ()
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.

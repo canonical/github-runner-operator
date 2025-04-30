@@ -5,7 +5,6 @@
 
 import logging
 from enum import Enum
-from typing import Iterable
 
 from pydantic import HttpUrl
 
@@ -111,7 +110,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         logger.info("JAVI github_provider get_runners_health identities %s", runner_identities)
         runners_health = []
-        runners = self.get_runners()
+        runners = self._client.list_runners(self._path, self._prefix)
         logger.info("JAVI github_provider internal data %s", runners)
         runners_map = {runner.instance_id: runner for runner in runners}
         for identity in runner_identities:
@@ -138,29 +137,6 @@ class GitHubRunnerPlatform(PlatformProvider):
                     )
                 )
         return runners_health
-
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        Args:
-            states: Filter the runners for these states. If None, all runners are returned.
-
-        Returns:
-            Information on the runners.
-        """
-        runner_list = self._client.list_runners(self._path, self._prefix)
-
-        if states is None:
-            return tuple(runner_list)
-
-        state_set = set(states)
-        return tuple(
-            runner
-            for runner in runner_list
-            if GitHubRunnerPlatform._is_runner_in_state(runner, state_set)
-        )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners in GitHub.
