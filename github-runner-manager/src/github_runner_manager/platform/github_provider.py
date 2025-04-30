@@ -111,6 +111,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         """
         runners_health = []
         runners = self.get_runners()
+        logger.info("JAVI github_provider internal data %s", runners)
         runners_map = {runner.instance_id: runner for runner in runners}
         for identity in runner_identities:
             if identity.instance_id in runners_map:
@@ -132,7 +133,7 @@ class GitHubRunnerPlatform(PlatformProvider):
                         metadata=identity.metadata,
                         online=False,
                         busy=False,
-                        deletable=False,
+                        deletable=True,
                     )
                 )
         return runners_health
@@ -177,6 +178,8 @@ class GitHubRunnerPlatform(PlatformProvider):
         Args:
             runner_identity: TODO
         """
+        logger.info("JAVI github_provider::delete_runner %s", runner_identity)
+        self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

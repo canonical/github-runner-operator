@@ -220,7 +220,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        logger.info("Deleting %s number of runners", num)
+        logger.info("JAVI runner_manager::delete_runners Deleting %s number of runners", num)
 
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners_javi()
@@ -277,6 +277,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
+        logger.info("JAVI runner_manager::flush_runners mode %s", flush_mode)
         match flush_mode:
             case FlushMode.FLUSH_IDLE:
                 logger.info("Flushing idle runners...")
@@ -338,21 +339,23 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
+        logger.info("JAVI runner_manager::cleanup")
         deleted_runner_metrics = self._cleanup_javi()
         return self._issue_runner_metrics(metrics=iter(deleted_runner_metrics))
 
     def _cleanup_javi(self) -> Iterable[runner_metrics.RunnerMetrics]:
         """TODO."""
+        logger.info("JAVI runner_manager::_cleanup_javi")
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners_javi()
+
+        # TODO DO THE OPPOSITE, REMOVE THE PLATFORM RUNNERS THAT DO NOT HAVE A CLOUD RUNNER.
+        # self._platform.cleanup(exclude_runners=cloud_runners)
+
         logger.info("JAVI cloud_runners %s", cloud_runners)
         cloud_runners_map = {runner.instance_id: runner for runner in cloud_runners}
         runners_health = self._platform.get_runners_health(cloud_runners)
         logger.info("JAVI runners_health %s", runners_health)
-
-        # TODO DO THE OPPOSITE, REMOVE THE PLATFORM RUNNERS THAT DO NOT HAVE
-        # A CLOUD RUNNER.
-        # self._platform.cleanup(exclude_runners=cloud_runners)
 
         for runner_health in runners_health:
             cloud_runner = cloud_runners_map[runner_health.instance_id]
@@ -656,5 +659,6 @@ class RunnerManager:
                 continue
             if runner_health.online or runner_health.deletable:
                 break
+            logger.info("Runner not yet online %s", instance_id)
         else:
             raise RunnerError(f"Runner {instance_id} did not get online")

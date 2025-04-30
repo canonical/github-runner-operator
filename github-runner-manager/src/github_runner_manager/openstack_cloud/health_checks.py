@@ -4,7 +4,7 @@
 """Collection of functions related to health checks for a runner VM."""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import invoke
 from fabric import Connection as SSHConnection
@@ -162,7 +162,7 @@ def _health_check_cloud_state(instance: OpenstackInstance) -> _HealthCheckResult
         )
         return False
     if cloud_state in (CloudRunnerState.CREATED,):
-        if datetime.now() - instance.created_at >= timedelta(
+        if datetime.now(timezone.utc) - instance.created_at >= timedelta(
             hours=INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS
         ):
             logger.error(
@@ -233,7 +233,7 @@ def _run_health_check_runner_installed(
             "Runner installed timestamp file not found on %s, cloud-init may still run",
             instance.instance_id,
         )
-        if datetime.now() - instance.created_at >= timedelta(
+        if datetime.now(timezone.utc) - instance.created_at >= timedelta(
             hours=INSTANCE_IN_BUILD_MODE_TIMEOUT_IN_HOURS
         ):
             logger.error(

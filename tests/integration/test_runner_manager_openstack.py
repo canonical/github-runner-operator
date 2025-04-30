@@ -434,6 +434,7 @@ async def test_runner_normal_lifecycle(
         1. The workflow complete successfully.
         2. The runner should be deleted. The metrics should be recorded.
     """
+    logger.info("JAVI starting test_runner_normal_lifecycle")
     metric_log_path = log_dir_base_path["metric_log"]
     try:
         metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
