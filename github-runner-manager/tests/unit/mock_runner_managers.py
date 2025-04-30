@@ -6,7 +6,7 @@ import random
 import secrets
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Iterable, Iterator, Sequence
+from typing import Iterable, Sequence
 from unittest.mock import MagicMock
 
 from pydantic import HttpUrl
@@ -368,41 +368,6 @@ class MockCloudRunnerManager(CloudRunnerManager):
         if runner is not None:
             return MagicMock()
         return []
-
-    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
-        """Stop all runners.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
-            busy: If false, only idle runners are removed. If true, both idle and busy runners are
-                removed.
-
-        Returns:
-            Any runner metrics produced during flushing.
-        """
-        if busy:
-            self.state.runners = {}
-        else:
-            self.state.runners = {
-                instance_id: runner
-                for instance_id, runner in self.state.runners.items()
-                if runner.github_state == PlatformRunnerState.BUSY
-            }
-        return iter([MagicMock()])
-
-    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
-        """Cleanup runner and resource on the cloud.
-
-        Perform health check on runner and delete the runner if it fails.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
-
-        Returns:
-            Any runner metrics produced during cleanup.
-        """
-        # Do nothing in mocks.
-        return [MagicMock()]
 
 
 class MockGitHubRunnerPlatform(PlatformProvider):

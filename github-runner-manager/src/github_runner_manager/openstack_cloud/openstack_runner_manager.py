@@ -9,14 +9,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
-import fabric
 import jinja2
 import paramiko
 from fabric import Connection as SSHConnection
 
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.errors import (
-    KeyfileError,
     MissingServerConfigError,
     OpenStackError,
     RunnerCreateError,
@@ -33,13 +31,11 @@ from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
     METRICS_EXCHANGE_PATH,
-    RUNNER_LISTENER_PROCESS,
-    RUNNER_WORKER_PROCESS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
-from github_runner_manager.utilities import retry, set_env_var
+from github_runner_manager.utilities import set_env_var
 
 logger = logging.getLogger(__name__)
 
@@ -51,8 +47,6 @@ PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
 OUTDATED_METRICS_STORAGE_IN_SECONDS = CREATE_SERVER_TIMEOUT + 30  # add a bit on top of the timeout
-
-HEALTH_CHECK_ERROR_LOG_MSG = "Health check could not be completed for %s"
 
 
 class _GithubRunnerRemoveError(Exception):
@@ -327,67 +321,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 service_config.repo_policy_compliance.token,
             )
         return None
-
-    @retry(tries=3, delay=5, backoff=2, local_logger=logger)
-    def _check_state_and_flush(self, instance: OpenstackInstance, busy: bool) -> None:
-        """Kill runner process depending on idle or busy.
-
-        Due to update to runner state has some delay with GitHub API. The state of the runner is
-        determined by which runner processes are running. If the Runner.Worker process is running,
-        the runner is deemed to be busy.
-
-        Raises:
-            SSHError: Unable to check the state of the runner and kill the runner process due to
-                SSH failure.
-
-        Args:
-            instance: The openstack instance to kill the runner process.
-            busy: Kill the process if runner is busy, else only kill runner
-                process if runner is idle.
-        """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except KeyfileError:
-            logger.exception(
-                "Health check failed due to unable to find keyfile for %s", instance.instance_id
-            )
-            return
-        except SSHError:
-            logger.exception(
-                "SSH connection failure with %s during flushing", instance.instance_id
-            )
-            raise
-
-        # Using a single command to determine the state and kill the process if needed.
-        # This makes it more robust when network is unstable.
-        if busy:
-            logger.info("Attempting to kill all runner process on %s", instance.instance_id)
-            # kill both Runner.Listener and Runner.Worker processes.
-            # This kills pre-job.sh, a child process of Runner.Worker.
-            kill_command = (
-                f"pgrep -x {RUNNER_LISTENER_PROCESS} && "
-                f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS});"
-                f"pgrep -x {RUNNER_WORKER_PROCESS} && kill $(pgrep -x {RUNNER_WORKER_PROCESS});"
-            )
-        else:
-            logger.info(
-                "Attempting to kill runner process on %s if not busy", instance.instance_id
-            )
-            # Only kill Runner.Listener if Runner.Worker does not exist.
-            kill_command = (
-                f"! pgrep -x {RUNNER_WORKER_PROCESS} && pgrep -x {RUNNER_LISTENER_PROCESS} && "
-                f"kill $(pgrep -x {RUNNER_LISTENER_PROCESS})"
-            )
-        logger.info("Running kill process command: %s", kill_command)
-        # Checking the result of kill command is not useful, as the exit code does not reveal much.
-        result: fabric.Result = ssh_conn.run(kill_command, warn=True, timeout=30, hide=True)
-        logger.info(
-            "Kill process command output, ok: %s code %s, out: %s, err: %s",
-            result.ok,
-            result.return_code,
-            result.stdout,
-            result.stderr,
-        )
 
     @staticmethod
     def _run_runner_removal_script(

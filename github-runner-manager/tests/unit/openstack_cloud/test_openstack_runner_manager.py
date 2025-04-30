@@ -10,7 +10,6 @@ from unittest.mock import MagicMock
 import pytest
 
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
-from github_runner_manager.errors import OpenstackHealthCheckError
 from github_runner_manager.manager.cloud_runner_manager import (
     CodeInformation,
     PostJobMetrics,
@@ -21,7 +20,7 @@ from github_runner_manager.manager.cloud_runner_manager import (
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.metrics import runner
 from github_runner_manager.metrics.runner import PullFileError
-from github_runner_manager.openstack_cloud import health_checks, openstack_cloud
+from github_runner_manager.openstack_cloud import openstack_cloud
 from github_runner_manager.openstack_cloud.constants import (
     POST_JOB_METRICS_FILE_NAME,
     PRE_JOB_METRICS_FILE_NAME,
@@ -285,30 +284,3 @@ def _create_openstack_cloud_mock(instance_name: str) -> MagicMock:
         prefix=OPENSTACK_INSTANCE_PREFIX,
     )
     return openstack_cloud_mock
-
-
-def _create_health_checks_mock() -> MagicMock:
-    """Create a health check mock that returns a boolean or raises an error.
-
-    The logic is that if the server name starts with "test-healthy" it returns True,
-    if it starts with "test-unhealthy" it returns False, and raises an error otherwise.
-    """
-    health_checks_mock = MagicMock(spec=health_checks)
-
-    def _health_checks_side_effect(openstack_cloud, instance):
-        """Mock side effect for the health_checks.check_runner method.
-
-        This implements the logic mentioned in the docstring above.
-        """
-        if instance.instance_id.prefix == "test" and instance.instance_id.suffix.startswith(
-            "healthy"
-        ):
-            return True
-        if instance.instance_id.prefix == "test" and instance.instance_id.suffix.startswith(
-            "unhealthy"
-        ):
-            return False
-        raise OpenstackHealthCheckError("Health check failed")
-
-    health_checks_mock.check_runner.side_effect = _health_checks_side_effect
-    return health_checks_mock
