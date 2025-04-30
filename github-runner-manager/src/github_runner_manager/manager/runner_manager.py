@@ -167,7 +167,7 @@ class RunnerManager:
         """
         logger.info("JAVI runner_manager::get_runners")
         runner_instances = []
-        cloud_runners = self._cloud.get_runners_javi()
+        cloud_runners = self._cloud.get_runners()
         runners_health = self._platform.get_runners_health(cloud_runners)
         logger.debug("clouds runners %s", cloud_runners)
         logger.debug("runner health %s", runners_health)
@@ -201,7 +201,7 @@ class RunnerManager:
         logger.info("JAVI runner_manager::delete_runners Deleting %s number of runners", num)
 
         extracted_runner_metrics = []
-        cloud_runners = self._cloud.get_runners_javi()
+        cloud_runners = self._cloud.get_runners()
         runners_health = self._platform.get_runners_health(cloud_runners)
         for runner_health in runners_health:
             instance_id = runner_health.instance_id
@@ -271,7 +271,7 @@ class RunnerManager:
             flush_busy = True
 
         extracted_runner_metrics = []
-        cloud_runners = self._cloud.get_runners_javi()
+        cloud_runners = self._cloud.get_runners()
         logger.debug("clouds runners %s", cloud_runners)
         runners_health = self._platform.get_runners_health(cloud_runners)
         logger.debug("runner health %s", runners_health)
@@ -315,7 +315,7 @@ class RunnerManager:
         """TODO."""
         logger.info("JAVI runner_manager::_cleanup")
         extracted_runner_metrics = []
-        cloud_runners = self._cloud.get_runners_javi()
+        cloud_runners = self._cloud.get_runners()
 
         # TODO DO THE OPPOSITE, REMOVE THE PLATFORM RUNNERS THAT DO NOT HAVE A CLOUD RUNNER.
         # self._platform.cleanup(exclude_runners=cloud_runners)

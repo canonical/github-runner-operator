@@ -72,7 +72,7 @@ def test_cleanup_removes_offline_expected_runners(
     )
 
     cloud_runner_manager = MagicMock()
-    cloud_runner_manager.get_runners_javi.return_value = cloud_instances
+    cloud_runner_manager.get_runners.return_value = cloud_instances
     github_provider = MagicMock()
     runner_manager = RunnerManager(
         "managername",

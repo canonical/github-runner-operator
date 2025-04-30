@@ -158,36 +158,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
 
-    def get_runners(
-        self, states: Sequence[CloudRunnerState] | None = None
-    ) -> tuple[CloudRunnerInstance, ...]:
-        """Get self-hosted runners by state.
-
-        Args:
-            states: Filter for the runners with these github states. If None all states will be
-                included.
-
-        Returns:
-            Information on the runner instances.
-        """
-        instances = self._openstack_cloud.get_instances()
-        runners = []
-        for instance in instances:
-            try:
-                healthy = health_checks.check_runner(
-                    openstack_cloud=self._openstack_cloud, instance=instance
-                )
-            except OpenstackHealthCheckError:
-                logger.exception(HEALTH_CHECK_ERROR_LOG_MSG, instance.instance_id.name)
-                healthy = None
-            runners.append(self._build_cloud_runner_instance(instance, healthy))
-        if states is None:
-            return tuple(runners)
-
-        state_set = set(states)
-        return tuple(runner for runner in runners if runner.state in state_set)
-
-    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[CloudRunnerInstance]:
         """Get cloud self-hosted runners.
 
         Returns:

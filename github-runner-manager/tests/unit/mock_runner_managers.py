@@ -344,35 +344,13 @@ class MockCloudRunnerManager(CloudRunnerManager):
         self.state.runners[instance_id] = runner
         return runner.to_cloud_runner()
 
-    def get_runners(
-        self, states: Sequence[CloudRunnerState] | None = None
-    ) -> tuple[CloudRunnerInstance, ...]:
-        """Get self-hosted runners by state.
-
-        Args:
-            states: Filter for the runners with these github states. If None all states will be
-                included.
-
-        Returns:
-            The list of runner instances.
-        """
-        if states is None:
-            states = [member.value for member in CloudRunnerState]
-
-        state_set = set(states)
-        return tuple(
-            runner.to_cloud_runner()
-            for runner in self.state.runners.values()
-            if runner.cloud_state in state_set
-        )
-
-    def get_runners_javi(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[CloudRunnerInstance]:
         """Get cloud self-hosted runners.
 
         Returns:
             Information on the runner instances.
         """
-        return list(self.get_runners())
+        return [runner.to_cloud_runner() for runner in self.state.runners.values()]
 
     def delete_runner(
         self, instance_id: InstanceID, remove_token: str | None = None
