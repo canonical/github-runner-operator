@@ -1,0 +1,169 @@
+20:03:17 INFO Adding model github-pr-b51b1-lxd:test-charm-scheduled-events-0z8z on cloud localhost
+20:03:17 WARNING unexpected facade AgentLifeFlag received from the controller
+20:03:17 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+20:03:17 WARNING unexpected facade SecretsDrain received from the controller
+20:03:19 INFO Deploying ch:amd64/github-runner-image-builder-68
+20:03:43 INFO Deploying local:jammy/github-runner-0
+20:03:43 INFO Waiting for model:
+  test-zwspvmuq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zwspvmuq/0 [allocating] waiting: waiting for machine
+20:04:13 INFO Waiting for model:
+  test-zwspvmuq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zwspvmuq/0 [allocating] waiting: waiting for machine
+20:04:43 INFO Waiting for model:
+  test-zwspvmuq/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:05:14 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:05:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:06:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:06:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:07:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] maintenance: Setting up Builder.
+20:07:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:08:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:08:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:09:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:09:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:10:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:10:44 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:11:14 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:11:45 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:12:15 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:12:45 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:13:15 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:13:45 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:14:15 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:14:45 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:15:15 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:15:45 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:16:15 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zwspvmuq/0 [executing] active: Building image.
+20:16:45 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Update image for runners
+20:17:15 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Update image for runners
+20:17:46 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Update image for runners
+20:18:16 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Update image for runners
+20:18:46 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:19:16 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:19:46 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:20:10 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] active: 
+20:20:40 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:21:10 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:21:40 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:22:10 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:22:40 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] active: 
+20:23:13 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] active:
+20:23:33 INFO Wait for condition not met, sleeping 3
+20:23:39 INFO Wait for condition not met, sleeping 3
+20:23:45 INFO Wait for condition not met, sleeping 3
+20:23:49 INFO Wait for condition not met, sleeping 3
+20:23:53 INFO Wait for condition not met, sleeping 3
+20:23:57 INFO Wait for condition not met, sleeping 3
+20:24:01 INFO Wait for 10 minutes
+20:34:01 INFO Waiting for model:
+  github-runner-image-builder-zwspvmuq/0 [idle] active: 
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:34:31 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:35:02 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:35:32 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:36:02 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:36:32 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:37:02 INFO Waiting for model:
+  test-zwspvmuq/0 [executing] maintenance: Reconciling runners
+20:37:32 INFO Waiting for model:
+  test-zwspvmuq/0 [idle] active:
+20:37:35 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-0z8z  github-pr-b51b1-lxd  localhost/localhost  3.1.10   unsupported  20:37:35Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-zwspvmuq           active      1  github-runner-image-builder  latest/edge   68  no       
+test-zwspvmuq                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-zwspvmuq/0*  active    idle   0        10.3.64.3              
+test-zwspvmuq/0*                         active    idle   1        10.3.64.192            
+
+Machine  State    Address      Inst id        Base          AZ  Message
+0        started  10.3.64.3    juju-71bf6d-0  ubuntu@22.04      Running
+1        started  10.3.64.192  juju-71bf6d-1  ubuntu@22.04      Running
+
+20:37:35 INFO Juju error logs:
+
+machine-0: 20:04:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 20:04:15 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 20:04:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-zwspvmuq-0: 20:04:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 20:04:36 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 20:04:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 20:04:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-zwspvmuq-0: 20:04:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-zwspvmuq-0: 20:05:02 ERROR unit.github-runner-image-builder-zwspvmuq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-zwspvmuq-0: 20:05:15 ERROR unit.test-zwspvmuq/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+
+20:37:36 INFO Forgetting model main...

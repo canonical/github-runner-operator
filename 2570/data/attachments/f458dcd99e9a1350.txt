@@ -1,0 +1,134 @@
+20:36:15 WARNING unexpected facade SSHServer received from the controller
+20:36:15 INFO Adding model github-pr-b51b1-lxd:test-charm-metrics-failure-e5ri on cloud localhost
+20:36:16 WARNING unexpected facade SSHServer received from the controller
+20:36:16 WARNING unexpected facade SSHSession received from the controller
+20:36:16 WARNING unexpected facade SSHTunneler received from the controller
+20:36:16 INFO GitHub token rate limit: Rate(reset=2025-04-30 20:38:23+00:00, remaining=4415, limit=5000)
+20:36:31 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+20:36:57 INFO Deploying local:jammy/github-runner-0
+20:36:57 INFO Waiting for model:
+  test-bb7av3s6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bb7av3s6/0 [allocating] waiting: waiting for machine
+20:37:28 INFO Waiting for model:
+  test-bb7av3s6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bb7av3s6/0 [allocating] waiting: waiting for machine
+20:37:58 INFO Waiting for model:
+  test-bb7av3s6/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-bb7av3s6/0 [allocating] waiting: agent initialising
+20:38:28 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-bb7av3s6/0 [executing] maintenance: Setting up Builder.
+20:38:59 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] maintenance: Setting up Builder.
+20:39:29 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] maintenance: Setting up Builder.
+20:39:59 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] maintenance: Setting up Builder.
+20:40:30 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] maintenance: Setting up Builder.
+20:41:00 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] blocked: image integration required.
+20:41:30 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:42:00 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:42:31 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:43:01 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:43:31 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:44:01 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:44:31 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:45:01 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:45:32 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:46:02 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:46:32 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:47:02 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:47:32 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:48:03 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:48:33 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:49:03 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:49:33 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:50:03 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bb7av3s6/0 [executing] active: Building image.
+20:50:34 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-bb7av3s6/0 [idle] active: 
+20:51:04 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] maintenance: Reconciling runners
+20:51:52 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] active: 
+20:52:22 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] active:
+20:57:08 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] active: 
+20:57:38 INFO Waiting for model:
+  test-bb7av3s6/0 [idle] active: 
+20:57:57 INFO [TEST SETUP] Exposing port 8080 on test-bb7av3s6-0-n-b4c830fd6e05
+20:57:57 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.73', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:56:02:8e'}]])
+20:57:58 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-bb7av3s6-0-n-b4c830fd6e05.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.73 &
+20:57:59 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.73' (ED25519) to the list of known hosts.
+
+20:58:01 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-bb7av3s6-0-n-b4c830fd6e05
+20:58:01 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.73', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:56:02:8e'}]])
+20:58:02 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bb7av3s6-0-n-b4c830fd6e05.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.73 nc -z localhost 8080'
+20:58:03 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+20:58:05 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-bb7av3s6-0-n-b4c830fd6e05
+20:58:05 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.73', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:56:02:8e'}]])
+20:58:06 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bb7av3s6-0-n-b4c830fd6e05.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.73 curl http://localhost:8080'
+20:58:07 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  38227      0 --:--:-- --:--:-- --:--:-- 41400
+'
+20:58:10 INFO Wait for condition not met, sleeping 10
+20:59:03 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] active: 
+20:59:34 INFO Waiting for model:
+  test-bb7av3s6/0 [executing] active: 
+20:59:50 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746046609.0, "event": "runner_installed", "flavor": "test-bb7av3s6", "duration": 161.0}
+{"timestamp": 1746046694.0, "event": "runner_start", "flavor": "test-bb7av3s6", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 85.0, "queue_duration": 1.0}
+{"timestamp": 1746046694.0, "event": "runner_stop", "flavor": "test-bb7av3s6", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1746046743.2402403, "event": "reconciliation", "flavor": "test-bb7av3s6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 38.64521861076355}
+{"timestamp": 1746046774.1681902, "event": "reconciliation", "flavor": "test-bb7av3s6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.471246004104614}

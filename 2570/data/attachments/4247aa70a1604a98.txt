@@ -1,0 +1,138 @@
+20:46:03 WARNING unexpected facade SSHServer received from the controller
+20:46:03 INFO Adding model github-pr-b51b1-lxd:test-reactive-j3y3 on cloud localhost
+20:46:03 WARNING unexpected facade SSHServer received from the controller
+20:46:03 WARNING unexpected facade SSHSession received from the controller
+20:46:03 WARNING unexpected facade SSHTunneler received from the controller
+20:46:04 INFO GitHub token rate limit: Rate(reset=2025-04-30 21:41:37+00:00, remaining=4992, limit=5000)
+20:46:08 INFO Deploying ch:amd64/jammy/mongodb-212
+20:46:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+20:46:35 INFO Deploying local:jammy/github-runner-0
+20:46:35 INFO Waiting for model:
+  test-gkvkxe47/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gkvkxe47/0 [allocating] waiting: waiting for machine
+20:47:05 INFO Waiting for model:
+  test-gkvkxe47/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gkvkxe47/0 [allocating] waiting: waiting for machine
+20:47:36 INFO Waiting for model:
+  test-gkvkxe47/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gkvkxe47/0 [allocating] waiting: waiting for machine
+20:48:06 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] waiting: agent initialising
+  github-runner-image-builder-gkvkxe47/0 [allocating] waiting: waiting for machine
+20:48:36 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-gkvkxe47/0 [allocating] waiting: agent initialising
+20:49:06 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:49:36 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:50:07 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:50:37 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:51:07 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:51:37 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] maintenance: Setting up Builder.
+20:52:07 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:52:37 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:53:08 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:53:38 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:54:08 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:54:39 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:55:09 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:55:39 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:56:09 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:56:40 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:57:10 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:57:40 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:58:10 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:58:41 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:59:11 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+20:59:41 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+21:00:11 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+21:00:42 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gkvkxe47/0 [executing] active: Building image.
+21:01:12 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-gkvkxe47/0 [idle] active: 
+21:01:42 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] active: 
+21:01:55 WARNING relate is deprecated and will be removed. Use integrate instead.
+21:01:55 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+21:02:26 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] maintenance: Reconciling runners
+21:03:23 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] active: 
+21:03:53 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] active:
+21:04:12 INFO Wait for condition not met, sleeping 10
+21:05:06 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] active: 
+21:05:21 INFO Wait for condition not met, sleeping 60
+21:06:58 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] active: 
+21:07:14 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746047105.4034553, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 40.344093799591064}
+{"timestamp": 1746047161.0, "event": "runner_installed", "flavor": "test-gkvkxe47", "duration": 94.0}
+{"timestamp": 1746047166.0, "event": "runner_start", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 111.0}
+{"timestamp": 1746047169.0, "event": "runner_stop", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1746047217.1915443, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.65440225601196}
+
+21:07:15 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746047105.4034553, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 40.344093799591064}
+{"timestamp": 1746047161.0, "event": "runner_installed", "flavor": "test-gkvkxe47", "duration": 94.0}
+{"timestamp": 1746047166.0, "event": "runner_start", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 111.0}
+{"timestamp": 1746047169.0, "event": "runner_stop", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1746047217.1915443, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.65440225601196}
+
+21:07:16 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746047105.4034553, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 0, "duration": 40.344093799591064}
+{"timestamp": 1746047161.0, "event": "runner_installed", "flavor": "test-gkvkxe47", "duration": 94.0}
+{"timestamp": 1746047166.0, "event": "runner_start", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 111.0}
+{"timestamp": 1746047169.0, "event": "runner_stop", "flavor": "test-gkvkxe47", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1746047217.1915443, "event": "reconciliation", "flavor": "test-gkvkxe47", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 33.65440225601196}
+21:07:41 INFO Waiting for model:
+  test-gkvkxe47/0 [executing] maintenance: Reconciling runners
+21:08:11 INFO Waiting for model:
+  test-gkvkxe47/0 [idle] active:

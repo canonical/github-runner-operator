@@ -1,0 +1,142 @@
+21:06:06 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-tzix  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  21:06:06Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-w1g04z48           active      1  github-runner-image-builder  latest/edge   68  no       
+test-w1g04z48                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-w1g04z48/0*  active    idle   0        10.181.121.118         
+test-w1g04z48/0*                         active    idle   1        10.181.121.100         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.181.121.118  juju-7a0d28-0  ubuntu@22.04      Running
+1        started  10.181.121.100  juju-7a0d28-1  ubuntu@22.04      Running
+
+21:06:06 INFO Juju error logs:
+
+machine-0: 20:42:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 20:42:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-w1g04z48-0: 20:42:14 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 20:42:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 20:42:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-w1g04z48-0: 20:42:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-w1g04z48-0: 20:42:56 ERROR unit.test-w1g04z48/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+unit-github-runner-image-builder-w1g04z48-0: 20:43:00 ERROR unit.github-runner-image-builder-w1g04z48/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-w1g04z48-0: 20:58:08 ERROR unit.test-w1g04z48/0.juju-log Unable to get SSH connection for instance test-w1g04z48-0-n-f5c80cafc91c, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-f5c80cafc91c, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-f5c80cafc91c.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-w1g04z48-0-n-f5c80cafc91c
+unit-test-w1g04z48-0: 21:04:22 ERROR unit.test-w1g04z48/0.juju-log Unable to get SSH connection for instance test-w1g04z48-0-n-935f5bf0df37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-w1g04z48-0-n-935f5bf0df37
+unit-test-w1g04z48-0: 21:04:26 ERROR unit.test-w1g04z48/0.juju-log Unable to get SSH connection for instance test-w1g04z48-0-n-935f5bf0df37, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-w1g04z48-0-n-935f5bf0df37
+unit-test-w1g04z48-0: 21:04:26 ERROR unit.test-w1g04z48/0.juju-log Failed to get SSH connection while removing test-w1g04z48-0-n-935f5bf0df37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+unit-test-w1g04z48-0: 21:04:29 ERROR unit.test-w1g04z48/0.juju-log Invalid pulled metrics. No runner_installed information for test-w1g04z48-0-n-935f5bf0df37.
+unit-test-w1g04z48-0: 21:04:29 ERROR unit.test-w1g04z48/0.juju-log No metrics returned after deleting test-w1g04z48-0-n-935f5bf0df37
+unit-test-w1g04z48-0: 21:04:54 ERROR unit.test-w1g04z48/0.juju-log Failed to get SSH connection while removing test-w1g04z48-0-n-935f5bf0df37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+unit-test-w1g04z48-0: 21:04:56 ERROR unit.test-w1g04z48/0.juju-log Invalid pulled metrics. No runner_installed information for test-w1g04z48-0-n-935f5bf0df37.
+unit-test-w1g04z48-0: 21:04:56 ERROR unit.test-w1g04z48/0.juju-log No metrics returned after deleting test-w1g04z48-0-n-935f5bf0df37
+unit-test-w1g04z48-0: 21:05:09 ERROR unit.test-w1g04z48/0.juju-log Failed to get SSH connection while removing test-w1g04z48-0-n-935f5bf0df37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+unit-test-w1g04z48-0: 21:05:12 ERROR unit.test-w1g04z48/0.juju-log Invalid pulled metrics. No runner_installed information for test-w1g04z48-0-n-935f5bf0df37.
+unit-test-w1g04z48-0: 21:05:26 ERROR unit.test-w1g04z48/0.juju-log Failed to get SSH connection while removing test-w1g04z48-0-n-935f5bf0df37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+unit-test-w1g04z48-0: 21:05:29 ERROR unit.test-w1g04z48/0.juju-log Invalid pulled metrics. No runner_installed information for test-w1g04z48-0-n-935f5bf0df37.
+unit-test-w1g04z48-0: 21:05:29 ERROR unit.test-w1g04z48/0.juju-log No metrics returned after deleting test-w1g04z48-0-n-935f5bf0df37
+unit-test-w1g04z48-0: 21:05:40 ERROR unit.test-w1g04z48/0.juju-log Failed to get SSH connection while removing test-w1g04z48-0-n-935f5bf0df37
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-w1g04z48-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-w1g04z48-0-n-935f5bf0df37, key path: /home/runner-manager/.ssh/test-w1g04z48-0-n-935f5bf0df37.key
+unit-test-w1g04z48-0: 21:05:43 ERROR unit.test-w1g04z48/0.juju-log Invalid pulled metrics. No runner_installed information for test-w1g04z48-0-n-935f5bf0df37.
+
+21:06:06 INFO Forgetting model main...

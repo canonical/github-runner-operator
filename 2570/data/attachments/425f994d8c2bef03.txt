@@ -1,0 +1,237 @@
+20:41:06 WARNING unexpected facade SSHServer received from the controller
+20:41:06 INFO Adding model github-pr-b51b1-lxd:test-jobmanager-advx on cloud localhost
+20:41:06 WARNING unexpected facade SSHServer received from the controller
+20:41:06 WARNING unexpected facade SSHSession received from the controller
+20:41:06 WARNING unexpected facade SSHTunneler received from the controller
+20:41:08 INFO Deploying ch:amd64/jammy/mongodb-212
+20:41:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+20:41:32 INFO Deploying local:jammy/github-runner-0
+20:41:32 INFO Waiting for model:
+  test-acxqj1bk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-acxqj1bk/0 [allocating] waiting: waiting for machine
+20:42:03 INFO Waiting for model:
+  test-acxqj1bk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-acxqj1bk/0 [allocating] waiting: waiting for machine
+20:42:33 INFO Waiting for model:
+  test-acxqj1bk/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-acxqj1bk/0 [allocating] waiting: waiting for machine
+20:43:03 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-acxqj1bk/0 [allocating] waiting: waiting for machine
+20:43:33 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] maintenance: Setting up Builder.
+20:44:04 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] maintenance: Setting up Builder.
+20:44:34 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] maintenance: Setting up Builder.
+20:45:04 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] maintenance: Setting up Builder.
+20:45:34 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] maintenance: Setting up Builder.
+20:46:04 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] blocked: image integration required.
+20:46:35 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:47:05 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:47:35 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:48:06 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:48:36 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:49:06 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:49:37 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:50:07 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:50:37 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:51:08 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:51:38 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:52:08 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:52:39 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:53:09 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:53:39 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:54:10 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:54:40 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:55:10 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:55:41 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:56:11 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-acxqj1bk/0 [executing] active: Building image.
+20:56:41 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-acxqj1bk/0 [idle] active: 
+20:57:12 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] maintenance: Reconciling runners
+20:57:42 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] active: 
+20:57:46 WARNING relate is deprecated and will be removed. Use integrate instead.
+20:57:47 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] active: 
+  mongodb/0 [executing] active: Primary
+20:58:17 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] maintenance: Reconciling runners
+20:59:15 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] maintenance: Reconciling runners
+20:59:45 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] active:
+20:59:56 INFO IP Address to use as the fake jobmanager: 10.145.216.64
+20:59:56 INFO Waiting for first check job status.
+20:59:56 INFO 10.168.115.110 - - [30/Apr/2025 20:59:56] "GET /v1/jobs/99 HTTP/1.1" 200 -
+20:59:56 INFO server log: [(<Request 'http://10.145.216.64:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>)] 
+20:59:56 INFO Waiting for get token.
+20:59:56 INFO 10.168.115.110 - - [30/Apr/2025 20:59:56] "POST /v1/jobs/99/token HTTP/1.1" 200 -
+20:59:56 INFO server log: [(<Request 'http://10.145.216.64:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>)] 
+20:59:56 INFO trying to prepare tunnel for builder agent
+20:59:57 INFO no runner or two or more runners in unit, return False
+20:59:57 INFO Wait for condition not met, sleeping 10
+21:00:07 INFO trying to prepare tunnel for builder agent
+21:00:07 INFO no addresses yet, return False
+21:00:07 INFO Wait for condition not met, sleeping 10
+21:00:17 INFO trying to prepare tunnel for builder agent
+21:00:18 INFO no addresses yet, return False
+21:00:18 INFO Wait for condition not met, sleeping 10
+21:00:28 INFO trying to prepare tunnel for builder agent
+21:00:28 INFO no addresses yet, return False
+21:00:28 INFO Wait for condition not met, sleeping 10
+21:00:38 INFO trying to prepare tunnel for builder agent
+21:00:39 INFO no addresses yet, return False
+21:00:39 INFO Wait for condition not met, sleeping 10
+21:00:49 INFO trying to prepare tunnel for builder agent
+21:00:49 INFO no addresses yet, return False
+21:00:49 INFO Wait for condition not met, sleeping 10
+21:00:59 INFO trying to prepare tunnel for builder agent
+21:00:59 INFO no addresses yet, return False
+21:00:59 INFO Wait for condition not met, sleeping 10
+21:01:09 INFO trying to prepare tunnel for builder agent
+21:01:11 INFO [TEST SETUP] Run command 'echo hello' on test-acxqj1bk-0-r-0b5dbc462796
+21:01:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:01:12 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.11 'echo hello''
+21:01:13 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.11 port 22: Connection refused
+'
+21:01:13 INFO cannot ssh yet, return False
+21:01:13 INFO Wait for condition not met, sleeping 10
+21:01:23 INFO trying to prepare tunnel for builder agent
+21:01:24 INFO [TEST SETUP] Run command 'echo hello' on test-acxqj1bk-0-r-0b5dbc462796
+21:01:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:01:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.11 'echo hello''
+21:01:27 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.11' (ED25519) to the list of known hosts.
+'
+21:02:05 INFO 10.168.115.110 - - [30/Apr/2025 21:02:05] "GET /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:28 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.64 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-acxqj1bk-0-r-0b5dbc462796
+21:02:28 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:02:29 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.11 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.64 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+21:02:30 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.64 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+21:02:30 INFO [TEST SETUP] Exposing port 8000 on test-acxqj1bk-0-r-0b5dbc462796
+21:02:30 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:02:31 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.64:8000 -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.11 &
+21:02:32 INFO ssh tunnel result 0 None None
+21:02:34 INFO 10.168.115.110 - - [30/Apr/2025 21:02:34] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:34 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-acxqj1bk-0-r-0b5dbc462796
+21:02:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:02:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.11 nc -z localhost 8000'
+21:02:36 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+21:02:36 INFO Waiting for builder-agent to contact us.
+21:02:39 INFO 10.168.115.110 - - [30/Apr/2025 21:02:39] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:39 INFO server log: [(<Request 'http://10.145.216.64:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+21:02:39 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-acxqj1bk-0-r-0b5dbc462796
+21:02:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:43:16:1c'}]])
+21:02:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-acxqj1bk-0-r-0b5dbc462796.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.11 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+21:02:41 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  11863  17445 --:--:-- --:--:-- --:--:-- 42000
+'
+21:02:41 INFO Waiting for builder-agent to contact us.
+21:02:44 INFO 10.168.115.110 - - [30/Apr/2025 21:02:44] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:49 INFO 10.168.115.110 - - [30/Apr/2025 21:02:49] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:54 INFO 10.168.115.110 - - [30/Apr/2025 21:02:54] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:02:59 INFO 10.168.115.110 - - [30/Apr/2025 21:02:59] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:04 INFO 10.168.115.110 - - [30/Apr/2025 21:03:04] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:05 INFO 10.168.115.110 - - [30/Apr/2025 21:03:05] "GET /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:09 INFO 10.168.115.110 - - [30/Apr/2025 21:03:09] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:14 INFO 10.168.115.110 - - [30/Apr/2025 21:03:14] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:14 INFO server log after executing: [(<Request 'http://10.145.216.64:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.64:8000/v1/jobs/99/health' [PUT]>, <Response 2 bytes [200 OK]>)]
+21:03:19 INFO 10.168.115.110 - - [30/Apr/2025 21:03:19] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:24 INFO 10.168.115.110 - - [30/Apr/2025 21:03:24] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:29 INFO 10.168.115.110 - - [30/Apr/2025 21:03:29] "PUT /v1/jobs/99/health HTTP/1.1" 200 -
+21:03:49 INFO Waiting for model:
+  test-acxqj1bk/0 [executing] active: 
+21:04:20 INFO Waiting for model:
+  test-acxqj1bk/0 [idle] active: 
+21:04:23 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-advx  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  21:04:23Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-acxqj1bk           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-acxqj1bk                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-acxqj1bk/0*  active    idle   1        10.168.115.86              
+mongodb/0*                               active    idle   0        10.168.115.36   27017/tcp  Primary
+test-acxqj1bk/0*                         active    idle   2        10.168.115.110             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.168.115.36   juju-a45396-0  ubuntu@22.04      Running
+1        started  10.168.115.86   juju-a45396-1  ubuntu@22.04      Running
+2        started  10.168.115.110  juju-a45396-2  ubuntu@22.04      Running
+
+21:04:23 INFO Juju error logs:
+
+machine-0: 20:42:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 20:42:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 20:42:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 20:42:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 20:42:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-acxqj1bk-0: 20:42:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 20:42:37 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 20:42:37 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-acxqj1bk-0: 20:43:02 ERROR unit.test-acxqj1bk/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+machine-1: 20:43:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 20:43:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-acxqj1bk-0: 20:43:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-acxqj1bk-0: 20:43:53 ERROR unit.github-runner-image-builder-acxqj1bk/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+21:04:23 INFO Forgetting model main...

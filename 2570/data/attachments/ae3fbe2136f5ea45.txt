@@ -1,0 +1,150 @@
+20:29:02 INFO Creating 2 runners
+20:30:45 INFO Getting runners...
+20:30:46 INFO Getting all openstack servers managed by the charm
+20:30:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:30:49 INFO Authentication (publickey) successful!
+20:30:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:30:50 INFO Authentication (publickey) successful!
+20:30:52 INFO Found following runners: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-7f23ba73ee0a', 'test-om9kffn7-0-n-bdada6530642'}
+20:30:52 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-om9kffn7-0-n-7f23ba73ee0a'}
+20:30:52 INFO Getting runners...
+20:30:53 INFO Getting all openstack servers managed by the charm
+20:30:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:30:55 INFO Authentication (publickey) successful!
+20:30:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:30:56 INFO Authentication (publickey) successful!
+20:30:57 INFO Found following runners: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-7f23ba73ee0a', 'test-om9kffn7-0-n-bdada6530642'}
+20:30:57 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-om9kffn7-0-n-7f23ba73ee0a'}
+20:30:57 INFO Flushing idle runners...
+20:30:57 INFO Getting all openstack servers managed by the charm
+20:31:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:00 INFO Authentication (publickey) successful!
+20:31:00 INFO Attempting to kill runner process on test-om9kffn7-0-n-112528e04996 if not busy
+20:31:00 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+20:31:00 INFO Kill process command output, ok: True code 0, out: 2198
+, err: 
+20:31:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:00 INFO Authentication (publickey) successful!
+20:31:00 INFO Attempting to kill runner process on test-om9kffn7-0-n-bdada6530642 if not busy
+20:31:00 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+20:31:00 INFO Kill process command output, ok: True code 0, out: 2200
+, err: 
+20:31:00 INFO Getting all openstack servers managed by the charm
+20:31:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:02 INFO Authentication (publickey) successful!
+20:31:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:03 INFO Authentication (publickey) successful!
+20:31:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:04 INFO Authentication (publickey) successful!
+20:31:04 INFO [chan 2] Opened sftp connection (server version 3)
+20:31:04 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.170, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+20:31:04 WARNING Failed to pull metrics for test-om9kffn7-0-n-112528e04996: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+20:31:04 INFO Running runner removal script for test-om9kffn7-0-n-112528e04996
+20:31:06 INFO Deleting openstack server with test-om9kffn7-0-n-112528e04996
+20:31:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+20:31:10 INFO Authentication (publickey) successful!
+20:31:10 INFO [chan 2] Opened sftp connection (server version 3)
+20:31:10 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.57, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+20:31:10 WARNING Failed to pull metrics for test-om9kffn7-0-n-bdada6530642: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+20:31:10 INFO Running runner removal script for test-om9kffn7-0-n-bdada6530642
+20:31:12 INFO Deleting openstack server with test-om9kffn7-0-n-bdada6530642
+20:31:16 INFO Cleaning up SSH key files
+20:31:16 INFO Found 0 key files, clean up 0 key files
+20:31:16 INFO Cleaning up openstack keypairs
+20:31:16 INFO Getting runners...
+20:31:18 INFO Getting all openstack servers managed by the charm
+20:31:20 ERROR Unable to get SSH connection for instance test-om9kffn7-0-n-112528e04996, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-om9kffn7-0-n-112528e04996, key path: /home/ubuntu/.ssh/test-om9kffn7-0-n-112528e04996.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-om9kffn7-0-n-112528e04996
+20:31:20 ERROR Unable to get SSH connection for instance test-om9kffn7-0-n-bdada6530642, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-om9kffn7-0-n-bdada6530642, key path: /home/ubuntu/.ssh/test-om9kffn7-0-n-bdada6530642.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-om9kffn7-0-n-bdada6530642
+20:31:20 INFO Found following runners: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-7f23ba73ee0a', 'test-om9kffn7-0-n-bdada6530642'}
+20:31:20 WARNING Found runner instance on cloud but not registered on GitHub: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-bdada6530642'}
+20:31:20 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-om9kffn7-0-n-7f23ba73ee0a'}
+20:31:20 INFO Getting runners...
+20:31:21 INFO Getting all openstack servers managed by the charm
+20:31:24 ERROR Unable to get SSH connection for instance test-om9kffn7-0-n-112528e04996, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-om9kffn7-0-n-112528e04996, key path: /home/ubuntu/.ssh/test-om9kffn7-0-n-112528e04996.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-om9kffn7-0-n-112528e04996
+20:31:24 ERROR Unable to get SSH connection for instance test-om9kffn7-0-n-bdada6530642, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-om9kffn7-0-n-bdada6530642, key path: /home/ubuntu/.ssh/test-om9kffn7-0-n-bdada6530642.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-om9kffn7-0-n-bdada6530642
+20:31:24 INFO Found following runners: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-7f23ba73ee0a', 'test-om9kffn7-0-n-bdada6530642'}
+20:31:24 WARNING Found runner instance on cloud but not registered on GitHub: {'test-om9kffn7-0-n-112528e04996', 'test-om9kffn7-0-n-bdada6530642'}
+20:31:24 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-om9kffn7-0-n-7f23ba73ee0a'}
+20:31:24 INFO Wait for condition not met, sleeping 60
+20:32:24 INFO Getting runners...
+20:32:26 INFO Getting all openstack servers managed by the charm
+20:32:27 INFO Found following runners: {'test-om9kffn7-0-n-7f23ba73ee0a'}
+20:32:27 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-om9kffn7-0-n-7f23ba73ee0a'}
