@@ -6,10 +6,7 @@
 import subprocess
 from time import sleep
 
-from tests.integration.helper import (
-    get_app_log,
-    health_check,
-)
+from tests.integration.helper import get_app_log, health_check
 
 
 def test_app_reconcile(app: subprocess.Popen):

@@ -11,15 +11,16 @@ from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
-from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     JobNotFoundError,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
 )
-from github_runner_manager.types_.github import SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,40 @@ class GitHubRunnerPlatform(PlatformProvider):
             github_client=GithubClient(github_configuration.token),
         )
 
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> PlatformRunnerHealth:
+        """Get information on the health of a github runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Returns:
+            Information about the health status of the runner.
+        """
+        try:
+            runner = self._client.get_runner(self._path, self._prefix, int(metadata.runner_id))
+            online = runner.status == GitHubRunnerStatus.ONLINE
+            return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
+                online=online,
+                busy=runner.busy,
+                deletable=False,
+            )
+
+        except GithubRunnerNotFoundError:
+            return PlatformRunnerHealth(
+                instance_id=instance_id,
+                metadata=metadata,
+                online=False,
+                busy=False,
+                deletable=True,
+            )
+
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
@@ -69,7 +104,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             Information on the runners.
         """
-        runner_list = self._client.get_runner_github_info(self._path, self._prefix)
+        runner_list = self._client.list_runners(self._path, self._prefix)
 
         if states is None:
             return tuple(runner_list)
@@ -90,9 +125,9 @@ class GitHubRunnerPlatform(PlatformProvider):
         for runner in runners:
             self._client.delete_runner(self._path, runner.id)
 
-    def get_runner_token(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
@@ -105,7 +140,14 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the runner.
         """
-        return self._client.get_runner_registration_jittoken(self._path, instance_id, labels)
+        token, runner = self._client.get_runner_registration_jittoken(
+            self._path, instance_id, labels
+        )
+        command_to_run = (
+            "su - ubuntu -c "
+            f'"cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {token}"'
+        )
+        return RunnerContext(shell_run_script=command_to_run), runner
 
     def get_removal_token(self) -> str:
         """Get removal token from GitHub.

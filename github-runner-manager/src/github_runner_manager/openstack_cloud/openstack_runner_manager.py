@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 import fabric
-import invoke
 import jinja2
 import paramiko
 from fabric import Connection as SSHConnection
@@ -22,16 +21,14 @@ from github_runner_manager.errors import (
     OpenStackError,
     OpenstackHealthCheckError,
     RunnerCreateError,
-    RunnerStartError,
     SSHError,
 )
 from github_runner_manager.manager.cloud_runner_manager import (
-    CloudInitStatus,
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud import health_checks
@@ -42,10 +39,7 @@ from github_runner_manager.openstack_cloud.constants import (
     RUNNER_WORKER_PROCESS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
-from github_runner_manager.openstack_cloud.openstack_cloud import (
-    OpenstackCloud,
-    OpenstackInstance,
-)
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 from github_runner_manager.utilities import retry, set_env_var
 
@@ -127,14 +121,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return self._config.prefix
 
     def create_runner(
-        self, instance_id: InstanceID, metadata: RunnerMetadata, runner_token: str
+        self,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+        runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
             instance_id: Instance ID for the runner to create.
             metadata: Metadata for the runner.
-            runner_token: The token for the runner.
+            runner_context: Context data for spawning the runner.
 
         Raises:
             MissingServerConfigError: Unable to create runner due to missing configuration.
@@ -146,21 +143,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
         if (server_config := self._config.server_config) is None:
             raise MissingServerConfigError("Missing server configuration to create runners")
 
-        cloud_init = self._generate_cloud_init(runner_token=runner_token)
+        cloud_init = self._generate_cloud_init(runner_context=runner_context)
         try:
             instance = self._openstack_cloud.launch_instance(
                 metadata=metadata,
                 instance_id=instance_id,
                 server_config=server_config,
                 cloud_init=cloud_init,
+                ingress_tcp_ports=runner_context.ingress_tcp_ports,
             )
         except OpenStackError as err:
             raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
-
-        logger.info("Waiting for runner process to startup: %s", instance.instance_id)
-        self._wait_runner_startup(instance)
-        logger.info("Waiting for runner process to be running: %s", instance.instance_id)
-        self._wait_runner_running(instance)
 
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
@@ -369,19 +362,20 @@ class OpenStackRunnerManager(CloudRunnerManager):
             healthy=tuple(healthy), unhealthy=tuple(unhealthy), unknown=tuple(unknown)
         )
 
-    def _generate_cloud_init(self, runner_token: str) -> str:
+    def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.
 
         This is the script the openstack server runs on startup.
 
         Args:
-            runner_token: The JIT GitHub runner registration token.
+            runner_context: Context for the runner.
 
         Returns:
             The cloud init userdata for openstack instance.
         """
-        jinja = jinja2.Environment(
-            loader=jinja2.PackageLoader("github_runner_manager", "templates"), autoescape=True
+        # We do not autoscape, the reason is that we are not generating html or xml
+        jinja = jinja2.Environment(  # nosec
+            loader=jinja2.PackageLoader("github_runner_manager", "templates")
         )
 
         service_config = self._config.service_config
@@ -422,7 +416,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
         )
         return jinja.get_template("openstack-userdata.sh.j2").render(
-            jittoken=runner_token,
+            run_script=runner_context.shell_run_script,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
@@ -505,80 +499,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             result.stdout,
             result.stderr,
         )
-
-    @retry(tries=10, delay=60, local_logger=logger)
-    def _wait_runner_startup(self, instance: OpenstackInstance) -> None:
-        """Wait until runner is startup.
-
-        Args:
-            instance: The runner instance.
-
-        Raises:
-            RunnerStartError: The runner startup process was not found on the runner.
-        """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SSHError as err:
-            raise RunnerStartError(
-                f"Failed to SSH to {instance.instance_id} during creation possible due to setup "
-                "not completed"
-            ) from err
-
-        logger.debug("Running `cloud-init status` on instance %s.", instance.instance_id)
-        result: invoke.runners.Result = ssh_conn.run("cloud-init status", warn=True, timeout=60)
-        if not result.ok:
-            logger.warning(
-                "cloud-init status command failed on %s: %s.", instance.instance_id, result.stderr
-            )
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
-        # A short running job may have already completed and exited the runner, hence check the
-        # condition via cloud-init status check.
-        if CloudInitStatus.DONE in result.stdout:
-            return
-        logger.debug("Running `ps aux` on instance %s.", instance.instance_id)
-        result = ssh_conn.run("ps aux", warn=True, timeout=60, hide=True)
-        if not result.ok:
-            logger.warning("SSH run of `ps aux` failed on %s", instance.instance_id)
-            raise RunnerStartError(f"Unable to SSH run `ps aux` on {instance.instance_id}")
-        # Runner startup process is the parent process of runner.Listener and runner.Worker which
-        # starts up much faster.
-        if RUNNER_STARTUP_PROCESS not in result.stdout:
-            logger.warning("Runner startup process not found on %s", instance.instance_id)
-            raise RunnerStartError(f"Runner startup process not found on {instance.instance_id}")
-        logger.info("Runner startup process found to be healthy on %s", instance.instance_id)
-
-    @retry(tries=5, delay=60, local_logger=logger)
-    def _wait_runner_running(self, instance: OpenstackInstance) -> None:
-        """Wait until runner is running.
-
-        Args:
-            instance: The runner instance.
-
-        Raises:
-            RunnerStartError: The runner process was not found on the runner.
-        """
-        try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-        except SSHError as err:
-            raise RunnerStartError(
-                f"Failed to SSH connect to {instance.instance_id} openstack runner"
-            ) from err
-
-        try:
-            healthy = health_checks.check_active_runner(
-                ssh_conn=ssh_conn, instance=instance, accept_finished_job=True
-            )
-        except OpenstackHealthCheckError as exc:
-            raise RunnerStartError(
-                f"Failed to check health of runner process on {instance.instance_id}"
-            ) from exc
-        if not healthy:
-            logger.info("Runner %s not considered healthy", instance.instance_id)
-            raise RunnerStartError(
-                f"Runner {instance.instance_id} failed to initialize after starting"
-            )
-
-        logger.info("Runner %s found to be healthy", instance.instance_id)
 
     @staticmethod
     def _run_runner_removal_script(

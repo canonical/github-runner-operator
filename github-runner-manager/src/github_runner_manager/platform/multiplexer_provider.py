@@ -9,12 +9,13 @@ from typing import Iterable
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
@@ -53,6 +54,22 @@ class MultiplexerPlatform(PlatformProvider):
         github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
         jobmanager_platform = JobManagerPlatform.build()
         return cls({"github": github_platform, "jobmanager": jobmanager_platform})
+
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> PlatformRunnerHealth:
+        """Get health information on self-hosted runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Returns:
+            Platform Runner Health information.
+        """
+        return self._get_provider(metadata).get_runner_health(metadata, instance_id)
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
@@ -93,9 +110,9 @@ class MultiplexerPlatform(PlatformProvider):
         for platform_name, platform_runners in platform_runners.items():
             self._providers[platform_name].delete_runners(platform_runners)
 
-    def get_runner_token(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -108,7 +125,7 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             The runner token and the runner.
         """
-        return self._get_provider(metadata).get_runner_token(metadata, instance_id, labels)
+        return self._get_provider(metadata).get_runner_context(metadata, instance_id, labels)
 
     def get_removal_token(self) -> str:
         """Get removal token from Platform.

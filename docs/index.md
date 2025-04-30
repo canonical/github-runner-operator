@@ -46,15 +46,15 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
 # Contents
 
 1. [How to](how-to)
-  1. [Add custom labels](how-to/add-custom-labels.md)
   1. [Change repository or organization](how-to/change-path.md)
   1. [Change GitHub personal access token](how-to/change-token.md)
-  1. [Comply with security requirements](how-to/comply-security.md)
-  1. [Contribute](how-to/contribute.md)
+  1. [Add custom labels](how-to/add-custom-labels.md)
   1. [Debug with SSH](how-to/debug-with-ssh.md)
   1. [Integrate with COS](how-to/integrate-with-cos.md)
   1. [Spawn OpenStack runner](how-to/openstack-runner.md)
   1. [Set up reactive spawning](how-to/reactive.md)
+  1. [Comply with security requirements](how-to/comply-security.md)
+  1. [Contribute](how-to/contribute.md)
 1. [Reference](reference)
   1. [Actions](reference/actions.md)
   1. [Configurations](reference/configurations.md)

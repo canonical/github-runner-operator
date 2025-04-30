@@ -5,6 +5,7 @@
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
@@ -30,6 +31,11 @@ from github_runner_manager.platform.platform_provider import (
 from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
+
+# After a runner is created, there will be as many health checks as
+# elements in this variable. The elements in the tuple represent
+# the time waiting before each health check against the platform provider.
+RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
@@ -468,7 +474,7 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_token, github_runner = args.platform_provider.get_runner_token(
+        runner_context, github_runner = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
@@ -477,14 +483,59 @@ class RunnerManager:
             args.metadata.runner_id = str(github_runner.id)
 
         try:
-            args.cloud_runner_manager.create_runner(
-                instance_id=instance_id, metadata=args.metadata, runner_token=runner_token
+            cloud_instance = args.cloud_runner_manager.create_runner(
+                instance_id=instance_id,
+                metadata=args.metadata,
+                runner_context=runner_context,
             )
+
+            # This wait should be deleted to make the runner creation as
+            # quick as possible. The waiting should only be done in the
+            # reactive case, before checking that a job was taken.
+            RunnerManager.wait_for_runner_online(
+                platform_provider=args.platform_provider,
+                instance_id=cloud_instance.instance_id,
+                metadata=cloud_instance.metadata,
+            )
+
         except RunnerError:
-            # try to clean the runner in GitHub. This is necessary, as for reactive runners
-            # we do not know in the clean up if the runner is offline because if failed or
-            # because it is being created.
-            logger.warning("Deleting runner %s from platform", instance_id)
+            logger.warning("Deleting runner %s from platform after creation failed", instance_id)
             args.platform_provider.delete_runners([github_runner])
             raise
         return instance_id
+
+    @staticmethod
+    def wait_for_runner_online(
+        platform_provider: PlatformProvider,
+        instance_id: InstanceID,
+        metadata: RunnerMetadata,
+    ) -> None:
+        """Wait until the runner is online.
+
+        The constant RUNNER_CREATION_WAITING_TIMES defines the time before calling
+        the platform provider to check if the runner is online. Besides online runner,
+        deletable runner will also be equivalent to online, as no more waiting should
+        be needed.
+
+        Args:
+            platform_provider: Platform provider to use for health checks.
+            instance_id: InstanceID for the runner to wait for.
+            metadata: Metadata for the runner to wait for.
+
+        Raises:
+            RunnerError: If the runner did not come online after the specified time.
+
+        """
+        for wait_time in RUNNER_CREATION_WAITING_TIMES:
+            time.sleep(wait_time)
+            try:
+                runner_health = platform_provider.get_runner_health(
+                    metadata=metadata, instance_id=instance_id
+                )
+            except PlatformApiError as exc:
+                logger.error("Error getting the runner health: %s", exc)
+                continue
+            if runner_health.online or runner_health.deletable:
+                break
+        else:
+            raise RunnerError(f"Runner {instance_id} did not get online")

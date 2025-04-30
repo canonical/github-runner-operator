@@ -13,10 +13,11 @@ from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
 )
 from github_runner_manager.types_.github import (
@@ -39,6 +40,51 @@ class JobManagerPlatform(PlatformProvider):
             New JobManagerPlatform.
         """
         return cls()
+
+    def get_runner_health(
+        self,
+        metadata: RunnerMetadata,
+        instance_id: InstanceID,
+    ) -> PlatformRunnerHealth:
+        """Get health information on jobmanager runner.
+
+        Args:
+            metadata: Metadata for the runner.
+            instance_id: Instance ID of the runner.
+
+        Raises:
+            PlatformApiError: If there was an error calling the jobmanager client.
+
+        Returns:
+           The health of the runner in the jobmanager.
+        """
+        configuration = jobmanager_client.Configuration(host=metadata.url)
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            try:
+                response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
+            except ApiException as exc:
+                logger.exception("Error calling jobmanager api.")
+                raise PlatformApiError("API error") from exc
+
+        # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
+        # We should review the jobmanager for any change in their statuses.
+        # Any other state besides PENDING means that no more waiting should be done
+        # for the runner, so it is equivalent to online, although the jobmanager does
+        # not provide an exact match with "online".
+        online = response.status not in [JobStatus.PENDING]
+        # busy is complex in the jobmanager, as a completed job that is not deletable is really
+        # busy. As so, every job that is not deletable is considered busy.
+        busy = not response.deletable
+        deletable = response.deletable
+
+        return PlatformRunnerHealth(
+            instance_id=instance_id,
+            metadata=metadata,
+            online=online,
+            deletable=deletable,
+            busy=busy,
+        )
 
     def get_runners(
         self, states: Iterable[PlatformRunnerState] | None = None
@@ -66,9 +112,9 @@ class JobManagerPlatform(PlatformProvider):
         # TODO for now do not do any work so the reconciliation can work.
         logger.warning("jobmanager.delete_runners not implemented")
 
-    def get_runner_token(
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -93,9 +139,22 @@ class JobManagerPlatform(PlatformProvider):
                 response = api_instance.v1_jobs_job_id_token_post(
                     int(metadata.runner_id), jobrequest
                 )
-                if response.token:
+                if token := response.token:
+                    jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
+                    # For now, use the first label
+                    label = "undefined"
+                    if labels:
+                        label = labels[0]
+                    command_to_run = (
+                        f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
+                        f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
+                        "builder-agent"
+                    )
                     return (
-                        response.token,
+                        RunnerContext(
+                            shell_run_script=command_to_run,
+                            ingress_tcp_ports=[8080],
+                        ),
                         SelfHostedRunner(
                             busy=False,
                             id=int(metadata.runner_id),

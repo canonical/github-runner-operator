@@ -13,10 +13,6 @@ class RunnerCreateError(RunnerError):
     """Error for runner creation failure."""
 
 
-class RunnerStartError(RunnerError):
-    """Error for runner start failure."""
-
-
 class MissingServerConfigError(RunnerError):
     """Error for unable to create runner due to missing server configurations."""
 
@@ -46,7 +42,7 @@ class TokenError(PlatformClientError):
 
 
 class JobNotFoundError(PlatformClientError):
-    """Represents an error when the job could not be found on GitHub."""
+    """Represents an error when the job could not be found on the platform."""
 
 
 class CloudError(Exception):

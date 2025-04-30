@@ -68,6 +68,8 @@ class SelfHostedRunner(BaseModel):
         status: The Github runner status.
         instance_id: InstanceID of the runner.
         metadata: Runner metadata.
+        deletable: Deletable runner. In GitHub, this is equivalent as the runner not
+            existing in GitHub, as that runner cannot get jobs.
     """
 
     busy: bool
@@ -76,13 +78,14 @@ class SelfHostedRunner(BaseModel):
     status: GitHubRunnerStatus
     instance_id: InstanceID
     metadata: RunnerMetadata
+    deletable: bool = False
 
     @classmethod
     def build_from_github(cls, github_dict: dict, instance_id: InstanceID) -> "SelfHostedRunner":
         """Build a SelfHostedRunner from the GitHub runner information and the InstanceID.
 
         Args:
-            github_dict: GitHub dictionary from the list_self_hosted_runners endpoint.
+            github_dict: GitHub dictionary from the list_runners endpoint.
             instance_id: InstanceID for the runner.
 
         Returns:
