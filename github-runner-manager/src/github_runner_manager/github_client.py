@@ -3,8 +3,7 @@
 
 """GitHub API client.
 
-Migrate to PyGithub in the future. PyGithub is still lacking some API such as
-remove token for runner.
+Migrate to PyGithub in the future. PyGithub is still lacking some API such as get runner groups.
 """
 import functools
 import logging
@@ -34,7 +33,7 @@ from github_runner_manager.manager.models import InstanceID
 
 # TODO PENDING TO PLACE IN A BETTER PLACE THE EXCEPTIONS
 from github_runner_manager.platform.platform_provider import DeleteRunnerBusyError
-from github_runner_manager.types_.github import JITConfig, JobInfo, RemoveToken, SelfHostedRunner
+from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -188,28 +187,6 @@ class GithubClient:
                 managed_runner = SelfHostedRunner.build_from_github(runner, instance_id)
                 managed_runners_list.append(managed_runner)
         return managed_runners_list
-
-    @catch_http_errors
-    def get_runner_remove_token(self, path: GitHubPath) -> str:
-        """Get token from GitHub used for removing runners.
-
-        Args:
-            path: The Github org/repo path.
-
-        Returns:
-            The removing token.
-        """
-        token: RemoveToken
-        if isinstance(path, GitHubRepo):
-            token = self._client.actions.create_remove_token_for_repo(
-                owner=path.owner, repo=path.repo
-            )
-        elif isinstance(path, GitHubOrg):
-            token = self._client.actions.create_remove_token_for_org(org=path.org)
-        else:
-            assert_never(token)
-
-        return token["token"]
 
     @catch_http_errors
     def get_runner_registration_jittoken(

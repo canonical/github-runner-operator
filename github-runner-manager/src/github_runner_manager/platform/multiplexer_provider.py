@@ -163,18 +163,6 @@ class MultiplexerPlatform(PlatformProvider):
         """
         return self._get_provider(metadata).get_runner_context(metadata, instance_id, labels)
 
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-
-        Returns:
-            The removal token..
-        """
-        # FIXME. This method should not exist. There should be just a method to delete a runner,
-        # For now, the github implementation is just used to not break the reconcile loop.
-        return self._providers["github"].get_removal_token()
-
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 

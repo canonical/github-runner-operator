@@ -332,16 +332,16 @@ def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPat
 def test_catch_http_errors(github_client: GithubClient):
     """
     arrange: A mocked Github Client that raises a 500 HTTPError.
-    act: Call  an API endpoint.
+    act: Call an API endpoint.
     assert: A PlatformApiError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
+    github_client._client.actions.delete_self_hosted_runner_from_repo.side_effect = HTTPError(
         "http://test.com", 500, "", http.client.HTTPMessage(), None
     )
 
     with pytest.raises(PlatformApiError):
-        github_client.get_runner_remove_token(github_repo)
+        github_client.delete_runner(path=github_repo, runner_id=1)
 
 
 def test_catch_http_errors_token_issues(github_client: GithubClient):
@@ -351,12 +351,12 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
     assert: A TokenError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
+    github_client._client.actions.delete_self_hosted_runner_from_repo.side_effect = HTTPError(
         "http://test.com", 401, "", http.client.HTTPMessage(), None
     )
 
     with pytest.raises(TokenError):
-        github_client.get_runner_remove_token(github_repo)
+        github_client.delete_runner(path=github_repo, runner_id=1)
 
 
 def test_get_runner_context_repo(github_client: GithubClient):

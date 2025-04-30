@@ -106,13 +106,6 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-        """
-
-    @abc.abstractmethod
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 

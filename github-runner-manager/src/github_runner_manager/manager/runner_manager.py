@@ -388,23 +388,18 @@ class RunnerManager:
                     instance_id_list.append(instance_id)
         return tuple(instance_id_list)
 
-    def _delete_runners(
-        self, runners: Sequence[RunnerInstance], remove_token: str
-    ) -> IssuedMetricEventsStats:
+    def _delete_runners(self, runners: Sequence[RunnerInstance]) -> IssuedMetricEventsStats:
         """Delete list of runners.
 
         Args:
             runners: The runners to delete.
-            remove_token: The token for removing self-hosted runners.
 
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
         runner_metrics_list = []
         for runner in runners:
-            deleted_runner_metrics = self._cloud.delete_runner(
-                instance_id=runner.instance_id, remove_token=remove_token
-            )
+            deleted_runner_metrics = self._cloud.delete_runner(instance_id=runner.instance_id)
             if deleted_runner_metrics is not None:
                 runner_metrics_list.append(deleted_runner_metrics)
         return self._issue_runner_metrics(metrics=iter(runner_metrics_list))

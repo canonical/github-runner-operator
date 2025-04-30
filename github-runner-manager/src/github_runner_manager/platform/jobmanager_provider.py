@@ -203,16 +203,6 @@ class JobManagerPlatform(PlatformProvider):
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
 
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-
-        Raises:
-            NotImplementedError: Work in progress.
-        """
-        raise NotImplementedError
-
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 

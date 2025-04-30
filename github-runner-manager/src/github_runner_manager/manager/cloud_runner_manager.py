@@ -260,12 +260,9 @@ class CloudRunnerManager(abc.ABC):
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(
-        self, instance_id: InstanceID, remove_token: str | None = None
-    ) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
             instance_id: The instance id of the runner to delete.
-            remove_token: The GitHub remove token.
         """

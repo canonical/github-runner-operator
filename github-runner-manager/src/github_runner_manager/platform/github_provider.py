@@ -206,16 +206,6 @@ class GitHubRunnerPlatform(PlatformProvider):
         )
         return RunnerContext(shell_run_script=command_to_run), runner
 
-    def get_removal_token(self) -> str:
-        """Get removal token from GitHub.
-
-        This token is used for removing self-hosted runners.
-
-        Returns:
-            The removal token.
-        """
-        return self._client.get_runner_remove_token(self._path)
-
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 

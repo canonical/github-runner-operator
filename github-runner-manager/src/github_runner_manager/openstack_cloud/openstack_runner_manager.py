@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Sequence
 
 import jinja2
-import paramiko
-from fabric import Connection as SSHConnection
 
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.errors import (
@@ -173,14 +171,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
             created_at=instance.created_at,
         )
 
-    def delete_runner(
-        self, instance_id: InstanceID, remove_token: str | None = None
-    ) -> runner_metrics.RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID) -> runner_metrics.RunnerMetrics | None:
         """Delete self-hosted runners.
 
         Args:
             instance_id: The instance id of the runner to delete.
-            remove_token: The GitHub remove token.
 
         Returns:
             Any metrics collected during the deletion of the runner.
@@ -194,7 +189,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             )
             return None
 
-        pulled_metrics = self._delete_runner(instance, remove_token)
+        pulled_metrics = self._delete_runner(instance)
         logger.debug(
             "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
         )
@@ -203,32 +198,16 @@ class OpenStackRunnerManager(CloudRunnerManager):
         cloud_instance = self._build_cloud_runner_instance(instance)
         return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
 
-    def _delete_runner(
-        self, instance: OpenstackInstance, remove_token: str | None = None
-    ) -> runner_metrics.PulledMetrics:
+    def _delete_runner(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
         """Delete self-hosted runners by openstack instance.
 
         Args:
             instance: The OpenStack instance.
-            remove_token: The GitHub remove token.
         """
         pulled_metrics = runner_metrics.PulledMetrics()
         try:
             ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
             pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
-
-            if remove_token:
-                try:
-                    logger.info("Running runner removal script for %s", instance.instance_id)
-                    OpenStackRunnerManager._run_runner_removal_script(
-                        instance.instance_id.name, ssh_conn, remove_token
-                    )
-                except _GithubRunnerRemoveError:
-                    logger.warning(
-                        "Unable to run github runner removal script for %s",
-                        instance.instance_id,
-                        stack_info=True,
-                    )
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id
@@ -321,47 +300,3 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 service_config.repo_policy_compliance.token,
             )
         return None
-
-    @staticmethod
-    def _run_runner_removal_script(
-        instance_id: InstanceID, ssh_conn: SSHConnection, remove_token: str
-    ) -> None:
-        """Run Github runner removal script.
-
-        Args:
-            instance_id: The name of the runner instance.
-            ssh_conn: The SSH connection to the runner instance.
-            remove_token: The GitHub instance removal token.
-
-        Raises:
-            _GithubRunnerRemoveError: Unable to remove runner from GitHub.
-        """
-        try:
-            result = ssh_conn.run(
-                f"{_CONFIG_SCRIPT_PATH} remove --token {remove_token}",
-                warn=True,
-                timeout=60,
-                hide=True,
-            )
-            if result.ok:
-                return
-
-            logger.warning(
-                (
-                    "Unable to run removal script on instance %s, "
-                    "exit code: %s, stdout: %s, stderr: %s"
-                ),
-                instance_id,
-                result.return_code,
-                result.stdout,
-                result.stderr,
-            )
-            raise _GithubRunnerRemoveError(f"Failed to remove runner {instance_id} from Github.")
-        except (
-            paramiko.ssh_exception.NoValidConnectionsError,
-            paramiko.ssh_exception.SSHException,
-            TimeoutError,
-        ) as exc:
-            raise _GithubRunnerRemoveError(
-                f"Failed to remove runner {instance_id} from Github."
-            ) from exc
