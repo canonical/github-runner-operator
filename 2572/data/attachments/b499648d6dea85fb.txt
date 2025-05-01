@@ -1,0 +1,146 @@
+18:28:25 INFO GitHub token rate limit: Rate(reset=2025-05-01 19:24:55+00:00, remaining=4972, limit=5000)
+18:28:28 INFO Creating 1 runners
+18:28:29 INFO Creating openstack server with test-eiiem2hj-0-n-a9dc6d224376
+18:29:26 INFO Runner test-eiiem2hj-0-n-a9dc6d224376 created successfully
+18:30:27 INFO Getting runners...
+18:30:28 INFO Getting all openstack servers managed by the charm
+18:30:30 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:30 INFO Authentication (publickey) successful!
+18:30:31 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:30:31 INFO Getting runners...
+18:30:32 INFO Getting all openstack servers managed by the charm
+18:30:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:35 INFO Authentication (publickey) successful!
+18:30:35 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:30:35 INFO Getting runners...
+18:30:36 INFO Getting all openstack servers managed by the charm
+18:30:38 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:39 INFO Authentication (publickey) successful!
+18:30:39 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:30:41 INFO Wait for condition not met, sleeping 10
+18:30:52 INFO Getting runners...
+18:30:53 INFO Getting all openstack servers managed by the charm
+18:30:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:30:55 INFO Authentication (publickey) successful!
+18:30:56 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:30:56 INFO Getting runners...
+18:30:57 INFO Getting all openstack servers managed by the charm
+18:30:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:00 INFO Authentication (publickey) successful!
+18:31:00 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:31:01 INFO Offline github runners to delete: []:
+18:31:02 INFO Getting all openstack servers managed by the charm
+18:31:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:04 INFO Authentication (publickey) successful!
+18:31:07 INFO Cleaning up SSH key files
+18:31:07 INFO Found 1 key files, clean up 0 key files
+18:31:07 INFO Cleaning up openstack keypairs
+18:31:07 INFO Getting runners...
+18:31:08 INFO Getting all openstack servers managed by the charm
+18:31:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:11 INFO Authentication (publickey) successful!
+18:31:11 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:31:11 INFO Flushing idle runners...
+18:31:12 INFO Getting all openstack servers managed by the charm
+18:31:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:14 INFO Authentication (publickey) successful!
+18:31:15 INFO Attempting to kill runner process on test-eiiem2hj-0-n-a9dc6d224376 if not busy
+18:31:15 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:31:15 INFO Kill process command output, ok: False code 1, out: 2487
+, err: 
+18:31:15 INFO Getting all openstack servers managed by the charm
+18:31:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:17 INFO Authentication (publickey) successful!
+18:31:20 INFO Cleaning up SSH key files
+18:31:20 INFO Found 1 key files, clean up 0 key files
+18:31:20 INFO Cleaning up openstack keypairs
+18:31:20 INFO Getting runners...
+18:31:21 INFO Getting all openstack servers managed by the charm
+18:31:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:27 INFO Authentication (publickey) successful!
+18:31:27 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:31:27 INFO Flushing idle and busy runners...
+18:31:28 INFO Getting all openstack servers managed by the charm
+18:31:32 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:32 INFO Authentication (publickey) successful!
+18:31:32 INFO Attempting to kill all runner process on test-eiiem2hj-0-n-a9dc6d224376
+18:31:32 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:31:33 INFO Kill process command output, ok: True code 0, out: 2199
+2487
+, err: 
+18:31:33 INFO Getting all openstack servers managed by the charm
+18:31:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:37 INFO Authentication (publickey) successful!
+18:31:40 INFO Cleaning up SSH key files
+18:31:40 INFO Found 1 key files, clean up 0 key files
+18:31:40 INFO Cleaning up openstack keypairs
+18:31:50 INFO Flushing idle and busy runners...
+18:31:50 INFO Getting all openstack servers managed by the charm
+18:31:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:52 INFO Authentication (publickey) successful!
+18:31:52 INFO Attempting to kill all runner process on test-eiiem2hj-0-n-a9dc6d224376
+18:31:52 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:31:52 INFO Kill process command output, ok: False code 1, out: , err: 
+18:31:52 INFO Getting all openstack servers managed by the charm
+18:31:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:54 INFO Authentication (publickey) successful!
+18:31:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:31:55 INFO Authentication (publickey) successful!
+18:31:55 INFO [chan 2] Opened sftp connection (server version 3)
+18:31:55 INFO Running runner removal script for test-eiiem2hj-0-n-a9dc6d224376
+18:31:57 INFO Deleting openstack server with test-eiiem2hj-0-n-a9dc6d224376
+18:32:03 INFO Cleaning up SSH key files
+18:32:03 INFO Found 0 key files, clean up 0 key files
+18:32:03 INFO Cleaning up openstack keypairs
+18:32:03 INFO Getting runners...
+18:32:04 INFO Getting all openstack servers managed by the charm
+18:32:08 ERROR Unable to get SSH connection for instance test-eiiem2hj-0-n-a9dc6d224376, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-eiiem2hj-0-n-a9dc6d224376, key path: /home/ubuntu/.ssh/test-eiiem2hj-0-n-a9dc6d224376.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-eiiem2hj-0-n-a9dc6d224376
+18:32:08 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:32:08 WARNING Found runner instance on cloud but not registered on GitHub: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:32:08 INFO Getting runners...
+18:32:09 INFO Getting all openstack servers managed by the charm
+18:32:11 ERROR Unable to get SSH connection for instance test-eiiem2hj-0-n-a9dc6d224376, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-eiiem2hj-0-n-a9dc6d224376, key path: /home/ubuntu/.ssh/test-eiiem2hj-0-n-a9dc6d224376.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-eiiem2hj-0-n-a9dc6d224376
+18:32:11 INFO Found following runners: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:32:11 WARNING Found runner instance on cloud but not registered on GitHub: {'test-eiiem2hj-0-n-a9dc6d224376'}
+18:32:11 INFO Wait for condition not met, sleeping 60
+18:33:11 INFO Getting runners...
+18:33:13 INFO Getting all openstack servers managed by the charm
+18:33:15 INFO Found following runners: set()

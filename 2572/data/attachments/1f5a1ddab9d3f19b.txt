@@ -1,0 +1,235 @@
+18:50:50 INFO Waiting for model:
+  test-nzbdy27c/0 [executing] maintenance: Reconciling runners
+18:51:20 INFO Waiting for model:
+  test-nzbdy27c/0 [idle] active:
+18:51:55 INFO Waiting for model:
+  test-nzbdy27c/0 [executing] active: 
+18:52:26 INFO Waiting for model:
+  test-nzbdy27c/0 [idle] active: 
+18:52:31 INFO Wait for condition not met, sleeping 10
+18:52:43 INFO Wait for condition not met, sleeping 10
+18:52:54 INFO Wait for condition not met, sleeping 10
+18:53:04 INFO Wait for condition not met, sleeping 10
+18:53:15 INFO Wait for condition not met, sleeping 10
+18:53:25 INFO Wait for condition not met, sleeping 10
+18:53:35 INFO Wait for condition not met, sleeping 10
+18:53:46 INFO Wait for condition not met, sleeping 10
+18:53:56 INFO Wait for condition not met, sleeping 10
+18:54:07 INFO Wait for condition not met, sleeping 10
+18:54:18 INFO Wait for condition not met, sleeping 10
+18:55:18 INFO Waiting for model:
+  test-nzbdy27c/0 [executing] active: 
+18:55:49 INFO Waiting for model:
+  test-nzbdy27c/0 [idle] active: 
+18:55:57 INFO Wait for condition not met, sleeping 60
+18:56:57 INFO Wait for condition not met, sleeping 60
+18:57:57 INFO Wait for condition not met, sleeping 60
+18:58:58 INFO Wait for condition not met, sleeping 60
+18:59:58 INFO Wait for condition not met, sleeping 60
+19:00:59 INFO Wait for condition not met, sleeping 60
+19:01:59 INFO Wait for condition not met, sleeping 60
+19:03:00 INFO Wait for condition not met, sleeping 60
+19:04:00 INFO Wait for condition not met, sleeping 60
+19:05:01 INFO Wait for condition not met, sleeping 60
+19:06:03 INFO Wait for condition not met, sleeping 10
+19:06:32 INFO Waiting for model:
+  test-nzbdy27c/0 [idle] active:
+19:07:06 INFO Waiting for model:
+  test-nzbdy27c/0 [idle] active: 
+19:07:23 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-fs3v  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  19:07:23Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-nzbdy27c           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-nzbdy27c                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-nzbdy27c/0*  active    idle   1        10.8.245.6                 
+mongodb/0*                               active    idle   0        10.8.245.238    27017/tcp  Primary
+test-nzbdy27c/0*                         active    idle   2        10.8.245.190               
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.8.245.238  juju-695630-0  ubuntu@22.04      Running
+1        started  10.8.245.6    juju-695630-1  ubuntu@22.04      Running
+2        started  10.8.245.190  juju-695630-2  ubuntu@22.04      Running
+
+19:07:23 INFO Juju error logs:
+
+machine-0: 18:26:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:26:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:26:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:26:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nzbdy27c-0: 18:26:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:26:34 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:26:34 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-nzbdy27c-0: 18:26:57 ERROR unit.test-nzbdy27c/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+machine-1: 18:27:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-nzbdy27c-0: 18:27:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-nzbdy27c-0: 18:27:52 ERROR unit.github-runner-image-builder-nzbdy27c/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-nzbdy27c-0: 18:43:00 ERROR unit.test-nzbdy27c/0.juju-log SSH connection failure with test-nzbdy27c-0-r-e8dd5ab04c80 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:43:05 ERROR unit.test-nzbdy27c/0.juju-log SSH connection failure with test-nzbdy27c-0-r-e8dd5ab04c80 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:43:15 ERROR unit.test-nzbdy27c/0.juju-log SSH connection failure with test-nzbdy27c-0-r-e8dd5ab04c80 during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:43:15 ERROR unit.test-nzbdy27c/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:46:04 ERROR unit.test-nzbdy27c/0.juju-log Health check failed due to unable to find keyfile for test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:46:07 ERROR unit.test-nzbdy27c/0.juju-log Unable to get SSH connection for instance test-nzbdy27c-0-r-e8dd5ab04c80, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:46:07 ERROR unit.test-nzbdy27c/0.juju-log Failed to get SSH connection while removing test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:46:10 ERROR unit.test-nzbdy27c/0.juju-log Invalid pulled metrics. No runner_installed information for test-nzbdy27c-0-r-e8dd5ab04c80.
+unit-test-nzbdy27c-0: 18:46:10 ERROR unit.test-nzbdy27c/0.juju-log No metrics returned after deleting test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:46:15 ERROR unit.test-nzbdy27c/0.juju-log Unable to get SSH connection for instance test-nzbdy27c-0-r-e8dd5ab04c80, marking as unhealthy.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:46:48 ERROR unit.test-nzbdy27c/0.juju-log Failed to get SSH connection while removing test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:46:51 ERROR unit.test-nzbdy27c/0.juju-log Invalid pulled metrics. No runner_installed information for test-nzbdy27c-0-r-e8dd5ab04c80.
+unit-test-nzbdy27c-0: 18:46:51 ERROR unit.test-nzbdy27c/0.juju-log No metrics returned after deleting test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:46:55 ERROR unit.test-nzbdy27c/0.juju-log Health check failed due to unable to find keyfile for test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:46:57 ERROR unit.test-nzbdy27c/0.juju-log Failed to get SSH connection while removing test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:46:59 ERROR unit.test-nzbdy27c/0.juju-log Invalid pulled metrics. No runner_installed information for test-nzbdy27c-0-r-e8dd5ab04c80.
+unit-test-nzbdy27c-0: 18:46:59 ERROR unit.test-nzbdy27c/0.juju-log No metrics returned after deleting test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:47:19 ERROR unit.test-nzbdy27c/0.juju-log Failed to get SSH connection while removing test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:47:22 ERROR unit.test-nzbdy27c/0.juju-log Invalid pulled metrics. No runner_installed information for test-nzbdy27c-0-r-e8dd5ab04c80.
+unit-test-nzbdy27c-0: 18:47:22 ERROR unit.test-nzbdy27c/0.juju-log No metrics returned after deleting test-nzbdy27c-0-r-e8dd5ab04c80
+unit-test-nzbdy27c-0: 18:47:27 ERROR unit.test-nzbdy27c/0.juju-log Health check failed due to unable to find keyfile for test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:47:29 ERROR unit.test-nzbdy27c/0.juju-log Failed to get SSH connection while removing test-nzbdy27c-0-r-e8dd5ab04c80
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-nzbdy27c-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-nzbdy27c-0-r-e8dd5ab04c80, key path: /home/runner-manager/.ssh/test-nzbdy27c-0-r-e8dd5ab04c80.key
+unit-test-nzbdy27c-0: 18:47:32 ERROR unit.test-nzbdy27c/0.juju-log Invalid pulled metrics. No runner_installed information for test-nzbdy27c-0-r-e8dd5ab04c80.
+unit-test-nzbdy27c-0: 18:47:32 ERROR unit.test-nzbdy27c/0.juju-log No metrics returned after deleting test-nzbdy27c-0-r-e8dd5ab04c80
+
+19:07:23 INFO Forgetting model main...

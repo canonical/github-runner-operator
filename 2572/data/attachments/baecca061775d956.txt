@@ -1,0 +1,72 @@
+18:25:06 INFO Creating 1 runners
+18:25:06 INFO Creating openstack server with test-eiiem2hj-0-n-be500db42a02
+18:25:42 INFO Runner test-eiiem2hj-0-n-be500db42a02 created successfully
+18:26:42 INFO Getting runners...
+18:26:43 INFO Getting all openstack servers managed by the charm
+18:26:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:45 INFO Authentication (publickey) successful!
+18:26:46 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:26:46 INFO Getting runners...
+18:26:47 INFO Getting all openstack servers managed by the charm
+18:26:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:49 INFO Authentication (publickey) successful!
+18:26:49 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:26:49 INFO Getting runners...
+18:26:50 INFO Getting all openstack servers managed by the charm
+18:26:53 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:53 INFO Authentication (publickey) successful!
+18:26:53 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:26:53 INFO Getting all openstack servers managed by the charm
+18:26:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:55 INFO Authentication (publickey) successful!
+18:26:56 INFO Getting runners...
+18:26:57 INFO Getting all openstack servers managed by the charm
+18:26:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:26:59 INFO Authentication (publickey) successful!
+18:26:59 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:00 INFO Offline github runners to delete: []:
+18:27:01 INFO Getting all openstack servers managed by the charm
+18:27:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:27:02 INFO Authentication (publickey) successful!
+18:27:05 INFO Cleaning up SSH key files
+18:27:05 INFO Found 1 key files, clean up 0 key files
+18:27:05 INFO Cleaning up openstack keypairs
+18:27:05 INFO Getting runners...
+18:27:06 INFO Getting all openstack servers managed by the charm
+18:27:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:27:07 INFO Authentication (publickey) successful!
+18:27:08 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:08 INFO Flushing idle runners...
+18:27:08 INFO Getting all openstack servers managed by the charm
+18:27:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:27:10 INFO Authentication (publickey) successful!
+18:27:10 INFO Attempting to kill runner process on test-eiiem2hj-0-n-be500db42a02 if not busy
+18:27:10 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:27:10 INFO Kill process command output, ok: True code 0, out: 2198
+, err: 
+18:27:10 INFO Getting all openstack servers managed by the charm
+18:27:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:27:12 INFO Authentication (publickey) successful!
+18:27:12 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:27:12 INFO Authentication (publickey) successful!
+18:27:13 INFO [chan 2] Opened sftp connection (server version 3)
+18:27:13 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.40, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:27:13 WARNING Failed to pull metrics for test-eiiem2hj-0-n-be500db42a02: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:27:13 INFO Running runner removal script for test-eiiem2hj-0-n-be500db42a02
+18:27:15 INFO Deleting openstack server with test-eiiem2hj-0-n-be500db42a02
+18:27:18 INFO Cleaning up SSH key files
+18:27:18 INFO Found 0 key files, clean up 0 key files
+18:27:18 INFO Cleaning up openstack keypairs
+18:27:18 INFO Getting runners...
+18:27:19 INFO Getting all openstack servers managed by the charm
+18:27:20 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:20 WARNING Found runner instance on cloud but not registered on GitHub: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:20 INFO Getting runners...
+18:27:21 INFO Getting all openstack servers managed by the charm
+18:27:22 INFO Found following runners: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:22 WARNING Found runner instance on cloud but not registered on GitHub: {'test-eiiem2hj-0-n-be500db42a02'}
+18:27:22 INFO Wait for condition not met, sleeping 60
+18:28:22 INFO Getting runners...
+18:28:24 INFO Getting all openstack servers managed by the charm
+18:28:25 INFO Found following runners: set()

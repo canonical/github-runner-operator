@@ -1,0 +1,95 @@
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 INFO Adding model github-pr-b51b1-lxd:test-charm-no-runner-93qp on cloud localhost
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 WARNING unexpected facade SSHSession received from the controller
+18:25:26 WARNING unexpected facade SSHTunneler received from the controller
+18:25:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:48 INFO Deploying local:jammy/github-runner-0
+18:25:49 INFO Waiting for model:
+  test-lafy1o3i/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lafy1o3i/0 [allocating] waiting: waiting for machine
+18:26:19 INFO Waiting for model:
+  test-lafy1o3i/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lafy1o3i/0 [allocating] waiting: waiting for machine
+18:26:49 INFO Waiting for model:
+  test-lafy1o3i/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lafy1o3i/0 [allocating] waiting: agent initialising
+18:27:19 INFO Waiting for model:
+  test-lafy1o3i/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lafy1o3i/0 [executing] maintenance: Setting up Builder.
+18:27:50 INFO Waiting for model:
+  test-lafy1o3i/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] maintenance: Setting up Builder.
+18:28:20 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] maintenance: Setting up Builder.
+18:28:50 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] maintenance: Setting up Builder.
+18:29:20 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] maintenance: Setting up Builder.
+18:29:50 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:30:21 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:30:51 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:31:21 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:31:51 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:32:21 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:32:52 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:33:22 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:33:52 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:34:22 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:34:52 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:35:22 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:35:52 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:36:22 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:36:53 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:37:23 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:37:53 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:38:23 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:38:53 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lafy1o3i/0 [executing] active: Building image.
+18:39:24 INFO Waiting for model:
+  test-lafy1o3i/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-lafy1o3i/0 [idle] active: 
+18:39:54 INFO Waiting for model:
+  test-lafy1o3i/0 [executing] maintenance: Reconciling runners
+18:40:10 INFO Waiting for model:
+  test-lafy1o3i/0 [idle] active:

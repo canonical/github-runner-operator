@@ -1,0 +1,139 @@
+18:54:51 INFO Adding model github-pr-b51b1-lxd:test-charm-upgrade-kzz3 on cloud localhost
+18:54:51 WARNING unexpected facade AgentLifeFlag received from the controller
+18:54:51 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:54:51 WARNING unexpected facade SecretsDrain received from the controller
+18:54:53 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:55:17 INFO Deploying local:jammy/github-runner-0
+18:55:17 INFO Waiting for model:
+  test-z5fegmpe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z5fegmpe/0 [allocating] waiting: waiting for machine
+18:55:47 INFO Waiting for model:
+  test-z5fegmpe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z5fegmpe/0 [allocating] waiting: agent initialising
+18:56:17 INFO Waiting for model:
+  test-z5fegmpe/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-z5fegmpe/0 [executing] maintenance: Setting up Builder.
+18:56:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] maintenance: Setting up Builder.
+18:57:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] maintenance: Setting up Builder.
+18:57:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] maintenance: Setting up Builder.
+18:58:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] maintenance: Setting up Builder.
+18:58:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] blocked: image integration required.
+18:59:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+18:59:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:00:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:00:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:01:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:01:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:02:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:02:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:03:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:03:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:04:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:04:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:05:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:05:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:06:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:06:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:07:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:07:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:08:17 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z5fegmpe/0 [executing] active: Building image.
+19:08:47 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-z5fegmpe/0 [idle] active: 
+19:09:17 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+19:09:47 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+19:10:17 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+19:10:47 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+19:11:17 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] maintenance: Reconciling runners
+19:11:47 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] active: 
+19:13:25 INFO Waiting for model:
+  test-z5fegmpe/0 [executing] active: 
+19:13:55 INFO Waiting for model:
+  test-z5fegmpe/0 [idle] active:
+19:14:27 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-kzz3  github-pr-b51b1-lxd  localhost/localhost  3.1.10   unsupported  19:14:27Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-z5fegmpe           active      1  github-runner-image-builder  latest/edge   68  no       
+test-z5fegmpe                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-z5fegmpe/0*  active    idle   0        10.80.89.5             
+test-z5fegmpe/0*                         active    idle   1        10.80.89.170           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.80.89.5    juju-ca81b1-0  ubuntu@22.04      Running
+1        started  10.80.89.170  juju-ca81b1-1  ubuntu@22.04      Running
+
+19:14:27 INFO Juju error logs:
+
+machine-0: 18:55:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:55:46 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:55:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-z5fegmpe-0: 18:55:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:56:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:07 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-z5fegmpe-0: 18:56:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-z5fegmpe-0: 18:56:30 ERROR unit.github-runner-image-builder-z5fegmpe/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-z5fegmpe-0: 19:13:10 ERROR unit.test-z5fegmpe/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+
+19:14:28 INFO Forgetting model main...

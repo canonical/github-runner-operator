@@ -1,0 +1,97 @@
+18:48:57 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-63un  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  18:48:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sg8s6g5o           active      1  github-runner-image-builder  latest/edge   68  no       
+test-sg8s6g5o                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-sg8s6g5o/0*  active    idle   0        10.234.102.126         
+test-sg8s6g5o/0*                         active    idle   1        10.234.102.102         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.234.102.126  juju-8c9f0b-0  ubuntu@22.04      Running
+1        started  10.234.102.102  juju-8c9f0b-1  ubuntu@22.04      Running
+
+18:48:57 INFO Juju error logs:
+
+machine-0: 18:26:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-sg8s6g5o-0: 18:26:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sg8s6g5o-0: 18:26:57 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-sg8s6g5o-0: 18:27:41 ERROR unit.github-runner-image-builder-sg8s6g5o/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-sg8s6g5o-0: 18:27:44 ERROR unit.test-sg8s6g5o/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+unit-test-sg8s6g5o-0: 18:46:56 ERROR unit.test-sg8s6g5o/0.juju-log Timeout creating openstack server test-sg8s6g5o-0-n-913e2b277f88
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_utils.py", line 225, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_compute.py", line 1004, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_compute.py", line 1160, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-sg8s6g5o-0: 18:46:58 ERROR unit.test-sg8s6g5o/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_utils.py", line 225, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_compute.py", line 1004, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/openstack/cloud/_compute.py", line 1160, in wait_for_server
+    raise exceptions.ResourceTimeout(timeout_message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 148, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 265, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-sg8s6g5o-0-n-913e2b277f88
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 336, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 486, in _create_runner
+    cloud_instance = args.cloud_runner_manager.create_runner(
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 156, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-sg8s6g5o-0-n-913e2b277f88 openstack runner
+unit-test-sg8s6g5o-0: 18:48:02 ERROR unit.test-sg8s6g5o/0.juju-log Failed to get SSH connection while removing test-sg8s6g5o-0-n-913e2b277f88
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sg8s6g5o-0-n-913e2b277f88, key path: /home/runner-manager/.ssh/test-sg8s6g5o-0-n-913e2b277f88.key
+unit-test-sg8s6g5o-0: 18:48:05 ERROR unit.test-sg8s6g5o/0.juju-log Invalid pulled metrics. No runner_installed information for test-sg8s6g5o-0-n-913e2b277f88.
+unit-test-sg8s6g5o-0: 18:48:27 ERROR unit.test-sg8s6g5o/0.juju-log Failed to get SSH connection while removing test-sg8s6g5o-0-n-913e2b277f88
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 311, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-sg8s6g5o-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-sg8s6g5o-0-n-913e2b277f88, key path: /home/runner-manager/.ssh/test-sg8s6g5o-0-n-913e2b277f88.key
+unit-test-sg8s6g5o-0: 18:48:30 ERROR unit.test-sg8s6g5o/0.juju-log Invalid pulled metrics. No runner_installed information for test-sg8s6g5o-0-n-913e2b277f88.
+
+18:48:57 INFO Forgetting model main...

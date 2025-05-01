@@ -1,0 +1,184 @@
+18:25:21 WARNING unexpected facade SSHServer received from the controller
+18:25:21 INFO Adding model github-pr-b51b1-lxd:test-charm-fork-repo-2aly on cloud localhost
+18:25:21 WARNING unexpected facade SSHServer received from the controller
+18:25:21 WARNING unexpected facade SSHSession received from the controller
+18:25:21 WARNING unexpected facade SSHTunneler received from the controller
+18:25:23 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:43 INFO Deploying local:jammy/github-runner-0
+18:25:43 INFO Waiting for model:
+  test-tfmc12rq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tfmc12rq/0 [allocating] waiting: waiting for machine
+18:26:13 INFO Waiting for model:
+  test-tfmc12rq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tfmc12rq/0 [allocating] waiting: waiting for machine
+18:26:43 INFO Waiting for model:
+  test-tfmc12rq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tfmc12rq/0 [allocating] waiting: agent initialising
+18:27:14 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tfmc12rq/0 [executing] maintenance: Setting up Builder.
+18:27:44 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tfmc12rq/0 [executing] maintenance: Setting up Builder.
+18:28:14 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] maintenance: Setting up Builder.
+18:28:45 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] maintenance: Setting up Builder.
+18:29:15 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] maintenance: Setting up Builder.
+18:29:45 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] blocked: image integration required.
+18:30:15 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:30:45 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:31:15 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:31:46 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:32:16 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:32:46 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:33:16 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:35:17 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:37:18 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:38:19 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:38:49 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:39:19 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tfmc12rq/0 [executing] active: Building image.
+18:39:50 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-tfmc12rq/0 [idle] active: 
+18:40:20 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] maintenance: Reconciling runners
+18:40:38 INFO GitHub token rate limit: Rate(reset=2025-05-01 19:24:55+00:00, remaining=4842, limit=5000)
+18:47:22 INFO Waiting for model:
+  test-tfmc12rq/0 [executing] active: 
+18:47:52 INFO Waiting for model:
+  test-tfmc12rq/0 [idle] active: 
+18:47:55 INFO [TEST SETUP] Exposing port 8080 on test-tfmc12rq-0-n-c81e77b21eff
+18:47:55 WARNING dict_values([])
+18:47:57 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-2aly  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  18:47:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-tfmc12rq           active      1  github-runner-image-builder  latest/edge   68  no       
+test-tfmc12rq                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-tfmc12rq/0*  active    idle   0        10.167.76.187             
+test-tfmc12rq/0*                         active    idle   1        10.167.76.10    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.167.76.187  juju-d75c90-0  ubuntu@22.04      Running
+1        started  10.167.76.10   juju-d75c90-1  ubuntu@22.04      Running
+
+18:47:57 INFO Juju error logs:
+
+machine-0: 18:26:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-tfmc12rq-0: 18:26:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-tfmc12rq-0: 18:26:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-tfmc12rq-0: 18:27:22 ERROR unit.github-runner-image-builder-tfmc12rq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-tfmc12rq-0: 18:27:27 ERROR unit.test-tfmc12rq/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+unit-test-tfmc12rq-0: 18:47:16 ERROR unit.test-tfmc12rq/0.juju-log Timeout creating openstack server test-tfmc12rq-0-n-c81e77b21eff
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_utils.py", line 225, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_compute.py", line 1004, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_compute.py", line 1143, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/utils.py", line 88, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-tfmc12rq-0: 18:47:18 ERROR unit.test-tfmc12rq/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_utils.py", line 225, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_compute.py", line 1004, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/cloud/_compute.py", line 1143, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/openstack/utils.py", line 88, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 148, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 265, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-tfmc12rq-0-n-c81e77b21eff
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 336, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 486, in _create_runner
+    cloud_instance = args.cloud_runner_manager.create_runner(
+  File "/var/lib/juju/agents/unit-test-tfmc12rq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 156, in create_runner
+    raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
+github_runner_manager.errors.RunnerCreateError: Failed to create test-tfmc12rq-0-n-c81e77b21eff openstack runner
+
+18:47:57 INFO Forgetting model main...
