@@ -1,0 +1,53 @@
+07:08:11 INFO Creating 1 runners
+07:08:11 INFO Creating openstack server with test-keous2rg-0-n-02ce62c04d4d
+07:08:37 INFO Runner test-keous2rg-0-n-02ce62c04d4d created successfully
+07:10:38 INFO Getting runners...
+07:10:39 INFO Getting all openstack servers managed by the charm
+07:10:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:10:41 INFO Authentication (publickey) successful!
+07:10:43 INFO Found following runners: {'test-keous2rg-0-n-02ce62c04d4d', 'test-keous2rg-0-n-dc411331c1dd'}
+07:10:43 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:10:43 INFO Getting runners...
+07:10:44 INFO Getting all openstack servers managed by the charm
+07:10:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:10:45 INFO Authentication (publickey) successful!
+07:10:46 INFO Found following runners: {'test-keous2rg-0-n-02ce62c04d4d', 'test-keous2rg-0-n-dc411331c1dd'}
+07:10:46 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:10:46 INFO Getting runners...
+07:10:47 INFO Getting all openstack servers managed by the charm
+07:10:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:10:49 INFO Authentication (publickey) successful!
+07:10:50 INFO Found following runners: {'test-keous2rg-0-n-02ce62c04d4d', 'test-keous2rg-0-n-dc411331c1dd'}
+07:10:50 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:10:51 INFO Wait for condition not met, sleeping 10
+07:11:03 INFO Getting runners...
+07:11:04 INFO Getting all openstack servers managed by the charm
+07:11:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:11:05 INFO Authentication (publickey) successful!
+07:11:06 INFO Found following runners: {'test-keous2rg-0-n-02ce62c04d4d', 'test-keous2rg-0-n-dc411331c1dd'}
+07:11:06 WARNING Found runner instance on cloud but not registered on GitHub: {'test-keous2rg-0-n-02ce62c04d4d'}
+07:11:06 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:11:06 INFO Getting runners...
+07:11:08 INFO Getting all openstack servers managed by the charm
+07:11:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:11:10 INFO Authentication (publickey) successful!
+07:11:10 INFO Found following runners: {'test-keous2rg-0-n-02ce62c04d4d', 'test-keous2rg-0-n-dc411331c1dd'}
+07:11:10 WARNING Found runner instance on cloud but not registered on GitHub: {'test-keous2rg-0-n-02ce62c04d4d'}
+07:11:10 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:11:12 INFO Offline github runners to delete: []:
+07:11:12 INFO Getting all openstack servers managed by the charm
+07:11:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:11:14 INFO Authentication (publickey) successful!
+07:11:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:11:15 INFO Authentication (publickey) successful!
+07:11:15 INFO [chan 2] Opened sftp connection (server version 3)
+07:11:15 INFO Running runner removal script for test-keous2rg-0-n-02ce62c04d4d
+07:11:16 INFO Deleting openstack server with test-keous2rg-0-n-02ce62c04d4d
+07:11:18 INFO Cleaning up SSH key files
+07:11:18 INFO Found 0 key files, clean up 0 key files
+07:11:18 INFO Cleaning up openstack keypairs
+07:11:19 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+07:11:19 INFO Getting runners...
+07:11:20 INFO Getting all openstack servers managed by the charm
+07:11:21 INFO Found following runners: {'test-keous2rg-0-n-dc411331c1dd'}
+07:11:21 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}

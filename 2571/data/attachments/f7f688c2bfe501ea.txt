@@ -1,0 +1,101 @@
+06:25:32 WARNING unexpected facade SSHServer received from the controller
+06:25:32 INFO Adding model github-pr-b51b1-lxd:test-charm-no-runner-lrlx on cloud localhost
+06:25:32 WARNING unexpected facade SSHServer received from the controller
+06:25:32 WARNING unexpected facade SSHSession received from the controller
+06:25:32 WARNING unexpected facade SSHTunneler received from the controller
+06:25:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:25:54 INFO Deploying local:jammy/github-runner-0
+06:25:54 INFO Waiting for model:
+  test-cz8qq3p6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cz8qq3p6/0 [allocating] waiting: waiting for machine
+06:26:25 INFO Waiting for model:
+  test-cz8qq3p6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cz8qq3p6/0 [allocating] waiting: waiting for machine
+06:26:55 INFO Waiting for model:
+  test-cz8qq3p6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cz8qq3p6/0 [allocating] waiting: agent initialising
+06:27:25 INFO Waiting for model:
+  test-cz8qq3p6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cz8qq3p6/0 [executing] maintenance: Setting up Builder.
+06:27:55 INFO Waiting for model:
+  test-cz8qq3p6/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] maintenance: Setting up Builder.
+06:28:25 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] maintenance: Setting up Builder.
+06:28:55 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] maintenance: Setting up Builder.
+06:29:26 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] maintenance: Setting up Builder.
+06:29:56 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] blocked: image integration required.
+06:30:26 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:30:57 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:31:27 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:31:57 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:32:28 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:32:58 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:33:28 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:33:59 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:34:29 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:34:59 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:35:29 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:35:59 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:36:29 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:37:00 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:37:30 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:38:01 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:38:31 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:39:01 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:39:32 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:40:02 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:40:32 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cz8qq3p6/0 [executing] active: Building image.
+06:41:02 INFO Waiting for model:
+  test-cz8qq3p6/0 [executing] maintenance: Reconciling runners
+06:41:30 INFO Waiting for model:
+  test-cz8qq3p6/0 [idle] active:

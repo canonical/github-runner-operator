@@ -1,0 +1,110 @@
+07:11:21 INFO Creating 2 runners
+07:12:36 INFO Getting runners...
+07:12:37 INFO Getting all openstack servers managed by the charm
+07:12:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:39 INFO Authentication (publickey) successful!
+07:12:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:40 INFO Authentication (publickey) successful!
+07:12:41 INFO Found following runners: {'test-keous2rg-0-n-84362c81a39a', 'test-keous2rg-0-n-dc411331c1dd', 'test-keous2rg-0-n-dcf4bd029347'}
+07:12:41 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:12:41 INFO Getting runners...
+07:12:43 INFO Getting all openstack servers managed by the charm
+07:12:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:44 INFO Authentication (publickey) successful!
+07:12:44 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:45 INFO Authentication (publickey) successful!
+07:12:45 INFO Found following runners: {'test-keous2rg-0-n-84362c81a39a', 'test-keous2rg-0-n-dc411331c1dd', 'test-keous2rg-0-n-dcf4bd029347'}
+07:12:45 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:12:45 INFO Flushing idle runners...
+07:12:46 INFO Getting all openstack servers managed by the charm
+07:12:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:47 INFO Authentication (publickey) successful!
+07:12:47 INFO Attempting to kill runner process on test-keous2rg-0-n-84362c81a39a if not busy
+07:12:47 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:12:47 INFO Kill process command output, ok: True code 0, out: 2199
+, err: 
+07:12:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:47 INFO Authentication (publickey) successful!
+07:12:48 INFO Attempting to kill runner process on test-keous2rg-0-n-dcf4bd029347 if not busy
+07:12:48 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:12:48 INFO Kill process command output, ok: True code 0, out: 2191
+, err: 
+07:12:48 INFO Getting all openstack servers managed by the charm
+07:12:49 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:49 INFO Authentication (publickey) successful!
+07:12:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:50 INFO Authentication (publickey) successful!
+07:12:50 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:50 INFO Authentication (publickey) successful!
+07:12:51 INFO [chan 2] Opened sftp connection (server version 3)
+07:12:51 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.233, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:12:51 WARNING Failed to pull metrics for test-keous2rg-0-n-84362c81a39a: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:12:51 INFO Running runner removal script for test-keous2rg-0-n-84362c81a39a
+07:12:52 INFO Deleting openstack server with test-keous2rg-0-n-84362c81a39a
+07:12:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:12:57 INFO Authentication (publickey) successful!
+07:12:57 INFO [chan 2] Opened sftp connection (server version 3)
+07:12:57 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.83, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:12:57 WARNING Failed to pull metrics for test-keous2rg-0-n-dcf4bd029347: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:12:57 INFO Running runner removal script for test-keous2rg-0-n-dcf4bd029347
+07:12:59 INFO Deleting openstack server with test-keous2rg-0-n-dcf4bd029347
+07:13:02 INFO Cleaning up SSH key files
+07:13:02 INFO Found 0 key files, clean up 0 key files
+07:13:02 INFO Cleaning up openstack keypairs
+07:13:02 INFO Getting runners...
+07:13:03 INFO Getting all openstack servers managed by the charm
+07:13:04 ERROR Unable to get SSH connection for instance test-keous2rg-0-n-dcf4bd029347, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-keous2rg-0-n-dcf4bd029347, key path: /home/ubuntu/.ssh/test-keous2rg-0-n-dcf4bd029347.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-keous2rg-0-n-dcf4bd029347
+07:13:04 INFO Found following runners: {'test-keous2rg-0-n-dc411331c1dd', 'test-keous2rg-0-n-dcf4bd029347'}
+07:13:04 WARNING Found runner instance on cloud but not registered on GitHub: {'test-keous2rg-0-n-dcf4bd029347'}
+07:13:04 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:13:04 INFO Getting runners...
+07:13:06 INFO Getting all openstack servers managed by the charm
+07:13:07 ERROR Unable to get SSH connection for instance test-keous2rg-0-n-dcf4bd029347, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-keous2rg-0-n-dcf4bd029347, key path: /home/ubuntu/.ssh/test-keous2rg-0-n-dcf4bd029347.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-keous2rg-0-n-dcf4bd029347
+07:13:07 INFO Found following runners: {'test-keous2rg-0-n-dc411331c1dd', 'test-keous2rg-0-n-dcf4bd029347'}
+07:13:07 WARNING Found runner instance on cloud but not registered on GitHub: {'test-keous2rg-0-n-dcf4bd029347'}
+07:13:07 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}
+07:13:07 INFO Wait for condition not met, sleeping 60
+07:14:07 INFO Getting runners...
+07:14:08 INFO Getting all openstack servers managed by the charm
+07:14:10 INFO Found following runners: {'test-keous2rg-0-n-dc411331c1dd'}
+07:14:10 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-keous2rg-0-n-dc411331c1dd'}

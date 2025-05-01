@@ -1,0 +1,63 @@
+07:03:34 INFO Creating 1 runners
+07:03:34 INFO Creating openstack server with test-keous2rg-0-n-be811ef956a6
+07:03:47 INFO Runner test-keous2rg-0-n-be811ef956a6 created successfully
+07:04:48 INFO Getting runners...
+07:04:49 INFO Getting all openstack servers managed by the charm
+07:04:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:04:51 INFO Authentication (publickey) successful!
+07:04:52 INFO Found following runners: {'test-keous2rg-0-n-be811ef956a6'}
+07:04:52 INFO Getting runners...
+07:04:53 INFO Getting all openstack servers managed by the charm
+07:04:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:04:55 INFO Authentication (publickey) successful!
+07:04:56 INFO Found following runners: {'test-keous2rg-0-n-be811ef956a6'}
+07:04:56 INFO Getting runners...
+07:04:57 INFO Getting all openstack servers managed by the charm
+07:04:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:04:59 INFO Authentication (publickey) successful!
+07:05:00 INFO Found following runners: {'test-keous2rg-0-n-be811ef956a6'}
+07:05:00 INFO Getting all openstack servers managed by the charm
+07:05:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:01 INFO Authentication (publickey) successful!
+07:05:02 INFO Getting runners...
+07:05:03 INFO Getting all openstack servers managed by the charm
+07:05:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:05 INFO Authentication (publickey) successful!
+07:05:06 INFO Found following runners: {'test-keous2rg-0-n-be811ef956a6'}
+07:05:07 INFO Offline github runners to delete: []:
+07:05:08 INFO Getting all openstack servers managed by the charm
+07:05:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:10 INFO Authentication (publickey) successful!
+07:05:13 INFO Cleaning up SSH key files
+07:05:13 INFO Found 1 key files, clean up 0 key files
+07:05:13 INFO Cleaning up openstack keypairs
+07:05:13 INFO Getting runners...
+07:05:14 INFO Getting all openstack servers managed by the charm
+07:05:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:17 INFO Authentication (publickey) successful!
+07:05:17 INFO Found following runners: {'test-keous2rg-0-n-be811ef956a6'}
+07:05:17 INFO Flushing idle runners...
+07:05:18 INFO Getting all openstack servers managed by the charm
+07:05:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:19 INFO Authentication (publickey) successful!
+07:05:19 INFO Attempting to kill runner process on test-keous2rg-0-n-be811ef956a6 if not busy
+07:05:19 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+07:05:19 INFO Kill process command output, ok: True code 0, out: 2195
+, err: 
+07:05:19 INFO Getting all openstack servers managed by the charm
+07:05:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:21 INFO Authentication (publickey) successful!
+07:05:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+07:05:21 INFO Authentication (publickey) successful!
+07:05:22 INFO [chan 2] Opened sftp connection (server version 3)
+07:05:22 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.182, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+07:05:22 WARNING Failed to pull metrics for test-keous2rg-0-n-be811ef956a6: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+07:05:22 INFO Running runner removal script for test-keous2rg-0-n-be811ef956a6
+07:05:24 INFO Deleting openstack server with test-keous2rg-0-n-be811ef956a6
+07:05:27 INFO Cleaning up SSH key files
+07:05:27 INFO Found 0 key files, clean up 0 key files
+07:05:27 INFO Cleaning up openstack keypairs
+07:05:27 INFO Getting runners...
+07:05:28 INFO Getting all openstack servers managed by the charm
+07:05:31 INFO Found following runners: set()
