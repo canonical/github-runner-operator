@@ -4,16 +4,18 @@
 """Base classes and APIs for platform providers."""
 
 import abc
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 
-# Pylint exception needed because of typing forward references.
-from typing import Iterable  # pylint: disable=unused-import
-
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -25,31 +27,43 @@ class JobNotFoundError(PlatformError):
     """Represents an error when the job could not be found on the platform."""
 
 
+class DeleteRunnerBusyError(PlatformError):
+    """TODO."""
+
+
+class PlatformApiError(PlatformError):
+    """Represents an error when the GitHub API returns an error."""
+
+
+class TokenError(PlatformError):
+    """Represents an error when the token is invalid or has not enough permissions."""
+
+
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
     @abc.abstractmethod
-    def get_runner_health(
-        self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
-    ) -> "PlatformRunnerHealth":
+    def get_runner_health(self, runner_identity: RunnerIdentity) -> "PlatformRunnerHealth":
         """Get health information on self-hosted runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: TODO
         """
 
     @abc.abstractmethod
-    def get_runners(
-        self, states: "Iterable[PlatformRunnerState] | None" = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
+    def get_runners_health(
+        self, requested_runners: list[RunnerIdentity]
+    ) -> "RunnersHealthResponse":
+        """TODO.
+
+        TODO should be return the list of the ones that failed?
+        Could we put that info in PlatformRunnerHealth instead?
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            requested_runners: TODO
         """
+        # TODO change the response to a map of identities to health so we can send
+        # some info when the call failed
 
     @abc.abstractmethod
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
@@ -57,6 +71,16 @@ class PlatformProvider(abc.ABC):
 
         Args:
             runners: list of runners to delete.
+        """
+
+    @abc.abstractmethod
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
         """
 
     @abc.abstractmethod
@@ -74,13 +98,6 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-        """
-
-    @abc.abstractmethod
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
 
@@ -95,12 +112,40 @@ class PlatformProvider(abc.ABC):
     ) -> "JobInfo":
         """Get the Job info from the provider.
 
+        Raises JobNotFoundError if the job was not found.
+
         Args:
             metadata: metadata. Always needed at least for the platform selection.
             repository: repository to get the job from.
             workflow_run_id: workflow run id of the job.
             runner: runner to get the job from.
         """
+
+
+@dataclass
+class RunnersHealthResponse:
+    """TODO.
+
+    Attributes:
+        requested_runners: TODO
+        failed_requested_runners: TODO
+        non_requested_runners: TODO
+    """
+
+    requested_runners: "list[PlatformRunnerHealth]" = field(default_factory=list)
+    failed_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
+    # TODO
+    non_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
+
+    def append(self, other: "RunnersHealthResponse") -> None:
+        """TODO.
+
+        Args:
+            other: TODO
+        """
+        self.requested_runners += other.requested_runners
+        self.failed_requested_runners += other.failed_requested_runners
+        self.non_requested_runners += other.non_requested_runners
 
 
 @dataclass
@@ -114,15 +159,13 @@ class PlatformRunnerHealth:
     manager.
 
     Attributes:
-        instance_id: InstanceID of the runner.
-        metadata: Metadata of the runner.
+        identity: Identity of the runner.
         online: Whether the runner is online.
         busy: Whether the runner is busy.
         deletable: Whether the runner is deletable.
     """
 
-    instance_id: InstanceID
-    metadata: RunnerMetadata
+    identity: RunnerIdentity
     online: bool
     busy: bool
     deletable: bool
@@ -158,6 +201,26 @@ class PlatformRunnerState(str, Enum):
         if runner.busy:
             state = PlatformRunnerState.BUSY
         if runner.status == GitHubRunnerStatus.ONLINE and not runner.busy:
+            state = PlatformRunnerState.IDLE
+        return state
+
+    @staticmethod
+    def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerState":
+        """TODO.
+
+        Args:
+            health: TODO
+
+        Returns:
+            The state of runner.
+        """
+        state = PlatformRunnerState.OFFLINE
+
+        if health.deletable:
+            state = PlatformRunnerState.OFFLINE
+        elif health.busy:
+            state = PlatformRunnerState.BUSY
+        elif health.online:
             state = PlatformRunnerState.IDLE
         return state
 

@@ -9,7 +9,7 @@ import hashlib
 import logging
 import secrets
 
-from github_runner_manager.types_.github import JITConfig, RemoveToken, RunnerApplication
+from github_runner_manager.types_.github import JITConfig, RunnerApplication
 
 from errors import RunnerError
 
@@ -87,8 +87,6 @@ class MockGhapiActions:
         self.test_hash = hash.hexdigest()
         self.registration_token_repo = secrets.token_hex()
         self.registration_token_org = secrets.token_hex()
-        self.remove_token_repo = secrets.token_hex()
-        self.remove_token_org = secrets.token_hex()
 
     def _list_runner_applications(self):
         """A placeholder method for test fake.
@@ -156,33 +154,6 @@ class MockGhapiActions:
         """
         return JITConfig(
             {"token": self.registration_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
-        )
-
-    def create_remove_token_for_repo(self, owner: str, repo: str):
-        """A placeholder method for test stub.
-
-        Args:
-            owner: Placeholder for repository owner.
-            repo: Placeholder for repository name.
-
-        Returns:
-            Remove token stub.
-        """
-        return RemoveToken(
-            {"token": self.remove_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
-        )
-
-    def create_remove_token_for_org(self, org: str):
-        """A placeholder method for test stub.
-
-        Args:
-            org: Placeholder for repository owner.
-
-        Returns:
-            Remove token stub.
-        """
-        return RemoveToken(
-            {"token": self.remove_token_org, "expires_at": "2020-01-22T12:13:35.123-08:00"}
         )
 
     def list_self_hosted_runners_for_repo(

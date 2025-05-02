@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 
+import logging
 from typing import Iterable
 from unittest.mock import MagicMock
 
@@ -50,6 +51,8 @@ from tests.unit.mock_runner_managers import (
     MockGitHubRunnerPlatform,
     SharedMockRunnerManagerState,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def mock_runner_manager_spawn_runners(
@@ -214,6 +217,7 @@ def set_one_runner_state(
     runner_scaler: RunnerScaler,
     github_state: PlatformRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
+    health: bool | None = None,
 ):
     """Set the runner state for a RunnerScaler with one runner.
 
@@ -221,7 +225,11 @@ def set_one_runner_state(
         runner_scaler: The RunnerScaler instance to modify.
         github_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
+        health: TODO.
     """
+    logger.info(
+        "JAVI set_one_runner_states github_state %s cloud_state %s", github_state, cloud_state
+    )
     runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
@@ -229,6 +237,9 @@ def set_one_runner_state(
         runner_dict[instance_id].github_state = github_state
     if cloud_state is not None:
         runner_dict[instance_id].cloud_state = cloud_state
+    if health is not None:
+        runner_dict[instance_id].health = health
+    logger.info(" runner_dict: %s", runner_dict)
 
 
 def assert_runner_info(
@@ -568,6 +579,5 @@ def test_get_runner_unknown_runner(runner_scaler_one_runner: RunnerScaler):
     Assert: One offline runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, "UNKNOWN")
-
+    set_one_runner_state(runner_scaler, health=False)
     assert_runner_info(runner_scaler=runner_scaler, unknown=1)

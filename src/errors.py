@@ -9,9 +9,7 @@ from typing import Union
 # we import the errors from the module, these are used in the charm
 from github_runner_manager.errors import (  # noqa: F401  pylint: disable=unused-import
     GithubMetricsError,
-    PlatformClientError,
     RunnerError,
-    TokenError,
 )
 
 
