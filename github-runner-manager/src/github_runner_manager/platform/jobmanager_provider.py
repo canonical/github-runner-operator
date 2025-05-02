@@ -106,10 +106,8 @@ class JobManagerPlatform(PlatformProvider):
         for identity in requested_runners:
             health = self.get_runner_health(identity)
             runners_health.append(health)
-        return (
-            RunnersHealthResponse(
-                requested_runners=runners_health,
-            ),
+        return RunnersHealthResponse(
+            requested_runners=runners_health,
         )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
