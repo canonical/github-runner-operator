@@ -39,6 +39,7 @@ CHARM_STATE_PATH = Path("charm_state.json")
 
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE = "experimental-job-manager-only-token"
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
@@ -91,7 +92,7 @@ class GithubConfig:
     path: GitHubPath
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
+    def from_charm(cls, charm: CharmBase) -> "GithubConfig | None":
         """Get github related charm configuration values from charm.
 
         Args:
@@ -106,6 +107,11 @@ class GithubConfig:
         runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
 
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
+        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
+
+        if token == EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE:
+            return None
+
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
         try:
@@ -113,7 +119,6 @@ class GithubConfig:
         except ValueError as e:
             raise CharmConfigInvalidError(str(e)) from e
 
-        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
@@ -299,10 +304,10 @@ class CharmConfig(BaseModel):
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
-    path: GitHubPath
+    path: GitHubPath | None
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
-    token: str
+    token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
 
@@ -451,10 +456,10 @@ class CharmConfig(BaseModel):
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path,
+            path=github_config.path if github_config else None,
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
-            token=github_config.token,
+            token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
         )
