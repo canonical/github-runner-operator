@@ -103,25 +103,24 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             Health information on the runners.
         """
-        logger.info("JAVI github_provider get_runners_health identities %s", requested_runners)
-        runners_health = []
-        runners = self._client.list_runners(self._path, self._prefix)
-        logger.info("JAVI github_provider internal data %s", runners)
-        runners_map = {runner.identity.instance_id: runner for runner in runners}
+        requested_runners_health = []
+        github_runners = self._client.list_runners(self._path, self._prefix)
+        github_runners_map = {runner.identity.instance_id: runner for runner in github_runners}
         for identity in requested_runners:
-            if identity.instance_id in runners_map:
-                runner = runners_map[identity.instance_id]
-                online = runner.status == GitHubRunnerStatus.ONLINE
-                runners_health.append(
+            if identity.instance_id in github_runners_map:
+                github_runner = github_runners_map[identity.instance_id]
+                online = github_runner.status == GitHubRunnerStatus.ONLINE
+                requested_runners_health.append(
                     PlatformRunnerHealth(
                         identity=identity,
                         online=online,
-                        busy=runner.busy,
+                        busy=github_runner.busy,
                         deletable=False,
                     )
                 )
             else:
-                runners_health.append(
+                # A runner not found in GitHub is a runner considered deletable.
+                requested_runners_health.append(
                     PlatformRunnerHealth(
                         identity=identity,
                         online=False,
@@ -129,8 +128,18 @@ class GitHubRunnerPlatform(PlatformProvider):
                         deletable=True,
                     )
                 )
+
+        # Now the other way. Get all runners in GitHub that are not in the requested runners
+        non_requested_runners = []
+        requested_instance_ids = {runner.instance_id for runner in requested_runners}
+        non_requested_runners = [
+            runner.identity
+            for runner in github_runners
+            if runner.identity.instance_id not in requested_instance_ids
+        ]
         return RunnersHealthResponse(
-            requested_runners=runners_health,
+            requested_runners=requested_runners_health,
+            non_requested_runners=non_requested_runners,
         )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
@@ -143,14 +152,15 @@ class GitHubRunnerPlatform(PlatformProvider):
             self._client.delete_runner(self._path, runner.id)
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """TODO.
+        """Delete a runner from GitHub.
 
-        TODO can raise DeleteRunnerBusyError
+        This method will raise DeleteRunnerBusyError if the runner is not deletable, that is,
+        if it is busy. If the runner does not exist it will not fail.
 
         Args:
-            runner_identity: TODO
+            runner_identity: Identity of the runner to delete.
         """
-        logger.info("JAVI github_provider::delete_runner %s", runner_identity)
+        logger.info("Delete runner in GitHub: %s", runner_identity)
         self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
 
     def get_runner_context(
@@ -231,7 +241,6 @@ class GitHubRunnerPlatform(PlatformProvider):
             workflow_run_id=workflow_run_id,
             runner_name=runner.name,
         )
-        # TODO HANDLE API ERRORS IN HERE?
         logger.debug(
             "Job info for runner %s with workflow run id %s: %s",
             runner,

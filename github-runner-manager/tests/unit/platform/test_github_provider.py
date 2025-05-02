@@ -14,6 +14,10 @@ from github_runner_manager.platform.github_provider import (
     GithubRunnerNotFoundError,
     GitHubRunnerPlatform,
 )
+from github_runner_manager.platform.platform_provider import (
+    PlatformRunnerHealth,
+    RunnersHealthResponse,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -116,3 +120,121 @@ def test_get_runner_health(
     assert runner_health.online is expected_online
     assert runner_health.busy is expected_busy
     assert runner_health.deletable is expected_deletable
+
+
+@pytest.mark.parametrize(
+    "requested_runners,github_runners,expected_health_response",
+    [
+        pytest.param(
+            [],
+            [],
+            RunnersHealthResponse(),
+            id="Nothing requested, nothing in github, nothing replied.",
+        ),
+        pytest.param(
+            [
+                identity_1 := RunnerIdentity(
+                    InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(platform_name="github", runner_id=str(1)),
+                ),
+                identity_2 := RunnerIdentity(
+                    InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(platform_name="github", runner_id=str(2)),
+                ),
+            ],
+            [
+                SelfHostedRunner(
+                    identity=identity_1,
+                    busy=True,
+                    id=3,
+                    labels=[],
+                    status=GitHubRunnerStatus.ONLINE,
+                    deletable=False,
+                )
+            ],
+            RunnersHealthResponse(
+                requested_runners=[
+                    PlatformRunnerHealth(
+                        identity=identity_1,
+                        online=True,
+                        busy=True,
+                        deletable=False,
+                    ),
+                    PlatformRunnerHealth(
+                        identity=identity_2,
+                        online=False,
+                        busy=False,
+                        deletable=True,
+                    ),
+                ]
+            ),
+            id="Two requested, only one in github.",
+        ),
+        pytest.param(
+            [
+                identity_1 := RunnerIdentity(
+                    InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(platform_name="github", runner_id=str(1)),
+                ),
+            ],
+            [
+                SelfHostedRunner(
+                    identity=identity_1,
+                    busy=True,
+                    id=3,
+                    labels=[],
+                    status=GitHubRunnerStatus.ONLINE,
+                    deletable=False,
+                ),
+                SelfHostedRunner(
+                    identity=(
+                        identity_2 := RunnerIdentity(
+                            InstanceID.build(prefix="unit-0"),
+                            metadata=RunnerMetadata(platform_name="github", runner_id=str(2)),
+                        )
+                    ),
+                    busy=True,
+                    id=3,
+                    labels=[],
+                    status=GitHubRunnerStatus.ONLINE,
+                    deletable=False,
+                ),
+            ],
+            RunnersHealthResponse(
+                requested_runners=[
+                    PlatformRunnerHealth(
+                        identity=identity_1,
+                        online=True,
+                        busy=True,
+                        deletable=False,
+                    ),
+                ],
+                non_requested_runners=[
+                    identity_2,
+                ],
+            ),
+            id="One requested, two in github.",
+        ),
+    ],
+)
+def test_get_runners_health(
+    monkeypatch: pytest.MonkeyPatch,
+    requested_runners: list[RunnerIdentity],
+    github_runners: list[SelfHostedRunner],
+    expected_health_response: RunnersHealthResponse,
+):
+    """
+    arrange: Given some requested runner identities, and a reply from GitHub.
+    act: Call get_runners_health.
+    assert: The expected health response with the correct requested_runners
+        and non_requested_runners.
+    """
+    prefix = "unit-0"
+
+    github_client_mock = MagicMock(spec=GithubClient)
+    github_client_mock.list_runners.return_value = github_runners
+
+    platform = GitHubRunnerPlatform(prefix=prefix, path="org", github_client=github_client_mock)
+    runners_health_response = platform.get_runners_health(requested_runners)
+
+    assert runners_health_response == expected_health_response

@@ -75,9 +75,7 @@ class MultiplexerPlatform(PlatformProvider):
             Platform Runner Health information.
         """
         logger.info("JAVI multiplexer get runner health: %s", runner_identity.instance_id)
-        return self._get_provider(runner_identity.metadata).get_runner_health(
-            runner_identity.metadata, runner_identity.instance_id
-        )
+        return self._get_provider(runner_identity.metadata).get_runner_health(runner_identity)
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
         """TODO.
