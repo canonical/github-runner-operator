@@ -110,6 +110,7 @@ class GithubConfig:
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
 
         if token == EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE:
+            logger.info("Experimental job manager only token value used.")
             return None
 
         if not path_str:

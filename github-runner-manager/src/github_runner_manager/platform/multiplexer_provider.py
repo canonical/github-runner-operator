@@ -2,7 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Multiplexer platform provider to use several providers simultaneously."""
-
+import logging
 from collections import defaultdict
 from typing import Iterable
 
@@ -20,6 +20,7 @@ from github_runner_manager.platform.platform_provider import (
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
+logger = logging.getLogger(__name__)
 
 class MultiplexerPlatform(PlatformProvider):
     """Manage self-hosted runner on the Multiplexer.
@@ -52,7 +53,9 @@ class MultiplexerPlatform(PlatformProvider):
             A new MultiplexerPlatform.
         """
         providers: dict[str, PlatformProvider] = {"jobmanager": JobManagerPlatform.build()}
-        if github_configuration is not None:
+        if github_configuration is None:
+            logger.debug("GitHub configuration not provided, skipping GitHub provider.")
+        else:
             github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
             providers.update({"github": github_platform})
         return cls(providers)

@@ -1,7 +1,6 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import pytest
-
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -30,13 +29,21 @@ import factories
 @pytest.mark.parametrize(
     "with_github_config, expected_github_config",
     [
-        pytest.param(True, GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
-        ), id="with_github_config"),
+        pytest.param(
+            True,
+            GitHubConfiguration(
+                token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+            ),
+            id="with_github_config",
+        ),
         pytest.param(False, None, id="without_github_config"),
-    ]
+    ],
 )
-def test_create_application_configuration(complete_charm_state: charm_state.CharmState, with_github_config: bool, expected_github_config: GitHubConfiguration | None):
+def test_create_application_configuration(
+    complete_charm_state: charm_state.CharmState,
+    with_github_config: bool,
+    expected_github_config: GitHubConfiguration | None,
+):
     """
     arrange: Prepare a fully populated CharmState.
     act: Call create_application_configuration.
@@ -49,7 +56,6 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
         state.charm_config.token = None
 
     app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
-
 
     assert app_configuration == ApplicationConfiguration(
         name="app_name",
