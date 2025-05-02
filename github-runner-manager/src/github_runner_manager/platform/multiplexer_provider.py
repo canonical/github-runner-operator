@@ -40,7 +40,7 @@ class MultiplexerPlatform(PlatformProvider):
 
     @classmethod
     def build(
-        cls, prefix: str, github_configuration: GitHubConfiguration
+        cls, prefix: str, github_configuration: GitHubConfiguration | None
     ) -> "MultiplexerPlatform":
         """Build a new MultiplexerPlatform.
 
@@ -51,9 +51,11 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             A new MultiplexerPlatform.
         """
-        github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
-        jobmanager_platform = JobManagerPlatform.build()
-        return cls({"github": github_platform, "jobmanager": jobmanager_platform})
+        providers: dict[str, PlatformProvider] = {"jobmanager": JobManagerPlatform.build()}
+        if github_configuration is not None:
+            github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
+            providers.update({"github": github_platform})
+        return cls(providers)
 
     def get_runner_health(
         self,
