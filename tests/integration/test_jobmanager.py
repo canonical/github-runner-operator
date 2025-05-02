@@ -28,7 +28,7 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    TOKEN_CONFIG_NAME,
+    TOKEN_CONFIG_NAME, EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
 from tests.integration.helpers.common import reconcile, wait_for
@@ -96,7 +96,7 @@ async def app_fixture(
 
     await app_for_jobmanager.set_config(
         {
-            TOKEN_CONFIG_NAME: "",
+            TOKEN_CONFIG_NAME: EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
             PATH_CONFIG_NAME: "",
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
