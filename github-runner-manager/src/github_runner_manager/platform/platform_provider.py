@@ -114,31 +114,35 @@ class PlatformProvider(abc.ABC):
 
 @dataclass
 class RunnersHealthResponse:
-    """TODO.
+    """Response for the get_runners_health.
+
+    See information in the method PlatformProvider.get_runners_health
+    The order or the runners in the lists is arbitrary.
 
     Attributes:
-        requested_runners: TODO
-        failed_requested_runners: TODO
-        non_requested_runners: TODO
+        requested_runners: Health information for the requested runners.
+        failed_requested_runners: Requested runners for which the health check request failed,
+            and was not possible to get information.
+        non_requested_runners: Optional list of runners for which the health check was not
+            requested.
     """
 
     requested_runners: "list[PlatformRunnerHealth]" = field(default_factory=list)
     failed_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
-    # TODO
     non_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
 
     def append(self, other: "RunnersHealthResponse") -> None:
-        """TODO.
+        """Append the other RunnersHealthResponse to the current object.
 
         Args:
-            other: TODO
+            other: Other RunnersHealthResponse.
         """
         self.requested_runners += other.requested_runners
         self.failed_requested_runners += other.failed_requested_runners
         self.non_requested_runners += other.non_requested_runners
 
 
-@dataclass
+@dataclass(order=True)
 class PlatformRunnerHealth:
     """Information about the health of a platform runner.
 

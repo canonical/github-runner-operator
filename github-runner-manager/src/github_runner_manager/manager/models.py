@@ -13,7 +13,7 @@ class InstanceIDInvalidError(Exception):
     """Raised when the InstanceID naming will break the provider of GitHub."""
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass(eq=True, frozen=True, order=True)
 class InstanceID:
     """Main identifier for a runner instance among all clouds and GitHub.
 
@@ -155,7 +155,7 @@ class InstanceID:
         return f"InstanceID({self.name!r})"
 
 
-@dataclass
+@dataclass(order=True)
 class RunnerMetadata:
     """This class contains information about the runner and the platform it runs in.
 
@@ -181,7 +181,7 @@ class RunnerMetadata:
         return {k: v for k, v in asdict(self).items() if v is not None}
 
 
-@dataclass
+@dataclass(order=True)
 class RunnerIdentity:
     """Identity for the runner.
 

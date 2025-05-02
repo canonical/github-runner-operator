@@ -74,20 +74,27 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             Platform Runner Health information.
         """
-        logger.info("JAVI multiplexer get runner health: %s", runner_identity.instance_id)
         return self._get_provider(runner_identity.metadata).get_runner_health(runner_identity)
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
-        """TODO.
+        """Get information from the runners health.
+
+        This method returns a RunnersHealthResponse object that contains three lists with runners,
+        none of them necessarily in the same order as the input argument:
+         - requested_runners: Runners for which a health check succeeded with the requested
+           information.
+         - failed_requested_runners: Runners for which the health check failed, and may succeed
+           if retrying.
+         - non_requested_runners: List of runners in the platform provider that were not requested.
+           This is an optional response from the provider. This may be useful to clean resources
+           in the platform provider.
 
         Args:
-            requested_runners: TODO
+            requested_runners: List of runners to get health information for.
 
         Returns:
             Health information on the runners.
         """
-        # TODO would it be better to return them in the same order as the input?
-        logger.info("JAVI multiplexer get runners health: %s", requested_runners)
         response = RunnersHealthResponse()
         identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
         for identity in requested_runners:
@@ -103,7 +110,7 @@ class MultiplexerPlatform(PlatformProvider):
         """Delete runners.
 
         Args:
-            runner_identity: TODO
+            runner_identity: Runner to delete.
         """
         self._get_provider(runner_identity.metadata).delete_runner(runner_identity)
 
