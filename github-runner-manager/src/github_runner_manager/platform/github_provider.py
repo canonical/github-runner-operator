@@ -131,10 +131,8 @@ class GitHubRunnerPlatform(PlatformProvider):
                         deletable=True,
                     )
                 )
-        return (
-            RunnersHealthResponse(
-                requested_runners=runners_health,
-            ),
+        return RunnersHealthResponse(
+            requested_runners=runners_health,
         )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:

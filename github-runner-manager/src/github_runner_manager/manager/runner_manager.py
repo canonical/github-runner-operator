@@ -169,8 +169,8 @@ class RunnerManager:
         runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.debug("clouds runners %s", cloud_runners)
-        logger.debug("runner health response %s", runners_health_response)
+        logger.info("clouds runners %s", cloud_runners)
+        logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         for cloud_runner in cloud_runners:
