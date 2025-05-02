@@ -79,7 +79,6 @@ The nftables on the Juju machine are configured to deny traffic from the runner 
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
 
 - Requesting self-hosted runner registration tokens
-- Requesting self-hosted runner removal tokens
 - Requesting a list of runner applications
 - Requesting a list of self-hosted runners configured in an organization or repository
 - Deleting self-hosted runners

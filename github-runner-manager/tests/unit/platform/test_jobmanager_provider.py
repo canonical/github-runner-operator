@@ -17,7 +17,7 @@ from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
 from jobmanager_client.rest import ApiException
 
 from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
 
@@ -43,7 +43,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
 
     assert "builder-agent" in context.shell_run_script
     assert runner.labels == [SelfHostedRunnerLabel(name="label")]
-    assert runner.metadata == metadata
+    assert runner.identity.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE
     assert not runner.busy
 
@@ -163,8 +163,8 @@ def test_get_runner_health(
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
     )
-
-    runner_health = platform.get_runner_health(metadata=metadata, instance_id=instance_id)
+    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+    runner_health = platform.get_runner_health(identity)
 
     assert runner_health
     assert runner_health.online is expected_online

@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 import pytest
 
 from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.github_provider import (
     GithubRunnerNotFoundError,
     GitHubRunnerPlatform,
@@ -23,6 +23,7 @@ def _params_test_get_runner_health():
     runner_id = 3
     metadata = RunnerMetadata(platform_name="github", runner_id=str(runner_id))
     instance_id = InstanceID.build(prefix=prefix)
+    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
     # The parameterized arguments are:
     # "instance_id,metadata,self_hosted_runner,expected_online,expected_busy,expected_deletable",
     return [
@@ -30,12 +31,11 @@ def _params_test_get_runner_health():
             instance_id,
             metadata,
             SelfHostedRunner(
+                identity=identity,
                 busy=False,
                 id=1,
                 labels=[],
                 status=GitHubRunnerStatus.OFFLINE,
-                instance_id=instance_id,
-                metadata=metadata,
             ),
             False,
             False,
@@ -46,12 +46,11 @@ def _params_test_get_runner_health():
             instance_id,
             metadata,
             SelfHostedRunner(
+                identity=identity,
                 busy=False,
                 id=1,
                 labels=[],
                 status=GitHubRunnerStatus.ONLINE,
-                instance_id=instance_id,
-                metadata=metadata,
             ),
             True,
             False,
@@ -62,12 +61,11 @@ def _params_test_get_runner_health():
             instance_id,
             metadata,
             SelfHostedRunner(
+                identity=identity,
                 busy=True,
                 id=1,
                 labels=[],
                 status=GitHubRunnerStatus.OFFLINE,
-                instance_id=instance_id,
-                metadata=metadata,
             ),
             False,
             True,
@@ -111,7 +109,8 @@ def test_get_runner_health(
 
     platform = GitHubRunnerPlatform(prefix=prefix, path="org", github_client=github_client_mock)
 
-    runner_health = platform.get_runner_health(instance_id=instance_id, metadata=metadata)
+    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+    runner_health = platform.get_runner_health(identity)
 
     assert runner_health
     assert runner_health.online is expected_online

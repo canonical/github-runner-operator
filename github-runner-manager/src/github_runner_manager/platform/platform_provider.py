@@ -8,12 +8,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum, auto
 
-# Pylint exception needed because of typing forward references.
-from typing import Iterable  # pylint: disable=unused-import
-
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -25,31 +27,35 @@ class JobNotFoundError(PlatformError):
     """Represents an error when the job could not be found on the platform."""
 
 
+class DeleteRunnerBusyError(PlatformError):
+    """TODO."""
+
+
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
     @abc.abstractmethod
-    def get_runner_health(
-        self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
-    ) -> "PlatformRunnerHealth":
+    def get_runner_health(self, runner_identity: RunnerIdentity) -> "PlatformRunnerHealth":
         """Get health information on self-hosted runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: TODO
         """
 
     @abc.abstractmethod
-    def get_runners(
-        self, states: "Iterable[PlatformRunnerState] | None" = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
+    def get_runners_health(
+        self, runner_identities: list[RunnerIdentity]
+    ) -> "list[PlatformRunnerHealth]":
+        """TODO.
+
+        TODO should be return the list of the ones that failed?
+        Could we put that info in PlatformRunnerHealth instead?
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            runner_identities: TODO
         """
+        # TODO change the response to a map of identities to health so we can send
+        # some info when the call failed
 
     @abc.abstractmethod
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
@@ -57,6 +63,16 @@ class PlatformProvider(abc.ABC):
 
         Args:
             runners: list of runners to delete.
+        """
+
+    @abc.abstractmethod
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """TODO.
+
+        TODO can raise DeleteRunnerBusyError
+
+        Args:
+            runner_identity: TODO
         """
 
     @abc.abstractmethod
@@ -71,13 +87,6 @@ class PlatformProvider(abc.ABC):
             metadata: Metadata for the runner.
             instance_id: Instance ID of the runner.
             labels: Labels for the runner.
-        """
-
-    @abc.abstractmethod
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
         """
 
     @abc.abstractmethod
@@ -103,6 +112,17 @@ class PlatformProvider(abc.ABC):
         """
 
 
+# @dataclass
+# class RunnerHealthResponse:
+#     """TODO.
+
+#     Attributes:
+
+#     """
+#     runners_health: "list[PlatformRunnerHealth]"
+#     failed_runners_health: "list[PlatformRunnerHealth]"
+
+
 @dataclass
 class PlatformRunnerHealth:
     """Information about the health of a platform runner.
@@ -114,15 +134,13 @@ class PlatformRunnerHealth:
     manager.
 
     Attributes:
-        instance_id: InstanceID of the runner.
-        metadata: Metadata of the runner.
+        identity: Identity of the runner.
         online: Whether the runner is online.
         busy: Whether the runner is busy.
         deletable: Whether the runner is deletable.
     """
 
-    instance_id: InstanceID
-    metadata: RunnerMetadata
+    identity: RunnerIdentity
     online: bool
     busy: bool
     deletable: bool
@@ -158,6 +176,26 @@ class PlatformRunnerState(str, Enum):
         if runner.busy:
             state = PlatformRunnerState.BUSY
         if runner.status == GitHubRunnerStatus.ONLINE and not runner.busy:
+            state = PlatformRunnerState.IDLE
+        return state
+
+    @staticmethod
+    def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerState":
+        """TODO.
+
+        Args:
+            health: TODO
+
+        Returns:
+            The state of runner.
+        """
+        state = PlatformRunnerState.OFFLINE
+
+        if health.deletable:
+            state = PlatformRunnerState.OFFLINE
+        elif health.busy:
+            state = PlatformRunnerState.BUSY
+        elif health.online:
             state = PlatformRunnerState.IDLE
         return state
 

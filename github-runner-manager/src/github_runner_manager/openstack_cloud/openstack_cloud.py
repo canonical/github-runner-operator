@@ -102,7 +102,9 @@ class OpenstackInstance:
             for network_addresses in server.addresses.values()
             for address in network_addresses
         ]
-        self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
+        self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=timezone.utc
+        )
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
