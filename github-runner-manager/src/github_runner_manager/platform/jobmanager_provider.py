@@ -80,7 +80,7 @@ class JobManagerPlatform(PlatformProvider):
                 )
             except (ApiException, RequestError) as exc:
                 logger.exception(
-                    "Error calling jobmanager api for runner %s. %s",
+                    "Error calling jobmanager api for runner %s. %s", runner_identity, exc
                 )
                 raise PlatformApiError("API error") from exc
 
@@ -126,12 +126,12 @@ class JobManagerPlatform(PlatformProvider):
         )
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """TODO.
+        """Delete a runner from jobmanager..
 
-        TODO can raise DeleteRunnerBusyError
+        This method does nothing, as the jobmanager does not implement it.
 
         Args:
-            runner_identity: TODO
+            runner_identity: The identity of the runner to delete.
         """
         logger.debug("No need to delete jobs in the jobmanager.")
 
@@ -234,7 +234,6 @@ class JobManagerPlatform(PlatformProvider):
         Raises:
             PlatformApiError: This is not provided by this interface yet.
         """
-        logger.info("get_job_info not implemented in the jobmanager")
         raise PlatformApiError("get_job_info not provided by the jobmanager")
 
 
