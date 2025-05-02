@@ -1,5 +1,6 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import pytest
 
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
@@ -26,7 +27,16 @@ import charm_state
 import factories
 
 
-def test_create_application_configuration(complete_charm_state: charm_state.CharmState):
+@pytest.mark.parametrize(
+    "with_github_config, expected_github_config",
+    [
+        pytest.param(True, GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ), id="with_github_config"),
+        pytest.param(False, None, id="without_github_config"),
+    ]
+)
+def test_create_application_configuration(complete_charm_state: charm_state.CharmState, with_github_config: bool, expected_github_config: GitHubConfiguration | None):
     """
     arrange: Prepare a fully populated CharmState.
     act: Call create_application_configuration.
@@ -34,14 +44,17 @@ def test_create_application_configuration(complete_charm_state: charm_state.Char
     """
     state = complete_charm_state
 
+    if not with_github_config:
+        state.charm_config.path = None
+        state.charm_config.token = None
+
     app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
+
 
     assert app_configuration == ApplicationConfiguration(
         name="app_name",
         extra_labels=["label1", "label2"],
-        github_config=GitHubConfiguration(
-            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
-        ),
+        github_config=expected_github_config,
         service_config=SupportServiceConfig(
             manager_proxy_command="ssh -W %h:%p example.com",
             proxy_config=ProxyConfig(
