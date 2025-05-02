@@ -3,6 +3,7 @@
 
 """Multiplexer platform provider to use several providers simultaneously."""
 
+import logging
 from collections import defaultdict
 
 from pydantic import HttpUrl
@@ -22,6 +23,8 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
+
+logger = logging.getLogger(__name__)
 
 
 class MultiplexerPlatform(PlatformProvider):
@@ -72,6 +75,7 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             Platform Runner Health information.
         """
+        logger.info("JAVI multiplexer get runner health: %s", instance_id)
         return self._get_provider(metadata).get_runner_health(metadata, instance_id)
 
     def get_runners_health(
@@ -86,6 +90,7 @@ class MultiplexerPlatform(PlatformProvider):
             Health information on the runners.
         """
         # TODO would it be better to return them in the same order as the input?
+        logger.info("JAVI multiplexer get runners health: %s", runner_identities)
         runners_health = []
         identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
         for identity in runner_identities:

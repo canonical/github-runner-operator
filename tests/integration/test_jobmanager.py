@@ -20,6 +20,7 @@ from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
+from juju.action import Action
 from juju.application import Application
 from pytest_httpserver import HTTPServer
 from pytest_operator.plugin import OpsTest
@@ -34,6 +35,7 @@ from tests.integration.utils_reactive import (
     clear_queue,
     get_mongodb_uri,
 )
+from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
@@ -165,7 +167,8 @@ async def test_jobmanager(
     # From this point, the github-runner reactive process will check if the job has been picked
     # up. The jobmanager will return pending until the builder-agent is alive (that is,
     # the server is alive and running).
-    httpserver.expect_request(job_path).respond_with_json(returned_job.to_dict())
+    job_get_handler = httpserver.expect_request(job_path)
+    job_get_handler.respond_with_json(returned_job.to_dict())
 
     # The runner manager will request a token to spawn the runner.
     token_path = f"/v1/jobs/{job_id}/token"
@@ -210,9 +213,8 @@ async def test_jobmanager(
         status="PENDING",
         deletable=False,
     )
-    httpserver.expect_request(uri=job_path_health, method="GET").respond_with_json(
-        health_response.to_dict()
-    )
+    health_get_handler = httpserver.expect_request(uri=job_path_health, method="GET")
+    health_get_handler.respond_with_json(health_response.to_dict())
 
     unit = app.units[0]
 
@@ -234,17 +236,12 @@ async def test_jobmanager(
     assert waiting.result, "builder-agent did not contact us."
 
     # ok, at this point reply from the jobmanager that the runner is in progress.
-    health_response = V1JobsJobIdHealthGet200Response(
-        label="label",
-        cpu_usage="1",
-        ram_usage="1",
-        disk_usage="1",
-        status="IN_PROGRESS",
-        deletable=False,
-    )
-    httpserver.expect_request(uri=job_path_health, method="GET").respond_with_json(
-        health_response.to_dict()
-    )
+    health_response.status = "IN_PROGRESS"
+    health_response.deletable = False
+    health_get_handler.respond_with_json(health_response.to_dict())
+
+    returned_job.status = JobStatus.IN_PROGRESS.value
+    job_get_handler.respond_with_json(returned_job.to_dict())
 
     httpserver.check_assertions()
 
@@ -271,11 +268,51 @@ async def test_jobmanager(
     assert waiting.result, "builder-agent did not execute or finished."
 
     httpserver.check_assertions()
-
     assert_queue_is_empty(mongodb_uri, app.name)
 
-    # The reconcile loop is still not adapted and will badly kill the instance as the ssh
-    # health check will mark the instance as unhealthy.
+    # The health check is not returning deletable yet. Reconcile should not kill the runner.
+    logger.info("JAVI call reconcile1")
+    action: Action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
+    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    logger.info("JAVI reconcile1 result %s %s", action.status, action.results)
+
+    # At this point there should be a runner
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+    logger.info("JAVI action runners before reconcile: %s", action)
+    logger.info("JAVI action runners before reconcile: %s", action.results)
+    assert action.status == "completed"
+    assert action.results["online"] == "1"
+    assert action.results["busy"] == "1"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+    logger.info("handlers %s", httpserver.format_matchers())
+    logger.info("handler health %s", health_get_handler)
+    # from here, reply that the thing is deletable.
+    health_response.deletable = True
+    health_response.status = "COMPLETED"
+    health_get_handler.respond_with_json(health_response.to_dict())
+    logger.info("handler health %s", health_get_handler)
+    logger.info("handlers %s", httpserver.format_matchers())
+
+    logger.info("JAVI call reconcile: %s", action.results)
+    action = await app.units[0].run_action("reconcile-runners")
+    await action.wait()
+    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
+
+    action = await app.units[0].run_action("check-runners")
+    await action.wait()
+    logger.info("JAVI action runners after reconcile: %s", action)
+    logger.info("JAVI action runners after reconcile: %s", action.results)
+    assert action.status == "completed"
+    assert action.results["online"] == "0"
+    assert action.results["busy"] == "0"
+    assert action.results["offline"] == "0"
+    assert action.results["unknown"] == "0"
+
+    assert_queue_is_empty(mongodb_uri, app.name)
 
 
 async def _prepare_runner_tunnel_for_builder_agent(

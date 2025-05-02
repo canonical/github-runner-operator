@@ -32,6 +32,7 @@ from github_runner_manager.types_.github import (
 logger = logging.getLogger(__name__)
 
 
+# TODO GET ALL CONNECTION ERRORS AND SIMILAR AND TRANSFORM THEM TO A PROPER EXCEPTION
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
@@ -61,11 +62,13 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
            The health of the runner in the jobmanager.
         """
+        logger.info("JAVI get runner health: %s", instance_id)
         configuration = jobmanager_client.Configuration(host=metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.DefaultApi(api_client)
             try:
                 response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
+                logger.info("JAVI get runner health response: %s", response)
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
@@ -100,6 +103,7 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             Health information on the runners.
         """
+        logger.info("JAVI get runners health: %s", runner_identities)
         runners_health = []
         for identity in runner_identities:
             health = self.get_runner_health(
@@ -203,6 +207,7 @@ class JobManagerPlatform(PlatformProvider):
             api_instance = jobmanager_client.DefaultApi(api_client)
             try:
                 job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
+                logger.exception("JAVI check_job_been_picked_up: %s", job)
                 if job.status != JobStatus.PENDING:
                     return True
             except ApiException as exc:
