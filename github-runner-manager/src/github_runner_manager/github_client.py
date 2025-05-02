@@ -29,8 +29,6 @@ from github_runner_manager.configuration.github import (
     GitHubRepo,
 )
 from github_runner_manager.manager.models import InstanceID
-
-# TODO PENDING TO PLACE IN A BETTER PLACE THE EXCEPTIONS
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -86,8 +84,10 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 else:
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
+            logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
+            logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
 
     return wrapper
@@ -273,7 +273,8 @@ class GithubClient:
             runner_id: Id of the runner.
 
         Raises:
-            DeleteRunnerBusyError: TODO
+            DeleteRunnerBusyError: Error raised when trying to delete a runner that is online
+                and busy.
         """
         try:
             if isinstance(path, GitHubRepo):
@@ -282,11 +283,13 @@ class GithubClient:
                     repo=path.repo,
                     runner_id=runner_id,
                 )
-                if isinstance(path, GitHubOrg):
-                    self._client.actions.delete_self_hosted_runner_from_org(
-                        org=path.org,
-                        runner_id=runner_id,
-                    )
+            else:
+                self._client.actions.delete_self_hosted_runner_from_org(
+                    org=path.org,
+                    runner_id=runner_id,
+                )
+        # This function delete_self_hosted_runner fail in GitHub if the runner does not exist,
+        # so we do not have to worry about that.
         except HTTP422UnprocessableEntityError as err:
             raise DeleteRunnerBusyError from err
 

@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import http
+import io
 import json
 import random
 import secrets
@@ -12,8 +13,11 @@ from urllib.error import HTTPError
 import pytest
 import requests
 
-# HTTP404NotFoundError is not found by pylint
-from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
+# These exceptions are3 not found by pylint
+from fastcore.net import (  # pylint: disable=no-name-in-module
+    HTTP404NotFoundError,
+    HTTP422UnprocessableEntityError,
+)
 from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
@@ -21,6 +25,7 @@ from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.platform_provider import (
+    DeleteRunnerBusyError,
     JobNotFoundError,
     PlatformApiError,
     TokenError,
@@ -624,3 +629,30 @@ def test_get_runner_not_found(
     )
     with pytest.raises(GithubRunnerNotFoundError):
         _ = github_client.get_runner(path, prefix, runner_id)
+
+
+def test_delete_runner_busy(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A mocked GhApi Github Client that raises 404 when a runner is requested.
+    act: Call get_runner in GithubClient.
+    assert: The exception GithubRunnerNotFoundError is raised.
+    """
+    path = GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16))
+    runner_id = 1
+
+    error_body = """
+        {
+        "message": "Bad request - Runner test-bs69mhr2-0-n-5dbb110595a9 is currently running a job and cannot be deleted.",
+        "documentation_url": "https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-a-repository",
+        "status": "422"
+        }
+    """  # noqa: E501
+
+    github_client._client.actions.delete_self_hosted_runner_from_org.side_effect = (
+        HTTP422UnprocessableEntityError("https://github.com/endpoint", {}, io.StringIO(error_body))
+    )
+    with pytest.raises(DeleteRunnerBusyError):
+        _ = github_client.delete_runner(path, runner_id)
