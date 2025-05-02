@@ -12,7 +12,7 @@ from typing import List, Literal, Optional, TypedDict
 
 from pydantic import BaseModel
 
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 
 
 class GitHubRunnerStatus(str, Enum):
@@ -62,22 +62,20 @@ class SelfHostedRunner(BaseModel):
     """Information on a single self-hosted runner.
 
     Attributes:
+        identity: TODO
         busy: Whether the runner is executing a job.
         id: Unique identifier of the runner.
         labels: Labels of the runner.
         status: The Github runner status.
-        instance_id: InstanceID of the runner.
-        metadata: Runner metadata.
         deletable: Deletable runner. In GitHub, this is equivalent as the runner not
             existing in GitHub, as that runner cannot get jobs.
     """
 
+    identity: RunnerIdentity
     busy: bool
     id: int
     labels: list[SelfHostedRunnerLabel]
     status: GitHubRunnerStatus
-    instance_id: InstanceID
-    metadata: RunnerMetadata
     deletable: bool = False
 
     @classmethod
@@ -93,9 +91,9 @@ class SelfHostedRunner(BaseModel):
         # Pydantic does not correctly parse labels, they are of type fastcore.foundation.L.
         """
         github_dict["labels"] = list(github_dict["labels"])
-        github_dict["instance_id"] = instance_id
-        github_dict["metadata"] = RunnerMetadata(
-            platform_name="github", runner_id=github_dict["id"]
+        github_dict["identity"] = RunnerIdentity(
+            instance_id=instance_id,
+            metadata=RunnerMetadata(platform_name="github", runner_id=github_dict["id"]),
         )
         return cls.parse_obj(github_dict)
 

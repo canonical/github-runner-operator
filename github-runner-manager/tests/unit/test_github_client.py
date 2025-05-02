@@ -20,7 +20,7 @@ import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
 from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JobConclusion,
@@ -324,7 +324,7 @@ def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPat
     assert len(runners) == 1
     runner0 = runners[0]
     assert runner0.id == response["runners"][0]["id"]  # type: ignore
-    assert runner0.instance_id.name == response["runners"][0]["name"]  # type: ignore
+    assert runner0.identity.instance_id.name == response["runners"][0]["name"]  # type: ignore
     assert runner0.busy == response["runners"][0]["busy"]  # type: ignore
     assert runner0.status == response["runners"][0]["status"]  # type: ignore
 
@@ -390,12 +390,14 @@ def test_get_runner_context_repo(github_client: GithubClient):
 
     assert jittoken == "hugestringinhere"
     assert runner == SelfHostedRunner(
+        identity=RunnerIdentity(
+            instance_id=instance_id,
+            metadata=RunnerMetadata(platform_name="github", runner_id=113),
+        ),
         busy=False,
         id=113,
         labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
         status=GitHubRunnerStatus.OFFLINE,
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id=113),
     )
 
 
@@ -539,12 +541,14 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
 
     assert jittoken == "anotherhugetoken"
     assert github_runner == SelfHostedRunner(
+        identity=RunnerIdentity(
+            instance_id=instance_id,
+            metadata=RunnerMetadata(platform_name="github", runner_id=18),
+        ),
         busy=False,
         id=18,
         labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
         status=GitHubRunnerStatus.OFFLINE,
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id=18),
     )
 
 
@@ -596,7 +600,7 @@ def test_get_runner(
 
     assert github_runner
     assert github_runner.id == runner_id
-    assert github_runner.metadata.runner_id == str(runner_id)
+    assert github_runner.identity.metadata.runner_id == str(runner_id)
 
 
 def test_get_runner_not_found(

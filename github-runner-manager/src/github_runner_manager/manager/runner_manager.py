@@ -171,7 +171,7 @@ class RunnerManager:
         runners_health = self._platform.get_runners_health(cloud_runners)
         logger.debug("clouds runners %s", cloud_runners)
         logger.debug("runner health %s", runners_health)
-        health_runners_map = {runner.instance_id: runner for runner in runners_health}
+        health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         for cloud_runner in cloud_runners:
             if cloud_runner.instance_id not in health_runners_map:
                 runner_instance = RunnerInstance(cloud_runner, None)
@@ -255,7 +255,7 @@ class RunnerManager:
                 logger.debug("busy and not flush_busy")
                 continue
             try:
-                self._platform.delete_runner(runner_health)
+                self._platform.delete_runner(runner_health.identity)
             except DeleteRunnerBusyError:
                 if not flush_busy:
                     # This is a race condition, as the runner changed from non busy to busy.
@@ -265,11 +265,11 @@ class RunnerManager:
                         runner_health.instance_id,
                     )
                     continue
-                logger.info("Deleting busy runner %s", runner_health.instance_id)
+                logger.info("Deleting busy runner %s", runner_health.identity.instance_id)
 
-            runner_metric = self._cloud.delete_runner(runner_health.instance_id)
+            runner_metric = self._cloud.delete_runner(runner_health.identity.instance_id)
             if not runner_metric:
-                logger.error("No metrics returned after deleting %s", runner_health.instance_id)
+                logger.error("No metrics returned after deleting %s", runner_health.identity)
             else:
                 extracted_runner_metrics.append(runner_metric)
         extracted_runner_metrics += list(self._cleanup())
@@ -300,7 +300,7 @@ class RunnerManager:
         logger.info("JAVI runners_health %s", runners_health)
 
         for runner_health in runners_health:
-            cloud_runner = cloud_runners_map[runner_health.instance_id]
+            cloud_runner = cloud_runners_map[runner_health.identity.instance_id]
             now = datetime.now(timezone.utc)
             runner_should_be_online = (now - cloud_runner.created_at).total_seconds() > 1800
             if not runner_health.online and not runner_health.busy and runner_should_be_online:
@@ -314,7 +314,7 @@ class RunnerManager:
                 continue
 
             try:
-                self._platform.delete_runner(runner_health)
+                self._platform.delete_runner(runner_health.identity)
             except DeleteRunnerBusyError:
                 logger.warning(
                     "Tried to delete busy runner in cleanup %s", cloud_runner.instance_id
@@ -542,9 +542,8 @@ class RunnerManager:
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
             time.sleep(wait_time)
             try:
-                runner_health = platform_provider.get_runner_health(
-                    metadata=metadata, instance_id=instance_id
-                )
+                identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+                runner_health = platform_provider.get_runner_health(identity)
             except PlatformApiError as exc:
                 logger.error("Error getting the runner health: %s", exc)
                 continue

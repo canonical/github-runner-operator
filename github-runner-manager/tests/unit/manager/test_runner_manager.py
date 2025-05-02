@@ -16,7 +16,12 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerHealth
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -53,9 +58,11 @@ def test_cleanup_removes_offline_expected_runners(
     assert: If appropriate, the offline runner should be deleted.
     """
     instance_id = InstanceID.build("prefix-0")
+    identity = RunnerIdentity(
+        instance_id=instance_id, metadata=RunnerMetadata(platform_name="github", runner_id="1")
+    )
     github_runner = PlatformRunnerHealth(
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
+        identity=identity,
         online=online,
         busy=busy,
         deletable=deletable,
@@ -86,7 +93,7 @@ def test_cleanup_removes_offline_expected_runners(
     runner_manager.cleanup()
 
     if remove_platform:
-        github_provider.delete_runner.assert_called_with(github_runner)
+        github_provider.delete_runner.assert_called_with(github_runner.identity)
     else:
         github_provider.delete_runner.assert_not_called()
 
@@ -116,19 +123,22 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         labels=["label1", "label2"],
     )
 
+    identity = RunnerIdentity(
+        instance_id=InstanceID.build("invalid"),
+        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
+    )
     github_runner = SelfHostedRunner(
+        identity=identity,
         id=1,
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        instance_id=InstanceID.build("invalid"),
-        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
 
     def _get_runner_context(instance_id, metadata, labels):
         """Return the runner context."""
         nonlocal github_runner
-        github_runner.instance_id = instance_id
+        github_runner.identity.instance_id = instance_id
         return RunnerContext(shell_run_script="agent"), github_runner
 
     github_provider.get_runner_context.side_effect = _get_runner_context
@@ -145,8 +155,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
             (0,),
             None,
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=True,
                 busy=False,
                 deletable=False,
@@ -156,15 +165,13 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         pytest.param(
             (0, 0),
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=False,
                 busy=True,
                 deletable=False,
             ),
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=False,
                 busy=False,
                 deletable=True,
@@ -216,7 +223,7 @@ def test_create_runner(
     # The method to get the runner health was called three times
     # until the runner was online.
     assert platform_provider.get_runner_health.call_count == len(creation_waiting_times)
-    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
+    platform_provider.get_runner_health.assert_called()
 
 
 def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
@@ -242,7 +249,7 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
 
     health_offline = PlatformRunnerHealth(
-        instance_id=MagicMock(), metadata=MagicMock(), online=False, busy=False, deletable=False
+        identity=MagicMock(), online=False, busy=False, deletable=False
     )
 
     platform_provider.get_runner_health.side_effect = (
@@ -262,5 +269,5 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     # The runner was started even if it failed.
     cloud_runner_manager.create_runner.assert_called_once()
     assert platform_provider.get_runner_health.call_count == 2
-    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
+    platform_provider.get_runner_health.assert_called()
     platform_provider.delete_runners.assert_called_once_with([ANY])

@@ -35,16 +35,11 @@ class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
     @abc.abstractmethod
-    def get_runner_health(
-        self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
-    ) -> "PlatformRunnerHealth":
+    def get_runner_health(self, runner_identity: RunnerIdentity) -> "PlatformRunnerHealth":
         """Get health information on self-hosted runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: TODO
         """
 
     @abc.abstractmethod
@@ -117,6 +112,17 @@ class PlatformProvider(abc.ABC):
         """
 
 
+# @dataclass
+# class RunnerHealthResponse:
+#     """TODO.
+
+#     Attributes:
+
+#     """
+#     runners_health: "list[PlatformRunnerHealth]"
+#     failed_runners_health: "list[PlatformRunnerHealth]"
+
+
 @dataclass
 class PlatformRunnerHealth:
     """Information about the health of a platform runner.
@@ -128,15 +134,13 @@ class PlatformRunnerHealth:
     manager.
 
     Attributes:
-        instance_id: InstanceID of the runner.
-        metadata: Metadata of the runner.
+        identity: Identity of the runner.
         online: Whether the runner is online.
         busy: Whether the runner is busy.
         deletable: Whether the runner is deletable.
     """
 
-    instance_id: InstanceID
-    metadata: RunnerMetadata
+    identity: RunnerIdentity
     online: bool
     busy: bool
     deletable: bool

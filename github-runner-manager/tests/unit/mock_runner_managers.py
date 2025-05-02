@@ -350,30 +350,32 @@ class MockGitHubRunnerPlatform(PlatformProvider):
 
     def get_runner_health(
         self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
+        runner_identity: RunnerIdentity,
     ) -> PlatformRunnerHealth:
         """Get info on self-hosted runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: Identity of the runner.
 
         Returns:
             Information about the health of the runner
         """
-        if instance_id in self.state.runners:
-            runner = self.state.runners[instance_id]
-            logger.info("JAVI mock_platform.get_runner_health %s %s", instance_id, runner)
+        if runner_identity.instance_id in self.state.runners:
+            runner = self.state.runners[runner_identity.instance_id]
+            logger.info(
+                "JAVI mock_platform.get_runner_health %s %s", runner_identity.instance_id, runner
+            )
             return PlatformRunnerHealth(
-                instance_id=instance_id,
-                metadata=metadata,
+                identity=runner_identity,
                 online=runner.github_state != PlatformRunnerState.OFFLINE,
                 busy=runner.github_state == PlatformRunnerState.BUSY,
                 deletable=False,
             )
         return PlatformRunnerHealth(
-            instance_id=instance_id, metadata=metadata, online=False, busy=False, deletable=True
+            identity=runner_identity,
+            online=False,
+            busy=False,
+            deletable=True,
         )
 
     def get_runners_health(
@@ -393,10 +395,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                 runner = self.state.runners[identity.instance_id]
                 if runner.health:
                     found_identities.append(identity)
-        return [
-            self.get_runner_health(instance_id=identity.instance_id, metadata=identity.metadata)
-            for identity in found_identities
-        ]
+        return [self.get_runner_health(identity) for identity in found_identities]
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]

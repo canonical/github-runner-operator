@@ -65,24 +65,23 @@ class GitHubRunnerPlatform(PlatformProvider):
 
     def get_runner_health(
         self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
+        runner_identity: RunnerIdentity,
     ) -> PlatformRunnerHealth:
         """Get information on the health of a github runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: Identity for the runner.
 
         Returns:
             Information about the health status of the runner.
         """
         try:
-            runner = self._client.get_runner(self._path, self._prefix, int(metadata.runner_id))
+            runner = self._client.get_runner(
+                self._path, self._prefix, int(runner_identity.metadata.runner_id)
+            )
             online = runner.status == GitHubRunnerStatus.ONLINE
             return PlatformRunnerHealth(
-                instance_id=instance_id,
-                metadata=metadata,
+                identity=runner_identity,
                 online=online,
                 busy=runner.busy,
                 deletable=False,
@@ -90,8 +89,7 @@ class GitHubRunnerPlatform(PlatformProvider):
 
         except GithubRunnerNotFoundError:
             return PlatformRunnerHealth(
-                instance_id=instance_id,
-                metadata=metadata,
+                identity=runner_identity,
                 online=False,
                 busy=False,
                 deletable=True,
@@ -119,8 +117,7 @@ class GitHubRunnerPlatform(PlatformProvider):
                 online = runner.status == GitHubRunnerStatus.ONLINE
                 runners_health.append(
                     PlatformRunnerHealth(
-                        instance_id=runner.instance_id,
-                        metadata=runner.metadata,
+                        identity=identity,
                         online=online,
                         busy=runner.busy,
                         deletable=False,
@@ -129,8 +126,7 @@ class GitHubRunnerPlatform(PlatformProvider):
             else:
                 runners_health.append(
                     PlatformRunnerHealth(
-                        instance_id=identity.instance_id,
-                        metadata=identity.metadata,
+                        identity=identity,
                         online=False,
                         busy=False,
                         deletable=True,

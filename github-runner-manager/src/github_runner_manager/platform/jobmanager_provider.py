@@ -47,14 +47,12 @@ class JobManagerPlatform(PlatformProvider):
 
     def get_runner_health(
         self,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
+        runner_identity: RunnerIdentity,
     ) -> PlatformRunnerHealth:
         """Get health information on jobmanager runner.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: Instance ID of the runner.
+            runner_identity: Identity of the runner.
 
         Raises:
             PlatformApiError: If there was an error calling the jobmanager client.
@@ -62,12 +60,14 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
            The health of the runner in the jobmanager.
         """
-        logger.info("JAVI get runner health: %s", instance_id)
-        configuration = jobmanager_client.Configuration(host=metadata.url)
+        logger.info("JAVI get runner health: %s", runner_identity.instance_id)
+        configuration = jobmanager_client.Configuration(host=runner_identity.metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.DefaultApi(api_client)
             try:
-                response = api_instance.v1_jobs_job_id_health_get(int(metadata.runner_id))
+                response = api_instance.v1_jobs_job_id_health_get(
+                    int(runner_identity.metadata.runner_id)
+                )
                 logger.info("JAVI get runner health response: %s", response)
             except ApiException as exc:
                 logger.exception("Error calling jobmanager api.")
@@ -85,8 +85,7 @@ class JobManagerPlatform(PlatformProvider):
         deletable = response.deletable
 
         return PlatformRunnerHealth(
-            instance_id=instance_id,
-            metadata=metadata,
+            identity=runner_identity,
             online=online,
             deletable=deletable,
             busy=busy,
@@ -106,9 +105,7 @@ class JobManagerPlatform(PlatformProvider):
         logger.info("JAVI get runners health: %s", runner_identities)
         runners_health = []
         for identity in runner_identities:
-            health = self.get_runner_health(
-                instance_id=identity.instance_id, metadata=identity.metadata
-            )
+            health = self.get_runner_health(identity)
             runners_health.append(health)
         return runners_health
 
@@ -175,12 +172,14 @@ class JobManagerPlatform(PlatformProvider):
                             ingress_tcp_ports=[8080],
                         ),
                         SelfHostedRunner(
+                            identity=RunnerIdentity(
+                                instance_id=instance_id,
+                                metadata=metadata,
+                            ),
                             busy=False,
                             id=int(metadata.runner_id),
-                            metadata=metadata,
                             labels=[SelfHostedRunnerLabel(name=label) for label in labels],
                             status=GitHubRunnerStatus.OFFLINE,
-                            instance_id=instance_id,
                         ),
                     )
                 raise PlatformApiError("Empty token from jobmanager API")
