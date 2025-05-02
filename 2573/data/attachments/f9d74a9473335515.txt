@@ -1,0 +1,101 @@
+06:35:05 INFO Creating 1 runners
+06:35:05 INFO Creating openstack server with test-k1r0yowh-0-n-7c01292d76ff
+06:35:27 INFO Runner test-k1r0yowh-0-n-7c01292d76ff created successfully
+06:37:28 INFO Getting runners...
+06:37:29 INFO Getting all openstack servers managed by the charm
+06:37:39 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:39 INFO Authentication (publickey) successful!
+06:37:40 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:37:40 INFO Getting runners...
+06:37:41 INFO Getting all openstack servers managed by the charm
+06:37:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:47 INFO Authentication (publickey) successful!
+06:37:48 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:37:48 INFO Getting runners...
+06:37:49 INFO Getting all openstack servers managed by the charm
+06:37:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:51 INFO Authentication (publickey) successful!
+06:37:52 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:37:54 INFO Wait for condition not met, sleeping 10
+06:38:05 INFO Getting runners...
+06:38:06 INFO Getting all openstack servers managed by the charm
+06:38:08 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:38:09 INFO Authentication (publickey) successful!
+06:38:09 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:09 WARNING Found runner instance on cloud but not registered on GitHub: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:09 INFO Getting runners...
+06:38:11 INFO Getting all openstack servers managed by the charm
+06:38:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:38:13 INFO Authentication (publickey) successful!
+06:38:13 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:13 WARNING Found runner instance on cloud but not registered on GitHub: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:15 INFO Offline github runners to delete: []:
+06:38:15 INFO Getting all openstack servers managed by the charm
+06:38:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:38:19 INFO Authentication (publickey) successful!
+06:38:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:38:20 INFO Authentication (publickey) successful!
+06:38:20 INFO [chan 2] Opened sftp connection (server version 3)
+06:38:20 INFO Running runner removal script for test-k1r0yowh-0-n-7c01292d76ff
+06:38:21 INFO Deleting openstack server with test-k1r0yowh-0-n-7c01292d76ff
+06:38:25 INFO Cleaning up SSH key files
+06:38:25 INFO Found 0 key files, clean up 0 key files
+06:38:25 INFO Cleaning up openstack keypairs
+06:38:25 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerStop'>: 1}
+06:38:25 INFO Getting runners...
+06:38:26 INFO Getting all openstack servers managed by the charm
+06:38:29 ERROR Unable to get SSH connection for instance test-k1r0yowh-0-n-7c01292d76ff, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-k1r0yowh-0-n-7c01292d76ff, key path: /home/ubuntu/.ssh/test-k1r0yowh-0-n-7c01292d76ff.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-k1r0yowh-0-n-7c01292d76ff
+06:38:29 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:29 WARNING Found runner instance on cloud but not registered on GitHub: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:29 INFO Getting runners...
+06:38:30 INFO Getting all openstack servers managed by the charm
+06:38:32 ERROR Unable to get SSH connection for instance test-k1r0yowh-0-n-7c01292d76ff, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-k1r0yowh-0-n-7c01292d76ff, key path: /home/ubuntu/.ssh/test-k1r0yowh-0-n-7c01292d76ff.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-k1r0yowh-0-n-7c01292d76ff
+06:38:32 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:32 WARNING Found runner instance on cloud but not registered on GitHub: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:38:32 INFO Wait for condition not met, sleeping 60
+06:39:32 INFO Getting runners...
+06:39:33 INFO Getting all openstack servers managed by the charm
+06:39:35 INFO Found following runners: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:39:35 WARNING Found runner instance on cloud but not registered on GitHub: {'test-k1r0yowh-0-n-7c01292d76ff'}
+06:39:35 INFO Wait for condition not met, sleeping 60
+06:40:35 INFO Getting runners...
+06:40:37 INFO Getting all openstack servers managed by the charm
+06:40:38 INFO Found following runners: set()

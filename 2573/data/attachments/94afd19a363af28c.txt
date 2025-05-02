@@ -1,0 +1,115 @@
+07:28:33 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] active: 
+07:29:03 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] maintenance: Reconciling runners
+07:30:11 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] active: 
+07:30:41 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] maintenance: Reconciling runners
+07:31:08 INFO Wait for condition not met, sleeping 10
+07:31:20 INFO Wait for condition not met, sleeping 10
+07:31:31 INFO Wait for condition not met, sleeping 10
+07:31:41 INFO Wait for condition not met, sleeping 10
+07:31:52 INFO Wait for condition not met, sleeping 10
+07:32:02 INFO Wait for condition not met, sleeping 10
+07:32:13 INFO Wait for condition not met, sleeping 10
+07:32:23 INFO Wait for condition not met, sleeping 10
+07:32:34 INFO Wait for condition not met, sleeping 10
+07:32:44 INFO Wait for condition not met, sleeping 10
+07:34:12 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] active: 
+07:34:42 INFO Waiting for model:
+  test-uuim4qfe/0 [executing] maintenance: Reconciling runners
+07:35:12 INFO Waiting for model:
+  test-uuim4qfe/0 [idle] active: 
+07:35:16 INFO Wait for condition not met, sleeping 60
+07:36:17 INFO Wait for condition not met, sleeping 60
+07:37:17 INFO Wait for condition not met, sleeping 60
+07:38:18 INFO Wait for condition not met, sleeping 60
+07:39:18 INFO Wait for condition not met, sleeping 60
+07:40:18 INFO Wait for condition not met, sleeping 60
+07:41:19 INFO Wait for condition not met, sleeping 60
+07:42:20 INFO Wait for condition not met, sleeping 60
+07:43:20 INFO Wait for condition not met, sleeping 60
+07:44:21 INFO Wait for condition not met, sleeping 60
+07:45:21 INFO Wait for condition not met, sleeping 60
+07:46:24 INFO Wait for condition not met, sleeping 10
+07:46:54 INFO Waiting for model:
+  test-uuim4qfe/0 [idle] active:
+07:47:34 INFO Waiting for model:
+  test-uuim4qfe/0 [idle] active: 
+07:47:52 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-fw2y  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  07:47:52Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-uuim4qfe           active      1  github-runner-image-builder  latest/edge   68  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       212  no       
+test-uuim4qfe                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-uuim4qfe/0*  active    idle   1        10.130.212.196             
+mongodb/0*                               active    idle   0        10.130.212.216  27017/tcp  Primary
+test-uuim4qfe/0*                         active    idle   2        10.130.212.184             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.130.212.216  juju-1d10bb-0  ubuntu@22.04      Running
+1        started  10.130.212.196  juju-1d10bb-1  ubuntu@22.04      Running
+2        started  10.130.212.184  juju-1d10bb-2  ubuntu@22.04      Running
+
+07:47:52 INFO Juju error logs:
+
+machine-0: 06:59:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:59:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:59:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:59:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:59:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-uuim4qfe-0: 06:59:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:59:53 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:59:53 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 07:00:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:00:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-uuim4qfe-0: 07:00:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-uuim4qfe-0: 07:00:37 ERROR unit.test-uuim4qfe/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 227, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+unit-github-runner-image-builder-uuim4qfe-0: 07:01:15 ERROR unit.github-runner-image-builder-uuim4qfe/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-uuim4qfe-0: 07:18:36 ERROR unit.test-uuim4qfe/0.juju-log SSH connection failure with test-uuim4qfe-0-r-a6953fda831f during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-uuim4qfe-0-r-a6953fda831f
+unit-test-uuim4qfe-0: 07:18:41 ERROR unit.test-uuim4qfe/0.juju-log SSH connection failure with test-uuim4qfe-0-r-a6953fda831f during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-uuim4qfe-0-r-a6953fda831f
+unit-test-uuim4qfe-0: 07:18:51 ERROR unit.test-uuim4qfe/0.juju-log SSH connection failure with test-uuim4qfe-0-r-a6953fda831f during flushing
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-uuim4qfe-0-r-a6953fda831f
+unit-test-uuim4qfe-0: 07:18:51 ERROR unit.test-uuim4qfe/0.juju-log Retry limit of 3 exceed: No addresses found for OpenStack server test-uuim4qfe-0-r-a6953fda831f
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 460, in _check_state_and_flush
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-uuim4qfe-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 345, in get_ssh_connection
+    raise SSHError(f"No addresses found for OpenStack server {instance.instance_id.name}")
+github_runner_manager.errors.SSHError: No addresses found for OpenStack server test-uuim4qfe-0-r-a6953fda831f
+
+07:47:52 INFO Forgetting model main...

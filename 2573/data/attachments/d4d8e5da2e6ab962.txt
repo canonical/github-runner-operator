@@ -1,0 +1,167 @@
+06:26:52 WARNING unexpected facade SSHServer received from the controller
+06:26:52 INFO Adding model github-pr-b51b1-lxd:test-charm-metrics-failure-jgdo on cloud localhost
+06:26:52 WARNING unexpected facade SSHServer received from the controller
+06:26:52 WARNING unexpected facade SSHSession received from the controller
+06:26:52 WARNING unexpected facade SSHTunneler received from the controller
+06:26:53 INFO GitHub token rate limit: Rate(reset=2025-05-02 07:14:07+00:00, remaining=4993, limit=5000)
+06:27:19 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:27:44 INFO Deploying local:jammy/github-runner-0
+06:27:44 INFO Waiting for model:
+  test-egopyqus/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-egopyqus/0 [allocating] waiting: waiting for machine
+06:28:14 INFO Waiting for model:
+  test-egopyqus/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-egopyqus/0 [allocating] waiting: waiting for machine
+06:28:45 INFO Waiting for model:
+  test-egopyqus/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-egopyqus/0 [allocating] waiting: agent initialising
+06:29:15 INFO Waiting for model:
+  test-egopyqus/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:29:45 INFO Waiting for model:
+  test-egopyqus/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:30:16 INFO Waiting for model:
+  test-egopyqus/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:30:46 INFO Waiting for model:
+  test-egopyqus/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:31:16 INFO Waiting for model:
+  test-egopyqus/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:31:47 INFO Waiting for model:
+  test-egopyqus/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-egopyqus/0 [executing] maintenance: Setting up Builder.
+06:32:17 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:32:47 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:33:18 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:33:48 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:34:19 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:34:49 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:35:20 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:35:50 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:36:21 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:36:51 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:37:21 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:37:52 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:38:22 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:38:53 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:39:23 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:39:53 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:40:23 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:40:53 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:41:23 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:41:54 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:42:24 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:42:54 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:43:24 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:43:54 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:44:25 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:44:55 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:45:25 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:45:55 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:46:25 INFO Waiting for model:
+  test-egopyqus/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-egopyqus/0 [executing] active: Building image.
+06:46:55 INFO Waiting for model:
+  test-egopyqus/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-egopyqus/0 [idle] active: 
+06:47:25 INFO Waiting for model:
+  test-egopyqus/0 [executing] maintenance: Reconciling runners
+06:48:12 INFO Waiting for model:
+  test-egopyqus/0 [executing] active: 
+06:48:42 INFO Waiting for model:
+  test-egopyqus/0 [idle] active:
+06:52:15 INFO Waiting for model:
+  test-egopyqus/0 [executing] active: 
+06:52:46 INFO Waiting for model:
+  test-egopyqus/0 [idle] active: 
+06:52:59 INFO [TEST SETUP] Exposing port 8080 on test-egopyqus-0-n-2e87ba61b0b8
+06:52:59 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:dc:ac'}]])
+06:53:00 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-egopyqus-0-n-2e87ba61b0b8.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.71 &
+06:53:01 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.71' (ED25519) to the list of known hosts.
+
+06:53:03 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-egopyqus-0-n-2e87ba61b0b8
+06:53:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:dc:ac'}]])
+06:53:04 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-egopyqus-0-n-2e87ba61b0b8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.71 nc -z localhost 8080'
+06:53:05 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:53:06 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-egopyqus-0-n-2e87ba61b0b8
+06:53:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.71', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:dc:ac'}]])
+06:53:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-egopyqus-0-n-2e87ba61b0b8.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.71 curl http://localhost:8080'
+06:53:08 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  48285      0 --:--:-- --:--:-- --:--:-- 51750
+'
+06:53:11 INFO Wait for condition not met, sleeping 10
+06:54:09 INFO Waiting for model:
+  test-egopyqus/0 [executing] active: 
+06:54:39 INFO Waiting for model:
+  test-egopyqus/0 [executing] maintenance: Reconciling runners
+06:54:59 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746168707.0, "event": "runner_installed", "flavor": "test-egopyqus", "duration": 78.0}
+{"timestamp": 1746168794.0, "event": "runner_start", "flavor": "test-egopyqus", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 87.0, "queue_duration": 1.0}
+{"timestamp": 1746168794.0, "event": "runner_stop", "flavor": "test-egopyqus", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1746168848.451469, "event": "reconciliation", "flavor": "test-egopyqus", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 42.480127573013306}
+{"timestamp": 1746168882.7178693, "event": "reconciliation", "flavor": "test-egopyqus", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 32.74479579925537}
