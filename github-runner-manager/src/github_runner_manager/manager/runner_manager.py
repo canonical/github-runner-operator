@@ -248,13 +248,30 @@ class RunnerManager:
 
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners()
-        logger.debug("clouds runners %s", cloud_runners)
+        cloud_runners_map = {runner.instance_id: runner for runner in cloud_runners}
+        logger.info("clouds runners %s", cloud_runners)
         runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.debug("runner health %s", runners_health_response)
+        logger.info("runner health %s", runners_health_response)
         for runner_health in runners_health_response.requested_runners:
             logger.debug("checking %s", runner_health)
+            now = datetime.now(timezone.utc)
+            cloud_runner = cloud_runners_map[runner_health.identity.instance_id]
+            runner_still_starting = (now - cloud_runner.created_at).total_seconds() <= 1800
+            # This is basically to not kill reactive runners that are still starting.
+            # Quite a workaround, think a bit more about it...
+            if (
+                not runner_health.online
+                and not runner_health.busy
+                and not runner_health.deletable
+                and runner_still_starting
+            ):
+                logger.info(
+                    "not flushing %s. not online, maybe still starting", runner_health.identity
+                )
+                continue
+
             if runner_health.busy and not flush_busy:
-                logger.debug("busy and not flush_busy")
+                logger.info("not flushing %s. busy and not flush_busy", runner_health.identity)
                 continue
             try:
                 self._platform.delete_runner(runner_health.identity)
@@ -274,6 +291,8 @@ class RunnerManager:
                 logger.error("No metrics returned after deleting %s", runner_health.identity)
             else:
                 extracted_runner_metrics.append(runner_metric)
+
+        # TODO should we call cleanup? Can we do it in here instead?
         extracted_runner_metrics += list(self._cleanup())
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
@@ -316,7 +335,6 @@ class RunnerManager:
                     cloud_runner,
                     runner_health,
                 )
-
             elif not runner_health.deletable:
                 continue
 
