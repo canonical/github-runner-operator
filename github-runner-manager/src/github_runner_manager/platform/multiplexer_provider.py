@@ -21,6 +21,7 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
+    RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
@@ -78,29 +79,27 @@ class MultiplexerPlatform(PlatformProvider):
             runner_identity.metadata, runner_identity.instance_id
         )
 
-    def get_runners_health(
-        self, runner_identities: list[RunnerIdentity]
-    ) -> "list[PlatformRunnerHealth]":
+    def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
         """TODO.
 
         Args:
-            runner_identities: TODO
+            requested_runners: TODO
 
         Returns:
             Health information on the runners.
         """
         # TODO would it be better to return them in the same order as the input?
-        logger.info("JAVI multiplexer get runners health: %s", runner_identities)
-        runners_health = []
+        logger.info("JAVI multiplexer get runners health: %s", requested_runners)
+        response = RunnersHealthResponse()
         identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
-        for identity in runner_identities:
+        for identity in requested_runners:
             identities_by_provider[identity.metadata.platform_name].append(identity)
         for platform_name, platform_identities in identities_by_provider.items():
-            provider_runners_health = self._providers[platform_name].get_runners_health(
+            provider_health_response = self._providers[platform_name].get_runners_health(
                 platform_identities
             )
-            runners_health += provider_runners_health
-        return runners_health
+            response.append(provider_health_response)
+        return response
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.

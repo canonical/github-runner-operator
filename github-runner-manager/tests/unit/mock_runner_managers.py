@@ -379,18 +379,18 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         )
 
     def get_runners_health(
-        self, runner_identities: list[RunnerIdentity]
+        self, requested_runners: list[RunnerIdentity]
     ) -> "list[PlatformRunnerHealth]":
         """TODO.
 
         Args:
-            runner_identities: TODO
+            requested_runners: TODO
 
         Returns:
             Health information on the runners.
         """
         found_identities = []
-        for identity in runner_identities:
+        for identity in requested_runners:
             if identity.instance_id in self.state.runners:
                 runner = self.state.runners[identity.instance_id]
                 if runner.health:

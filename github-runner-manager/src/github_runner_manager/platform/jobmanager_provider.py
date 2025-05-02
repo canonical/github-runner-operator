@@ -22,6 +22,7 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
+    RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -91,23 +92,25 @@ class JobManagerPlatform(PlatformProvider):
             busy=busy,
         )
 
-    def get_runners_health(
-        self, runner_identities: list[RunnerIdentity]
-    ) -> "list[PlatformRunnerHealth]":
+    def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
         """TODO.
 
         Args:
-            runner_identities: TODO
+            requested_runners: TODO
 
         Returns:
             Health information on the runners.
         """
-        logger.info("JAVI get runners health: %s", runner_identities)
+        logger.info("JAVI get runners health: %s", requested_runners)
         runners_health = []
-        for identity in runner_identities:
+        for identity in requested_runners:
             health = self.get_runner_health(identity)
             runners_health.append(health)
-        return runners_health
+        return (
+            RunnersHealthResponse(
+                requested_runners=runners_health,
+            ),
+        )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners.

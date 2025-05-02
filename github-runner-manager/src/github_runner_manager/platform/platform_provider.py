@@ -4,7 +4,7 @@
 """Base classes and APIs for platform providers."""
 
 import abc
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 
@@ -44,15 +44,15 @@ class PlatformProvider(abc.ABC):
 
     @abc.abstractmethod
     def get_runners_health(
-        self, runner_identities: list[RunnerIdentity]
-    ) -> "list[PlatformRunnerHealth]":
+        self, requested_runners: list[RunnerIdentity]
+    ) -> "RunnersHealthResponse":
         """TODO.
 
         TODO should be return the list of the ones that failed?
         Could we put that info in PlatformRunnerHealth instead?
 
         Args:
-            runner_identities: TODO
+            requested_runners: TODO
         """
         # TODO change the response to a map of identities to health so we can send
         # some info when the call failed
@@ -112,15 +112,30 @@ class PlatformProvider(abc.ABC):
         """
 
 
-# @dataclass
-# class RunnerHealthResponse:
-#     """TODO.
+@dataclass
+class RunnersHealthResponse:
+    """TODO.
 
-#     Attributes:
+    Attributes:
+        requested_runners: TODO
+        failed_requested_runners: TODO
+        non_requested_runners: TODO
+    """
 
-#     """
-#     runners_health: "list[PlatformRunnerHealth]"
-#     failed_runners_health: "list[PlatformRunnerHealth]"
+    requested_runners: "list[PlatformRunnerHealth]" = field(default_factory=list)
+    failed_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
+    # TODO
+    non_requested_runners: "list[RunnerIdentity]" = field(default_factory=list)
+
+    def append(self, other: "RunnersHealthResponse") -> None:
+        """TODO.
+
+        Args:
+            other: TODO
+        """
+        self.requested_runners += other.requested_runners
+        self.failed_requested_runners += other.failed_requested_runners
+        self.non_requested_runners += other.non_requested_runners
 
 
 @dataclass

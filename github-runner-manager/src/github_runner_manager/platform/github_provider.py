@@ -23,6 +23,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerHealth,
     PlatformRunnerState,
+    RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
@@ -95,23 +96,21 @@ class GitHubRunnerPlatform(PlatformProvider):
                 deletable=True,
             )
 
-    def get_runners_health(
-        self, runner_identities: list[RunnerIdentity]
-    ) -> "list[PlatformRunnerHealth]":
+    def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
         """TODO.
 
         Args:
-            runner_identities: TODO
+            requested_runners: TODO
 
         Returns:
             Health information on the runners.
         """
-        logger.info("JAVI github_provider get_runners_health identities %s", runner_identities)
+        logger.info("JAVI github_provider get_runners_health identities %s", requested_runners)
         runners_health = []
         runners = self._client.list_runners(self._path, self._prefix)
         logger.info("JAVI github_provider internal data %s", runners)
-        runners_map = {runner.instance_id: runner for runner in runners}
-        for identity in runner_identities:
+        runners_map = {runner.identity.instance_id: runner for runner in runners}
+        for identity in requested_runners:
             if identity.instance_id in runners_map:
                 runner = runners_map[identity.instance_id]
                 online = runner.status == GitHubRunnerStatus.ONLINE
@@ -132,7 +131,11 @@ class GitHubRunnerPlatform(PlatformProvider):
                         deletable=True,
                     )
                 )
-        return runners_health
+        return (
+            RunnersHealthResponse(
+                requested_runners=runners_health,
+            ),
+        )
 
     def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
         """Delete runners in GitHub.
