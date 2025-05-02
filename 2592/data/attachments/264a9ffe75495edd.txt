@@ -1,0 +1,132 @@
+18:24:55 WARNING unexpected facade SSHServer received from the controller
+18:24:55 INFO Adding model github-pr-b51b1-lxd:test-charm-metrics-failure-ge4w on cloud localhost
+18:24:55 WARNING unexpected facade SSHServer received from the controller
+18:24:55 WARNING unexpected facade SSHSession received from the controller
+18:24:55 WARNING unexpected facade SSHTunneler received from the controller
+18:24:55 INFO GitHub token rate limit: Rate(reset=2025-05-02 19:20:03+00:00, remaining=4998, limit=5000)
+18:25:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+18:25:44 INFO Deploying local:jammy/github-runner-0
+18:25:44 INFO Waiting for model:
+  test-qnoglt60/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qnoglt60/0 [allocating] waiting: waiting for machine
+18:26:14 INFO Waiting for model:
+  test-qnoglt60/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qnoglt60/0 [allocating] waiting: waiting for machine
+18:26:45 INFO Waiting for model:
+  test-qnoglt60/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:27:15 INFO Waiting for model:
+  test-qnoglt60/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:27:45 INFO Waiting for model:
+  test-qnoglt60/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:28:16 INFO Waiting for model:
+  test-qnoglt60/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:28:46 INFO Waiting for model:
+  test-qnoglt60/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:29:16 INFO Waiting for model:
+  test-qnoglt60/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qnoglt60/0 [executing] maintenance: Setting up Builder.
+18:29:47 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:30:17 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:30:47 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:31:17 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:31:48 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:32:18 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:32:48 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:33:19 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:33:49 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:34:19 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:34:49 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:35:20 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:35:50 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:36:20 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:36:50 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:37:20 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:37:51 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:38:21 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:38:51 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:39:21 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:39:52 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:40:22 INFO Waiting for model:
+  test-qnoglt60/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qnoglt60/0 [executing] active: Building image.
+18:40:52 INFO Waiting for model:
+  test-qnoglt60/0 [executing] maintenance: Reconciling runners
+18:41:23 INFO Waiting for model:
+  test-qnoglt60/0 [idle] active: 
+18:41:54 INFO Waiting for model:
+  test-qnoglt60/0 [executing] maintenance: Reconciling runners
+18:42:24 INFO Waiting for model:
+  test-qnoglt60/0 [idle] active:
+19:04:41 INFO Waiting for model:
+  test-qnoglt60/0 [executing] active: 
+19:05:11 INFO Waiting for model:
+  test-qnoglt60/0 [idle] active: 
+19:05:21 INFO [TEST SETUP] Exposing port 8080 on test-qnoglt60-0-n-c8cc0bb8c114
+19:05:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b9:42:ff'}]])
+19:05:22 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-qnoglt60-0-n-c8cc0bb8c114.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.91 &
+19:05:23 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.91' (ED25519) to the list of known hosts.
+
+19:05:24 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-qnoglt60-0-n-c8cc0bb8c114
+19:05:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b9:42:ff'}]])
+19:05:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qnoglt60-0-n-c8cc0bb8c114.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.91 nc -z localhost 8080'
+19:05:26 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:05:27 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-qnoglt60-0-n-c8cc0bb8c114
+19:05:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.91', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b9:42:ff'}]])
+19:05:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qnoglt60-0-n-c8cc0bb8c114.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.91 curl http://localhost:8080'
+19:05:29 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  58974      0 --:--:-- --:--:-- --:--:-- 69000
+'

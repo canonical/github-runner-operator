@@ -1,0 +1,135 @@
+18:55:08 INFO Adding model github-pr-b51b1-lxd:test-charm-scheduled-events-5gpb on cloud localhost
+18:55:08 WARNING unexpected facade AgentLifeFlag received from the controller
+18:55:08 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:55:08 WARNING unexpected facade SecretsDrain received from the controller
+18:55:10 INFO Deploying ch:amd64/github-runner-image-builder-68
+18:55:39 INFO Deploying local:jammy/github-runner-0
+18:55:39 INFO Waiting for model:
+  test-vcl65x2g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vcl65x2g/0 [allocating] waiting: waiting for machine
+18:56:09 INFO Waiting for model:
+  test-vcl65x2g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vcl65x2g/0 [allocating] waiting: agent initialising
+18:56:39 INFO Waiting for model:
+  test-vcl65x2g/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vcl65x2g/0 [executing] maintenance: Setting up Builder.
+18:57:09 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vcl65x2g/0 [executing] maintenance: Setting up Builder.
+18:57:40 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vcl65x2g/0 [executing] maintenance: Setting up Builder.
+18:58:10 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] maintenance: Setting up Builder.
+18:58:40 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] maintenance: Setting up Builder.
+18:59:10 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Waiting for first image.
+18:59:40 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:00:10 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:00:40 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:01:10 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:01:40 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:02:10 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:02:40 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:03:10 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:03:41 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:04:11 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:04:41 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:05:11 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:05:41 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:06:11 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:06:41 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:07:11 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:07:41 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vcl65x2g/0 [executing] active: Building image.
+19:08:11 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:08:39 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] active: 
+19:09:10 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:09:40 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:10:10 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:10:40 INFO Waiting for model:
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:11:23 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] active:
+19:11:41 INFO Wait for condition not met, sleeping 3
+19:11:45 INFO Wait for 10 minutes
+19:21:45 INFO Waiting for model:
+  github-runner-image-builder-vcl65x2g/0 [idle] active: 
+  test-vcl65x2g/0 [executing] maintenance: Reconciling runners
+19:22:15 INFO Waiting for model:
+  test-vcl65x2g/0 [idle] active:
+19:22:17 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-5gpb  github-pr-b51b1-lxd  localhost/localhost  3.1.10   unsupported  19:22:17Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-vcl65x2g           active      1  github-runner-image-builder  latest/edge   68  no       
+test-vcl65x2g                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-vcl65x2g/0*  active    idle   0        10.20.33.21            
+test-vcl65x2g/0*                         active    idle   1        10.20.33.233           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.20.33.21   juju-109670-0  ubuntu@22.04      Running
+1        started  10.20.33.233  juju-109670-1  ubuntu@22.04      Running
+
+19:22:17 INFO Juju error logs:
+
+machine-0: 18:56:08 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:56:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:56:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-vcl65x2g-0: 18:56:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:56:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:38 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-vcl65x2g-0: 18:56:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-vcl65x2g-0: 18:56:55 ERROR unit.github-runner-image-builder-vcl65x2g/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-vcl65x2g-0: 18:57:20 ERROR unit.test-vcl65x2g/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 229, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+
+19:22:18 INFO Forgetting model main...
