@@ -62,7 +62,7 @@ class SelfHostedRunner(BaseModel):
     """Information on a single self-hosted runner.
 
     Attributes:
-        identity: TODO
+        identity: Identity of the runner.
         busy: Whether the runner is executing a job.
         id: Unique identifier of the runner.
         labels: Labels of the runner.

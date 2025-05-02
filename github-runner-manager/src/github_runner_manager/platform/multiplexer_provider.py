@@ -77,23 +77,13 @@ class MultiplexerPlatform(PlatformProvider):
         return self._get_provider(runner_identity.metadata).get_runner_health(runner_identity)
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
-        """Get information from the runners health.
-
-        This method returns a RunnersHealthResponse object that contains three lists with runners,
-        none of them necessarily in the same order as the input argument:
-         - requested_runners: Runners for which a health check succeeded with the requested
-           information.
-         - failed_requested_runners: Runners for which the health check failed, and may succeed
-           if retrying.
-         - non_requested_runners: List of runners in the platform provider that were not requested.
-           This is an optional response from the provider. This may be useful to clean resources
-           in the platform provider.
+        """Get information from the requested runners health.
 
         Args:
             requested_runners: List of runners to get health information for.
 
         Returns:
-            Health information on the runners.
+            Health information for the runners.
         """
         response = RunnersHealthResponse()
         identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
@@ -107,7 +97,7 @@ class MultiplexerPlatform(PlatformProvider):
         return response
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete runners.
+        """Delete a  runner.
 
         Args:
             runner_identity: Runner to delete.

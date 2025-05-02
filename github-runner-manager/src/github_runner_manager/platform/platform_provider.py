@@ -28,7 +28,7 @@ class JobNotFoundError(PlatformError):
 
 
 class DeleteRunnerBusyError(PlatformError):
-    """TODO."""
+    """Error when deleting a runner that cannot be deleted as it could be busy."""
 
 
 class PlatformApiError(PlatformError):
@@ -47,30 +47,37 @@ class PlatformProvider(abc.ABC):
         """Get health information on self-hosted runner.
 
         Args:
-            runner_identity: TODO
+            runner_identity: Identity of the runner.
         """
 
     @abc.abstractmethod
     def get_runners_health(
         self, requested_runners: list[RunnerIdentity]
     ) -> "RunnersHealthResponse":
-        """TODO.
+        """Get information from the requested runners health.
 
-        TODO should be return the list of the ones that failed?
-        Could we put that info in PlatformRunnerHealth instead?
+        This method returns a RunnersHealthResponse object that contains three lists with runners,
+        none of them necessarily in the same order as the input argument:
+         - requested_runners: Runners for which a health check succeeded with the requested
+           information.
+         - failed_requested_runners: Runners for which the health check failed, and may succeed
+           if retrying.
+         - non_requested_runners: List of runners in the platform provider that were not requested.
+           This is an optional response from the provider. This may be useful to clean resources
+           in the platform provider.
 
         Args:
-            requested_runners: TODO
+            requested_runners: List of runners to get health information for.
         """
 
     @abc.abstractmethod
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """TODO.
+        """Delete a  runner.
 
-        TODO can raise DeleteRunnerBusyError
+        Can raise DeleteRunnerBusyError
 
         Args:
-            runner_identity: TODO
+            runner_identity: Runner to delete.
         """
 
     @abc.abstractmethod
@@ -200,10 +207,10 @@ class PlatformRunnerState(str, Enum):
 
     @staticmethod
     def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerState":
-        """TODO.
+        """Construct the object from runner information.
 
         Args:
-            health: TODO
+            health: health information from a runner.
 
         Returns:
             The state of runner.

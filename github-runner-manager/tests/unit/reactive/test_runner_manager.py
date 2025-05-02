@@ -85,7 +85,6 @@ def test_reconcile_positive_runner_diff(
         MagicMock(spec=[field.name for field in fields(RunnerInstance)])
         for _ in range(runner_quantity)
     ]
-    logger.info("JAVI test_reconcile_positive_runner_diff runners %s", runners)
     for runner in runners:
         runner.github_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
@@ -298,7 +297,6 @@ def test_reconcile_returns_issued_metrics(
         MagicMock(spec=[field.name for field in fields(RunnerInstance)])
         for _ in range(runner_quantity)
     ]
-    logger.info("JAVI test_reconcile_positive_runner_diff runners %s", runners)
     for runner in runners:
         runner.github_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
@@ -437,7 +435,6 @@ def test_reconcile_empty_queue_returns_issued_metrics(
         MagicMock(spec=[field.name for field in fields(RunnerInstance)])
         for _ in range(runner_quantity)
     ]
-    logger.info("JAVI test_reconcile_positive_runner_diff runners %s", runners)
     for runner in runners:
         runner.github_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)

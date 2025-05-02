@@ -361,9 +361,6 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         """
         if runner_identity.instance_id in self.state.runners:
             runner = self.state.runners[runner_identity.instance_id]
-            logger.info(
-                "JAVI mock_platform.get_runner_health %s %s", runner_identity.instance_id, runner
-            )
             return PlatformRunnerHealth(
                 identity=runner_identity,
                 online=runner.github_state != PlatformRunnerState.OFFLINE,
@@ -380,13 +377,13 @@ class MockGitHubRunnerPlatform(PlatformProvider):
     def get_runners_health(
         self, requested_runners: list[RunnerIdentity]
     ) -> "list[PlatformRunnerHealth]":
-        """TODO.
+        """Get information from the requested runners health.
 
         Args:
-            requested_runners: TODO
+            requested_runners: List of runners to get health information for.
 
         Returns:
-            Health information on the runners.
+            Health information for the runners.
         """
         found_identities = []
         for identity in requested_runners:
@@ -448,12 +445,10 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         )
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """TODO.
-
-        TODO can raise DeleteRunnerBusyError
+        """Delete a runner.
 
         Args:
-            runner_identity: TODO
+            runner_identity: Runner to delete.
         """
         if runner_identity.instance_id in self.state.runners:
             del self.state.runners[runner_identity.instance_id]
