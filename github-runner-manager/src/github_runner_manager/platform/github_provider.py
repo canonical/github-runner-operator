@@ -66,7 +66,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         self,
         runner_identity: RunnerIdentity,
     ) -> PlatformRunnerHealth:
-        """Get information on the health of a github runner.
+        """Get information on the health of a list of github runners.
 
         Args:
             runner_identity: Identity for the runner.
@@ -95,10 +95,10 @@ class GitHubRunnerPlatform(PlatformProvider):
             )
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
-        """TODO.
+        """Get the health of a list of requested runners.
 
         Args:
-            requested_runners: TODO
+            requested_runners: List of requested runners.
 
         Returns:
             Health information on the runners.
@@ -141,15 +141,6 @@ class GitHubRunnerPlatform(PlatformProvider):
             requested_runners=requested_runners_health,
             non_requested_runners=non_requested_runners,
         )
-
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners in GitHub.
-
-        Args:
-            runners: list of runners to delete.
-        """
-        for runner in runners:
-            self._client.delete_runner(self._path, runner.id)
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
         """Delete a runner from GitHub.

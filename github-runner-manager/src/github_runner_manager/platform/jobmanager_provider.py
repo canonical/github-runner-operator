@@ -8,8 +8,9 @@ from enum import Enum
 
 import jobmanager_client
 from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
-from jobmanager_client.rest import ApiException
+from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import HttpUrl
+from urllib3.exceptions import RequestError
 
 from github_runner_manager.manager.models import (
     InstanceID,
@@ -33,7 +34,6 @@ from github_runner_manager.types_.github import (
 logger = logging.getLogger(__name__)
 
 
-# TODO GET ALL CONNECTION ERRORS AND SIMILAR AND TRANSFORM THEM TO A PROPER EXCEPTION
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
@@ -61,7 +61,6 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
            The health of the runner in the jobmanager.
         """
-        logger.info("JAVI get runner health: %s", runner_identity.instance_id)
         configuration = jobmanager_client.Configuration(host=runner_identity.metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.DefaultApi(api_client)
@@ -69,9 +68,20 @@ class JobManagerPlatform(PlatformProvider):
                 response = api_instance.v1_jobs_job_id_health_get(
                     int(runner_identity.metadata.runner_id)
                 )
-                logger.info("JAVI get runner health response: %s", response)
-            except ApiException as exc:
-                logger.exception("Error calling jobmanager api.")
+            except NotFoundException:
+                # Pending to test with the real JobManager.
+                # The last assumption is that the builder-agent did not contact
+                # the JobManager and so it returns a 404.
+                return PlatformRunnerHealth(
+                    identity=runner_identity,
+                    online=False,
+                    deletable=False,
+                    busy=False,
+                )
+            except (ApiException, RequestError) as exc:
+                logger.exception(
+                    "Error calling jobmanager api for runner %s. %s",
+                )
                 raise PlatformApiError("API error") from exc
 
         # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
@@ -93,31 +103,27 @@ class JobManagerPlatform(PlatformProvider):
         )
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
-        """TODO.
+        """Get the health of a list of requested runners.
 
         Args:
-            requested_runners: TODO
+            requested_runners: List of requested runners.
 
         Returns:
             Health information on the runners.
         """
-        logger.info("JAVI get runners health: %s", requested_runners)
         runners_health = []
+        failed_runners = []
         for identity in requested_runners:
-            health = self.get_runner_health(identity)
+            try:
+                health = self.get_runner_health(identity)
+            except PlatformApiError:
+                failed_runners.append(identity)
+                continue
             runners_health.append(health)
         return RunnersHealthResponse(
             requested_runners=runners_health,
+            failed_requested_runners=failed_runners,
         )
-
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners.
-
-        Args:
-            runners: list of runners to delete.
-        """
-        # TODO for now do not do any work so the reconciliation can work.
-        logger.info("jobmanager.delete_runners not implemented")
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
         """TODO.
@@ -184,7 +190,7 @@ class JobManagerPlatform(PlatformProvider):
                         ),
                     )
                 raise PlatformApiError("Empty token from jobmanager API")
-            except ApiException as exc:
+            except (ApiException, RequestError) as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
 
@@ -207,13 +213,12 @@ class JobManagerPlatform(PlatformProvider):
             api_instance = jobmanager_client.DefaultApi(api_client)
             try:
                 job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
-                logger.exception("JAVI check_job_been_picked_up: %s", job)
                 if job.status != JobStatus.PENDING:
                     return True
-            except ApiException as exc:
+            except (ApiException, RequestError) as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
                 raise PlatformApiError("API error") from exc
-            return False
+        return False
 
     def get_job_info(
         self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
@@ -227,9 +232,10 @@ class JobManagerPlatform(PlatformProvider):
             runner: runner to get the job from.
 
         Raises:
-            NotImplementedError: Work in progress.
+            PlatformApiError: This is not provided by this interface yet.
         """
-        raise NotImplementedError
+        logger.info("get_job_info not implemented in the jobmanager")
+        raise PlatformApiError("get_job_info not provided by the jobmanager")
 
 
 class JobStatus(str, Enum):

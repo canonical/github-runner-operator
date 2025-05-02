@@ -519,7 +519,7 @@ class RunnerManager:
 
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
-            args.platform_provider.delete_runners([github_runner])
+            args.platform_provider.delete_runner(github_runner)
             raise
         return instance_id
 

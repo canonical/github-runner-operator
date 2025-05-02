@@ -447,19 +447,6 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             if runner.github_state in github_state_set
         )
 
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete the runners.
-
-        Args:
-            runners: Runners to delete
-        """
-        runners_names_to_delete = {runner.name for runner in runners}
-        self.state.runners = {
-            instance_id: runner
-            for instance_id, runner in self.state.runners.items()
-            if instance_id.name not in runners_names_to_delete
-        }
-
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
         """TODO.
 

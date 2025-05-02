@@ -99,23 +99,6 @@ class MultiplexerPlatform(PlatformProvider):
             response.append(provider_health_response)
         return response
 
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners.
-
-        Args:
-            runners: list of runners to delete.
-        """
-        # FIXME. This method should disappear. Instead a delete_runner method
-        # should be created that can be checked. This is specially important for
-        # github, as the API can return 422, in case the runner is in (online, busy),
-        # in which case the caller can decide if the cloud runner should be deleted or not
-        platform_runners: dict[str, PlatformProvider] = defaultdict(list)
-        for runner in runners:
-            platform_runners[runner.metadata.platform_name].append(runner)
-
-        for platform_name, platform_runners in platform_runners.items():
-            self._providers[platform_name].delete_runners(platform_runners)
-
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
         """Delete runners.
 
