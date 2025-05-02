@@ -23,7 +23,11 @@ from github_runner_manager.manager.models import (
     RunnerMetadata,
 )
 from github_runner_manager.manager.runner_manager import RunnerManager
-from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerHealth
+from github_runner_manager.platform.platform_provider import (
+    PlatformProvider,
+    PlatformRunnerHealth,
+    RunnersHealthResponse,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -88,7 +92,9 @@ def test_cleanup_removes_offline_expected_runners(
         labels=["label1", "label2"],
     )
 
-    github_provider.get_runners_health.return_value = [github_runner]
+    github_provider.get_runners_health.return_value = RunnersHealthResponse(
+        requested_runners=[github_runner]
+    )
 
     runner_manager.cleanup()
 

@@ -168,9 +168,10 @@ class RunnerManager:
         logger.info("JAVI runner_manager::get_runners")
         runner_instances = []
         cloud_runners = self._cloud.get_runners()
-        runners_health = self._platform.get_runners_health(cloud_runners)
+        runners_health_response = self._platform.get_runners_health(cloud_runners)
         logger.debug("clouds runners %s", cloud_runners)
-        logger.debug("runner health %s", runners_health)
+        logger.debug("runner health response %s", runners_health_response)
+        runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         for cloud_runner in cloud_runners:
             if cloud_runner.instance_id not in health_runners_map:
@@ -247,9 +248,9 @@ class RunnerManager:
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners()
         logger.debug("clouds runners %s", cloud_runners)
-        runners_health = self._platform.get_runners_health(cloud_runners)
-        logger.debug("runner health %s", runners_health)
-        for runner_health in runners_health:
+        runners_health_response = self._platform.get_runners_health(cloud_runners)
+        logger.debug("runner health %s", runners_health_response)
+        for runner_health in runners_health_response.requested_runners:
             logger.debug("checking %s", runner_health)
             if runner_health.busy and not flush_busy:
                 logger.debug("busy and not flush_busy")
@@ -291,15 +292,20 @@ class RunnerManager:
         extracted_runner_metrics = []
         cloud_runners = self._cloud.get_runners()
 
-        # TODO DO THE OPPOSITE, REMOVE THE PLATFORM RUNNERS THAT DO NOT HAVE A CLOUD RUNNER.
-        # self._platform.cleanup(exclude_runners=cloud_runners)
-
         logger.info("JAVI cloud_runners %s", cloud_runners)
         cloud_runners_map = {runner.instance_id: runner for runner in cloud_runners}
-        runners_health = self._platform.get_runners_health(cloud_runners)
-        logger.info("JAVI runners_health %s", runners_health)
+        runners_health_response = self._platform.get_runners_health(cloud_runners)
+        logger.info("JAVI runners_health %s", runners_health_response)
 
-        for runner_health in runners_health:
+        for identity in runners_health_response.non_requested_runners:
+            try:
+                self._platform.delete_runner(identity)
+            except DeleteRunnerBusyError:
+                logger.warning("Tried to delete busy runner in cleanup %s", identity)
+                continue
+            # TODO DO NOT CRASH ON OTHER ERRORS.
+
+        for runner_health in runners_health_response.requested_runners:
             cloud_runner = cloud_runners_map[runner_health.identity.instance_id]
             now = datetime.now(timezone.utc)
             runner_should_be_online = (now - cloud_runner.created_at).total_seconds() > 1800

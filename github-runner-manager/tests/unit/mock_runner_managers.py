@@ -32,6 +32,7 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
+    RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -395,7 +396,8 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                 runner = self.state.runners[identity.instance_id]
                 if runner.health:
                     found_identities.append(identity)
-        return [self.get_runner_health(identity) for identity in found_identities]
+        requested_runners = [self.get_runner_health(identity) for identity in found_identities]
+        return RunnersHealthResponse(requested_runners=requested_runners)
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: str, labels: list[str]
