@@ -504,7 +504,7 @@ class RunnerManager:
 
         runner_identity = RunnerIdentity(instance_id=instance_id, metadata=args.metadata)
         try:
-            cloud_instance = args.cloud_runner_manager.create_runner(
+            args.cloud_runner_manager.create_runner(
                 runner_identity=runner_identity,
                 runner_context=runner_context,
             )
@@ -514,8 +514,7 @@ class RunnerManager:
             # reactive case, before checking that a job was taken.
             RunnerManager.wait_for_runner_online(
                 platform_provider=args.platform_provider,
-                instance_id=cloud_instance.instance_id,
-                metadata=cloud_instance.metadata,
+                runner_identity=runner_identity,
             )
 
         except RunnerError:
@@ -527,8 +526,7 @@ class RunnerManager:
     @staticmethod
     def wait_for_runner_online(
         platform_provider: PlatformProvider,
-        instance_id: InstanceID,
-        metadata: RunnerMetadata,
+        runner_identity: RunnerIdentity,
     ) -> None:
         """Wait until the runner is online.
 
@@ -539,8 +537,7 @@ class RunnerManager:
 
         Args:
             platform_provider: Platform provider to use for health checks.
-            instance_id: InstanceID for the runner to wait for.
-            metadata: Metadata for the runner to wait for.
+            runner_identity: Identity of the runner.
 
         Raises:
             RunnerError: If the runner did not come online after the specified time.
@@ -549,13 +546,12 @@ class RunnerManager:
         for wait_time in RUNNER_CREATION_WAITING_TIMES:
             time.sleep(wait_time)
             try:
-                identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
-                runner_health = platform_provider.get_runner_health(identity)
+                runner_health = platform_provider.get_runner_health(runner_identity)
             except PlatformApiError as exc:
                 logger.error("Error getting the runner health: %s", exc)
                 continue
             if runner_health.online or runner_health.deletable:
                 break
-            logger.info("Runner not yet online %s", instance_id)
+            logger.info("Runner not yet online %s", runner_identity)
         else:
-            raise RunnerError(f"Runner {instance_id} did not get online")
+            raise RunnerError(f"Runner {runner_identity} did not get online")
