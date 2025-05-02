@@ -183,11 +183,17 @@ class RunnerMetadata:
 
 @dataclass
 class RunnerIdentity:
-    """TODO.
+    """Identity for the runner.
+
+    The full identity of the runner is made of the instance_id and the
+    metadata. The instance_id is used for the name of the runner in the cloud
+    provider, and it should be immutable. The metadata is used to identify the
+    platform provider and other information that could be relevant to identify
+    the runner in the platform provider.
 
     Attributes:
-        instance_id: TODO
-        metadata: TODO
+        instance_id: InstanceID of the runner.
+        metadata: Metadata for the runner.
     """
 
     instance_id: InstanceID

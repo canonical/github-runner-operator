@@ -26,7 +26,7 @@ from openstack.network.v2.security_group_rule import SecurityGroupRule
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
@@ -210,13 +210,10 @@ class OpenstackCloud:
         self._proxy_command = proxy_command
 
     @_catch_openstack_errors
-    # Pending to review the list of arguments
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def launch_instance(
         self,
         *,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
+        runner_identity: RunnerIdentity,
         server_config: OpenStackServerConfig,
         cloud_init: str,
         ingress_tcp_ports: list[int] | None = None,
@@ -224,8 +221,7 @@ class OpenstackCloud:
         """Create an OpenStack instance.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: The instance ID to form the instance name.
+            runner_identity: Identity of the runner.
             server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
             ingress_tcp_ports: Ports to be allowed to connect to the new instance.
@@ -236,11 +232,13 @@ class OpenstackCloud:
         Returns:
             The OpenStack instance created.
         """
-        logger.info("Creating openstack server with %s", instance_id)
+        logger.info("Creating openstack server with %s", runner_identity)
+        instance_id = runner_identity.instance_id
+        metadata = runner_identity.metadata
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
-            keypair = self._setup_keypair(conn, instance_id)
+            keypair = self._setup_keypair(conn, runner_identity.instance_id)
             meta = metadata.as_dict()
             meta["prefix"] = self.prefix
             try:

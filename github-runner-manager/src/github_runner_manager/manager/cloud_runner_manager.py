@@ -12,7 +12,12 @@ from typing import Optional, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -140,7 +145,7 @@ class CloudRunnerInstance:
         metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
-        created_at: TODO CHECK UTZ
+        created_at: Creation time of the runner in the cloud provider.
     """
 
     name: str
@@ -243,15 +248,13 @@ class CloudRunnerManager(abc.ABC):
     @abc.abstractmethod
     def create_runner(
         self,
-        instance_id: InstanceID,
-        metadata: RunnerMetadata,
+        runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            instance_id: Instance ID for the runner.
-            metadata: Runner Metadata.
+            runner_identity: Identity of the runner to create.
             runner_context: Context information needed to spawn the runner.
         """
 

@@ -23,7 +23,11 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerManager,
     CloudRunnerState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+)
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
@@ -112,15 +116,13 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def create_runner(
         self,
-        instance_id: InstanceID,
-        metadata: RunnerMetadata,
+        runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            instance_id: Instance ID for the runner to create.
-            metadata: Metadata for the runner.
+            runner_identity: Identity of the runner to create.
             runner_context: Context data for spawning the runner.
 
         Raises:
@@ -136,14 +138,15 @@ class OpenStackRunnerManager(CloudRunnerManager):
         cloud_init = self._generate_cloud_init(runner_context=runner_context)
         try:
             instance = self._openstack_cloud.launch_instance(
-                metadata=metadata,
-                instance_id=instance_id,
+                runner_identity=runner_identity,
                 server_config=server_config,
                 cloud_init=cloud_init,
                 ingress_tcp_ports=runner_context.ingress_tcp_ports,
             )
         except OpenStackError as err:
-            raise RunnerCreateError(f"Failed to create {instance_id} openstack runner") from err
+            raise RunnerCreateError(
+                f"Failed to create {runner_identity} openstack runner"
+            ) from err
 
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
