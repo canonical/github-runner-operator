@@ -502,10 +502,10 @@ class RunnerManager:
         if not args.metadata.runner_id:
             args.metadata.runner_id = str(github_runner.id)
 
+        runner_identity = RunnerIdentity(instance_id=instance_id, metadata=args.metadata)
         try:
             cloud_instance = args.cloud_runner_manager.create_runner(
-                instance_id=instance_id,
-                metadata=args.metadata,
+                runner_identity=runner_identity,
                 runner_context=runner_context,
             )
 

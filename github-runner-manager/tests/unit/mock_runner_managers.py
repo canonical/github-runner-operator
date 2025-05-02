@@ -284,22 +284,20 @@ class MockCloudRunnerManager(CloudRunnerManager):
 
     def create_runner(
         self,
-        instance_id: InstanceID,
-        metadata: RunnerMetadata,
+        runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
     ) -> None:
         """Create a self-hosted runner.
 
         Args:
-            instance_id: Instance ID for the runner to create.
-            metadata: Metadata for the runner.
+            runner_identity: Identity of the runner to create.
             runner_context: Context for the runner.
 
         Returns:
             The CloudRunnerInstance for the runner
         """
-        runner = MockRunner(instance_id)
-        self.state.runners[instance_id] = runner
+        runner = MockRunner(runner_identity.instance_id)
+        self.state.runners[runner_identity.instance_id] = runner
         return runner.to_cloud_runner()
 
     def get_runners(self) -> Sequence[CloudRunnerInstance]:
