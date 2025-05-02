@@ -111,9 +111,6 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
 
-        Raises:
-            ValueError: Invalid configuration.
-
         Returns:
             A new RunnerScaler.
         """

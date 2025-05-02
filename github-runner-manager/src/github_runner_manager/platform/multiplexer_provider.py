@@ -22,6 +22,7 @@ from github_runner_manager.types_.github import SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
+
 class MultiplexerPlatform(PlatformProvider):
     """Manage self-hosted runner on the Multiplexer.
 
