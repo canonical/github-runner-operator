@@ -13,7 +13,7 @@ from multiprocessing import Pool
 from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
-from github_runner_manager.errors import GithubMetricsError, PlatformApiError, RunnerError
+from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -27,6 +27,7 @@ from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
+    PlatformApiError,
     PlatformProvider,
     PlatformRunnerHealth,
     PlatformRunnerState,

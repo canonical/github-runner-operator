@@ -9,7 +9,6 @@ from enum import Enum
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
-from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import (
     InstanceID,
@@ -19,7 +18,6 @@ from github_runner_manager.manager.models import (
 )
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
-    JobNotFoundError,
     PlatformProvider,
     PlatformRunnerHealth,
     PlatformRunnerState,
@@ -226,20 +224,14 @@ class GitHubRunnerPlatform(PlatformProvider):
 
         Returns:
             Information about the Job.
-
-        Raises:
-            JobNotFoundError: If the job was not found.
-
         """
         owner, repo = repository.split("/", maxsplit=1)
-        try:
-            job_info = self._client.get_job_info_by_runner_name(
-                path=GitHubRepo(owner=owner, repo=repo),
-                workflow_run_id=workflow_run_id,
-                runner_name=runner.name,
-            )
-        except GithubJobNotFoundError as exc:
-            raise JobNotFoundError from exc
+        job_info = self._client.get_job_info_by_runner_name(
+            path=GitHubRepo(owner=owner, repo=repo),
+            workflow_run_id=workflow_run_id,
+            runner_name=runner.name,
+        )
+        # TODO HANDLE API ERRORS IN HERE?
         logger.debug(
             "Job info for runner %s with workflow run id %s: %s",
             runner,

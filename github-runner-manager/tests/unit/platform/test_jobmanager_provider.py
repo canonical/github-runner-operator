@@ -16,9 +16,9 @@ from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
 )
 from jobmanager_client.rest import ApiException
 
-from github_runner_manager.errors import PlatformApiError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
+from github_runner_manager.platform.platform_provider import PlatformApiError
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
 
 

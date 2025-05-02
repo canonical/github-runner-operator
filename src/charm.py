@@ -26,6 +26,7 @@ from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.platform.platform_provider import TokenError
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -60,7 +61,6 @@ from errors import (
     RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
     SubprocessError,
-    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from factories import create_runner_scaler

@@ -18,9 +18,13 @@ from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.platform.platform_provider import (
+    JobNotFoundError,
+    PlatformApiError,
+    TokenError,
+)
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JobConclusion,

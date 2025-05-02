@@ -13,7 +13,7 @@ from urllib.error import HTTPError
 
 import requests
 
-# HTTP404NotFoundError is not found by pylint
+# These exceptions are3 not found by pylint
 from fastcore.net import (  # pylint: disable=no-name-in-module
     HTTP404NotFoundError,
     HTTP422UnprocessableEntityError,
@@ -28,11 +28,15 @@ from github_runner_manager.configuration.github import (
     GitHubPath,
     GitHubRepo,
 )
-from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.manager.models import InstanceID
 
 # TODO PENDING TO PLACE IN A BETTER PLACE THE EXCEPTIONS
-from github_runner_manager.platform.platform_provider import DeleteRunnerBusyError
+from github_runner_manager.platform.platform_provider import (
+    DeleteRunnerBusyError,
+    JobNotFoundError,
+    PlatformApiError,
+    TokenError,
+)
 from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRunner
 
 logger = logging.getLogger(__name__)

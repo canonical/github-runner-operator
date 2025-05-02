@@ -11,7 +11,6 @@ from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJob
 from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 
-from github_runner_manager.errors import PlatformApiError
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -20,6 +19,7 @@ from github_runner_manager.manager.models import (
 )
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
+    PlatformApiError,
     PlatformProvider,
     PlatformRunnerHealth,
     RunnersHealthResponse,

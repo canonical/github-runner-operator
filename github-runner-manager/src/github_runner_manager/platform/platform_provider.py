@@ -31,6 +31,14 @@ class DeleteRunnerBusyError(PlatformError):
     """TODO."""
 
 
+class PlatformApiError(PlatformError):
+    """Represents an error when the GitHub API returns an error."""
+
+
+class TokenError(PlatformError):
+    """Represents an error when the token is invalid or has not enough permissions."""
+
+
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 
@@ -103,6 +111,8 @@ class PlatformProvider(abc.ABC):
         self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
     ) -> "JobInfo":
         """Get the Job info from the provider.
+
+        Raises JobNotFoundError if the job was not found.
 
         Args:
             metadata: metadata. Always needed at least for the platform selection.
