@@ -1,0 +1,58 @@
+06:32:51 INFO Creating 1 runners
+06:32:51 INFO Creating openstack server with test-zen25ryn-0-n-5f52b3a26095
+06:33:12 INFO Runner test-zen25ryn-0-n-5f52b3a26095 created successfully
+06:34:13 INFO Getting runners...
+06:34:14 INFO Getting all openstack servers managed by the charm
+06:34:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:16 INFO Authentication (publickey) successful!
+06:34:17 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:34:17 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:34:17 INFO Getting runners...
+06:34:18 INFO Getting all openstack servers managed by the charm
+06:34:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:20 INFO Authentication (publickey) successful!
+06:34:21 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:34:21 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:34:21 INFO Getting runners...
+06:34:22 INFO Getting all openstack servers managed by the charm
+06:34:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:24 INFO Authentication (publickey) successful!
+06:34:25 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:34:25 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:34:26 INFO Wait for condition not met, sleeping 10
+06:34:38 INFO Getting runners...
+06:34:39 INFO Getting all openstack servers managed by the charm
+06:34:42 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:42 INFO Authentication (publickey) successful!
+06:34:43 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:34:43 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-5f52b3a26095'}
+06:34:43 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:34:43 INFO Getting runners...
+06:34:44 INFO Getting all openstack servers managed by the charm
+06:34:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:46 INFO Authentication (publickey) successful!
+06:34:47 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:34:47 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-5f52b3a26095'}
+06:34:47 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:34:48 INFO Offline github runners to delete: []:
+06:34:48 INFO Getting all openstack servers managed by the charm
+06:34:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:51 INFO Authentication (publickey) successful!
+06:34:51 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:34:51 INFO Authentication (publickey) successful!
+06:34:51 INFO [chan 2] Opened sftp connection (server version 3)
+06:34:52 INFO Running runner removal script for test-zen25ryn-0-n-5f52b3a26095
+06:34:52 INFO Deleting openstack server with test-zen25ryn-0-n-5f52b3a26095
+06:34:57 INFO Cleaning up SSH key files
+06:34:57 INFO Found 0 key files, clean up 0 key files
+06:34:57 INFO Cleaning up openstack keypairs
+06:34:57 INFO issued_metrics_events: {<class 'github_runner_manager.metrics.events.RunnerStop'>: 1, <class 'github_runner_manager.metrics.events.RunnerStart'>: 1, <class 'github_runner_manager.metrics.events.RunnerInstalled'>: 1}
+06:34:57 INFO Getting runners...
+06:34:59 INFO Getting all openstack servers managed by the charm
+06:35:01 INFO Found following runners: {'test-zen25ryn-0-n-5f52b3a26095', 'test-zen25ryn-0-n-87f434e448df'}
+06:35:01 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-5f52b3a26095'}
+06:35:01 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:35:01 INFO Getting runners...
+06:35:03 INFO Getting all openstack servers managed by the charm
+06:35:04 INFO Found following runners: {'test-zen25ryn-0-n-87f434e448df'}
+06:35:04 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}

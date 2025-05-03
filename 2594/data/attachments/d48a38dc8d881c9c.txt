@@ -1,0 +1,150 @@
+06:35:04 INFO Creating 2 runners
+06:36:37 INFO Getting runners...
+06:36:38 INFO Getting all openstack servers managed by the charm
+06:36:40 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:40 INFO Authentication (publickey) successful!
+06:36:41 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:41 INFO Authentication (publickey) successful!
+06:36:43 INFO Found following runners: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f', 'test-zen25ryn-0-n-87f434e448df'}
+06:36:43 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:36:43 INFO Getting runners...
+06:36:44 INFO Getting all openstack servers managed by the charm
+06:36:46 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:46 INFO Authentication (publickey) successful!
+06:36:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:47 INFO Authentication (publickey) successful!
+06:36:47 INFO Found following runners: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f', 'test-zen25ryn-0-n-87f434e448df'}
+06:36:47 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:36:47 INFO Flushing idle runners...
+06:36:48 INFO Getting all openstack servers managed by the charm
+06:36:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:52 INFO Authentication (publickey) successful!
+06:36:52 INFO Attempting to kill runner process on test-zen25ryn-0-n-a2de4e88be98 if not busy
+06:36:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:36:52 INFO Kill process command output, ok: True code 0, out: 2196
+, err: 
+06:36:52 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:52 INFO Authentication (publickey) successful!
+06:36:52 INFO Attempting to kill runner process on test-zen25ryn-0-n-9f969b76443f if not busy
+06:36:52 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:36:52 INFO Kill process command output, ok: True code 0, out: 2185
+, err: 
+06:36:52 INFO Getting all openstack servers managed by the charm
+06:36:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:54 INFO Authentication (publickey) successful!
+06:36:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:55 INFO Authentication (publickey) successful!
+06:36:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:36:55 INFO Authentication (publickey) successful!
+06:36:55 INFO [chan 2] Opened sftp connection (server version 3)
+06:36:56 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.83, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:36:56 WARNING Failed to pull metrics for test-zen25ryn-0-n-a2de4e88be98: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:36:56 INFO Running runner removal script for test-zen25ryn-0-n-a2de4e88be98
+06:36:57 INFO Deleting openstack server with test-zen25ryn-0-n-a2de4e88be98
+06:37:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:37:00 INFO Authentication (publickey) successful!
+06:37:00 INFO [chan 2] Opened sftp connection (server version 3)
+06:37:00 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.135, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:37:00 WARNING Failed to pull metrics for test-zen25ryn-0-n-9f969b76443f: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:37:00 INFO Running runner removal script for test-zen25ryn-0-n-9f969b76443f
+06:37:02 INFO Deleting openstack server with test-zen25ryn-0-n-9f969b76443f
+06:37:06 INFO Cleaning up SSH key files
+06:37:06 INFO Found 0 key files, clean up 0 key files
+06:37:06 INFO Cleaning up openstack keypairs
+06:37:06 INFO Getting runners...
+06:37:08 INFO Getting all openstack servers managed by the charm
+06:37:12 ERROR Unable to get SSH connection for instance test-zen25ryn-0-n-a2de4e88be98, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zen25ryn-0-n-a2de4e88be98, key path: /home/ubuntu/.ssh/test-zen25ryn-0-n-a2de4e88be98.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-zen25ryn-0-n-a2de4e88be98
+06:37:12 ERROR Unable to get SSH connection for instance test-zen25ryn-0-n-9f969b76443f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zen25ryn-0-n-9f969b76443f, key path: /home/ubuntu/.ssh/test-zen25ryn-0-n-9f969b76443f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-zen25ryn-0-n-9f969b76443f
+06:37:12 INFO Found following runners: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f', 'test-zen25ryn-0-n-87f434e448df'}
+06:37:12 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f'}
+06:37:12 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:37:12 INFO Getting runners...
+06:37:14 INFO Getting all openstack servers managed by the charm
+06:37:15 ERROR Unable to get SSH connection for instance test-zen25ryn-0-n-a2de4e88be98, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zen25ryn-0-n-a2de4e88be98, key path: /home/ubuntu/.ssh/test-zen25ryn-0-n-a2de4e88be98.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-zen25ryn-0-n-a2de4e88be98
+06:37:15 ERROR Unable to get SSH connection for instance test-zen25ryn-0-n-9f969b76443f, marking as unhealthy.
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 132, in _get_ssh_connection
+    ssh_conn = openstack_cloud.get_ssh_connection(instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 142, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 341, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-zen25ryn-0-n-9f969b76443f, key path: /home/ubuntu/.ssh/test-zen25ryn-0-n-9f969b76443f.key
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 49, in check_runner
+    ssh_conn = _get_ssh_connection(openstack_cloud=openstack_cloud, instance=instance)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/utilities.py", line 77, in fn_with_retry
+    return func(*args, **kwargs)
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/health_checks.py", line 135, in _get_ssh_connection
+    raise _SSHError(f"Unable to get SSH connection to {instance.instance_id}") from exc
+github_runner_manager.openstack_cloud.health_checks._SSHError: Unable to get SSH connection to test-zen25ryn-0-n-9f969b76443f
+06:37:15 INFO Found following runners: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f', 'test-zen25ryn-0-n-87f434e448df'}
+06:37:15 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-a2de4e88be98', 'test-zen25ryn-0-n-9f969b76443f'}
+06:37:15 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}
+06:37:15 INFO Wait for condition not met, sleeping 60
+06:38:15 INFO Getting runners...
+06:38:17 INFO Getting all openstack servers managed by the charm
+06:38:18 INFO Found following runners: {'test-zen25ryn-0-n-87f434e448df'}
+06:38:18 WARNING Found self-hosted runner on GitHub but no matching runner instance on cloud: {'test-zen25ryn-0-n-87f434e448df'}

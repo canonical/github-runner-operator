@@ -1,0 +1,151 @@
+06:26:19 WARNING unexpected facade SSHServer received from the controller
+06:26:19 INFO Adding model github-pr-b51b1-lxd:test-charm-metrics-failure-yox3 on cloud localhost
+06:26:19 WARNING unexpected facade SSHServer received from the controller
+06:26:19 WARNING unexpected facade SSHSession received from the controller
+06:26:19 WARNING unexpected facade SSHTunneler received from the controller
+06:26:20 INFO GitHub token rate limit: Rate(reset=2025-05-03 07:20:30+00:00, remaining=4998, limit=5000)
+06:26:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-68
+06:27:03 INFO Deploying local:jammy/github-runner-0
+06:27:03 INFO Waiting for model:
+  test-vevzyog7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vevzyog7/0 [allocating] waiting: waiting for machine
+06:27:33 INFO Waiting for model:
+  test-vevzyog7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vevzyog7/0 [allocating] waiting: waiting for machine
+06:28:04 INFO Waiting for model:
+  test-vevzyog7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vevzyog7/0 [allocating] waiting: agent initialising
+06:28:34 INFO Waiting for model:
+  test-vevzyog7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vevzyog7/0 [executing] maintenance: Setting up Builder.
+06:29:04 INFO Waiting for model:
+  test-vevzyog7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vevzyog7/0 [executing] maintenance: Setting up Builder.
+06:29:35 INFO Waiting for model:
+  test-vevzyog7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vevzyog7/0 [executing] maintenance: Setting up Builder.
+06:30:05 INFO Waiting for model:
+  test-vevzyog7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vevzyog7/0 [executing] maintenance: Setting up Builder.
+06:30:36 INFO Waiting for model:
+  test-vevzyog7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vevzyog7/0 [executing] maintenance: Setting up Builder.
+06:31:06 INFO Waiting for model:
+  test-vevzyog7/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Waiting for first image.
+06:31:36 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:32:06 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:32:37 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:33:07 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:33:37 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:34:07 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:34:37 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:35:07 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:35:37 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:36:07 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:36:37 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:37:08 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:37:38 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:38:08 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:38:38 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:39:09 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:40:09 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:40:39 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:41:09 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:41:40 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:42:10 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:42:40 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:43:11 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:43:41 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:44:11 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:44:41 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:45:11 INFO Waiting for model:
+  test-vevzyog7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vevzyog7/0 [executing] active: Building image.
+06:45:41 INFO Waiting for model:
+  test-vevzyog7/0 [executing] maintenance: Reconciling runners
+06:46:34 INFO Waiting for model:
+  test-vevzyog7/0 [executing] active: 
+06:47:04 INFO Waiting for model:
+  test-vevzyog7/0 [idle] active:
+07:06:56 INFO Waiting for model:
+  test-vevzyog7/0 [executing] active: 
+07:07:26 INFO Waiting for model:
+  test-vevzyog7/0 [idle] active: 
+07:07:42 INFO [TEST SETUP] Exposing port 8080 on test-vevzyog7-0-n-bc45c6737d3a
+07:07:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:11:8a:12'}]])
+07:07:43 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-vevzyog7-0-n-bc45c6737d3a.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.4 &
+07:07:44 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.4' (ED25519) to the list of known hosts.
+
+07:07:46 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-vevzyog7-0-n-bc45c6737d3a
+07:07:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:11:8a:12'}]])
+07:07:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vevzyog7-0-n-bc45c6737d3a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.4 nc -z localhost 8080'
+07:07:48 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:07:49 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-vevzyog7-0-n-bc45c6737d3a
+07:07:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:11:8a:12'}]])
+07:07:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vevzyog7-0-n-bc45c6737d3a.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.4 curl http://localhost:8080'
+07:07:51 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  55362      0 --:--:-- --:--:-- --:--:-- 69000
+'

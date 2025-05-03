@@ -1,0 +1,72 @@
+06:24:34 INFO Creating 1 runners
+06:24:35 INFO Creating openstack server with test-zen25ryn-0-n-72c2f4b28bb3
+06:25:51 INFO Runner test-zen25ryn-0-n-72c2f4b28bb3 created successfully
+06:26:51 INFO Getting runners...
+06:26:52 INFO Getting all openstack servers managed by the charm
+06:26:54 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:54 INFO Authentication (publickey) successful!
+06:26:55 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:26:55 INFO Getting runners...
+06:26:57 INFO Getting all openstack servers managed by the charm
+06:26:58 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:26:58 INFO Authentication (publickey) successful!
+06:26:59 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:26:59 INFO Getting runners...
+06:27:00 INFO Getting all openstack servers managed by the charm
+06:27:01 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:01 INFO Authentication (publickey) successful!
+06:27:02 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:02 INFO Getting all openstack servers managed by the charm
+06:27:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:04 INFO Authentication (publickey) successful!
+06:27:04 INFO Getting runners...
+06:27:06 INFO Getting all openstack servers managed by the charm
+06:27:07 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:07 INFO Authentication (publickey) successful!
+06:27:07 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:09 INFO Offline github runners to delete: []:
+06:27:09 INFO Getting all openstack servers managed by the charm
+06:27:11 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:11 INFO Authentication (publickey) successful!
+06:27:13 INFO Cleaning up SSH key files
+06:27:13 INFO Found 1 key files, clean up 0 key files
+06:27:13 INFO Cleaning up openstack keypairs
+06:27:13 INFO Getting runners...
+06:27:14 INFO Getting all openstack servers managed by the charm
+06:27:15 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:15 INFO Authentication (publickey) successful!
+06:27:16 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:16 INFO Flushing idle runners...
+06:27:16 INFO Getting all openstack servers managed by the charm
+06:27:17 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:18 INFO Authentication (publickey) successful!
+06:27:18 INFO Attempting to kill runner process on test-zen25ryn-0-n-72c2f4b28bb3 if not busy
+06:27:18 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+06:27:18 INFO Kill process command output, ok: True code 0, out: 2190
+, err: 
+06:27:18 INFO Getting all openstack servers managed by the charm
+06:27:19 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:19 INFO Authentication (publickey) successful!
+06:27:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+06:27:20 INFO Authentication (publickey) successful!
+06:27:20 INFO [chan 2] Opened sftp connection (server version 3)
+06:27:20 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.96, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+06:27:20 WARNING Failed to pull metrics for test-zen25ryn-0-n-72c2f4b28bb3: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+06:27:20 INFO Running runner removal script for test-zen25ryn-0-n-72c2f4b28bb3
+06:27:22 INFO Deleting openstack server with test-zen25ryn-0-n-72c2f4b28bb3
+06:27:27 INFO Cleaning up SSH key files
+06:27:27 INFO Found 0 key files, clean up 0 key files
+06:27:27 INFO Cleaning up openstack keypairs
+06:27:27 INFO Getting runners...
+06:27:28 INFO Getting all openstack servers managed by the charm
+06:27:29 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:29 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:29 INFO Getting runners...
+06:27:30 INFO Getting all openstack servers managed by the charm
+06:27:31 INFO Found following runners: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:31 WARNING Found runner instance on cloud but not registered on GitHub: {'test-zen25ryn-0-n-72c2f4b28bb3'}
+06:27:31 INFO Wait for condition not met, sleeping 60
+06:28:31 INFO Getting runners...
+06:28:32 INFO Getting all openstack servers managed by the charm
+06:28:34 INFO Found following runners: set()
