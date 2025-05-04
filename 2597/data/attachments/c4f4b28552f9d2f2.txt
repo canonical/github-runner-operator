@@ -1,0 +1,63 @@
+18:51:06 INFO Creating 1 runners
+18:51:07 INFO Creating openstack server with test-ehrrcg6z-0-n-ba16e49ad2a8
+18:52:56 INFO Runner test-ehrrcg6z-0-n-ba16e49ad2a8 created successfully
+18:53:57 INFO Getting runners...
+18:53:58 INFO Getting all openstack servers managed by the charm
+18:54:00 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:00 INFO Authentication (publickey) successful!
+18:54:01 INFO Found following runners: {'test-ehrrcg6z-0-n-ba16e49ad2a8'}
+18:54:01 INFO Getting runners...
+18:54:02 INFO Getting all openstack servers managed by the charm
+18:54:03 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:03 INFO Authentication (publickey) successful!
+18:54:04 INFO Found following runners: {'test-ehrrcg6z-0-n-ba16e49ad2a8'}
+18:54:04 INFO Getting runners...
+18:54:05 INFO Getting all openstack servers managed by the charm
+18:54:06 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:06 INFO Authentication (publickey) successful!
+18:54:06 INFO Found following runners: {'test-ehrrcg6z-0-n-ba16e49ad2a8'}
+18:54:06 INFO Getting all openstack servers managed by the charm
+18:54:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:09 INFO Authentication (publickey) successful!
+18:54:09 INFO Getting runners...
+18:54:10 INFO Getting all openstack servers managed by the charm
+18:54:13 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:13 INFO Authentication (publickey) successful!
+18:54:13 INFO Found following runners: {'test-ehrrcg6z-0-n-ba16e49ad2a8'}
+18:54:14 INFO Offline github runners to delete: []:
+18:54:14 INFO Getting all openstack servers managed by the charm
+18:54:16 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:16 INFO Authentication (publickey) successful!
+18:54:18 INFO Cleaning up SSH key files
+18:54:18 INFO Found 1 key files, clean up 0 key files
+18:54:18 INFO Cleaning up openstack keypairs
+18:54:18 INFO Getting runners...
+18:54:19 INFO Getting all openstack servers managed by the charm
+18:54:21 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:21 INFO Authentication (publickey) successful!
+18:54:21 INFO Found following runners: {'test-ehrrcg6z-0-n-ba16e49ad2a8'}
+18:54:21 INFO Flushing idle runners...
+18:54:22 INFO Getting all openstack servers managed by the charm
+18:54:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:24 INFO Authentication (publickey) successful!
+18:54:24 INFO Attempting to kill runner process on test-ehrrcg6z-0-n-ba16e49ad2a8 if not busy
+18:54:24 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:54:24 INFO Kill process command output, ok: True code 0, out: 2199
+, err: 
+18:54:24 INFO Getting all openstack servers managed by the charm
+18:54:25 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:25 INFO Authentication (publickey) successful!
+18:54:26 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:54:26 INFO Authentication (publickey) successful!
+18:54:26 INFO [chan 2] Opened sftp connection (server version 3)
+18:54:26 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.216, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+18:54:26 WARNING Failed to pull metrics for test-ehrrcg6z-0-n-ba16e49ad2a8: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+18:54:26 INFO Running runner removal script for test-ehrrcg6z-0-n-ba16e49ad2a8
+18:54:28 INFO Deleting openstack server with test-ehrrcg6z-0-n-ba16e49ad2a8
+18:54:31 INFO Cleaning up SSH key files
+18:54:31 INFO Found 0 key files, clean up 0 key files
+18:54:31 INFO Cleaning up openstack keypairs
+18:54:31 INFO Getting runners...
+18:54:33 INFO Getting all openstack servers managed by the charm
+18:54:34 INFO Found following runners: set()

@@ -1,0 +1,97 @@
+18:54:35 INFO GitHub token rate limit: Rate(reset=2025-05-04 19:36:58+00:00, remaining=4801, limit=5000)
+18:54:38 INFO Creating 1 runners
+18:54:38 INFO Creating openstack server with test-ehrrcg6z-0-n-2b37087bcd93
+18:54:52 INFO Runner test-ehrrcg6z-0-n-2b37087bcd93 created successfully
+18:55:53 INFO Getting runners...
+18:55:54 INFO Getting all openstack servers managed by the charm
+18:55:55 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:55:56 INFO Authentication (publickey) successful!
+18:55:57 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:55:57 INFO Getting runners...
+18:55:58 INFO Getting all openstack servers managed by the charm
+18:55:59 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:55:59 INFO Authentication (publickey) successful!
+18:56:00 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:00 INFO Getting runners...
+18:56:01 INFO Getting all openstack servers managed by the charm
+18:56:04 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:04 INFO Authentication (publickey) successful!
+18:56:04 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:06 INFO Wait for condition not met, sleeping 10
+18:56:17 INFO Getting runners...
+18:56:18 INFO Getting all openstack servers managed by the charm
+18:56:20 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:20 INFO Authentication (publickey) successful!
+18:56:20 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:20 INFO Getting runners...
+18:56:22 INFO Getting all openstack servers managed by the charm
+18:56:24 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:24 INFO Authentication (publickey) successful!
+18:56:24 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:26 INFO Offline github runners to delete: []:
+18:56:26 INFO Getting all openstack servers managed by the charm
+18:56:27 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:27 INFO Authentication (publickey) successful!
+18:56:30 INFO Cleaning up SSH key files
+18:56:30 INFO Found 1 key files, clean up 0 key files
+18:56:30 INFO Cleaning up openstack keypairs
+18:56:30 INFO Getting runners...
+18:56:31 INFO Getting all openstack servers managed by the charm
+18:56:33 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:33 INFO Authentication (publickey) successful!
+18:56:33 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:33 INFO Flushing idle runners...
+18:56:34 INFO Getting all openstack servers managed by the charm
+18:56:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:35 INFO Authentication (publickey) successful!
+18:56:35 INFO Attempting to kill runner process on test-ehrrcg6z-0-n-2b37087bcd93 if not busy
+18:56:35 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+18:56:35 INFO Kill process command output, ok: False code 1, out: 2483
+, err: 
+18:56:35 INFO Getting all openstack servers managed by the charm
+18:56:37 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:37 INFO Authentication (publickey) successful!
+18:56:40 INFO Cleaning up SSH key files
+18:56:40 INFO Found 1 key files, clean up 0 key files
+18:56:40 INFO Cleaning up openstack keypairs
+18:56:40 INFO Getting runners...
+18:56:41 INFO Getting all openstack servers managed by the charm
+18:56:43 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:43 INFO Authentication (publickey) successful!
+18:56:43 INFO Found following runners: {'test-ehrrcg6z-0-n-2b37087bcd93'}
+18:56:43 INFO Flushing idle and busy runners...
+18:56:44 INFO Getting all openstack servers managed by the charm
+18:56:45 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:46 INFO Authentication (publickey) successful!
+18:56:46 INFO Attempting to kill all runner process on test-ehrrcg6z-0-n-2b37087bcd93
+18:56:46 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:56:46 INFO Kill process command output, ok: True code 0, out: 2203
+2483
+, err: 
+18:56:46 INFO Getting all openstack servers managed by the charm
+18:56:47 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:56:47 INFO Authentication (publickey) successful!
+18:56:50 INFO Cleaning up SSH key files
+18:56:50 INFO Found 1 key files, clean up 0 key files
+18:56:50 INFO Cleaning up openstack keypairs
+18:57:00 INFO Flushing idle and busy runners...
+18:57:01 INFO Getting all openstack servers managed by the charm
+18:57:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:03 INFO Authentication (publickey) successful!
+18:57:03 INFO Attempting to kill all runner process on test-ehrrcg6z-0-n-2b37087bcd93
+18:57:03 INFO Running kill process command: pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener);pgrep -x Runner.Worker && kill $(pgrep -x Runner.Worker);
+18:57:03 INFO Kill process command output, ok: False code 1, out: , err: 
+18:57:03 INFO Getting all openstack servers managed by the charm
+18:57:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:05 INFO Authentication (publickey) successful!
+18:57:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:57:05 INFO Authentication (publickey) successful!
+18:57:06 INFO [chan 2] Opened sftp connection (server version 3)
+18:57:06 INFO Running runner removal script for test-ehrrcg6z-0-n-2b37087bcd93
+18:57:07 INFO Deleting openstack server with test-ehrrcg6z-0-n-2b37087bcd93
+18:57:10 INFO Cleaning up SSH key files
+18:57:10 INFO Found 0 key files, clean up 0 key files
+18:57:10 INFO Cleaning up openstack keypairs
+18:57:11 INFO Getting runners...
+18:57:12 INFO Getting all openstack servers managed by the charm
+18:57:13 INFO Found following runners: set()

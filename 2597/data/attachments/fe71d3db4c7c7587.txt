@@ -1,0 +1,58 @@
+18:59:40 INFO Creating 2 runners
+19:01:53 INFO Getting runners...
+19:01:54 INFO Getting all openstack servers managed by the charm
+19:01:56 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:56 INFO Authentication (publickey) successful!
+19:01:57 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:01:57 INFO Authentication (publickey) successful!
+19:01:58 INFO Found following runners: {'test-ehrrcg6z-0-n-2bdc6c6fd4ca', 'test-ehrrcg6z-0-n-efad556f89b4'}
+19:01:58 INFO Getting runners...
+19:01:59 INFO Getting all openstack servers managed by the charm
+19:02:01 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/ports: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+19:02:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:02 INFO Authentication (publickey) successful!
+19:02:02 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:02 INFO Authentication (publickey) successful!
+19:02:03 INFO Found following runners: {'test-ehrrcg6z-0-n-2bdc6c6fd4ca', 'test-ehrrcg6z-0-n-efad556f89b4'}
+19:02:03 INFO Flushing idle runners...
+19:02:03 INFO Getting all openstack servers managed by the charm
+19:02:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:05 INFO Authentication (publickey) successful!
+19:02:05 INFO Attempting to kill runner process on test-ehrrcg6z-0-n-2bdc6c6fd4ca if not busy
+19:02:05 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:02:05 INFO Kill process command output, ok: True code 0, out: 1982
+, err: 
+19:02:05 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:05 INFO Authentication (publickey) successful!
+19:02:06 INFO Attempting to kill runner process on test-ehrrcg6z-0-n-efad556f89b4 if not busy
+19:02:06 INFO Running kill process command: ! pgrep -x Runner.Worker && pgrep -x Runner.Listener && kill $(pgrep -x Runner.Listener)
+19:02:06 INFO Kill process command output, ok: True code 0, out: 2196
+, err: 
+19:02:06 INFO Getting all openstack servers managed by the charm
+19:02:07 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/networks: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+19:02:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:09 INFO Authentication (publickey) successful!
+19:02:09 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:09 INFO Authentication (publickey) successful!
+19:02:10 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:10 INFO Authentication (publickey) successful!
+19:02:10 INFO [chan 2] Opened sftp connection (server version 3)
+19:02:10 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.238, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+19:02:10 WARNING Failed to pull metrics for test-ehrrcg6z-0-n-2bdc6c6fd4ca: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+19:02:10 INFO Running runner removal script for test-ehrrcg6z-0-n-2bdc6c6fd4ca
+19:02:12 INFO Deleting openstack server with test-ehrrcg6z-0-n-2bdc6c6fd4ca
+19:02:14 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+19:02:14 INFO Authentication (publickey) successful!
+19:02:15 INFO [chan 2] Opened sftp connection (server version 3)
+19:02:15 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json on instance 10.145.193.165, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/pre-job-metrics.json': No such file or directory
+
+19:02:15 WARNING Failed to pull metrics for test-ehrrcg6z-0-n-efad556f89b4: Unable to get file size of /home/ubuntu/metrics-exchange/pre-job-metrics.json . Will not be able to issue all metrics
+19:02:15 INFO Running runner removal script for test-ehrrcg6z-0-n-efad556f89b4
+19:02:16 INFO Deleting openstack server with test-ehrrcg6z-0-n-efad556f89b4
+19:02:19 INFO Cleaning up SSH key files
+19:02:19 INFO Found 0 key files, clean up 0 key files
+19:02:19 INFO Cleaning up openstack keypairs
+19:02:19 INFO Getting runners...
+19:02:20 INFO Getting all openstack servers managed by the charm
+19:02:21 INFO Found following runners: set()

@@ -1,0 +1,64 @@
+18:54:31 INFO Waiting for model:
+  test-yw5pzqc9/0 [executing] active: 
+18:55:01 INFO Waiting for model:
+  test-yw5pzqc9/0 [idle] active:
+18:55:50 INFO Waiting for model:
+  test-yw5pzqc9/0 [executing] active: 
+18:56:20 INFO Waiting for model:
+  test-yw5pzqc9/0 [idle] active: 
+18:56:33 INFO [TEST SETUP] Exposing port 8080 on test-yw5pzqc9-0-n-048895668d70
+18:56:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.134', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:1f:61'}]])
+18:56:34 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-yw5pzqc9-0-n-048895668d70.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.134 &
+18:56:35 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.134' (ED25519) to the list of known hosts.
+
+18:56:36 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-yw5pzqc9-0-n-048895668d70
+18:56:36 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.134', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:1f:61'}]])
+18:56:37 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yw5pzqc9-0-n-048895668d70.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.134 nc -z localhost 8080'
+18:56:38 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:56:39 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-yw5pzqc9-0-n-048895668d70
+18:56:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.134', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:1f:61'}]])
+18:56:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yw5pzqc9-0-n-048895668d70.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.134 curl http://localhost:8080'
+18:56:41 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  76383      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:56:43 INFO Wait for condition not met, sleeping 10
+18:57:20 INFO Waiting for model:
+  test-yw5pzqc9/0 [executing] active: 
+18:57:50 INFO Waiting for model:
+  test-yw5pzqc9/0 [idle] active: 
+18:57:53 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-orka  github-pr-b51b1-lxd  localhost/localhost  3.6.5    unsupported  18:57:53Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yw5pzqc9           active      1  github-runner-image-builder  latest/edge   68  no       
+test-yw5pzqc9                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-yw5pzqc9/0*  active    idle   0        10.41.62.133              
+test-yw5pzqc9/0*                         active    idle   1        10.41.62.150    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.41.62.133  juju-b4caf8-0  ubuntu@22.04      Running
+1        started  10.41.62.150  juju-b4caf8-1  ubuntu@22.04      Running
+
+18:57:53 INFO Juju error logs:
+
+machine-0: 18:25:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yw5pzqc9-0: 18:25:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yw5pzqc9-0: 18:25:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yw5pzqc9-0: 18:26:04 ERROR unit.github-runner-image-builder-yw5pzqc9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-yw5pzqc9-0: 18:26:14 ERROR unit.test-yw5pzqc9/0.juju-log Command python3 -m pip uninstall github_runner_manager failed with code 2: b'ERROR: Exception:\nTraceback (most recent call last):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 105, in _run_wrapper\n    status = _inner_run()\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/cli/base_command.py", line 96, in _inner_run\n    return self.run(options, args)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/commands/uninstall.py", line 106, in run\n    uninstall_pathset = req.uninstall(\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_install.py", line 723, in uninstall\n    uninstalled_pathset.remove(auto_confirm, verbose)\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 364, in remove\n    if auto_confirm or self._allowed_to_proceed(verbose):\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/req/req_uninstall.py", line 404, in _allowed_to_proceed\n    return ask("Proceed (Y/n)? ", ("y", "n", "")) != "n"\n  File "/usr/local/lib/python3.10/dist-packages/pip/_internal/utils/misc.py", line 229, in ask\n    response = input(message)\nEOFError: EOF when reading a line\n'
+
+18:57:53 INFO Forgetting model main...
