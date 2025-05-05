@@ -132,7 +132,6 @@ class GitHubRunnerPlatform(PlatformProvider):
                 )
 
         # Now the other way. Get all runners in GitHub that are not in the requested runners
-        non_requested_runners = []
         requested_instance_ids = {runner.instance_id for runner in requested_runners}
         non_requested_runners = [
             runner.identity
