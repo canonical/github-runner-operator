@@ -670,16 +670,36 @@ def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_in
     """
     Arrange: Run a reconcile to get 5 runners online.
     Act: In a different runner_scaler, reconcile with 2 runners.
-    Assert: 3 runners should be delete and 2 runners should be online.
+    Assert: 3 runners should be delete and 2 runners should be online. The busy runner and the
+        runner without health information should be retained based on the desired ordering.
     """
     runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=5, max_quantity=0)
     diff = runner_scaler.reconcile()
     assert diff == 5
     assert_runner_info(runner_scaler, online=5)
 
+    # Update the runner_dict, so we can check that runners are deleted in order of "inconvenience".
+    # This test depends on the preservation of insertion order.
+    # See https://docs.python.org/3.7/library/stdtypes.html#dict.values
+    runner_dict = runner_scaler._manager._platform.state.runners
+    initial_mock_runners = list(runner_dict.values())
+    initial_mock_runners[0].platform_state = PlatformRunnerState.IDLE
+    initial_mock_runners[1].platform_state = PlatformRunnerState.OFFLINE
+    initial_mock_runners[2].platform_state = PlatformRunnerState.BUSY
+    initial_mock_runners[3].deletable = True
+    initial_mock_runners[4].health = False  # Runner without health information
+
     second_runner_scaler = RunnerScaler(
         runner_manager, None, user_info, base_quantity=2, max_quantity=0
     )
     diff = second_runner_scaler.reconcile()
-    assert diff == -3
-    assert_runner_info(second_runner_scaler, online=2)
+    # Even as 3 runners were deleted, the deletable one was deleted in the cleanup, so
+    # the runner_scaler returns -2.
+    assert diff == -2
+    assert_runner_info(second_runner_scaler, online=1, busy=1, unknown=1)
+
+    assert len(runner_dict) == 2
+    # The busy runner should not be deleted.
+    assert initial_mock_runners[2].instance_id in runner_dict
+    # The runner without health information should not be deleted
+    assert initial_mock_runners[4].instance_id in runner_dict

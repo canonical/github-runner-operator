@@ -8,6 +8,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum, auto
+from functools import partial
 from multiprocessing import Pool
 from typing import Iterable, Iterator, Sequence, Type, cast
 
@@ -206,7 +207,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        logger.info("runner_manager::delete_runners Deleting %s number of runners", num)
+        logger.info("runner_manager::delete_runners Deleting %s runners", num)
         extracted_runner_metrics = self._cleanup_resources(
             force_delete=True, maximum_runners_to_delete=num
         )
@@ -295,6 +296,9 @@ class RunnerManager:
         )
 
         if maximum_runners_to_delete:
+            cloud_runners_to_delete.sort(
+                key=partial(_runner_deletion_sort_key, health_runners_map)
+            )
             cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
 
         return self._delete_cloud_runners(
@@ -604,3 +608,22 @@ def _filter_runner_to_delete(
             return True
 
     return False
+
+
+def _runner_deletion_sort_key(
+    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: CloudRunnerInstance
+) -> int:
+    """Order the runners in accordance to how inconvenient is to delete them.
+
+    Deletable runner should be the first to be removed, and busy runner should be the last
+    ones to delete. For the other ones it is a bit more arbitrary, but runners without health
+    information should not be preferred to be deleted, as they could be busy.
+    """
+    if cloud_runner.instance_id in health_runners_map:
+        health = health_runners_map[cloud_runner.instance_id]
+        if health.deletable:
+            return 1
+        if health.busy:
+            return 4
+        return 2
+    return 3

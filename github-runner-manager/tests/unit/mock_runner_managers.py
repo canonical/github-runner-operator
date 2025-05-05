@@ -203,6 +203,7 @@ class MockRunner:
         platform_state: The github state of the runner.
         health: The health state of the runner.
         created_at: The cloud creation time of the runner.
+        deletable: If the runner is deletable.
     """
 
     name: str
@@ -212,6 +213,7 @@ class MockRunner:
     platform_state: PlatformRunnerState
     health: bool
     created_at: datetime
+    deletable: bool = False
 
     def __init__(self, instance_id: InstanceID):
         """Construct the object.
@@ -372,7 +374,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
                 identity=runner_identity,
                 online=runner.platform_state != PlatformRunnerState.OFFLINE,
                 busy=runner.platform_state == PlatformRunnerState.BUSY,
-                deletable=False,
+                deletable=runner.deletable,
             )
         return PlatformRunnerHealth(
             identity=runner_identity,
