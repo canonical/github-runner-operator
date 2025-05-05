@@ -1,6 +1,13 @@
 # Changelog
 
 
+### 2025-05-06
+
+- The ssh health checks are removed and the platform providers (GitHub or the JobManager) are used instead to get the runners health
+information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
+disappear for the GitHub case. 
+- The JobManager implementation is now complete using the new health checks without ssh.
+
 ### 2025-04-28
 
 - Add a visualization of the share of jobs started per application.
