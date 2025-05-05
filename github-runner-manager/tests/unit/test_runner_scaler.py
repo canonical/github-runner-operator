@@ -675,7 +675,7 @@ def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_in
     runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=5, max_quantity=0)
     diff = runner_scaler.reconcile()
     assert diff == 5
-    assert_runner_info(runner_scaler, online=4)
+    assert_runner_info(runner_scaler, online=5)
 
     second_runner_scaler = RunnerScaler(
         runner_manager, None, user_info, base_quantity=2, max_quantity=0
