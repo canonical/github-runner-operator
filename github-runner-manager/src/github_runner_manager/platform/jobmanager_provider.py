@@ -118,7 +118,7 @@ class JobManagerPlatform(PlatformProvider):
                 health = self.get_runner_health(identity)
             except PlatformApiError as exc:
                 logger.warning(
-                    "Failed to get information for the runner %s in the jobmaner. %s",
+                    "Failed to get information for the runner %s in the jobmanager. %s",
                     identity,
                     exc,
                 )
