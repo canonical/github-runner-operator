@@ -20,6 +20,9 @@ from github_runner_manager.platform.platform_provider import (
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
+_GITHUB_PLATFORM_KEY = "github"
+_JOBMANAGER_PLATFORM_KEY = "jobmanager"
+
 logger = logging.getLogger(__name__)
 
 
@@ -53,12 +56,14 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             A new MultiplexerPlatform.
         """
-        providers: dict[str, PlatformProvider] = {"jobmanager": JobManagerPlatform.build()}
+        providers: dict[str, PlatformProvider] = {
+            _JOBMANAGER_PLATFORM_KEY: JobManagerPlatform.build()
+        }
         if github_configuration is None:
             logger.debug("GitHub configuration not provided, skipping GitHub provider.")
         else:
             github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
-            providers.update({"github": github_platform})
+            providers.update({_GITHUB_PLATFORM_KEY: github_platform})
         return cls(providers)
 
     def get_runner_health(
@@ -143,7 +148,11 @@ class MultiplexerPlatform(PlatformProvider):
         """
         # FIXME. This method should not exist. There should be just a method to delete a runner,
         # For now, the github implementation is just used to not break the reconcile loop.
-        return self._providers["github"].get_removal_token()
+        if _GITHUB_PLATFORM_KEY in self._providers:
+            return self._providers[_GITHUB_PLATFORM_KEY].get_removal_token()
+        # If GITHUB is not used at all, we return an empty string as the value is not really
+        # important.
+        return ""
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
