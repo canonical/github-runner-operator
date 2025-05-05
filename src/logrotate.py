@@ -11,6 +11,7 @@ from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_D
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
+from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
@@ -73,6 +74,14 @@ REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     frequency=LogrotateFrequency.DAILY,
 )
 
+GITHUB_RUNNER_MANAGER_CONFIG = LogrotateConfig(
+    name="github-runner-manager",
+    log_path_glob_pattern=f"{GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR}/*.log",
+    rotate=0,
+    create=False,
+    notifempty=False,
+)
+
 
 def setup() -> None:
     """Enable and configure logrotate.
@@ -110,6 +119,7 @@ def _configure() -> None:
     """Configure logrotate."""
     _write_config(REACTIVE_LOGROTATE_CONFIG)
     _write_config(METRICS_LOGROTATE_CONFIG)
+    _write_config(GITHUB_RUNNER_MANAGER_CONFIG)
 
 
 def _write_config(logrotate_config: LogrotateConfig) -> None:

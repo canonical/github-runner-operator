@@ -35,6 +35,7 @@ JOB_MANAGER_PACKAGE = "jobmanager_client"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
+GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log")
 
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
@@ -53,7 +54,8 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     """
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
-    _setup_service_file(config_file)
+    GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
+    _setup_service_file(config_file, GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR /  f"{app_name}-{unit_name}.log")
     _enable_service()
 
 
@@ -136,11 +138,12 @@ def _setup_config_file(config: ApplicationConfiguration) -> Path:
     return path
 
 
-def _setup_service_file(config_file: Path) -> None:
+def _setup_service_file(config_file: Path, log_file: Path) -> None:
     """Configure the systemd service.
 
     Args:
         config_file: The configuration file for the service.
+        log_file: The file location to store the logs.
     """
     service_file_content = textwrap.dedent(
         f"""\
@@ -154,6 +157,8 @@ def _setup_service_file(config_file: Path) -> None:
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT}
         Restart=on-failure
+        StandardOutput=append:{log_file}
+        StandardError=append:{log_file}
 
         [Install]
         WantedBy=multi-user.target
