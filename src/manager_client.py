@@ -118,6 +118,7 @@ class GitHubRunnerManagerClient:
         response = self._request(_HTTPMethod.GET, "/runner/check")
         runner_info = json.loads(response.text)
         runner_info["runners"] = tuple(runner_info["runners"])
+        runner_info["busy_runners"] = tuple(runner_info["busy_runners"])
         runner_info = {key.replace("_", "-"): value for key, value in runner_info.items()}
         return runner_info
 

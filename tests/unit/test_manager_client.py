@@ -49,8 +49,8 @@ def test_check_runner_success(client: GitHubRunnerManagerClient, mock__request: 
         "busy": 0,
         "offline": 0,
         "unknown": 0,
-        "runners": [],
-        "busy-runners": [],
+        "runners": (),
+        "busy-runners": (),
     }
 
 
