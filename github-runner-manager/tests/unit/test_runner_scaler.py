@@ -3,6 +3,7 @@
 
 
 import logging
+from datetime import timedelta
 from typing import Iterable
 from unittest.mock import MagicMock
 
@@ -218,6 +219,7 @@ def set_one_runner_state(
     platform_state: PlatformRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
     health: bool | None = None,
+    old_runner: bool = False,
 ):
     """Set the runner state for a RunnerScaler with one runner.
 
@@ -226,6 +228,7 @@ def set_one_runner_state(
         platform_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
         health: Whether the runner is healthy.
+        old_runner: A runner that has had enough time to get created.
     """
     logger.info(
         "set_one_runner_state: platform_state %s, cloud_state %s, health %s",
@@ -236,6 +239,10 @@ def set_one_runner_state(
     runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
+    if old_runner:
+        runner_dict[instance_id].created_at -= timedelta(
+            seconds=runner_manager_module.RUNNER_MAXIMUM_CREATION_TIME + 1
+        )
     if platform_state is not None:
         runner_dict[instance_id].platform_state = platform_state
     if cloud_state is not None:
@@ -584,3 +591,95 @@ def test_get_runner_unknown_runner(runner_scaler_one_runner: RunnerScaler):
     runner_scaler = runner_scaler_one_runner
     set_one_runner_state(runner_scaler, health=False)
     assert_runner_info(runner_scaler=runner_scaler, unknown=1)
+
+
+def test_flush_idle_on_starting_offline_runner(
+    runner_scaler_one_runner: RunnerScaler,
+    runner_manager: RunnerManager,
+):
+    """
+    Arrange: A RunnerScaler with one offline runner that could be starting.
+    Act: Run flush idle runner.
+    Assert: The runner should not be deleted.
+    """
+    runner_scaler = runner_scaler_one_runner
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
+    runners_before = runner_manager.get_runners()
+
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+    assert_runner_info(runner_scaler, offline=1)
+    runners_after = runner_manager.get_runners()
+    assert runners_before[0].instance_id == runners_after[0].instance_id
+
+
+def test_flush_idle_on_old_offline_runner(
+    runner_scaler_one_runner: RunnerScaler,
+    runner_manager: RunnerManager,
+):
+    """
+    Arrange: A RunnerScaler with one offline runner that had enough time to start.
+    Act: Run flush idle runner.
+    Assert: The runner should be deleted. No one should be created.
+    """
+    runner_scaler = runner_scaler_one_runner
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
+
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+    assert_runner_info(runner_scaler, offline=0)
+
+
+def test_reconcile_on_starting_offline_runner(
+    runner_scaler_one_runner: RunnerScaler,
+    runner_manager: RunnerManager,
+):
+    """
+    Arrange: A RunnerScaler with one offline runner that could be starting.
+    Act: Run reconcile.
+    Assert: The runner should not be deleted.
+    """
+    runner_scaler = runner_scaler_one_runner
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
+    runners_before = runner_manager.get_runners()
+
+    runner_scaler.reconcile()
+    assert_runner_info(runner_scaler, offline=1)
+    runners_after = runner_manager.get_runners()
+    assert runners_before[0].instance_id == runners_after[0].instance_id
+
+
+def test_reconcile_on_old_offline_runner(
+    runner_scaler_one_runner: RunnerScaler,
+    runner_manager: RunnerManager,
+):
+    """
+    Arrange: A RunnerScaler with one offline not busy runner that could have failed to start.
+    Act: Run reconcile.
+    Assert: The runner should be deleted. Another one will be created.
+    """
+    runner_scaler = runner_scaler_one_runner
+    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
+    runners_before = runner_manager.get_runners()
+
+    runner_scaler.reconcile()
+    assert_runner_info(runner_scaler, online=1, offline=0)
+    runners_after = runner_manager.get_runners()
+    assert runners_before[0].instance_id != runners_after[0].instance_id
+
+
+def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_info: UserInfo):
+    """
+    Arrange: Run a reconcile to get 5 runners online.
+    Act: In a different runner_scaler, reconcile with 2 runners.
+    Assert: 3 runners should be delete and 2 runners should be online.
+    """
+    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=5, max_quantity=0)
+    diff = runner_scaler.reconcile()
+    assert diff == 5
+    assert_runner_info(runner_scaler, online=4)
+
+    second_runner_scaler = RunnerScaler(
+        runner_manager, None, user_info, base_quantity=2, max_quantity=0
+    )
+    diff = second_runner_scaler.reconcile()
+    assert diff == -3
+    assert_runner_info(second_runner_scaler, online=2)

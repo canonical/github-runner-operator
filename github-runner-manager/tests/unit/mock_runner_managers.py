@@ -202,6 +202,7 @@ class MockRunner:
         cloud_state: The cloud state of the runner.
         platform_state: The github state of the runner.
         health: The health state of the runner.
+        created_at: The cloud creation time of the runner.
     """
 
     name: str
@@ -210,6 +211,7 @@ class MockRunner:
     cloud_state: CloudRunnerState
     platform_state: PlatformRunnerState
     health: bool
+    created_at: datetime
 
     def __init__(self, instance_id: InstanceID):
         """Construct the object.
@@ -223,6 +225,8 @@ class MockRunner:
         self.cloud_state = CloudRunnerState.ACTIVE
         self.platform_state = PlatformRunnerState.IDLE
         self.health = True
+        # By default a runner that has just being created.
+        self.created_at = datetime.now(timezone.utc)
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
         """Construct CloudRunnerInstance from this object.
@@ -236,7 +240,7 @@ class MockRunner:
             instance_id=self.instance_id,
             health=self.health,
             state=self.cloud_state,
-            created_at=datetime.now(timezone.utc),
+            created_at=self.created_at,
         )
 
 

@@ -207,7 +207,9 @@ class RunnerManager:
             Stats on metrics events issued during the deletion of runners.
         """
         logger.info("runner_manager::delete_runners Deleting %s number of runners", num)
-        extracted_runner_metrics = self._cleanup_resources(force_delete=True)
+        extracted_runner_metrics = self._cleanup_resources(
+            force_delete=True, maximum_runners_to_delete=num
+        )
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
     def flush_runners(
@@ -236,7 +238,9 @@ class RunnerManager:
         if flush_mode == FlushMode.FLUSH_BUSY:
             flush_busy = True
 
-        extracted_runner_metrics = self._cleanup_resources(clean_idle=True, clean_busy=flush_busy)
+        extracted_runner_metrics = self._cleanup_resources(
+            clean_idle=True, force_delete=flush_busy
+        )
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
     def cleanup(self) -> IssuedMetricEventsStats:
@@ -251,17 +255,14 @@ class RunnerManager:
 
     def _cleanup_resources(
         self,
-        clean_busy: bool = False,
         clean_idle: bool = False,
-        clean_starting: bool = False,
         force_delete: bool = False,
+        maximum_runners_to_delete: int | None = None,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
         """Cleanup the indicated runners in the platform and in the cloud."""
         logger.info(
-            " _cleanup_resources busy: %s, idle: %s, starting: %s, force: %s",
-            clean_busy,
+            " _cleanup_resources idle: %s, force: %s",
             clean_idle,
-            clean_starting,
             force_delete,
         )
         cloud_runners = self._cloud.get_runners()
@@ -281,24 +282,25 @@ class RunnerManager:
             for health in runners_health_response.requested_runners
         }
 
-        # Skip runners without health information
         cloud_runners_to_delete = list(
             filter(
                 lambda cloud_runner: _filter_runner_to_delete(
                     cloud_runner,
                     health_runners_map.get(cloud_runner.instance_id),
-                    clean_busy=clean_busy,
                     clean_idle=clean_idle,
-                    clean_starting=clean_starting,
                     force_delete=force_delete,
                 ),
                 cloud_runners_to_delete,
             )
         )
+
+        if maximum_runners_to_delete:
+            cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
+
         return self._delete_cloud_runners(
             cloud_runners_to_delete,
             runners_health_response.requested_runners,
-            delete_busy_runners=(force_delete or clean_busy),
+            delete_busy_runners=force_delete,
         )
 
     def _delete_cloud_runners(
@@ -558,14 +560,12 @@ class RunnerManager:
 
 
 # Several positional arguments are required for this function to be generic enough for
-# all the cases.
-def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-return-statements
+# all the cases and it is simpler to exit early.
+def _filter_runner_to_delete(  # pylint: disable=too-many-return-statements
     cloud_runner: CloudRunnerInstance,
     health: PlatformRunnerHealth | None,
     *,
-    clean_busy: bool = False,
     clean_idle: bool = False,
-    clean_starting: bool = False,
     force_delete: bool = False,
 ) -> bool:
     """Filter runners to delete based on the input arguments.
@@ -577,16 +577,13 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-re
     Args:
         cloud_runner: Cloud runner.
         health: Platform runner or None if health information is not available.
-        clean_busy: Remove runners that are busy.
         clean_idle: Remove runners that are idle.
-        clean_starting: If this flag is False, a runner that is offline and not busy, and it
-            has been created recently, will not be deleted.
         force_delete: Delete the runner in all conditions.
 
     Returns:
         True if the runner should be deleted
     """
-    # If force_delete, delete everything.
+    # If force_delete, always delete the runner.
     if force_delete:
         return True
 
@@ -595,22 +592,18 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-re
         logger.info("No health information for %s. deleting: %s", health, force_delete)
         return False
 
-    # Always delete deletable runner
+    # Always delete deletable runners with health information.
     if health.deletable:
-        return True
-
-    if clean_busy and health.busy:
         return True
 
     if clean_idle and health.online and not health.busy:
         return True
 
-    if (
-        clean_starting
-        and not health.online
-        and not health.busy
-        and not cloud_runner.is_older_than(RUNNER_MAXIMUM_CREATION_TIME)
-    ):
-        return True
+    if not health.online and not health.busy:
+        # Kill old runners that are offline and idle as they could be in failed state.
+        # We may also kill here runners that were online and not busy and went temporarily to
+        # offline, but that should not be an issue, as those runners will be spawned again.
+        if cloud_runner.is_older_than(RUNNER_MAXIMUM_CREATION_TIME):
+            return True
 
     return False
