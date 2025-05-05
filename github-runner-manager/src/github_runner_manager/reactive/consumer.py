@@ -233,10 +233,10 @@ def _spawn_runner(
         platform_provider: Platform provider.
         metadata: RunnerMetadata for the runner to spawn..
     """
-    logger.info("Spawning new reactive runner")
+    logger.info("Spawning new reactive runner for job %s", job_url)
     instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:
-        logger.error("Failed to spawn a runner. Will reject the message.")
+        logger.error("Failed to spawn a runner for job %s. Will reject the message.", job_url)
         msg.reject(requeue=True)
         return
     logger.info("Reactive runner spawned %s", instance_ids)
@@ -252,7 +252,7 @@ def _spawn_runner(
             break
     else:
         logger.info(
-            "Failed piking job %s. reactive runner %s probably picked another job",
+            "Job %s not picked by reactive runner %s. Probably picked up by another job",
             job_url,
             instance_ids,
         )

@@ -13,7 +13,7 @@ from urllib.error import HTTPError
 
 import requests
 
-# These exceptions are3 not found by pylint
+# These exceptions are not found by pylint
 from fastcore.net import (  # pylint: disable=no-name-in-module
     HTTP404NotFoundError,
     HTTP422UnprocessableEntityError,
@@ -288,7 +288,7 @@ class GithubClient:
                     org=path.org,
                     runner_id=runner_id,
                 )
-        # This function delete_self_hosted_runner fail in GitHub if the runner does not exist,
+        # The function delete_self_hosted_runner fails in GitHub if the runner does not exist,
         # so we do not have to worry about that.
         except HTTP422UnprocessableEntityError as err:
             raise DeleteRunnerBusyError from err

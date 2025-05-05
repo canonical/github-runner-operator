@@ -225,10 +225,13 @@ def set_one_runner_state(
         runner_scaler: The RunnerScaler instance to modify.
         github_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
-        health: TODO.
+        health: Whether the runner is healthy.
     """
     logger.info(
-        "JAVI set_one_runner_states github_state %s cloud_state %s", github_state, cloud_state
+        "set_one_runner_state: github_state %s, cloud_state %s, health %s",
+        github_state,
+        cloud_state,
+        health,
     )
     runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
@@ -239,7 +242,7 @@ def set_one_runner_state(
         runner_dict[instance_id].cloud_state = cloud_state
     if health is not None:
         runner_dict[instance_id].health = health
-    logger.info(" runner_dict: %s", runner_dict)
+    logger.info("current runner_dict: %s.", runner_dict)
 
 
 def assert_runner_info(

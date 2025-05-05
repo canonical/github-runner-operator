@@ -165,11 +165,11 @@ class RunnerManager:
         Returns:
             Information on the runners.
         """
-        logger.info("JAVI runner_manager::get_runners")
+        logger.info("runner_manager::get_runners")
         runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.info("clouds runners %s", cloud_runners)
+        logger.info("clouds runners response %s", cloud_runners)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
@@ -199,7 +199,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        logger.info("JAVI runner_manager::delete_runners Deleting %s number of runners", num)
+        logger.info("runner_manager::delete_runners Deleting %s number of runners", num)
         extracted_runner_metrics = self._cleanup_resources(force_delete=True)
         return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
 
@@ -214,7 +214,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the deletion of runners.
         """
-        logger.info("JAVI runner_manager::flush_runners mode %s", flush_mode)
+        logger.info("runner_manager::flush_runners. mode %s", flush_mode)
         match flush_mode:
             case FlushMode.FLUSH_IDLE:
                 logger.info("Flushing idle runners...")
@@ -238,7 +238,7 @@ class RunnerManager:
         Returns:
             Stats on metrics events issued during the cleanup of runners.
         """
-        logger.info("JAVI runner_manager::cleanup")
+        logger.info("runner_manager::cleanup")
         deleted_runner_metrics = self._cleanup_resources()
         return self._issue_runner_metrics(metrics=iter(deleted_runner_metrics))
 

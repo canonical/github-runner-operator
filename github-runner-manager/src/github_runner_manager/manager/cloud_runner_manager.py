@@ -156,13 +156,13 @@ class CloudRunnerInstance:
     created_at: datetime
 
     def is_older_than(self, seconds: float) -> bool:
-        """TODO.
+        """Check if the cloud instance is older that the provided args.
 
         Args:
-            seconds: TODO
+            seconds: The seconds to check if the machine is older than.
 
         Returns:
-            TODO
+            True is the machine is older than the seconds provided.
         """
         now = datetime.now(timezone.utc)
         return (now - self.created_at).total_seconds() > seconds

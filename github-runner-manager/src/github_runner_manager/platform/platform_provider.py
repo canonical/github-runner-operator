@@ -164,7 +164,7 @@ class PlatformRunnerHealth:
         online: Whether the runner is online.
         busy: Whether the runner is busy.
         deletable: Whether the runner is deletable.
-        runner_in_platform: TODO
+        runner_in_platform: Whether the runner is in the platform.
     """
 
     identity: RunnerIdentity

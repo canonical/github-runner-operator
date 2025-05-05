@@ -13,7 +13,7 @@ from urllib.error import HTTPError
 import pytest
 import requests
 
-# These exceptions are3 not found by pylint
+# These exceptions are not found by pylint
 from fastcore.net import (  # pylint: disable=no-name-in-module
     HTTP404NotFoundError,
     HTTP422UnprocessableEntityError,

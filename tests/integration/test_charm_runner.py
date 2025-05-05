@@ -99,8 +99,10 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
-    # TODO DELETE RUNNERS IS WITHOUT WAIT IN OPENSTACK. WAIT FOR A BIT
-    # JUST IN CASE IT TOOK A WHILE TO DELETE IT...
+    # There is a race condition in here. When deleting a runner in openstack, it can take
+    # a while to get the runner deleted and the "flush-runner" will not spawn a new runner.
+    # We may need to call flush-runners twice and wait in the middle until the openstack
+    # instance disappear.
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

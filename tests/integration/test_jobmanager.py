@@ -116,10 +116,27 @@ async def test_jobmanager(
     httpserver: HTTPServer,
 ):
     """
-    arrange: Prepare a Job related to the jobmanager.
-        Prepare a fake http server to simulate all interactions.
-    act: Put the message in the queue.
-    assert: Work in progress.
+    This is a full test for the happy path of the jobmanager.
+
+    A message is created that will target the jobmamanager. A fake http server will
+    simulate all interactions with the jobmanager. The main steps in this test are:
+     1. Create a job and put it in mongodb.
+     2. The jobmanager will reply to the github-runner manager that the job is "PENDING"
+     3. The github-runner manager will get a token from the jobmanager for the runner and
+        will spawn a reactive runner with this token.
+     4. A tunner will be prepared in the test so the reactive runner can get to the jobmanager.
+        This is specific to this test and in production it should not be needed.
+     5. After some time, the reactive runner will hit the jobmanager health endpoint indicating
+        IDLE status.
+     6. The jobmanager will change the health response to "IN_PROGRESS" and will send a job
+        to the builder-agent. The job will be a sleep 30 seconds.
+     7. The builder-agent will run the the job. While running the job it will send the status
+        EXECUTING and after it is finished it will send the status FINISHED.
+     8. Run reconcile in the github-runner manager. As the jobmanager fake health response is
+        still "IN_PROGRESS" and not deletable, the runner should not be deleted.
+     9. Change the health response from the fake jobmanager to reply COMPLETED and deletable.
+     10. Run reconcile in the github-runner manager. The runner should be deleted at this point.
+         The mongodb should be empty.
     """
     # The http server simulates the jobmanager. Both the github-runner application
     # and the builder-agent will interact with the jobmanager. An alternative is
@@ -178,7 +195,7 @@ async def test_jobmanager(
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for get token.")
     logger.info("server log: %s ", (httpserver.log))
-    assert waiting.result, "Failed Waiting for get token."
+    assert waiting.result, "Failed waiting for get token in the jobmanager."
 
     # The builder-agent can get to us at any point.
     # the builder-agent will make PUT requests to
@@ -271,17 +288,16 @@ async def test_jobmanager(
     assert_queue_is_empty(mongodb_uri, app.name)
 
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
-    logger.info("JAVI call reconcile1")
+    logger.info("First reconcile that should not delete the runner, as it is still healthy.")
     action: Action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
-    logger.info("JAVI reconcile1 result %s %s", action.status, action.results)
+    logger.info("First reconcile result %s %s", action.status, action.results)
 
     # At this point there should be a runner
     action = await app.units[0].run_action("check-runners")
     await action.wait()
-    logger.info("JAVI action runners before reconcile: %s", action)
-    logger.info("JAVI action runners before reconcile: %s", action.results)
+    logger.info("check-runners after first reconcile: %s", action.results)
     assert action.status == "completed"
     assert action.results["online"] == "1"
     assert action.results["busy"] == "1"
@@ -290,6 +306,7 @@ async def test_jobmanager(
 
     logger.info("handlers %s", httpserver.format_matchers())
     logger.info("handler health %s", health_get_handler)
+
     # from here, reply that the thing is deletable.
     health_response.deletable = True
     health_response.status = "COMPLETED"
@@ -297,15 +314,15 @@ async def test_jobmanager(
     logger.info("handler health %s", health_get_handler)
     logger.info("handlers %s", httpserver.format_matchers())
 
-    logger.info("JAVI call reconcile: %s", action.results)
+    logger.info("Second reconsile call: %s", action.results)
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    logger.info("Second reconcile result %s %s", action.status, action.results)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
-    logger.info("JAVI action runners after reconcile: %s", action)
-    logger.info("JAVI action runners after reconcile: %s", action.results)
+    logger.info("check-runner runners after second reconcile: %s", action.results)
     assert action.status == "completed"
     assert action.results["online"] == "0"
     assert action.results["busy"] == "0"
