@@ -39,7 +39,8 @@ CHARM_STATE_PATH = Path("charm_state.json")
 
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
-EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE = "experimental-job-manager-only-token"
+# bandit thinks this is a hardcoded password
+EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE = "experimental-job-manager-only-token"  # nosec
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
