@@ -321,6 +321,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
+        self._setup_service(state, self.app.name, self.unit.name)
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
