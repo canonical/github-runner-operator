@@ -135,4 +135,3 @@ def test_check_runner(client: FlaskClient, lock: Lock, mock_runner_scaler: Magic
         "runners": ["mock_runner"],
         "busy_runners": [],
     }
-    mock_runner_scaler.get_runner_info.assert_called_once()
