@@ -172,7 +172,7 @@ class RunnerManager:
         Returns:
             Information on the runners.
         """
-        logger.info("runner_manager::get_runners")
+        logger.debug("runner_manager::get_runners")
         runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
@@ -586,7 +586,7 @@ def _filter_runner_to_delete(
 
     # Do not delete runners without health information.
     if health is None:
-        logger.info("No health information for %s. deleting: %s", health, force_delete)
+        logger.info("No health information for %s. Skip deletion.", cloud_runner.instance_id)
         return False
 
     # Always delete deletable runners with health information.
