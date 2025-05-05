@@ -254,18 +254,19 @@ class RunnerManager:
         logger.info("Cleanup cloud_runners %s", cloud_runners)
         runners_health_response = self._platform.get_runners_health(cloud_runners)
         logger.info("Cleanup health_response %s", runners_health_response)
+        logger.info(
+            " _cleanup_resources busy: %s, idle: %s, starting: %s, force: %s",
+            clean_busy,
+            clean_idle,
+            clean_starting,
+            force_delete,
+        )
 
         # Clean dangling resources in the cloud
         self._cloud.cleanup()
 
         # Always clean all runners in the platform that are not in the cloud
         self._clean_platform_runners(runners_health_response.non_requested_runners)
-        if force_delete:
-            # Delete everything
-            logger.info("Force delete, Deleting all runners")
-            return self._delete_cloud_runners(
-                cloud_runners, runners_health_response.requested_runners
-            )
 
         cloud_runners_to_delete = list(cloud_runners)
         health_runners_map = {
@@ -538,7 +539,7 @@ class RunnerManager:
             raise RunnerError(f"Runner {runner_identity} did not get online")
 
 
-def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-positional-arguments
+def _filter_runner_to_delete(  # noqa: E501  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-return-statements
     cloud_runner: CloudRunnerInstance,
     health: PlatformRunnerHealth | None,
     clean_busy: bool = False,
@@ -549,24 +550,26 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-po
     """TODO."""
     logger.info("Filter cloud runner: %s", cloud_runner)
     logger.info("Filter - health info: %s", health)
-    logger.info(
-        "clean_busy: %s, clean_idle: %s, clean_starting: %s, force_delete %s",
-        clean_busy,
-        clean_idle,
-        clean_starting,
-        force_delete,
-    )
+
+    # If force_delete, delete everything.
+    if force_delete:
+        return True
+
+    # Do not delete runners without health information.
     if health is None:
         logger.info("No health information for %s deleting: %s", health, force_delete)
-        return force_delete
+        return False
 
     # Always delete deletable runner
     if health.deletable:
         return True
+
     if clean_busy and health.busy:
         return True
+
     if clean_idle and health.online and not health.busy:
         return True
+
     if (
         clean_starting
         and not health.online
@@ -574,4 +577,5 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-po
         and not cloud_runner.is_older_than(1800)
     ):
         return True
+
     return False
