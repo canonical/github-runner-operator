@@ -280,10 +280,10 @@ class RunnerManager:
                 lambda cloud_runner: _filter_runner_to_delete(
                     cloud_runner,
                     health_runners_map.get(cloud_runner.instance_id),
-                    clean_busy,
-                    clean_idle,
-                    clean_starting,
-                    force_delete,
+                    clean_busy=clean_busy,
+                    clean_idle=clean_idle,
+                    clean_starting=clean_starting,
+                    force_delete=force_delete,
                 ),
                 cloud_runners_to_delete,
             )
@@ -539,9 +539,12 @@ class RunnerManager:
             raise RunnerError(f"Runner {runner_identity} did not get online")
 
 
-def _filter_runner_to_delete(  # noqa: E501  # pylint: disable=too-many-arguments, too-many-positional-arguments, too-many-return-statements
+# Several positional arguments are required for this function to be generic enough for
+# all the cases.
+def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-return-statements
     cloud_runner: CloudRunnerInstance,
     health: PlatformRunnerHealth | None,
+    *,
     clean_busy: bool = False,
     clean_idle: bool = False,
     clean_starting: bool = False,
