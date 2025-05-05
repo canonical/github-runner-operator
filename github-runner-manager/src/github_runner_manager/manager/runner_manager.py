@@ -249,11 +249,7 @@ class RunnerManager:
         clean_starting: bool = False,
         force_delete: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
-        """TODO."""
-        cloud_runners = self._cloud.get_runners()
-        logger.info("Cleanup cloud_runners %s", cloud_runners)
-        runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.info("Cleanup health_response %s", runners_health_response)
+        """Cleanup the indicated runners in the platform and in the cloud."""
         logger.info(
             " _cleanup_resources busy: %s, idle: %s, starting: %s, force: %s",
             clean_busy,
@@ -261,6 +257,10 @@ class RunnerManager:
             clean_starting,
             force_delete,
         )
+        cloud_runners = self._cloud.get_runners()
+        logger.info("cleanup cloud_runners %s", cloud_runners)
+        runners_health_response = self._platform.get_runners_health(cloud_runners)
+        logger.info("cleanup health_response %s", runners_health_response)
 
         # Clean dangling resources in the cloud
         self._cloud.cleanup()
@@ -300,7 +300,11 @@ class RunnerManager:
         runners_health: Sequence[PlatformRunnerHealth],
         delete_busy_runners: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
-        """TODO."""
+        """Delete runners in the platform ant the cloud.
+
+        If delete_busy_runners is False, when the platform provider fails in deleting the
+        runner because it can be busy, will mean that that runner should not be deleted.
+        """
         extracted_runner_metrics = []
         health_runners_map = {health.identity.instance_id: health for health in runners_health}
         for cloud_runner in cloud_runners:
@@ -315,6 +319,12 @@ class RunnerManager:
                             "Skipping deletion as the runner is busy. %s", cloud_runner.instance_id
                         )
                         continue
+                    logger.info("Deleting busy runner: %s", cloud_runner.instance_id)
+                except PlatformApiError as exc:
+                    logger.warning(
+                        "Failed to delete platform runner %s. %s", cloud_runner.instance_id, exc
+                    )
+                    continue
             logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
             runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
             if not runner_metric:
@@ -324,7 +334,7 @@ class RunnerManager:
         return extracted_runner_metrics
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
-        """TODO."""
+        """Clean the specified runners in the platform."""
         for runner in runners:
             try:
                 self._platform.delete_runner(runner)
@@ -550,17 +560,31 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-re
     clean_starting: bool = False,
     force_delete: bool = False,
 ) -> bool:
-    """TODO."""
-    logger.info("Filter cloud runner: %s", cloud_runner)
-    logger.info("Filter - health info: %s", health)
+    """Filter runners to delete based on the input arguments.
 
+    This is the main function to filter what runners to delete. Runners that are deletable
+    in the health information from platform should be deleted. For the other cases, the
+    filtering will depend on the input arguments.
+
+    Args:
+        cloud_runner: Cloud runner.
+        health: Platform runner or None if health information is not available.
+        clean_busy: Remove runners that are busy.
+        clean_idle: Remove runners that are idle.
+        clean_starting: If this flag is False, a runner that is offline and not busy, and it
+            has been created recently, will not be deleted.
+        force_delete: Delete the runner in all conditions.
+
+    Returns:
+        True if the runner should be deleted
+    """
     # If force_delete, delete everything.
     if force_delete:
         return True
 
     # Do not delete runners without health information.
     if health is None:
-        logger.info("No health information for %s deleting: %s", health, force_delete)
+        logger.info("No health information for %s. deleting: %s", health, force_delete)
         return False
 
     # Always delete deletable runner
