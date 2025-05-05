@@ -48,17 +48,13 @@ def check_runner() -> tuple[str, int]:
         Information on the runners in JSON format.
     """
     app_config = app.config[APP_CONFIG_NAME]
-
-    lock = get_lock()
-    with lock:
-        app.logger.info("Checking runners...")
-        runner_scaler = _get_runner_scaler(app_config)
-        try:
-            runner_info = runner_scaler.get_runner_info()
-        except CloudError as err:
-            app.logger.exception("Cloud error encountered while getting runner info")
-            return (str(err), 500)
-
+    app.logger.info("Checking runners...")
+    runner_scaler = _get_runner_scaler(app_config)
+    try:
+        runner_info = runner_scaler.get_runner_info()
+    except CloudError as err:
+        app.logger.exception("Cloud error encountered while getting runner info")
+        return (str(err), 500)
     return (json.dumps(dataclasses.asdict(runner_info)), 200)
 
 
