@@ -92,6 +92,7 @@ class GitHubRunnerPlatform(PlatformProvider):
                 online=False,
                 busy=False,
                 deletable=True,
+                runner_in_platform=False,
             )
 
     def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
@@ -126,6 +127,7 @@ class GitHubRunnerPlatform(PlatformProvider):
                         online=False,
                         busy=False,
                         deletable=True,
+                        runner_in_platform=False,
                     )
                 )
 

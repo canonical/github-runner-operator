@@ -322,6 +322,9 @@ class MockCloudRunnerManager(CloudRunnerManager):
             return MagicMock()
         return []
 
+    def cleanup(self) -> None:
+        """Cleanup runner dangling resources on the cloud."""
+
 
 class MockGitHubRunnerPlatform(PlatformProvider):
     """Mock of GitHubRunnerPlatform.

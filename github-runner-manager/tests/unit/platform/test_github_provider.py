@@ -165,6 +165,7 @@ def test_get_runner_health(
                         online=False,
                         busy=False,
                         deletable=True,
+                        runner_in_platform=False,
                     ),
                 ]
             ),

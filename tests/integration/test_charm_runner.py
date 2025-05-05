@@ -99,6 +99,9 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
+    # TODO DELETE RUNNERS IS WITHOUT WAIT IN OPENSTACK. WAIT FOR A BIT
+    # JUST IN CASE IT TOOK A WHILE TO DELETE IT...
+
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 

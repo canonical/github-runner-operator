@@ -6,7 +6,7 @@
 import abc
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum, auto
 from typing import Optional, Sequence
 
@@ -155,6 +155,18 @@ class CloudRunnerInstance:
     state: CloudRunnerState
     created_at: datetime
 
+    def is_older_than(self, seconds: float) -> bool:
+        """TODO.
+
+        Args:
+            seconds: TODO
+
+        Returns:
+            TODO
+        """
+        now = datetime.now(timezone.utc)
+        return (now - self.created_at).total_seconds() > seconds
+
 
 class PreJobMetrics(BaseModel):
     """Metrics for the pre-job phase of a runner.
@@ -269,3 +281,7 @@ class CloudRunnerManager(abc.ABC):
         Args:
             instance_id: The instance id of the runner to delete.
         """
+
+    @abc.abstractmethod
+    def cleanup(self) -> None:
+        """Cleanup runner dangling resources on the cloud."""

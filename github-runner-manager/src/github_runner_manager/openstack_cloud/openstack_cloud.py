@@ -313,7 +313,9 @@ class OpenstackCloud:
         try:
             server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
             if server is not None:
-                conn.delete_server(name_or_id=server.id)
+                res = conn.delete_server(name_or_id=server.id)
+                # TODO many times the machine is not deleted, probably in progress...
+                logger.info("JAVI openstack result: %s", res)
             self._delete_keypair(conn, instance_id)
         except (
             openstack.exceptions.SDKException,

@@ -160,6 +160,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         instances = self._openstack_cloud.get_instances()
         return [self._build_cloud_runner_instance(instance) for instance in instances]
 
+    def cleanup(self) -> None:
+        """Cleanup runner and resource on the cloud."""
+        self._openstack_cloud.cleanup()
+
     def _build_cloud_runner_instance(
         self, instance: OpenstackInstance, healthy: bool | None = None
     ) -> CloudRunnerInstance:

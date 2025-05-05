@@ -151,7 +151,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
 
     _ = runner_manager.create_runners(1, RunnerMetadata(), True)
-    github_provider.delete_runner.assert_called_once_with(github_runner)
+    github_provider.delete_runner.assert_called_once_with(github_runner.identity)
 
 
 @pytest.mark.parametrize(
