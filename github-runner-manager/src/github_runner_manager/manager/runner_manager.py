@@ -24,6 +24,7 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
+from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     PlatformApiError,
@@ -38,6 +39,12 @@ logger = logging.getLogger(__name__)
 # elements in this variable. The elements in the tuple represent
 # the time waiting before each health check against the platform provider.
 RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
+
+# For the reconcile loop, specially for reactive runner (as it is outside of this loop),
+# we do not want to delete runners that are offline and not busy in the platform and
+# that are not very old in the cloud, as they could be just starting. The creation time will
+# be equal to all the possible wait times in creation plus an extra amount.
+RUNNER_MAXIMUM_CREATION_TIME = CREATE_SERVER_TIMEOUT + sum(RUNNER_CREATION_WAITING_TIMES) + 120
 
 IssuedMetricEventsStats = dict[Type[metric_events.Event], int]
 
@@ -543,8 +550,9 @@ class RunnerManager:
                 logger.exception("Error getting the runner health: %s", runner_identity)
                 continue
             if runner_health.online or runner_health.deletable:
+                logger.info("Runner %s online", runner_identity)
                 break
-            logger.info("Runner not yet online %s", runner_identity)
+            logger.info("Runner %s not yet online", runner_identity)
         else:
             raise RunnerError(f"Runner {runner_identity} did not get online")
 
@@ -601,7 +609,7 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-arguments, too-many-re
         clean_starting
         and not health.online
         and not health.busy
-        and not cloud_runner.is_older_than(1800)
+        and not cloud_runner.is_older_than(RUNNER_MAXIMUM_CREATION_TIME)
     ):
         return True
 
