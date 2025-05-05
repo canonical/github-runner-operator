@@ -116,8 +116,9 @@ class GitHubRunnerManagerClient:
             The information on the runners.
         """
         response = self._request(_HTTPMethod.GET, "/runner/check")
-        raw_runner_info = json.loads(response.text)
-        runner_info = {key.replace("_", "-"): value for key, value in raw_runner_info.items()}
+        runner_info = json.loads(response.text)
+        runner_info["runners"] = tuple(runner_info["runners"])
+        runner_info = {key.replace("_", "-"): value for key, value in runner_info.items()}
         return runner_info
 
     @catch_requests_errors
