@@ -46,9 +46,7 @@ def job(
             workflow_run_id=pre_job_metrics.workflow_run_id,
             runner=runner,
         )
-    except JobNotFoundError as exc:
-        raise GithubMetricsError from exc
-    except PlatformApiError as exc:
+    except (JobNotFoundError, PlatformApiError) as exc:
         raise GithubMetricsError from exc
 
     queue_duration = (job_info.started_at - job_info.created_at).total_seconds()
