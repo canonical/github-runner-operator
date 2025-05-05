@@ -77,7 +77,9 @@ def install_package() -> None:
 
     logger.info("Uninstalling previous version of packages")
     try:
-        execute_command(["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE])
+        execute_command(
+            ["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE]
+        )
         execute_command(["python3", "-m", "pip", "uninstall", "--yes", JOB_MANAGER_PACKAGE])
     except SubprocessError:
         logger.info(
