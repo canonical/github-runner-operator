@@ -559,9 +559,7 @@ class RunnerManager:
             raise RunnerError(f"Runner {runner_identity} did not get online")
 
 
-# Several positional arguments are required for this function to be generic enough for
-# all the cases and it is simpler to exit early.
-def _filter_runner_to_delete(  # pylint: disable=too-many-return-statements
+def _filter_runner_to_delete(
     cloud_runner: CloudRunnerInstance,
     health: PlatformRunnerHealth | None,
     *,
@@ -583,7 +581,6 @@ def _filter_runner_to_delete(  # pylint: disable=too-many-return-statements
     Returns:
         True if the runner should be deleted
     """
-    # If force_delete, always delete the runner.
     if force_delete:
         return True
 
