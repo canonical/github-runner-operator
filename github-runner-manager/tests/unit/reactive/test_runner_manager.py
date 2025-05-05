@@ -86,7 +86,7 @@ def test_reconcile_positive_runner_diff(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.github_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
 
@@ -129,7 +129,7 @@ def test_reconcile_negative_runner_diff(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.github_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerState.IDLE
 
     runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
@@ -298,7 +298,7 @@ def test_reconcile_returns_issued_metrics(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.github_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats
@@ -436,7 +436,7 @@ def test_reconcile_empty_queue_returns_issued_metrics(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.github_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerState.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats

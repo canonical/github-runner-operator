@@ -63,7 +63,7 @@ class RunnerInstance:
         instance_id: ID of the runner. Managed by the runner manager.
         metadata: Metadata for the runner.
         health: The health state of the runner.
-        github_state: State on github.
+        platform_state: State on the platform.
         cloud_state: State on cloud.
     """
 
@@ -71,7 +71,7 @@ class RunnerInstance:
     instance_id: InstanceID
     metadata: RunnerMetadata
     health: HealthState
-    github_state: PlatformRunnerState | None
+    platform_state: PlatformRunnerState | None
     cloud_state: CloudRunnerState
 
     def __init__(
@@ -83,13 +83,13 @@ class RunnerInstance:
 
         Args:
             cloud_instance: Information on the cloud instance.
-            platform_health_state: TODO
+            platform_health_state: Health state in the platform provider.
         """
         self.name = cloud_instance.name
         self.instance_id = cloud_instance.instance_id
         self.metadata = cloud_instance.metadata
         self.health = cloud_instance.health
-        self.github_state = (
+        self.platform_state = (
             PlatformRunnerState.from_platform_health(platform_health_state)
             if platform_health_state is not None
             else None

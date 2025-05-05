@@ -215,7 +215,7 @@ def runner_scaler_one_runner_fixture(
 
 def set_one_runner_state(
     runner_scaler: RunnerScaler,
-    github_state: PlatformRunnerState | None = None,
+    platform_state: PlatformRunnerState | None = None,
     cloud_state: CloudRunnerState | None = None,
     health: bool | None = None,
 ):
@@ -223,21 +223,21 @@ def set_one_runner_state(
 
     Args:
         runner_scaler: The RunnerScaler instance to modify.
-        github_state: The github state to set the runner.
+        platform_state: The github state to set the runner.
         cloud_state: The cloud state to set the runner.
         health: Whether the runner is healthy.
     """
     logger.info(
-        "set_one_runner_state: github_state %s, cloud_state %s, health %s",
-        github_state,
+        "set_one_runner_state: platform_state %s, cloud_state %s, health %s",
+        platform_state,
         cloud_state,
         health,
     )
     runner_dict = runner_scaler._manager._platform.state.runners
     assert len(runner_dict) == 1, "Test arrange failed: One runner should be present"
     instance_id = list(runner_dict.keys())[0]
-    if github_state is not None:
-        runner_dict[instance_id].github_state = github_state
+    if platform_state is not None:
+        runner_dict[instance_id].platform_state = platform_state
     if cloud_state is not None:
         runner_dict[instance_id].cloud_state = cloud_state
     if health is not None:

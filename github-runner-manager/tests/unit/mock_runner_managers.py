@@ -200,7 +200,7 @@ class MockRunner:
         instance_id: The instance id of the runner.
         metadata: Metadata of the server.
         cloud_state: The cloud state of the runner.
-        github_state: The github state of the runner.
+        platform_state: The github state of the runner.
         health: The health state of the runner.
     """
 
@@ -208,7 +208,7 @@ class MockRunner:
     instance_id: InstanceID
     metadata: RunnerMetadata
     cloud_state: CloudRunnerState
-    github_state: PlatformRunnerState
+    platform_state: PlatformRunnerState
     health: bool
 
     def __init__(self, instance_id: InstanceID):
@@ -221,7 +221,7 @@ class MockRunner:
         self.instance_id = instance_id
         self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
-        self.github_state = PlatformRunnerState.IDLE
+        self.platform_state = PlatformRunnerState.IDLE
         self.health = True
 
     def to_cloud_runner(self) -> CloudRunnerInstance:
@@ -366,8 +366,8 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             runner = self.state.runners[runner_identity.instance_id]
             return PlatformRunnerHealth(
                 identity=runner_identity,
-                online=runner.github_state != PlatformRunnerState.OFFLINE,
-                busy=runner.github_state == PlatformRunnerState.BUSY,
+                online=runner.platform_state != PlatformRunnerState.OFFLINE,
+                busy=runner.platform_state == PlatformRunnerState.BUSY,
                 deletable=False,
             )
         return PlatformRunnerHealth(
@@ -428,23 +428,23 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         if states is None:
             states = [member.value for member in PlatformRunnerState]
 
-        github_state_set = set(states)
+        platform_state_set = set(states)
         runner_id = random.randint(1, 1000000)
         return tuple(
             SelfHostedRunner(
-                busy=runner.github_state == PlatformRunnerState.BUSY,
+                busy=runner.platform_state == PlatformRunnerState.BUSY,
                 id=runner_id,
                 labels=[],
                 instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
-                    if runner.github_state == PlatformRunnerState.OFFLINE
+                    if runner.platform_state == PlatformRunnerState.OFFLINE
                     else GitHubRunnerStatus.ONLINE
                 ),
                 metadata=RunnerMetadata(platform_name="github", runner_id=str(runner_id)),
             )
             for runner in self.state.runners.values()
-            if runner.github_state in github_state_set
+            if runner.platform_state in platform_state_set
         )
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:

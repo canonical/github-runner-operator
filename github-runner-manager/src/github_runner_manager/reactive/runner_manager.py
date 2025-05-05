@@ -99,7 +99,7 @@ def reconcile(
     runners = [
         runner
         for runner in all_runners
-        if runner.github_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
+        if runner.platform_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
     ]
     runner_diff = expected_quantity - len(runners)
 
