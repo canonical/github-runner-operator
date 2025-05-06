@@ -121,6 +121,7 @@ class GithubClient:
         Returns:
             The information for the requested runner.
         """
+        logger.info("JAVI get_runner %s %s, from %s", prefix, runner_id, path)
         try:
             if isinstance(path, GitHubRepo):
                 raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
@@ -207,6 +208,7 @@ class GithubClient:
         Returns:
             The registration token.
         """
+        logger.info("JAVI get jittoken %s %s, from %s", path, instance_id, labels)
         token: JITConfig
         if isinstance(path, GitHubRepo):
             # The supposition is that the runner_group_id 1 is the default.

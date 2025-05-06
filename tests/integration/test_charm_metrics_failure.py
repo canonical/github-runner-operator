@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 """Integration tests for metrics/logs assuming Github workflow failures or a runner crash."""
+import logging
 import time
 from asyncio import sleep
 from typing import AsyncIterator
@@ -29,6 +30,8 @@ from tests.integration.helpers.common import (
     reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+
+logger = logging.getLogger(__name__)
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -69,6 +72,10 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
         The Reconciliation metric has the post job status set to failure.
     """
+    logger.info(
+        "JAVI test_charm_issues_metrics_for_failed_repo_policy. path: %s",
+        forked_github_repository.full_name,
+    )
     await app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     await setup_repo_policy(
@@ -89,6 +96,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     )
 
+    logger.info("JAVI set config to 0")
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config(
         {
