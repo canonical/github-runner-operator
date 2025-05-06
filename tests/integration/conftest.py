@@ -390,7 +390,7 @@ async def image_builder_fixture(
         app = await model.deploy(
             "github-runner-image-builder",
             application_name=application_name,
-            channel="latest/stable",
+            channel="latest/edge",
             config=image_builder_config,
         )
     else:
