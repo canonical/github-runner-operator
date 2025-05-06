@@ -636,7 +636,7 @@ def test_delete_runner_busy(
     monkeypatch: pytest.MonkeyPatch,
 ):
     """
-    arrange: A mocked GhApi Github Client that raises 404 when a runner is requested.
+    arrange: A mocked GhApi Github Client that raises 422 when a runner is requested.
     act: Call get_runner in GithubClient.
     assert: The exception GithubRunnerNotFoundError is raised.
     """

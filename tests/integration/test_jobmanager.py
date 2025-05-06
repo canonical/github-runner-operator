@@ -124,7 +124,7 @@ async def test_jobmanager(
      2. The jobmanager will reply to the github-runner manager that the job is "PENDING"
      3. The github-runner manager will get a token from the jobmanager for the runner and
         will spawn a reactive runner with this token.
-     4. A tunner will be prepared in the test so the reactive runner can get to the jobmanager.
+     4. A tunnel will be prepared in the test so the reactive runner can get to the jobmanager.
         This is specific to this test and in production it should not be needed.
      5. After some time, the reactive runner will hit the jobmanager health endpoint indicating
         IDLE status.
@@ -314,7 +314,7 @@ async def test_jobmanager(
     logger.info("handler health %s", health_get_handler)
     logger.info("handlers %s", httpserver.format_matchers())
 
-    logger.info("Second reconsile call: %s", action.results)
+    logger.info("Second reconcile call: %s", action.results)
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
     await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
