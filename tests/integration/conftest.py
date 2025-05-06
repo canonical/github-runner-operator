@@ -46,6 +46,7 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, Private
 from tests.status_name import ACTIVE
 
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
+logger = logging.getLogger(__name__)
 
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
@@ -648,6 +649,10 @@ async def app_with_forked_repo(
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
+    logger.info(
+        "JAVI app_with_forked_repo. path: %s",
+        forked_github_repository.full_name,
+    )
     await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
 
     return basic_app
