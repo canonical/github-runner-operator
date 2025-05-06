@@ -27,9 +27,11 @@ def mock_service_path_fixture(tmp_path_factory):
 def mock_home_path_fixture(tmp_path_factory):
     return tmp_path_factory.mktemp("home")
 
+
 @pytest.fixture(name="mock_log_path")
 def mock_log_path_fixture(tmp_path_factory):
     return tmp_path_factory.mktemp("log") / "github-runner-manager"
+
 
 @pytest.fixture(name="mock_systemd")
 def mock_systemd_fixture(monkeypatch):
@@ -51,9 +53,7 @@ def patch_file_paths(monkeypatch, mock_service_path, mock_home_path, mock_log_pa
     monkeypatch.setattr(
         "manager_service.GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH", mock_service_path
     )
-    monkeypatch.setattr(
-        "manager_service.GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", mock_log_path
-    )
+    monkeypatch.setattr("manager_service.GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", mock_log_path)
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: mock_home_path)
 
 

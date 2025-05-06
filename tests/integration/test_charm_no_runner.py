@@ -118,4 +118,5 @@ async def test_manager_service_started(
     )
 
     assert return_code == 0, f"Get log with cat failed with: {stderr}"
+    assert stdout is not None
     assert "Starting the server..." in stdout
