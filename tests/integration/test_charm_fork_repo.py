@@ -6,6 +6,7 @@
 The forked repo is configured to fail the repo-policy-compliance check.
 """
 
+import logging
 from datetime import datetime, timezone
 
 import pytest
@@ -20,6 +21,8 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.mark.openstack
@@ -42,8 +45,10 @@ async def test_dispatch_workflow_failure(
      in the forked repository.
     assert: The workflow that was dispatched failed and the reason is logged.
     """
+    logger.info("JAVI test_dispatch_workflow_failure")
     start_time = datetime.now(timezone.utc)
 
+    logger.info("JAVI setup repo policy")
     await setup_repo_policy(
         app=app_with_forked_repo,
         openstack_connection=instance_helper.openstack_connection,
@@ -51,10 +56,12 @@ async def test_dispatch_workflow_failure(
         https_proxy=https_proxy,
     )
 
+    logger.info("JAVI setup repo policy")
     workflow = forked_github_repository.get_workflow(
         id_or_file_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME
     )
 
+    logger.info("JAVI dispatch workflow")
     await dispatch_workflow(
         app=app_with_forked_repo,
         workflow_id_or_name=DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
@@ -65,6 +72,7 @@ async def test_dispatch_workflow_failure(
 
     # Unable to find the run id of the workflow that was dispatched.
     # Therefore, all runs after this test start should pass the conditions.
+    logger.info("JAVI let's go for the runners")
     for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
         if start_time > run.created_at:
             continue

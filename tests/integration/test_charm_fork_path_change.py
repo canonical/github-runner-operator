@@ -45,6 +45,7 @@ async def test_path_config_change(
     logger.info("Ensure there is a runner (this calls reconcile)")
     await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
+    logger.info("JAVI Set app to path: %s", path)
     await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
     logger.info("Reconciling (again)")
@@ -56,7 +57,9 @@ async def test_path_config_change(
     runner_name = runner_names[0]
 
     runners_in_repo = github_repository.get_self_hosted_runners()
-    logger.info("runners in github repo: %s", list(runners_in_repo))
+    logger.info(
+        "runners in github repo %s: %s", github_repository.full_name, list(runners_in_repo)
+    )
 
     runner_in_repo_with_same_name = tuple(
         filter(lambda runner: runner.name == runner_name, runners_in_repo)

@@ -328,6 +328,11 @@ class GithubRunnerCharm(CharmBase):
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_and_reconcile = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
+            logger.info(
+                "JAVI Flush and reconcile because of path change from %s to %s",
+                self._stored.path,
+                self.config[PATH_CONFIG_NAME],
+            )
             self._stored.path = self.config[PATH_CONFIG_NAME]
             flush_and_reconcile = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:

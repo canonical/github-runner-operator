@@ -151,8 +151,11 @@ class OpenStackInstanceHelper:
             app: The GitHub Runner Charm app to create the runner for.
             num_runners: The number of runners.
         """
+        logger.info("JAVI _set_app_runner_amount %s", num_runners)
         await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
+        logger.info("JAVI  after set config %s", num_runners)
         await reconcile(app=app, model=app.model)
+        logger.info("JAVI end _set_app_runner_amount %s", num_runners)
 
     async def get_runner_names(self, unit: Unit) -> list[str]:
         """Get the name of all the runners in the unit.
@@ -229,6 +232,7 @@ async def setup_repo_policy(
         token: GitHub token.
         https_proxy: HTTPS proxy url to use.
     """
+    logger.info("JAVI setup_repo_policy")
     unit = app.units[0]
     charm_token = secrets.token_hex(16)
     await _install_repo_policy(
@@ -244,6 +248,7 @@ async def setup_repo_policy(
         assert_on_failure=True,
         assert_msg="Failed to open port 8080",
     )
+    logger.info("JAVI    set config in setup_repo_policy")
     await app.set_config(
         {
             "repo-policy-compliance-token": charm_token,
@@ -252,7 +257,9 @@ async def setup_repo_policy(
     )
 
     await instance_helper.ensure_charm_has_runner(app=app)
+    logger.info("JAVI    before exposing")
     await instance_helper.expose_to_instance(unit, 8080)
+    logger.info("JAVI    after exposing")
     # This tests the connection to the repo policy compliance, not a health check of service.
     await instance_helper.run_in_instance(
         unit=unit,
@@ -260,6 +267,8 @@ async def setup_repo_policy(
         assert_on_failure=True,
         assert_msg="Unable to reach the repo policy compliance server setup",
     )
+    logger.info("JAVI    after run curl in instance")
+    logger.info("JAVI END setup_repo_policy")
 
 
 async def _install_repo_policy(
