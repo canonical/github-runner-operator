@@ -63,10 +63,15 @@ def create_application_configuration(
         The created ApplicationConfiguration
     """
     extra_labels = list(state.charm_config.labels)
-    github_configuration = GitHubConfiguration(
-        token=state.charm_config.token,
-        path=state.charm_config.path,
+    github_configuration = (
+        GitHubConfiguration(
+            token=state.charm_config.token,
+            path=state.charm_config.path,
+        )
+        if state.charm_config.path
+        else None
     )
+
     service_config = SupportServiceConfig(
         manager_proxy_command=state.charm_config.manager_proxy_command,
         proxy_config=state.proxy_config,
