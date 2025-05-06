@@ -55,8 +55,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
-    log_name = unit_name.replace("/","-") + ".log"
-    log_file_path = GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / log_name
+    log_file_path = _get_log_file_path(unit_name)
     log_file_path.touch(exist_ok=True)
     _setup_service_file(config_file, log_file_path)
     _enable_service()
@@ -109,6 +108,19 @@ def install_package() -> None:
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
+
+
+def _get_log_file_path(unit_name: str) -> Path:
+    """Get the log file path.
+
+    Args:
+        unit_name: The Juju unit name.
+
+    Returns:
+        The path to the log file.
+    """
+    log_name = unit_name.replace("/", "-") + ".log"
+    return GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / log_name
 
 
 def _enable_service() -> None:

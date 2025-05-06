@@ -9,7 +9,7 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
+from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME, _get_log_file_path
 from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -107,3 +107,15 @@ async def test_manager_service_started(
         assert_on_failure=True,
         assert_msg="GitHub runner manager service not healthy",
     )
+
+    log_file_path = _get_log_file_path(unit.name)
+    return_code, stdout, stderr = await run_in_unit(
+        unit,
+        f"cat {log_file_path}",
+        timeout=60,
+        assert_on_failure=True,
+        assert_msg="Failed to get the GitHub runner manager logs",
+    )
+
+    assert return_code == 0, f"Get log with cat failed with: {stderr}"
+    assert "Starting the server..." in stdout
