@@ -5,6 +5,7 @@
 
 import json
 import logging
+import os
 import textwrap
 from pathlib import Path
 
@@ -77,10 +78,12 @@ def install_package() -> None:
 
     logger.info("Uninstalling previous version of packages")
     try:
+        env_vars = os.environ.copy()
+        env_vars["PYTHON_PATH"] = ""
         execute_command(
-            ["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE]
+            ["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE], env=env_vars
         )
-        execute_command(["python3", "-m", "pip", "uninstall", "--yes", JOB_MANAGER_PACKAGE])
+        execute_command(["python3", "-m", "pip", "uninstall", "--yes", JOB_MANAGER_PACKAGE], env=env_vars)
     except SubprocessError:
         logger.info(
             "Unable to uninstall existing packages, likely due to previous version not installed"
@@ -89,6 +92,8 @@ def install_package() -> None:
     try:
         # Use `--prefix` to install the package in a location (/usr) all user can use and
         # `--ignore-installed` to force all dependencies be to installed under /usr.
+        env_vars = os.environ.copy()
+        env_vars["PYTHON_PATH"] = ""
         execute_command(
             [
                 "python3",
@@ -101,6 +106,7 @@ def install_package() -> None:
                 GITHUB_RUNNER_MANAGER_PACKAGE_PATH,
                 JOB_MANAGER_PACKAGE_PATH,
             ]
+            , env=env_vars
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
