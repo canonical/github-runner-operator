@@ -4,6 +4,7 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from manager_client import GitHubRunnerManagerClient
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -60,6 +61,7 @@ from errors import (
     MissingMongoDBError,
     RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
+    RunnerManagerServiceError,
     SubprocessError,
 )
 from event_timer import EventTimer, TimerStatusError
@@ -213,6 +215,11 @@ class GithubRunnerCharm(CharmBase):
         )
         self.framework.observe(self.database.on.database_created, self._on_database_created)
         self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
+
+        self._manager_client = GitHubRunnerManagerClient(
+            host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
+            port=manager_service.GITHUB_RUNNER_MANAGER_PORT,
+        )
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
@@ -373,20 +380,13 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        state = self._setup_state()
-
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        info = runner_scaler.get_runner_info()
-        event.set_results(
-            {
-                "online": info.online,
-                "busy": info.busy,
-                "offline": info.offline,
-                "unknown": info.unknown,
-                "runners": info.runners,
-                "busy-runners": info.busy_runners,
-            }
-        )
+        try:
+            info = self._manager_client.check_runner()
+        except RunnerManagerServiceError as err:
+            logger.exception("Failed check runner request")
+            event.fail(f"Failed check runner request: {str(err)}")
+            return
+        event.set_results(info)
 
     @catch_action_errors
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:

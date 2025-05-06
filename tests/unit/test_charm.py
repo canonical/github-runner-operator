@@ -449,18 +449,18 @@ class TestCharm(unittest.TestCase):
         with pytest.raises(TimerEnableError):
             harness.charm.on.update_status.emit()
 
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_check_runners_action_with_errors(self, run, wt, mkdir):
-        mock_event = MagicMock()
 
-        harness = Harness(GithubRunnerCharm)
-        harness.begin()
+def test_check_runners_action_with_errors():
+    mock_event = MagicMock()
 
-        # No config
-        harness.charm._on_check_runners_action(mock_event)
-        mock_event.fail.assert_called_with("Invalid Github config, Missing path configuration")
+    harness = Harness(GithubRunnerCharm)
+    harness.begin()
+
+    # No config
+    harness.charm._on_check_runners_action(mock_event)
+    mock_event.fail.assert_called_with(
+        "Failed check runner request: Failed request due to connection failure"
+    )
 
 
 @pytest.mark.parametrize(
