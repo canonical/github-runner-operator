@@ -57,7 +57,6 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service()
 
 
-# TODO: Use pipx over pip once the version that supports `pipx install --global` lands on apt.
 def install_package() -> None:
     """Install the GitHub runner manager package.
 
@@ -78,8 +77,10 @@ def install_package() -> None:
 
     logger.info("Uninstalling previous version of packages")
     try:
-        execute_command(["python3", "-m", "pip", "uninstall", GITHUB_RUNNER_MANAGER_PACKAGE])
-        execute_command(["python3", "-m", "pip", "uninstall", JOB_MANAGER_PACKAGE])
+        execute_command(
+            ["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE]
+        )
+        execute_command(["python3", "-m", "pip", "uninstall", "--yes", JOB_MANAGER_PACKAGE])
     except SubprocessError:
         logger.info(
             "Unable to uninstall existing packages, likely due to previous version not installed"
