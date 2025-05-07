@@ -95,9 +95,12 @@ def reconcile(
 
     # Only count runners which are online on GitHub to prevent machines to be just in
     # construction to be counted and then killed immediately by the process manager.
-    runners = runner_manager.get_runners(
-        github_states=[PlatformRunnerState.IDLE, PlatformRunnerState.BUSY]
-    )
+    all_runners = runner_manager.get_runners()
+    runners = [
+        runner
+        for runner in all_runners
+        if runner.platform_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
+    ]
     runner_diff = expected_quantity - len(runners)
 
     if runner_diff >= 0:
