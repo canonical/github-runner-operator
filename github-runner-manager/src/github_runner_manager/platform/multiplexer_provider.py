@@ -25,6 +25,9 @@ from github_runner_manager.platform.platform_provider import (
 )
 from github_runner_manager.types_.github import SelfHostedRunner
 
+_GITHUB_PLATFORM_KEY = "github"
+_JOBMANAGER_PLATFORM_KEY = "jobmanager"
+
 logger = logging.getLogger(__name__)
 
 
@@ -47,7 +50,7 @@ class MultiplexerPlatform(PlatformProvider):
 
     @classmethod
     def build(
-        cls, prefix: str, github_configuration: GitHubConfiguration
+        cls, prefix: str, github_configuration: GitHubConfiguration | None
     ) -> "MultiplexerPlatform":
         """Build a new MultiplexerPlatform.
 
@@ -58,9 +61,15 @@ class MultiplexerPlatform(PlatformProvider):
         Returns:
             A new MultiplexerPlatform.
         """
-        github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
-        jobmanager_platform = JobManagerPlatform.build()
-        return cls({"github": github_platform, "jobmanager": jobmanager_platform})
+        providers: dict[str, PlatformProvider] = {
+            _JOBMANAGER_PLATFORM_KEY: JobManagerPlatform.build()
+        }
+        if github_configuration is None:
+            logger.debug("GitHub configuration not provided, skipping GitHub provider.")
+        else:
+            github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
+            providers.update({_GITHUB_PLATFORM_KEY: github_platform})
+        return cls(providers)
 
     def get_runner_health(
         self,

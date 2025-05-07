@@ -26,7 +26,7 @@ class ReactiveProcessConfig(BaseModel):
 
     queue: QueueConfig
     manager_name: str
-    github_configuration: GitHubConfiguration
+    github_configuration: GitHubConfiguration | None
     cloud_runner_manager: OpenStackRunnerManagerConfig
     supported_labels: set[str]
     labels: list[str]
