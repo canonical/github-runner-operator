@@ -11,7 +11,7 @@ from pathlib import Path
 from charms.operator_libs_linux.v1 import systemd
 from charms.operator_libs_linux.v1.systemd import SystemdError
 from github_runner_manager import constants
-from github_runner_manager.configuration.base import ApplicationConfiguration, ProxyConfig
+from github_runner_manager.configuration.base import ApplicationConfiguration
 from yaml import safe_dump as yaml_safe_dump
 
 from charm_state import CharmState
@@ -57,11 +57,8 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     _enable_service()
 
 
-def install_package(proxy_config: ProxyConfig) -> None:
+def install_package() -> None:
     """Install the GitHub runner manager package.
-
-    Args:
-        proxy_config: HTTP proxy configurations.
 
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
@@ -76,7 +73,6 @@ def install_package(proxy_config: ProxyConfig) -> None:
     try:
         execute_command(
             ["pip", "install", "--prefix", "/usr", "--ignore-installed", "--upgrade", "pipx"],
-            env=proxy_config.get_env_vars(),
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
@@ -86,7 +82,6 @@ def install_package(proxy_config: ProxyConfig) -> None:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
             ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH],
-            env=proxy_config.get_env_vars(),
         )
         execute_command(
             [
@@ -97,7 +92,6 @@ def install_package(proxy_config: ProxyConfig) -> None:
                 GITHUB_RUNNER_MANAGER_PACKAGE,
                 JOB_MANAGER_PACKAGE_PATH,
             ],
-            env=proxy_config.get_env_vars(),
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
