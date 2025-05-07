@@ -111,9 +111,6 @@ class RunnerScaler:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
 
-        Raises:
-            ValueError: Invalid configuration.
-
         Returns:
             A new RunnerScaler.
         """
@@ -138,13 +135,10 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        if application_configuration.github_config:
-            platform_provider = MultiplexerPlatform.build(
-                prefix=application_configuration.openstack_configuration.vm_prefix,
-                github_configuration=application_configuration.github_config,
-            )
-        else:
-            raise ValueError("No valid platform configuration")
+        platform_provider = MultiplexerPlatform.build(
+            prefix=application_configuration.openstack_configuration.vm_prefix,
+            github_configuration=application_configuration.github_config,
+        )
 
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
@@ -283,9 +277,7 @@ class RunnerScaler:
 
         try:
             if self._reactive_config is not None:
-                logger.info(
-                    "Reactive configuration detected, going into experimental reactive mode."
-                )
+                logger.info("Reactive configuration detected, spawning runners in reactive mode.")
                 reconcile_result = reactive_runner_manager.reconcile(
                     expected_quantity=self._max_quantity,
                     runner_manager=self._manager,
