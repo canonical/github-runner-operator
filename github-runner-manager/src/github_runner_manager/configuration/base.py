@@ -157,6 +157,21 @@ class ProxyConfig(BaseModel):
             Whether the proxy config is set.
         """
         return bool(self.http or self.https)
+    
+    def get_env_vars(self) -> dict:
+        """Get the proxy environment variables.
+        
+        Returns:
+            The proxy environment variables.
+        """
+        return {
+            "http_proxy": self.http,
+            "https_proxy": self.https,
+            "no_proxy": self.no_proxy,
+            "HTTP_PROXY": self.http,
+            "HTTPS_PROXY": self.https,
+            "NO_PROXY": self.no_proxy,
+        }
 
 
 class SSHDebugConnection(BaseModel):

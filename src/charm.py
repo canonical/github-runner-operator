@@ -52,6 +52,7 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
+    build_proxy_config_from_charm,
 )
 from errors import (
     ConfigurationError,
@@ -245,6 +246,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
+        proxy_config = build_proxy_config_from_charm()
+
         try:
             self._install_deps()
         except SubprocessError:
@@ -258,7 +261,7 @@ class GithubRunnerCharm(CharmBase):
             raise
 
         try:
-            manager_service.install_package()
+            manager_service.install_package(proxy_config)
         except RunnerManagerApplicationInstallError:
             logger.error("Failed to install github runner manager package")
             # Not re-raising error for until the github-runner-manager service replaces the
