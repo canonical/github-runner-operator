@@ -5,7 +5,6 @@
 
 import json
 import logging
-import os
 import textwrap
 from pathlib import Path
 
@@ -77,17 +76,24 @@ def install_package() -> None:
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
-    
+
     logger.info("Installing github-runner-manager package as executable")
     try:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
-            ["pipx", "install", "--global", "--force",  GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
+            ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
         )
-        execute_command([
-            "pipx", "inject", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE, JOB_MANAGER_PACKAGE_PATH
-            ])
-    except SubprocessError:
+        execute_command(
+            [
+                "pipx",
+                "inject",
+                "--global",
+                "--force",
+                GITHUB_RUNNER_MANAGER_PACKAGE,
+                JOB_MANAGER_PACKAGE_PATH,
+            ]
+        )
+    except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
 
 
