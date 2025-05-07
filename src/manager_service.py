@@ -71,7 +71,9 @@ def install_package() -> None:
 
     logger.info("Ensure pipx is at latest version")
     try:
-        execute_command(["python3", "-m", "pip", "install", "--upgrade", "pip"])
+        execute_command(
+            ["pip", "install", "--prefix", "/usr", "--ignore-installed", "--upgrade", "pipx"]
+        )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
 
@@ -79,17 +81,8 @@ def install_package() -> None:
     try:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
-            ["python3", "-m", "pip", "uninstall", "--yes", GITHUB_RUNNER_MANAGER_PACKAGE]
+            ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
         )
-        execute_command(["python3", "-m", "pip", "uninstall", "--yes", JOB_MANAGER_PACKAGE])
-    except SubprocessError:
-        logger.info(
-            "Unable to uninstall existing packages, likely due to previous version not installed"
-        )
-
-    try:
-        # Use `--prefix` to install the package in a location (/usr) all user can use and
-        # `--ignore-installed` to force all dependencies be to installed under /usr.
         execute_command(
             [
                 "pipx",
@@ -98,7 +91,7 @@ def install_package() -> None:
                 "--force",
                 GITHUB_RUNNER_MANAGER_PACKAGE,
                 JOB_MANAGER_PACKAGE_PATH,
-            ],
+            ]
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
