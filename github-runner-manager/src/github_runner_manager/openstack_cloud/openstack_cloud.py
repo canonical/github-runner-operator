@@ -451,7 +451,7 @@ class OpenstackCloud:
         total = 0
         deleted = 0
         for path in self._ssh_key_dir.iterdir():
-            # Find key file from this application.
+            # Find key file for this application.
             if (
                 path.is_file()
                 and InstanceID.name_has_prefix(self.prefix, path.name)
