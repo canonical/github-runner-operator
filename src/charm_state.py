@@ -586,7 +586,7 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-def build_proxy_config_from_charm() -> "ProxyConfig":
+def _build_proxy_config_from_charm() -> "ProxyConfig":
     """Initialize the proxy config from charm.
 
     Returns:
@@ -614,7 +614,7 @@ def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
         return ProxyConfig(
             http=runner_http_proxy,
         )
-    return build_proxy_config_from_charm()
+    return _build_proxy_config_from_charm()
 
 
 class UnsupportedArchitectureError(Exception):
@@ -834,7 +834,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            proxy_config = build_proxy_config_from_charm()
+            proxy_config = _build_proxy_config_from_charm()
             runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
             if charm_config.use_aproxy and not runner_proxy_config.proxy_address:
                 raise CharmConfigInvalidError(

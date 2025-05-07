@@ -545,7 +545,7 @@ def test_proxy_config_from_charm(
     mock_charm.config[USE_APROXY_CONFIG_NAME] = False
     monkeypatch.setattr(charm_state, "get_env_var", MagicMock(side_effect=[http, https, no_proxy]))
 
-    result = charm_state.build_proxy_config()
+    result = charm_state._build_proxy_config_from_charm()
 
     assert result.no_proxy is None
 
