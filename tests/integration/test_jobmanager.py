@@ -76,8 +76,7 @@ async def image_builder_config_fixture(
 @pytest.fixture(scope="session")
 def httpserver_listen_port() -> int:
     # Do not use the listening port of the builder-agent, as it
-    # will interfere with the tunnel from the runner to the
-    # mock jobmanager.
+    # will interfere with the tunnel from the runner to the mock jobmanager.
     return 8000
 
 
