@@ -1,0 +1,392 @@
+18:25:32 INFO Adding model github-pr-9e156-lxd:test-debug-ssh-lugt on cloud localhost
+18:25:33 WARNING unexpected facade AgentLifeFlag received from the controller
+18:25:33 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:25:33 WARNING unexpected facade SecretsDrain received from the controller
+18:25:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:55 INFO Deploying local:jammy/github-runner-0
+18:25:55 INFO Waiting for model:
+  test-hefy09y0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hefy09y0/0 [allocating] waiting: waiting for machine
+18:26:25 INFO Waiting for model:
+  test-hefy09y0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hefy09y0/0 [allocating] waiting: waiting for machine
+18:26:55 INFO Waiting for model:
+  test-hefy09y0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-hefy09y0/0 [executing] maintenance: Setting up Builder.
+18:27:25 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hefy09y0/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hefy09y0/0 [executing] maintenance: Setting up Builder.
+18:28:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hefy09y0/0 [executing] maintenance: Setting up Builder.
+18:28:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hefy09y0/0 [executing] maintenance: Setting up Builder.
+18:29:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:29:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:30:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:30:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:31:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:31:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:32:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:32:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:33:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:33:56 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:34:26 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:34:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:35:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:35:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:36:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:36:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:37:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:37:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:38:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:38:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:39:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:39:57 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:40:27 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:40:58 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:41:28 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:41:58 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:42:28 INFO Waiting for model:
+  test-hefy09y0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hefy09y0/0 [executing] active: Building image.
+18:42:58 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:43:15 INFO GitHub token rate limit: Rate(reset=2025-05-07 19:25:29+00:00, remaining=4928, limit=5000)
+18:43:20 INFO Deploying ch:amd64/jammy/tmate-ssh-server-10
+18:43:20 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:43:20 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:43:51 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:44:21 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:44:51 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:45:21 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: agent initialising
+18:45:51 INFO Waiting for model:
+  tmate-ssh-server/0 [executing] maintenance: Installing packages.
+18:46:21 INFO Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+18:46:31 INFO Waiting for model:
+  github-runner-image-builder-hefy09y0/0 [idle] active: 
+  test-hefy09y0/0 [executing] maintenance: Added debug-ssh relation
+  tmate-ssh-server/0 [idle] active: 
+18:47:02 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:47:32 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:48:02 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:48:32 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Added debug-ssh relation
+18:49:02 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:49:32 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:50:03 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:50:33 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:51:03 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:51:33 INFO Waiting for model:
+  test-hefy09y0/0 [executing] maintenance: Reconciling runners
+18:51:57 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.91.122.137 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-hefy09y0-0-n-2bb4b8645749
+18:51:57 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.5', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6c:9e:39'}]])
+18:51:58 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hefy09y0-0-n-2bb4b8645749.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.5 sudo iptables -t nat -A OUTPUT -p tcp -d 10.91.122.137 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+18:51:59 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.91.122.137 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.5' (ED25519) to the list of known hosts.
+'
+18:52:00 INFO [TEST SETUP] Exposing port 10022 on test-hefy09y0-0-n-2bb4b8645749
+18:52:00 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.5', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6c:9e:39'}]])
+18:52:01 INFO ssh tunnel command ssh -fNT -R 10022:10.91.122.137:10022 -i /home/runner-manager/.ssh/test-hefy09y0-0-n-2bb4b8645749.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.5 &
+18:52:02 INFO ssh tunnel result 0 None None
+18:52:04 INFO [TEST SETUP] Run command nc -z localhost 10022 on test-hefy09y0-0-n-2bb4b8645749
+18:52:04 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.5', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:6c:9e:39'}]])
+18:52:05 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hefy09y0-0-n-2bb4b8645749.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.5 nc -z localhost 10022'
+18:52:06 INFO Run command 'nc -z localhost 10022' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 10022 port [tcp/*] succeeded!
+'
+18:52:06 INFO Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+18:52:08 INFO Wait for condition not met, sleeping 10
+18:52:19 INFO Wait for condition not met, sleeping 60
+18:53:20 INFO Wait for condition not met, sleeping 60
+18:54:20 INFO Wait for condition not met, sleeping 60
+18:55:21 INFO Wait for condition not met, sleeping 60
+18:56:21 INFO Wait for condition not met, sleeping 60
+18:57:23 INFO Logs: ﻿2025-05-07T18:52:12.2671655Z Current runner version: '2.323.0'
+2025-05-07T18:52:12.2681825Z Runner name: 'test-hefy09y0-0-n-2bb4b8645749'
+2025-05-07T18:52:12.2682873Z Runner group name: 'Default'
+2025-05-07T18:52:12.2683799Z Machine name: 'github-runner'
+2025-05-07T18:52:12.2688083Z ##[group]GITHUB_TOKEN Permissions
+2025-05-07T18:52:12.2690782Z Actions: write
+2025-05-07T18:52:12.2691367Z Attestations: write
+2025-05-07T18:52:12.2691963Z Checks: write
+2025-05-07T18:52:12.2692442Z Contents: write
+2025-05-07T18:52:12.2692950Z Deployments: write
+2025-05-07T18:52:12.2693462Z Discussions: write
+2025-05-07T18:52:12.2693960Z Issues: write
+2025-05-07T18:52:12.2694701Z Metadata: read
+2025-05-07T18:52:12.2695179Z Models: read
+2025-05-07T18:52:12.2695672Z Packages: write
+2025-05-07T18:52:12.2696177Z Pages: write
+2025-05-07T18:52:12.2696666Z PullRequests: write
+2025-05-07T18:52:12.2697291Z RepositoryProjects: write
+2025-05-07T18:52:12.2697876Z SecurityEvents: write
+2025-05-07T18:52:12.2698395Z Statuses: write
+2025-05-07T18:52:12.2699060Z ##[endgroup]
+2025-05-07T18:52:12.2701412Z Secret source: Actions
+2025-05-07T18:52:12.2702110Z Prepare workflow directory
+2025-05-07T18:52:12.3075487Z Prepare all required actions
+2025-05-07T18:52:12.3117982Z Getting action download info
+2025-05-07T18:52:12.4782466Z Download action repository 'canonical/action-tmate@main' (SHA:366d1538966693beedfa54130ba4505343f814df)
+2025-05-07T18:52:13.7605601Z Complete job name: workflow-dispatch-tests
+2025-05-07T18:52:13.8256137Z A job started hook has been configured by the self-hosted runner administrator
+2025-05-07T18:52:13.8440321Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2025-05-07T18:52:13.8462866Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-05-07T18:52:13.8465739Z ##[endgroup]
+2025-05-07T18:52:13.9015082Z ##[group]Run canonical/action-tmate@main
+2025-05-07T18:52:13.9016680Z with:
+2025-05-07T18:52:13.9017773Z   sudo: auto
+2025-05-07T18:52:13.9018924Z   install-dependencies: true
+2025-05-07T18:52:13.9020350Z   limit-access-to-actor: auto
+2025-05-07T18:52:13.9021815Z   detached: false
+2025-05-07T18:52:13.9023494Z   github-token: ***
+2025-05-07T18:52:13.9024901Z ##[endgroup]
+2025-05-07T18:52:14.2716959Z Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+2025-05-07T18:52:14.3329517Z Hit:2 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble InRelease
+2025-05-07T18:52:14.4111493Z Get:3 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2025-05-07T18:52:14.4848655Z Get:4 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-05-07T18:52:14.7688964Z Fetched 252 kB in 0s (570 kB/s)
+2025-05-07T18:52:15.7401344Z Reading package lists...
+2025-05-07T18:52:15.7989071Z Reading package lists...
+2025-05-07T18:52:16.0603096Z Building dependency tree...
+2025-05-07T18:52:16.0628891Z Reading state information...
+2025-05-07T18:52:16.4456768Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.11).
+2025-05-07T18:52:16.4457552Z openssh-client set to manually installed.
+2025-05-07T18:52:16.4458296Z xz-utils is already the newest version (5.6.1+really5.4.5-1ubuntu0.2).
+2025-05-07T18:52:16.4458970Z xz-utils set to manually installed.
+2025-05-07T18:52:16.4459562Z 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2025-05-07T18:52:17.1295146Z Created symlink /etc/systemd/system/multi-user.target.wants/tmate-proxy.service → /etc/systemd/system/tmate-proxy.service.
+2025-05-07T18:52:20.4817363Z ssh -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:20.4867114Z 
+2025-05-07T18:52:20.4881479Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:20.4889327Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:25.4912467Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:25.4916649Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:30.4976464Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:30.4978982Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:35.5033102Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:35.5045467Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:40.5085041Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:40.5086313Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:45.5140801Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:45.5149155Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:50.5203596Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:50.5205971Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:55.5255425Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:52:55.5259405Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:00.5312135Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:00.5316560Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:05.5368769Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:05.5376520Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:10.5413371Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:10.5415809Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:15.5473572Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:15.5475833Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:20.5531700Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:20.5534629Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:25.5589286Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:25.5590474Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:30.5651844Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:30.5652937Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:35.5706469Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:35.5707415Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:40.5760294Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:40.5762338Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:45.5814617Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:45.5816752Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:50.5845406Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:50.5849400Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:55.5868632Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:53:55.5870101Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:00.5921643Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:00.5926613Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:05.5977230Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:05.5978029Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:10.6030359Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:10.6035110Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:15.6083264Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:15.6087885Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:20.6139023Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:20.6142693Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:25.6188055Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:25.6192472Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:30.6244733Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:30.6246227Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:35.6300189Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:35.6301143Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:40.6355378Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:40.6356446Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:45.6408296Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:45.6413358Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:50.6465677Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:50.6467125Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:55.6517411Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:54:55.6521606Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:00.6573378Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:00.6575738Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:05.6631365Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:05.6633469Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:10.6689681Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:10.6693971Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:15.6746507Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:15.6750325Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:20.6794477Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:20.6796090Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:25.6848949Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:25.6850633Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:30.6905052Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:30.6906585Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:35.6957591Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:35.6958379Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:40.7012328Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:40.7013576Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:45.7070488Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:45.7073148Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:50.7122771Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:50.7126343Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:55.7179057Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:55:55.7180765Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:00.7235523Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:00.7236285Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:05.7286826Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:05.7287675Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:10.7341388Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:10.7343079Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:15.7393314Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:15.7396854Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:20.7449790Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:20.7450842Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:25.7505679Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:25.7506560Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:30.7548555Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:30.7550552Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:35.7603622Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:35.7605495Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:40.7659476Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:40.7660995Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:45.7710593Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:45.7711403Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:50.7737801Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:50.7738744Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:55.7791955Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:56:55.7802249Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:00.7827608Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:00.7832108Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:05.7887560Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:05.7910306Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:10.7961270Z SSH: ssh -p 10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:10.7963993Z or: ssh -i <path-to-private-SSH-key> -p10022 dvrK9qK8QSMvNm5ufRjzK7bpB@10.91.122.137
+2025-05-07T18:57:13.8969793Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2025-05-07T18:57:13.9048638Z Post job cleanup.
+2025-05-07T18:57:14.0117377Z Cleaning up orphan processes
+2025-05-07T18:57:14.0524706Z Terminate orphan process: pid (2453) (tmate)
+2025-05-07T18:57:14.0584738Z Terminate orphan process: pid (2454) (bash)
+18:57:25 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-lugt  github-pr-9e156-lxd  localhost/localhost  3.1.10   unsupported  18:57:25Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-hefy09y0           active      1  github-runner-image-builder  latest/edge   81  no       
+test-hefy09y0                                  active      1  github-runner                               0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server             edge          10  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-hefy09y0/0*  active    idle   0        10.91.122.70               
+test-hefy09y0/0*                         active    idle   1        10.91.122.195              
+tmate-ssh-server/0*                      active    idle   2        10.91.122.137   10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.91.122.70   juju-860a81-0  ubuntu@22.04      Running
+1        started  10.91.122.195  juju-860a81-1  ubuntu@22.04      Running
+2        started  10.91.122.137  juju-860a81-2  ubuntu@22.04      Running
+
+18:57:25 INFO Juju error logs:
+
+machine-0: 18:26:29 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:26:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-hefy09y0-0: 18:26:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:50 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:26:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hefy09y0-0: 18:26:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-hefy09y0-0: 18:27:10 ERROR unit.github-runner-image-builder-hefy09y0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-2: 18:45:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:45:11 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 18:45:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 18:45:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-hefy09y0-0: 18:46:54 ERROR unit.test-hefy09y0/0.juju-log debug-ssh:1: No metrics returned after deleting test-hefy09y0-0-n-85d5b4721e58
+unit-test-hefy09y0-0: 18:49:02 ERROR unit.test-hefy09y0/0.juju-log debug-ssh:1: No metrics returned after deleting test-hefy09y0-0-n-ab8b6c78f656
+
+18:57:26 INFO Forgetting model main...

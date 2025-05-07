@@ -1,0 +1,94 @@
+18:25:25 WARNING unexpected facade SSHServer received from the controller
+18:25:26 INFO Adding model github-pr-9e156-lxd:test-charm-metrics-success-b88m on cloud localhost
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 WARNING unexpected facade SSHSession received from the controller
+18:25:26 WARNING unexpected facade SSHTunneler received from the controller
+18:25:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:43 INFO Deploying local:jammy/github-runner-0
+18:25:44 INFO Waiting for model:
+  test-mk6mphxc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mk6mphxc/0 [allocating] waiting: waiting for machine
+18:26:14 INFO Waiting for model:
+  test-mk6mphxc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mk6mphxc/0 [allocating] waiting: waiting for machine
+18:26:44 INFO Waiting for model:
+  test-mk6mphxc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mk6mphxc/0 [executing] maintenance: Setting up Builder.
+18:27:14 INFO Waiting for model:
+  test-mk6mphxc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mk6mphxc/0 [executing] maintenance: Setting up Builder.
+18:27:44 INFO Waiting for model:
+  test-mk6mphxc/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-mk6mphxc/0 [executing] maintenance: Setting up Builder.
+18:28:14 INFO Waiting for model:
+  test-mk6mphxc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-mk6mphxc/0 [executing] maintenance: Setting up Builder.
+18:28:44 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] maintenance: Setting up Builder.
+18:29:15 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:29:45 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:30:15 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:30:46 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:31:16 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:31:46 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:32:16 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:32:47 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:33:17 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:34:48 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:35:49 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:36:19 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:36:50 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:37:20 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:37:51 INFO Waiting for model:
+  test-mk6mphxc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mk6mphxc/0 [executing] active: Building image.
+18:38:21 INFO Waiting for model:
+  test-mk6mphxc/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-mk6mphxc/0 [idle] active:
+18:41:26 INFO Waiting for model:
+  test-mk6mphxc/0 [executing] active: 
+18:42:23 INFO Waiting for model:
+  test-mk6mphxc/0 [executing] active: 
+18:42:50 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746643284.9989002, "event": "reconciliation", "flavor": "test-mk6mphxc", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 152.221022605896}
+{"timestamp": 1746643299.3754845, "event": "reconciliation", "flavor": "test-mk6mphxc", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.269828081130981}
+{"timestamp": 1746643255.0, "event": "runner_installed", "flavor": "test-mk6mphxc", "duration": 115.0}
+{"timestamp": 1746643342.1579938, "event": "reconciliation", "flavor": "test-mk6mphxc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.84441089630127}
+{"timestamp": 1746643352.3047132, "event": "reconciliation", "flavor": "test-mk6mphxc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.684671640396118}
