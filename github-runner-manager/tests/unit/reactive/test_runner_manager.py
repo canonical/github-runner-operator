@@ -1,5 +1,7 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
+import logging
+from dataclasses import fields
 from random import randint
 from unittest.mock import MagicMock
 
@@ -14,8 +16,11 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.metrics.events import RunnerStart, RunnerStop
+from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.runner_manager import reconcile
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
+
+logger = logging.getLogger(__name__)
 
 TEST_METRIC_EVENTS = {RunnerStart: 1, RunnerStop: 2}
 TEST_DELETE_RUNNER_METRIC_EVENTS = {RunnerStart: 1, RunnerStop: 1}
@@ -76,9 +81,13 @@ def test_reconcile_positive_runner_diff(
     assert: The cleanup method of runner manager is called and the reconcile method of
         process manager is called with the expected quantity.
     """
-    runner_manager.get_runners = MagicMock(
-        return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
-    )
+    runners = [
+        MagicMock(spec=[field.name for field in fields(RunnerInstance)])
+        for _ in range(runner_quantity)
+    ]
+    for runner in runners:
+        runner.platform_state = PlatformRunnerState.IDLE
+    runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
 
     reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
@@ -115,9 +124,14 @@ def test_reconcile_negative_runner_diff(
     assert: The additional amount of runners are deleted and the reconcile method of the
         process manager is called with zero quantity.
     """
-    runner_manager.get_runners = MagicMock(
-        return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
-    )
+    runners = [
+        MagicMock(spec=[field.name for field in fields(RunnerInstance)])
+        for _ in range(runner_quantity)
+    ]
+    for runner in runners:
+        runner.platform_state = PlatformRunnerState.IDLE
+
+    runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
 
     reconcile(desired_quantity, runner_manager, reactive_process_config, user_info)
@@ -279,9 +293,13 @@ def test_reconcile_returns_issued_metrics(
     act: Call reconcile.
     assert: The returned metrics are as expected.
     """
-    runner_manager.get_runners = MagicMock(
-        return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
-    )
+    runners = [
+        MagicMock(spec=[field.name for field in fields(RunnerInstance)])
+        for _ in range(runner_quantity)
+    ]
+    for runner in runners:
+        runner.platform_state = PlatformRunnerState.IDLE
+    runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats
 
@@ -413,9 +431,13 @@ def test_reconcile_empty_queue_returns_issued_metrics(
     act: Call reconcile.
     assert: The returned metrics are as expected.
     """
-    runner_manager.get_runners = MagicMock(
-        return_value=(tuple(MagicMock(spec=RunnerInstance) for _ in range(runner_quantity)))
-    )
+    runners = [
+        MagicMock(spec=[field.name for field in fields(RunnerInstance)])
+        for _ in range(runner_quantity)
+    ]
+    for runner in runners:
+        runner.platform_state = PlatformRunnerState.IDLE
+    runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats
     runner_manager.flush_runners.return_value = flush_metric_stats

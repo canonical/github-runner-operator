@@ -215,7 +215,7 @@ class RunnerScaler:
         online_runners = []
         busy_runners = []
         for runner in runner_list:
-            match runner.github_state:
+            match runner.platform_state:
                 case PlatformRunnerState.BUSY:
                     online += 1
                     online_runners.append(runner.name)
@@ -357,19 +357,19 @@ class RunnerScaler:
             logger.info(
                 "Runner %s: state=%s, health=%s",
                 runner.name,
-                runner.github_state,
+                runner.platform_state,
                 runner.health,
             )
         busy_runners = [
-            runner for runner in runner_list if runner.github_state == PlatformRunnerState.BUSY
+            runner for runner in runner_list if runner.platform_state == PlatformRunnerState.BUSY
         ]
         idle_runners = [
-            runner for runner in runner_list if runner.github_state == PlatformRunnerState.IDLE
+            runner for runner in runner_list if runner.platform_state == PlatformRunnerState.IDLE
         ]
         offline_healthy_runners = [
             runner
             for runner in runner_list
-            if runner.github_state == PlatformRunnerState.OFFLINE
+            if runner.platform_state == PlatformRunnerState.OFFLINE
             and runner.health == HealthState.HEALTHY
         ]
         unhealthy_states = {HealthState.UNHEALTHY, HealthState.UNKNOWN}
@@ -395,20 +395,20 @@ def _issue_reconciliation_metric(
     idle_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == PlatformRunnerState.IDLE
+        if runner.platform_state == PlatformRunnerState.IDLE
     }
 
     offline_healthy_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == PlatformRunnerState.OFFLINE
+        if runner.platform_state == PlatformRunnerState.OFFLINE
         and runner.health == HealthState.HEALTHY
     }
     available_runners = idle_runners | offline_healthy_runners
     active_runners = {
         runner.name
         for runner in reconcile_metric_data.runner_list
-        if runner.github_state == PlatformRunnerState.BUSY
+        if runner.platform_state == PlatformRunnerState.BUSY
     }
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)

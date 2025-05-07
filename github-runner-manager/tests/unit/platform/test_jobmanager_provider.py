@@ -4,6 +4,7 @@
 
 """Test for the jobmanager provider module."""
 
+from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
@@ -14,11 +15,15 @@ from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
-from jobmanager_client.rest import ApiException
+from jobmanager_client.rest import ApiException, NotFoundException
 
-from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
+from github_runner_manager.platform.platform_provider import (
+    PlatformApiError,
+    PlatformRunnerHealth,
+    RunnersHealthResponse,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
 
 
@@ -43,7 +48,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
 
     assert "builder-agent" in context.shell_run_script
     assert runner.labels == [SelfHostedRunnerLabel(name="label")]
-    assert runner.metadata == metadata
+    assert runner.identity.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE
     assert not runner.busy
 
@@ -163,10 +168,131 @@ def test_get_runner_health(
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
     )
-
-    runner_health = platform.get_runner_health(metadata=metadata, instance_id=instance_id)
+    identity = RunnerIdentity(instance_id=instance_id, metadata=metadata)
+    runner_health = platform.get_runner_health(identity)
 
     assert runner_health
     assert runner_health.online is expected_online
     assert runner_health.busy is expected_busy
     assert runner_health.deletable is expected_deletable
+
+
+@pytest.mark.parametrize(
+    "requested_runners,jobmanager_side_effects,expected_health_response",
+    [
+        pytest.param(
+            [],
+            [],
+            RunnersHealthResponse(),
+            id="Nothing requested, nothing in jobmanager, nothing replied.",
+        ),
+        pytest.param(
+            [
+                identity_1 := RunnerIdentity(
+                    instance_id=InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(
+                        platform_name="jobmanager",
+                        runner_id="1",
+                        url="http://jobmanager.example.com",
+                    ),
+                ),
+                identity_2 := RunnerIdentity(
+                    instance_id=InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(
+                        platform_name="jobmanager",
+                        runner_id="2",
+                        url="http://jobmanager.example.com",
+                    ),
+                ),
+            ],
+            [
+                V1JobsJobIdHealthGet200Response(
+                    label="label",
+                    status="IN_PROGRESS",
+                    deletable=False,
+                ),
+                ApiException,
+            ],
+            RunnersHealthResponse(
+                requested_runners=[
+                    PlatformRunnerHealth(
+                        identity=identity_1,
+                        online=True,
+                        busy=True,
+                        deletable=False,
+                    ),
+                ],
+                failed_requested_runners=[
+                    identity_2,
+                ],
+            ),
+            id="Two requested. One of the request failed.",
+        ),
+        pytest.param(
+            [
+                identity_1 := RunnerIdentity(
+                    instance_id=InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(
+                        platform_name="jobmanager",
+                        runner_id="1",
+                        url="http://jobmanager.example.com",
+                    ),
+                ),
+                identity_2 := RunnerIdentity(
+                    instance_id=InstanceID.build(prefix="unit-0"),
+                    metadata=RunnerMetadata(
+                        platform_name="jobmanager",
+                        runner_id="2",
+                        url="http://jobmanager.example.com",
+                    ),
+                ),
+            ],
+            [
+                V1JobsJobIdHealthGet200Response(
+                    label="label",
+                    status="FAILED",
+                    deletable=True,
+                ),
+                NotFoundException,
+            ],
+            RunnersHealthResponse(
+                requested_runners=[
+                    PlatformRunnerHealth(
+                        identity=identity_1,
+                        online=True,
+                        busy=False,
+                        deletable=True,
+                    ),
+                    PlatformRunnerHealth(
+                        identity=identity_2,
+                        online=False,
+                        busy=False,
+                        deletable=False,
+                    ),
+                ],
+            ),
+            id="Two requested. One deletable, one not found in jobmanager.",
+        ),
+    ],
+)
+def test_get_runners_health(
+    monkeypatch: pytest.MonkeyPatch,
+    requested_runners: list[RunnerIdentity],
+    jobmanager_side_effects: Any,
+    expected_health_response: RunnersHealthResponse,
+):
+    """
+    arrange: Given some requested runner identities, and replies from the jobmanager.
+    act: Call get_runners_health.
+    assert: The expected health response with the correct requested_runners and
+        runners with failed requests.
+    """
+    call_api_mock = MagicMock()
+    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
+    call_api_mock.side_effect = jobmanager_side_effects
+
+    platform = JobManagerPlatform()
+    runners_health_response = platform.get_runners_health(requested_runners)
+
+    expected_health_response = expected_health_response
+    assert runners_health_response == expected_health_response
