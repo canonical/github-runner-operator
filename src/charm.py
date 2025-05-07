@@ -519,7 +519,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one", "python3-pip"])
+        self._apt_install(["run-one", "python3-pip", "python3-venv"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.
