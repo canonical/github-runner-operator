@@ -6,12 +6,13 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from github_runner_manager.errors import GithubMetricsError, JobNotFoundError
+from github_runner_manager.errors import GithubMetricsError
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics.runner import PreJobMetrics
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
+from github_runner_manager.platform.platform_provider import JobNotFoundError
 from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 

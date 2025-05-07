@@ -12,115 +12,35 @@ from github_runner_manager.manager import runner_manager as runner_manager_modul
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
-    CloudRunnerState,
-    HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.manager.runner_manager import RunnerManager
-from github_runner_manager.platform.platform_provider import PlatformProvider, PlatformRunnerHealth
+from github_runner_manager.platform.platform_provider import (
+    PlatformProvider,
+    PlatformRunnerHealth,
+    RunnersHealthResponse,
+)
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
-@pytest.mark.parametrize(
-    "cloud_state,health,reactive,removal_called",
-    [
-        pytest.param(
-            None, None, False, True, id="Non reactive GitHub runner offline should be deleted."
-        ),
-        pytest.param(
-            None, None, True, False, id="Reactive GitHub runner offline should be deleted."
-        ),
-    ]
-    + [
-        pytest.param(
-            cloud_state,
-            health,
-            False,
-            True,
-            id="Non reactive GitHub runners with any cloud state should be DELETED.",
-        )
-        for cloud_state in CloudRunnerState
-        for health in HealthState
-    ]
-    + [
-        pytest.param(
-            CloudRunnerState.CREATED,
-            HealthState.UNKNOWN,
-            True,
-            False,
-            id="Reactive Github offline with CREATED state cloud should not be deleted.",
-        ),
-        pytest.param(
-            CloudRunnerState.ACTIVE,
-            HealthState.UNHEALTHY,
-            True,
-            True,
-            id="Reactive Github offline with ACTIVE and healthy cloud should be deleted.",
-        ),
-        pytest.param(
-            CloudRunnerState.ACTIVE,
-            HealthState.HEALTHY,
-            True,
-            False,
-            id="Reactive Github offline with ACTIVE and healthy cloud should not be deleted.",
-        ),
-        pytest.param(
-            CloudRunnerState.ACTIVE,
-            HealthState.UNHEALTHY,
-            True,
-            True,
-            id="Reactive Github offline with ACTIVE and healthy cloud should be deleted.",
-        ),
-    ]
-    + [
-        pytest.param(
-            cloud_state,
-            health,
-            True,
-            True,
-            id=f"Reactive Github runners with cloud state {cloud_state} should be DELETED.",
-        )
-        for cloud_state in CloudRunnerState
-        for health in HealthState
-        if cloud_state not in (CloudRunnerState.ACTIVE, CloudRunnerState.CREATED)
-    ],
-)
-def test_cleanup_removes_offline_expected_runners(
-    cloud_state: CloudRunnerState | None,
-    health: HealthState | None,
-    reactive: bool,
-    removal_called: bool,
-    monkeypatch: pytest.MonkeyPatch,
-):
+def test_cleanup_removes_runners_in_platform_not_in_cloud(monkeypatch: pytest.MonkeyPatch):
     """
-    arrange: Given a runner with offline state in GitHub.
-       Also given an optional runner in the cloud provider with an state.
+    arrange: Given a runner in GitHub that is not in the cloud provider.
     act: Call cleanup in the RunnerManager instance.
-    assert: If appropriate, the offline runner should be deleted.
+    assert: The github runner should be deleted.
     """
-    instance_id = InstanceID.build("prefix-0", reactive)
-    github_runner = SelfHostedRunner(
-        id=1,
-        labels=[],
-        status=GitHubRunnerStatus.OFFLINE,
-        busy=True,
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
+    instance_id = InstanceID.build("prefix-0")
+    github_runner_identity = RunnerIdentity(
+        instance_id=instance_id, metadata=RunnerMetadata(platform_name="github", runner_id="1")
     )
-    cloud_instances: tuple[CloudRunnerInstance, ...] = ()
-    if cloud_state:
-        cloud_instances = (
-            CloudRunnerInstance(
-                name=instance_id.name,
-                instance_id=instance_id,
-                metadata=RunnerMetadata(),
-                health=health,
-                state=cloud_state,
-            ),
-        )
 
     cloud_runner_manager = MagicMock()
-    cloud_runner_manager.get_runners.return_value = cloud_instances
+    cloud_runner_manager.get_runners.return_value = []
     github_provider = MagicMock()
     runner_manager = RunnerManager(
         "managername",
@@ -129,15 +49,14 @@ def test_cleanup_removes_offline_expected_runners(
         labels=["label1", "label2"],
     )
 
-    github_provider.get_runners.return_value = [github_runner]
-    github_provider.get_removal_token.return_value = "removaltoken"
+    github_provider.get_runners_health.return_value = RunnersHealthResponse(
+        non_requested_runners=[github_runner_identity]
+    )
 
     runner_manager.cleanup()
 
-    if removal_called:
-        github_provider.delete_runners.assert_called_with([github_runner])
-    else:
-        github_provider.delete_runners.assert_called_with([])
+    github_provider.delete_runner.assert_called_with(github_runner_identity)
+    cloud_runner_manager.delete_runner.assert_not_called()
 
 
 def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatch):
@@ -160,38 +79,29 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         labels=["label1", "label2"],
     )
 
+    identity = RunnerIdentity(
+        instance_id=InstanceID.build("invalid"),
+        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
+    )
     github_runner = SelfHostedRunner(
+        identity=identity,
         id=1,
         labels=[],
         status=GitHubRunnerStatus.OFFLINE,
         busy=True,
-        instance_id=InstanceID.build("invalid"),
-        metadata=RunnerMetadata(platform_name="github", runner_id="1"),
     )
-    github_runners = [
-        github_runner,
-        SelfHostedRunner(
-            id=2,
-            labels=[],
-            status=GitHubRunnerStatus.OFFLINE,
-            busy=True,
-            instance_id=InstanceID.build("unit-0"),
-            metadata=RunnerMetadata(platform_name="github", runner_id="2"),
-        ),
-    ]
 
     def _get_runner_context(instance_id, metadata, labels):
         """Return the runner context."""
         nonlocal github_runner
-        github_runner.instance_id = instance_id
+        github_runner.identity.instance_id = instance_id
         return RunnerContext(shell_run_script="agent"), github_runner
 
     github_provider.get_runner_context.side_effect = _get_runner_context
     cloud_runner_manager.create_runner.side_effect = RunnerCreateError("")
-    github_provider.get_runners.return_value = github_runners
 
     _ = runner_manager.create_runners(1, RunnerMetadata(), True)
-    github_provider.delete_runners.assert_called_once_with([github_runner])
+    github_provider.delete_runner.assert_called_once_with(github_runner.identity)
 
 
 @pytest.mark.parametrize(
@@ -201,8 +111,7 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
             (0,),
             None,
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=True,
                 busy=False,
                 deletable=False,
@@ -212,15 +121,13 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
         pytest.param(
             (0, 0),
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=False,
                 busy=True,
                 deletable=False,
             ),
             PlatformRunnerHealth(
-                instance_id=MagicMock(),
-                metadata=MagicMock(),
+                identity=MagicMock(),
                 online=False,
                 busy=False,
                 deletable=True,
@@ -272,7 +179,7 @@ def test_create_runner(
     # The method to get the runner health was called three times
     # until the runner was online.
     assert platform_provider.get_runner_health.call_count == len(creation_waiting_times)
-    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
+    platform_provider.get_runner_health.assert_called()
 
 
 def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
@@ -298,7 +205,7 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
 
     health_offline = PlatformRunnerHealth(
-        instance_id=MagicMock(), metadata=MagicMock(), online=False, busy=False, deletable=False
+        identity=MagicMock(), online=False, busy=False, deletable=False
     )
 
     platform_provider.get_runner_health.side_effect = (
@@ -318,5 +225,5 @@ def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
     # The runner was started even if it failed.
     cloud_runner_manager.create_runner.assert_called_once()
     assert platform_provider.get_runner_health.call_count == 2
-    platform_provider.get_runner_health.assert_called_with(metadata=ANY, instance_id=ANY)
-    platform_provider.delete_runners.assert_called_once_with([ANY])
+    platform_provider.get_runner_health.assert_called()
+    platform_provider.delete_runner.assert_called_once_with(ANY)

@@ -4,7 +4,6 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-from manager_client import GitHubRunnerManagerClient
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -27,6 +26,7 @@ from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.platform.platform_provider import TokenError
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -62,10 +62,10 @@ from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerServiceError,
     SubprocessError,
-    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from factories import create_runner_scaler
+from manager_client import GitHubRunnerManagerClient
 
 # We assume a stuck reconcile event when it takes longer
 # than 10 times a normal interval. Currently, we are only aware of
@@ -519,7 +519,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one", "python3-pip"])
+        self._apt_install(["run-one", "python3-pip", "python3-venv"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.

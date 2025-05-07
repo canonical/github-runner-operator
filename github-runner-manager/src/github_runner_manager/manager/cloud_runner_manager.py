@@ -6,12 +6,18 @@
 import abc
 import logging
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import Enum, auto
-from typing import Iterable, Iterator, Optional, Sequence, Tuple
+from typing import Optional, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +145,7 @@ class CloudRunnerInstance:
         metadata: Metadata of the runner.
         health: Health state of the runner.
         state: State of the instance hosting the runner.
+        created_at: Creation time of the runner in the cloud provider.
     """
 
     name: str
@@ -146,6 +153,19 @@ class CloudRunnerInstance:
     metadata: RunnerMetadata
     health: HealthState
     state: CloudRunnerState
+    created_at: datetime
+
+    def is_older_than(self, seconds: float) -> bool:
+        """Check if the cloud instance is older than the provided args.
+
+        Args:
+            seconds: The seconds to check if the machine is older than.
+
+        Returns:
+            True is the machine is older than the seconds provided.
+        """
+        now = datetime.now(timezone.utc)
+        return (now - self.created_at).total_seconds() > seconds
 
 
 class PreJobMetrics(BaseModel):
@@ -240,52 +260,28 @@ class CloudRunnerManager(abc.ABC):
     @abc.abstractmethod
     def create_runner(
         self,
-        instance_id: InstanceID,
-        metadata: RunnerMetadata,
+        runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
     ) -> CloudRunnerInstance:
         """Create a self-hosted runner.
 
         Args:
-            instance_id: Instance ID for the runner.
-            metadata: Runner Metadata.
+            runner_identity: Identity of the runner to create.
             runner_context: Context information needed to spawn the runner.
         """
 
     @abc.abstractmethod
-    def get_runners(self, states: Sequence[CloudRunnerState]) -> Tuple[CloudRunnerInstance]:
-        """Get self-hosted runners by state.
-
-        Args:
-            states: Filter for the runners with these github states. If None all states will be
-                included.
-        """
+    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+        """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID, remove_token: str) -> RunnerMetrics | None:
+    def delete_runner(self, instance_id: InstanceID) -> RunnerMetrics | None:
         """Delete self-hosted runner.
 
         Args:
             instance_id: The instance id of the runner to delete.
-            remove_token: The GitHub remove token.
         """
 
     @abc.abstractmethod
-    def flush_runners(self, remove_token: str, busy: bool = False) -> Iterator[RunnerMetrics]:
-        """Stop all runners.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
-            busy: If false, only idle runners are removed. If true, both idle and busy runners are
-                removed.
-        """
-
-    @abc.abstractmethod
-    def cleanup(self, remove_token: str) -> Iterable[RunnerMetrics]:
-        """Cleanup runner and resource on the cloud.
-
-        Perform health check on runner and delete the runner if it fails.
-
-        Args:
-            remove_token: The GitHub remove token for removing runners.
-        """
+    def cleanup(self) -> None:
+        """Cleanup runner dangling resources on the cloud."""
