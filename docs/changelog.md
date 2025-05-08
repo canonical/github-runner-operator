@@ -1,6 +1,12 @@
 # Changelog
 
 
+### 2025-05-06
+
+- The ssh health checks are removed and the platform providers (GitHub or the JobManager) are used instead to get the runners health
+information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
+disappear for the GitHub case. 
+
 ### 2025-04-28
 
 - Add a visualization of the share of jobs started per application.
@@ -10,7 +16,6 @@
 - Add how-to landing page.
 
 ### 2025-04-15
-
 
 - Fix a race condition where keypairs were being deleted even though the server was being built, potentially killing active github action runs.
 
