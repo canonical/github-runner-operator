@@ -49,7 +49,7 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
-    github_config: github.GitHubConfiguration
+    github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"

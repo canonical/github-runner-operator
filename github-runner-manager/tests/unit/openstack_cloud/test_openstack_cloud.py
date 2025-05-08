@@ -38,8 +38,7 @@ logger = logging.getLogger(__name__)
         pytest.param(
             "launch_instance",
             {
-                "metadata": FAKE_ARG,
-                "instance_id": FAKE_ARG,
+                "runner_identity": MagicMock(),
                 "server_config": FAKE_ARG,
                 "cloud_init": FAKE_ARG,
             },

@@ -4,7 +4,6 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
-from manager_client import GitHubRunnerManagerClient
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -27,6 +26,8 @@ from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.platform.platform_provider import TokenError
+from github_runner_manager.utilities import set_env_var
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -53,6 +54,7 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
+    build_proxy_config_from_charm,
 )
 from errors import (
     ConfigurationError,
@@ -62,10 +64,10 @@ from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerServiceError,
     SubprocessError,
-    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from factories import create_runner_scaler
+from manager_client import GitHubRunnerManagerClient
 
 # We assume a stuck reconcile event when it takes longer
 # than 10 times a normal interval. Currently, we are only aware of
@@ -235,6 +237,20 @@ class GithubRunnerCharm(CharmBase):
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
+    def _set_proxy_env_var(self) -> None:
+        """Set the HTTP proxy environment variables."""
+        proxy_config = build_proxy_config_from_charm()
+
+        if proxy_config.no_proxy is not None:
+            set_env_var("NO_PROXY", proxy_config.no_proxy)
+            set_env_var("no_proxy", proxy_config.no_proxy)
+        if proxy_config.http is not None:
+            set_env_var("HTTP_PROXY", proxy_config.http)
+            set_env_var("http_proxy", proxy_config.http)
+        if proxy_config.https is not None:
+            set_env_var("HTTPS_PROXY", proxy_config.https)
+            set_env_var("https_proxy", proxy_config.https)
+
     def _common_install_code(self) -> bool:
         """Installation code shared between install and upgrade hook.
 
@@ -245,6 +261,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
+        self._set_proxy_env_var()
+
         try:
             self._install_deps()
         except SubprocessError:
@@ -519,7 +537,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one", "python3-pip"])
+        self._apt_install(["run-one", "python3-pip", "python3-venv"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.

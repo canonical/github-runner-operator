@@ -14,6 +14,7 @@ import yaml
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.platform.platform_provider import TokenError
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
@@ -42,7 +43,6 @@ from errors import (
     MissingMongoDBError,
     RunnerError,
     SubprocessError,
-    TokenError,
 )
 from event_timer import EventTimer, TimerEnableError
 

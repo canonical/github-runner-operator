@@ -19,6 +19,7 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
+    EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -50,7 +51,7 @@ from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
 
 
-def test_github_config_from_charm_invalud_path():
+def test_github_config_from_charm_invalid_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
     act: Call parse_github_path with the invalid path string and runner group name.
@@ -88,6 +89,21 @@ def test_github_config_from_charm_invalid_token():
 
     with pytest.raises(CharmConfigInvalidError):
         GithubConfig.from_charm(mock_charm)
+
+
+def test_github_config_from_charm_special_token_returns_none():
+    """
+    arrange: Create a mock CharmBase instance with an empty path and token configuration.
+    act: Call from_charm method with the mock CharmBase instance.
+    assert: Verify that the method returns None.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_CONFIG_NAME] = charm_state.EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE
+
+    result = GithubConfig.from_charm(mock_charm)
+
+    assert result is None
 
 
 @pytest.mark.parametrize(
@@ -332,21 +348,6 @@ def test_check_reconcile_interval_valid(reconcile_interval: int):
     assert result == reconcile_interval
 
 
-def test_charm_config_from_charm_invalid_github_config():
-    """
-    arrange: Create a mock CharmBase instance with an invalid GitHub configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method raises CharmConfigInvalidError with the correct message.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = ""
-
-    # Act and Assert
-    with pytest.raises(CharmConfigInvalidError) as exc_info:
-        CharmConfig.from_charm(mock_charm)
-    assert str(exc_info.value) == "Invalid Github config, Missing path configuration"
-
-
 def test_charm_config_from_charm_invalid_reconcile_interval():
     """
     arrange: Create a mock CharmBase instance with an invalid reconcile interval.
@@ -373,6 +374,22 @@ def test_charm_config_from_charm_invalid_labels():
     with pytest.raises(CharmConfigInvalidError) as exc_info:
         CharmConfig.from_charm(mock_charm)
     assert "Invalid labels config" in str(exc_info.value)
+
+
+def test_charm_config_from_charm_missing_github_config():
+    """
+    arrange: Create a mock CharmBase instance with special token value and empty path.
+    act: Call from_charm method with the mock CharmBase instance.
+    assert: Verify that token and path is set to none.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = ""
+    mock_charm.config[TOKEN_CONFIG_NAME] = EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE
+
+    config = CharmConfig.from_charm(mock_charm)
+
+    assert config.token is None
+    assert config.path is None
 
 
 def test_charm_config_from_charm_valid():
@@ -528,7 +545,7 @@ def test_proxy_config_from_charm(
     mock_charm.config[USE_APROXY_CONFIG_NAME] = False
     monkeypatch.setattr(charm_state, "get_env_var", MagicMock(side_effect=[http, https, no_proxy]))
 
-    result = charm_state._build_proxy_config_from_charm()
+    result = charm_state.build_proxy_config_from_charm()
 
     assert result.no_proxy is None
 
@@ -741,8 +758,8 @@ class MockModel(BaseModel):
 @pytest.mark.parametrize(
     "module, target, exc",
     [
-        (charm_state, "_build_proxy_config_from_charm", ValidationError([], MockModel)),
-        (charm_state, "_build_proxy_config_from_charm", ValueError),
+        (charm_state, "build_proxy_config_from_charm", ValidationError([], MockModel)),
+        (charm_state, "build_proxy_config_from_charm", ValueError),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
@@ -759,7 +776,7 @@ def test_charm_state_from_charm_invalid_cases(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_database = MagicMock(spec=DatabaseRequires)
-    monkeypatch.setattr("charm_state._build_proxy_config_from_charm", MagicMock())
+    monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     mock_charm_config = MagicMock()
     mock_charm_config.openstack_clouds_yaml = None
     mock_charm_config_from_charm = MagicMock()
@@ -782,7 +799,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_database = MagicMock(spec=DatabaseRequires)
-    monkeypatch.setattr("charm_state._build_proxy_config_from_charm", MagicMock())
+    monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
