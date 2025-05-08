@@ -545,7 +545,7 @@ def test_proxy_config_from_charm(
     mock_charm.config[USE_APROXY_CONFIG_NAME] = False
     monkeypatch.setattr(charm_state, "get_env_var", MagicMock(side_effect=[http, https, no_proxy]))
 
-    result = charm_state._build_proxy_config_from_charm()
+    result = charm_state.build_proxy_config_from_charm()
 
     assert result.no_proxy is None
 
@@ -758,8 +758,8 @@ class MockModel(BaseModel):
 @pytest.mark.parametrize(
     "module, target, exc",
     [
-        (charm_state, "_build_proxy_config_from_charm", ValidationError([], MockModel)),
-        (charm_state, "_build_proxy_config_from_charm", ValueError),
+        (charm_state, "build_proxy_config_from_charm", ValidationError([], MockModel)),
+        (charm_state, "build_proxy_config_from_charm", ValueError),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
         (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
@@ -776,7 +776,7 @@ def test_charm_state_from_charm_invalid_cases(
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_database = MagicMock(spec=DatabaseRequires)
-    monkeypatch.setattr("charm_state._build_proxy_config_from_charm", MagicMock())
+    monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     mock_charm_config = MagicMock()
     mock_charm_config.openstack_clouds_yaml = None
     mock_charm_config_from_charm = MagicMock()
@@ -799,7 +799,7 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_database = MagicMock(spec=DatabaseRequires)
-    monkeypatch.setattr("charm_state._build_proxy_config_from_charm", MagicMock())
+    monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
     monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
