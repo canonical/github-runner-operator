@@ -1,0 +1,55 @@
+06:46:40 INFO Waiting for model:
+  test-lfhg2wg8/0 [executing] maintenance: Reconciling runners
+06:52:09 INFO Waiting for model:
+  test-lfhg2wg8/0 [executing] active: 
+06:52:39 INFO Waiting for model:
+  test-lfhg2wg8/0 [idle] active: 
+06:52:43 INFO Wait for condition not met, sleeping 30
+06:53:25 INFO [TEST SETUP] Run command pkill -9 run.sh on test-lfhg2wg8-0-n-12692ff34b15
+06:53:25 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.149', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8c:48:08'}]])
+06:53:26 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-lfhg2wg8-0-n-12692ff34b15.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.149 pkill -9 run.sh'
+06:53:27 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.149' (ED25519) to the list of known hosts.
+'
+06:53:31 INFO Runner test-lfhg2wg8-0-n-12692ff34b15 status: online
+06:53:31 INFO Runner still marked as online, waiting for it to be marked offline
+06:55:00 INFO Waiting for model:
+  test-lfhg2wg8/0 [executing] active: 
+06:55:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746686798.9058557, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.174901485443115}
+{"timestamp": 1746686810.8176746, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.628148794174194}
+{"timestamp": 1746687116.414239, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 276.91865730285645}
+{"timestamp": 1746687128.8131382, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.084350347518921}
+{"timestamp": 1746687144.5360787, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 14.476014614105225}
+{"timestamp": 1746687092.0, "event": "runner_installed", "flavor": "test-lfhg2wg8", "duration": 242.0}
+{"timestamp": 1746687166.0, "event": "runner_start", "flavor": "test-lfhg2wg8", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 74.0, "queue_duration": 3.0}
+{"timestamp": 1746687207.0, "event": "runner_stop", "flavor": "test-lfhg2wg8", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1746687299.5201373, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.307653665542603}
+{"timestamp": 1746687307.8498623, "event": "reconciliation", "flavor": "test-lfhg2wg8", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.002609491348267}
+06:55:26 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-7me5  github-pr-9e156-lxd  localhost/localhost  3.6.5    unsupported  06:55:26Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-lfhg2wg8           active      1  github-runner-image-builder  latest/edge   81  no       
+test-lfhg2wg8                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-lfhg2wg8/0*  active    idle   0        10.28.124.101             
+test-lfhg2wg8/0*                         active    idle   1        10.28.124.177   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.28.124.101  juju-c5e818-0  ubuntu@22.04      Running
+1        started  10.28.124.177  juju-c5e818-1  ubuntu@22.04      Running
+
+06:55:26 INFO Juju error logs:
+
+machine-0: 06:27:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-lfhg2wg8-0: 06:27:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-lfhg2wg8-0: 06:27:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-lfhg2wg8-0: 06:28:25 ERROR unit.github-runner-image-builder-lfhg2wg8/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-lfhg2wg8-0: 06:45:43 ERROR unit.test-lfhg2wg8/0.juju-log No metrics returned after deleting test-lfhg2wg8-0-n-7ff8616e0bff
+
+06:55:26 INFO Forgetting model main...
