@@ -80,6 +80,7 @@ GITHUB_RUNNER_MANAGER_CONFIG = LogrotateConfig(
     rotate=0,
     create=False,
     notifempty=False,
+    frequency=LogrotateFrequency.DAILY,
 )
 
 
