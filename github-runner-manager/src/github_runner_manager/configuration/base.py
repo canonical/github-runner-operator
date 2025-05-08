@@ -157,7 +157,8 @@ class ProxyConfig(BaseModel):
             Whether the proxy config is set.
         """
         return bool(self.http or self.https)
-    
+
+
 class SSHDebugConnection(BaseModel):
     """SSH connection information for debug workflow.
 
