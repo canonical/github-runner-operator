@@ -283,7 +283,7 @@ class OpenstackCloud:
         logger.info("Getting openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
+            server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
             if server is not None:
                 return OpenstackInstance(server, self.prefix)
         return None
