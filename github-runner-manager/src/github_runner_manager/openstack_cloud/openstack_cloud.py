@@ -311,11 +311,8 @@ class OpenstackCloud:
             instance_id: The full name of the server.
         """
         try:
-            openstack_server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
-            if openstack_server is not None:
-                server = OpenstackInstance(openstack_server, self.prefix)
-                res = conn.delete_server(name_or_id=server.id)
-                logger.info("openstack delete result for %s: %s", instance_id, res)
+            res = conn.delete_server(name_or_id=instance_id.name)
+            logger.info("openstack delete result for %s: %s", instance_id, res)
             self._delete_keypair(conn, instance_id)
         except (
             openstack.exceptions.SDKException,
