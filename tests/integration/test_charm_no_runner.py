@@ -2,8 +2,8 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
-from asyncio import sleep
 import logging
+from asyncio import sleep
 
 import pytest
 from juju.application import Application
@@ -100,10 +100,10 @@ async def test_manager_service_started(
 ) -> None:
     """
     arrange: A working application with no runners.
-    act: 
+    act:
         1. Check the github runner manager service.
         2. Force a logrotate
-    assert: 
+    assert:
         1. The service should be running, and logs generated.
         2. New lines of log should be found, the initialize logs should not be found.
     """
@@ -132,7 +132,7 @@ async def test_manager_service_started(
         assert_msg="Failed to force rotate of logs",
     )
     assert return_code == 0
-    
+
     # Wait for more log lines.
     await sleep(15)
 
@@ -140,4 +140,3 @@ async def test_manager_service_started(
     assert "Starting the server..." not in log
     assert "Staring the reconcile_service..." not in log
     assert "Acquired the lock for reconciling" in log
-    
