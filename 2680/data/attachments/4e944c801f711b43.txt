@@ -1,0 +1,111 @@
+06:49:41 WARNING unexpected facade SSHServer received from the controller
+06:49:41 INFO Adding model github-pr-b4539-lxd:test-charm-metrics-failure-wtgk on cloud localhost
+06:49:41 WARNING unexpected facade SSHServer received from the controller
+06:49:41 WARNING unexpected facade SSHSession received from the controller
+06:49:41 WARNING unexpected facade SSHTunneler received from the controller
+06:49:41 INFO GitHub token rate limit: Rate(reset=2025-05-09 06:55:03+00:00, remaining=4570, limit=5000)
+06:49:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:50:17 INFO Deploying local:jammy/github-runner-0
+06:50:17 INFO Waiting for model:
+  test-zh8rmwoe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zh8rmwoe/0 [allocating] waiting: waiting for machine
+06:50:47 INFO Waiting for model:
+  test-zh8rmwoe/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zh8rmwoe/0 [allocating] waiting: waiting for machine
+06:51:18 INFO Waiting for model:
+  test-zh8rmwoe/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zh8rmwoe/0 [allocating] waiting: agent initialising
+06:51:48 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zh8rmwoe/0 [executing] maintenance: Setting up Builder.
+06:52:18 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zh8rmwoe/0 [executing] maintenance: Setting up Builder.
+06:52:49 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] maintenance: Setting up Builder.
+06:53:19 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] maintenance: Setting up Builder.
+06:53:49 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] blocked: image integration required.
+06:54:19 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:54:50 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:55:20 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:55:51 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:56:21 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:56:51 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:57:21 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:57:52 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:58:22 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:58:53 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:59:23 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+06:59:53 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+07:00:23 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+07:00:54 INFO Waiting for model:
+  test-zh8rmwoe/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zh8rmwoe/0 [executing] active: Building image.
+07:01:24 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-zh8rmwoe/0 [idle] active: 
+07:01:54 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] maintenance: Reconciling runners
+07:05:06 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] active: 
+07:05:33 INFO [TEST SETUP] Exposing port 8080 on test-zh8rmwoe-0-n-317a9468a595
+07:05:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:04:c1:82'}]])
+07:05:34 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-zh8rmwoe-0-n-317a9468a595.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.95 &
+07:05:35 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.95' (ED25519) to the list of known hosts.
+
+07:05:36 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-zh8rmwoe-0-n-317a9468a595
+07:05:36 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:04:c1:82'}]])
+07:05:37 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zh8rmwoe-0-n-317a9468a595.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.95 nc -z localhost 8080'
+07:05:38 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:05:39 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-zh8rmwoe-0-n-317a9468a595
+07:05:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.95', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:04:c1:82'}]])
+07:05:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zh8rmwoe-0-n-317a9468a595.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.95 curl http://localhost:8080'
+07:05:41 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  77123      0 --:--:-- --:--:-- --:--:--  101k
+'
+07:05:44 INFO Wait for condition not met, sleeping 10
+07:06:16 INFO Waiting for model:
+  test-zh8rmwoe/0 [executing] active: 
+07:06:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746774274.0, "event": "runner_installed", "flavor": "test-zh8rmwoe", "duration": 72.0}
+{"timestamp": 1746774347.0, "event": "runner_start", "flavor": "test-zh8rmwoe", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 73.0, "queue_duration": 1.0}
+{"timestamp": 1746774347.0, "event": "runner_stop", "flavor": "test-zh8rmwoe", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1746774375.9496279, "event": "reconciliation", "flavor": "test-zh8rmwoe", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.833009004592896}
+{"timestamp": 1746774384.0371299, "event": "reconciliation", "flavor": "test-zh8rmwoe", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.687091588973999}
