@@ -119,7 +119,7 @@ async def test_manager_service_started(
         assert_msg="GitHub runner manager service not healthy",
     )
 
-    log = get_github_runner_manager_service_log(unit)
+    log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." in log
     assert "Staring the reconcile_service..." in log
 
@@ -136,7 +136,7 @@ async def test_manager_service_started(
     # Wait for more log lines.
     await sleep(15)
 
-    log = get_github_runner_manager_service_log(unit)
+    log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." not in log
     assert "Staring the reconcile_service..." not in log
     assert "Acquired the lock for reconciling" in log
