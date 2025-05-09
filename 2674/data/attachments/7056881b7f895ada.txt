@@ -1,0 +1,131 @@
+18:24:48 INFO Adding model github-pr-b4539-lxd:test-charm-scheduled-events-fmov on cloud localhost
+18:24:49 WARNING unexpected facade AgentLifeFlag received from the controller
+18:24:49 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:24:49 WARNING unexpected facade SecretsDrain received from the controller
+18:24:50 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:12 INFO Deploying local:jammy/github-runner-0
+18:25:12 INFO Waiting for model:
+  test-t4m9rwol/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t4m9rwol/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  test-t4m9rwol/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t4m9rwol/0 [allocating] waiting: waiting for machine
+18:26:12 INFO Waiting for model:
+  test-t4m9rwol/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-t4m9rwol/0 [executing] maintenance: Setting up Builder.
+18:26:42 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t4m9rwol/0 [executing] maintenance: Setting up Builder.
+18:27:12 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] maintenance: Setting up Builder.
+18:27:42 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] maintenance: Setting up Builder.
+18:28:12 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] maintenance: Setting up Builder.
+18:28:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:29:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:29:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:30:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:30:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:31:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:31:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:32:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:32:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:33:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:33:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:34:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:34:43 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:35:13 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:35:44 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:36:14 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:36:44 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t4m9rwol/0 [executing] active: Building image.
+18:37:14 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:37:31 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] active: 
+18:38:01 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:38:31 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:39:02 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:39:32 INFO Waiting for model:
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:40:08 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] active:
+18:40:29 INFO Wait for condition not met, sleeping 3
+18:40:33 INFO Wait for 10 minutes
+18:50:33 INFO Waiting for model:
+  github-runner-image-builder-t4m9rwol/0 [idle] active: 
+  test-t4m9rwol/0 [executing] maintenance: Reconciling runners
+18:51:03 INFO Waiting for model:
+  test-t4m9rwol/0 [idle] active:
+18:51:12 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-fmov  github-pr-b4539-lxd  localhost/localhost  3.1.10   unsupported  18:51:12Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-t4m9rwol           active      1  github-runner-image-builder  latest/edge   81  no       
+test-t4m9rwol                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-t4m9rwol/0*  active    idle   0        10.189.144.185         
+test-t4m9rwol/0*                         active    idle   1        10.189.144.131         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.189.144.185  juju-54f042-0  ubuntu@22.04      Running
+1        started  10.189.144.131  juju-54f042-1  ubuntu@22.04      Running
+
+18:51:12 INFO Juju error logs:
+
+machine-0: 18:25:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:45 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-t4m9rwol-0: 18:25:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:00 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:26:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t4m9rwol-0: 18:26:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-t4m9rwol-0: 18:26:32 ERROR unit.github-runner-image-builder-t4m9rwol/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:51:13 INFO Forgetting model main...

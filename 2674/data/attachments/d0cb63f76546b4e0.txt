@@ -1,0 +1,80 @@
+18:51:34 INFO Waiting for model:
+  test-a90eujkq/0 [executing] active:
+18:52:17 INFO Waiting for model:
+  test-a90eujkq/0 [executing] active: 
+18:52:46 INFO Wait for condition not met, sleeping 10
+18:52:58 INFO Wait for condition not met, sleeping 10
+18:53:09 INFO Wait for condition not met, sleeping 10
+18:53:19 INFO Wait for condition not met, sleeping 10
+18:53:30 INFO Wait for condition not met, sleeping 10
+18:53:40 INFO Wait for condition not met, sleeping 10
+18:53:51 INFO Wait for condition not met, sleeping 10
+18:54:01 INFO Wait for condition not met, sleeping 10
+18:54:12 INFO Wait for condition not met, sleeping 10
+18:54:22 INFO Wait for condition not met, sleeping 10
+18:55:05 INFO Waiting for model:
+  test-a90eujkq/0 [executing] active: 
+18:55:35 INFO Waiting for model:
+  test-a90eujkq/0 [idle] active: 
+18:55:48 INFO Wait for condition not met, sleeping 60
+18:56:49 INFO Wait for condition not met, sleeping 60
+18:57:49 INFO Wait for condition not met, sleeping 60
+18:58:50 INFO Wait for condition not met, sleeping 60
+18:59:50 INFO Wait for condition not met, sleeping 60
+19:00:51 INFO Wait for condition not met, sleeping 60
+19:01:51 INFO Wait for condition not met, sleeping 60
+19:02:52 INFO Wait for condition not met, sleeping 60
+19:03:52 INFO Wait for condition not met, sleeping 60
+19:04:55 INFO Wait for condition not met, sleeping 10
+19:05:15 INFO Waiting for model:
+  test-a90eujkq/0 [idle] active:
+19:05:40 INFO Waiting for model:
+  test-a90eujkq/0 [idle] active: 
+19:05:57 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-wxjs  github-pr-b4539-lxd  localhost/localhost  3.6.5    unsupported  19:05:57Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-a90eujkq           active      1  github-runner-image-builder  latest/edge   81  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-a90eujkq                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-a90eujkq/0*  active    idle   1        10.210.213.36              
+mongodb/0*                               active    idle   0        10.210.213.166  27017/tcp  Primary
+test-a90eujkq/0*                         active    idle   2        10.210.213.20              
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.210.213.166  juju-35a0ee-0  ubuntu@22.04      Running
+1        started  10.210.213.36   juju-35a0ee-1  ubuntu@22.04      Running
+2        started  10.210.213.20   juju-35a0ee-2  ubuntu@22.04      Running
+
+19:05:57 INFO Juju error logs:
+
+machine-0: 18:28:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:28:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:28:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:28:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-a90eujkq-0: 18:28:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:29:15 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:29:15 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 18:29:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-a90eujkq-0: 18:29:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-a90eujkq-0: 18:30:32 ERROR unit.github-runner-image-builder-a90eujkq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-a90eujkq-0: 18:48:02 ERROR unit.test-a90eujkq/0.juju-log No metrics returned after deleting test-a90eujkq-0-r-1a593bff10ec
+unit-test-a90eujkq-0: 18:55:26 ERROR unit.test-a90eujkq/0.juju-log Failed to get SSH connection while removing test-a90eujkq-0-r-1e692399e8e7
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-a90eujkq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-a90eujkq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-a90eujkq-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-a90eujkq-0-r-1e692399e8e7, key path: /home/runner-manager/.ssh/test-a90eujkq-0-r-1e692399e8e7.key
+unit-test-a90eujkq-0: 18:55:27 ERROR unit.test-a90eujkq/0.juju-log Invalid pulled metrics. No runner_installed information for test-a90eujkq-0-r-1e692399e8e7.
+unit-test-a90eujkq-0: 18:55:27 ERROR unit.test-a90eujkq/0.juju-log No metrics returned after deleting test-a90eujkq-0-r-1e692399e8e7
+
+19:05:57 INFO Forgetting model main...

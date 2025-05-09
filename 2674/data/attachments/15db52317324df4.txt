@@ -1,0 +1,53 @@
+18:50:30 INFO Waiting for model:
+  test-nwvha90w/0 [executing] active:
+18:54:13 INFO Waiting for model:
+  test-nwvha90w/0 [executing] maintenance: Reconciling runners
+18:54:42 INFO Wait for condition not met, sleeping 30
+18:55:25 INFO [TEST SETUP] Run command pkill -9 run.sh on test-nwvha90w-0-n-5652fdd4dc83
+18:55:25 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:16:57:f9'}]])
+18:55:26 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-nwvha90w-0-n-5652fdd4dc83.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.108 pkill -9 run.sh'
+18:55:28 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.108' (ED25519) to the list of known hosts.
+'
+18:55:31 INFO Runner test-nwvha90w-0-n-5652fdd4dc83 status: online
+18:55:31 INFO Runner still marked as online, waiting for it to be marked offline
+18:56:54 INFO Waiting for model:
+  test-nwvha90w/0 [executing] active: 
+18:57:16 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746730229.6440306, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.527291297912598}
+{"timestamp": 1746730238.7977235, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.105448484420776}
+{"timestamp": 1746730439.9306178, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 175.98475861549377}
+{"timestamp": 1746730452.218581, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.148990154266357}
+{"timestamp": 1746730464.4416707, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.113837718963623}
+{"timestamp": 1746730391.0, "event": "runner_installed", "flavor": "test-nwvha90w", "duration": 118.0}
+{"timestamp": 1746730485.0, "event": "runner_start", "flavor": "test-nwvha90w", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 94.0, "queue_duration": 1.0}
+{"timestamp": 1746730527.0, "event": "runner_stop", "flavor": "test-nwvha90w", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1746730613.5149345, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.288050651550293}
+{"timestamp": 1746730619.7115483, "event": "reconciliation", "flavor": "test-nwvha90w", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.023711919784546}
+18:57:18 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-a5qh  github-pr-b4539-lxd  localhost/localhost  3.6.5    unsupported  18:57:18Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-nwvha90w           active      1  github-runner-image-builder  latest/edge   81  no       
+test-nwvha90w                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-nwvha90w/0*  active    idle   0        10.201.10.170             
+test-nwvha90w/0*                         active    idle   1        10.201.10.200   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.201.10.170  juju-f42ea1-0  ubuntu@22.04      Running
+1        started  10.201.10.200  juju-f42ea1-1  ubuntu@22.04      Running
+
+18:57:18 INFO Juju error logs:
+
+machine-0: 18:27:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:27:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-nwvha90w-0: 18:27:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:27:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nwvha90w-0: 18:27:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-nwvha90w-0: 18:27:48 ERROR unit.github-runner-image-builder-nwvha90w/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-nwvha90w-0: 18:49:48 ERROR unit.test-nwvha90w/0.juju-log No metrics returned after deleting test-nwvha90w-0-n-89896279f99c
+
+18:57:18 INFO Forgetting model main...
