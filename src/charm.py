@@ -72,7 +72,7 @@ from manager_client import GitHubRunnerManagerClient
 # The reconcile loop can get stuck in a charm upgrade. Put a timeout so
 # we can get out of that issue.
 # https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
-RECONCILIATION_INTERVAL_TIMEOUT = 3000
+RECONCILIATION_INTERVAL_TIMEOUT_SECONDS = 3000
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
@@ -313,7 +313,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=RECONCILIATION_INTERVAL_TIMEOUT,
+            timeout=RECONCILIATION_INTERVAL_TIMEOUT_SECONDS,
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
