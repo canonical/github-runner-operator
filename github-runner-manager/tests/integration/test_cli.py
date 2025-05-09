@@ -18,12 +18,11 @@ def test_app_reconcile(app: subprocess.Popen):
     sleep(15)
     app.terminate()
     logs = get_app_log(app)
-    assert "Attempting to acquire lock for reconcile..." in logs
-    assert "Reconciling the runners..." in logs
-    assert "Reconcile of runners completed" in logs
+    assert "Starting the server..." in logs
+    assert "Staring the reconcile_service..." in logs
 
 
-def test_app_http_server(app: subprocess.Popen):
+def test_app_http_server(web_started_app: subprocess.Popen):
     """
     arrange: Run the github-runner-manager CLI application.
     act: Make health check HTTP request.

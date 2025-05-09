@@ -18,11 +18,9 @@ def start_reconcile_service(_: ApplicationConfiguration, lock: Lock) -> None:
     Args:
         lock: The lock representing modification access to the managed set of runners.
     """
-    # The reconcile service is not implemented yet, current logging the lock status.
+    logger.info("Staring the reconcile_service...")
     while True:
-        logger.info("Lock locked: %s", lock.locked())
-        logger.info("Attempting to acquire lock for reconcile...")
         with lock:
-            logger.info("Reconciling the runners...")
+            logger.info("Acquired the lock for reconciling")
             sleep(10)
-        logger.info("Reconcile of runners completed")
+        logger.info("Released the lock")

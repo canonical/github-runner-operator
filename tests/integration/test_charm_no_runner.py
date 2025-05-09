@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with no runner."""
+from asyncio import sleep
 import logging
 
 import pytest
@@ -9,8 +10,13 @@ from juju.application import Application
 from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME, _get_log_file_path
-from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
+from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
+from tests.integration.helpers.common import (
+    get_github_runner_manager_service_log,
+    reconcile,
+    run_in_unit,
+    wait_for,
+)
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
@@ -94,12 +100,17 @@ async def test_manager_service_started(
 ) -> None:
     """
     arrange: A working application with no runners.
-    act: Check the github runner manager service.
-    assert: The service should be running.
+    act: 
+        1. Check the github runner manager service.
+        2. Force a logrotate
+    assert: 
+        1. The service should be running, and logs generated.
+        2. New lines of log should be found, the initialize logs should not be found.
     """
     app = app_no_runner
     unit = app.units[0]
 
+    # 1.
     await run_in_unit(
         unit,
         f"sudo systemctl status {GITHUB_RUNNER_MANAGER_SERVICE_NAME}",
@@ -108,15 +119,25 @@ async def test_manager_service_started(
         assert_msg="GitHub runner manager service not healthy",
     )
 
-    log_file_path = _get_log_file_path(unit.name)
-    return_code, stdout, stderr = await run_in_unit(
+    log = get_github_runner_manager_service_log(unit)
+    assert "Starting the server..." in log
+    assert "Staring the reconcile_service..." in log
+
+    # 2.
+    return_code, _, _ = await run_in_unit(
         unit,
-        f"cat {log_file_path}",
+        "sudo logrotate -f /etc/logrotate.d/github-runner-manager",
         timeout=60,
         assert_on_failure=True,
-        assert_msg="Failed to get the GitHub runner manager logs",
+        assert_msg="Failed to force rotate of logs",
     )
+    assert return_code == 0
+    
+    # Wait for more log lines.
+    await sleep(15)
 
-    assert return_code == 0, f"Get log with cat failed with: {stderr}"
-    assert stdout is not None
-    assert "Starting the server..." in stdout
+    log = get_github_runner_manager_service_log(unit)
+    assert "Starting the server..." not in log
+    assert "Staring the reconcile_service..." not in log
+    assert "Acquired the lock for reconciling" in log
+    

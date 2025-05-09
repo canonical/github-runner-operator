@@ -90,7 +90,7 @@ def config_file_fixture(tmp_path_factory, config: dict) -> Path:
 
 @pytest.fixture(name="install_app", scope="module")
 def install_app_fixture() -> None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "."])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--force-reinstall", "."])
 
 
 @pytest.fixture(name="app", scope="function")
@@ -99,5 +99,19 @@ def app_fixture(
     config_file: Path,
 ) -> Iterator[subprocess.Popen]:
     process = start_app(config_file, [])
+    yield process
+    process.kill()
+
+
+@pytest.fixture(name="web_started_app", scope="function")
+def web_started_app_fixture(
+    install_app: None,
+    config_file: Path,
+) -> Iterator[subprocess.Popen]:
+    """Start a github-runner-manager app and wait until HTTP server is ready.
+
+    This will truncate the logs prior to the HTTP server is ready.
+    """
+    process = start_app(config_file, [], wait_flask_start=True)
     yield process
     process.kill()

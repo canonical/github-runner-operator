@@ -134,6 +134,7 @@ def _write_config(logrotate_config: LogrotateConfig) -> None:
         f"""{logrotate_config.log_path_glob_pattern} {{
 {logrotate_config.frequency}
 rotate {logrotate_config.rotate}
+copytruncate
 missingok
 {"notifempty" if logrotate_config.notifempty else "ifempty"}
 {"create" if logrotate_config.create else "nocreate"}
