@@ -18,7 +18,7 @@ def start_reconcile_service(_: ApplicationConfiguration, lock: Lock) -> None:
     Args:
         lock: The lock representing modification access to the managed set of runners.
     """
-    logger.info("Staring the reconcile_service...")
+    logger.info("Starting the reconcile_service...")
     while True:
         with lock:
             logger.info("Acquired the lock for reconciling")

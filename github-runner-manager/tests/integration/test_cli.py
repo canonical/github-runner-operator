@@ -19,7 +19,7 @@ def test_app_reconcile(app: subprocess.Popen):
     app.terminate()
     logs = get_app_log(app)
     assert "Starting the server..." in logs
-    assert "Staring the reconcile_service..." in logs
+    assert "Starting the reconcile_service..." in logs
 
 
 def test_app_http_server(web_started_app: subprocess.Popen):

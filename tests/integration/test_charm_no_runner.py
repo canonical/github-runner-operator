@@ -121,7 +121,7 @@ async def test_manager_service_started(
 
     log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." in log
-    assert "Staring the reconcile_service..." in log
+    assert "Starting the reconcile_service..." in log
 
     # 2.
     return_code, _, _ = await run_in_unit(
@@ -138,5 +138,5 @@ async def test_manager_service_started(
 
     log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." not in log
-    assert "Staring the reconcile_service..." not in log
+    assert "Starting the reconcile_service..." not in log
     assert "Acquired the lock for reconciling" in log
