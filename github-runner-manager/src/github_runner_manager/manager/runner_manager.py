@@ -412,7 +412,7 @@ class RunnerManager:
             A tuple of instance ID's of runners spawned.
         """
         instance_id_list = []
-        with Pool(processes=min(num, 20)) as pool:
+        with Pool(processes=min(num, 30)) as pool:
             jobs = pool.imap_unordered(
                 func=RunnerManager._create_runner, iterable=create_runner_args_sequence
             )
