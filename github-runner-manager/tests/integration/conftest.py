@@ -90,7 +90,7 @@ def config_file_fixture(tmp_path_factory, config: dict) -> Path:
 
 @pytest.fixture(name="install_app", scope="module")
 def install_app_fixture() -> None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "."])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--force-reinstall", "."])
 
 
 @pytest.fixture(name="app", scope="function")

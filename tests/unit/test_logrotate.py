@@ -110,6 +110,7 @@ def test__write_config(
     expected_logrotate_config = f"""{log_path_glob_pattern} {{
 {frequency}
 rotate {rotate}
+copytruncate
 missingok
 {"notifempty" if notifempty else "ifempty"}
 {"create" if create else "nocreate"}

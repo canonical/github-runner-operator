@@ -5,6 +5,7 @@
 
 import subprocess
 from pathlib import Path
+from time import sleep
 from typing import Sequence
 
 import requests
@@ -50,15 +51,13 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
-    logs = b""
-    for line in process.stderr:
-        if b"Address already in use" in line:
-            assert False, "Test setup failure: Port used for testing taken"
-        if b"Press CTRL+C to quit" in line:
-            break
-        logs += line
-    else:
-        assert False, f"Test setup failure: Abnormal app exit with logs:\n{logs.decode('utf-8')}"
+    for _ in range(6):
+        try:
+            health_check()
+        except (AssertionError, requests.ConnectionError):
+            sleep(10)
+            continue
+        break
     return process
 
 

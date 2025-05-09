@@ -146,6 +146,7 @@ def start_http_server(
         lock: The lock representing modification access to the managed set of runners.
         flask_args: The arguments for the flask HTTP server.
     """
+    app.logger.info("Starting the server...")
     # The lock is passed from the caller, hence the need to update the global variable.
     global _lock  # pylint: disable=global-statement
     _lock = lock
