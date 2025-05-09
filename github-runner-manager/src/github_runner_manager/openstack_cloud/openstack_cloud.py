@@ -283,7 +283,7 @@ class OpenstackCloud:
         logger.info("Getting openstack server with %s", instance_id)
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
+            server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
             if server is not None:
                 return OpenstackInstance(server, self.prefix)
         return None
@@ -311,10 +311,8 @@ class OpenstackCloud:
             instance_id: The full name of the server.
         """
         try:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
-            if server is not None:
-                res = conn.delete_server(name_or_id=server.id)
-                logger.info("openstack delete result for %s: %s", instance_id, res)
+            res = conn.delete_server(name_or_id=instance_id.name)
+            logger.info("openstack delete result for %s: %s", instance_id, res)
             self._delete_keypair(conn, instance_id)
         except (
             openstack.exceptions.SDKException,
