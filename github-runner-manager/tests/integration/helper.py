@@ -5,6 +5,7 @@
 
 import subprocess
 from pathlib import Path
+from time import sleep
 from typing import Sequence
 
 import requests
@@ -28,16 +29,12 @@ def get_app_log(app: subprocess.Popen) -> str:
     return app.stderr.read().decode("utf-8")
 
 
-def start_app(
-    config_file: Path, extra_args: Sequence[str], wait_flask_start: bool = False
-) -> subprocess.Popen:
+def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
     """Start the CLI application.
 
     Args:
         config_file: The Path to the configuration file.
         extra_args: Any extra args to the CLI application.
-        wait_flask_start: Wait for flask to start before returning. Logs prior to the flask server
-            started will be removed.
 
     Returns:
         The process running the CLI application.
@@ -54,18 +51,13 @@ def start_app(
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
-    if not wait_flask_start:
-        return process
-
-    logs = b""
-    for line in process.stderr:
-        if b"Address already in use" in line:
-            assert False, "Test setup failure: Port used for testing taken"
-        if b"Press CTRL+C to quit" in line:
-            break
-        logs += line
-    else:
-        assert False, f"Test setup failure: Abnormal app exit with logs:\n{logs.decode('utf-8')}"
+    for _ in range(6):
+        try:
+            health_check()
+        except (AssertionError, requests.ConnectionError):
+            sleep(10)
+            continue
+        break
     return process
 
 

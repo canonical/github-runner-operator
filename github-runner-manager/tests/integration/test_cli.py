@@ -22,7 +22,7 @@ def test_app_reconcile(app: subprocess.Popen):
     assert "Starting the reconcile_service..." in logs
 
 
-def test_app_http_server(web_started_app: subprocess.Popen):
+def test_app_http_server(app: subprocess.Popen):
     """
     arrange: Run the github-runner-manager CLI application.
     act: Make health check HTTP request.

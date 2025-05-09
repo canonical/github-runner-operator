@@ -101,17 +101,3 @@ def app_fixture(
     process = start_app(config_file, [])
     yield process
     process.kill()
-
-
-@pytest.fixture(name="web_started_app", scope="function")
-def web_started_app_fixture(
-    install_app: None,
-    config_file: Path,
-) -> Iterator[subprocess.Popen]:
-    """Start a github-runner-manager app and wait until HTTP server is ready.
-
-    This will truncate the logs prior to the HTTP server is ready.
-    """
-    process = start_app(config_file, [], wait_flask_start=True)
-    yield process
-    process.kill()
