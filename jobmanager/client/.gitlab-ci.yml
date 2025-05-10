@@ -28,4 +28,4 @@ pytest-3.10:
   image: python:3.10-alpine@sha256:0733909561f552d8557618ee738b2a5cbf3fddfddf92c0fb261b293b90a51f12
 pytest-3.11:
   extends: .pytest
-  image: python:3.11-alpine@sha256:32ac7ba3dad4bcee9c8cfaf3b489f832b84ba0a1eb8ef76685456d424baaf444
+  image: python:3.11-alpine@sha256:f53f8d462c6f0baafc7b90f6174ca7a63a923e8024cbcc37c42d5a2cafb55091
