@@ -1,0 +1,348 @@
+19:02:26 INFO Adding model github-pr-a55a2-lxd:test-debug-ssh-yx68 on cloud localhost
+19:02:26 WARNING unexpected facade AgentLifeFlag received from the controller
+19:02:26 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+19:02:26 WARNING unexpected facade SecretsDrain received from the controller
+19:02:28 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+19:02:52 INFO Deploying local:jammy/github-runner-0
+19:02:52 INFO Waiting for model:
+  test-yxln2ub8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yxln2ub8/0 [allocating] waiting: waiting for machine
+19:03:22 INFO Waiting for model:
+  test-yxln2ub8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yxln2ub8/0 [executing] maintenance: Setting up Builder.
+19:03:52 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yxln2ub8/0 [executing] maintenance: Setting up Builder.
+19:04:22 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yxln2ub8/0 [executing] maintenance: Setting up Builder.
+19:04:52 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] maintenance: Setting up Builder.
+19:05:22 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] maintenance: Setting up Builder.
+19:05:52 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:06:22 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:06:52 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:07:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:07:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:08:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:08:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:09:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:09:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:10:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:10:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:11:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:11:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:12:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:12:53 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:13:23 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:13:54 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yxln2ub8/0 [executing] active: Building image.
+19:14:24 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] active: 
+19:14:39 INFO GitHub token rate limit: Rate(reset=2025-05-11 19:27:23+00:00, remaining=3961, limit=5000)
+19:14:43 INFO Deploying ch:amd64/jammy/tmate-ssh-server-10
+19:14:43 WARNING relate is deprecated and will be removed. Use integrate instead.
+19:14:43 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+19:15:13 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+19:15:43 INFO Waiting for model:
+  tmate-ssh-server/0 [idle] active:
+19:15:56 INFO Waiting for model:
+  github-runner-image-builder-yxln2ub8/0 [idle] active: 
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+19:16:26 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+19:16:56 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] active: 
+  tmate-ssh-server/0 [idle] active: 
+19:17:26 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+19:17:56 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+19:18:27 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+19:18:57 INFO Waiting for model:
+  test-yxln2ub8/0 [executing] maintenance: Reconciling runners
+19:19:27 INFO Waiting for model:
+  test-yxln2ub8/0 [idle] active: 
+19:19:43 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.142.89.85 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-yxln2ub8-0-n-2ef15d95129f
+19:19:43 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ca:21:dd'}]])
+19:19:44 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yxln2ub8-0-n-2ef15d95129f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.189 sudo iptables -t nat -A OUTPUT -p tcp -d 10.142.89.85 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+19:19:45 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.142.89.85 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.189' (ED25519) to the list of known hosts.
+'
+19:19:46 INFO [TEST SETUP] Exposing port 10022 on test-yxln2ub8-0-n-2ef15d95129f
+19:19:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ca:21:dd'}]])
+19:19:47 INFO ssh tunnel command ssh -fNT -R 10022:10.142.89.85:10022 -i /home/runner-manager/.ssh/test-yxln2ub8-0-n-2ef15d95129f.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.189 &
+19:19:48 INFO ssh tunnel result 0 None None
+19:19:52 INFO [TEST SETUP] Run command nc -z localhost 10022 on test-yxln2ub8-0-n-2ef15d95129f
+19:19:52 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.189', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ca:21:dd'}]])
+19:19:53 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yxln2ub8-0-n-2ef15d95129f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.189 nc -z localhost 10022'
+19:19:54 INFO Run command 'nc -z localhost 10022' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 10022 port [tcp/*] succeeded!
+'
+19:19:54 INFO Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+19:19:55 INFO Wait for condition not met, sleeping 10
+19:20:07 INFO Wait for condition not met, sleeping 60
+19:21:07 INFO Wait for condition not met, sleeping 60
+19:22:08 INFO Wait for condition not met, sleeping 60
+19:23:08 INFO Wait for condition not met, sleeping 60
+19:24:09 INFO Wait for condition not met, sleeping 60
+19:25:11 INFO Logs: ﻿2025-05-11T19:19:58.4106015Z Current runner version: '2.323.0'
+2025-05-11T19:19:58.4113368Z Runner name: 'test-yxln2ub8-0-n-2ef15d95129f'
+2025-05-11T19:19:58.4114988Z Machine name: 'github-runner'
+2025-05-11T19:19:58.4119874Z ##[group]GITHUB_TOKEN Permissions
+2025-05-11T19:19:58.4122362Z Actions: write
+2025-05-11T19:19:58.4123097Z Attestations: write
+2025-05-11T19:19:58.4123712Z Checks: write
+2025-05-11T19:19:58.4124522Z Contents: write
+2025-05-11T19:19:58.4125210Z Deployments: write
+2025-05-11T19:19:58.4125768Z Discussions: write
+2025-05-11T19:19:58.4126399Z Issues: write
+2025-05-11T19:19:58.4127016Z Metadata: read
+2025-05-11T19:19:58.4127533Z Models: read
+2025-05-11T19:19:58.4128097Z Packages: write
+2025-05-11T19:19:58.4128673Z Pages: write
+2025-05-11T19:19:58.4129264Z PullRequests: write
+2025-05-11T19:19:58.4129875Z RepositoryProjects: write
+2025-05-11T19:19:58.4130542Z SecurityEvents: write
+2025-05-11T19:19:58.4131118Z Statuses: write
+2025-05-11T19:19:58.4131686Z ##[endgroup]
+2025-05-11T19:19:58.4134937Z Secret source: Actions
+2025-05-11T19:19:58.4135893Z Prepare workflow directory
+2025-05-11T19:19:58.4992301Z Prepare all required actions
+2025-05-11T19:19:58.5081333Z Getting action download info
+2025-05-11T19:19:58.9242565Z Download action repository 'canonical/action-tmate@main' (SHA:366d1538966693beedfa54130ba4505343f814df)
+2025-05-11T19:20:00.3233863Z Complete job name: workflow-dispatch-tests
+2025-05-11T19:20:00.3866470Z A job started hook has been configured by the self-hosted runner administrator
+2025-05-11T19:20:00.4007415Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2025-05-11T19:20:00.4028322Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-05-11T19:20:00.4029740Z ##[endgroup]
+2025-05-11T19:20:00.4510406Z ##[group]Run canonical/action-tmate@main
+2025-05-11T19:20:00.4511270Z with:
+2025-05-11T19:20:00.4511843Z   sudo: auto
+2025-05-11T19:20:00.4512468Z   install-dependencies: true
+2025-05-11T19:20:00.4513198Z   limit-access-to-actor: auto
+2025-05-11T19:20:00.4514096Z   detached: false
+2025-05-11T19:20:00.4514996Z   github-token: ***
+2025-05-11T19:20:00.4515632Z ##[endgroup]
+2025-05-11T19:20:00.7867498Z Hit:1 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble InRelease
+2025-05-11T19:20:00.8979281Z Hit:2 http://security.ubuntu.com/ubuntu noble-security InRelease
+2025-05-11T19:20:00.9203740Z Hit:3 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-05-11T19:20:00.9373123Z Get:4 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2025-05-11T19:20:01.1320027Z Get:5 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports/main amd64 Components [7064 B]
+2025-05-11T19:20:01.2278078Z Get:6 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports/universe amd64 Components [16.4 kB]
+2025-05-11T19:20:01.3892110Z Get:7 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports/restricted amd64 Components [216 B]
+2025-05-11T19:20:01.4851664Z Get:8 http://availability-zone-2.clouds.archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Components [212 B]
+2025-05-11T19:20:03.2619079Z Fetched 150 kB in 1s (197 kB/s)
+2025-05-11T19:20:04.3068860Z Reading package lists...
+2025-05-11T19:20:04.3687000Z Reading package lists...
+2025-05-11T19:20:04.6543043Z Building dependency tree...
+2025-05-11T19:20:04.6568710Z Reading state information...
+2025-05-11T19:20:04.9495168Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.11).
+2025-05-11T19:20:04.9498090Z openssh-client set to manually installed.
+2025-05-11T19:20:04.9505260Z xz-utils is already the newest version (5.6.1+really5.4.5-1ubuntu0.2).
+2025-05-11T19:20:04.9506330Z xz-utils set to manually installed.
+2025-05-11T19:20:04.9515203Z 0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+2025-05-11T19:20:05.7628609Z Created symlink /etc/systemd/system/multi-user.target.wants/tmate-proxy.service → /etc/systemd/system/tmate-proxy.service.
+2025-05-11T19:20:09.8210915Z ssh -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:09.8265104Z 
+2025-05-11T19:20:09.8267518Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:09.8268435Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:14.8321545Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:14.8324608Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:19.8379143Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:19.8386149Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:24.8440727Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:24.8443748Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:29.8482976Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:29.8504260Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:34.8551248Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:34.8576071Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:39.8615901Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:39.8628650Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:44.8639597Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:44.8640756Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:49.8694925Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:49.8696472Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:54.8746779Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:54.8749953Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:59.8801664Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:20:59.8806296Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:04.8858405Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:04.8859393Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:09.8915456Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:09.8918398Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:14.8969526Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:14.8974805Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:19.9029767Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:19.9030484Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:24.9038760Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:24.9040556Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:29.9091796Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:29.9092997Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:34.9149862Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:34.9150748Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:39.9203576Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:39.9205197Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:44.9261252Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:44.9262440Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:49.9315161Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:49.9320013Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:54.9368433Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:54.9369611Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:59.9422353Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:21:59.9423211Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:04.9477966Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:04.9479255Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:09.9530836Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:09.9531844Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:14.9585085Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:14.9586520Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:19.9641238Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:19.9642480Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:24.9695174Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:24.9696043Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:29.9749979Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:29.9751699Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:34.9805644Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:34.9806642Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:39.9855909Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:39.9856706Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:44.9915116Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:44.9917285Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:49.9966875Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:49.9968685Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:55.0024300Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:22:55.0028503Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:00.0081882Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:00.0086403Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:05.0140728Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:05.0141602Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:10.0195887Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:10.0197441Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:15.0253832Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:15.0256646Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:20.0308699Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:20.0315736Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:25.0369770Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:25.0371157Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:30.0423631Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:30.0428627Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:35.0481641Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:35.0482581Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:40.0542032Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:40.0543223Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:45.0595584Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:45.0616454Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:50.0653848Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:50.0658978Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:55.0711263Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:23:55.0716513Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:00.0769634Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:00.0770718Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:05.0826235Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:05.0830504Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:10.0883332Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:10.0884496Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:15.0945307Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:15.0947245Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:20.0998930Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:20.1001132Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:25.1052286Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:25.1054400Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:30.1109308Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:30.1110559Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:35.1166271Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:35.1176241Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:40.1221634Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:40.1224818Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:45.1281366Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:45.1284256Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:50.1341253Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:50.1344608Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:55.1400574Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:24:55.1402980Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:25:00.1460340Z SSH: ssh -p 10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:25:00.1461673Z or: ssh -i <path-to-private-SSH-key> -p10022 EfFZJ9wFEH4gs5BxBeAadAmBP@10.142.89.85
+2025-05-11T19:25:00.4526652Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2025-05-11T19:25:00.4610972Z Post job cleanup.
+2025-05-11T19:25:00.5672538Z Cleaning up orphan processes
+2025-05-11T19:25:00.6159589Z Terminate orphan process: pid (2467) (tmate)
+2025-05-11T19:25:00.6230657Z Terminate orphan process: pid (2468) (bash)
+19:25:13 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-yx68  github-pr-a55a2-lxd  localhost/localhost  3.1.10   unsupported  19:25:13Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yxln2ub8           active      1  github-runner-image-builder  latest/edge   81  no       
+test-yxln2ub8                                  active      1  github-runner                               0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server             edge          10  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-yxln2ub8/0*  active    idle   0        10.142.89.51               
+test-yxln2ub8/0*                         active    idle   1        10.142.89.23               
+tmate-ssh-server/0*                      active    idle   2        10.142.89.85    10022/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.142.89.51  juju-86d0d4-0  ubuntu@22.04      Running
+1        started  10.142.89.23  juju-86d0d4-1  ubuntu@22.04      Running
+2        started  10.142.89.85  juju-86d0d4-2  ubuntu@22.04      Running
+
+19:25:13 INFO Juju error logs:
+
+machine-0: 19:03:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:03:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:03:03 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-yxln2ub8-0: 19:03:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:03:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:03:28 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 19:03:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yxln2ub8-0: 19:03:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yxln2ub8-0: 19:03:44 ERROR unit.github-runner-image-builder-yxln2ub8/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-2: 19:15:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 19:15:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 19:15:20 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-tmate-ssh-server-0: 19:15:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-yxln2ub8-0: 19:17:28 ERROR unit.test-yxln2ub8/0.juju-log debug-ssh:1: No metrics returned after deleting test-yxln2ub8-0-n-b1b79e09f879
+
+19:25:14 INFO Forgetting model main...

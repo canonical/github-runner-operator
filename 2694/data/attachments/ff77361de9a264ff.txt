@@ -1,0 +1,39 @@
+19:39:05 INFO GitHub token rate limit: Rate(reset=2025-05-11 20:27:39+00:00, remaining=4795, limit=5000)
+19:41:10 INFO Waiting for model:
+  test-byaw3zqo/0 [executing] active: 
+19:41:39 INFO Wait for condition not met, sleeping 10
+19:42:09 INFO Waiting for model:
+  test-byaw3zqo/0 [executing] maintenance: Reconciling runners
+19:42:35 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1746992442.0, "event": "runner_installed", "flavor": "test-byaw3zqo", "duration": 83.0}
+{"timestamp": 1746992502.0, "event": "runner_start", "flavor": "test-byaw3zqo", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 60.0, "queue_duration": 1.0}
+{"timestamp": 1746992504.0, "event": "runner_stop", "flavor": "test-byaw3zqo", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1746992528.5140297, "event": "reconciliation", "flavor": "test-byaw3zqo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.616082429885864}
+{"timestamp": 1746992539.026878, "event": "reconciliation", "flavor": "test-byaw3zqo", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.23732614517212}
+19:42:37 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-6r0j  github-pr-a55a2-lxd  localhost/localhost  3.6.5    unsupported  19:42:37Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-byaw3zqo           active      1  github-runner-image-builder  latest/edge   81  no       
+test-byaw3zqo                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-byaw3zqo/0*  active    idle   0        10.227.227.170         
+test-byaw3zqo/0*                         active    idle   1        10.227.227.17          
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.227.227.170  juju-8826e7-0  ubuntu@22.04      Running
+1        started  10.227.227.17   juju-8826e7-1  ubuntu@22.04      Running
+
+19:42:37 INFO Juju error logs:
+
+machine-0: 19:21:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:21:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-byaw3zqo-0: 19:21:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:21:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:21:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-byaw3zqo-0: 19:21:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-byaw3zqo-0: 19:22:36 ERROR unit.github-runner-image-builder-byaw3zqo/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+19:42:37 INFO Forgetting model main...
