@@ -1,0 +1,67 @@
+06:48:37 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] active: 
+06:49:07 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active:
+06:49:28 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] active: 
+06:50:00 INFO Wait for condition not met, sleeping 10
+06:50:12 INFO Wait for condition not met, sleeping 10
+06:50:23 INFO Wait for condition not met, sleeping 10
+06:50:33 INFO Wait for condition not met, sleeping 10
+06:50:44 INFO Wait for condition not met, sleeping 10
+06:50:54 INFO Wait for condition not met, sleeping 10
+06:51:05 INFO Wait for condition not met, sleeping 10
+06:51:15 INFO Wait for condition not met, sleeping 10
+06:51:25 INFO Wait for condition not met, sleeping 10
+06:52:02 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] active: 
+06:52:31 INFO Wait for condition not met, sleeping 60
+06:53:32 INFO Wait for condition not met, sleeping 60
+06:54:32 INFO Wait for condition not met, sleeping 60
+06:55:33 INFO Wait for condition not met, sleeping 60
+06:56:33 INFO Wait for condition not met, sleeping 60
+06:57:34 INFO Wait for condition not met, sleeping 60
+06:58:34 INFO Wait for condition not met, sleeping 60
+06:59:35 INFO Wait for condition not met, sleeping 60
+07:00:36 INFO Wait for condition not met, sleeping 60
+07:01:38 INFO Wait for condition not met, sleeping 10
+07:02:00 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active:
+07:02:28 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active: 
+07:02:45 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-uobq  github-pr-8ff96-lxd  localhost/localhost  3.6.5    unsupported  07:02:45Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fwjo9p2t           active      1  github-runner-image-builder  latest/edge   81  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-fwjo9p2t                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-fwjo9p2t/0*  active    idle   1        10.247.87.25               
+mongodb/0*                               active    idle   0        10.247.87.129   27017/tcp  Primary
+test-fwjo9p2t/0*                         active    idle   2        10.247.87.88               
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.247.87.129  juju-4e0488-0  ubuntu@22.04      Running
+1        started  10.247.87.25   juju-4e0488-1  ubuntu@22.04      Running
+2        started  10.247.87.88   juju-4e0488-2  ubuntu@22.04      Running
+
+07:02:45 INFO Juju error logs:
+
+machine-0: 06:24:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:24:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:24:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:24:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fwjo9p2t-0: 06:24:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:25:15 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:25:15 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:26:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fwjo9p2t-0: 06:26:14 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-fwjo9p2t-0: 06:27:21 ERROR unit.github-runner-image-builder-fwjo9p2t/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+07:02:45 INFO Forgetting model main...

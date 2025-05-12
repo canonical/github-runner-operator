@@ -1,0 +1,146 @@
+06:23:54 WARNING unexpected facade SSHServer received from the controller
+06:23:54 INFO Adding model github-pr-8ff96-lxd:test-reactive-uobq on cloud localhost
+06:23:54 WARNING unexpected facade SSHServer received from the controller
+06:23:54 WARNING unexpected facade SSHSession received from the controller
+06:23:54 WARNING unexpected facade SSHTunneler received from the controller
+06:23:55 INFO GitHub token rate limit: Rate(reset=2025-05-12 07:23:54+00:00, remaining=5000, limit=5000)
+06:23:59 INFO Deploying ch:amd64/jammy/mongodb-214
+06:24:01 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:24:19 INFO Deploying local:jammy/github-runner-0
+06:24:19 INFO Waiting for model:
+  test-fwjo9p2t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fwjo9p2t/0 [allocating] waiting: waiting for machine
+06:24:50 INFO Waiting for model:
+  test-fwjo9p2t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fwjo9p2t/0 [allocating] waiting: waiting for machine
+06:25:20 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fwjo9p2t/0 [allocating] waiting: waiting for machine
+06:25:51 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fwjo9p2t/0 [allocating] waiting: waiting for machine
+06:26:21 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fwjo9p2t/0 [allocating] waiting: agent initialising
+06:26:51 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:27:22 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:27:52 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:28:22 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:28:53 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:29:23 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] maintenance: Setting up Builder.
+06:29:53 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:30:24 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:30:54 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:31:24 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:31:54 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:32:24 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:32:54 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:33:24 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:33:54 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:34:24 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:34:55 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:35:25 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:35:55 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:36:25 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:37:26 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:37:56 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:38:26 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:38:56 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:39:27 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:39:57 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:40:27 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fwjo9p2t/0 [executing] active: Building image.
+06:40:57 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] maintenance: Reconciling runners
+06:41:13 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:41:13 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:41:44 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:42:09 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] active:
+06:42:42 INFO Wait for condition not met, sleeping 10
+06:43:21 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active: 
+06:43:36 INFO Wait for condition not met, sleeping 60
+06:45:06 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active: 
+06:45:22 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747032200.0519037, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.182756900787354}
+{"timestamp": 1747032251.0, "event": "runner_installed", "flavor": "test-fwjo9p2t", "duration": 74.0}
+{"timestamp": 1747032255.0, "event": "runner_start", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1747032257.0, "event": "runner_stop", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747032305.4464595, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.35510492324829}
+
+06:45:23 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747032200.0519037, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.182756900787354}
+{"timestamp": 1747032251.0, "event": "runner_installed", "flavor": "test-fwjo9p2t", "duration": 74.0}
+{"timestamp": 1747032255.0, "event": "runner_start", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1747032257.0, "event": "runner_stop", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747032305.4464595, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.35510492324829}
+
+06:45:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747032200.0519037, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.182756900787354}
+{"timestamp": 1747032251.0, "event": "runner_installed", "flavor": "test-fwjo9p2t", "duration": 74.0}
+{"timestamp": 1747032255.0, "event": "runner_start", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1747032257.0, "event": "runner_stop", "flavor": "test-fwjo9p2t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747032305.4464595, "event": "reconciliation", "flavor": "test-fwjo9p2t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.35510492324829}
+06:45:42 INFO Waiting for model:
+  test-fwjo9p2t/0 [executing] active: 
+06:46:12 INFO Waiting for model:
+  test-fwjo9p2t/0 [idle] active:

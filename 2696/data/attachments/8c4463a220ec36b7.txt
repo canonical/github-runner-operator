@@ -1,0 +1,25 @@
+06:54:54 INFO GitHub token rate limit: Rate(reset=2025-05-12 07:23:55+00:00, remaining=4185, limit=5000)
+06:55:00 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-qv6e  github-pr-8ff96-lxd  localhost/localhost  3.6.5    unsupported  06:55:00Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kh34ongi           waiting    0/1  github-runner-image-builder  latest/edge   81  no       waiting for machine
+test-kh34ongi                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                    Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-kh34ongi/0  waiting   allocating  0        10.254.40.105          waiting for machine
+test-kh34ongi/0*                        blocked   idle        1        10.254.40.5            Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        pending  10.254.40.105  juju-faf5b3-0  ubuntu@22.04      Running
+1        started  10.254.40.5    juju-faf5b3-1  ubuntu@22.04      Running
+
+06:55:00 INFO Juju error logs:
+
+machine-1: 06:26:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kh34ongi-0: 06:26:35 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+
+06:55:00 INFO Forgetting model main...

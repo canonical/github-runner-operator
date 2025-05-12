@@ -1,0 +1,28 @@
+06:40:41 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-eosj  github-pr-8ff96-lxd  localhost/localhost  3.6.5    unsupported  06:40:41Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-xekrcer9           active      1  github-runner-image-builder  latest/edge   81  no       
+test-xekrcer9                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-xekrcer9/0*  active    idle   0        10.99.90.184           
+test-xekrcer9/0*                         active    idle   1        10.99.90.155           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.99.90.184  juju-c39027-0  ubuntu@22.04      Running
+1        started  10.99.90.155  juju-c39027-1  ubuntu@22.04      Running
+
+06:40:41 INFO Juju error logs:
+
+machine-0: 06:25:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-xekrcer9-0: 06:25:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:25:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-xekrcer9-0: 06:25:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-xekrcer9-0: 06:26:17 ERROR unit.github-runner-image-builder-xekrcer9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:40:41 INFO Forgetting model main...
