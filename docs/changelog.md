@@ -1,5 +1,8 @@
 # Changelog
 
+### 2025-05-09
+
+- Change the repository panel to show the number of jobs per workflow per repository.
 
 ### 2025-05-06
 
