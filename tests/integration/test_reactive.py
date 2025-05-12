@@ -3,6 +3,7 @@
 
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
 import json
+from asyncio import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -99,6 +100,9 @@ async def test_reactive_mode_spawns_runner(
 
     # This reconcile call is to check that we are not killing machines that are under
     # construction in a subsequent reconciliation.
+
+    # There may be a race condition between getting the token and spawning the machine.
+    await sleep(10)
     await reconcile(app, app.model)
 
     try:

@@ -31,7 +31,10 @@ def test_get_runners_health(
     jobmanager_provider_mock = MagicMock(spec=PlatformProvider)
 
     platform = MultiplexerPlatform(
-        {"github": github_provider_mock, "jobmanager": jobmanager_provider_mock}
+        {
+            "github": github_provider_mock,
+            "jobmanager": jobmanager_provider_mock,
+        }
     )
 
     identity_github_1 = RunnerIdentity(
@@ -83,6 +86,39 @@ def test_get_runners_health(
     )
     assert runners_health_response.failed_requested_runners == [identity_jobmanager_2]
     assert runners_health_response.non_requested_runners == [identity_github_2]
+
+
+def test_get_runners_health_returns_non_requested_runners_always(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: Prepare a github provider that replies with one non requested runner.
+    act: Call get_runners_health without any requested runner.
+    assert: The non requested runner is in the runner health response.
+    """
+    prefix = "unit-0"
+
+    identity_github_1 = RunnerIdentity(
+        instance_id=InstanceID.build(prefix=prefix),
+        metadata=RunnerMetadata(platform_name="github", runner_id=str(1)),
+    )
+
+    github_provider_mock = MagicMock(spec=PlatformProvider)
+    github_provider_mock.get_runners_health.return_value = RunnersHealthResponse(
+        non_requested_runners=[identity_github_1],
+    )
+
+    platform = MultiplexerPlatform(
+        {
+            "github": github_provider_mock,
+        }
+    )
+
+    runners_health_response = platform.get_runners_health(requested_runners=[])
+
+    assert runners_health_response.requested_runners == []
+    assert runners_health_response.failed_requested_runners == []
+    assert runners_health_response.non_requested_runners == [identity_github_1]
 
 
 def test_multiplexer_build_without_github():

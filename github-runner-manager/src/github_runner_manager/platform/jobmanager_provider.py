@@ -10,6 +10,7 @@ import jobmanager_client
 from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
 from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import HttpUrl
+from pydantic.error_wrappers import ValidationError
 from urllib3.exceptions import RequestError
 
 from github_runner_manager.manager.models import (
@@ -78,7 +79,7 @@ class JobManagerPlatform(PlatformProvider):
                     deletable=False,
                     busy=False,
                 )
-            except (ApiException, RequestError) as exc:
+            except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception(
                     "Error calling jobmanager api for runner %s. %s", runner_identity, exc
                 )
@@ -195,7 +196,7 @@ class JobManagerPlatform(PlatformProvider):
                         ),
                     )
                 raise PlatformApiError("Empty token from jobmanager API")
-            except (ApiException, RequestError) as exc:
+            except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
 
@@ -220,7 +221,7 @@ class JobManagerPlatform(PlatformProvider):
                 job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
                 if job.status != JobStatus.PENDING:
                     return True
-            except (ApiException, RequestError) as exc:
+            except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
                 raise PlatformApiError("API error") from exc
         return False

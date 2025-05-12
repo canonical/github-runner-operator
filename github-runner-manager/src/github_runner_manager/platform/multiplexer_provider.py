@@ -98,7 +98,9 @@ class MultiplexerPlatform(PlatformProvider):
         identities_by_provider: dict[str, RunnerIdentity] = defaultdict(list)
         for identity in requested_runners:
             identities_by_provider[identity.metadata.platform_name].append(identity)
-        for platform_name, platform_identities in identities_by_provider.items():
+        # Call all of them, whether there is data or not
+        for platform_name in self._providers:
+            platform_identities = identities_by_provider.get(platform_name, [])
             provider_health_response = self._providers[platform_name].get_runners_health(
                 platform_identities
             )

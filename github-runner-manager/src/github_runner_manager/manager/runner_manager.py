@@ -334,10 +334,19 @@ class RunnerManager:
                         continue
                     logger.info("Deleting busy runner: %s", cloud_runner.instance_id)
                 except PlatformApiError as exc:
+                    if not delete_busy_runners:
+                        logger.warning(
+                            "Failed to delete platform runner %s. %s. Skipping.",
+                            cloud_runner.instance_id,
+                            exc,
+                        )
+                        continue
                     logger.warning(
-                        "Failed to delete platform runner %s. %s", cloud_runner.instance_id, exc
+                        "Deleting runner: %s after platform failure %s.",
+                        cloud_runner.instance_id,
+                        exc,
                     )
-                    continue
+
             logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
             runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
             if not runner_metric:
@@ -403,7 +412,7 @@ class RunnerManager:
             A tuple of instance ID's of runners spawned.
         """
         instance_id_list = []
-        with Pool(processes=min(num, 20)) as pool:
+        with Pool(processes=min(num, 30)) as pool:
             jobs = pool.imap_unordered(
                 func=RunnerManager._create_runner, iterable=create_runner_args_sequence
             )
