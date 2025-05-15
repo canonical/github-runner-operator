@@ -6,6 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  tmate-test:
+    runs-on: [self-hosted]
+    steps:
+      # Enable tmate debugging of manually-triggered workflows if the input option was provided
+      - name: Setup tmate session
+        uses: canonical/action-tmate@feat/ubuntu-arch
   # reactive-focal-large-long-label:
   #   name: reactive focal large with long label
   #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-large]
@@ -113,28 +119,28 @@ jobs:
   #   runs-on: [self-hosted, X64, staging]
   #   steps:
   #     - run: echo hello
-  self-host-large:
-    name: self-hosted large
-    runs-on: [self-hosted, X64, large, jammy]
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    steps:
-      - run: echo hello
-      - name: tmate ssh
-        uses: canonical/action-tmate@main
-  self-host:
-    name: self-hosted edge
-    runs-on: [self-hosted, X64, edge, jammy]
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    steps:
-      - run: echo hello
-      - name: tmate ssh
-        uses: canonical/action-tmate@main
+  # self-host-large:
+  #   name: self-hosted large
+  #   runs-on: [self-hosted, X64, large, jammy]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       index: [0]
+  #   steps:
+  #     - run: echo hello
+  #     - name: tmate ssh
+  #       uses: canonical/action-tmate@main
+  # self-host:
+  #   name: self-hosted edge
+  #   runs-on: [self-hosted, X64, edge, jammy]
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       index: [0]
+  #   steps:
+  #     - run: echo hello
+  #     - name: tmate ssh
+  #       uses: canonical/action-tmate@main
     #   - run: cat /etc/docker/daemon.json
     #   - run: docker pull github-runner-dockerhub-cache.canonical.com:5000/jujusolutions/charm-base:ubuntu-20.04
     #   - run: docker pull jujusolutions/charm-base:ubuntu-20.04
