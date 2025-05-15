@@ -7,7 +7,7 @@ on:
 
 jobs:
   tmate-test:
-    runs-on: [self-hosted]
+    runs-on: [self-hosted, ppc64el]
     steps:
       # Enable tmate debugging of manually-triggered workflows if the input option was provided
       - name: Setup tmate session
