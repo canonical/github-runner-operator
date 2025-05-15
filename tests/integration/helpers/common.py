@@ -32,6 +32,7 @@ from charm_state import (
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
+from manager_service import _get_log_file_path
 from tests.status_name import ACTIVE
 
 DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
@@ -417,3 +418,26 @@ async def get_file_content(unit: Unit, filepath: pathlib.Path) -> str:
     assert stdout is not None, f"Failed to get content of {filepath}, no stdout message"
     logging.info("File content of %s: %s", filepath, stdout)
     return stdout.strip()
+
+
+async def get_github_runner_manager_service_log(unit: Unit) -> str:
+    """Get the logs of github-runner-manager service.
+
+    Args:
+        unit: The unit to get the logs from.
+
+    Returns:
+        The logs.
+    """
+    log_file_path = _get_log_file_path(unit.name)
+    return_code, stdout, stderr = await run_in_unit(
+        unit,
+        f"cat {log_file_path}",
+        timeout=60,
+        assert_on_failure=True,
+        assert_msg="Failed to get the GitHub runner manager logs",
+    )
+
+    assert return_code == 0, f"Get log with cat failed with: {stderr}"
+    assert stdout is not None
+    return stdout

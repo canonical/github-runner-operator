@@ -4,6 +4,7 @@
 """The CLI entrypoint for github-runner-manager application."""
 
 import logging
+import sys
 from functools import partial
 from io import StringIO
 from threading import Lock
@@ -15,8 +16,6 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
-
-logger = logging.getLogger(__name__)
 
 
 @click.command()
@@ -59,8 +58,10 @@ def main(
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
     """
+    log_level = logging.INFO
     if debug:
-        logging.basicConfig(level=logging.DEBUG)
+        log_level = logging.DEBUG
+    logging.basicConfig(level=log_level, stream=sys.stderr)
 
     lock = Lock()
     config_str = config_file.read()
@@ -68,8 +69,8 @@ def main(
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
     thread_manager.add_thread(target=partial(start_http_server, config, lock, http_server_args))
+    thread_manager.add_thread(target=partial(start_reconcile_service, config, lock))
     thread_manager.start()
 
     thread_manager.raise_on_error()
