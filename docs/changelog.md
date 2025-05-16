@@ -1,5 +1,8 @@
 # Changelog
 
+### 2025-05-09
+
+- The log rotation is done by copying the logs then truncating. There is a small chance some log might be lost during the log rotation. This affects the github-runner-manager service logs, and the reactive spawning logs.
 
 ### 2025-05-06
 
