@@ -1,0 +1,137 @@
+16:41:47 INFO Adding model github-pr-4bf6e-lxd:test-charm-scheduled-events-m264 on cloud localhost
+16:41:48 WARNING unexpected facade AgentLifeFlag received from the controller
+16:41:48 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+16:41:48 WARNING unexpected facade SecretsDrain received from the controller
+16:41:50 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+16:42:11 INFO Deploying local:jammy/github-runner-0
+16:42:11 INFO Waiting for model:
+  test-b2sgzugu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b2sgzugu/0 [allocating] waiting: waiting for machine
+16:42:41 INFO Waiting for model:
+  test-b2sgzugu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b2sgzugu/0 [executing] maintenance: Setting up Builder.
+16:43:11 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b2sgzugu/0 [executing] maintenance: Setting up Builder.
+16:43:41 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b2sgzugu/0 [executing] maintenance: Setting up Builder.
+16:44:11 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] maintenance: Setting up Builder.
+16:44:41 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] blocked: image integration required.
+16:45:11 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:45:41 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:46:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:46:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:47:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:47:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:48:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:48:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:49:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:49:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:50:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:50:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:51:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:51:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:52:12 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:52:42 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:53:13 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:53:43 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2sgzugu/0 [executing] active: Building image.
+16:54:13 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+16:54:30 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] active: 
+16:55:00 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+16:55:30 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+16:56:00 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+16:56:31 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+16:57:05 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] active:
+16:57:23 INFO Wait for condition not met, sleeping 3
+16:57:27 INFO Wait for 10 minutes
+17:07:27 INFO Waiting for model:
+  github-runner-image-builder-b2sgzugu/0 [idle] active: 
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+17:07:58 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+17:08:28 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+17:08:58 INFO Waiting for model:
+  test-b2sgzugu/0 [executing] maintenance: Reconciling runners
+17:09:28 INFO Waiting for model:
+  test-b2sgzugu/0 [idle] active:
+17:09:35 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-m264  github-pr-4bf6e-lxd  localhost/localhost  3.1.10   unsupported  17:09:35Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-b2sgzugu           active      1  github-runner-image-builder  latest/edge   81  no       
+test-b2sgzugu                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-b2sgzugu/0*  active    idle   0        10.210.85.98           
+test-b2sgzugu/0*                         active    idle   1        10.210.85.252          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.210.85.98   juju-5f8c9c-0  ubuntu@22.04      Running
+1        started  10.210.85.252  juju-5f8c9c-1  ubuntu@22.04      Running
+
+17:09:36 INFO Juju error logs:
+
+machine-0: 16:42:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 16:42:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 16:42:22 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-b2sgzugu-0: 16:42:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 16:42:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 16:42:45 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 16:42:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-b2sgzugu-0: 16:42:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-b2sgzugu-0: 16:43:02 ERROR unit.github-runner-image-builder-b2sgzugu/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+17:09:37 INFO Forgetting model main...

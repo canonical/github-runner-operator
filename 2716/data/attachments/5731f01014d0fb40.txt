@@ -1,0 +1,88 @@
+17:02:54 WARNING unexpected facade SSHServer received from the controller
+17:02:54 INFO Adding model github-pr-4bf6e-lxd:test-charm-metrics-success-uboo on cloud localhost
+17:02:54 WARNING unexpected facade SSHServer received from the controller
+17:02:54 WARNING unexpected facade SSHSession received from the controller
+17:02:54 WARNING unexpected facade SSHTunneler received from the controller
+17:02:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+17:03:13 INFO Deploying local:jammy/github-runner-0
+17:03:14 INFO Waiting for model:
+  test-h07ob4mc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-h07ob4mc/0 [allocating] waiting: waiting for machine
+17:03:44 INFO Waiting for model:
+  test-h07ob4mc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-h07ob4mc/0 [allocating] waiting: waiting for machine
+17:04:14 INFO Waiting for model:
+  test-h07ob4mc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-h07ob4mc/0 [executing] maintenance: Setting up Builder.
+17:04:44 INFO Waiting for model:
+  test-h07ob4mc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-h07ob4mc/0 [executing] maintenance: Setting up Builder.
+17:05:15 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] maintenance: Setting up Builder.
+17:05:45 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] maintenance: Setting up Builder.
+17:06:15 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:06:46 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:07:16 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:07:46 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:08:17 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:08:47 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:09:17 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:09:48 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:10:18 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:10:48 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:11:19 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:11:49 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:12:19 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:12:49 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:13:20 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:13:50 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:14:20 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-h07ob4mc/0 [executing] active: Building image.
+17:14:51 INFO Waiting for model:
+  test-h07ob4mc/0 [idle] active: 
+  github-runner-image-builder-h07ob4mc/0 [idle] active:
+17:16:50 INFO Waiting for model:
+  test-h07ob4mc/0 [executing] active: 
+17:17:36 INFO Waiting for model:
+  test-h07ob4mc/0 [executing] maintenance: Reconciling runners
+17:17:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747675010.1646152, "event": "reconciliation", "flavor": "test-h07ob4mc", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 101.91360712051392}
+{"timestamp": 1747675019.9993095, "event": "reconciliation", "flavor": "test-h07ob4mc", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.757164716720581}
+{"timestamp": 1747674987.0, "event": "runner_installed", "flavor": "test-h07ob4mc", "duration": 72.0}
+{"timestamp": 1747675054.9289963, "event": "reconciliation", "flavor": "test-h07ob4mc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.720306396484375}
+{"timestamp": 1747675062.0018897, "event": "reconciliation", "flavor": "test-h07ob4mc", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.986252307891846}

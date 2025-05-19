@@ -1,0 +1,129 @@
+16:42:20 WARNING unexpected facade SSHServer received from the controller
+16:42:20 INFO Adding model github-pr-4bf6e-lxd:test-charm-metrics-failure-7mbk on cloud localhost
+16:42:20 WARNING unexpected facade SSHServer received from the controller
+16:42:20 WARNING unexpected facade SSHSession received from the controller
+16:42:20 WARNING unexpected facade SSHTunneler received from the controller
+16:42:21 INFO GitHub token rate limit: Rate(reset=2025-05-19 16:53:24+00:00, remaining=4995, limit=5000)
+16:42:36 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+16:42:56 INFO Deploying local:jammy/github-runner-0
+16:42:56 INFO Waiting for model:
+  test-frh9nd11/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-frh9nd11/0 [allocating] waiting: waiting for machine
+16:43:27 INFO Waiting for model:
+  test-frh9nd11/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-frh9nd11/0 [allocating] waiting: waiting for machine
+16:43:57 INFO Waiting for model:
+  test-frh9nd11/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-frh9nd11/0 [executing] maintenance: Setting up Builder.
+16:44:27 INFO Waiting for model:
+  test-frh9nd11/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-frh9nd11/0 [executing] maintenance: Setting up Builder.
+16:44:57 INFO Waiting for model:
+  test-frh9nd11/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-frh9nd11/0 [executing] maintenance: Setting up Builder.
+16:45:28 INFO Waiting for model:
+  test-frh9nd11/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-frh9nd11/0 [executing] maintenance: Setting up Builder.
+16:45:58 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] blocked: image integration required.
+16:46:28 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:46:59 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:47:29 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:47:59 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:48:30 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:49:00 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:49:30 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:50:01 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:50:31 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:51:01 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:51:31 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:52:01 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:52:31 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:53:01 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:53:32 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:54:02 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:54:32 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:55:02 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:55:32 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:56:02 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:56:32 INFO Waiting for model:
+  test-frh9nd11/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-frh9nd11/0 [executing] active: Building image.
+16:57:03 INFO Waiting for model:
+  test-frh9nd11/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-frh9nd11/0 [idle] active: 
+16:57:43 INFO Waiting for model:
+  test-frh9nd11/0 [executing] active:
+17:01:22 INFO Waiting for model:
+  test-frh9nd11/0 [executing] active: 
+17:01:51 INFO [TEST SETUP] Exposing port 8080 on test-frh9nd11-0-n-780099d97f3d
+17:01:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:b2:17'}]])
+17:01:52 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-frh9nd11-0-n-780099d97f3d.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.63 &
+17:01:53 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.63' (ED25519) to the list of known hosts.
+
+17:01:55 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-frh9nd11-0-n-780099d97f3d
+17:01:55 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:b2:17'}]])
+17:01:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-frh9nd11-0-n-780099d97f3d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.63 nc -z localhost 8080'
+17:01:57 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+17:01:58 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-frh9nd11-0-n-780099d97f3d
+17:01:58 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.63', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b0:b2:17'}]])
+17:01:59 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-frh9nd11-0-n-780099d97f3d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.63 curl http://localhost:8080'
+17:02:00 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  79830      0 --:--:-- --:--:-- --:--:--  101k
+'
+17:02:02 INFO Wait for condition not met, sleeping 10
+17:02:36 INFO Waiting for model:
+  test-frh9nd11/0 [executing] active: 
+17:03:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747674040.0, "event": "runner_installed", "flavor": "test-frh9nd11", "duration": 80.0}
+{"timestamp": 1747674125.0, "event": "runner_start", "flavor": "test-frh9nd11", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 85.0, "queue_duration": 1.0}
+{"timestamp": 1747674125.0, "event": "runner_stop", "flavor": "test-frh9nd11", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1747674155.4061415, "event": "reconciliation", "flavor": "test-frh9nd11", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.608494520187378}
+{"timestamp": 1747674165.7722173, "event": "reconciliation", "flavor": "test-frh9nd11", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.058311700820923}

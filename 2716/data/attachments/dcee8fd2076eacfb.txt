@@ -1,0 +1,28 @@
+16:58:51 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-cqdd  github-pr-4bf6e-lxd  localhost/localhost  3.6.5    unsupported  16:58:51Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mysdesgf           active      1  github-runner-image-builder  latest/edge   81  no       
+test-mysdesgf                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-mysdesgf/0*  active    idle   0        10.253.76.243          
+test-mysdesgf/0*                         active    idle   1        10.253.76.10           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.253.76.243  juju-9f2b6c-0  ubuntu@22.04      Running
+1        started  10.253.76.10   juju-9f2b6c-1  ubuntu@22.04      Running
+
+16:58:51 INFO Juju error logs:
+
+machine-0: 16:43:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 16:43:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-mysdesgf-0: 16:43:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 16:43:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 16:43:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-mysdesgf-0: 16:43:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-mysdesgf-0: 16:44:11 ERROR unit.github-runner-image-builder-mysdesgf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+16:58:51 INFO Forgetting model main...
