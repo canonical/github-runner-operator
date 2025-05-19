@@ -1,0 +1,141 @@
+18:25:02 WARNING unexpected facade SSHServer received from the controller
+18:25:02 INFO Adding model github-pr-4bf6e-lxd:test-reactive-0zrj on cloud localhost
+18:25:02 WARNING unexpected facade SSHServer received from the controller
+18:25:02 WARNING unexpected facade SSHSession received from the controller
+18:25:02 WARNING unexpected facade SSHTunneler received from the controller
+18:25:03 INFO GitHub token rate limit: Rate(reset=2025-05-19 19:24:26+00:00, remaining=4995, limit=5000)
+18:25:07 INFO Deploying ch:amd64/jammy/mongodb-214
+18:25:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:29 INFO Deploying local:jammy/github-runner-0
+18:25:29 INFO Waiting for model:
+  test-g3hol81t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-g3hol81t/0 [allocating] waiting: waiting for machine
+18:26:00 INFO Waiting for model:
+  test-g3hol81t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-g3hol81t/0 [allocating] waiting: waiting for machine
+18:26:30 INFO Waiting for model:
+  test-g3hol81t/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-g3hol81t/0 [allocating] waiting: waiting for machine
+18:27:00 INFO Waiting for model:
+  test-g3hol81t/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-g3hol81t/0 [allocating] waiting: agent initialising
+18:27:31 INFO Waiting for model:
+  test-g3hol81t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-g3hol81t/0 [executing] maintenance: Setting up Builder.
+18:28:01 INFO Waiting for model:
+  test-g3hol81t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-g3hol81t/0 [executing] maintenance: Setting up Builder.
+18:28:31 INFO Waiting for model:
+  test-g3hol81t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-g3hol81t/0 [executing] maintenance: Setting up Builder.
+18:29:02 INFO Waiting for model:
+  test-g3hol81t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-g3hol81t/0 [executing] maintenance: Setting up Builder.
+18:29:32 INFO Waiting for model:
+  test-g3hol81t/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-g3hol81t/0 [executing] maintenance: Setting up Builder.
+18:30:02 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:30:32 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:31:02 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:31:32 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:32:03 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:32:33 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:33:03 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:33:33 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:34:03 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:34:34 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:35:04 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:35:34 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:36:04 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:36:35 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:37:05 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:37:35 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:38:05 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:39:05 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:39:36 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:40:06 INFO Waiting for model:
+  test-g3hol81t/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-g3hol81t/0 [executing] active: Building image.
+18:40:36 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active: 
+18:40:46 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:40:46 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:41:16 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:41:47 INFO Waiting for model:
+  test-g3hol81t/0 [executing] active: 
+18:42:17 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active:
+18:42:22 INFO Wait for condition not met, sleeping 10
+18:43:00 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active: 
+18:43:16 INFO Wait for condition not met, sleeping 60
+18:44:16 INFO Wait for condition not met, sleeping 60
+18:45:17 INFO Wait for condition not met, sleeping 60
+18:46:40 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active: 
+18:46:56 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747680179.570134, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.137420654296875}
+{"timestamp": 1747680356.0, "event": "runner_installed", "flavor": "test-g3hol81t", "duration": 200.0}
+{"timestamp": 1747680360.0, "event": "runner_start", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 216.0}
+{"timestamp": 1747680362.0, "event": "runner_stop", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747680399.084511, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.44572639465332}
+
+18:46:57 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747680179.570134, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.137420654296875}
+{"timestamp": 1747680356.0, "event": "runner_installed", "flavor": "test-g3hol81t", "duration": 200.0}
+{"timestamp": 1747680360.0, "event": "runner_start", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 216.0}
+{"timestamp": 1747680362.0, "event": "runner_stop", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747680399.084511, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.44572639465332}
+
+18:46:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747680179.570134, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.137420654296875}
+{"timestamp": 1747680356.0, "event": "runner_installed", "flavor": "test-g3hol81t", "duration": 200.0}
+{"timestamp": 1747680360.0, "event": "runner_start", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 216.0}
+{"timestamp": 1747680362.0, "event": "runner_stop", "flavor": "test-g3hol81t", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1747680399.084511, "event": "reconciliation", "flavor": "test-g3hol81t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.44572639465332}
+18:47:18 INFO Waiting for model:
+  test-g3hol81t/0 [executing] active: 
+18:47:48 INFO Waiting for model:
+  test-g3hol81t/0 [idle] active:
