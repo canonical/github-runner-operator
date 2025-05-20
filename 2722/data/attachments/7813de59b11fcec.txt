@@ -1,0 +1,28 @@
+18:54:36 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-t3qv  github-pr-648c9-lxd  localhost/localhost  3.6.5    unsupported  18:54:36Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fjxpldq9           active       1  github-runner-image-builder  latest/edge   81  no       Building image.
+test-fjxpldq9                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-fjxpldq9/0*  active    executing  0        10.117.175.212         Building image.
+test-fjxpldq9/0*                         waiting   idle       1        10.117.175.254         Waiting for image over integration.
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.117.175.212  juju-d69bbf-0  ubuntu@22.04      Running
+1        started  10.117.175.254  juju-d69bbf-1  ubuntu@22.04      Running
+
+18:54:37 INFO Juju error logs:
+
+machine-0: 18:25:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fjxpldq9-0: 18:25:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fjxpldq9-0: 18:25:16 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-fjxpldq9-0: 18:26:09 ERROR unit.github-runner-image-builder-fjxpldq9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:54:37 INFO Forgetting model main...
