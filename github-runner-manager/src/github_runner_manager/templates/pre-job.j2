@@ -141,7 +141,7 @@ fi
 
 {% if custom_pre_job_script %}
 cat > /tmp/custom_pre_job_script <<XYZEOF
-{{ pre_job_contents | safe }}
+{{ custom_pre_job_script | safe }}
 XYZEOF
 chmod +x /tmp/custom_pre_job_script
 logger -s "Running custom pre-job script"
