@@ -223,6 +223,8 @@ async def setup_repo_policy(
 ) -> None:
     """Setup the repo policy compliance service for one runner.
 
+    Does also setup a runner if one is not present.
+
     Args:
         app: The GitHub Runner Charm app to create the runner for.
         openstack_connection: OpenStack connection object.
