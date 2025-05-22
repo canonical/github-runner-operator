@@ -263,6 +263,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             dockerhub_mirror=service_config.dockerhub_mirror or "",
             ssh_debug_info=ssh_debug_info,
             tmate_server_proxy=runner_http_proxy,
+            custom_pre_job_script=service_config.custom_pre_job_script or "",
         )
         pre_job_contents_dict = {
             "issue_metrics": True,

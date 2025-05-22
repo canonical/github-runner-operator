@@ -20,10 +20,7 @@ from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
-from github_runner_manager.configuration.github import (
-    GitHubPath,
-    parse_github_path,
-)
+from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import RunnerMetadata
