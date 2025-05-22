@@ -1,0 +1,127 @@
+18:24:29 WARNING unexpected facade SSHServer received from the controller
+18:24:29 INFO Adding model github-pr-39e19-lxd:test-charm-metrics-failure-ulcn on cloud localhost
+18:24:29 WARNING unexpected facade SSHServer received from the controller
+18:24:29 WARNING unexpected facade SSHSession received from the controller
+18:24:29 WARNING unexpected facade SSHTunneler received from the controller
+18:24:30 INFO GitHub token rate limit: Rate(reset=2025-05-22 19:24:30+00:00, remaining=5000, limit=5000)
+18:24:49 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:11 INFO Deploying local:jammy/github-runner-0
+18:25:12 INFO Waiting for model:
+  test-ix6ljvrk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ix6ljvrk/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  test-ix6ljvrk/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ix6ljvrk/0 [allocating] waiting: waiting for machine
+18:26:12 INFO Waiting for model:
+  test-ix6ljvrk/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ix6ljvrk/0 [executing] maintenance: Setting up Builder.
+18:26:43 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ix6ljvrk/0 [executing] maintenance: Setting up Builder.
+18:27:13 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ix6ljvrk/0 [executing] maintenance: Setting up Builder.
+18:27:43 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] maintenance: Setting up Builder.
+18:28:13 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] maintenance: Setting up Builder.
+18:28:44 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:29:14 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:29:44 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:30:14 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:30:44 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:31:14 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:31:44 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:32:15 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:32:45 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:33:15 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:33:45 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:34:16 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:34:46 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:35:16 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:35:47 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:36:17 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:36:47 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:37:17 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:37:48 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ix6ljvrk/0 [executing] active: Building image.
+18:38:18 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ix6ljvrk/0 [idle] active: 
+18:38:48 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] active: 
+18:39:11 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] active:
+18:46:21 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] active: 
+18:46:51 INFO [TEST SETUP] Exposing port 8080 on test-ix6ljvrk-0-n-8bdf6493b7c3
+18:46:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.179', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:20:92'}]])
+18:46:52 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-ix6ljvrk-0-n-8bdf6493b7c3.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.179 &
+18:46:53 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.179' (ED25519) to the list of known hosts.
+
+18:46:55 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-ix6ljvrk-0-n-8bdf6493b7c3
+18:46:55 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.179', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:20:92'}]])
+18:46:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ix6ljvrk-0-n-8bdf6493b7c3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.179 nc -z localhost 8080'
+18:46:57 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:46:58 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-ix6ljvrk-0-n-8bdf6493b7c3
+18:46:58 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.179', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a4:20:92'}]])
+18:46:59 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ix6ljvrk-0-n-8bdf6493b7c3.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.179 curl http://localhost:8080'
+18:47:00 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  41507      0 --:--:-- --:--:-- --:--:-- 51750
+'
+18:47:03 INFO Wait for condition not met, sleeping 10
+18:47:38 INFO Waiting for model:
+  test-ix6ljvrk/0 [executing] active: 
+18:48:08 INFO Waiting for model:
+  test-ix6ljvrk/0 [idle] active: 
+18:48:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747939515.0, "event": "runner_installed", "flavor": "test-ix6ljvrk", "duration": 259.0}
+{"timestamp": 1747939626.0, "event": "runner_start", "flavor": "test-ix6ljvrk", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 111.0, "queue_duration": 1.0}
+{"timestamp": 1747939626.0, "event": "runner_stop", "flavor": "test-ix6ljvrk", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1747939657.334591, "event": "reconciliation", "flavor": "test-ix6ljvrk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.121134996414185}
+{"timestamp": 1747939675.280297, "event": "reconciliation", "flavor": "test-ix6ljvrk", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.535584211349487}

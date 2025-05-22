@@ -1,0 +1,72 @@
+18:50:41 INFO Waiting for model:
+  test-hd1xogzl/0 [executing] maintenance: Reconciling runners
+18:51:12 INFO Waiting for model:
+  test-hd1xogzl/0 [idle] active:
+18:51:35 INFO Waiting for model:
+  test-hd1xogzl/0 [executing] active: 
+18:52:06 INFO Waiting for model:
+  test-hd1xogzl/0 [idle] active: 
+18:52:08 INFO Wait for condition not met, sleeping 10
+18:52:20 INFO Wait for condition not met, sleeping 10
+18:52:31 INFO Wait for condition not met, sleeping 10
+18:52:41 INFO Wait for condition not met, sleeping 10
+18:52:52 INFO Wait for condition not met, sleeping 10
+18:53:02 INFO Wait for condition not met, sleeping 10
+18:53:13 INFO Wait for condition not met, sleeping 10
+18:53:23 INFO Wait for condition not met, sleeping 10
+18:53:34 INFO Wait for condition not met, sleeping 10
+18:54:15 INFO Waiting for model:
+  test-hd1xogzl/0 [executing] active: 
+18:54:46 INFO Waiting for model:
+  test-hd1xogzl/0 [idle] active: 
+18:54:49 INFO Wait for condition not met, sleeping 60
+18:55:50 INFO Wait for condition not met, sleeping 60
+18:56:50 INFO Wait for condition not met, sleeping 60
+18:57:51 INFO Wait for condition not met, sleeping 60
+18:58:51 INFO Wait for condition not met, sleeping 60
+18:59:52 INFO Wait for condition not met, sleeping 60
+19:00:53 INFO Wait for condition not met, sleeping 60
+19:01:53 INFO Wait for condition not met, sleeping 60
+19:02:54 INFO Wait for condition not met, sleeping 60
+19:03:56 INFO Wait for condition not met, sleeping 10
+19:04:19 INFO Waiting for model:
+  test-hd1xogzl/0 [idle] active:
+19:04:48 INFO Waiting for model:
+  test-hd1xogzl/0 [idle] active: 
+19:05:06 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-v205  github-pr-39e19-lxd  localhost/localhost  3.6.5    unsupported  19:05:06Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-hd1xogzl           active      1  github-runner-image-builder  latest/edge   81  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-hd1xogzl                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-hd1xogzl/0*  active    idle   1        10.50.143.68               
+mongodb/0*                               active    idle   0        10.50.143.31    27017/tcp  Primary
+test-hd1xogzl/0*                         active    idle   2        10.50.143.55               
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.50.143.31  juju-9096f6-0  ubuntu@22.04      Running
+1        started  10.50.143.68  juju-9096f6-1  ubuntu@22.04      Running
+2        started  10.50.143.55  juju-9096f6-2  ubuntu@22.04      Running
+
+19:05:06 INFO Juju error logs:
+
+machine-0: 18:25:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:25:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:25:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:25:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hd1xogzl-0: 18:25:43 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:26:07 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:26:07 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 18:26:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-hd1xogzl-0: 18:26:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-hd1xogzl-0: 18:27:17 ERROR unit.github-runner-image-builder-hd1xogzl/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-hd1xogzl-0: 18:46:30 ERROR unit.test-hd1xogzl/0.juju-log No metrics returned after deleting test-hd1xogzl-0-r-35ea30a7aa9f
+
+19:05:06 INFO Forgetting model main...

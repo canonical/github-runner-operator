@@ -1,0 +1,156 @@
+18:23:57 INFO Adding model github-pr-39e19-lxd:test-debug-ssh-6m4r on cloud localhost
+18:23:58 WARNING unexpected facade AgentLifeFlag received from the controller
+18:23:58 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:23:58 WARNING unexpected facade SecretsDrain received from the controller
+18:23:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:24:25 INFO Deploying local:jammy/github-runner-0
+18:24:25 INFO Waiting for model:
+  test-htpn4n88/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-htpn4n88/0 [allocating] waiting: waiting for machine
+18:24:55 INFO Waiting for model:
+  test-htpn4n88/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-htpn4n88/0 [executing] maintenance: Setting up Builder.
+18:25:25 INFO Waiting for model:
+  test-htpn4n88/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-htpn4n88/0 [executing] maintenance: Setting up Builder.
+18:25:55 INFO Waiting for model:
+  test-htpn4n88/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-htpn4n88/0 [executing] maintenance: Setting up Builder.
+18:26:25 INFO Waiting for model:
+  test-htpn4n88/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-htpn4n88/0 [executing] maintenance: Setting up Builder.
+18:26:55 INFO Waiting for model:
+  test-htpn4n88/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-htpn4n88/0 [executing] maintenance: Setting up Builder.
+18:27:25 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] blocked: image integration required.
+18:27:55 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:28:25 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:28:55 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:29:25 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:29:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:30:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:30:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:31:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:31:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:32:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:32:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:33:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:33:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:34:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:34:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:35:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:35:56 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:36:26 INFO Waiting for model:
+  test-htpn4n88/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-htpn4n88/0 [executing] active: Building image.
+18:36:56 INFO Waiting for model:
+  test-htpn4n88/0 [executing] maintenance: Reconciling runners
+18:37:17 INFO GitHub token rate limit: Rate(reset=2025-05-22 19:24:30+00:00, remaining=4966, limit=5000)
+18:37:22 INFO Deploying ch:amd64/jammy/tmate-ssh-server-10
+18:37:22 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:37:22 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:37:52 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:38:22 INFO Waiting for model:
+  tmate-ssh-server/0 [executing] active:
+18:38:37 INFO Waiting for model:
+  github-runner-image-builder-htpn4n88/0 [idle] active: 
+  test-htpn4n88/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+18:39:07 INFO Waiting for model:
+  test-htpn4n88/0 [executing] maintenance: Reconciling runners
+  tmate-ssh-server/0 [idle] active: 
+18:39:38 INFO Waiting for model:
+  test-htpn4n88/0 [executing] maintenance: Added debug-ssh relation
+  tmate-ssh-server/0 [idle] active: 
+18:40:08 INFO Waiting for model:
+  test-htpn4n88/0 [idle] active: 
+18:40:19 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.25.207.127 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-htpn4n88-0-n-532185b897d8
+18:40:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.101', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:94:e3:1f'}]])
+18:40:21 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-6m4r  github-pr-39e19-lxd  localhost/localhost  3.1.10   unsupported  18:40:21Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-htpn4n88           active      1  github-runner-image-builder  latest/edge   81  no       
+test-htpn4n88                                  active      1  github-runner                               0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server             edge          10  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-htpn4n88/0*  active    idle   0        10.25.207.121              
+test-htpn4n88/0*                         active    idle   1        10.25.207.7                
+tmate-ssh-server/0*                      active    idle   2        10.25.207.127   10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.25.207.121  juju-160105-0  ubuntu@22.04      Running
+1        started  10.25.207.7    juju-160105-1  ubuntu@22.04      Running
+2        started  10.25.207.127  juju-160105-2  ubuntu@22.04      Running
+
+18:40:21 INFO Juju error logs:
+
+machine-0: 18:24:34 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:24:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-htpn4n88-0: 18:24:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:02 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:25:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-htpn4n88-0: 18:25:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-htpn4n88-0: 18:25:20 ERROR unit.github-runner-image-builder-htpn4n88/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-2: 18:37:59 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-2: 18:37:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:37:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-tmate-ssh-server-0: 18:37:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-htpn4n88-0: 18:39:54 ERROR unit.test-htpn4n88/0.juju-log debug-ssh:1: Failed to get SSH connection while removing test-htpn4n88-0-n-532185b897d8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-htpn4n88-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-htpn4n88-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-htpn4n88-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-htpn4n88-0-n-532185b897d8, key path: /home/runner-manager/.ssh/test-htpn4n88-0-n-532185b897d8.key
+unit-test-htpn4n88-0: 18:39:55 ERROR unit.test-htpn4n88/0.juju-log debug-ssh:1: Invalid pulled metrics. No runner_installed information for test-htpn4n88-0-n-532185b897d8.
+unit-test-htpn4n88-0: 18:39:55 ERROR unit.test-htpn4n88/0.juju-log debug-ssh:1: No metrics returned after deleting test-htpn4n88-0-n-532185b897d8
+
+18:40:22 INFO Forgetting model main...
