@@ -180,7 +180,7 @@ async def test_custom_pre_job_script(
         wait=False,
     )
     logs = workflow_run.jobs("latest")[0]
-    assert "SSH config" in get_job_logs(logs)
+    assert "SSH config" in logs
     assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
 
 
