@@ -20,6 +20,7 @@ from github_runner_manager.configuration import ApplicationConfiguration, UserIn
 from github_runner_manager.errors import CloudError, LockError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.utilities import _get_runner_scaler
 
 APP_CONFIG_NAME = "app_config"
 OPENSTACK_CONFIG_NAME = "openstack_config"
@@ -121,17 +122,6 @@ class FlaskArgs:
     debug: bool
 
 
-def _get_runner_scaler(app_config: ApplicationConfiguration) -> RunnerScaler:
-    """Get runner scaler.
-
-    Args:
-        app_config: The configuration of github-runner-manager.
-
-    Returns:
-        The RunnerScaler object.
-    """
-    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
-    return RunnerScaler.build(app_config, user)
 
 
 def start_http_server(

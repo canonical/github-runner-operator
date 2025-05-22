@@ -297,15 +297,7 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_start(self, _: StartEvent) -> None:
         """Handle the start of the charm."""
-        state = self._setup_state()
-
-        self.unit.status = MaintenanceStatus("Starting runners")
-        if not self._get_set_image_ready_status():
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
+        self._get_set_image_ready_status()
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
@@ -416,21 +408,6 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.disable_event_timer("reconcile-runners")
         self._manager_client.flush_runner(busy=True)
 
-    def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler) -> None:
-        """Reconcile the current runners state and intended runner state for OpenStack mode.
-
-        Args:
-            runner_scaler: Scaler used to scale the amount of runners.
-        """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-        else:
-            self.unit.status = ActiveStatus()
-
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
@@ -478,9 +455,8 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Update image for runners")
         if not self._get_set_image_ready_status():
             return
-        
-        self._manager_client.flush_runner()
 
+        self._manager_client.flush_runner()
 
     def _get_set_image_ready_status(self) -> bool:
         """Check if image is ready for Openstack and charm status accordingly.
@@ -495,6 +471,7 @@ class GithubRunnerCharm(CharmBase):
         if not openstack_image.id:
             self.unit.status = WaitingStatus("Waiting for image over integration.")
             return False
+        self.unit.status = ActiveStatus()
         return True
 
     @staticmethod
