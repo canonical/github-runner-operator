@@ -181,7 +181,7 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     )
     logs = get_job_logs(workflow_run.jobs("latest")[0])
     assert "SSH config" in logs
-    assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
+    assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
 
 
 # WARNING: the test below sets up repo policy which affects all tests coming after it. It should
