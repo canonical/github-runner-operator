@@ -70,10 +70,10 @@ systemctl restart docker
 # Prepare metrics
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
-# Insert pre-job script
-cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
+# Insert pre-job script, we use a special end marker and not EOF or EOT to avoid that the same is reused inside the script
+cat << '35c681d7-e0b1-43aa-afdc-ff7d1c4810ca' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
 {{ pre_job_contents | safe }}
-EOF
+35c681d7-e0b1-43aa-afdc-ff7d1c4810ca
 
 
 write_post_metrics(){
