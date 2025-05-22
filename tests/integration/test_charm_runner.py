@@ -157,15 +157,15 @@ async def test_custom_pre_job_script(
         {
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
             CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
-    #!/usr/bin/env bash
-    cat > ~/.ssh/config <<EOF
-    host github.com
-      user git
-      hostname github.com
-      port 22
-      proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
-    EOF
-    logger -s "SSH config: $(cat ~/.ssh/config)"
+#!/usr/bin/env bash
+cat > ~/.ssh/config <<EOF
+host github.com
+  user git
+  hostname github.com
+  port 22
+  proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+EOF
+logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         }
     )
