@@ -158,6 +158,9 @@ def catch_action_errors(
             logger.exception("Issue with charm configuration")
             self.unit.status = BlockedStatus(str(err))
             event.fail(str(err))
+        except RunnerManagerServiceError as err:
+            logger.exception("Failed runner manager request")
+            event.fail(f"Failed runner manager request: {str(err)}")
 
     return func_with_catch_errors
 
@@ -340,28 +343,24 @@ class GithubRunnerCharm(CharmBase):
         self._set_reconcile_timer()
         self._setup_service(state)
 
-        flush_and_reconcile = False
+        flush_runners = False
         if state.charm_config.token != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
 
         state = self._setup_state()
 
         if not self._get_set_image_ready_status():
             return
-        if flush_and_reconcile:
-            logger.info("Flush and reconcile on config-changed")
-            runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-            runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-            self._reconcile_openstack_runners(
-                runner_scaler,
-            )
+        if flush_runners:
+            logger.info("Flush runners on config-changed")
+            self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
@@ -397,12 +396,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        try:
-            info = self._manager_client.check_runner()
-        except RunnerManagerServiceError as err:
-            logger.exception("Failed check runner request")
-            event.fail(f"Failed check runner request: {str(err)}")
-            return
+        info = self._manager_client.check_runner()
         event.set_results(info)
 
     @catch_action_errors
@@ -439,22 +433,7 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: Action event of flushing all runners.
         """
-        state = self._setup_state()
-
-        # Flushing mode not implemented for OpenStack yet.
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        logger.info("Flushed %s runners", flushed)
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            delta = runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-            event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
-            return
-        self.unit.status = ActiveStatus()
-        event.set_results({"delta": {"virtual-machines": delta}})
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
@@ -514,9 +493,7 @@ class GithubRunnerCharm(CharmBase):
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
         self._event_timer.disable_event_timer("reconcile-runners")
-        state = self._setup_state()
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush(FlushMode.FLUSH_BUSY)
+        self._manager_client.flush_runner(busy=True)
 
     def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler) -> None:
         """Reconcile the current runners state and intended runner state for OpenStack mode.
@@ -558,15 +535,10 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        state = self._setup_state()
-
         if not self._get_set_image_ready_status():
             return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush()
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
+
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
@@ -582,17 +554,12 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
-        state = self._setup_state()
         self.unit.status = MaintenanceStatus("Update image for runners")
-
         if not self._get_set_image_ready_status():
             return
+        
+        self._manager_client.flush_runner()
 
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
 
     def _get_set_image_ready_status(self) -> bool:
         """Check if image is ready for Openstack and charm status accordingly.
