@@ -429,6 +429,7 @@ def test_charm_config_from_charm_valid():
         MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME: "bash -c 'openssl s_client -quiet -connect example.com:2222 -servername %h 2>/dev/null'",
         CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: (
             custom_pre_job_script := """
+#!/usr/bin/env bash
 cat > ~/.ssh/config <<EOF
       host github.com
           user git

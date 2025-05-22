@@ -140,6 +140,55 @@ async def test_flush_runner_and_resource_config(
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
+async def test_custom_pre_job_script(
+    app: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+    token: str,
+    https_proxy: str,
+) -> None:
+    """
+    arrange: A working application with one runner with a custom pre-job script enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed and pre-job script has been executed.
+    """
+    await app.set_config(
+        {
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
+    #!/usr/bin/env bash
+    cat > ~/.ssh/config <<EOF
+    host github.com
+      user git
+      hostname github.com
+      port 22
+      proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+    EOF
+    logger -s "SSH config: $(cat ~/.ssh/config)"
+    """,
+        }
+    )
+    await reconcile(app, app.model)
+
+    workflow_run = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name, "minutes": "5"},
+        wait=False,
+    )
+    logs = workflow_run.jobs("latest")[0]
+    assert "SSH config" in get_job_logs(logs)
+    assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
+
+
+# WARNING: the test below sets up repo policy which affects all tests coming after it. It should
+# be the last test in the file.
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
 async def test_repo_policy_enabled(
     app: Application,
     github_repository: Repository,
@@ -167,49 +216,3 @@ async def test_repo_policy_enabled(
         conclusion="success",
         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
     )
-
-
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_custom_pre_job_script(
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-    token: str,
-    https_proxy: str,
-) -> None:
-    """
-    arrange: A working application with one runner with a custom pre-job script enabled.
-    act: Dispatch a workflow.
-    assert: Workflow run successfully passed and pre-job script has been executed.
-    """
-    await app.set_config(
-        {
-            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
-    cat > ~/.ssh/config <<EOF
-    host github.com
-      user git
-      hostname github.com
-      port 22
-      proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
-    EOF
-    logger -s "SSH config: $(cat ~/.ssh/config)"
-    """,
-        }
-    )
-    await reconcile(app, app.model)
-
-    workflow_run = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name, "minutes": "5"},
-        wait=False,
-    )
-    logs = workflow_run.jobs("latest")[0]
-    assert "SSH config" in get_job_logs(logs)
-    assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
