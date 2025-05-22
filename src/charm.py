@@ -212,7 +212,6 @@ class GithubRunnerCharm(CharmBase):
         )
         self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
-        self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
@@ -398,33 +397,6 @@ class GithubRunnerCharm(CharmBase):
         """
         info = self._manager_client.check_runner()
         event.set_results(info)
-
-    @catch_action_errors
-    def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of reconcile of runner state.
-
-        Args:
-            event: Action event of reconciling the runner.
-        """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        state = self._setup_state()
-
-        if not self._get_set_image_ready_status():
-            event.fail("Openstack image not yet provided/ready.")
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            delta = runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-            event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
-            return
-
-        self.unit.status = ActiveStatus()
-        event.set_results({"delta": {"virtual-machines": delta}})
 
     @catch_action_errors
     def _on_flush_runners_action(self, event: ActionEvent) -> None:
