@@ -62,6 +62,7 @@ TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
+CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -312,6 +313,7 @@ class CharmConfig(BaseModel):
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
+    custom_pre_job_script: str | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:

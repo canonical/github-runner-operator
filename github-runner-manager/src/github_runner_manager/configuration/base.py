@@ -89,6 +89,7 @@ class SupportServiceConfig(BaseModel):
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
+    custom_pre_job_script: str | None
 
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod

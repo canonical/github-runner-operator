@@ -138,3 +138,7 @@ if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
 fi
+
+if [[ -n "$CUSTOM_PRE_JOB_SCRIPT" ]]; then
+    $CUSTOM_PRE_JOB_SCRIPT
+fi
