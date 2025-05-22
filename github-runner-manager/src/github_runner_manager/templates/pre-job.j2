@@ -139,6 +139,12 @@ if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
 fi
 
-if [[ -n "$CUSTOM_PRE_JOB_SCRIPT" ]]; then
-    $CUSTOM_PRE_JOB_SCRIPT
-fi
+{% if custom_pre_job_script %}
+cat > /tmp/custom_pre_job_script <<XYZEOF
+{{ pre_job_contents | safe }}
+XYZEOF
+chmod +x /tmp/custom_pre_job_script
+logger -s "Running custom pre-job script"
+/tmp/custom_pre_job_script || logger -s "Custom pre-job script failed, continuing with the job"
+rm /tmp/custom_pre_job_script || logger -s "Failed to remove custom pre-job script"
+{% endif %}

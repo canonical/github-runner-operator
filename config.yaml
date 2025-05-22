@@ -139,10 +139,12 @@ options:
   pre-job-script:
     type: string
     description: >-
-      Optional bash script to execute in the pre-job phase of a spawned runner VM. This can e.g.
-      be useful for specific infrastructure related configurations (e.g. usage of certain proxies
-      or custom routes). Note that the user executing the script is the ubuntu user (which has
-      sudo rights). Example script:
+      Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM. 
+      This can e.g. be useful for specific infrastructure related configurations 
+      (e.g. usage of certain proxies or custom routes).
+      Note that the user executing the script is the ubuntu user (which has sudo rights).
+      Example script:
+      #!/usr/bin/env bash
       cat > ~/.ssh/config <<EOF
       host github.com
           user git
