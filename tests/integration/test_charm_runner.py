@@ -176,12 +176,10 @@ async def test_custom_pre_job_script(
         branch=test_github_branch,
         github_repository=github_repository,
         conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name, "minutes": "5"},
-        wait=False,
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name},
     )
-    sleep(5)
-    logs = get_job_logs(workflow_run.jobs()[0])
+    logs = get_job_logs(workflow_run.jobs("latest")[0])
     assert "SSH config" in logs
     assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
 
