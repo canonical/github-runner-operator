@@ -1,0 +1,129 @@
+09:48:23 INFO Adding model github-pr-39e19-lxd:test-charm-scheduled-events-dkc0 on cloud localhost
+09:48:23 WARNING unexpected facade AgentLifeFlag received from the controller
+09:48:23 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+09:48:23 WARNING unexpected facade SecretsDrain received from the controller
+09:48:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+09:48:52 INFO Deploying local:jammy/github-runner-0
+09:48:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kv4ye1qf/0 [allocating] waiting: waiting for machine
+09:49:23 INFO Waiting for model:
+  test-kv4ye1qf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kv4ye1qf/0 [executing] maintenance: Setting up Builder.
+09:49:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-kv4ye1qf/0 [executing] maintenance: Setting up Builder.
+09:50:23 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kv4ye1qf/0 [executing] maintenance: Setting up Builder.
+09:50:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kv4ye1qf/0 [executing] maintenance: Setting up Builder.
+09:51:23 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] maintenance: Setting up Builder.
+09:51:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Waiting for first image.
+09:52:23 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:52:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:53:23 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:53:53 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:54:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:54:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:55:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:55:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:56:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:56:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:57:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:57:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:58:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:58:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:59:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+09:59:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kv4ye1qf/0 [executing] active: Building image.
+10:00:24 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kv4ye1qf/0 [idle] active: 
+10:00:55 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Reconciling runners
+10:01:14 INFO Waiting for model:
+  test-kv4ye1qf/0 [idle] active: 
+10:01:44 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Reconciling runners
+10:02:14 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Reconciling runners
+10:02:44 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Reconciling runners
+10:03:14 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] maintenance: Reconciling runners
+10:03:54 INFO Waiting for model:
+  test-kv4ye1qf/0 [executing] active:
+10:04:14 INFO Wait for condition not met, sleeping 3
+10:04:18 INFO Wait for 10 minutes
+10:14:18 INFO Waiting for model:
+  github-runner-image-builder-kv4ye1qf/0 [idle] active: 
+  test-kv4ye1qf/0 [idle] active:
+10:14:37 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-dkc0  github-pr-39e19-lxd  localhost/localhost  3.1.10   unsupported  10:14:37Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kv4ye1qf           active      1  github-runner-image-builder  latest/edge   81  no       
+test-kv4ye1qf                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kv4ye1qf/0*  active    idle   0        10.114.102.68          
+test-kv4ye1qf/0*                         active    idle   1        10.114.102.44          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.114.102.68  juju-cf3d7e-0  ubuntu@22.04      Running
+1        started  10.114.102.44  juju-cf3d7e-1  ubuntu@22.04      Running
+
+10:14:37 INFO Juju error logs:
+
+machine-0: 09:49:06 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 09:49:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:49:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kv4ye1qf-0: 09:49:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:49:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:49:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:49:35 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-kv4ye1qf-0: 09:49:35 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kv4ye1qf-0: 09:49:55 ERROR unit.github-runner-image-builder-kv4ye1qf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+10:14:38 INFO Forgetting model main...

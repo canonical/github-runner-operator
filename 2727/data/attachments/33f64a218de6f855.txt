@@ -1,0 +1,59 @@
+10:11:33 INFO Waiting for model:
+  test-fovnuvcl/0 [executing] active:
+10:14:30 INFO Waiting for model:
+  test-fovnuvcl/0 [executing] active: 
+10:15:01 INFO Waiting for model:
+  test-fovnuvcl/0 [idle] active: 
+10:15:08 INFO Wait for condition not met, sleeping 30
+10:15:55 INFO [TEST SETUP] Run command pkill -9 run.sh on test-fovnuvcl-0-n-eecc1807627e
+10:15:55 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.15', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:35:6a:56'}]])
+10:15:56 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fovnuvcl-0-n-eecc1807627e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.15 pkill -9 run.sh'
+10:15:57 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.15' (ED25519) to the list of known hosts.
+'
+10:16:01 INFO Runner test-fovnuvcl-0-n-eecc1807627e status: online
+10:16:01 INFO Runner still marked as online, waiting for it to be marked offline
+10:17:35 INFO Waiting for model:
+  test-fovnuvcl/0 [executing] active: 
+10:18:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1747908692.6006305, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.191341400146484}
+{"timestamp": 1747908708.4726741, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.461232900619507}
+{"timestamp": 1747908853.364016, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 115.0252206325531}
+{"timestamp": 1747908869.4548726, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 14.765746831893921}
+{"timestamp": 1747908889.801339, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 18.87375569343567}
+{"timestamp": 1747908831.0, "event": "runner_installed", "flavor": "test-fovnuvcl", "duration": 81.0}
+{"timestamp": 1747908910.0, "event": "runner_start", "flavor": "test-fovnuvcl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 79.0, "queue_duration": 1.0}
+{"timestamp": 1747908957.0, "event": "runner_stop", "flavor": "test-fovnuvcl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 47.0, "job_conclusion": "cancelled"}
+{"timestamp": 1747909054.4736326, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.44013476371765}
+{"timestamp": 1747909069.9875815, "event": "reconciliation", "flavor": "test-fovnuvcl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.19981598854065}
+10:18:09 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-x4d5  github-pr-39e19-lxd  localhost/localhost  3.6.5    unsupported  10:18:09Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fovnuvcl           active      1  github-runner-image-builder  latest/edge   81  no       
+test-fovnuvcl                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-fovnuvcl/0*  active    idle   0        10.115.152.52             
+test-fovnuvcl/0*                         active    idle   1        10.115.152.9    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.115.152.52  juju-d8dcef-0  ubuntu@22.04      Running
+1        started  10.115.152.9   juju-d8dcef-1  ubuntu@22.04      Running
+
+10:18:09 INFO Juju error logs:
+
+machine-0: 09:50:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:50:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fovnuvcl-0: 09:50:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:50:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:50:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fovnuvcl-0: 09:50:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-fovnuvcl-0: 09:51:16 ERROR unit.github-runner-image-builder-fovnuvcl/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-github-runner-image-builder-fovnuvcl-0: 09:55:25 ERROR unit.github-runner-image-builder-fovnuvcl/0.juju-log image:0: Image build failed, code: 1, out: hello world
+...............................................................................................................................................................................................................................................................status: error
+, err: None, stdout: hello world
+...............................................................................................................................................................................................................................................................status: error
+
+
+10:18:09 INFO Forgetting model main...

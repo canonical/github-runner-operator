@@ -1,0 +1,65 @@
+10:15:42 INFO Waiting for model:
+  test-sdbp24kg/0 [executing] active: 
+10:16:12 INFO Waiting for model:
+  test-sdbp24kg/0 [idle] active:
+10:16:59 INFO Waiting for model:
+  test-sdbp24kg/0 [executing] maintenance: Reconciling runners
+10:17:29 INFO Waiting for model:
+  test-sdbp24kg/0 [idle] active: 
+10:17:33 INFO [TEST SETUP] Exposing port 8080 on test-sdbp24kg-0-n-3eada6bd3335
+10:17:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:3b:0a'}]])
+10:17:34 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-sdbp24kg-0-n-3eada6bd3335.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.77 &
+10:17:35 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.77' (ED25519) to the list of known hosts.
+
+10:17:37 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-sdbp24kg-0-n-3eada6bd3335
+10:17:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:3b:0a'}]])
+10:17:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-sdbp24kg-0-n-3eada6bd3335.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 nc -z localhost 8080'
+10:17:39 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+10:17:40 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-sdbp24kg-0-n-3eada6bd3335
+10:17:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:41:3b:0a'}]])
+10:17:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-sdbp24kg-0-n-3eada6bd3335.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 curl http://localhost:8080'
+10:17:42 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  81915      0 --:--:-- --:--:-- --:--:--  101k
+'
+10:17:44 INFO Wait for condition not met, sleeping 10
+10:18:24 INFO Waiting for model:
+  test-sdbp24kg/0 [executing] maintenance: Reconciling runners
+10:18:54 INFO Waiting for model:
+  test-sdbp24kg/0 [idle] active: 
+10:18:58 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-35zs  github-pr-39e19-lxd  localhost/localhost  3.6.5    unsupported  10:18:58Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sdbp24kg           active      1  github-runner-image-builder  latest/edge   81  no       
+test-sdbp24kg                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-sdbp24kg/0*  active    idle   0        10.149.68.26              
+test-sdbp24kg/0*                         active    idle   1        10.149.68.58    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.149.68.26  juju-a24b43-0  ubuntu@22.04      Running
+1        started  10.149.68.58  juju-a24b43-1  ubuntu@22.04      Running
+
+10:18:58 INFO Juju error logs:
+
+machine-0: 09:49:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:49:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-sdbp24kg-0: 09:49:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:50:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:50:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sdbp24kg-0: 09:50:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-sdbp24kg-0: 09:50:48 ERROR unit.github-runner-image-builder-sdbp24kg/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-sdbp24kg-0: 10:10:07 ERROR unit.test-sdbp24kg/0.juju-log No metrics returned after deleting test-sdbp24kg-0-n-08128fc4de4f
+unit-test-sdbp24kg-0: 10:18:19 ERROR unit.test-sdbp24kg/0.juju-log No metrics returned after deleting test-sdbp24kg-0-n-3eada6bd3335
+
+10:18:58 INFO Forgetting model main...

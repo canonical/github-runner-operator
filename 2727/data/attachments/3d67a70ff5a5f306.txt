@@ -1,0 +1,137 @@
+09:38:05 WARNING unexpected facade SSHServer received from the controller
+09:38:05 INFO Adding model github-pr-39e19-lxd:test-charm-fork-repo-3tjs on cloud localhost
+09:38:05 WARNING unexpected facade SSHServer received from the controller
+09:38:05 WARNING unexpected facade SSHSession received from the controller
+09:38:05 WARNING unexpected facade SSHTunneler received from the controller
+09:38:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+09:38:33 INFO Deploying local:jammy/github-runner-0
+09:38:34 INFO Waiting for model:
+  test-m8lk2qn0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m8lk2qn0/0 [allocating] waiting: waiting for machine
+09:39:04 INFO Waiting for model:
+  test-m8lk2qn0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m8lk2qn0/0 [allocating] waiting: agent initialising
+09:39:34 INFO Waiting for model:
+  test-m8lk2qn0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-m8lk2qn0/0 [executing] maintenance: Setting up Builder.
+09:40:04 INFO Waiting for model:
+  test-m8lk2qn0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-m8lk2qn0/0 [executing] maintenance: Setting up Builder.
+09:40:35 INFO Waiting for model:
+  test-m8lk2qn0/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] maintenance: Setting up Builder.
+09:41:05 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] maintenance: Setting up Builder.
+09:41:35 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] maintenance: Setting up Builder.
+09:42:05 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:42:35 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:43:06 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:43:36 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:44:06 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:44:37 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:45:07 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:45:37 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:46:07 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:46:37 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:47:07 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:47:37 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:48:08 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:48:38 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:49:08 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:49:38 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:50:08 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8lk2qn0/0 [executing] active: Building image.
+09:50:39 INFO Waiting for model:
+  test-m8lk2qn0/0 [executing] maintenance: Reconciling runners
+09:51:05 INFO GitHub token rate limit: Rate(reset=2025-05-22 10:17:42+00:00, remaining=3951, limit=5000)
+09:54:48 INFO Waiting for model:
+  test-m8lk2qn0/0 [executing] active: 
+09:55:18 INFO Waiting for model:
+  test-m8lk2qn0/0 [idle] active: 
+09:55:27 INFO [TEST SETUP] Exposing port 8080 on test-m8lk2qn0-0-n-494fd598e256
+09:55:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.34', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:89:d7:66'}]])
+09:55:28 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-m8lk2qn0-0-n-494fd598e256.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.34 &
+09:55:29 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.34' (ED25519) to the list of known hosts.
+
+09:55:33 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-m8lk2qn0-0-n-494fd598e256
+09:55:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.34', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:89:d7:66'}]])
+09:55:34 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m8lk2qn0-0-n-494fd598e256.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.34 nc -z localhost 8080'
+09:55:35 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+09:55:37 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-m8lk2qn0-0-n-494fd598e256
+09:55:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.34', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:89:d7:66'}]])
+09:55:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m8lk2qn0-0-n-494fd598e256.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.34 curl http://localhost:8080'
+09:55:39 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  68679      0 --:--:-- --:--:-- --:--:--  101k
+'
+09:55:41 INFO Wait for condition not met, sleeping 10
+09:56:00 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-3tjs  github-pr-39e19-lxd  localhost/localhost  3.6.5    unsupported  09:56:00Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-m8lk2qn0           active      1  github-runner-image-builder  latest/edge   81  no       
+test-m8lk2qn0                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-m8lk2qn0/0*  active    idle   0        10.161.187.12             
+test-m8lk2qn0/0*                         active    idle   1        10.161.187.122  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.161.187.12   juju-81b3e5-0  ubuntu@22.04      Running
+1        started  10.161.187.122  juju-81b3e5-1  ubuntu@22.04      Running
+
+09:56:00 INFO Juju error logs:
+
+machine-0: 09:38:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 09:38:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-m8lk2qn0-0: 09:38:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 09:39:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 09:39:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-m8lk2qn0-0: 09:39:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-m8lk2qn0-0: 09:39:43 ERROR unit.github-runner-image-builder-m8lk2qn0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+09:56:00 INFO Forgetting model main...
