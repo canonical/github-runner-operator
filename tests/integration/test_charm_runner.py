@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm containing one runner."""
+from time import sleep
 from typing import AsyncIterator
 
 import pytest
@@ -179,7 +180,8 @@ async def test_custom_pre_job_script(
         dispatch_input={"runner": app.name, "minutes": "5"},
         wait=False,
     )
-    logs = workflow_run.jobs("latest")[0]
+    sleep(5)
+    logs = get_job_logs(workflow_run.jobs()[0])
     assert "SSH config" in logs
     assert "proxycommand socat - PROXY:squid.internal:github.com:22,proxyport=3128" in logs
 
