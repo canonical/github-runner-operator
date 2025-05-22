@@ -263,12 +263,12 @@ class OpenStackRunnerManager(CloudRunnerManager):
             dockerhub_mirror=service_config.dockerhub_mirror or "",
             ssh_debug_info=ssh_debug_info,
             tmate_server_proxy=runner_http_proxy,
-            custom_pre_job_script=service_config.custom_pre_job_script or "",
         )
         pre_job_contents_dict = {
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
+            "custom_pre_job_script": service_config.custom_pre_job_script,
         }
         repo_policy = self._get_repo_policy_compliance_client()
         if repo_policy is not None:
