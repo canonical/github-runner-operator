@@ -210,15 +210,12 @@ class GithubRunnerCharm(CharmBase):
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
         )
-        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
         )
-        self.framework.observe(self.database.on.database_created, self._on_database_created)
-        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
@@ -310,25 +307,6 @@ class GithubRunnerCharm(CharmBase):
             runner_scaler,
         )
 
-    def _set_reconcile_timer(self) -> None:
-        """Set the timer for regular reconciliation checks."""
-        self._event_timer.ensure_event_timer(
-            event_name="reconcile-runners",
-            interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=RECONCILIATION_INTERVAL_TIMEOUT_SECONDS,
-        )
-
-    def _ensure_reconcile_timer_is_active(self) -> None:
-        """Ensure the timer for reconciliation event is active."""
-        try:
-            reconcile_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
-        except TimerStatusError:
-            logger.exception("Failed to check the reconciliation event timer status")
-        else:
-            if not reconcile_timer_is_active:
-                logger.error("Reconciliation event timer is not activated")
-                self._set_reconcile_timer()
-
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
@@ -339,7 +317,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
         state = self._setup_state()
-        self._set_reconcile_timer()
         self._setup_service(state)
 
         flush_runners = False
@@ -360,33 +337,6 @@ class GithubRunnerCharm(CharmBase):
         if flush_runners:
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
-
-    @catch_charm_errors
-    def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
-        """Event handler for reconciling runners."""
-        self._trigger_reconciliation()
-
-    @catch_charm_errors
-    def _on_database_created(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB database created event."""
-        self._trigger_reconciliation()
-
-    @catch_charm_errors
-    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB endpoints changed event."""
-        self._trigger_reconciliation()
-
-    def _trigger_reconciliation(self) -> None:
-        """Trigger the reconciliation of runners."""
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        state = self._setup_state()
-
-        if not self._get_set_image_ready_status():
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -410,7 +360,6 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
-        self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
 
     def _setup_service(self, state: CharmState) -> None:

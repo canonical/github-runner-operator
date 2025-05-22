@@ -2,6 +2,7 @@
 
 ### 2025-05-22
 
+- The charm will reconcile the state of the self-hosted runners in the background when it is able to.
 - Removed the reconcile-runners juju action.
 
 ### 2025-05-09
