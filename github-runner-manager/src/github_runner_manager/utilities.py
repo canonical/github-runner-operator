@@ -156,16 +156,3 @@ def set_env_var(env_var: str, value: str) -> None:
     """
     os.environ[env_var.upper()] = value
     os.environ[env_var.lower()] = value
-
-
-def _get_runner_scaler(app_config: ApplicationConfiguration) -> RunnerScaler:
-    """Get runner scaler.
-
-    Args:
-        app_config: The configuration of github-runner-manager.
-
-    Returns:
-        The RunnerScaler object.
-    """
-    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
-    return RunnerScaler.build(app_config, user)

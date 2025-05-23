@@ -7,20 +7,16 @@ The HTTP server for request to the github-runner-manager.
 """
 
 import dataclasses
-import getpass
-import grp
 import json
-import os
 from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
 
-from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
+from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import CloudError, LockError
 from github_runner_manager.manager.runner_manager import FlushMode
-from github_runner_manager.manager.runner_scaler import RunnerScaler
-from github_runner_manager.utilities import _get_runner_scaler
+from github_runner_manager.reconcile_service import get_runner_scaler
 
 APP_CONFIG_NAME = "app_config"
 OPENSTACK_CONFIG_NAME = "openstack_config"
@@ -50,7 +46,7 @@ def check_runner() -> tuple[str, int]:
     """
     app_config = app.config[APP_CONFIG_NAME]
     app.logger.info("Checking runners...")
-    runner_scaler = _get_runner_scaler(app_config)
+    runner_scaler = get_runner_scaler(app_config)
     try:
         runner_info = runner_scaler.get_runner_info()
     except CloudError as err:
@@ -79,7 +75,7 @@ def flush_runner() -> tuple[str, int]:
     lock = get_lock()
     with lock:
         app.logger.info("Flushing runners...")
-        runner_scaler = _get_runner_scaler(app_config)
+        runner_scaler = get_runner_scaler(app_config)
         app.logger.info("Flushing busy: %s", flush_busy)
         flush_mode = FlushMode.FLUSH_BUSY if flush_busy else FlushMode.FLUSH_IDLE
         try:
@@ -120,8 +116,6 @@ class FlaskArgs:
     host: str
     port: int
     debug: bool
-
-
 
 
 def start_http_server(

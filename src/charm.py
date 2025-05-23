@@ -309,7 +309,6 @@ class GithubRunnerCharm(CharmBase):
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
         state = self._setup_state()
-        self._setup_service(state)
 
         flush_runners = False
         if state.charm_config.token != self._stored.token:
@@ -322,10 +321,11 @@ class GithubRunnerCharm(CharmBase):
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
             flush_runners = True
 
-        state = self._setup_state()
-
         if not self._get_set_image_ready_status():
             return
+
+        self._setup_service(state)
+
         if flush_runners:
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
@@ -455,6 +455,9 @@ class GithubRunnerCharm(CharmBase):
         self.unit.status = MaintenanceStatus("Update image for runners")
         if not self._get_set_image_ready_status():
             return
+
+        state = self._setup_state()
+        self._setup_service(state)
 
         self._manager_client.flush_runner()
 
