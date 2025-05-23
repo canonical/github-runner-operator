@@ -136,6 +136,23 @@ options:
       machine runners from the runner manager. It is equivalent to ProxyCommand in ssh-config,
       but without a shell. For example, a value could be something like:
       `bash -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
+  pre-job-script:
+    type: string
+    description: >-
+      Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM. 
+      This can e.g. be useful for specific infrastructure related configurations 
+      (e.g. usage of certain proxies or custom routes).
+      Note that the user executing the script is the ubuntu user (which has sudo rights).
+      Example script:
+      #!/usr/bin/env bash
+      cat > ~/.ssh/config <<EOF
+      host github.com
+          user git
+          hostname github.com
+          port 22
+          proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+      EOF
+
   runner-http-proxy:
     type: string
     default: ""
