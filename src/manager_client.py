@@ -123,7 +123,7 @@ class GitHubRunnerManagerClient:
         return runner_info
 
     @catch_requests_errors
-    def flush_runner(self, busy: bool = True) -> None:
+    def flush_runner(self, busy: bool = False) -> None:
         """Request to flush the runners.
 
         Args:

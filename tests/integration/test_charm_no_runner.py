@@ -6,6 +6,10 @@ import logging
 from asyncio import sleep
 
 import pytest
+from github_runner_manager.reconcile_service import (
+    RECONCILE_SERVICE_START_MSG,
+    RECONCILE_START_MSG,
+)
 from juju.application import Application
 from juju.model import Model
 
@@ -121,7 +125,7 @@ async def test_manager_service_started(
 
     log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." in log
-    assert "Starting the reconcile_service..." in log
+    assert RECONCILE_SERVICE_START_MSG in log
 
     # 2.
     return_code, _, _ = await run_in_unit(
@@ -138,5 +142,5 @@ async def test_manager_service_started(
 
     log = await get_github_runner_manager_service_log(unit)
     assert "Starting the server..." not in log
-    assert "Starting the reconcile_service..." not in log
-    assert "Acquired the lock for reconciling" in log
+    assert RECONCILE_SERVICE_START_MSG not in log
+    assert RECONCILE_START_MSG in log
