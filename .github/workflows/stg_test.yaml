@@ -7,9 +7,9 @@ jobs:
         - name: Hello world
           run: |
             echo "Hello, world"
-        - name: Git pull via https
+        - name: Git pull via git
           run: |
-            git clone https://github.com/canonical/github-runner-operator.git github-runner-via-https
+            git clone git://git.launchpad.net/ntp-charm  ntp-charm-via-git
         - name: Git pull via ssh
           run: |
-            git clone git@github.com:canonical/github-runner-operator.git github-runner-via-ssh
+            git clone git+ssh://git.launchpad.net/ntp-charm ntp-charm-via-ssh
