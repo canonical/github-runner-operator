@@ -1,12 +1,12 @@
 name: Staging Tests
 on: [push, pull_request]
 jobs:
-  staging-tests:
-    strategy:
-      matrix:
-        arch: [arm64, x64]
-    runs-on: ["self-hosted", "staging", "${{ matrix.arch }}"]
+  build:
+    runs-on: ["self-hosted", "staging", "ps7"]
     steps:
         - name: Hello world
           run: |
             echo "Hello, world"
+        - name: Git pull via ssh
+          run: |
+            git clone git@github.com:canonical/github-runner-operator.git
