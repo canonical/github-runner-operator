@@ -1,0 +1,138 @@
+18:23:08 WARNING unexpected facade SSHServer received from the controller
+18:23:08 INFO Adding model github-pr-43d35-lxd:test-charm-metrics-failure-aee5 on cloud localhost
+18:23:08 WARNING unexpected facade SSHServer received from the controller
+18:23:08 WARNING unexpected facade SSHSession received from the controller
+18:23:08 WARNING unexpected facade SSHTunneler received from the controller
+18:23:09 INFO GitHub token rate limit: Rate(reset=2025-05-23 19:05:18+00:00, remaining=4963, limit=5000)
+18:23:24 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:23:43 INFO Deploying local:jammy/github-runner-0
+18:23:44 INFO Waiting for model:
+  test-z1785xnx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z1785xnx/0 [allocating] waiting: waiting for machine
+18:24:14 INFO Waiting for model:
+  test-z1785xnx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-z1785xnx/0 [allocating] waiting: waiting for machine
+18:24:44 INFO Waiting for model:
+  test-z1785xnx/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-z1785xnx/0 [executing] maintenance: Setting up Builder.
+18:25:15 INFO Waiting for model:
+  test-z1785xnx/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-z1785xnx/0 [executing] maintenance: Setting up Builder.
+18:25:45 INFO Waiting for model:
+  test-z1785xnx/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-z1785xnx/0 [executing] maintenance: Setting up Builder.
+18:26:15 INFO Waiting for model:
+  test-z1785xnx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z1785xnx/0 [executing] maintenance: Setting up Builder.
+18:26:45 INFO Waiting for model:
+  test-z1785xnx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-z1785xnx/0 [executing] maintenance: Setting up Builder.
+18:27:15 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:27:46 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:28:16 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:28:46 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:29:16 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:29:46 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:30:16 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:30:46 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:31:16 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:31:47 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:32:17 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:32:47 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:33:17 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:37:18 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:38:19 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:38:49 INFO Waiting for model:
+  test-z1785xnx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-z1785xnx/0 [executing] active: Building image.
+18:39:19 INFO Waiting for model:
+  test-z1785xnx/0 [idle] active: 
+18:39:44 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active:
+18:43:49 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active: 
+18:44:16 INFO [TEST SETUP] Exposing port 8080 on test-z1785xnx-0-n-cf07e68a2192
+18:44:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.48', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:21:bc:f3'}]])
+18:44:17 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-z1785xnx-0-n-cf07e68a2192.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.48 &
+18:44:19 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.48' (ED25519) to the list of known hosts.
+
+18:44:20 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-z1785xnx-0-n-cf07e68a2192
+18:44:20 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.48', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:21:bc:f3'}]])
+18:44:21 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z1785xnx-0-n-cf07e68a2192.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.48 nc -z localhost 8080'
+18:44:22 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:44:23 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-z1785xnx-0-n-cf07e68a2192
+18:44:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.48', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:21:bc:f3'}]])
+18:44:24 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z1785xnx-0-n-cf07e68a2192.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.48 curl http://localhost:8080'
+18:44:25 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  48072      0 --:--:-- --:--:-- --:--:-- 51750
+'
+18:44:28 INFO Wait for condition not met, sleeping 10
+18:44:39 INFO Wait for condition not met, sleeping 60
+18:46:03 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active: 
+18:46:31 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748025822.0, "event": "runner_installed", "flavor": "test-z1785xnx", "duration": 130.0}
+{"timestamp": 1748025871.0, "event": "runner_start", "flavor": "test-z1785xnx", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 49.0, "queue_duration": 1.0}
+{"timestamp": 1748025871.0, "event": "runner_stop", "flavor": "test-z1785xnx", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1748025961.685574, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.38757348060608}
+{"timestamp": 1748025974.977949, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.565149784088135}

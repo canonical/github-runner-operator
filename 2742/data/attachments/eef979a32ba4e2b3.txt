@@ -1,0 +1,54 @@
+18:46:50 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active:
+18:50:20 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active: 
+18:50:50 INFO Waiting for model:
+  test-z1785xnx/0 [idle] active: 
+18:50:57 INFO Wait for condition not met, sleeping 30
+18:51:39 INFO [TEST SETUP] Run command pkill -9 run.sh on test-z1785xnx-0-n-9abc48153686
+18:51:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.204', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:19:1f:96'}]])
+18:51:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z1785xnx-0-n-9abc48153686.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.204 pkill -9 run.sh'
+18:51:42 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.204' (ED25519) to the list of known hosts.
+'
+18:51:46 INFO Runner test-z1785xnx-0-n-9abc48153686 status: online
+18:51:46 INFO Runner still marked as online, waiting for it to be marked offline
+18:53:16 INFO Waiting for model:
+  test-z1785xnx/0 [executing] active: 
+18:53:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748026008.7752678, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.364651441574097}
+{"timestamp": 1748026023.204334, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.801663875579834}
+{"timestamp": 1748026203.2125678, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 151.2927918434143}
+{"timestamp": 1748026219.4592745, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 14.538817882537842}
+{"timestamp": 1748026237.7137034, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 16.56070113182068}
+{"timestamp": 1748026175.0, "event": "runner_installed", "flavor": "test-z1785xnx", "duration": 112.0}
+{"timestamp": 1748026259.0, "event": "runner_start", "flavor": "test-z1785xnx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 84.0, "queue_duration": 1.0}
+{"timestamp": 1748026301.0, "event": "runner_stop", "flavor": "test-z1785xnx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1748026395.2451775, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.941261291503906}
+{"timestamp": 1748026407.7784307, "event": "reconciliation", "flavor": "test-z1785xnx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.617706537246704}
+18:53:46 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-aee5  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  18:53:46Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-z1785xnx           active      1  github-runner-image-builder  latest/edge   81  no       
+test-z1785xnx                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-z1785xnx/0*  active    idle   0        10.250.6.53               
+test-z1785xnx/0*                         active    idle   1        10.250.6.136    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.250.6.53   juju-7a9e20-0  ubuntu@22.04      Running
+1        started  10.250.6.136  juju-7a9e20-1  ubuntu@22.04      Running
+
+18:53:47 INFO Juju error logs:
+
+machine-0: 18:24:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-z1785xnx-0: 18:24:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:24:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-z1785xnx-0: 18:24:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-z1785xnx-0: 18:25:10 ERROR unit.github-runner-image-builder-z1785xnx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:53:47 INFO Forgetting model main...
