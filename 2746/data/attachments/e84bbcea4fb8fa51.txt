@@ -1,0 +1,64 @@
+18:44:13 INFO Waiting for model:
+  test-s82291sf/0 [executing] active:
+18:46:26 INFO Waiting for model:
+  test-s82291sf/0 [executing] active: 
+18:46:57 INFO Wait for condition not met, sleeping 30
+18:47:39 INFO [TEST SETUP] Run command pkill -9 run.sh on test-s82291sf-0-n-48acd4b21b86
+18:47:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.33', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:01:99:92'}]])
+18:47:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-s82291sf-0-n-48acd4b21b86.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.33 pkill -9 run.sh'
+18:47:41 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.33' (ED25519) to the list of known hosts.
+'
+18:47:45 INFO Runner test-s82291sf-0-n-48acd4b21b86 status: online
+18:47:45 INFO Runner still marked as online, waiting for it to be marked offline
+18:49:08 INFO Waiting for model:
+  test-s82291sf/0 [executing] active: 
+18:49:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748198653.0288284, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.039309740066528}
+{"timestamp": 1748198662.8983502, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.811288833618164}
+{"timestamp": 1748198774.3114107, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 85.48761367797852}
+{"timestamp": 1748198786.0873137, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 10.611550092697144}
+{"timestamp": 1748198798.6630366, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.479868412017822}
+{"timestamp": 1748198751.0, "event": "runner_installed", "flavor": "test-s82291sf", "duration": 53.0}
+{"timestamp": 1748198819.0, "event": "runner_start", "flavor": "test-s82291sf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 68.0, "queue_duration": 1.0}
+{"timestamp": 1748198861.0, "event": "runner_stop", "flavor": "test-s82291sf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1748198947.15449, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.99771547317505}
+{"timestamp": 1748198957.2597241, "event": "reconciliation", "flavor": "test-s82291sf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.998996496200562}
+18:49:36 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-e9bz  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  18:49:36Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-s82291sf           active      1  github-runner-image-builder  latest/edge   81  no       
+test-s82291sf                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-s82291sf/0*  active    idle   0        10.217.157.153            
+test-s82291sf/0*                         active    idle   1        10.217.157.88   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.217.157.153  juju-513697-0  ubuntu@22.04      Running
+1        started  10.217.157.88   juju-513697-1  ubuntu@22.04      Running
+
+18:49:36 INFO Juju error logs:
+
+machine-0: 18:23:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:23:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-s82291sf-0: 18:23:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-s82291sf-0: 18:24:24 ERROR unit.github-runner-image-builder-s82291sf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:24:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-s82291sf-0: 18:24:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-s82291sf-0: 18:43:24 ERROR unit.test-s82291sf/0.juju-log Failed to get SSH connection while removing test-s82291sf-0-n-201e1c39b321
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-s82291sf-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-s82291sf-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-s82291sf-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-s82291sf-0-n-201e1c39b321, key path: /home/runner-manager/.ssh/test-s82291sf-0-n-201e1c39b321.key
+unit-test-s82291sf-0: 18:43:25 ERROR unit.test-s82291sf/0.juju-log Invalid pulled metrics. No runner_installed information for test-s82291sf-0-n-201e1c39b321.
+unit-test-s82291sf-0: 18:43:25 ERROR unit.test-s82291sf/0.juju-log No metrics returned after deleting test-s82291sf-0-n-201e1c39b321
+unit-test-s82291sf-0: 18:43:35 ERROR unit.test-s82291sf/0.juju-log No metrics returned after deleting test-s82291sf-0-n-201e1c39b321
+
+18:49:36 INFO Forgetting model main...

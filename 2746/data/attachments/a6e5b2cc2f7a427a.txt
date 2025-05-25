@@ -1,0 +1,140 @@
+18:23:42 INFO Adding model github-pr-43d35-lxd:test-charm-upgrade-npez on cloud localhost
+18:23:43 WARNING unexpected facade AgentLifeFlag received from the controller
+18:23:43 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:23:43 WARNING unexpected facade SecretsDrain received from the controller
+18:23:45 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:24:09 INFO Deploying local:jammy/github-runner-0
+18:24:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ubvk3tsj/0 [allocating] waiting: waiting for machine
+18:24:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ubvk3tsj/0 [executing] maintenance: Setting up Builder.
+18:25:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ubvk3tsj/0 [executing] maintenance: Setting up Builder.
+18:25:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ubvk3tsj/0 [executing] maintenance: Setting up Builder.
+18:26:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] maintenance: Setting up Builder.
+18:26:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] maintenance: Setting up Builder.
+18:27:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:27:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:28:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:28:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:29:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:29:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:30:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:30:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:31:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:31:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:32:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:32:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:33:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:33:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:34:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:34:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:35:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:35:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:36:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:36:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:37:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:37:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:38:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ubvk3tsj/0 [executing] active: Building image.
+18:38:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ubvk3tsj/0 [idle] active: 
+18:39:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: Reconciling runners
+18:39:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: Reconciling runners
+18:40:09 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] maintenance: Reconciling runners
+18:40:39 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] active: 
+18:42:28 INFO Waiting for model:
+  test-ubvk3tsj/0 [executing] active: 
+18:42:58 INFO Waiting for model:
+  test-ubvk3tsj/0 [idle] active:
+18:43:30 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-npez  github-pr-43d35-lxd  localhost/localhost  3.1.10   unsupported  18:43:30Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ubvk3tsj           active      1  github-runner-image-builder  latest/edge   81  no       
+test-ubvk3tsj                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ubvk3tsj/0*  active    idle   0        10.44.240.107          
+test-ubvk3tsj/0*                         active    idle   1        10.44.240.6            
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.44.240.107  juju-4e2ce2-0  ubuntu@22.04      Running
+1        started  10.44.240.6    juju-4e2ce2-1  ubuntu@22.04      Running
+
+18:43:30 INFO Juju error logs:
+
+machine-0: 18:24:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:24:23 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:24:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ubvk3tsj-0: 18:24:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:24:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:24:49 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:24:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ubvk3tsj-0: 18:24:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ubvk3tsj-0: 18:25:06 ERROR unit.github-runner-image-builder-ubvk3tsj/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+18:43:31 INFO Forgetting model main...
