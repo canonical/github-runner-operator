@@ -1,0 +1,98 @@
+06:24:06 WARNING unexpected facade SSHServer received from the controller
+06:24:06 INFO Adding model github-pr-43d35-lxd:test-charm-metrics-success-ava2 on cloud localhost
+06:24:06 WARNING unexpected facade SSHServer received from the controller
+06:24:06 WARNING unexpected facade SSHSession received from the controller
+06:24:06 WARNING unexpected facade SSHTunneler received from the controller
+06:24:08 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:24:26 INFO Deploying local:jammy/github-runner-0
+06:24:27 INFO Waiting for model:
+  test-tbtftl5p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tbtftl5p/0 [allocating] waiting: waiting for machine
+06:24:57 INFO Waiting for model:
+  test-tbtftl5p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tbtftl5p/0 [allocating] waiting: waiting for machine
+06:25:27 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tbtftl5p/0 [executing] maintenance: Setting up Builder.
+06:25:57 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tbtftl5p/0 [executing] maintenance: Setting up Builder.
+06:26:28 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] maintenance: Setting up Builder.
+06:26:58 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] maintenance: Setting up Builder.
+06:27:28 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] maintenance: Setting up Builder.
+06:27:58 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:28:28 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:28:58 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:29:28 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:29:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:30:29 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:30:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:31:29 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:31:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:32:29 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:32:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:33:29 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:33:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:34:29 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:34:59 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:35:30 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:36:00 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:36:30 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tbtftl5p/0 [executing] active: Building image.
+06:37:01 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-tbtftl5p/0 [idle] active: 
+06:37:31 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] active:
+06:39:34 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] active: 
+06:40:33 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] maintenance: Reconciling runners
+06:41:03 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] active: 
+06:41:05 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748155173.669509, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 117.25468969345093}
+{"timestamp": 1748155188.509937, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 13.527398586273193}
+{"timestamp": 1748155148.0, "event": "runner_installed", "flavor": "test-tbtftl5p", "duration": 81.0}
+{"timestamp": 1748155231.8723602, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 25.14908766746521}
+{"timestamp": 1748155247.9077997, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.697537422180176}

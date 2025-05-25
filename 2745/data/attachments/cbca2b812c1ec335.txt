@@ -1,0 +1,41 @@
+06:41:05 INFO GitHub token rate limit: Rate(reset=2025-05-25 07:04:17+00:00, remaining=4568, limit=5000)
+06:43:06 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] maintenance: Reconciling runners
+06:43:36 INFO Waiting for model:
+  test-tbtftl5p/0 [idle] active: 
+06:43:41 INFO Wait for condition not met, sleeping 10
+06:44:19 INFO Waiting for model:
+  test-tbtftl5p/0 [executing] active: 
+06:44:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748155357.0, "event": "runner_installed", "flavor": "test-tbtftl5p", "duration": 74.0}
+{"timestamp": 1748155423.0, "event": "runner_start", "flavor": "test-tbtftl5p", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 66.0, "queue_duration": 1.0}
+{"timestamp": 1748155425.0, "event": "runner_stop", "flavor": "test-tbtftl5p", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748155458.4211118, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.545573234558105}
+{"timestamp": 1748155472.4549253, "event": "reconciliation", "flavor": "test-tbtftl5p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.68129014968872}
+06:44:51 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-ava2  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  06:44:51Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-tbtftl5p           active      1  github-runner-image-builder  latest/edge   81  no       
+test-tbtftl5p                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-tbtftl5p/0*  active    idle   0        10.200.238.108         
+test-tbtftl5p/0*                         active    idle   1        10.200.238.104         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.200.238.108  juju-21edac-0  ubuntu@22.04      Running
+1        started  10.200.238.104  juju-21edac-1  ubuntu@22.04      Running
+
+06:44:51 INFO Juju error logs:
+
+machine-0: 06:25:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-tbtftl5p-0: 06:25:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:25:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-tbtftl5p-0: 06:25:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-tbtftl5p-0: 06:25:50 ERROR unit.github-runner-image-builder-tbtftl5p/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:44:51 INFO Forgetting model main...
