@@ -1,0 +1,140 @@
+06:25:31 WARNING unexpected facade SSHServer received from the controller
+06:25:31 INFO Adding model github-pr-43d35-lxd:test-charm-metrics-failure-yld8 on cloud localhost
+06:25:31 WARNING unexpected facade SSHServer received from the controller
+06:25:31 WARNING unexpected facade SSHSession received from the controller
+06:25:31 WARNING unexpected facade SSHTunneler received from the controller
+06:25:32 INFO GitHub token rate limit: Rate(reset=2025-05-26 06:51:03+00:00, remaining=4992, limit=5000)
+06:25:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:26:06 INFO Deploying local:jammy/github-runner-0
+06:26:06 INFO Waiting for model:
+  test-eio7hwbd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eio7hwbd/0 [allocating] waiting: waiting for machine
+06:26:36 INFO Waiting for model:
+  test-eio7hwbd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eio7hwbd/0 [allocating] waiting: waiting for machine
+06:27:06 INFO Waiting for model:
+  test-eio7hwbd/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-eio7hwbd/0 [allocating] waiting: waiting for machine
+06:27:36 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-eio7hwbd/0 [allocating] waiting: agent initialising
+06:28:07 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-eio7hwbd/0 [executing] maintenance: Setting up Builder.
+06:28:37 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] maintenance: Setting up Builder.
+06:29:07 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] maintenance: Setting up Builder.
+06:29:38 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] maintenance: Setting up Builder.
+06:30:08 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] blocked: image integration required.
+06:30:39 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:31:09 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:31:39 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:32:10 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:32:40 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:33:11 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:33:41 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:34:11 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:34:42 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:35:12 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:35:42 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:36:12 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:36:43 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:37:13 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:37:43 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:38:14 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:38:44 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:39:15 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:39:45 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:40:16 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:40:46 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:41:17 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eio7hwbd/0 [executing] active: Building image.
+06:41:47 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-eio7hwbd/0 [idle] active: 
+06:42:27 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] active:
+06:46:01 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] maintenance: Reconciling runners
+06:46:31 INFO Waiting for model:
+  test-eio7hwbd/0 [idle] active: 
+06:46:34 INFO [TEST SETUP] Exposing port 8080 on test-eio7hwbd-0-n-cbb1dcc12dfd
+06:46:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.43', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:fa:82'}]])
+06:46:35 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-eio7hwbd-0-n-cbb1dcc12dfd.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.43 &
+06:46:36 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.43' (ED25519) to the list of known hosts.
+
+06:46:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-eio7hwbd-0-n-cbb1dcc12dfd
+06:46:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.43', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:fa:82'}]])
+06:46:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eio7hwbd-0-n-cbb1dcc12dfd.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.43 nc -z localhost 8080'
+06:46:40 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:46:41 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-eio7hwbd-0-n-cbb1dcc12dfd
+06:46:41 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.43', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e8:fa:82'}]])
+06:46:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eio7hwbd-0-n-cbb1dcc12dfd.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.43 curl http://localhost:8080'
+06:46:43 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  58441      0 --:--:-- --:--:-- --:--:-- 69000
+'
+06:46:46 INFO Wait for condition not met, sleeping 10
+06:47:18 INFO Waiting for model:
+  test-eio7hwbd/0 [executing] active: 
+06:47:46 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748241919.0, "event": "runner_installed", "flavor": "test-eio7hwbd", "duration": 77.0}
+{"timestamp": 1748242008.0, "event": "runner_start", "flavor": "test-eio7hwbd", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 89.0, "queue_duration": 0.0}
+{"timestamp": 1748242008.0, "event": "runner_stop", "flavor": "test-eio7hwbd", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1748242038.0044487, "event": "reconciliation", "flavor": "test-eio7hwbd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.90218734741211}
+{"timestamp": 1748242048.5751224, "event": "reconciliation", "flavor": "test-eio7hwbd", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.257869482040405}

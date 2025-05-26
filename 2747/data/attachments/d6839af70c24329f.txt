@@ -1,0 +1,149 @@
+06:24:31 INFO Adding model github-pr-43d35-lxd:test-charm-upgrade-2ioz on cloud localhost
+06:24:31 WARNING unexpected facade AgentLifeFlag received from the controller
+06:24:31 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:24:31 WARNING unexpected facade SecretsDrain received from the controller
+06:24:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:24:55 INFO Deploying local:jammy/github-runner-0
+06:24:55 INFO Waiting for model:
+  test-j4n35nhn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j4n35nhn/0 [allocating] waiting: waiting for machine
+06:25:25 INFO Waiting for model:
+  test-j4n35nhn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j4n35nhn/0 [allocating] waiting: waiting for machine
+06:25:55 INFO Waiting for model:
+  test-j4n35nhn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j4n35nhn/0 [allocating] waiting: agent initialising
+06:26:25 INFO Waiting for model:
+  test-j4n35nhn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:26:55 INFO Waiting for model:
+  test-j4n35nhn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:27:25 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:27:55 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:28:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:28:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] maintenance: Setting up Builder.
+06:29:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:29:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:30:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:30:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:31:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:31:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:32:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:32:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:33:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:33:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:34:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:34:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:35:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:35:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:36:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:37:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:38:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:38:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:39:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:39:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:40:25 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j4n35nhn/0 [executing] active: Building image.
+06:40:55 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-j4n35nhn/0 [idle] active: 
+06:41:25 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: Reconciling runners
+06:41:55 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: Reconciling runners
+06:42:25 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] maintenance: Reconciling runners
+06:42:55 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] active: 
+06:44:26 INFO Waiting for model:
+  test-j4n35nhn/0 [executing] active: 
+06:44:56 INFO Waiting for model:
+  test-j4n35nhn/0 [idle] active:
+06:45:28 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-2ioz  github-pr-43d35-lxd  localhost/localhost  3.1.10   unsupported  06:45:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-j4n35nhn           active      1  github-runner-image-builder  latest/edge   81  no       
+test-j4n35nhn                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-j4n35nhn/0*  active    idle   0        10.119.22.105          
+test-j4n35nhn/0*                         active    idle   1        10.119.22.188          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.119.22.105  juju-b53151-0  ubuntu@22.04      Running
+1        started  10.119.22.188  juju-b53151-1  ubuntu@22.04      Running
+
+06:45:28 INFO Juju error logs:
+
+machine-0: 06:25:48 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:25:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-j4n35nhn-0: 06:25:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:04 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-j4n35nhn-0: 06:27:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-j4n35nhn-0: 06:27:20 ERROR unit.github-runner-image-builder-j4n35nhn/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:45:29 INFO Forgetting model main...

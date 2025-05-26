@@ -1,0 +1,144 @@
+06:25:32 WARNING unexpected facade SSHServer received from the controller
+06:25:32 INFO Adding model github-pr-43d35-lxd:test-reactive-5rkx on cloud localhost
+06:25:32 WARNING unexpected facade SSHServer received from the controller
+06:25:32 WARNING unexpected facade SSHSession received from the controller
+06:25:32 WARNING unexpected facade SSHTunneler received from the controller
+06:25:33 INFO GitHub token rate limit: Rate(reset=2025-05-26 06:51:03+00:00, remaining=4991, limit=5000)
+06:25:37 INFO Deploying ch:amd64/jammy/mongodb-214
+06:25:39 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:25:58 INFO Deploying local:jammy/github-runner-0
+06:25:58 INFO Waiting for model:
+  test-tofnnvcp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tofnnvcp/0 [allocating] waiting: waiting for machine
+06:26:28 INFO Waiting for model:
+  test-tofnnvcp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tofnnvcp/0 [allocating] waiting: waiting for machine
+06:26:59 INFO Waiting for model:
+  test-tofnnvcp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tofnnvcp/0 [allocating] waiting: waiting for machine
+06:27:29 INFO Waiting for model:
+  test-tofnnvcp/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-tofnnvcp/0 [allocating] waiting: waiting for machine
+06:27:59 INFO Waiting for model:
+  test-tofnnvcp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tofnnvcp/0 [executing] maintenance: Setting up Builder.
+06:28:29 INFO Waiting for model:
+  test-tofnnvcp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tofnnvcp/0 [executing] maintenance: Setting up Builder.
+06:28:59 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] maintenance: Setting up Builder.
+06:29:30 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] maintenance: Setting up Builder.
+06:30:00 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] maintenance: Setting up Builder.
+06:30:30 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:31:01 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:31:31 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:32:01 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:32:31 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:33:02 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:33:32 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:34:02 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:34:33 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:35:03 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:35:34 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:36:04 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:36:34 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:37:04 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:37:34 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:38:04 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:38:35 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:39:05 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:39:35 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:40:06 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:40:36 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:41:07 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tofnnvcp/0 [executing] active: Building image.
+06:41:37 INFO Waiting for model:
+  test-tofnnvcp/0 [executing] maintenance: Reconciling runners
+  github-runner-image-builder-tofnnvcp/0 [idle] active: 
+06:41:59 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:41:59 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:42:29 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:43:04 INFO Waiting for model:
+  test-tofnnvcp/0 [executing] active: 
+06:43:34 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active:
+06:43:38 INFO Wait for condition not met, sleeping 10
+06:44:20 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active: 
+06:44:35 INFO Wait for condition not met, sleeping 60
+06:45:36 INFO Wait for condition not met, sleeping 60
+06:47:02 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active: 
+06:47:19 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748241858.783374, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.858334064483643}
+{"timestamp": 1748241933.0, "event": "runner_installed", "flavor": "test-tofnnvcp", "duration": 100.0}
+{"timestamp": 1748241937.0, "event": "runner_start", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 117.0}
+{"timestamp": 1748241939.0, "event": "runner_stop", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748242021.5664866, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.923054218292236}
+
+06:47:20 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748241858.783374, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.858334064483643}
+{"timestamp": 1748241933.0, "event": "runner_installed", "flavor": "test-tofnnvcp", "duration": 100.0}
+{"timestamp": 1748241937.0, "event": "runner_start", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 117.0}
+{"timestamp": 1748241939.0, "event": "runner_stop", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748242021.5664866, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.923054218292236}
+
+06:47:21 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748241858.783374, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.858334064483643}
+{"timestamp": 1748241933.0, "event": "runner_installed", "flavor": "test-tofnnvcp", "duration": 100.0}
+{"timestamp": 1748241937.0, "event": "runner_start", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 117.0}
+{"timestamp": 1748241939.0, "event": "runner_stop", "flavor": "test-tofnnvcp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748242021.5664866, "event": "reconciliation", "flavor": "test-tofnnvcp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.923054218292236}
+06:47:43 INFO Waiting for model:
+  test-tofnnvcp/0 [executing] active: 
+06:48:13 INFO Waiting for model:
+  test-tofnnvcp/0 [idle] active:
