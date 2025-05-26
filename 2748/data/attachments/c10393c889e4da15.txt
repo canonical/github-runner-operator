@@ -1,0 +1,140 @@
+18:24:34 WARNING unexpected facade SSHServer received from the controller
+18:24:34 INFO Adding model github-pr-43d35-lxd:test-reactive-5be4 on cloud localhost
+18:24:34 WARNING unexpected facade SSHServer received from the controller
+18:24:34 WARNING unexpected facade SSHSession received from the controller
+18:24:34 WARNING unexpected facade SSHTunneler received from the controller
+18:24:35 INFO GitHub token rate limit: Rate(reset=2025-05-26 18:44:33+00:00, remaining=4999, limit=5000)
+18:24:39 INFO Deploying ch:amd64/jammy/mongodb-214
+18:24:41 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+18:25:01 INFO Deploying local:jammy/github-runner-0
+18:25:02 INFO Waiting for model:
+  test-henprg4u/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-henprg4u/0 [allocating] waiting: waiting for machine
+18:25:32 INFO Waiting for model:
+  test-henprg4u/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-henprg4u/0 [allocating] waiting: waiting for machine
+18:26:02 INFO Waiting for model:
+  test-henprg4u/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-henprg4u/0 [allocating] waiting: waiting for machine
+18:26:32 INFO Waiting for model:
+  test-henprg4u/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-henprg4u/0 [allocating] waiting: waiting for machine
+18:27:03 INFO Waiting for model:
+  test-henprg4u/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-henprg4u/0 [executing] maintenance: Setting up Builder.
+18:27:33 INFO Waiting for model:
+  test-henprg4u/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-henprg4u/0 [executing] maintenance: Setting up Builder.
+18:28:03 INFO Waiting for model:
+  test-henprg4u/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-henprg4u/0 [executing] maintenance: Setting up Builder.
+18:28:33 INFO Waiting for model:
+  test-henprg4u/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-henprg4u/0 [executing] maintenance: Setting up Builder.
+18:29:04 INFO Waiting for model:
+  test-henprg4u/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-henprg4u/0 [executing] maintenance: Setting up Builder.
+18:29:34 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:30:05 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:30:35 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:31:05 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:31:36 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:32:06 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:32:36 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:33:07 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:33:37 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:34:08 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:34:38 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:35:08 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:35:39 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:36:09 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:36:40 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:37:10 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:37:41 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:38:11 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:38:41 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:39:11 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:39:41 INFO Waiting for model:
+  test-henprg4u/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-henprg4u/0 [executing] active: Building image.
+18:40:11 INFO Waiting for model:
+  test-henprg4u/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-henprg4u/0 [idle] active: 
+18:40:41 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:40:41 INFO Waiting for model:
+  test-henprg4u/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:41:11 INFO Waiting for model:
+  test-henprg4u/0 [idle] active: 
+  mongodb/0 [executing] active: Primary
+18:41:54 INFO Waiting for model:
+  test-henprg4u/0 [executing] active: 
+18:42:24 INFO Waiting for model:
+  test-henprg4u/0 [idle] active:
+18:42:33 INFO Wait for condition not met, sleeping 10
+18:43:18 INFO Waiting for model:
+  test-henprg4u/0 [idle] active: 
+18:43:34 INFO Wait for condition not met, sleeping 60
+18:45:04 INFO Waiting for model:
+  test-henprg4u/0 [idle] active: 
+18:45:21 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748284997.551077, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.18836736679077}
+{"timestamp": 1748285044.0, "event": "runner_installed", "flavor": "test-henprg4u", "duration": 77.0}
+{"timestamp": 1748285048.0, "event": "runner_start", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 94.0}
+{"timestamp": 1748285050.0, "event": "runner_stop", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748285103.3494322, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.607986211776733}
+
+18:45:22 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748284997.551077, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.18836736679077}
+{"timestamp": 1748285044.0, "event": "runner_installed", "flavor": "test-henprg4u", "duration": 77.0}
+{"timestamp": 1748285048.0, "event": "runner_start", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 94.0}
+{"timestamp": 1748285050.0, "event": "runner_stop", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748285103.3494322, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.607986211776733}
+
+18:45:23 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748284997.551077, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.18836736679077}
+{"timestamp": 1748285044.0, "event": "runner_installed", "flavor": "test-henprg4u", "duration": 77.0}
+{"timestamp": 1748285048.0, "event": "runner_start", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 94.0}
+{"timestamp": 1748285050.0, "event": "runner_stop", "flavor": "test-henprg4u", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1748285103.3494322, "event": "reconciliation", "flavor": "test-henprg4u", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.607986211776733}
+18:45:46 INFO Waiting for model:
+  test-henprg4u/0 [executing] maintenance: Reconciling runners
+18:46:16 INFO Waiting for model:
+  test-henprg4u/0 [idle] active:

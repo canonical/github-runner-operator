@@ -1,0 +1,77 @@
+18:26:31 INFO GitHub token rate limit: Rate(reset=2025-05-26 18:44:33+00:00, remaining=4968, limit=5000)
+18:26:34 INFO Creating 1 runners
+18:26:34 INFO Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None))
+18:26:48 INFO Runner test-p9xnfo5n-0-n-e0fe817ed3c7 created successfully
+18:27:48 INFO Runner RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None)) online
+18:27:48 INFO Getting all openstack servers managed by the charm
+18:27:51 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:27:51 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:27:51 INFO Getting all openstack servers managed by the charm
+18:27:54 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:27:54 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:27:54 INFO Getting all openstack servers managed by the charm
+18:27:57 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:27:57 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=False, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:27:59 INFO Wait for condition not met, sleeping 10
+18:28:10 INFO Getting all openstack servers managed by the charm
+18:28:14 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:14 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:14 INFO runner_manager::cleanup
+18:28:14 INFO  _cleanup_resources idle: False, force: False
+18:28:14 INFO Getting all openstack servers managed by the charm
+18:28:15 INFO cleanup cloud_runners [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:16 INFO cleanup health_response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:18 INFO Cleaning up SSH key files
+18:28:18 INFO Found 1 key files, clean up 0 key files
+18:28:18 INFO Cleaning up openstack keypairs
+18:28:18 INFO Getting all openstack servers managed by the charm
+18:28:21 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:21 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:21 INFO runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+18:28:21 INFO Flushing idle runners...
+18:28:21 INFO  _cleanup_resources idle: True, force: False
+18:28:21 INFO Getting all openstack servers managed by the charm
+18:28:23 INFO cleanup cloud_runners [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:24 INFO cleanup health_response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:25 INFO Cleaning up SSH key files
+18:28:25 INFO Found 1 key files, clean up 0 key files
+18:28:25 INFO Cleaning up openstack keypairs
+18:28:25 INFO Getting all openstack servers managed by the charm
+18:28:28 INFO clouds runners response [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:28 INFO runner health response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:28 INFO runner_manager::flush_runners. mode FlushMode.FLUSH_BUSY
+18:28:28 INFO Flushing idle and busy runners...
+18:28:28 INFO  _cleanup_resources idle: True, force: True
+18:28:28 INFO Getting all openstack servers managed by the charm
+18:28:30 INFO cleanup cloud_runners [CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))]
+18:28:31 INFO cleanup health_response RunnersHealthResponse(requested_runners=[PlatformRunnerHealth(identity=CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc)), online=True, busy=True, deletable=False, runner_in_platform=True)], failed_requested_runners=[], non_requested_runners=[])
+18:28:33 INFO Cleaning up SSH key files
+18:28:33 INFO Found 1 key files, clean up 0 key files
+18:28:33 INFO Cleaning up openstack keypairs
+18:28:33 INFO Trying to delete cloud_runner CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))
+18:28:33 INFO Delete runner in GitHub: CloudRunnerInstance(name='test-p9xnfo5n-0-n-e0fe817ed3c7', instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None), health=<HealthState.UNKNOWN: 3>, state=<CloudRunnerState.ACTIVE: '2'>, created_at=datetime.datetime(2025, 5, 26, 18, 26, 36, tzinfo=datetime.timezone.utc))
+18:28:34 INFO Deleting busy runner: test-p9xnfo5n-0-n-e0fe817ed3c7
+18:28:34 INFO Delete runner in cloud: test-p9xnfo5n-0-n-e0fe817ed3c7
+18:28:34 INFO Getting openstack server with test-p9xnfo5n-0-n-e0fe817ed3c7
+18:28:35 INFO Connected (version 2.0, client OpenSSH_9.6p1)
+18:28:35 INFO Authentication (publickey) successful!
+18:28:36 INFO [chan 2] Opened sftp connection (server version 3)
+18:28:36 WARNING Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json on instance 10.145.193.63, exit code: 1, stdout: , stderr: stat: cannot statx '/home/ubuntu/metrics-exchange/post-job-metrics.json': No such file or directory
+
+18:28:36 WARNING Failed to pull metrics for test-p9xnfo5n-0-n-e0fe817ed3c7: Unable to get file size of /home/ubuntu/metrics-exchange/post-job-metrics.json . Will not be able to issue all metrics
+18:28:36 INFO Deleting openstack server with test-p9xnfo5n-0-n-e0fe817ed3c7
+18:28:37 INFO openstack delete result for test-p9xnfo5n-0-n-e0fe817ed3c7: True
+18:28:48 INFO runner_manager::flush_runners. mode FlushMode.FLUSH_BUSY
+18:28:48 INFO Flushing idle and busy runners...
+18:28:48 INFO  _cleanup_resources idle: True, force: True
+18:28:48 INFO Getting all openstack servers managed by the charm
+18:28:50 INFO cleanup cloud_runners []
+18:28:51 INFO cleanup health_response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None))])
+18:28:53 INFO Cleaning up SSH key files
+18:28:53 INFO Found 0 key files, clean up 0 key files
+18:28:53 INFO Cleaning up openstack keypairs
+18:28:53 INFO Delete runner in GitHub: RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None))
+18:28:53 WARNING Tried to delete busy runner in cleanup RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None))
+18:28:53 INFO Getting all openstack servers managed by the charm
+18:28:56 INFO clouds runners response []
+18:28:56 INFO runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[RunnerIdentity(instance_id=InstanceID('test-p9xnfo5n-0-n-e0fe817ed3c7'), metadata=RunnerMetadata(platform_name='github', runner_id='106876', url=None))])
