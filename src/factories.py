@@ -80,6 +80,7 @@ def create_application_configuration(
         ssh_debug_connections=state.ssh_debug_connections,
         repo_policy_compliance=state.charm_config.repo_policy_compliance,
         use_aproxy=state.charm_config.use_aproxy,
+        custom_pre_job_script=state.charm_config.custom_pre_job_script,
     )
     non_reactive_configuration = _get_non_reactive_configuration(state)
     reactive_configuration = _get_reactive_configuration(state, app_name)

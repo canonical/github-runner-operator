@@ -268,6 +268,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
+            "custom_pre_job_script": service_config.custom_pre_job_script,
         }
         repo_policy = self._get_repo_policy_compliance_client()
         if repo_policy is not None:

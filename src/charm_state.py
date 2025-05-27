@@ -62,6 +62,7 @@ TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
+CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -301,6 +302,7 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
+        custom_pre_job_script: Custom pre-job script to run before the job.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -312,6 +314,7 @@ class CharmConfig(BaseModel):
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
+    custom_pre_job_script: str | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -453,6 +456,9 @@ class CharmConfig(BaseModel):
         )
         use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
 
+        custom_pre_job_script = (
+            cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
+        )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
@@ -464,6 +470,7 @@ class CharmConfig(BaseModel):
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
+            custom_pre_job_script=custom_pre_job_script,
         )
 
 
