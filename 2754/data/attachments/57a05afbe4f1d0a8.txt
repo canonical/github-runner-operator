@@ -1,0 +1,153 @@
+06:30:30 WARNING unexpected facade SSHServer received from the controller
+06:30:30 INFO Adding model github-pr-43d35-lxd:test-charm-metrics-failure-tnlb on cloud localhost
+06:30:31 WARNING unexpected facade SSHServer received from the controller
+06:30:31 WARNING unexpected facade SSHSession received from the controller
+06:30:31 WARNING unexpected facade SSHTunneler received from the controller
+06:30:31 INFO GitHub token rate limit: Rate(reset=2025-05-27 07:26:05+00:00, remaining=4954, limit=5000)
+06:30:46 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:31:05 INFO Deploying local:jammy/github-runner-0
+06:31:05 INFO Waiting for model:
+  test-b4h9x7nm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b4h9x7nm/0 [allocating] waiting: waiting for machine
+06:31:35 INFO Waiting for model:
+  test-b4h9x7nm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b4h9x7nm/0 [allocating] waiting: waiting for machine
+06:32:06 INFO Waiting for model:
+  test-b4h9x7nm/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-b4h9x7nm/0 [executing] maintenance: Setting up Builder.
+06:32:36 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b4h9x7nm/0 [executing] maintenance: Setting up Builder.
+06:33:06 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b4h9x7nm/0 [executing] maintenance: Setting up Builder.
+06:33:36 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] maintenance: Setting up Builder.
+06:34:07 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] maintenance: Setting up Builder.
+06:34:37 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:35:07 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:35:38 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:36:08 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:36:38 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:37:08 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:37:38 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:38:08 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:38:39 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:39:09 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:40:09 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:40:40 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:41:10 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:41:41 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:42:11 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:42:41 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:43:12 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:43:42 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:44:12 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:44:43 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:45:13 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:45:43 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:46:14 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:46:44 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b4h9x7nm/0 [executing] active: Building image.
+06:47:14 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-b4h9x7nm/0 [idle] active: 
+06:48:01 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active:
+06:54:52 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+06:55:22 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Reconciling runners
+06:55:52 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Reconciling runners
+06:56:23 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Reconciling runners
+06:56:53 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Reconciling runners
+06:57:23 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] maintenance: Reconciling runners
+06:57:53 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+06:58:11 INFO [TEST SETUP] Exposing port 8080 on test-b4h9x7nm-0-n-2219754a51bf
+06:58:11 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.27', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5b:76:99'}]])
+06:58:12 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-b4h9x7nm-0-n-2219754a51bf.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.27 &
+06:58:13 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.27' (ED25519) to the list of known hosts.
+
+06:58:15 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-b4h9x7nm-0-n-2219754a51bf
+06:58:15 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.27', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5b:76:99'}]])
+06:58:16 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-b4h9x7nm-0-n-2219754a51bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.27 nc -z localhost 8080'
+06:58:17 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:58:18 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-b4h9x7nm-0-n-2219754a51bf
+06:58:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.27', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5b:76:99'}]])
+06:58:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-b4h9x7nm-0-n-2219754a51bf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.27 curl http://localhost:8080'
+06:58:20 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  71256      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:58:23 INFO Wait for condition not met, sleeping 10
+06:59:04 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+06:59:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748329051.0, "event": "runner_installed", "flavor": "test-b4h9x7nm", "duration": 147.0}
+{"timestamp": 1748329106.0, "event": "runner_start", "flavor": "test-b4h9x7nm", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 55.0, "queue_duration": 1.0}
+{"timestamp": 1748329106.0, "event": "runner_stop", "flavor": "test-b4h9x7nm", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1748329142.9639075, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.894868850708008}
+{"timestamp": 1748329157.6693864, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.03555965423584}

@@ -1,0 +1,107 @@
+06:59:52 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+07:00:22 INFO Waiting for model:
+  test-b4h9x7nm/0 [idle] active:
+07:03:19 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+07:03:50 INFO Wait for condition not met, sleeping 30
+07:04:32 INFO [TEST SETUP] Run command pkill -9 run.sh on test-b4h9x7nm-0-n-321b2e42d266
+07:04:32 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.78', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e7:ac:ef'}]])
+07:04:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-b4h9x7nm-0-n-321b2e42d266.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.78 pkill -9 run.sh'
+07:04:34 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.78' (ED25519) to the list of known hosts.
+'
+07:04:37 INFO Runner test-b4h9x7nm-0-n-321b2e42d266 status: online
+07:04:37 INFO Runner still marked as online, waiting for it to be marked offline
+07:06:11 INFO Waiting for model:
+  test-b4h9x7nm/0 [executing] active: 
+07:06:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748329191.2144368, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.6708824634552}
+{"timestamp": 1748329208.2161534, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.538036823272705}
+{"timestamp": 1748329386.3237762, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 148.6050295829773}
+{"timestamp": 1748329399.1741824, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.481152057647705}
+{"timestamp": 1748329411.2873936, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 10.615268230438232}
+{"timestamp": 1748329373.0, "event": "runner_installed", "flavor": "test-b4h9x7nm", "duration": 121.0}
+{"timestamp": 1748329433.0, "event": "runner_start", "flavor": "test-b4h9x7nm", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 60.0, "queue_duration": 2.0}
+{"timestamp": 1748329474.0, "event": "runner_stop", "flavor": "test-b4h9x7nm", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1748329571.194769, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.777254343032837}
+{"timestamp": 1748329585.9614127, "event": "reconciliation", "flavor": "test-b4h9x7nm", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.275357961654663}
+07:06:44 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-tnlb  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  07:06:44Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-b4h9x7nm           active      1  github-runner-image-builder  latest/edge   81  no       
+test-b4h9x7nm                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-b4h9x7nm/0*  active    idle   0        10.13.67.114              
+test-b4h9x7nm/0*                         active    idle   1        10.13.67.7      8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.13.67.114  juju-ffc100-0  ubuntu@22.04      Running
+1        started  10.13.67.7    juju-ffc100-1  ubuntu@22.04      Running
+
+07:06:44 INFO Juju error logs:
+
+machine-0: 06:31:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:31:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-b4h9x7nm-0: 06:31:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:31:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:31:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-b4h9x7nm-0: 06:31:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-b4h9x7nm-0: 06:32:34 ERROR unit.github-runner-image-builder-b4h9x7nm/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-b4h9x7nm-0: 06:54:47 ERROR unit.test-b4h9x7nm/0.juju-log Timeout creating openstack server test-b4h9x7nm-0-n-498aec59bade
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_compute.py", line 1104, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_compute.py", line 1243, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/utils.py", line 88, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+unit-test-b4h9x7nm-0: 06:54:49 ERROR unit.test-b4h9x7nm/0.juju-log Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 245, in launch_instance
+    server = conn.create_server(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_compute.py", line 1104, in create_server
+    server = self.wait_for_server(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/cloud/_compute.py", line 1243, in wait_for_server
+    for count in utils.iterate_timeout(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/openstack/utils.py", line 88, in iterate_timeout
+    raise exceptions.ResourceTimeout(message)
+openstack.exceptions.ResourceTimeout: Timeout waiting for the server to come up.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 140, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 265, in launch_instance
+    raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Timeout creating openstack server test-b4h9x7nm-0-n-498aec59bade
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 391, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 521, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/var/lib/juju/agents/unit-test-b4h9x7nm-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 147, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-b4h9x7nm-0-n-498aec59bade'), metadata=RunnerMetadata(platform_name='github', runner_id='8110', url=None)) openstack runner
+unit-test-b4h9x7nm-0: 06:58:59 ERROR unit.test-b4h9x7nm/0.juju-log No metrics returned after deleting test-b4h9x7nm-0-n-2219754a51bf
+
+07:06:44 INFO Forgetting model main...

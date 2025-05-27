@@ -1,0 +1,139 @@
+06:37:40 WARNING unexpected facade SSHServer received from the controller
+06:37:40 INFO Adding model github-pr-43d35-lxd:test-charm-fork-path-change-wmjr on cloud localhost
+06:37:41 WARNING unexpected facade SSHServer received from the controller
+06:37:41 WARNING unexpected facade SSHSession received from the controller
+06:37:41 WARNING unexpected facade SSHTunneler received from the controller
+06:37:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-81
+06:38:58 INFO Deploying local:jammy/github-runner-0
+06:38:59 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ma2skfae/0 [allocating] waiting: waiting for machine
+06:39:30 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ma2skfae/0 [allocating] waiting: agent initialising
+06:40:00 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ma2skfae/0 [allocating] waiting: agent initialising
+06:40:30 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:41:01 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:41:31 INFO Waiting for model:
+  test-ma2skfae/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:42:01 INFO Waiting for model:
+  test-ma2skfae/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:42:32 INFO Waiting for model:
+  test-ma2skfae/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:43:02 INFO Waiting for model:
+  test-ma2skfae/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:43:33 INFO Waiting for model:
+  test-ma2skfae/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ma2skfae/0 [executing] maintenance: Setting up Builder.
+06:44:03 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:44:33 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:45:03 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:45:34 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:46:04 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:46:34 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:47:05 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:47:35 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:48:05 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:48:36 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:49:06 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:49:36 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:50:06 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:50:36 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:51:07 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:51:37 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:52:07 INFO Waiting for model:
+  test-ma2skfae/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ma2skfae/0 [executing] active: Building image.
+06:52:37 INFO Waiting for model:
+  test-ma2skfae/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ma2skfae/0 [idle] active: 
+06:53:08 INFO Waiting for model:
+  test-ma2skfae/0 [idle] active: 
+06:53:15 INFO GitHub token rate limit: Rate(reset=2025-05-27 07:26:05+00:00, remaining=4496, limit=5000)
+06:53:27 INFO test_path_config_change
+06:53:27 INFO Waiting for model:
+  test-ma2skfae/0 [idle] active: 
+06:53:57 INFO Waiting for model:
+  test-ma2skfae/0 [idle] active: 
+06:54:27 INFO Ensure there is a runner (this calls reconcile)
+06:57:14 INFO Waiting for model:
+  test-ma2skfae/0 [executing] active: 
+06:57:44 INFO Reconciling (again)
+06:59:46 INFO Waiting for model:
+  test-ma2skfae/0 [executing] active: 
+07:00:16 INFO Waiting for model:
+  test-ma2skfae/0 [idle] active: 
+07:00:19 INFO runners: ['test-ma2skfae-0-n-d2eda74c7ae1']
+07:00:19 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-7d5cbf23207b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-8102403296e2"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-8bf1aa946608"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-9e4e6e9d02ca"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-b182cb976d2f"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-b27c70b9c6db"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-c4a66818e01a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-d8393460cf3c"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-db67ff3305ba"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-e493d00032c2"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-2-n-e83e52373b60"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-109cdc44d318"), SelfHostedActionsRunner(name="test-ab4lsj6d-0-n-79db46be3ff3"), SelfHostedActionsRunner(name="test-azksseum-0-n-28d79a0c7aea"), SelfHostedActionsRunner(name="test-b2mdkyua-0-n-20ce30ed5fed"), SelfHostedActionsRunner(name="test-d32ohlsr-0-n-3ec6584f7a40"), SelfHostedActionsRunner(name="test-j4n35nhn-0-n-c718a398a754"), SelfHostedActionsRunner(name="test-k940r442-0-n-99bedcc54ef9"), SelfHostedActionsRunner(name="test-lg0wjfa6-0-n-fdedae206d28"), SelfHostedActionsRunner(name="test-lkiel9md-0-n-8ac49972859e"), SelfHostedActionsRunner(name="test-ma2skfae-0-n-d2eda74c7ae1"), SelfHostedActionsRunner(name="test-qvm2y3ol-0-n-8d27b1cf8bf6"), SelfHostedActionsRunner(name="test-ubvk3tsj-0-n-1db4d7f8560b"), SelfHostedActionsRunner(name="test-vbwp26j1-0-n-fcae4af2dcfc"), SelfHostedActionsRunner(name="test-wpoz8m8k-0-n-3b1ed58a6533")]
+07:00:22 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-wmjr  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  07:00:22Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ma2skfae           active      1  github-runner-image-builder  latest/edge   81  no       
+test-ma2skfae                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ma2skfae/0*  active    idle   0        10.84.87.104           
+test-ma2skfae/0*                         active    idle   1        10.84.87.47            
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.84.87.104  juju-d7eaf1-0  ubuntu@22.04      Running
+1        started  10.84.87.47   juju-d7eaf1-1  ubuntu@22.04      Running
+
+07:00:22 INFO Juju error logs:
+
+machine-0: 06:39:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:39:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ma2skfae-0: 06:39:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:40:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:40:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ma2skfae-0: 06:40:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ma2skfae-0: 06:41:24 ERROR unit.github-runner-image-builder-ma2skfae/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ma2skfae-0: 06:58:04 ERROR unit.test-ma2skfae/0.juju-log No metrics returned after deleting test-ma2skfae-0-n-2dd5c0614481
+unit-test-ma2skfae-0: 06:58:33 ERROR unit.test-ma2skfae/0.juju-log Socket exception: Connection reset by peer (104)
+
+07:00:22 INFO Forgetting model main...

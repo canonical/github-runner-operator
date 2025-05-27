@@ -1,0 +1,56 @@
+07:16:51 INFO Waiting for model:
+  test-rell5fjl/0 [executing] active: 
+07:17:23 INFO [TEST SETUP] Exposing port 8080 on test-rell5fjl-0-n-48c207e6ffee
+07:17:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.119', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:18:84:11'}]])
+07:17:24 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-rell5fjl-0-n-48c207e6ffee.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.119 &
+07:17:25 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.119' (ED25519) to the list of known hosts.
+
+07:17:26 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-rell5fjl-0-n-48c207e6ffee
+07:17:26 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.119', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:18:84:11'}]])
+07:17:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rell5fjl-0-n-48c207e6ffee.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.119 nc -z localhost 8080'
+07:17:29 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:17:29 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-rell5fjl-0-n-48c207e6ffee
+07:17:29 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.119', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:18:84:11'}]])
+07:17:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rell5fjl-0-n-48c207e6ffee.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.119 curl http://localhost:8080'
+07:17:31 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  62708      0 --:--:-- --:--:-- --:--:-- 69000
+'
+07:17:33 INFO Wait for condition not met, sleeping 10
+07:18:12 INFO Waiting for model:
+  test-rell5fjl/0 [executing] active: 
+07:18:39 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-kyoy  github-pr-43d35-lxd  localhost/localhost  3.6.5    unsupported  07:18:39Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-rell5fjl           active      1  github-runner-image-builder  latest/edge   81  no       
+test-rell5fjl                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-rell5fjl/0*  active    idle   0        10.146.229.47             
+test-rell5fjl/0*                         active    idle   1        10.146.229.83   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.146.229.47  juju-567900-0  ubuntu@22.04      Running
+1        started  10.146.229.83  juju-567900-1  ubuntu@22.04      Running
+
+07:18:39 INFO Juju error logs:
+
+machine-0: 06:47:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:47:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-rell5fjl-0: 06:47:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:47:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:47:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rell5fjl-0: 06:47:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-rell5fjl-0: 06:48:15 ERROR unit.github-runner-image-builder-rell5fjl/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-rell5fjl-0: 07:07:53 ERROR unit.test-rell5fjl/0.juju-log No metrics returned after deleting test-rell5fjl-0-n-5f0cb147efa1
+
+07:18:39 INFO Forgetting model main...
