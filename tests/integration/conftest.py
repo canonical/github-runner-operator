@@ -308,11 +308,11 @@ def openstack_connection_fixture(
             connection.delete_keypair(key_name)
 
 
-@pytest.fixture(scope="module")
-def model(ops_test: OpsTest, http_proxy: str, https_proxy: str, no_proxy: str) -> Model:
+@pytest_asyncio.fixture(scope="module")
+async def model(ops_test: OpsTest, http_proxy: str, https_proxy: str, no_proxy: str) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
-    ops_test.model.set_config(
+    await ops_test.model.set_config(
         {
             "juju-http-proxy": http_proxy,
             "juju-https-proxy": https_proxy,
