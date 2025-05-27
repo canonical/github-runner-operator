@@ -309,9 +309,16 @@ def openstack_connection_fixture(
 
 
 @pytest.fixture(scope="module")
-def model(ops_test: OpsTest) -> Model:
+def model(ops_test: OpsTest, http_proxy: str, https_proxy: str, no_proxy: str) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
+    model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+        }
+    )
     return ops_test.model
 
 
