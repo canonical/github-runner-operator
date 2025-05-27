@@ -11,7 +11,7 @@ from pydantic import BaseModel, NonNegativeFloat
 from github_runner_manager.errors import IssueMetricEventError
 from github_runner_manager.manager.cloud_runner_manager import CodeInformation
 
-METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
+METRICS_LOG_PATH = Path("/var/log/github-runner-manager/github-runner-metrics.log")
 
 
 logger = logging.getLogger(__name__)
