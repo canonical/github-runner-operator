@@ -60,10 +60,11 @@ jobs:
       # TODO: Remove debug
       tmate-debug: true
       tmate-timeout: 300
-  allure-report:
-    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
-    needs:
-      - integration-tests
-      - openstack-interface-tests-private-endpoint
-      - openstack-integration-tests-private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+  # TODO: debug
+  # allure-report:
+  #   if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
+  #   needs:
+  #     - integration-tests
+  #     - openstack-interface-tests-private-endpoint
+  #     - openstack-integration-tests-private-endpoint
+  #   uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
