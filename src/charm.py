@@ -520,6 +520,8 @@ def _setup_runner_manager_user() -> None:
         ]
     )
     execute_command(["/usr/bin/chmod", "700", f"/home/{constants.RUNNER_MANAGER_USER}/.ssh"])
+    # Give the user access to write to /var/log
+    execute_command(["/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER])
 
 
 if __name__ == "__main__":
