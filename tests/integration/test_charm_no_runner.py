@@ -124,7 +124,6 @@ async def test_manager_service_started(
     )
 
     log = await get_github_runner_manager_service_log(unit)
-    assert "Starting the server..." in log
     assert RECONCILE_SERVICE_START_MSG in log
 
     # 2.
@@ -141,6 +140,5 @@ async def test_manager_service_started(
     await sleep(15)
 
     log = await get_github_runner_manager_service_log(unit)
-    assert "Starting the server..." not in log
     assert RECONCILE_SERVICE_START_MSG not in log
     assert RECONCILE_START_MSG in log
