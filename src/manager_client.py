@@ -7,17 +7,19 @@ import enum
 import functools
 import json
 import logging
+from time import sleep
 from typing import Any, Callable
 from urllib.parse import urljoin
 
 import requests
 
-from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceResponseError
+from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceNotReadyError, RunnerManagerServiceResponseError
 
 logger = logging.getLogger(__name__)
 
 NO_RESPONSE_ERROR_MESSAGE = "Failed request with no response"
 CONNECTION_ERROR_MESSAGE = "Failed request due to connection failure"
+NOT_READY_ERROR_MESSAGE = "GitHub runner manager service not ready"
 
 
 def catch_requests_errors(func: Callable) -> Callable:
@@ -131,3 +133,26 @@ class GitHubRunnerManagerClient:
         """
         params = {"flush-busy": str(busy)}
         self._request(_HTTPMethod.POST, "/runner/flush", params=params)
+        
+    def health_check(self) -> None:
+        try:
+            response = self._request(_HTTPMethod.GET, "/health")
+        except requests.HTTPError as err:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+        except requests.ConnectionError as err:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+
+        if response.status_code != 204:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE)
+    
+    def wait_till_ready(self) -> None:
+        for _ in range(5):
+            try:
+                self.health_check()
+            except RunnerManagerServiceNotReadyError:
+                pass
+            else:
+                return
+            sleep(60)
+        self.health_check()
+        

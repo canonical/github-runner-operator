@@ -304,11 +304,6 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         logger.info(UPGRADE_MSG)
         self._common_install_code()
-        # if not self._get_set_image_ready_status():
-        #     return
-
-        # state = self._setup_state()
-        # self._setup_service(state)
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
@@ -367,10 +362,10 @@ class GithubRunnerCharm(CharmBase):
         """
         try:
             manager_service.setup(state, self.app.name, self.unit.name)
-        except RunnerManagerApplicationError:
+        except RunnerManagerApplicationError as err:
             logging.exception("Unable to setup the github-runner-manager service")
-            # Not re-raising error for until the github-runner-manager service replaces the
-            # library.
+            raise
+        self._manager_client.wait_till_ready()
 
     @staticmethod
     def _log_juju_processes() -> None:
