@@ -1,0 +1,159 @@
+06:24:40 WARNING unexpected facade SSHServer received from the controller
+06:24:40 INFO Adding model github-pr-43d35-lxd:test-charm-no-runner-t81g on cloud localhost
+06:24:40 WARNING unexpected facade SSHServer received from the controller
+06:24:40 WARNING unexpected facade SSHSession received from the controller
+06:24:40 WARNING unexpected facade SSHTunneler received from the controller
+06:24:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-82
+06:25:01 INFO Deploying local:jammy/github-runner-0
+06:25:01 INFO Waiting for model:
+  test-r1t5j22y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-r1t5j22y/0 [allocating] waiting: waiting for machine
+06:25:31 INFO Waiting for model:
+  test-r1t5j22y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-r1t5j22y/0 [allocating] waiting: waiting for machine
+06:26:02 INFO Waiting for model:
+  test-r1t5j22y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-r1t5j22y/0 [allocating] waiting: waiting for machine
+06:26:32 INFO Waiting for model:
+  test-r1t5j22y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-r1t5j22y/0 [allocating] waiting: waiting for machine
+06:27:02 INFO Waiting for model:
+  test-r1t5j22y/0 [executing] waiting: agent initialising
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:27:32 INFO Waiting for model:
+  test-r1t5j22y/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:28:03 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:28:33 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:29:03 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:29:33 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] maintenance: Setting up Builder.
+06:30:03 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] blocked: image integration required.
+06:30:34 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:31:04 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:31:34 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:32:05 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:32:35 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:33:05 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:33:35 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:34:06 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:34:36 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:35:06 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:35:37 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:36:07 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:36:38 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:37:08 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:37:38 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:38:08 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:38:38 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:39:09 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:40:09 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-r1t5j22y/0 [executing] active: Building image.
+06:40:39 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+  github-runner-image-builder-r1t5j22y/0 [idle] active: 
+06:41:10 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:41:40 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:42:11 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:42:41 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:43:12 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:43:42 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:44:13 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:44:43 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:45:14 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:45:44 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:46:15 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:46:45 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:47:15 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:47:46 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:48:16 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:48:47 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:49:17 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:49:47 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:50:17 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:50:48 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:51:18 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:51:49 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:52:19 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:52:50 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:53:20 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:53:51 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:54:21 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
+06:54:51 INFO Waiting for model:
+  test-r1t5j22y/0 [idle] blocked: Invalid token.
