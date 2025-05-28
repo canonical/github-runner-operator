@@ -89,7 +89,7 @@ async def get_reconcile_id(unit: Unit) -> str:
     Returns:
         The UUID.
     """
-    _ , stdout, _ = await run_in_unit(unit, f"cat /home/runner-manager/reconcile.id", assert_on_failure=True, assert_msg="Unable to get reconcile id")
+    _ , stdout, _ = await run_in_unit(unit, f"cat /var/log/reconcile.id", assert_on_failure=True, assert_msg="Unable to get reconcile id")
     return stdout
 
 
