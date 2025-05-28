@@ -49,6 +49,7 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
     assert: Action returns result with one runner.
     """
     await instance_helper.ensure_charm_has_runner(app)
+    await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -85,6 +86,7 @@ async def test_flush_runner_and_resource_config(
     Test are combined to reduce number of runner spawned.
     """
     await instance_helper.ensure_charm_has_runner(app)
+    await wait_for_reconcile(app, app.model)
 
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
