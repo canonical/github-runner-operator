@@ -304,6 +304,11 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         logger.info(UPGRADE_MSG)
         self._common_install_code()
+        if not self._get_set_image_ready_status():
+            return
+
+        state = self._setup_state()
+        self._setup_service(state)
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:

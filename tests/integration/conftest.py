@@ -440,7 +440,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=60,
+            reconcile_interval=1,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
@@ -513,7 +513,7 @@ async def app_runner(
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
-        reconcile_interval=60,
+        reconcile_interval=1,
     )
     return application
 
@@ -539,7 +539,7 @@ async def app_no_wait_fixture(
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
-        reconcile_interval=60,
+        reconcile_interval=1,
         wait_idle=False,
     )
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
