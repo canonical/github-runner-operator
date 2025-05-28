@@ -3,6 +3,7 @@
 
 """Utilities for integration test."""
 
+from asyncio import sleep
 import inspect
 import logging
 import pathlib
@@ -77,20 +78,40 @@ async def run_in_unit(
 
     return code, stdout, stderr
 
+async def get_reconcile_id(unit: Unit) -> str:
+    """Get reconcile UUID of the unit.
 
-async def reconcile(app: Application, model: Model) -> None:
-    """Reconcile the runners.
+    This is to distinguish whether reconcile has happened in a unit.
+    
+    Args:
+        unit: The unit.
+    
+    Returns:
+        The UUID.
+    """
+    _ , stdout, _ = await run_in_unit(unit, f"cat /var/log/reconcile.id", assert_on_failure=True, assert_msg="Unable to get reconcile id")
+    return stdout
 
-    Uses the first unit found in the application for the reconciliation.
+
+async def wait_for_reconcile(app: Application, model: Model) -> None:
+    """Wait until a reconcile has happened.
+
+    Uses the first unit found in the application.
 
     Args:
-        app: The GitHub Runner Charm app to reconcile the runners for.
+        app: The GitHub Runner Charm application.
         model: The machine charm model.
     """
-    action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
+    # Wait the application is actively reconciling. Avoid waiting for image, etc.
     await model.wait_for_idle(apps=[app.name], status=ACTIVE)
 
+    unit = app.units[0]
+    base_id = await get_reconcile_id(unit)
+    for _ in range(10):
+        await sleep(60)
+        current_id = await get_reconcile_id(unit)
+        if base_id != current_id:
+           return 
 
 async def deploy_github_runner_charm(
     model: Model,
@@ -438,6 +459,6 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
         assert_msg="Failed to get the GitHub runner manager logs",
     )
 
-    assert return_code == 0, f"Get log with cat failed with: {stderr}"
+    assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
     assert stdout is not None
     return stdout

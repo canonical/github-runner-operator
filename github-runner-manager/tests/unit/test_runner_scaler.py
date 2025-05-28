@@ -195,6 +195,7 @@ def application_configuration_fixture() -> ApplicationConfiguration:
                 region_name="region",
             ),
         ),
+        reconcile_interval=10,
     )
 
 

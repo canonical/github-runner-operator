@@ -26,7 +26,7 @@ from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    reconcile,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -46,7 +46,7 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
             "repo-policy-compliance-url": "",
         }
     )
-    await reconcile(app=app_for_metric, model=model)
+    await wait_for_reconcile(app=app_for_metric, model=model)
 
     yield app_for_metric
 
@@ -95,7 +95,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
         app=app,
@@ -158,7 +158,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app, model=model)
 
     await assert_events_after_reconciliation(
         app=app,

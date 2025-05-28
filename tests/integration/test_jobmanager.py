@@ -33,7 +33,7 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
-from tests.integration.helpers.common import reconcile, wait_for
+from tests.integration.helpers.common import wait_for_reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,
@@ -104,14 +104,14 @@ async def app_fixture(
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
         }
     )
-    await reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
     await clear_metrics_log(app_for_jobmanager.units[0])
 
     yield app_for_jobmanager
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_jobmanager.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
 
 
 @pytest.mark.abort_on_fail

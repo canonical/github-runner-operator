@@ -114,7 +114,7 @@ class RunnerScaler:
         Returns:
             A new RunnerScaler.
         """
-        labels = application_configuration.extra_labels
+        labels = list(application_configuration.extra_labels)
         server_config = None
         base_quantity = 0
         if combinations := application_configuration.non_reactive_configuration.combinations:
@@ -139,7 +139,7 @@ class RunnerScaler:
             prefix=application_configuration.openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
         )
-
+        
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
             platform_provider=platform_provider,

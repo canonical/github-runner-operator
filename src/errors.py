@@ -80,3 +80,6 @@ class RunnerManagerServiceConnectionError(RunnerManagerServiceError):
 
 class RunnerManagerServiceResponseError(RunnerManagerServiceError):
     """Represents a issue with the response to github-runner-manager service."""
+
+class RunnerManagerServiceNotReadyError(RunnerManagerServiceError):
+    """Represents the github-runner-manager service is not ready for requests."""

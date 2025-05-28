@@ -93,6 +93,7 @@ def create_application_configuration(
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,
         openstack_configuration=openstack_configuration,
+        reconcile_interval=state.charm_config.reconcile_interval
     )
 
 
