@@ -403,12 +403,14 @@ async def image_builder_fixture(
     else:
         app = model.applications[image_builder_app_name]
     yield app
-    # The github-image-builder does not clean keypairs. Until it does,
-    # we clean them manually here.
-    for key in openstack_connection.list_keypairs():
-        key_name: str = key.name
-        if key_name.startswith(image_builder_app_name):
-            openstack_connection.delete_keypair(key_name)
+
+    if not existing_app_suffix:
+        # The github-image-builder does not clean keypairs. Until it does,
+        # we clean them manually here.
+        for key in openstack_connection.list_keypairs():
+            key_name: str = key.name
+            if key_name.startswith(image_builder_app_name):
+                openstack_connection.delete_keypair(key_name)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
