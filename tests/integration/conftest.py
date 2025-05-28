@@ -285,7 +285,7 @@ def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
 
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
-    clouds_yaml_contents: str, app_name: str
+    clouds_yaml_contents: str, app_name: str, existing_app_suffix: str,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -295,17 +295,18 @@ def openstack_connection_fixture(
     with openstack.connect(first_cloud) as connection:
         yield connection
 
-    # servers, keys, security groups, security rules, images are created by the charm.
-    # don't remove security groups & rules since they are single instances.
-    # don't remove images since it will be moved to image-builder
-    for server in connection.list_servers():
-        server_name: str = server.name
-        if server_name.startswith(app_name):
-            connection.delete_server(server_name)
-    for key in connection.list_keypairs():
-        key_name: str = key.name
-        if key_name.startswith(app_name):
-            connection.delete_keypair(key_name)
+    if not existing_app_suffix:
+        # servers, keys, security groups, security rules, images are created by the charm.
+        # don't remove security groups & rules since they are single instances.
+        # don't remove images since it will be moved to image-builder
+        for server in connection.list_servers():
+            server_name: str = server.name
+            if server_name.startswith(app_name):
+                connection.delete_server(server_name)
+        for key in connection.list_keypairs():
+            key_name: str = key.name
+            if key_name.startswith(app_name):
+                connection.delete_keypair(key_name)
 
 
 @pytest_asyncio.fixture(scope="module")
