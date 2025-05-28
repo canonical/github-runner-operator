@@ -459,6 +459,6 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
         assert_msg="Failed to get the GitHub runner manager logs",
     )
 
-    assert return_code == 0, f"Get log with cat failed with: {stderr}"
+    assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
     assert stdout is not None
     return stdout
