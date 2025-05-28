@@ -139,7 +139,8 @@ class RunnerScaler:
             prefix=application_configuration.openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
         )
-
+        
+        logger.info("labels: %s", labels)
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
             platform_provider=platform_provider,
@@ -165,6 +166,8 @@ class RunnerScaler:
                 labels=labels,
             )
             max_quantity = reactive_config.max_total_virtual_machines
+        logger.info("base_quantity: %s", base_quantity)
+        logger.info("max_quantity: %s", max_quantity)
         return cls(
             runner_manager=runner_manager,
             reactive_process_config=reactive_runner_config,
