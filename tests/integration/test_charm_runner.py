@@ -18,7 +18,7 @@ from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     get_job_logs,
-    reconcile,
+    wait_for_reconcile,
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
@@ -36,7 +36,7 @@ async def app_fixture(
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(basic_app, basic_app.model)
+    await wait_for_reconcile(basic_app, basic_app.model)
 
 
 @pytest.mark.openstack
@@ -168,7 +168,7 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         }
     )
-    await reconcile(app, app.model)
+    await wait_for_reconcile(app, app.model)
 
     workflow_run = await dispatch_workflow(
         app=app,

@@ -39,7 +39,7 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
-    reconcile,
+    wait_for_reconcile,
     wait_for,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
@@ -474,7 +474,7 @@ async def app_scheduled_events_fixture(
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
-    await reconcile(app=application, model=model)
+    await wait_for_reconcile(app=application, model=model)
     return application
 
 

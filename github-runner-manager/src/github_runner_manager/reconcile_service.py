@@ -7,14 +7,18 @@ import getpass
 import grp
 import logging
 import os
+from pathlib import Path
 from threading import Lock
 from time import sleep
+import uuid
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.configuration.base import UserInfo
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 logger = logging.getLogger(__name__)
+
+RECONCILE_ID_FILE = Path.home() / "reconcile.id"
 
 RECONCILE_SERVICE_START_MSG = "Starting the reconcile service..."
 RECONCILE_START_MSG = "Start reconciliation"
@@ -41,6 +45,10 @@ def start_reconcile_service(app_config: ApplicationConfiguration, lock: Lock) ->
         lock: The lock representing modification access to the managed set of runners.
     """
     logger.info(RECONCILE_SERVICE_START_MSG)
+    
+    # This is used for in test to distinguish which reconcile run the unit is at.
+    RECONCILE_ID_FILE.write_text(uuid.uuid4())
+
     while True:
         with lock:
             logger.info(RECONCILE_START_MSG)
@@ -48,5 +56,6 @@ def start_reconcile_service(app_config: ApplicationConfiguration, lock: Lock) ->
             delta = runner_scaler.reconcile()
             logger.info("Change in number of runner after reconcile: %s", delta)
         logger.info(RECONCILE_END_MSG)
-        # TODO: Think about this.
-        sleep(30)
+        RECONCILE_ID_FILE.write_text(uuid.uuid4())
+        
+        sleep(app_config.reconcile_interval * 60)

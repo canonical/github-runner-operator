@@ -17,7 +17,7 @@ from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
 from tests.integration.helpers.common import (
     get_github_runner_manager_service_log,
-    reconcile,
+    wait_for_reconcile,
     run_in_unit,
     wait_for,
 )
@@ -81,7 +81,7 @@ async def test_reconcile_runners(
     # 1.
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app, model=model)
 
     async def _runners_number(number) -> bool:
         """Check if there is the expected number of runners."""
@@ -92,7 +92,7 @@ async def test_reconcile_runners(
     # 2.
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app, model=model)
 
     await wait_for(lambda: _runners_number(0), timeout=10 * 60, check_interval=10)
 
