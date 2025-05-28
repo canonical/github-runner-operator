@@ -52,6 +52,8 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
+    
+    pytest.set_trace()
 
     assert action.status == "completed"
     assert action.results["online"] == "1"
