@@ -19,10 +19,11 @@ jobs:
         - name: egress var
           run: |
                 echo $EGRESS_PROXY
-                cat /home/ubuntu/.env
+                cat /etc/environment
                 env
         - name: show ip address
           run: |
                 ip addr show
-        - name: tmate
-          uses: canonical/action-tmate@main
+        - name: sleep 20 minutes
+          run: |
+                    sleep 1200
