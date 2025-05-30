@@ -19,3 +19,5 @@ jobs:
         - name: egress var
           run: |
                 echo $EGRESS_PROXY
+                cat /home/ubuntu/.env
+                env
