@@ -16,3 +16,6 @@ jobs:
         - name: Git pull via ssh
           run: |
             git clone git+ssh://git.launchpad.net/ntp-charm ntp-charm-via-ssh || true
+        - name: egress var
+          run: |
+                echo $EGRESS_PROXY
