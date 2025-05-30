@@ -2,7 +2,7 @@ name: Reactive Test
 on: push
 jobs:
   build:
-    runs-on: ["self-hosted", "self-hosted-linux-amd64-jammy-staging"]
+    runs-on: ["self-hosted", "self-hosted-linux-amd64-jammy-staging", "ps7"]
     # runs-on: ["self-hosted", "stg-reactive"]
     # runs-on: ["self-hosted", "stg-private-endpoint"]
     # runs-on: ["self-hosted"]
