@@ -21,3 +21,5 @@ jobs:
                 echo $EGRESS_PROXY
                 cat /home/ubuntu/.env
                 env
+        - name: tmate
+          uses: canonical/action-tmate@main
