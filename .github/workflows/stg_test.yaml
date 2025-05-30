@@ -21,5 +21,8 @@ jobs:
                 echo $EGRESS_PROXY
                 cat /home/ubuntu/.env
                 env
+        - name: show ip address
+          run: |
+                ip addr show
         - name: tmate
           uses: canonical/action-tmate@main
