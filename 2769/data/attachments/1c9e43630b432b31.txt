@@ -1,0 +1,155 @@
+06:23:46 WARNING unexpected facade SSHServer received from the controller
+06:23:46 INFO Adding model github-pr-43d35-lxd:test-charm-runner-58j4 on cloud localhost
+06:23:46 WARNING unexpected facade SSHServer received from the controller
+06:23:46 WARNING unexpected facade SSHSession received from the controller
+06:23:46 WARNING unexpected facade SSHTunneler received from the controller
+06:23:48 INFO Deploying ch:amd64/jammy/github-runner-image-builder-82
+06:24:06 INFO Deploying local:jammy/github-runner-0
+06:24:06 INFO Waiting for model:
+  test-rx1x1ouv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rx1x1ouv/0 [allocating] waiting: waiting for machine
+06:24:36 INFO Waiting for model:
+  test-rx1x1ouv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rx1x1ouv/0 [allocating] waiting: waiting for machine
+06:25:07 INFO Waiting for model:
+  test-rx1x1ouv/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rx1x1ouv/0 [executing] maintenance: Setting up Builder.
+06:25:37 INFO Waiting for model:
+  test-rx1x1ouv/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rx1x1ouv/0 [executing] maintenance: Setting up Builder.
+06:26:07 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] maintenance: Setting up Builder.
+06:26:37 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] maintenance: Setting up Builder.
+06:27:08 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Waiting for first image.
+06:27:38 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:28:08 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:28:39 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:29:09 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:29:39 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:30:10 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:30:40 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:31:10 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:31:41 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:32:11 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:32:41 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:33:11 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:33:42 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:34:12 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:34:42 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:35:12 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:35:42 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:36:13 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:36:43 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:37:13 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rx1x1ouv/0 [executing] active: Building image.
+06:37:43 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+  github-runner-image-builder-rx1x1ouv/0 [idle] active: 
+06:38:14 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:38:44 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:39:14 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:39:44 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:40:15 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:40:45 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:41:15 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:41:45 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:42:16 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:42:46 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:43:16 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:43:46 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:44:17 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:44:47 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:45:17 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:45:47 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:46:18 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:46:48 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:47:18 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:47:48 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:48:19 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:48:49 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:49:19 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:49:49 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:50:19 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:50:50 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:51:20 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:51:51 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:52:21 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:52:52 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:53:22 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
+06:53:52 INFO Waiting for model:
+  test-rx1x1ouv/0 [idle] blocked: Invalid token.
