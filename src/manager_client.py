@@ -117,6 +117,7 @@ class GitHubRunnerManagerClient:
         Returns:
             The information on the runners.
         """
+        self.wait_till_ready()
         response = self._request(_HTTPMethod.GET, "/runner/check")
         runner_info = json.loads(response.text)
         runner_info["runners"] = tuple(runner_info["runners"])
@@ -131,6 +132,7 @@ class GitHubRunnerManagerClient:
         Args:
             busy: Whether to flush the busy runners.
         """
+        self.wait_till_ready()
         params = {"flush-busy": str(busy)}
         self._request(_HTTPMethod.POST, "/runner/flush", params=params)
         
