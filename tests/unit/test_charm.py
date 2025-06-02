@@ -164,7 +164,6 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch) -> Harness:
         }
     )
     harness.begin()
-    monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     monkeypatch.setattr("charm.logrotate.setup", MagicMock())
     return harness
 
@@ -306,11 +305,12 @@ def test_check_runners_action_with_errors():
 
     harness = Harness(GithubRunnerCharm)
     harness.begin()
+    harness.charm._manager_client.wait_till_ready = MagicMock()
 
     # No config
     harness.charm._on_check_runners_action(mock_event)
     mock_event.fail.assert_called_with(
-        "Failed check runner request: Failed request due to connection failure"
+        "Failed runner manager request: Failed request due to connection failure"
     )
 
 
@@ -407,7 +407,7 @@ def test_catch_action_errors(
         ),
         pytest.param(
             OpenstackImage(id="test", tags=["test"]),
-            MaintenanceStatus,
+            ActiveStatus,
             True,
             id="Valid image integration.",
         ),
@@ -463,16 +463,15 @@ def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     harness = Harness(GithubRunnerCharm)
     harness.begin()
     state_mock = MagicMock()
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
-    runner_scaler_mock = MagicMock()
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     assert harness.charm.unit.status.name == ActiveStatus.name
-    runner_scaler_mock.flush.assert_called_once()
-    runner_scaler_mock.reconcile.assert_called_once()
+    
+    harness.charm._manager_client.flush_runner.assert_called_once()
 
 
 def test__on_image_relation_joined():
