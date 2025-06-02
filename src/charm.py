@@ -23,9 +23,6 @@ import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from github_runner_manager import constants
-from github_runner_manager.errors import ReconcileError
-from github_runner_manager.manager.runner_manager import FlushMode
-from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.platform.platform_provider import TokenError
 from github_runner_manager.utilities import set_env_var
 from ops.charm import (
@@ -49,7 +46,6 @@ from charm_state import (
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
@@ -65,8 +61,6 @@ from errors import (
     RunnerManagerServiceError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerStatusError
-from factories import create_runner_scaler
 from manager_client import GitHubRunnerManagerClient
 
 # The reconcile loop can get stuck in a charm upgrade. Put a timeout so
@@ -182,8 +176,6 @@ class GithubRunnerCharm(CharmBase):
         self._log_charm_status()
 
         self._grafana_agent = COSAgentProvider(self)
-
-        self._event_timer = EventTimer(self.unit.name)
 
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
@@ -341,12 +333,8 @@ class GithubRunnerCharm(CharmBase):
         event.set_results(info)
 
     @catch_action_errors
-    def _on_flush_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of flushing all runner and reconciling afterwards.
-
-        Args:
-            event: Action event of flushing all runners.
-        """
+    def _on_flush_runners_action(self, _: ActionEvent) -> None:
+        """Handle the action of flushing all runner and reconciling afterwards."""
         self._manager_client.flush_runner()
 
     @catch_charm_errors
@@ -359,10 +347,14 @@ class GithubRunnerCharm(CharmBase):
 
         Args:
             state: The charm state.
+
+        Raises:
+            RunnerManagerApplicationError: The runner manager service is not ready for requests or
+                has errors.
         """
         try:
             manager_service.setup(state, self.app.name, self.unit.name)
-        except RunnerManagerApplicationError as err:
+        except RunnerManagerApplicationError:
             logging.exception("Unable to setup the github-runner-manager service")
             raise
         self._manager_client.wait_till_ready()
@@ -405,7 +397,6 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
-        self._event_timer.disable_event_timer("reconcile-runners")
         self._manager_client.flush_runner(busy=True)
 
     def _install_deps(self) -> None:

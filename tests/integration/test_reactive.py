@@ -23,9 +23,9 @@ from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    wait_for_reconcile,
     wait_for,
     wait_for_completion,
+    wait_for_reconcile,
     wait_for_status,
 )
 from tests.integration.utils_reactive import (

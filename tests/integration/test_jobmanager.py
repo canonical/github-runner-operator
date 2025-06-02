@@ -33,7 +33,7 @@ from charm_state import (
     TOKEN_CONFIG_NAME,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
-from tests.integration.helpers.common import wait_for_reconcile, wait_for
+from tests.integration.helpers.common import wait_for, wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,

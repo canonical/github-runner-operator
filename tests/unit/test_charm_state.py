@@ -322,7 +322,7 @@ def test_parse_openstack_clouds_config_valid(valid_yaml_config: str):
     assert "clouds" in result
 
 
-@pytest.mark.parametrize("reconcile_interval", [(0)])
+@pytest.mark.parametrize("reconcile_interval", [0])
 def test_check_reconcile_interval_invalid(reconcile_interval: int):
     """
     arrange: Provide an invalid reconcile interval value.

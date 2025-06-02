@@ -398,7 +398,8 @@ class CharmConfig(BaseModel):
         # The reconcile_interval should be greater than 0.
         if reconcile_interval < 1:
             logger.error(
-                "The %s configuration must be greater than or equal to 1", RECONCILE_INTERVAL_CONFIG_NAME
+                "The %s configuration must be greater than or equal to 1",
+                RECONCILE_INTERVAL_CONFIG_NAME,
             )
             raise ValueError(
                 f"The {RECONCILE_INTERVAL_CONFIG_NAME} configuration needs to be greater or equal"

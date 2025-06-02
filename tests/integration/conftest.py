@@ -39,8 +39,8 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
-    wait_for_reconcile,
     wait_for,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
@@ -205,7 +205,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
         return None
     return {
         "auth_url": auth_url,
-        "password": password,
+        "password": str(password),
         "project_domain_name": project_domain_name,
         "project_name": project_name,
         "user_domain_name": user_domain_name,
@@ -285,7 +285,9 @@ def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
 
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
-    clouds_yaml_contents: str, app_name: str, existing_app_suffix: str,
+    clouds_yaml_contents: str,
+    app_name: str,
+    existing_app_suffix: str,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)

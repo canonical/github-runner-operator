@@ -13,7 +13,11 @@ from urllib.parse import urljoin
 
 import requests
 
-from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceNotReadyError, RunnerManagerServiceResponseError
+from errors import (
+    RunnerManagerServiceConnectionError,
+    RunnerManagerServiceNotReadyError,
+    RunnerManagerServiceResponseError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -135,8 +139,17 @@ class GitHubRunnerManagerClient:
         self.wait_till_ready()
         params = {"flush-busy": str(busy)}
         self._request(_HTTPMethod.POST, "/runner/flush", params=params)
-        
+
     def health_check(self) -> None:
+        """Request a health check on the runner manager service.
+
+        This is used as a readiness check since the service does not have a dedicated readiness
+        endpoint.
+
+        Raises:
+            RunnerManagerServiceNotReadyError: The runner manager service is not ready for
+                API requests.
+        """
         try:
             response = self._request(_HTTPMethod.GET, "/health")
         except requests.HTTPError as err:
@@ -146,8 +159,9 @@ class GitHubRunnerManagerClient:
 
         if response.status_code != 204:
             raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE)
-    
+
     def wait_till_ready(self) -> None:
+        """Wait till the runner manager service is ready for requests."""
         for _ in range(5):
             try:
                 self.health_check()
@@ -156,5 +170,5 @@ class GitHubRunnerManagerClient:
             else:
                 return
             sleep(60)
+        # RunnerManagerServiceNotReadyError will be raised if the service is still not unhealthy.
         self.health_check()
-        

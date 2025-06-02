@@ -17,9 +17,9 @@ from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
 from tests.integration.helpers.common import (
     get_github_runner_manager_service_log,
-    wait_for_reconcile,
     run_in_unit,
     wait_for,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 

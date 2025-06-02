@@ -18,8 +18,8 @@ from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     get_job_logs,
-    wait_for_reconcile,
     wait_for,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 

@@ -3,12 +3,12 @@
 
 """Utilities for integration test."""
 
-from asyncio import sleep
 import inspect
 import logging
 import pathlib
 import time
 import typing
+from asyncio import sleep
 from datetime import datetime, timezone
 from functools import partial
 from typing import Awaitable, Callable, ParamSpec, TypeVar, cast
@@ -78,18 +78,25 @@ async def run_in_unit(
 
     return code, stdout, stderr
 
+
 async def get_reconcile_id(unit: Unit) -> str:
     """Get reconcile UUID of the unit.
 
     This is to distinguish whether reconcile has happened in a unit.
-    
+
     Args:
         unit: The unit.
-    
+
     Returns:
         The UUID.
     """
-    _ , stdout, _ = await run_in_unit(unit, f"cat /var/log/reconcile.id", assert_on_failure=True, assert_msg="Unable to get reconcile id")
+    _, stdout, _ = await run_in_unit(
+        unit,
+        "cat /var/log/reconcile.id",
+        assert_on_failure=True,
+        assert_msg="Unable to get reconcile ID",
+    )
+    assert stdout is not None, "Got empty reconcile ID, this should be impossible"
     return stdout
 
 
@@ -111,7 +118,8 @@ async def wait_for_reconcile(app: Application, model: Model) -> None:
         await sleep(60)
         current_id = await get_reconcile_id(unit)
         if base_id != current_id:
-           return 
+            return
+
 
 async def deploy_github_runner_charm(
     model: Model,
