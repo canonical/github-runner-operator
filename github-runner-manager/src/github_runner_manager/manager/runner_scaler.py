@@ -139,7 +139,7 @@ class RunnerScaler:
             prefix=application_configuration.openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
         )
-        
+
         runner_manager = RunnerManager(
             manager_name=application_configuration.name,
             platform_provider=platform_provider,
