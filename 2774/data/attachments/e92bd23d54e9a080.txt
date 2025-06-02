@@ -1,0 +1,239 @@
+07:26:49 WARNING unexpected facade SSHServer received from the controller
+07:26:49 INFO Adding model github-pr-43d35-lxd:test-jobmanager-v8jp on cloud localhost
+07:26:50 WARNING unexpected facade SSHServer received from the controller
+07:26:50 WARNING unexpected facade SSHSession received from the controller
+07:26:50 WARNING unexpected facade SSHTunneler received from the controller
+07:26:51 INFO Deploying ch:amd64/jammy/mongodb-214
+07:26:53 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+07:27:09 INFO Deploying local:jammy/github-runner-0
+07:27:10 INFO Waiting for model:
+  test-t2rarn6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2rarn6r/0 [allocating] waiting: waiting for machine
+07:27:40 INFO Waiting for model:
+  test-t2rarn6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2rarn6r/0 [allocating] waiting: waiting for machine
+07:28:10 INFO Waiting for model:
+  test-t2rarn6r/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-t2rarn6r/0 [allocating] waiting: waiting for machine
+07:28:40 INFO Waiting for model:
+  test-t2rarn6r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t2rarn6r/0 [allocating] waiting: waiting for machine
+07:29:10 INFO Waiting for model:
+  test-t2rarn6r/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] maintenance: Setting up Builder.
+07:29:41 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] maintenance: Setting up Builder.
+07:30:11 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] maintenance: Setting up Builder.
+07:30:41 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] maintenance: Setting up Builder.
+07:31:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] maintenance: Setting up Builder.
+07:31:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:32:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:32:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:33:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:33:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:34:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:34:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:35:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:35:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:36:12 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:36:42 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:37:13 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:37:43 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:38:13 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:38:43 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:39:13 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:39:43 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:40:14 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:40:44 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:41:14 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:41:44 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:42:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2rarn6r/0 [executing] active: Building image.
+07:42:45 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+  github-runner-image-builder-t2rarn6r/0 [idle] active: 
+07:43:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:43:45 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:44:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:44:45 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:45:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:45:45 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:46:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:46:45 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:47:15 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:47:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:48:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:48:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:49:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:49:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:50:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:50:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:51:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:51:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:52:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:52:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:53:16 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:53:46 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:54:17 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:54:47 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:55:17 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:55:47 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:56:17 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:56:47 INFO Waiting for model:
+  test-t2rarn6r/0 [idle] blocked: Invalid token.
+07:57:11 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-v8jp  github-pr-43d35-lxd  localhost/localhost  3.6.6    unsupported  07:57:11Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-t2rarn6r           active       1  github-runner-image-builder  latest/edge   83  no       
+mongodb                               6.0.6    active       1  mongodb                      6/edge       214  no       
+test-t2rarn6r                                  blocked      1  github-runner                               0  no       Invalid token.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-t2rarn6r/0*  active    idle   1        10.248.238.6               
+mongodb/0*                               active    idle   0        10.248.238.190  27017/tcp  Primary
+test-t2rarn6r/0*                         blocked   idle   2        10.248.238.229             Invalid token.
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.248.238.190  juju-404ae2-0  ubuntu@22.04      Running
+1        started  10.248.238.6    juju-404ae2-1  ubuntu@22.04      Running
+2        started  10.248.238.229  juju-404ae2-2  ubuntu@22.04      Running
+
+07:57:12 INFO Juju error logs:
+
+machine-2: 07:28:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 07:28:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t2rarn6r-0: 07:28:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 07:28:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:28:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 07:28:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 07:28:28 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 07:28:28 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 07:28:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:28:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-t2rarn6r-0: 07:28:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-t2rarn6r-0: 07:29:35 ERROR unit.github-runner-image-builder-t2rarn6r/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-t2rarn6r-0: 07:42:37 ERROR unit.test-t2rarn6r/0.juju-log image:3: Issue with GitHub token
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/github_client.py", line 79, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/github_client.py", line 155, in list_runners
+    self._client.actions.list_self_hosted_runners_for_repo(
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/fastcore/net.py", line 122, in urlread
+    if 400 <= e.code < 500: raise ExceptionsHTTP[e.code](e.url, e.hdrs, e.fp, msg=e.msg) from None
+fastcore.net.HTTP401UnauthorizedError: HTTP Error 401: Unauthorized
+====Error Body====
+{
+  "message": "Bad credentials",
+  "documentation_url": "https://docs.github.com/rest",
+  "status": "401"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/./src/charm.py", line 121, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/./src/charm.py", line 592, in _on_image_relation_changed
+    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 249, in flush
+    metric_stats = self._manager.cleanup()
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 254, in cleanup
+    deleted_runner_metrics = self._cleanup_resources()
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 271, in _cleanup_resources
+    runners_health_response = self._platform.get_runners_health(cloud_runners)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/platform/multiplexer_provider.py", line 104, in get_runners_health
+    provider_health_response = self._providers[platform_name].get_runners_health(
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/platform/github_provider.py", line 108, in get_runners_health
+    github_runners = self._client.list_runners(self._path, self._prefix)
+  File "/var/lib/juju/agents/unit-test-t2rarn6r-0/charm/venv/github_runner_manager/github_client.py", line 86, in wrapper
+    raise TokenError(msg) from exc
+github_runner_manager.platform.platform_provider.TokenError: Invalid token.
+
+07:57:12 INFO Forgetting model main...
