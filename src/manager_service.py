@@ -51,7 +51,15 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
         state: The state of the charm.
         app_name: The Juju application name.
         unit_name: The Juju unit.
+
+    Raises:
+        RunnerManagerApplicationStartError: Setup of the runner manager service has failed.
     """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)

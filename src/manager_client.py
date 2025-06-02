@@ -7,17 +7,23 @@ import enum
 import functools
 import json
 import logging
+from time import sleep
 from typing import Any, Callable
 from urllib.parse import urljoin
 
 import requests
 
-from errors import RunnerManagerServiceConnectionError, RunnerManagerServiceResponseError
+from errors import (
+    RunnerManagerServiceConnectionError,
+    RunnerManagerServiceNotReadyError,
+    RunnerManagerServiceResponseError,
+)
 
 logger = logging.getLogger(__name__)
 
 NO_RESPONSE_ERROR_MESSAGE = "Failed request with no response"
 CONNECTION_ERROR_MESSAGE = "Failed request due to connection failure"
+NOT_READY_ERROR_MESSAGE = "GitHub runner manager service not ready"
 
 
 def catch_requests_errors(func: Callable) -> Callable:
@@ -115,6 +121,7 @@ class GitHubRunnerManagerClient:
         Returns:
             The information on the runners.
         """
+        self.wait_till_ready()
         response = self._request(_HTTPMethod.GET, "/runner/check")
         runner_info = json.loads(response.text)
         runner_info["runners"] = tuple(runner_info["runners"])
@@ -123,11 +130,45 @@ class GitHubRunnerManagerClient:
         return runner_info
 
     @catch_requests_errors
-    def flush_runner(self, busy: bool = True) -> None:
+    def flush_runner(self, busy: bool = False) -> None:
         """Request to flush the runners.
 
         Args:
             busy: Whether to flush the busy runners.
         """
+        self.wait_till_ready()
         params = {"flush-busy": str(busy)}
         self._request(_HTTPMethod.POST, "/runner/flush", params=params)
+
+    def health_check(self) -> None:
+        """Request a health check on the runner manager service.
+
+        This is used as a readiness check since the service does not have a dedicated readiness
+        endpoint.
+
+        Raises:
+            RunnerManagerServiceNotReadyError: The runner manager service is not ready for
+                API requests.
+        """
+        try:
+            response = self._request(_HTTPMethod.GET, "/health")
+        except requests.HTTPError as err:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+        except requests.ConnectionError as err:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+
+        if response.status_code != 204:
+            raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE)
+
+    def wait_till_ready(self) -> None:
+        """Wait till the runner manager service is ready for requests."""
+        for _ in range(5):
+            try:
+                self.health_check()
+            except RunnerManagerServiceNotReadyError:
+                pass
+            else:
+                return
+            sleep(60)
+        # RunnerManagerServiceNotReadyError will be raised if the service is still not unhealthy.
+        self.health_check()

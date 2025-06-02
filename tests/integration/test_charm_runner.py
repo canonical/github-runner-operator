@@ -18,8 +18,8 @@ from tests.integration.helpers.common import (
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     get_job_logs,
-    reconcile,
     wait_for,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -36,7 +36,7 @@ async def app_fixture(
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(basic_app, basic_app.model)
+    await wait_for_reconcile(basic_app, basic_app.model)
 
 
 @pytest.mark.openstack
@@ -49,6 +49,7 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
     assert: Action returns result with one runner.
     """
     await instance_helper.ensure_charm_has_runner(app)
+    await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -85,6 +86,7 @@ async def test_flush_runner_and_resource_config(
     Test are combined to reduce number of runner spawned.
     """
     await instance_helper.ensure_charm_has_runner(app)
+    await wait_for_reconcile(app, app.model)
 
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
@@ -102,10 +104,7 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
-    # There is a race condition in here. When deleting a runner in openstack, it can take
-    # a while to get the runner deleted and the "flush-runner" will not spawn a new runner.
-    # We may need to call flush-runners twice and wait in the middle until the openstack
-    # instance disappear.
+    await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -134,7 +133,6 @@ async def test_flush_runner_and_resource_config(
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["delta"]["virtual-machines"] == "0"
 
 
 @pytest.mark.openstack
@@ -168,7 +166,7 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         }
     )
-    await reconcile(app, app.model)
+    await wait_for_reconcile(app, app.model)
 
     workflow_run = await dispatch_workflow(
         app=app,

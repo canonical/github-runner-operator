@@ -14,7 +14,7 @@ from juju.model import Model
 from ops.model import ActiveStatus
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers.common import reconcile
+from tests.integration.helpers.common import wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
@@ -48,7 +48,7 @@ async def test_path_config_change(
     await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
 
     logger.info("Reconciling (again)")
-    await reconcile(app=app_with_forked_repo, model=model)
+    await wait_for_reconcile(app=app_with_forked_repo, model=model)
 
     runner_names = await instance_helper.get_runner_names(unit)
     logger.info("runners: %s", runner_names)

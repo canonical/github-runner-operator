@@ -38,21 +38,8 @@ def disk_usage_mock(total_disk: int):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command):
-    runner_scaler_mock = unittest.mock.MagicMock(spec=RunnerScaler)
-
-    cron_path = tmp_path / "cron.d"
-    cron_path.mkdir()
-
-    monkeypatch.setattr("charm.RunnerScaler", runner_scaler_mock)
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
-    monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
-    monkeypatch.setattr("event_timer.execute_command", exec_command)
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
-    )
-    monkeypatch.setattr("github_runner_manager.github_client.GhApi", MockGhapiClient)
-    monkeypatch.setattr("github_runner_manager.utilities.time", unittest.mock.MagicMock())
 
 
 @pytest.fixture(autouse=True, name="cloud_name")
