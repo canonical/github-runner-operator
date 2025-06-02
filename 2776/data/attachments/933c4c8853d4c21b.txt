@@ -1,0 +1,157 @@
+18:54:17 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] maintenance: Reconciling runners
+18:55:07 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+18:55:39 INFO Wait for condition not met, sleeping 10
+18:55:51 INFO Wait for condition not met, sleeping 10
+18:56:01 INFO Wait for condition not met, sleeping 10
+18:56:12 INFO Wait for condition not met, sleeping 10
+18:56:22 INFO Wait for condition not met, sleeping 10
+18:56:32 INFO Wait for condition not met, sleeping 10
+18:56:43 INFO Wait for condition not met, sleeping 10
+18:56:54 INFO Wait for condition not met, sleeping 10
+18:57:04 INFO Wait for condition not met, sleeping 10
+18:57:15 INFO Wait for condition not met, sleeping 10
+18:57:25 INFO Wait for condition not met, sleeping 10
+18:58:09 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] maintenance: Reconciling runners
+18:58:39 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active: 
+18:58:41 INFO Wait for condition not met, sleeping 60
+18:59:41 INFO Wait for condition not met, sleeping 60
+19:00:42 INFO Wait for condition not met, sleeping 60
+19:01:42 INFO Wait for condition not met, sleeping 60
+19:02:43 INFO Wait for condition not met, sleeping 60
+19:03:43 INFO Wait for condition not met, sleeping 60
+19:04:44 INFO Wait for condition not met, sleeping 60
+19:05:44 INFO Wait for condition not met, sleeping 60
+19:06:45 INFO Wait for condition not met, sleeping 60
+19:07:47 INFO Wait for condition not met, sleeping 10
+19:08:11 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active:
+19:08:39 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+19:08:58 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-pm3l  github-pr-43d35-lxd  localhost/localhost  3.6.6    unsupported  19:08:58Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pfah1hrp           active      1  github-runner-image-builder  latest/edge   83  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-pfah1hrp                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-pfah1hrp/0*  active    idle   1        10.79.98.3                 
+mongodb/0*                               active    idle   0        10.79.98.177    27017/tcp  Primary
+test-pfah1hrp/0*                         active    idle   2        10.79.98.16                
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.79.98.177  juju-152028-0  ubuntu@22.04      Running
+1        started  10.79.98.3    juju-152028-1  ubuntu@22.04      Running
+2        started  10.79.98.16   juju-152028-2  ubuntu@22.04      Running
+
+19:08:58 INFO Juju error logs:
+
+machine-1: 18:26:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pfah1hrp-0: 18:26:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:27:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:27:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pfah1hrp-0: 18:27:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pfah1hrp-0: 18:27:47 ERROR unit.github-runner-image-builder-pfah1hrp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-0: 18:28:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:28:42 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:29:07 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:29:07 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-pfah1hrp-0: 18:49:49 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:49:58 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:49:58 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:50:37 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:50:38 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:50:38 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:50:48 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:50:49 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:50:49 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:51:03 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:51:04 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:51:04 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:51:10 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:51:12 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:51:12 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:51:43 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:51:45 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:51:45 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:51:52 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:51:53 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:51:53 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+unit-test-pfah1hrp-0: 18:52:08 ERROR unit.test-pfah1hrp/0.juju-log Failed to get SSH connection while removing test-pfah1hrp-0-r-28d7bd64a7e8
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 216, in _delete_runner
+    ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 144, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-pfah1hrp-0/charm/venv/github_runner_manager/openstack_cloud/openstack_cloud.py", line 340, in get_ssh_connection
+    raise KeyfileError(
+github_runner_manager.errors.KeyfileError: Missing keyfile for server: test-pfah1hrp-0-r-28d7bd64a7e8, key path: /home/runner-manager/.ssh/test-pfah1hrp-0-r-28d7bd64a7e8.key
+unit-test-pfah1hrp-0: 18:52:10 ERROR unit.test-pfah1hrp/0.juju-log Invalid pulled metrics. No runner_installed information for test-pfah1hrp-0-r-28d7bd64a7e8.
+unit-test-pfah1hrp-0: 18:52:10 ERROR unit.test-pfah1hrp/0.juju-log No metrics returned after deleting test-pfah1hrp-0-r-28d7bd64a7e8
+
+19:08:58 INFO Forgetting model main...

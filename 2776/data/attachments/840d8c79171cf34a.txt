@@ -1,0 +1,147 @@
+18:25:17 WARNING unexpected facade SSHServer received from the controller
+18:25:17 INFO Adding model github-pr-43d35-lxd:test-reactive-pm3l on cloud localhost
+18:25:18 WARNING unexpected facade SSHServer received from the controller
+18:25:18 WARNING unexpected facade SSHSession received from the controller
+18:25:18 WARNING unexpected facade SSHTunneler received from the controller
+18:25:18 INFO GitHub token rate limit: Rate(reset=2025-06-02 19:24:19+00:00, remaining=4997, limit=5000)
+18:25:23 INFO Deploying ch:amd64/jammy/mongodb-214
+18:25:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+18:25:49 INFO Deploying local:jammy/github-runner-0
+18:25:50 INFO Waiting for model:
+  test-pfah1hrp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pfah1hrp/0 [allocating] waiting: waiting for machine
+18:26:20 INFO Waiting for model:
+  test-pfah1hrp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pfah1hrp/0 [allocating] waiting: waiting for machine
+18:26:50 INFO Waiting for model:
+  test-pfah1hrp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pfah1hrp/0 [allocating] waiting: waiting for machine
+18:27:21 INFO Waiting for model:
+  test-pfah1hrp/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pfah1hrp/0 [executing] maintenance: Setting up Builder.
+18:27:51 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pfah1hrp/0 [executing] maintenance: Setting up Builder.
+18:28:21 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pfah1hrp/0 [executing] maintenance: Setting up Builder.
+18:28:52 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] maintenance: Setting up Builder.
+18:29:22 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] maintenance: Setting up Builder.
+18:29:52 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:30:22 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:30:53 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:31:23 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:31:53 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:32:23 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:32:53 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:33:24 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:33:54 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:34:24 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:34:54 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:35:25 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:35:55 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:36:25 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:36:55 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:37:25 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:37:56 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:38:26 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:38:56 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:39:26 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:39:57 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:40:27 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:40:57 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:41:28 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pfah1hrp/0 [executing] active: Building image.
+18:41:58 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] maintenance: Reconciling runners
+18:42:24 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:42:24 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:42:54 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+18:43:36 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+18:44:06 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active:
+18:44:19 INFO Wait for condition not met, sleeping 10
+18:45:01 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active: 
+18:45:17 INFO Wait for condition not met, sleeping 60
+18:46:17 INFO Wait for condition not met, sleeping 60
+18:47:18 INFO Wait for condition not met, sleeping 60
+18:48:18 INFO Wait for condition not met, sleeping 60
+18:50:09 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+18:50:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748889900.8114967, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.354098558425903}
+{"timestamp": 1748890131.0, "event": "runner_installed", "flavor": "test-pfah1hrp", "duration": 256.0}
+{"timestamp": 1748890134.0, "event": "runner_start", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 273.0}
+{"timestamp": 1748890137.0, "event": "runner_stop", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1748890207.9581685, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 47.61771583557129}
+
+18:50:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748889900.8114967, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.354098558425903}
+{"timestamp": 1748890131.0, "event": "runner_installed", "flavor": "test-pfah1hrp", "duration": 256.0}
+{"timestamp": 1748890134.0, "event": "runner_start", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 273.0}
+{"timestamp": 1748890137.0, "event": "runner_stop", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1748890207.9581685, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 47.61771583557129}
+
+18:50:28 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1748889900.8114967, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.354098558425903}
+{"timestamp": 1748890131.0, "event": "runner_installed", "flavor": "test-pfah1hrp", "duration": 256.0}
+{"timestamp": 1748890134.0, "event": "runner_start", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 273.0}
+{"timestamp": 1748890137.0, "event": "runner_stop", "flavor": "test-pfah1hrp", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1748890207.9581685, "event": "reconciliation", "flavor": "test-pfah1hrp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 47.61771583557129}
+18:50:55 INFO Waiting for model:
+  test-pfah1hrp/0 [executing] active: 
+18:51:26 INFO Waiting for model:
+  test-pfah1hrp/0 [idle] active:

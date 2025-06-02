@@ -1,0 +1,127 @@
+18:42:09 WARNING unexpected facade SSHServer received from the controller
+18:42:09 INFO Adding model github-pr-43d35-lxd:test-charm-fork-path-change-pw86 on cloud localhost
+18:42:09 WARNING unexpected facade SSHServer received from the controller
+18:42:09 WARNING unexpected facade SSHSession received from the controller
+18:42:09 WARNING unexpected facade SSHTunneler received from the controller
+18:42:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+18:42:29 INFO Deploying local:jammy/github-runner-0
+18:42:29 INFO Waiting for model:
+  test-ed9j0tlc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ed9j0tlc/0 [allocating] waiting: waiting for machine
+18:42:59 INFO Waiting for model:
+  test-ed9j0tlc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ed9j0tlc/0 [allocating] waiting: waiting for machine
+18:43:29 INFO Waiting for model:
+  test-ed9j0tlc/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ed9j0tlc/0 [executing] maintenance: Setting up Builder.
+18:44:00 INFO Waiting for model:
+  test-ed9j0tlc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ed9j0tlc/0 [executing] maintenance: Setting up Builder.
+18:44:30 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] maintenance: Setting up Builder.
+18:45:00 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] maintenance: Setting up Builder.
+18:45:31 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] maintenance: Setting up Builder.
+18:46:01 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:46:31 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:47:02 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:47:32 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:48:02 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:48:33 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:49:03 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:49:34 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:50:04 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:50:34 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:51:05 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:51:35 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:52:05 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:52:35 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:53:06 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:53:36 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:54:06 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ed9j0tlc/0 [executing] active: Building image.
+18:54:37 INFO Waiting for model:
+  test-ed9j0tlc/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ed9j0tlc/0 [idle] active: 
+18:55:07 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] active: 
+18:55:11 INFO GitHub token rate limit: Rate(reset=2025-06-02 19:24:19+00:00, remaining=4310, limit=5000)
+18:55:23 INFO test_path_config_change
+18:55:23 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] active: 
+18:55:53 INFO Waiting for model:
+  test-ed9j0tlc/0 [idle] active: 
+18:56:22 INFO Ensure there is a runner (this calls reconcile)
+18:58:23 INFO Waiting for model:
+  test-ed9j0tlc/0 [executing] active: 
+18:58:50 INFO Reconciling (again)
+19:00:57 INFO Waiting for model:
+  test-ed9j0tlc/0 [executing] active: 
+19:01:28 INFO runners: ['test-ed9j0tlc-0-n-2597f5877cb8']
+19:01:28 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-1a66ebb46565"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-36a0de496e2f"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-55d32c889ed7"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-60a4b5d4556f"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-70011ca4b024"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-8876f1994cc7"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-902cf0e6e2d7"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-9754d40f3081"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-cf4bd668313a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-f5d1ffdcee12"), SelfHostedActionsRunner(name="test-brzvonjd-0-n-f8e0ae031d7c"), SelfHostedActionsRunner(name="test-bza5htyh-0-n-880ba343bc8a"), SelfHostedActionsRunner(name="test-ed9j0tlc-0-n-2597f5877cb8"), SelfHostedActionsRunner(name="test-okxk8g43-0-n-b8aee9cd7966"), SelfHostedActionsRunner(name="test-pfah1hrp-0-r-432aa896857f"), SelfHostedActionsRunner(name="test-pps1u01r-0-n-2e4fc02eb62f"), SelfHostedActionsRunner(name="test-shkejwgi-0-n-8f51b2397142")]
+19:01:40 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-pw86  github-pr-43d35-lxd  localhost/localhost  3.6.6    unsupported  19:01:40Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ed9j0tlc           active      1  github-runner-image-builder  latest/edge   83  no       
+test-ed9j0tlc                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ed9j0tlc/0*  active    idle   0        10.123.183.37          
+test-ed9j0tlc/0*                         active    idle   1        10.123.183.39          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.123.183.37  juju-242bf1-0  ubuntu@22.04      Running
+1        started  10.123.183.39  juju-242bf1-1  ubuntu@22.04      Running
+
+19:01:40 INFO Juju error logs:
+
+machine-0: 18:43:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:43:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ed9j0tlc-0: 18:43:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:43:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:43:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ed9j0tlc-0: 18:43:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ed9j0tlc-0: 18:43:52 ERROR unit.github-runner-image-builder-ed9j0tlc/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ed9j0tlc-0: 18:59:07 ERROR unit.test-ed9j0tlc/0.juju-log No metrics returned after deleting test-ed9j0tlc-0-n-086ed2e06504
+
+19:01:40 INFO Forgetting model main...
