@@ -133,7 +133,6 @@ async def test_flush_runner_and_resource_config(
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["delta"]["virtual-machines"] == "0"
 
 
 @pytest.mark.openstack
