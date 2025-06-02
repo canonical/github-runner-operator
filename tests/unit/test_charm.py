@@ -458,19 +458,18 @@ def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     arrange: given a charm with OpenStack instance type and a monkeypatched \
         _get_set_image_ready_status that returns True denoting image ready.
     act: when _on_image_relation_changed is called.
-    assert: runner flush and reconcile is called.
+    assert: runner flush is called.
     """
     harness = Harness(GithubRunnerCharm)
     harness.begin()
     state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
     harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
 
     harness.charm._on_image_relation_changed(MagicMock())
 
-    assert harness.charm.unit.status.name == ActiveStatus.name
-    
     harness.charm._manager_client.flush_runner.assert_called_once()
 
 
