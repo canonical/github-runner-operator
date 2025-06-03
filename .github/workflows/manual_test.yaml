@@ -6,12 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  tmate-test:
-    runs-on: [self-hosted, ppc64el]
+  test:
+    runs-on: [self-hosted, arm64, medium, jammy]
     steps:
-      # Enable tmate debugging of manually-triggered workflows if the input option was provided
-      - name: Setup tmate session
-        uses: canonical/action-tmate@feat/ubuntu-arch
+    - run: lscpu
+    - run: df -h
+    - run: free -h
+    - run: uname -a
+    - run: lsb_release -a
   # reactive-focal-large-long-label:
   #   name: reactive focal large with long label
   #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-large]
