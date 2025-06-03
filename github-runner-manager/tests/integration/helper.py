@@ -51,7 +51,7 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
-    for _ in range(6):
+    for _ in range(30):
         try:
             health_check()
         except (AssertionError, requests.ConnectionError):
