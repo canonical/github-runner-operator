@@ -99,17 +99,20 @@ class _ReconcileMetricData:
 class RunnerScaler:
     """Manage the reconcile of runners."""
 
+    # Disable too many locals due to this function is collecting and processing configurations.
     @classmethod
-    def build(
+    def build(  # pylint: disable-msg=too-many-locals
         cls,
         application_configuration: ApplicationConfiguration,
         user: UserInfo,
+        python_path: str | None = None,
     ) -> "RunnerScaler":
         """Create a RunnerScaler from application and OpenStack configuration.
 
         Args:
             application_configuration: Main configuration for the application.
             user: The user to run reactive process.
+            python_path: The PYTHONPATH to access the github-runner-manager library.
 
         Returns:
             A new RunnerScaler.
@@ -171,6 +174,7 @@ class RunnerScaler:
             user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
+            python_path=python_path,
         )
 
     # The `user` argument will be removed once the charm no longer uses the github-runner-manager
@@ -185,6 +189,7 @@ class RunnerScaler:
         user: UserInfo,
         base_quantity: int,
         max_quantity: int,
+        python_path: str | None = None,
     ):
         """Construct the object.
 
@@ -194,12 +199,14 @@ class RunnerScaler:
             user: The user to run the reactive process.
             base_quantity: The number of intended non-reactive runners.
             max_quantity: The number of maximum runners for reactive.
+            python_path: The PYTHONPATH to access the github-runner-manager library.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
         self._user = user
         self._base_quantity = base_quantity
         self._max_quantity = max_quantity
+        self._python_path = python_path
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -283,6 +290,7 @@ class RunnerScaler:
                     runner_manager=self._manager,
                     reactive_process_config=self._reactive_config,
                     user=self._user,
+                    python_path=self._python_path,
                 )
                 reconcile_diff = reconcile_result.processes_diff
                 metric_stats = reconcile_result.metric_stats

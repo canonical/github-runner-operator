@@ -440,7 +440,7 @@ def test_reconcile_runner_create_one_reactive(
     from github_runner_manager.reactive.runner_manager import ReconcileResult
 
     def _fake_reactive_reconcile(
-        expected_quantity: int, runner_manager, reactive_process_config, user
+        expected_quantity: int, runner_manager, reactive_process_config, user, python_path
     ):
         """Reactive reconcile fake."""
         return ReconcileResult(processes_diff=expected_quantity, metric_stats={"event": ""})
