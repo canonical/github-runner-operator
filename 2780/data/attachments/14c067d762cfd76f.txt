@@ -1,0 +1,138 @@
+06:24:55 INFO Adding model github-pr-43d35-lxd:test-charm-upgrade-l54l on cloud localhost
+06:24:55 WARNING unexpected facade AgentLifeFlag received from the controller
+06:24:55 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:24:55 WARNING unexpected facade SecretsDrain received from the controller
+06:24:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+06:25:19 INFO Deploying local:jammy/github-runner-0
+06:25:19 INFO Waiting for model:
+  test-spisgmh7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-spisgmh7/0 [allocating] waiting: waiting for machine
+06:25:49 INFO Waiting for model:
+  test-spisgmh7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-spisgmh7/0 [allocating] waiting: waiting for machine
+06:26:19 INFO Waiting for model:
+  test-spisgmh7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-spisgmh7/0 [executing] maintenance: Setting up Builder.
+06:26:49 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-spisgmh7/0 [executing] maintenance: Setting up Builder.
+06:27:19 INFO Waiting for model:
+  test-spisgmh7/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-spisgmh7/0 [executing] maintenance: Setting up Builder.
+06:27:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-spisgmh7/0 [executing] maintenance: Setting up Builder.
+06:28:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-spisgmh7/0 [executing] maintenance: Setting up Builder.
+06:28:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:29:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:29:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:30:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:30:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:31:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:31:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:32:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:32:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:33:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:33:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:34:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:34:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:35:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:35:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:36:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:36:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:37:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:37:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:38:19 INFO Waiting for model:
+  test-spisgmh7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-spisgmh7/0 [executing] active: Building image.
+06:38:49 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-spisgmh7/0 [idle] active: 
+06:39:19 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Reconciling runners
+06:39:49 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Reconciling runners
+06:40:19 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Reconciling runners
+06:40:49 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Reconciling runners
+06:41:19 INFO Waiting for model:
+  test-spisgmh7/0 [executing] maintenance: Reconciling runners
+06:41:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] active: 
+06:43:19 INFO Waiting for model:
+  test-spisgmh7/0 [executing] active: 
+06:43:49 INFO Waiting for model:
+  test-spisgmh7/0 [idle] active:
+06:44:23 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-l54l  github-pr-43d35-lxd  localhost/localhost  3.1.10   unsupported  06:44:23Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-spisgmh7           active      1  github-runner-image-builder  latest/edge   83  no       
+test-spisgmh7                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-spisgmh7/0*  active    idle   0        10.251.80.101          
+test-spisgmh7/0*                         active    idle   1        10.251.80.30           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.251.80.101  juju-5c3250-0  ubuntu@22.04      Running
+1        started  10.251.80.30   juju-5c3250-1  ubuntu@22.04      Running
+
+06:44:23 INFO Juju error logs:
+
+machine-0: 06:26:01 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:26:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-spisgmh7-0: 06:26:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:26:10 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:26:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-spisgmh7-0: 06:26:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-spisgmh7-0: 06:26:40 ERROR unit.github-runner-image-builder-spisgmh7/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:44:24 INFO Forgetting model main...

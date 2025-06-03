@@ -1,0 +1,187 @@
+06:24:50 INFO Adding model github-pr-43d35-lxd:test-charm-scheduled-events-7vsl on cloud localhost
+06:24:50 WARNING unexpected facade AgentLifeFlag received from the controller
+06:24:50 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:24:50 WARNING unexpected facade SecretsDrain received from the controller
+06:24:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+06:25:14 INFO Deploying local:jammy/github-runner-0
+06:25:14 INFO Waiting for model:
+  test-guo9hv7v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-guo9hv7v/0 [allocating] waiting: waiting for machine
+06:25:44 INFO Waiting for model:
+  test-guo9hv7v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-guo9hv7v/0 [allocating] waiting: waiting for machine
+06:26:14 INFO Waiting for model:
+  test-guo9hv7v/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-guo9hv7v/0 [allocating] waiting: agent initialising
+06:26:44 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-guo9hv7v/0 [executing] maintenance: Setting up Builder.
+06:27:14 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-guo9hv7v/0 [executing] maintenance: Setting up Builder.
+06:27:44 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] maintenance: Setting up Builder.
+06:28:14 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] maintenance: Setting up Builder.
+06:28:44 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] maintenance: Setting up Builder.
+06:29:14 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:29:44 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:30:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:30:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:31:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:31:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:32:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:32:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:33:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:33:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:34:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:34:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:35:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:35:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:36:15 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:36:45 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:37:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:37:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:38:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:38:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:39:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:39:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:40:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:40:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:41:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:41:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:42:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:42:46 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:43:16 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:43:47 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:44:17 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:44:47 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:45:17 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-guo9hv7v/0 [executing] active: Building image.
+06:45:47 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: Reconciling runners
+06:46:03 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] active: 
+06:46:33 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: Reconciling runners
+06:47:03 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: Reconciling runners
+06:47:34 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: Reconciling runners
+06:48:04 INFO Waiting for model:
+  test-guo9hv7v/0 [executing] maintenance: Reconciling runners
+06:48:34 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] active: 
+06:49:00 INFO Waiting for model:
+  test-guo9hv7v/0 [idle] active:
+06:49:21 INFO Wait for condition not met, sleeping 3
+06:49:26 INFO Wait for 10 minutes
+06:59:26 INFO Waiting for model:
+  github-runner-image-builder-guo9hv7v/0 [idle] active: 
+  test-guo9hv7v/0 [idle] active:
+06:59:50 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-7vsl  github-pr-43d35-lxd  localhost/localhost  3.1.10   unsupported  06:59:50Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-guo9hv7v           active      1  github-runner-image-builder  latest/edge   83  no       
+test-guo9hv7v                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-guo9hv7v/0*  active    idle   0        10.146.241.62          
+test-guo9hv7v/0*                         active    idle   1        10.146.241.105         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.146.241.62   juju-e2657a-0  ubuntu@22.04      Running
+1        started  10.146.241.105  juju-e2657a-1  ubuntu@22.04      Running
+
+06:59:50 INFO Juju error logs:
+
+machine-0: 06:26:05 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:26:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-guo9hv7v-0: 06:26:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:26:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:09 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-guo9hv7v-0: 06:26:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-guo9hv7v-0: 06:26:45 ERROR unit.github-runner-image-builder-guo9hv7v/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-github-runner-image-builder-guo9hv7v-0: 06:34:58 ERROR unit.github-runner-image-builder-guo9hv7v/0.juju-log image:0: Image build failed, code: 1, out: hello world
+.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+, err: None, stdout: hello world
+.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+
+
+06:59:51 INFO Forgetting model main...

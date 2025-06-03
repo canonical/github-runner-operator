@@ -1,0 +1,131 @@
+06:24:31 WARNING unexpected facade SSHServer received from the controller
+06:24:31 INFO Adding model github-pr-43d35-lxd:test-charm-fork-path-change-d0iu on cloud localhost
+06:24:31 WARNING unexpected facade SSHServer received from the controller
+06:24:31 WARNING unexpected facade SSHSession received from the controller
+06:24:31 WARNING unexpected facade SSHTunneler received from the controller
+06:24:33 INFO Deploying ch:amd64/jammy/github-runner-image-builder-83
+06:24:49 INFO Deploying local:jammy/github-runner-0
+06:24:49 INFO Waiting for model:
+  test-ekq85how/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ekq85how/0 [allocating] waiting: waiting for machine
+06:25:20 INFO Waiting for model:
+  test-ekq85how/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ekq85how/0 [allocating] waiting: waiting for machine
+06:25:50 INFO Waiting for model:
+  test-ekq85how/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ekq85how/0 [executing] maintenance: Setting up Builder.
+06:26:20 INFO Waiting for model:
+  test-ekq85how/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ekq85how/0 [executing] maintenance: Setting up Builder.
+06:26:50 INFO Waiting for model:
+  test-ekq85how/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ekq85how/0 [executing] maintenance: Setting up Builder.
+06:27:21 INFO Waiting for model:
+  test-ekq85how/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ekq85how/0 [executing] maintenance: Setting up Builder.
+06:27:51 INFO Waiting for model:
+  test-ekq85how/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ekq85how/0 [executing] maintenance: Setting up Builder.
+06:28:22 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:28:52 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:29:22 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:29:52 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:30:22 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:30:53 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:31:23 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:31:53 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:32:23 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:32:54 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:33:24 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:33:54 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:34:24 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:34:55 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:35:25 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:35:55 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:36:26 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:36:56 INFO Waiting for model:
+  test-ekq85how/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ekq85how/0 [executing] active: Building image.
+06:37:26 INFO Waiting for model:
+  test-ekq85how/0 [executing] maintenance: Reconciling runners
+06:37:45 INFO GitHub token rate limit: Rate(reset=2025-06-03 07:27:21+00:00, remaining=4923, limit=5000)
+06:37:56 INFO test_path_config_change
+06:37:56 INFO Waiting for model:
+  test-ekq85how/0 [idle] active: 
+06:38:26 INFO Waiting for model:
+  test-ekq85how/0 [executing] maintenance: Reconciling runners
+06:38:57 INFO Waiting for model:
+  test-ekq85how/0 [idle] active: 
+06:39:06 INFO Ensure there is a runner (this calls reconcile)
+06:41:26 INFO Waiting for model:
+  test-ekq85how/0 [executing] active: 
+06:41:57 INFO Reconciling (again)
+06:44:54 INFO Waiting for model:
+  test-ekq85how/0 [executing] maintenance: Reconciling runners
+06:45:25 INFO Waiting for model:
+  test-ekq85how/0 [idle] active: 
+06:45:27 INFO runners: ['test-ekq85how-0-n-19c4cbf8146d']
+06:45:27 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-2b1fb3b30852"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-3c58a154cee5"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-53d24e1e00f4"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-5d2fae6b5810"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-89ffb21bd6e4"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-8edcc0018d35"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-bf9c1983b9e0"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-cc9c940b72c2"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-d7fb12ff097d"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-0fb0264ef6a7"), SelfHostedActionsRunner(name="test-b4v5tr3d-0-n-ab721fe34b13"), SelfHostedActionsRunner(name="test-bhhkgrp7-0-n-9e931243322d"), SelfHostedActionsRunner(name="test-brzvonjd-0-n-f8e0ae031d7c"), SelfHostedActionsRunner(name="test-bza5htyh-0-n-880ba343bc8a"), SelfHostedActionsRunner(name="test-ed9j0tlc-0-n-2597f5877cb8"), SelfHostedActionsRunner(name="test-ekq85how-0-n-19c4cbf8146d"), SelfHostedActionsRunner(name="test-jezmh61z-0-n-a6c8ce0553b6"), SelfHostedActionsRunner(name="test-m562yfl5-0-n-4ce9ec4793be"), SelfHostedActionsRunner(name="test-m562yfl5-0-n-5330ee32d0ca"), SelfHostedActionsRunner(name="test-m562yfl5-0-n-bfb86513e2f4"), SelfHostedActionsRunner(name="test-okxk8g43-0-n-b8aee9cd7966"), SelfHostedActionsRunner(name="test-pkcdy66w-0-n-213599daa4dc"), SelfHostedActionsRunner(name="test-pps1u01r-0-n-2e4fc02eb62f"), SelfHostedActionsRunner(name="test-ricwun9p-0-n-c96ae206b733"), SelfHostedActionsRunner(name="test-shkejwgi-0-n-8f51b2397142"), SelfHostedActionsRunner(name="test-spisgmh7-0-n-6847217d3e7a")]
+06:45:31 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-d0iu  github-pr-43d35-lxd  localhost/localhost  3.6.6    unsupported  06:45:31Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ekq85how           active      1  github-runner-image-builder  latest/edge   83  no       
+test-ekq85how                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ekq85how/0*  active    idle   0        10.127.10.111          
+test-ekq85how/0*                         active    idle   1        10.127.10.91           
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.127.10.111  juju-de0e0d-0  ubuntu@22.04      Running
+1        started  10.127.10.91   juju-de0e0d-1  ubuntu@22.04      Running
+
+06:45:31 INFO Juju error logs:
+
+machine-0: 06:25:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ekq85how-0: 06:25:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ekq85how-0: 06:26:17 ERROR unit.github-runner-image-builder-ekq85how/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:26:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ekq85how-0: 06:26:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-ekq85how-0: 06:42:27 ERROR unit.test-ekq85how/0.juju-log No metrics returned after deleting test-ekq85how-0-n-965164a9e920
+
+06:45:31 INFO Forgetting model main...
