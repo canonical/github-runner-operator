@@ -70,7 +70,11 @@ def main(
     log_level = logging.INFO
     if debug:
         log_level = logging.DEBUG
-    logging.basicConfig(level=log_level, stream=sys.stderr)
+    logging.basicConfig(
+        level=log_level,
+        stream=sys.stderr,
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    )
 
     lock = Lock()
     config_str = config_file.read()
