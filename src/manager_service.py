@@ -160,7 +160,7 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         config_file: The configuration file for the service.
         log_file: The file location to store the logs.
     """
-    python_path = os.environ["PYTHONPATH"]
+    python_path = Path(os.getcwd()) / "venv"
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -171,7 +171,7 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {python_path}
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)}
         Restart=on-failure
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
