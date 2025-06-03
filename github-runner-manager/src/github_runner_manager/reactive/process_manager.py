@@ -133,7 +133,6 @@ def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
         reactive_process_config: The runner configuration to pass to the spawned runner process.
     """
     env = {
-        "PYTHONPATH": os.environ["PYTHONPATH"],
         RUNNER_CONFIG_ENV_VAR: reactive_process_config.json(),
     }
     # We do not want to wait for the process to finish, so we do not use with statement.
