@@ -9,11 +9,9 @@ from pathlib import Path
 
 import pytest
 from github_runner_manager.configuration.github import GitHubOrg
-from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 import charm_state
 import utilities
-from tests.unit.mock import MockGhapiClient
 
 
 @pytest.fixture(name="exec_command")
