@@ -1,0 +1,22 @@
+18:57:47 INFO Creating 2 runners
+19:14:24 ERROR Failed to spawn a runner.
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 529, in _create_runner
+    RunnerManager.wait_for_runner_online(
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 572, in wait_for_runner_online
+    raise RunnerError(f"Runner {runner_identity} did not get online")
+github_runner_manager.errors.RunnerError: Runner RunnerIdentity(instance_id=InstanceID('test-b68jw5jf-0-n-19f60ed35aca'), metadata=RunnerMetadata(platform_name='github', runner_id='107660', url=None)) did not get online
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/.tox/integration-juju3.6/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 421, in _spawn_runners_using_multiprocessing
+    instance_id = next(jobs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 873, in next
+    raise value
+github_runner_manager.errors.RunnerError: Runner RunnerIdentity(instance_id=InstanceID('test-b68jw5jf-0-n-19f60ed35aca'), metadata=RunnerMetadata(platform_name='github', runner_id='107660', url=None)) did not get online
