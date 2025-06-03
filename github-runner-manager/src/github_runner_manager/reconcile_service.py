@@ -34,7 +34,7 @@ def get_runner_scaler(app_config: ApplicationConfiguration) -> RunnerScaler:
     Returns:
         The RunnerScaler object.
     """
-    user = UserInfo(getpass.getuser(), str(grp.getgrgid(os.getgid())))
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
     return RunnerScaler.build(app_config, user)
 
 
