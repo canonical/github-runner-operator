@@ -26,6 +26,8 @@ from github_runner_manager import constants
 from github_runner_manager.errors import ReconcileError
 from github_runner_manager.manager.runner_manager import FlushMode
 from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.platform.platform_provider import TokenError
+from github_runner_manager.utilities import set_env_var
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -41,6 +43,7 @@ from ops.framework import StoredState
 from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingStatus
 
 import logrotate
+import manager_service
 from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -51,21 +54,25 @@ from charm_state import (
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
+    build_proxy_config_from_charm,
 )
 from errors import (
     ConfigurationError,
     LogrotateSetupError,
     MissingMongoDBError,
+    RunnerManagerApplicationError,
+    RunnerManagerApplicationInstallError,
+    RunnerManagerServiceError,
     SubprocessError,
-    TokenError,
 )
 from event_timer import EventTimer, TimerStatusError
 from factories import create_runner_scaler
+from manager_client import GitHubRunnerManagerClient
 
-# We assume a stuck reconcile event when it takes longer
-# than 10 times a normal interval. Currently, we are only aware of
+# The reconcile loop can get stuck in a charm upgrade. Put a timeout so
+# we can get out of that issue.
 # https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
-RECONCILIATION_INTERVAL_TIMEOUT_FACTOR = 10
+RECONCILIATION_INTERVAL_TIMEOUT_SECONDS = 3000
 RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
@@ -211,6 +218,11 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.database.on.database_created, self._on_database_created)
         self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
 
+        self._manager_client = GitHubRunnerManagerClient(
+            host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
+            port=manager_service.GITHUB_RUNNER_MANAGER_PORT,
+        )
+
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
 
@@ -225,6 +237,20 @@ class GithubRunnerCharm(CharmBase):
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
+    def _set_proxy_env_var(self) -> None:
+        """Set the HTTP proxy environment variables."""
+        proxy_config = build_proxy_config_from_charm()
+
+        if proxy_config.no_proxy is not None:
+            set_env_var("NO_PROXY", proxy_config.no_proxy)
+            set_env_var("no_proxy", proxy_config.no_proxy)
+        if proxy_config.http is not None:
+            set_env_var("HTTP_PROXY", proxy_config.http)
+            set_env_var("http_proxy", proxy_config.http)
+        if proxy_config.https is not None:
+            set_env_var("HTTPS_PROXY", proxy_config.https)
+            set_env_var("https_proxy", proxy_config.https)
+
     def _common_install_code(self) -> bool:
         """Installation code shared between install and upgrade hook.
 
@@ -235,6 +261,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
+        self._set_proxy_env_var()
+
         try:
             self._install_deps()
         except SubprocessError:
@@ -246,6 +274,13 @@ class GithubRunnerCharm(CharmBase):
         except SubprocessError:
             logger.error("Failed to setup runner manager user")
             raise
+
+        try:
+            manager_service.install_package()
+        except RunnerManagerApplicationInstallError:
+            logger.error("Failed to install github runner manager package")
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
 
         try:
             logrotate.setup()
@@ -278,8 +313,7 @@ class GithubRunnerCharm(CharmBase):
         self._event_timer.ensure_event_timer(
             event_name="reconcile-runners",
             interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=RECONCILIATION_INTERVAL_TIMEOUT_FACTOR
-            * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
+            timeout=RECONCILIATION_INTERVAL_TIMEOUT_SECONDS,
         )
 
     def _ensure_reconcile_timer_is_active(self) -> None:
@@ -304,6 +338,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the configuration change."""
         state = self._setup_state()
         self._set_reconcile_timer()
+        self._setup_service(state)
 
         flush_and_reconcile = False
         if state.charm_config.token != self._stored.token:
@@ -362,20 +397,13 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        state = self._setup_state()
-
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        info = runner_scaler.get_runner_info()
-        event.set_results(
-            {
-                "online": info.online,
-                "busy": info.busy,
-                "offline": info.offline,
-                "unknown": info.unknown,
-                "runners": info.runners,
-                "busy-runners": info.busy_runners,
-            }
-        )
+        try:
+            info = self._manager_client.check_runner()
+        except RunnerManagerServiceError as err:
+            logger.exception("Failed check runner request")
+            event.fail(f"Failed check runner request: {str(err)}")
+            return
+        event.set_results(info)
 
     @catch_action_errors
     def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
@@ -433,6 +461,19 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm status."""
         self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
+
+    def _setup_service(self, state: CharmState) -> None:
+        """Set up services.
+
+        Args:
+            state: The charm state.
+        """
+        try:
+            manager_service.setup(state, self.app.name, self.unit.name)
+        except RunnerManagerApplicationError:
+            logging.exception("Unable to setup the github-runner-manager service")
+            # Not re-raising error for until the github-runner-manager service replaces the
+            # library.
 
     @staticmethod
     def _log_juju_processes() -> None:
@@ -495,7 +536,7 @@ class GithubRunnerCharm(CharmBase):
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one"])
+        self._apt_install(["run-one", "python3-pip", "python3-venv"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.

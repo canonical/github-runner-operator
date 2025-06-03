@@ -20,16 +20,13 @@ from github.Branch import Branch
 from github.Repository import Repository
 from github.Workflow import Workflow
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
-from github_runner_manager.configuration.github import (
-    GitHubConfiguration,
-    GitHubPath,
-    parse_github_path,
-)
+from github_runner_manager.configuration.github import GitHubPath, parse_github_path
+from github_runner_manager.github_client import GithubClient
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
 from github_runner_manager.metrics import events
-from github_runner_manager.openstack_cloud import constants, health_checks
+from github_runner_manager.openstack_cloud import constants
 from github_runner_manager.openstack_cloud.models import (
     OpenStackCredentials,
     OpenStackRunnerManagerConfig,
@@ -40,6 +37,7 @@ from github_runner_manager.platform.github_provider import (
     GitHubRunnerPlatform,
     PlatformRunnerState,
 )
+from github_runner_manager.types_.github import GitHubRunnerStatus
 from openstack.connection import Connection as OpenstackConnection
 
 from tests.integration.helpers.common import (
@@ -93,6 +91,11 @@ def log_dir_base_path_fixture(
         }
 
 
+@pytest.fixture(scope="module", name="prefix")
+def prefix_fixture(app_name: str) -> str:
+    return f"{app_name}-0"
+
+
 @pytest.fixture(scope="module", name="github_path")
 def github_path_fixture(path: str) -> GitHubPath:
     return parse_github_path(path, "Default")
@@ -114,6 +117,7 @@ def openstack_proxy_config_fixture(
 @pytest_asyncio.fixture(scope="module", name="openstack_runner_manager")
 async def openstack_runner_manager_fixture(
     app_name: str,
+    prefix: str,
     private_endpoint_clouds_yaml: str,
     openstack_test_image: str,
     flavor_name: str,
@@ -168,7 +172,7 @@ async def openstack_runner_manager_fixture(
 
     openstack_runner_manager_config = OpenStackRunnerManagerConfig(
         name=app_name,
-        prefix=f"{app_name}-0",
+        prefix=prefix,
         credentials=credentials,
         server_config=server_config,
         service_config=service_config,
@@ -181,23 +185,38 @@ async def openstack_runner_manager_fixture(
     )
 
 
+@pytest.fixture(scope="module", name="github_client_for_manager")
+def github_client_for_manager_fixture(token: str) -> GithubClient:
+    github_client = GithubClient(token)
+    return github_client
+
+
+@pytest.fixture(scope="module", name="github_platform")
+def github_platform_fixture(
+    token: str,
+    prefix: str,
+    github_path: GitHubPath,
+    github_client_for_manager: GithubClient,
+) -> GitHubRunnerPlatform:
+    github_platform = GitHubRunnerPlatform(
+        prefix=prefix,
+        path=github_path,
+        github_client=github_client_for_manager,
+    )
+    return github_platform
+
+
 @pytest_asyncio.fixture(scope="module", name="runner_manager")
 async def runner_manager_fixture(
     openstack_runner_manager: OpenStackRunnerManager,
-    token: str,
     log_dir_base_path: dict[str, Path],
-    github_path: GitHubPath,
     runner_label: str,
+    github_platform: GitHubRunnerPlatform,
 ) -> AsyncGenerator[RunnerManager, None]:
     """Get RunnerManager instance.
 
     Import of log_dir_base_path to monkeypatch the runner logs path with tmp_path.
     """
-    github_configuration = GitHubConfiguration(token=token, path=github_path)
-    github_platform = GitHubRunnerPlatform.build(
-        prefix=openstack_runner_manager.name_prefix,
-        github_configuration=github_configuration,
-    )
     yield RunnerManager(
         manager_name="test_runner",
         platform_provider=github_platform,
@@ -221,7 +240,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     ), "Test arrange failed: Expect runner in active state"
     try:
         await wait_for(
-            lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
+            lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerState.IDLE,
             timeout=120,
             check_interval=10,
         )
@@ -288,7 +307,10 @@ async def test_get_no_runner(runner_manager: RunnerManager) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_runner_normal_idle_lifecycle(
-    runner_manager: RunnerManager, openstack_runner_manager: OpenStackRunnerManager
+    runner_manager: RunnerManager,
+    openstack_runner_manager: OpenStackRunnerManager,
+    github_client_for_manager: GithubClient,
+    github_path: GitHubPath,
 ) -> None:
     """
     Arrange: RunnerManager instance with no runners.
@@ -323,7 +345,7 @@ async def test_runner_normal_idle_lifecycle(
     assert runner.metadata.platform_name == "github"
     # Update on GitHub-side can take a bit of time.
     await wait_for(
-        lambda: runner_manager.get_runners()[0].github_state == PlatformRunnerState.IDLE,
+        lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerState.IDLE,
         timeout=120,
         check_interval=10,
     )
@@ -334,8 +356,10 @@ async def test_runner_normal_idle_lifecycle(
     assert len(openstack_instances) == 1, "Test arrange failed: Needs one runner."
     runner = openstack_instances[0]
 
-    ssh_conn = openstack_runner_manager._openstack_cloud.get_ssh_connection(runner)
-    assert health_checks.check_active_runner(ssh_conn=ssh_conn, instance=runner)
+    self_hosted_runner = github_client_for_manager.get_runner(
+        github_path, runner.instance_id.prefix, int(runner.metadata.runner_id)
+    )
+    assert self_hosted_runner.status == GitHubRunnerStatus.ONLINE
 
     # 3.
     runner_manager.cleanup()
@@ -387,7 +411,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerState.BUSY
 
     # 2.
     runner_manager_with_one_runner.cleanup()
@@ -396,7 +420,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     runner = runner_list[0]
     assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerState.BUSY
 
     # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
@@ -404,7 +428,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.github_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerState.BUSY
 
     # 4.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
@@ -434,6 +458,7 @@ async def test_runner_normal_lifecycle(
         1. The workflow complete successfully.
         2. The runner should be deleted. The metrics should be recorded.
     """
+    logger.info("Starting test_runner_normal_lifecycle")
     metric_log_path = log_dir_base_path["metric_log"]
     try:
         metric_log_existing_content = metric_log_path.read_text(encoding="utf-8")
@@ -463,7 +488,7 @@ async def test_runner_normal_lifecycle(
         """
         runners = runner_manager_with_one_runner.get_runners()
         assert len(runners) == 1
-        return runners[0].github_state in (PlatformRunnerState.OFFLINE, None)
+        return runners[0].platform_state in (PlatformRunnerState.OFFLINE, None)
 
     await wait_for(is_runner_offline, check_interval=60, timeout=600)
 

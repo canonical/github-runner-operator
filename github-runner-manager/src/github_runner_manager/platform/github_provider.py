@@ -5,21 +5,25 @@
 
 import logging
 from enum import Enum
-from typing import Iterable
 
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
-from github_runner_manager.errors import JobNotFoundError as GithubJobNotFoundError
-from github_runner_manager.github_client import GithubClient
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
-    JobNotFoundError,
     PlatformProvider,
+    PlatformRunnerHealth,
     PlatformRunnerState,
+    RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import SelfHostedRunner
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -58,41 +62,102 @@ class GitHubRunnerPlatform(PlatformProvider):
             github_client=GithubClient(github_configuration.token),
         )
 
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
+    def get_runner_health(
+        self,
+        runner_identity: RunnerIdentity,
+    ) -> PlatformRunnerHealth:
+        """Get information on the health of a list of github runners.
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            runner_identity: Identity for the runner.
 
         Returns:
-            Information on the runners.
+            Information about the health status of the runner.
         """
-        runner_list = self._client.get_runner_github_info(self._path, self._prefix)
+        try:
+            runner = self._client.get_runner(
+                self._path, self._prefix, int(runner_identity.metadata.runner_id)
+            )
+            online = runner.status == GitHubRunnerStatus.ONLINE
+            return PlatformRunnerHealth(
+                identity=runner_identity,
+                online=online,
+                busy=runner.busy,
+                deletable=False,
+            )
 
-        if states is None:
-            return tuple(runner_list)
+        except GithubRunnerNotFoundError:
+            return PlatformRunnerHealth(
+                identity=runner_identity,
+                online=False,
+                busy=False,
+                deletable=True,
+                runner_in_platform=False,
+            )
 
-        state_set = set(states)
-        return tuple(
-            runner
-            for runner in runner_list
-            if GitHubRunnerPlatform._is_runner_in_state(runner, state_set)
-        )
-
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners in GitHub.
+    def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
+        """Get the health of a list of requested runners.
 
         Args:
-            runners: list of runners to delete.
-        """
-        for runner in runners:
-            self._client.delete_runner(self._path, runner.id)
+            requested_runners: List of requested runners.
 
-    def get_runner_token(
+        Returns:
+            Health information on the runners.
+        """
+        requested_runners_health = []
+        github_runners = self._client.list_runners(self._path, self._prefix)
+        github_runners_map = {runner.identity.instance_id: runner for runner in github_runners}
+        for identity in requested_runners:
+            if identity.instance_id in github_runners_map:
+                github_runner = github_runners_map[identity.instance_id]
+                online = github_runner.status == GitHubRunnerStatus.ONLINE
+                requested_runners_health.append(
+                    PlatformRunnerHealth(
+                        identity=identity,
+                        online=online,
+                        busy=github_runner.busy,
+                        deletable=False,
+                    )
+                )
+            else:
+                # A runner not found in GitHub is a runner considered deletable.
+                requested_runners_health.append(
+                    PlatformRunnerHealth(
+                        identity=identity,
+                        online=False,
+                        busy=False,
+                        deletable=True,
+                        runner_in_platform=False,
+                    )
+                )
+
+        # Now the other way. Get all runners in GitHub that are not in the requested runners
+        requested_instance_ids = {runner.instance_id for runner in requested_runners}
+        non_requested_runners = [
+            runner.identity
+            for runner in github_runners
+            if runner.identity.instance_id not in requested_instance_ids
+        ]
+        return RunnersHealthResponse(
+            requested_runners=requested_runners_health,
+            non_requested_runners=non_requested_runners,
+        )
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """Delete a runner from GitHub.
+
+        This method will raise DeleteRunnerBusyError if the runner is not deletable, that is,
+        if it is busy. If the runner does not exist it will not fail.
+
+        Args:
+            runner_identity: Identity of the runner to delete.
+        """
+        logger.info("Delete runner in GitHub: %s", runner_identity)
+        self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
+
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get registration JIT token from GitHub.
 
         This token is used for registering self-hosted runners.
@@ -105,17 +170,14 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             The registration token and the runner.
         """
-        return self._client.get_runner_registration_jittoken(self._path, instance_id, labels)
-
-    def get_removal_token(self) -> str:
-        """Get removal token from GitHub.
-
-        This token is used for removing self-hosted runners.
-
-        Returns:
-            The removal token.
-        """
-        return self._client.get_runner_remove_token(self._path)
+        token, runner = self._client.get_runner_registration_jittoken(
+            self._path, instance_id, labels
+        )
+        command_to_run = (
+            "su - ubuntu -c "
+            f'"cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {token}"'
+        )
+        return RunnerContext(shell_run_script=command_to_run), runner
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
@@ -164,20 +226,13 @@ class GitHubRunnerPlatform(PlatformProvider):
 
         Returns:
             Information about the Job.
-
-        Raises:
-            JobNotFoundError: If the job was not found.
-
         """
         owner, repo = repository.split("/", maxsplit=1)
-        try:
-            job_info = self._client.get_job_info_by_runner_name(
-                path=GitHubRepo(owner=owner, repo=repo),
-                workflow_run_id=workflow_run_id,
-                runner_name=runner.name,
-            )
-        except GithubJobNotFoundError as exc:
-            raise JobNotFoundError from exc
+        job_info = self._client.get_job_info_by_runner_name(
+            path=GitHubRepo(owner=owner, repo=repo),
+            workflow_run_id=workflow_run_id,
+            runner_name=runner.name,
+        )
         logger.debug(
             "Job info for runner %s with workflow run id %s: %s",
             runner,

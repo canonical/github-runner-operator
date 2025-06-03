@@ -4,7 +4,7 @@
 """Module containing the main classes for business logic."""
 
 import secrets
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 
 INSTANCE_SUFFIX_LENGTH = 12
 
@@ -13,7 +13,7 @@ class InstanceIDInvalidError(Exception):
     """Raised when the InstanceID naming will break the provider of GitHub."""
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass(eq=True, frozen=True, order=True)
 class InstanceID:
     """Main identifier for a runner instance among all clouds and GitHub.
 
@@ -155,7 +155,7 @@ class InstanceID:
         return f"InstanceID({self.name!r})"
 
 
-@dataclass
+@dataclass(order=True)
 class RunnerMetadata:
     """This class contains information about the runner and the platform it runs in.
 
@@ -179,3 +179,35 @@ class RunnerMetadata:
             metadata as a dict.
         """
         return {k: v for k, v in asdict(self).items() if v is not None}
+
+
+@dataclass(order=True)
+class RunnerIdentity:
+    """Identity for the runner.
+
+    The full identity of the runner is made of the instance_id and the
+    metadata. The instance_id is used for the name of the runner in the cloud
+    provider, and it should be immutable. The metadata is used to identify the
+    platform provider and other information that could be relevant to identify
+    the runner in the platform provider.
+
+    Attributes:
+        instance_id: InstanceID of the runner.
+        metadata: Metadata for the runner.
+    """
+
+    instance_id: InstanceID
+    metadata: RunnerMetadata
+
+
+@dataclass
+class RunnerContext:
+    """Information provided by the platform provider needed to spawn a runner.
+
+    Attributes:
+        shell_run_script: Script to run the platform agent.
+        ingress_tcp_ports: Ports to be opened in the cloud provider.
+    """
+
+    shell_run_script: str
+    ingress_tcp_ports: list[int] = field(default_factory=lambda: [])

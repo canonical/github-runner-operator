@@ -1,6 +1,29 @@
 # Changelog
 
-### 20250-04-15
+### 2025-05-22
+
+- Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
+network/infrastructure specific things.
+
+### 2025-05-09
+
+- The log rotation is done by copying the logs then truncating. There is a small chance some log might be lost during the log rotation. This affects the github-runner-manager service logs, and the reactive spawning logs.
+
+### 2025-05-06
+
+- The ssh health checks are removed and the platform providers (GitHub or the JobManager) are used instead to get the runners health
+information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
+disappear for the GitHub case. 
+
+### 2025-04-28
+
+- Add a visualization of the share of jobs started per application.
+
+### 2025-04-22
+
+- Add how-to landing page.
+
+### 2025-04-15
 
 - Fix a race condition where keypairs were being deleted even though the server was being built, potentially killing active github action runs.
 

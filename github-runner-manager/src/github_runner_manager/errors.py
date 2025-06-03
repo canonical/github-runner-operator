@@ -13,10 +13,6 @@ class RunnerCreateError(RunnerError):
     """Error for runner creation failure."""
 
 
-class RunnerStartError(RunnerError):
-    """Error for runner start failure."""
-
-
 class MissingServerConfigError(RunnerError):
     """Error for unable to create runner due to missing server configurations."""
 
@@ -31,22 +27,6 @@ class RunnerMetricsError(Exception):
 
 class GithubMetricsError(Exception):
     """Base class for all github metrics errors."""
-
-
-class PlatformClientError(Exception):
-    """Base class for all github client errors."""
-
-
-class PlatformApiError(PlatformClientError):
-    """Represents an error when the GitHub API returns an error."""
-
-
-class TokenError(PlatformClientError):
-    """Represents an error when the token is invalid or has not enough permissions."""
-
-
-class JobNotFoundError(PlatformClientError):
-    """Represents an error when the job could not be found on GitHub."""
 
 
 class CloudError(Exception):

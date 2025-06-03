@@ -148,6 +148,7 @@ def consume(
                 if platform_provider.check_job_been_picked_up(
                     metadata=metadata, job_url=job_details.url
                 ):
+                    logger.info("reactive job: %s already picked up.", job_details)
                     msg.ack()
                     continue
                 _spawn_runner(
@@ -172,7 +173,7 @@ def _build_runner_metadata(job_url: str) -> RunnerMetadata:
 
     # From here on jobmanager. For now we just regex on the url to check if it is the url
     # of a runner.
-    match_result = re.match(r"^(.+)v1/jobs/(\d+)$", parsed_url.path)
+    match_result = re.match(r"^(.*)/v1/jobs/(\d+)$", parsed_url.path)
     if not match_result:
         logger.error("Invalid URL for a job. url: %s", job_url)
         raise ValueError(f"Invalid format for job url {job_url}")
@@ -232,17 +233,29 @@ def _spawn_runner(
         platform_provider: Platform provider.
         metadata: RunnerMetadata for the runner to spawn..
     """
+    logger.info("Spawning new reactive runner for job %s", job_url)
     instance_ids = runner_manager.create_runners(1, metadata=metadata, reactive=True)
     if not instance_ids:
-        logger.error("Failed to spawn a runner. Will reject the message.")
+        logger.error("Failed to spawn a runner for job %s. Will reject the message.", job_url)
         msg.reject(requeue=True)
         return
-    for _ in range(10):
+    logger.info("Reactive runner spawned %s", instance_ids)
+
+    for iteration in range(5):
+        # Do not sleep on the first iteration — the job might already be taken.
+        logger.info("Checking if job picked up for reactive runner %s", instance_ids)
+        if iteration != 0:
+            sleep(60)
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
+            logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
             msg.ack()
             break
-        sleep(30)
     else:
+        logger.info(
+            "Job %s not picked by reactive runner %s. Probably picked up by another job",
+            job_url,
+            instance_ids,
+        )
         msg.reject(requeue=True)
 
 

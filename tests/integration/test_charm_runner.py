@@ -12,11 +12,12 @@ from juju.action import Action
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
+    get_job_logs,
     reconcile,
     wait_for,
 )
@@ -27,14 +28,11 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 async def app_fixture(
     model: Model,
     basic_app: Application,
-    instance_helper: OpenStackInstanceHelper,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
-    Ensure the charm has one runner before starting a test.
+    Ensure the charm has no runner after a test.
     """
-    await instance_helper.ensure_charm_has_runner(basic_app)
-
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
@@ -44,12 +42,14 @@ async def app_fixture(
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
-async def test_check_runner(app: Application) -> None:
+async def test_check_runner(app: Application, instance_helper: OpenStackInstanceHelper) -> None:
     """
     arrange: A working application with one runner.
     act: Run check_runner action.
     assert: Action returns result with one runner.
     """
+    await instance_helper.ensure_charm_has_runner(app)
+
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
@@ -66,6 +66,7 @@ async def test_flush_runner_and_resource_config(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
+    instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
     arrange: A working application with one runner.
@@ -83,6 +84,8 @@ async def test_flush_runner_and_resource_config(
 
     Test are combined to reduce number of runner spawned.
     """
+    await instance_helper.ensure_charm_has_runner(app)
+
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -98,6 +101,11 @@ async def test_flush_runner_and_resource_config(
     # 2.
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
+
+    # There is a race condition in here. When deleting a runner in openstack, it can take
+    # a while to get the runner deleted and the "flush-runner" will not spawn a new runner.
+    # We may need to call flush-runners twice and wait in the middle until the openstack
+    # instance disappear.
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -129,6 +137,54 @@ async def test_flush_runner_and_resource_config(
     assert action.results["delta"]["virtual-machines"] == "0"
 
 
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_custom_pre_job_script(
+    app: Application,
+    github_repository: Repository,
+    test_github_branch: Branch,
+    token: str,
+    https_proxy: str,
+) -> None:
+    """
+    arrange: A working application with one runner with a custom pre-job script enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed and pre-job script has been executed.
+    """
+    await app.set_config(
+        {
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
+#!/usr/bin/env bash
+cat > ~/.ssh/config <<EOF
+host github.com
+  user git
+  hostname github.com
+  port 22
+  proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+EOF
+logger -s "SSH config: $(cat ~/.ssh/config)"
+    """,
+        }
+    )
+    await reconcile(app, app.model)
+
+    workflow_run = await dispatch_workflow(
+        app=app,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+        dispatch_input={"runner": app.name},
+    )
+    logs = get_job_logs(workflow_run.jobs("latest")[0])
+    assert "SSH config" in logs
+    assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
+
+
+# WARNING: the test below sets up repo policy which affects all tests coming after it. It should
+# be the last test in the file.
 @pytest.mark.openstack
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail

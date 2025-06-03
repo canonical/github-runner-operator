@@ -9,6 +9,8 @@ from urllib.parse import urljoin
 import requests
 import urllib3
 
+from github_runner_manager.errors import RunnerCreateError
+
 logger = logging.getLogger(__name__)
 
 
@@ -36,8 +38,8 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         """Get a single-use token for repo policy compliance check.
 
         Raises:
-            HTTPError: If there was an error getting one-time token from repo-policy-compliance \
-                service.
+            RunnerCreateError: If there was an error getting one-time token from \
+                repo-policy-compliance service.
 
         Returns:
             The one-time token to be used in a single request of repo policy compliance check.
@@ -47,9 +49,9 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
             response = self._session.get(url, headers={"Authorization": f"Bearer {self.token}"})
             response.raise_for_status()
             return response.content.decode("utf-8")
-        except requests.HTTPError:
+        except requests.RequestException as exc:
             logger.exception("Unable to get one time token from repo policy compliance service.")
-            raise
+            raise RunnerCreateError from exc
 
     def _create_session(self) -> requests.Session:
         """Create a new requests session.

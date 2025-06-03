@@ -39,6 +39,8 @@ CHARM_STATE_PATH = Path("charm_state.json")
 
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
+# bandit thinks this is a hardcoded password
+EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE = "experimental-job-manager-only-token"  # nosec
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
@@ -60,6 +62,7 @@ TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
 USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
+CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
@@ -91,7 +94,7 @@ class GithubConfig:
     path: GitHubPath
 
     @classmethod
-    def from_charm(cls, charm: CharmBase) -> "GithubConfig":
+    def from_charm(cls, charm: CharmBase) -> "GithubConfig | None":
         """Get github related charm configuration values from charm.
 
         Args:
@@ -106,6 +109,12 @@ class GithubConfig:
         runner_group = cast(str, charm.config.get(GROUP_CONFIG_NAME, "default"))
 
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
+        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
+
+        if token == EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE:
+            logger.info("Experimental job manager only token value used.")
+            return None
+
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
         try:
@@ -113,7 +122,6 @@ class GithubConfig:
         except ValueError as e:
             raise CharmConfigInvalidError(str(e)) from e
 
-        token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
         if not token:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
@@ -294,17 +302,19 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
+        custom_pre_job_script: Custom pre-job script to run before the job.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
-    path: GitHubPath
+    path: GitHubPath | None
     reconcile_interval: int
     repo_policy_compliance: RepoPolicyComplianceConfig | None
-    token: str
+    token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
+    custom_pre_job_script: str | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -446,17 +456,21 @@ class CharmConfig(BaseModel):
         )
         use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
 
+        custom_pre_job_script = (
+            cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
+        )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
-            path=github_config.path,
+            path=github_config.path if github_config else None,
             reconcile_interval=reconcile_interval,
             repo_policy_compliance=repo_policy_compliance,
-            token=github_config.token,
+            token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
+            custom_pre_job_script=custom_pre_job_script,
         )
 
 
@@ -579,7 +593,7 @@ class OpenstackRunnerConfig(BaseModel):
         )
 
 
-def _build_proxy_config_from_charm() -> "ProxyConfig":
+def build_proxy_config_from_charm() -> "ProxyConfig":
     """Initialize the proxy config from charm.
 
     Returns:
@@ -607,7 +621,7 @@ def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
         return ProxyConfig(
             http=runner_http_proxy,
         )
-    return _build_proxy_config_from_charm()
+    return build_proxy_config_from_charm()
 
 
 class UnsupportedArchitectureError(Exception):
@@ -827,7 +841,7 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             raise CharmConfigInvalidError(f"Invalid configuration: {str(exc)}") from exc
 
         try:
-            proxy_config = _build_proxy_config_from_charm()
+            proxy_config = build_proxy_config_from_charm()
             runner_proxy_config = _build_runner_proxy_config_from_charm(charm)
             if charm_config.use_aproxy and not runner_proxy_config.proxy_address:
                 raise CharmConfigInvalidError(

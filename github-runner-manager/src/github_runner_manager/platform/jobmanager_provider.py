@@ -5,19 +5,26 @@
 
 import logging
 from enum import Enum
-from typing import Iterable
 
 import jobmanager_client
 from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
-from jobmanager_client.rest import ApiException
+from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import HttpUrl
+from pydantic.error_wrappers import ValidationError
+from urllib3.exceptions import RequestError
 
-from github_runner_manager.errors import PlatformApiError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import (
+    InstanceID,
+    RunnerContext,
+    RunnerIdentity,
+    RunnerMetadata,
+)
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
+    PlatformApiError,
     PlatformProvider,
-    PlatformRunnerState,
+    PlatformRunnerHealth,
+    RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
@@ -40,35 +47,103 @@ class JobManagerPlatform(PlatformProvider):
         """
         return cls()
 
-    def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
-    ) -> tuple[SelfHostedRunner, ...]:
-        """Get info on self-hosted runners of certain states.
-
-        This method will disappear in a following PR.
+    def get_runner_health(
+        self,
+        runner_identity: RunnerIdentity,
+    ) -> PlatformRunnerHealth:
+        """Get health information on jobmanager runner.
 
         Args:
-            states: Filter the runners for these states. If None, all runners are returned.
+            runner_identity: Identity of the runner.
+
+        Raises:
+            PlatformApiError: If there was an error calling the jobmanager client.
 
         Returns:
-            Empty list of runners, as jobmanager will not implement this functionality.
+           The health of the runner in the jobmanager.
         """
-        # TODO for now return empty so the reconciliation can work.
-        logger.warning("jobmanager.get_runners not implemented")
-        return ()
+        configuration = jobmanager_client.Configuration(host=runner_identity.metadata.url)
+        with jobmanager_client.ApiClient(configuration) as api_client:
+            api_instance = jobmanager_client.DefaultApi(api_client)
+            try:
+                response = api_instance.v1_jobs_job_id_health_get(
+                    int(runner_identity.metadata.runner_id)
+                )
+            except NotFoundException:
+                # Pending to test with the real JobManager.
+                # The last assumption is that the builder-agent did not contact
+                # the JobManager and so it returns a 404.
+                return PlatformRunnerHealth(
+                    identity=runner_identity,
+                    online=False,
+                    deletable=False,
+                    busy=False,
+                )
+            except (ApiException, RequestError, ValidationError) as exc:
+                logger.exception(
+                    "Error calling jobmanager api for runner %s. %s", runner_identity, exc
+                )
+                raise PlatformApiError("API error") from exc
 
-    def delete_runners(self, runners: list[SelfHostedRunner]) -> None:
-        """Delete runners.
+        # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
+        # We should review the jobmanager for any change in their statuses.
+        # Any other state besides PENDING means that no more waiting should be done
+        # for the runner, so it is equivalent to online, although the jobmanager does
+        # not provide an exact match with "online".
+        online = response.status not in [JobStatus.PENDING]
+        # busy is complex in the jobmanager, as a completed job that is not deletable is really
+        # busy. As so, every job that is not deletable is considered busy.
+        busy = not response.deletable
+        deletable = response.deletable
+
+        return PlatformRunnerHealth(
+            identity=runner_identity,
+            online=online,
+            deletable=deletable,
+            busy=busy,
+        )
+
+    def get_runners_health(self, requested_runners: list[RunnerIdentity]) -> RunnersHealthResponse:
+        """Get the health of a list of requested runners.
 
         Args:
-            runners: list of runners to delete.
-        """
-        # TODO for now do not do any work so the reconciliation can work.
-        logger.warning("jobmanager.delete_runners not implemented")
+            requested_runners: List of requested runners.
 
-    def get_runner_token(
+        Returns:
+            Health information on the runners.
+        """
+        runners_health = []
+        failed_runners = []
+        for identity in requested_runners:
+            try:
+                health = self.get_runner_health(identity)
+            except PlatformApiError as exc:
+                logger.warning(
+                    "Failed to get information for the runner %s in the jobmanager. %s",
+                    identity,
+                    exc,
+                )
+                failed_runners.append(identity)
+                continue
+            runners_health.append(health)
+        return RunnersHealthResponse(
+            requested_runners=runners_health,
+            failed_requested_runners=failed_runners,
+        )
+
+    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+        """Delete a runner from jobmanager..
+
+        This method does nothing, as the jobmanager does not implement it.
+
+        Args:
+            runner_identity: The identity of the runner to delete.
+        """
+        logger.debug("No need to delete jobs in the jobmanager.")
+
+    def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
-    ) -> tuple[str, SelfHostedRunner]:
+    ) -> tuple[RunnerContext, SelfHostedRunner]:
         """Get a one time token for a runner.
 
         This token is used for registering self-hosted runners.
@@ -93,32 +168,37 @@ class JobManagerPlatform(PlatformProvider):
                 response = api_instance.v1_jobs_job_id_token_post(
                     int(metadata.runner_id), jobrequest
                 )
-                if response.token:
+                if token := response.token:
+                    jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
+                    # For now, use the first label
+                    label = "undefined"
+                    if labels:
+                        label = labels[0]
+                    command_to_run = (
+                        f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
+                        f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
+                        "builder-agent"
+                    )
                     return (
-                        response.token,
+                        RunnerContext(
+                            shell_run_script=command_to_run,
+                            ingress_tcp_ports=[8080],
+                        ),
                         SelfHostedRunner(
+                            identity=RunnerIdentity(
+                                instance_id=instance_id,
+                                metadata=metadata,
+                            ),
                             busy=False,
                             id=int(metadata.runner_id),
-                            metadata=metadata,
                             labels=[SelfHostedRunnerLabel(name=label) for label in labels],
                             status=GitHubRunnerStatus.OFFLINE,
-                            instance_id=instance_id,
                         ),
                     )
                 raise PlatformApiError("Empty token from jobmanager API")
-            except ApiException as exc:
+            except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception("Error calling jobmanager api.")
                 raise PlatformApiError("API error") from exc
-
-    def get_removal_token(self) -> str:
-        """Get removal token from Platform.
-
-        This token is used for removing self-hosted runners.
-
-        Raises:
-            NotImplementedError: Work in progress.
-        """
-        raise NotImplementedError
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
@@ -141,10 +221,10 @@ class JobManagerPlatform(PlatformProvider):
                 job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
                 if job.status != JobStatus.PENDING:
                     return True
-            except ApiException as exc:
+            except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
                 raise PlatformApiError("API error") from exc
-            return False
+        return False
 
     def get_job_info(
         self, metadata: RunnerMetadata, repository: str, workflow_run_id: str, runner: InstanceID
@@ -158,9 +238,9 @@ class JobManagerPlatform(PlatformProvider):
             runner: runner to get the job from.
 
         Raises:
-            NotImplementedError: Work in progress.
+            PlatformApiError: This is not provided by this interface yet.
         """
-        raise NotImplementedError
+        raise PlatformApiError("get_job_info not provided by the jobmanager")
 
 
 class JobStatus(str, Enum):
