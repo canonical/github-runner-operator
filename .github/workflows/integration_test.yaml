@@ -23,30 +23,24 @@ jobs:
       pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.1
-      # TODO: Debug
-      modules: '["test_debug_ssh"]'
-      # modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
+      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
       test-timeout: 90
-      # TODO: Debug
-      tmate-debug: true
-      tmate-timeout: 3000
-  # TODO: Debug
-  # openstack-interface-tests-private-endpoint:
-  #   name: openstack interface test using private-endpoint
-  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-  #   secrets: inherit
-  #   with:
-  #     juju-channel: 3.6/stable
-  #     pre-run-script: scripts/setup-integration-tests.sh
-  #     provider: lxd
-  #     test-tox-env: integration-juju3.6
-  #     modules: '["test_runner_manager_openstack"]'
-  #     extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
-  #     self-hosted-runner: true
-  #     self-hosted-runner-label: stg-private-endpoint
+  openstack-interface-tests-private-endpoint:
+    name: openstack interface test using private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.6/stable
+      pre-run-script: scripts/setup-integration-tests.sh
+      provider: lxd
+      test-tox-env: integration-juju3.6
+      modules: '["test_runner_manager_openstack"]'
+      extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
+      self-hosted-runner: true
+      self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -56,20 +50,14 @@ jobs:
       pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
-      # TODO: Debug
-      modules: '["test_charm_metrics_failure", "test_reactive", "test_jobmanager"]'
-      # modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive", "test_jobmanager"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive", "test_jobmanager"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      # TODO: Debug
-      tmate-debug: true
-      tmate-timeout: 3000
-  # TODO: Debug
-  # allure-report:
-  #   if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
-  #   needs:
-  #     - integration-tests
-  #     - openstack-interface-tests-private-endpoint
-  #     - openstack-integration-tests-private-endpoint
-  #   uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+  allure-report:
+    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
+    needs:
+      - integration-tests
+      - openstack-interface-tests-private-endpoint
+      - openstack-integration-tests-private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
