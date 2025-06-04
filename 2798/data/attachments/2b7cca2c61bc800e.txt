@@ -1,0 +1,55 @@
+18:49:55 INFO Waiting for model:
+  test-mbexseyl/0 [executing] active: 
+18:50:25 INFO Waiting for model:
+  test-mbexseyl/0 [idle] active:
+18:53:10 INFO Waiting for model:
+  test-mbexseyl/0 [executing] active: 
+18:53:40 INFO Wait for condition not met, sleeping 30
+18:54:23 INFO [TEST SETUP] Run command pkill -9 run.sh on test-mbexseyl-0-n-c9a638919a52
+18:54:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.158', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5d:44:44'}]])
+18:54:24 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-mbexseyl-0-n-c9a638919a52.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.158 pkill -9 run.sh'
+18:54:25 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.158' (ED25519) to the list of known hosts.
+'
+18:54:30 INFO Runner test-mbexseyl-0-n-c9a638919a52 status: online
+18:54:30 INFO Runner still marked as online, waiting for it to be marked offline
+18:56:04 INFO Waiting for model:
+  test-mbexseyl/0 [executing] active: 
+18:56:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1749062994.7661405, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.922490119934082}
+{"timestamp": 1749063019.4887648, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.42604923248291}
+{"timestamp": 1749063177.6115973, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 121.6437156200409}
+{"timestamp": 1749063190.0417478, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.061469554901123}
+{"timestamp": 1749063203.0711288, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.736633062362671}
+{"timestamp": 1749063157.0, "event": "runner_installed", "flavor": "test-mbexseyl", "duration": 88.0}
+{"timestamp": 1749063223.0, "event": "runner_start", "flavor": "test-mbexseyl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 66.0, "queue_duration": 1.0}
+{"timestamp": 1749063265.0, "event": "runner_stop", "flavor": "test-mbexseyl", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1749063363.7597475, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 29.434009313583374}
+{"timestamp": 1749063376.8619745, "event": "reconciliation", "flavor": "test-mbexseyl", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.827082633972168}
+18:56:35 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-7kpf  github-pr-c3380-lxd  localhost/localhost  3.6.6    unsupported  18:56:35Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mbexseyl           active      1  github-runner-image-builder  latest/edge   84  no       
+test-mbexseyl                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-mbexseyl/0*  active    idle   0        10.98.163.92              
+test-mbexseyl/0*                         active    idle   1        10.98.163.44    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.98.163.92  juju-7e0975-0  ubuntu@22.04      Running
+1        started  10.98.163.44  juju-7e0975-1  ubuntu@22.04      Running
+
+18:56:35 INFO Juju error logs:
+
+machine-0: 18:26:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-mbexseyl-0: 18:26:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-mbexseyl-0: 18:26:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-mbexseyl-0: 18:26:49 ERROR unit.github-runner-image-builder-mbexseyl/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-mbexseyl-0: 18:48:54 ERROR unit.test-mbexseyl/0.juju-log No metrics returned after deleting test-mbexseyl-0-n-f3f6d96d7695
+
+18:56:36 INFO Forgetting model main...
