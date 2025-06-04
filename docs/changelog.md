@@ -3,7 +3,6 @@
 ### 2025-06-04
 
 - The charm will reconcile the state of the self-hosted runners in the background when it is able to.
-- The default reconcile-interval is reduced to 1. This value can be adjusted if GitHub rate-limiting is an issue, else it should be as low as possible.
 - Removed the reconcile-runners juju action.
 
 ### 2025-06-03
