@@ -427,6 +427,9 @@ class GithubRunnerCharm(CharmBase):
         if not self._get_set_image_ready_status():
             return
 
+        state = self._setup_state()
+        self._setup_service(state)
+
         self._manager_client.flush_runner()
 
     @catch_charm_errors

@@ -105,13 +105,14 @@ def reconcile(
     ]
     runner_diff = expected_quantity - len(runners)
     
-    logger.info(f"DEBUG: process_quantity: {process_quantity}, runner_diff: {runner_diff}, expected_quantity: {expected_quantity}, len(runners): {len(runners)}")
 
     if runner_diff >= 0:
         process_quantity = runner_diff
     else:
         delete_metric_stats = runner_manager.delete_runners(-runner_diff)
         process_quantity = 0
+
+    logger.info(f"DEBUG: process_quantity: {process_quantity}, runner_diff: {runner_diff}, expected_quantity: {expected_quantity}, len(runners): {len(runners)}")
 
     metric_stats = {
         event_name: delete_metric_stats.get(event_name, 0)
