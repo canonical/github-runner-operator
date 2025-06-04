@@ -173,6 +173,7 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)}
         Restart=on-failure
+        KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
 
