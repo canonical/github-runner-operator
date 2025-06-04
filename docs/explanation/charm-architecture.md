@@ -90,7 +90,7 @@ This inconsistency can result in failed workflows, prompting the introduction of
 
 ### aproxy
 If the proxy configuration is utilised and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
-all HTTP(S) requests to standard ports (80, 443) within the GitHub workflow will be automatically directed 
+all HTTP(S) requests to standard ports (80, 443, 11371) within the GitHub workflow will be automatically directed 
 to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
 aproxy then forwards received packets to the designated HTTP(S) proxy. 
 Beyond that, the environment variables (`http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`)

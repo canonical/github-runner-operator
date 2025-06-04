@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-06-03
+
+- Redirect HKP protocol traffic (port 11371) to aproxy
+
 ### 2025-05-22
 
 - Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
