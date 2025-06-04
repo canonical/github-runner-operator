@@ -38,7 +38,7 @@ options:
     description: >-
       (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy)
       will be installed within the runners. It will forward all HTTP(S) traffic to standard ports
-      (80, 443) to a proxy server configured by the juju model config 'juju-http-proxy'
+      (80, 443, 11371) to a proxy server configured by the juju model config 'juju-http-proxy'
       (or, if this is not set, 'juju-https-proxy' will be used).
       This is useful when the charm is deployed in a network that requires a proxy to access the
       internet.
