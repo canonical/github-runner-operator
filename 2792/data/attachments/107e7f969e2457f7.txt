@@ -1,0 +1,207 @@
+06:47:55 INFO Waiting for model:
+  test-v9zocpo5/0 [executing] active: 
+06:48:26 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] active:
+06:48:52 INFO Waiting for model:
+  test-v9zocpo5/0 [executing] active: 
+06:49:23 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] active: 
+06:49:28 INFO Wait for condition not met, sleeping 10
+06:49:40 INFO Wait for condition not met, sleeping 10
+06:49:50 INFO Wait for condition not met, sleeping 10
+06:50:01 INFO Wait for condition not met, sleeping 10
+06:50:11 INFO Wait for condition not met, sleeping 10
+06:50:22 INFO Wait for condition not met, sleeping 10
+06:50:32 INFO Wait for condition not met, sleeping 10
+06:50:42 INFO Wait for condition not met, sleeping 10
+06:50:53 INFO Wait for condition not met, sleeping 10
+06:51:03 INFO Wait for condition not met, sleeping 10
+06:51:14 INFO Wait for condition not met, sleeping 10
+06:52:02 INFO Waiting for model:
+  test-v9zocpo5/0 [executing] active: 
+06:52:32 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] active: 
+06:52:36 INFO Wait for condition not met, sleeping 60
+06:53:36 INFO Wait for condition not met, sleeping 60
+06:54:37 INFO Wait for condition not met, sleeping 60
+06:55:37 INFO Wait for condition not met, sleeping 60
+06:56:38 INFO Wait for condition not met, sleeping 60
+06:57:38 INFO Wait for condition not met, sleeping 60
+06:58:39 INFO Wait for condition not met, sleeping 60
+06:59:39 INFO Wait for condition not met, sleeping 60
+07:00:40 INFO Wait for condition not met, sleeping 60
+07:01:42 INFO Wait for condition not met, sleeping 10
+07:02:18 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:02:48 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:03:18 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:03:49 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:04:19 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:04:49 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:05:20 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:05:50 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:06:21 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:06:51 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:07:21 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:07:51 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:08:22 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:08:52 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:09:22 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:09:53 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:10:23 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:10:53 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:11:24 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:11:54 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] maintenance: Reconciling runners
+07:12:29 INFO Waiting for model:
+  test-v9zocpo5/0 [idle] active: 
+07:12:47 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-o5b6  github-pr-c8563-lxd  localhost/localhost  3.6.6    unsupported  07:12:47Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-v9zocpo5           active      1  github-runner-image-builder  latest/edge   84  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-v9zocpo5                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-v9zocpo5/0*  active    idle   1        10.201.209.147             
+mongodb/0*                               active    idle   0        10.201.209.29   27017/tcp  Primary
+test-v9zocpo5/0*                         active    idle   2        10.201.209.129             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.201.209.29   juju-b32aab-0  ubuntu@22.04      Running
+1        started  10.201.209.147  juju-b32aab-1  ubuntu@22.04      Running
+2        started  10.201.209.129  juju-b32aab-2  ubuntu@22.04      Running
+
+07:12:48 INFO Juju error logs:
+
+machine-0: 06:26:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:26:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:26:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:26:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-v9zocpo5-0: 06:26:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:26:31 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:26:31 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:26:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-v9zocpo5-0: 06:26:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-v9zocpo5-0: 06:27:41 ERROR unit.github-runner-image-builder-v9zocpo5/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-v9zocpo5-0: 06:43:30 ERROR unit.test-v9zocpo5/0.juju-log No metrics returned after deleting test-v9zocpo5-0-r-7c33335a6977
+unit-test-v9zocpo5-0: 07:02:17 ERROR unit.test-v9zocpo5/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/github_client.py", line 79, in wrapper
+    return func(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/github_client.py", line 161, in list_runners
+    for page in pages(
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ghapi/page.py", line 71, in pages
+    return parallel(_call_page, range(1,n_pages+1), oper=oper, per_page=per_page, args=args, kwargs=kwargs,
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/parallel.py", line 134, in parallel
+    return L(r)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/foundation.py", line 100, in __call__
+    return super().__call__(x, *args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/foundation.py", line 108, in __init__
+    items = listify(items, *rest, use_list=use_list, match=match)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/basics.py", line 79, in listify
+    elif is_iter(o): res = list(o)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 621, in result_iterator
+    yield _result_or_cancel(fs.pop())
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 319, in _result_or_cancel
+    return fut.result(timeout)
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/parallel.py", line 63, in _call
+    return g(item)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ghapi/page.py", line 66, in _call_page
+    return oper(*args, per_page=per_page, page=i, **kwargs)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ghapi/core.py", line 74, in __call__
+    return self.client(self.path, self.verb, headers=headers, decode=self.decode, route=route_p, query=query_p, data=data_p)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ghapi/core.py", line 133, in __call__
+    res,self.recv_hdrs = urlsend(path, verb, headers=headers or None, decode=decode, debug=debug, return_headers=True,
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/net.py", line 221, in urlsend
+    return urlread(req, decode=decode, return_json=return_json, return_headers=return_headers, timeout=timeout)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/net.py", line 120, in urlread
+    with urlopen(url, data=data, headers=headers, timeout=timeout, **kwargs) as u: res,hdrs = u.read(),u.headers
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/fastcore/net.py", line 111, in urlopen
+    try: return urlopener().open(urlwrap(url, data=data, headers=headers), timeout=timeout)
+  File "/usr/lib/python3.10/urllib/request.py", line 525, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.10/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+  File "/usr/lib/python3.10/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.10/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 503: Service Unavailable
+====Error Body====
+{
+  "message": "Server Error",
+  "documentation_url": "https://docs.github.com/rest/actions/self-hosted-runners#list-self-hosted-runners-for-a-repository",
+  "status": "503"
+}
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/./src/charm.py", line 658, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/__init__.py", line 356, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/_main.py", line 475, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/_main.py", line 459, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/_main.py", line 403, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/_main.py", line 438, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/ops/framework.py", line 1030, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/./src/charm.py", line 156, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/./src/charm.py", line 425, in _on_reconcile_runners_action
+    delta = runner_scaler.reconcile()
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/manager/runner_scaler.py", line 297, in reconcile
+    runner_list = self._manager.get_runners()
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/manager/runner_manager.py", line 179, in get_runners
+    runners_health_response = self._platform.get_runners_health(cloud_runners)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/platform/multiplexer_provider.py", line 104, in get_runners_health
+    provider_health_response = self._providers[platform_name].get_runners_health(
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/platform/github_provider.py", line 108, in get_runners_health
+    github_runners = self._client.list_runners(self._path, self._prefix)
+  File "/var/lib/juju/agents/unit-test-v9zocpo5-0/charm/venv/github_runner_manager/github_client.py", line 88, in wrapper
+    raise PlatformApiError from exc
+github_runner_manager.platform.platform_provider.PlatformApiError
+
+07:12:48 INFO Forgetting model main...
