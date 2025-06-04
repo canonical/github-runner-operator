@@ -36,6 +36,9 @@ async def test_ssh_debug(
     """
     await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
 
+    # TODO: Debug
+    pytest.set_trace()
+
     unit = app_no_wait_tmate.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
     # as the tmate_ssh_server is not routable.
