@@ -104,6 +104,8 @@ def reconcile(
         if runner.platform_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
     ]
     runner_diff = expected_quantity - len(runners)
+    
+    logger.info(f"DEBUG: process_quantity: {process_quantity}, runner_diff: {runner_diff}, expected_quantity: {expected_quantity}, len(runners): {len(runners)}")
 
     if runner_diff >= 0:
         process_quantity = runner_diff

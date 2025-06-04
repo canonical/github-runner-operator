@@ -57,7 +57,7 @@ jobs:
       provider: lxd
       test-tox-env: integration-juju3.6
       # TODO: Debug
-      modules: '["test_charm_metrics_failure", "test_reactive", "test_jobmanager"]'
+      modules: '["test_reactive", "test_jobmanager"]'
       # modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive", "test_jobmanager"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
