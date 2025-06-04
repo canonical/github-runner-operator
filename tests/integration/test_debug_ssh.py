@@ -10,7 +10,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers.common import dispatch_workflow, get_job_logs
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs, wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
@@ -35,9 +35,7 @@ async def test_ssh_debug(
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
     await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
-
-    # TODO: Debug
-    pytest.set_trace()
+    await wait_for_reconcile(app_no_wait_tmate, model)
 
     unit = app_no_wait_tmate.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
