@@ -34,7 +34,7 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    await model.wait_for_idle(status=ACTIVE, timeout=60 * 20)
+    await instance_helper.ensure_charm_has_runner(app_no_wait_tmate)
     await wait_for_reconcile(app_no_wait_tmate, model)
 
     unit = app_no_wait_tmate.units[0]
