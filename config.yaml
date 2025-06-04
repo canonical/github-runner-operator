@@ -70,10 +70,7 @@ options:
     default: 1
     description: >-
       Minutes between each reconciliation of the current runners state and their targeted state.
-      On reconciliation, the charm polls the state of runners and see if actions are needed. A
-      random delay of 25% is added. Changes to this time interval will apply when next interval is
-      triggered. Prior to reconciliation, any packages, and services used by the software will be
-      updated.
+      Adjust this if Github rate-limiting is an issue, else keep this value as low as possible.
   repo-policy-compliance-token:
     type: string
     description: >-
