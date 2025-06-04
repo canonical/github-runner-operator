@@ -2,8 +2,8 @@
 # See LICENSE file for licensing details.
 
 """Integration tests for github-runner charm with ssh-debug integration."""
-from asyncio import sleep
 import logging
+from asyncio import sleep
 
 import pytest
 from github.Branch import Branch
@@ -35,7 +35,7 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    # Need to wait for the tmate integration join flush to complete before ensuring the charm has 
+    # Need to wait for the tmate integration join flush to complete before ensuring the charm has
     # runners. Else the runner will just get flushed.
     await sleep(60)
 
