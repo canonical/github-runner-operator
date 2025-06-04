@@ -3,7 +3,6 @@
 
 """Integration tests for github-runner charm with ssh-debug integration."""
 import logging
-from asyncio import sleep
 
 import pytest
 from github.Branch import Branch
@@ -11,9 +10,8 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.helpers.common import dispatch_workflow, get_job_logs, wait_for_reconcile
+from tests.integration.helpers.common import dispatch_workflow, get_job_logs
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
-from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
 
@@ -35,10 +33,6 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    # Need to wait for the flush in _on_debug_ssh_relation_change do complete before ensuring the 
-    # charm has runners. Else the runner will just get flushed.
-    await sleep(60)
-
     await instance_helper.ensure_charm_has_runner(app_no_wait_tmate)
 
     unit = app_no_wait_tmate.units[0]
