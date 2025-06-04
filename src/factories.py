@@ -18,6 +18,9 @@ from github_runner_manager.configuration import (
     UserInfo,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
+
+#  TODO copy that config over to the charm
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
@@ -71,6 +74,11 @@ def create_application_configuration(
         if state.charm_config.path
         else None
     )
+    jobmanager_configuration = (
+        JobManagerConfiguration(url=state.charm_config.jobmanager_url)
+        if state.charm_config.jobmanager_url
+        else None
+    )
 
     service_config = SupportServiceConfig(
         manager_proxy_command=state.charm_config.manager_proxy_command,
@@ -89,6 +97,7 @@ def create_application_configuration(
         name=app_name,
         extra_labels=extra_labels,
         github_config=github_configuration,
+        jobmanager_config=jobmanager_configuration,
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,

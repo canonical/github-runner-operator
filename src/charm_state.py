@@ -111,12 +111,17 @@ class GithubConfig:
         path_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
         token = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
 
-        if token == EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE:
-            logger.info("Experimental job manager only token value used.")
-            return None
-
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+
+        # check if path_str is an url using pydantic
+        if path_str.startswith("http://") or path_str.startswith("https://"):
+            logger.info(
+                "Detected URL in %s configuration, will use experimental jobmanager mode",
+                PATH_CONFIG_NAME,
+            )
+            return None
+
         try:
             path = parse_github_path(cast(str, path_str), cast(str, runner_group))
         except ValueError as e:
@@ -126,6 +131,40 @@ class GithubConfig:
             raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
 
         return cls(token=cast(str, token), path=path)
+
+
+class JobManagerConfig(BaseModel):
+    """Configuration for the job manager.
+
+    Attributes:
+        url: The job manager base URL.
+    """
+
+    url: AnyHttpUrl
+
+    @classmethod
+    def from_charm(cls, charm: CharmBase) -> "JobManagerConfig | None":
+        """Initialize the config from charm.
+
+        Args:
+            charm: The charm instance.
+
+        Returns:
+            Current job manager config of the charm.
+
+        Raises:
+            CharmConfigInvalidError: If an invalid configuration was set.
+        """
+        url_str = cast(str, charm.config.get(PATH_CONFIG_NAME, ""))
+        if not url_str:
+            raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
+
+        try:
+            # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
+            return cls(url=url_str)  # type: ignore
+        except ValidationError as e:
+            logger.info("Path is not a URL, will not use it as jobmanager url: %s", e)
+        return None
 
 
 class Arch(str, Enum):
@@ -303,6 +342,7 @@ class CharmConfig(BaseModel):
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
         custom_pre_job_script: Custom pre-job script to run before the job.
+        jobmanager_url: Base URL of the job manager service.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -315,6 +355,7 @@ class CharmConfig(BaseModel):
     manager_proxy_command: str | None
     use_aproxy: bool
     custom_pre_job_script: str | None
+    jobmanager_url: AnyHttpUrl | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -426,6 +467,8 @@ class CharmConfig(BaseModel):
         except CharmConfigInvalidError as exc:
             raise CharmConfigInvalidError(f"Invalid Github config, {str(exc)}") from exc
 
+        jobmanager_config = JobManagerConfig.from_charm(charm) if not github_config else None
+
         try:
             reconcile_interval = int(charm.config[RECONCILE_INTERVAL_CONFIG_NAME])
         except ValueError as err:
@@ -471,6 +514,7 @@ class CharmConfig(BaseModel):
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
             custom_pre_job_script=custom_pre_job_script,
+            jobmanager_url=jobmanager_config.url if jobmanager_config else None,
         )
 
 
