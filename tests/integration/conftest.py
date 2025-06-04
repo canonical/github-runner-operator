@@ -185,6 +185,9 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
     password = pytestconfig.getoption("--openstack-password-amd64")
     password = password or os.environ.get("INTEGRATION_OPENSTACK_PASSWORD_AMD64")
+    assert (
+        password
+    ), "Please specify the --openstack-password-amd64 option or INTEGRATION_OPENSTACK_PASSWORD_AMD64 environment variable"
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
     project_name = pytestconfig.getoption("--openstack-project-name-amd64")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
