@@ -35,8 +35,8 @@ async def test_ssh_debug(
     act: when canonical/action-tmate is triggered.
     assert: the ssh connection info from action-log and tmate-ssh-server matches.
     """
-    # Need to wait for the tmate integration join flush to complete before ensuring the charm has
-    # runners. Else the runner will just get flushed.
+    # Need to wait for the flush in _on_debug_ssh_relation_change do complete before ensuring the 
+    # charm has runners. Else the runner will just get flushed.
     await sleep(60)
 
     await instance_helper.ensure_charm_has_runner(app_no_wait_tmate)

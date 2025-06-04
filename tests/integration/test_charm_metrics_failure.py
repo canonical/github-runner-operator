@@ -146,7 +146,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, stdout, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
+    ret_code, _, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
     assert ret_code == 0, f"Failed to kill run.sh with code {ret_code}: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
