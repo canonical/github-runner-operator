@@ -322,7 +322,7 @@ def test_parse_openstack_clouds_config_valid(valid_yaml_config: str):
     assert "clouds" in result
 
 
-@pytest.mark.parametrize("reconcile_interval", [(0), (1)])
+@pytest.mark.parametrize("reconcile_interval", [0])
 def test_check_reconcile_interval_invalid(reconcile_interval: int):
     """
     arrange: Provide an invalid reconcile interval value.
@@ -333,11 +333,11 @@ def test_check_reconcile_interval_invalid(reconcile_interval: int):
         CharmConfig.check_reconcile_interval(reconcile_interval)
     assert (
         str(exc_info.value)
-        == "The reconcile-interval configuration needs to be greater or equal to 2"
+        == "The reconcile-interval configuration needs to be greater or equal to 1"
     )
 
 
-@pytest.mark.parametrize("reconcile_interval", [(2), (5), (10)])
+@pytest.mark.parametrize("reconcile_interval", [(1), (2), (5), (10)])
 def test_check_reconcile_interval_valid(reconcile_interval: int):
     """
     arrange: Provide a valid reconcile interval value.

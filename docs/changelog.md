@@ -1,5 +1,10 @@
 # Changelog
 
+### 2025-06-04
+
+- The charm will reconcile the state of the self-hosted runners in the background when it is able to.
+- Removed the reconcile-runners juju action.
+
 ### 2025-06-03
 
 - Redirect HKP protocol traffic (port 11371) to aproxy
@@ -8,6 +13,7 @@
 
 - Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
 network/infrastructure specific things.
+
 
 ### 2025-05-09
 
