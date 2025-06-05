@@ -20,7 +20,6 @@ from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
-from juju.action import Action
 from juju.application import Application
 from pytest_httpserver import HTTPServer
 from pytest_operator.plugin import OpsTest
@@ -30,7 +29,6 @@ from charm_state import (
     EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
-    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
@@ -42,7 +40,6 @@ from tests.integration.utils_reactive import (
     clear_queue,
     get_mongodb_uri,
 )
-from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
@@ -298,7 +295,6 @@ async def test_jobmanager(
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
     await wait_for_reconcile(app, app.model)
-    logger.info("First reconcile result %s %s", action.status, action.results)
 
     # At this point there should be a runner
     action = await app.units[0].run_action("check-runners")
@@ -322,7 +318,6 @@ async def test_jobmanager(
 
     logger.info("Second reconcile call: %s", action.results)
     await wait_for_reconcile(app, app.model)
-    logger.info("Second reconcile result %s %s", action.status, action.results)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
