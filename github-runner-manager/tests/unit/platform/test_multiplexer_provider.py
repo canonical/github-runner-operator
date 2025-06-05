@@ -2,14 +2,17 @@
 #  See LICENSE file for licensing details.
 
 """Test for the multiplexer provider module."""
-
+import secrets
 from unittest.mock import MagicMock
 
 import pytest
 
+from github_runner_manager.configuration import GitHubConfiguration, GitHubRepo
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform
 from github_runner_manager.platform.platform_provider import (
+    PlatformError,
     PlatformProvider,
     PlatformRunnerHealth,
     RunnersHealthResponse,
@@ -121,17 +124,63 @@ def test_get_runners_health_returns_non_requested_runners_always(
     assert runners_health_response.non_requested_runners == [identity_github_1]
 
 
-def test_multiplexer_build_without_github():
+@pytest.mark.parametrize(
+    "github_config, jobmanager_config, expected_platforms",
+    [
+        pytest.param(
+            GitHubConfiguration(
+                token=secrets.token_hex(5),
+                path=GitHubRepo(owner=secrets.token_hex(4), repo=secrets.token_hex(5)),
+            ),
+            None,
+            {"github"},
+            id="GitHub only",
+        ),
+        pytest.param(
+            None,
+            JobManagerConfiguration(url="http://jobmanager.example.com"),
+            {"jobmanager"},
+            id="JobManager only",
+        ),
+        pytest.param(
+            GitHubConfiguration(
+                token=secrets.token_hex(5),
+                path=GitHubRepo(owner=secrets.token_hex(4), repo=secrets.token_hex(5)),
+            ),
+            JobManagerConfiguration(url="http://jobmanager.example.com"),
+            {"github", "jobmanager"},
+            id="Both GitHub and JobManager",
+        ),
+    ],
+)
+def test_multipexer_platform_build(
+    github_config: GitHubConfiguration | None,
+    jobmanager_config: JobManagerConfiguration | None,
+    expected_platforms: set[str],
+):
     """
-    arrange: no GithubConfiguration.
+    arrange: Either GitHub or JobManager configuration is provided.
     act: call build
-    assert: no github in the multiplexer provider map
+    assert: no github or jobmanager in the multiplexer provider map
     """
-    github_config = None
-
     multiplexer = MultiplexerPlatform.build(
         prefix="unit-0",
         github_configuration=github_config,
+        jobmanager_configuration=jobmanager_config,
     )
 
-    assert "github" not in multiplexer._providers
+    assert expected_platforms == set(multiplexer._providers.keys())
+
+
+def test_multipexer_platform_build_no_config_raises_error():
+    """
+    arrange: No configuration is provided.
+    act: call build
+    assert: raises ValueError
+    """
+    with pytest.raises(
+        PlatformError, match="Either GitHub or JobManager configuration must be provided"
+    ):
+        MultiplexerPlatform.build(
+            prefix="unit-0", github_configuration=None, jobmanager_configuration=None
+        )
