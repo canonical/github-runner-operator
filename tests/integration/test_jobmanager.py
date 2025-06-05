@@ -297,9 +297,9 @@ async def test_jobmanager(
 
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
-    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook 
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
-    await app.set_config( { RECONCILE_INTERVAL_CONFIG_NAME: "10"})
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "10"})
     await wait_for_reconcile(app, app.model)
 
     # At this point there should be a runner
@@ -323,9 +323,9 @@ async def test_jobmanager(
     logger.info("handlers %s", httpserver.format_matchers())
 
     logger.info("Second reconcile call")
-    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook 
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
-    await app.set_config( { RECONCILE_INTERVAL_CONFIG_NAME: "5"})
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "5"})
     await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")

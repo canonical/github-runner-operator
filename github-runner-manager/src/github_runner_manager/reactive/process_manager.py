@@ -61,7 +61,7 @@ def reconcile(
     pids = _get_pids()
     current_quantity = len(pids)
     logger.info(
-        "Current quantity of reactive runner processes: %s, Expect quantity of reactive runner processes: %s",
+        "Reactive runner processes: current quantity %s, expected quantity %s",
         current_quantity,
         quantity,
     )
