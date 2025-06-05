@@ -2,7 +2,9 @@
 
 ### 2025-06-04
 
-- The charm will reconcile the state of the self-hosted runners in the background when it is able to.
+- Greatly reduce the reconcile-interval configuration. This is the interval between reconciling 
+the current and intended number of runners. The value should be kept low, unless Github API rate 
+limiting is encountered.
 - Removed the reconcile-runners juju action.
 
 ### 2025-06-03
