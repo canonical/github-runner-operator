@@ -7,12 +7,12 @@ import logging
 from enum import Enum
 
 import jobmanager_client
-from jobmanager_client.models.v1_jobs_job_id_token_post_request import V1JobsJobIdTokenPostRequest
 from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import HttpUrl
 from pydantic.error_wrappers import ValidationError
 from urllib3.exceptions import RequestError
 
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -38,14 +38,25 @@ logger = logging.getLogger(__name__)
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
+    def __init__(self, url: str):
+        """Construct the object.
+
+        Args:
+            url: The jobmanager base URL.
+        """
+        self._url = url
+
     @classmethod
-    def build(cls) -> "JobManagerPlatform":
+    def build(cls, jobmanager_configuration: JobManagerConfiguration) -> "JobManagerPlatform":
         """Build a new instance of the JobManagerPlatform.
+
+        Args:
+            jobmanager_configuration: Configuration for the jobmanager.
 
         Returns:
             New JobManagerPlatform.
         """
-        return cls()
+        return cls(url=jobmanager_configuration.url)
 
     def get_runner_health(
         self,
@@ -64,9 +75,9 @@ class JobManagerPlatform(PlatformProvider):
         """
         configuration = jobmanager_client.Configuration(host=runner_identity.metadata.url)
         with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.DefaultApi(api_client)
+            api_instance = jobmanager_client.RunnersApi(api_client)
             try:
-                response = api_instance.v1_jobs_job_id_health_get(
+                response = api_instance.get_runner_health_v1_runner_runner_id_health_get(
                     int(runner_identity.metadata.runner_id)
                 )
             except NotFoundException:
@@ -132,14 +143,14 @@ class JobManagerPlatform(PlatformProvider):
         )
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a runner from jobmanager..
+        """Delete a runner from jobmanager.
 
         This method does nothing, as the jobmanager does not implement it.
 
         Args:
             runner_identity: The identity of the runner to delete.
         """
-        logger.debug("No need to delete jobs in the jobmanager.")
+        logger.debug("No need to delete runners in the jobmanager.")
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
@@ -159,17 +170,31 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             New runner token.
         """
-        configuration = jobmanager_client.Configuration(host=metadata.url)
+        configuration = jobmanager_client.Configuration(host=self._url)
         with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.DefaultApi(api_client)
+            api_instance = jobmanager_client.RunnersApi(api_client)
             try:
                 # Retrieve jobs
-                jobrequest = V1JobsJobIdTokenPostRequest(job_id=int(metadata.runner_id))
-                response = api_instance.v1_jobs_job_id_token_post(
-                    int(metadata.runner_id), jobrequest
+                # TODO: Ask for removal of series and arch in openapi spec
+                runner_register_request = (
+                    jobmanager_client.RegisterRunnerV1RunnerRegisterPostRequest(
+                        name=instance_id.name, series="foobar", arch="foobar", labels=labels
+                    )
                 )
+
+                response = api_instance.register_runner_v1_runner_register_post(
+                    runner_register_request
+                )
+                if not response.id:
+                    raise PlatformApiError("No runner ID from jobmanager API")
+                updated_metadata = RunnerMetadata(
+                    platform_name=metadata.platform_name, url=self._url
+                )
+                updated_metadata.runner_id = str(response.id)
                 if token := response.token:
-                    jobmanager_endpoint = f"{metadata.url}/v1/jobs/{metadata.runner_id}/health"
+                    jobmanager_endpoint = (
+                        f"{self._url}/v1/runner/{updated_metadata.runner_id}/health"
+                    )
                     # For now, use the first label
                     label = "undefined"
                     if labels:
@@ -190,7 +215,7 @@ class JobManagerPlatform(PlatformProvider):
                                 metadata=metadata,
                             ),
                             busy=False,
-                            id=int(metadata.runner_id),
+                            id=int(updated_metadata.runner_id),
                             labels=[SelfHostedRunnerLabel(name=label) for label in labels],
                             status=GitHubRunnerStatus.OFFLINE,
                         ),
@@ -213,13 +238,26 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             True if the job has been picked up, False otherwise.
         """
-        configuration = jobmanager_client.Configuration(host=metadata.url)
+        configuration = jobmanager_client.Configuration(host=self._url)
+        #
+        # job_url has the path:
+        # "/v1/job/<job_id>/health"
+        path = job_url.path
+        # we know that path is not empty as it is validated by the JobDetails model
+        job_url_path_parts = path.split("/")  # type: ignore
+        job_id = job_url_path_parts[-2]
+        logging.debug(
+            "Parsed job_id: %s from job_url path %s",
+            job_id,
+            path,
+        )
 
         with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.DefaultApi(api_client)
+            api_instance = jobmanager_client.JobsApi(api_client)
             try:
-                job = api_instance.v1_jobs_job_id_get(int(metadata.runner_id))
-                if job.status != JobStatus.PENDING:
+                job = api_instance.get_health_v1_jobs_job_id_health_get(int(job_id))
+                # the api returns a generic object, ignore the type for status
+                if job.status != JobStatus.PENDING:  # type: ignore
                     return True
             except (ApiException, RequestError, ValidationError) as exc:
                 logger.exception("Error calling jobmanager api to get job information.")
