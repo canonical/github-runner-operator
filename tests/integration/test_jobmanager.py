@@ -29,6 +29,7 @@ from charm_state import (
     EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
@@ -100,6 +101,8 @@ async def app_fixture(
             PATH_CONFIG_NAME: "",
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            # Disable reconcile since the test controls when the reconcile happens.
+            RECONCILE_INTERVAL_CONFIG_NAME: "60",
         }
     )
     await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
@@ -294,6 +297,9 @@ async def test_jobmanager(
 
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook 
+    # to restart the reconcile service.
+    await app.set_config( { RECONCILE_INTERVAL_CONFIG_NAME: "10"})
     await wait_for_reconcile(app, app.model)
 
     # At this point there should be a runner
@@ -316,7 +322,10 @@ async def test_jobmanager(
     logger.info("handler health %s", health_get_handler)
     logger.info("handlers %s", httpserver.format_matchers())
 
-    logger.info("Second reconcile call: %s", action.results)
+    logger.info("Second reconcile call")
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook 
+    # to restart the reconcile service.
+    await app.set_config( { RECONCILE_INTERVAL_CONFIG_NAME: "5"})
     await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")

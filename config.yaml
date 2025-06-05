@@ -67,7 +67,7 @@ options:
       "{owner}/{repo}" format.
   reconcile-interval:
     type: int
-    default: 1
+    default: 5
     description: >-
       Minutes between each reconciliation of the current runners state and their targeted state.
       On reconciliation, the charm polls the state of runners and see if actions are needed. The

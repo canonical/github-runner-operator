@@ -60,7 +60,7 @@ def reconcile(
     """
     pids = _get_pids()
     current_quantity = len(pids)
-    logger.info("Current quantity of reactive runner processes: %s", current_quantity)
+    logger.info("Current quantity of reactive runner processes: %s, Expect quantity of reactive runner processes: %s", current_quantity, quantity)
     delta = quantity - current_quantity
     if delta > 0:
         logger.info("Will spawn %d new reactive runner process(es)", delta)
