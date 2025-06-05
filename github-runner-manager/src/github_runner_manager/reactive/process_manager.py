@@ -40,7 +40,10 @@ class ReactiveRunnerError(Exception):
 
 
 def reconcile(
-    quantity: int, reactive_process_config: ReactiveProcessConfig, user: UserInfo
+    quantity: int,
+    reactive_process_config: ReactiveProcessConfig,
+    user: UserInfo,
+    python_path: str | None = None,
 ) -> int:
     """Reconcile the number of reactive runner processes.
 
@@ -48,6 +51,7 @@ def reconcile(
         quantity: The number of processes to spawn.
         reactive_process_config: The reactive runner configuration.
         user: The user to run the reactive process.
+        python_path: The PYTHONPATH to access the github-runner-manager library.
 
     Raises a ReactiveRunnerError if the runner fails to spawn.
 
@@ -62,7 +66,7 @@ def reconcile(
         logger.info("Will spawn %d new reactive runner process(es)", delta)
         _setup_logging_for_processes(user.user, user.group)
         for _ in range(delta):
-            _spawn_runner(reactive_process_config)
+            _spawn_runner(reactive_process_config, python_path)
     elif delta < 0:
         logger.info("Will kill %d process(es).", -delta)
         for pid in pids[:-delta]:
@@ -126,16 +130,18 @@ def _setup_logging_for_processes(user: str, group: str) -> None:
     )
 
 
-def _spawn_runner(reactive_process_config: ReactiveProcessConfig) -> None:
+def _spawn_runner(reactive_process_config: ReactiveProcessConfig, python_path: str | None) -> None:
     """Spawn a runner.
 
     Args:
         reactive_process_config: The runner configuration to pass to the spawned runner process.
+        python_path: The PYTHONPATH to access the github-runner-manager library.
     """
     env = {
-        "PYTHONPATH": os.environ["PYTHONPATH"],
         RUNNER_CONFIG_ENV_VAR: reactive_process_config.json(),
     }
+    if python_path is not None:
+        env["PYTHONPATH"] = str(python_path)
     # We do not want to wait for the process to finish, so we do not use with statement.
     # We trust the command.
     command = " ".join(
