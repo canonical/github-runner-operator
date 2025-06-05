@@ -1,0 +1,73 @@
+06:50:07 INFO Waiting for model:
+  test-jg1w8u5p/0 [executing] active: 
+06:50:37 INFO Waiting for model:
+  test-jg1w8u5p/0 [idle] active:
+06:51:02 INFO Waiting for model:
+  test-jg1w8u5p/0 [executing] active: 
+06:51:33 INFO Waiting for model:
+  test-jg1w8u5p/0 [idle] active: 
+06:51:38 INFO Wait for condition not met, sleeping 10
+06:51:50 INFO Wait for condition not met, sleeping 10
+06:52:00 INFO Wait for condition not met, sleeping 10
+06:52:11 INFO Wait for condition not met, sleeping 10
+06:52:21 INFO Wait for condition not met, sleeping 10
+06:52:32 INFO Wait for condition not met, sleeping 10
+06:52:42 INFO Wait for condition not met, sleeping 10
+06:52:53 INFO Wait for condition not met, sleeping 10
+06:53:03 INFO Wait for condition not met, sleeping 10
+06:53:13 INFO Wait for condition not met, sleeping 10
+06:54:06 INFO Waiting for model:
+  test-jg1w8u5p/0 [executing] active: 
+06:54:37 INFO Waiting for model:
+  test-jg1w8u5p/0 [idle] active: 
+06:54:46 INFO Wait for condition not met, sleeping 60
+06:55:47 INFO Wait for condition not met, sleeping 60
+06:56:48 INFO Wait for condition not met, sleeping 60
+06:57:48 INFO Wait for condition not met, sleeping 60
+06:58:49 INFO Wait for condition not met, sleeping 60
+06:59:49 INFO Wait for condition not met, sleeping 60
+07:00:50 INFO Wait for condition not met, sleeping 60
+07:01:50 INFO Wait for condition not met, sleeping 60
+07:02:51 INFO Wait for condition not met, sleeping 60
+07:03:54 INFO Wait for condition not met, sleeping 10
+07:04:23 INFO Waiting for model:
+  test-jg1w8u5p/0 [idle] active:
+07:04:58 INFO Waiting for model:
+  test-jg1w8u5p/0 [idle] active: 
+07:05:16 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-wrpz  github-pr-c3380-lxd  localhost/localhost  3.6.6    unsupported  07:05:16Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-jg1w8u5p           active      1  github-runner-image-builder  latest/edge   84  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       214  no       
+test-jg1w8u5p                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-jg1w8u5p/0*  active    idle   1        10.36.187.94               
+mongodb/0*                               active    idle   0        10.36.187.68    27017/tcp  Primary
+test-jg1w8u5p/0*                         active    idle   2        10.36.187.21               
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.36.187.68  juju-db7154-0  ubuntu@22.04      Running
+1        started  10.36.187.94  juju-db7154-1  ubuntu@22.04      Running
+2        started  10.36.187.21  juju-db7154-2  ubuntu@22.04      Running
+
+07:05:16 INFO Juju error logs:
+
+machine-0: 06:26:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:26:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:27:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:27:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jg1w8u5p-0: 06:27:12 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:27:35 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:27:35 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:28:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-jg1w8u5p-0: 06:28:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-jg1w8u5p-0: 06:28:47 ERROR unit.github-runner-image-builder-jg1w8u5p/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-jg1w8u5p-0: 06:45:49 ERROR unit.test-jg1w8u5p/0.juju-log No metrics returned after deleting test-jg1w8u5p-0-r-70d3221288b8
+
+07:05:16 INFO Forgetting model main...
