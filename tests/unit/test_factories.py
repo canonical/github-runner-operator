@@ -130,6 +130,7 @@ def test_create_application_configuration(
                 region_name="region",
             ),
         ),
+        reconcile_interval=5,
     )
 
 

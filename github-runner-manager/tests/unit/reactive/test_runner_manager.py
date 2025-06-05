@@ -97,6 +97,7 @@ def test_reconcile_positive_runner_diff(
         quantity=expected_process_quantity,
         reactive_process_config=reactive_process_config,
         user=user_info,
+        python_path=None,
     )
 
 
@@ -139,7 +140,10 @@ def test_reconcile_negative_runner_diff(
     runner_manager.cleanup.assert_called_once()
     runner_manager.delete_runners.assert_called_once_with(expected_number_of_runners_to_delete)
     reactive_process_manager.reconcile.assert_called_once_with(
-        quantity=0, reactive_process_config=reactive_process_config, user=user_info
+        quantity=0,
+        reactive_process_config=reactive_process_config,
+        user=user_info,
+        python_path=None,
     )
 
 
