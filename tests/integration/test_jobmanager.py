@@ -30,6 +30,7 @@ from charm_state import (
     EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
 from tests.integration.helpers.charm_metrics import clear_metrics_log
@@ -102,6 +103,8 @@ async def app_fixture(
             PATH_CONFIG_NAME: "",
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            # Disable reconciliation for this test.
+            RECONCILE_INTERVAL_CONFIG_NAME: "60"
         }
     )
     await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
