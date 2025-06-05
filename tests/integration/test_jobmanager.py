@@ -103,8 +103,7 @@ async def app_fixture(
             PATH_CONFIG_NAME: "",
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            # Disable reconciliation for this test.
-            RECONCILE_INTERVAL_CONFIG_NAME: "60"
+            RECONCILE_INTERVAL_CONFIG_NAME: "5"
         }
     )
     await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
@@ -299,9 +298,7 @@ async def test_jobmanager(
 
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
-    action: Action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
-    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    await wait_for_reconcile(app, app.model)
     logger.info("First reconcile result %s %s", action.status, action.results)
 
     # At this point there should be a runner
@@ -325,9 +322,7 @@ async def test_jobmanager(
     logger.info("handlers %s", httpserver.format_matchers())
 
     logger.info("Second reconcile call: %s", action.results)
-    action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
-    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    await wait_for_reconcile(app, app.model)
     logger.info("Second reconcile result %s %s", action.status, action.results)
 
     action = await app.units[0].run_action("check-runners")
