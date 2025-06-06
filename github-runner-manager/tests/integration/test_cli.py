@@ -6,6 +6,7 @@
 import subprocess
 from time import sleep
 
+from github_runner_manager.reconcile_service import RECONCILE_SERVICE_START_MSG
 from tests.integration.helper import get_app_log, health_check
 
 
@@ -19,7 +20,7 @@ def test_app_reconcile(app: subprocess.Popen):
     app.terminate()
     logs = get_app_log(app)
     assert "Starting the server..." in logs
-    assert "Starting the reconcile_service..." in logs
+    assert RECONCILE_SERVICE_START_MSG in logs
 
 
 def test_app_http_server(app: subprocess.Popen):

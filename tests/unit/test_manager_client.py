@@ -25,6 +25,7 @@ def mock_requests_fixture() -> MagicMock:
 def client_fixture(mock__request: MagicMock):
     client = GitHubRunnerManagerClient("mock_ip", "mock_port")
     # Remove the request session as safe guard against issues real requests.
+    client.wait_till_ready = MagicMock()
     client._requests = None
     client._request = mock__request
     return client

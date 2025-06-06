@@ -137,3 +137,27 @@ def test_install_package_failure(mock_execute_command: MagicMock):
         manager_service.install_package()
 
     assert manager_service._INSTALL_ERROR_MESSAGE in str(err.value)
+
+
+def test_stop_with_running_service(mock_systemd: MagicMock):
+    """
+    arrange: The service is running.
+    act: Run stop.
+    assert: There is a call for stopping service.
+    """
+    mock_systemd.service_running.return_value = True
+    manager_service.stop()
+    mock_systemd.service_running.assert_called_once()
+    mock_systemd.service_stop.assert_called_once()
+
+
+def test_stop_with_stopped_service(mock_systemd: MagicMock):
+    """
+    arrange: The service is stopped.
+    act: Run stop.
+    assert: There is no call for stopping service.
+    """
+    mock_systemd.service_running.return_value = False
+    manager_service.stop()
+    mock_systemd.service_running.assert_called_once()
+    mock_systemd.service_stop.assert_not_called()

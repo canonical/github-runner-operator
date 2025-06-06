@@ -47,7 +47,7 @@ def main() -> None:
     setup_root_logging()
     queue_config = runner_config.queue
 
-    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
     openstack_runner_manager = OpenStackRunnerManager(
         config=runner_config.cloud_runner_manager, user=user
     )
