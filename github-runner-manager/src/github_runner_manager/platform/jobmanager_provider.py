@@ -174,11 +174,9 @@ class JobManagerPlatform(PlatformProvider):
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.RunnersApi(api_client)
             try:
-                # Retrieve jobs
-                # TODO: Ask for removal of series and arch in openapi spec
                 runner_register_request = (
                     jobmanager_client.RegisterRunnerV1RunnerRegisterPostRequest(
-                        name=instance_id.name, series="foobar", arch="foobar", labels=labels
+                        name=instance_id.name, labels=labels
                     )
                 )
 
