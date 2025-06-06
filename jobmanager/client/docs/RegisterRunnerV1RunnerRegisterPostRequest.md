@@ -5,10 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** |  | 
-**series** | **str** |  | 
-**arch** | **str** |  | 
 **labels** | **List[str]** |  | [optional] 
-**vm_size** | **str** |  | [optional] 
 
 ## Example
 

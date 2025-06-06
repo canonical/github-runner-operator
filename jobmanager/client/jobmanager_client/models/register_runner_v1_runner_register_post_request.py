@@ -26,11 +26,8 @@ class RegisterRunnerV1RunnerRegisterPostRequest(BaseModel):
     RegisterRunnerV1RunnerRegisterPostRequest
     """
     name: StrictStr = Field(...)
-    series: StrictStr = Field(...)
-    arch: StrictStr = Field(...)
     labels: Optional[conlist(StrictStr)] = None
-    vm_size: Optional[StrictStr] = None
-    __properties = ["name", "series", "arch", "labels", "vm_size"]
+    __properties = ["name", "labels"]
 
     class Config:
         """Pydantic configuration"""
@@ -69,10 +66,7 @@ class RegisterRunnerV1RunnerRegisterPostRequest(BaseModel):
 
         _obj = RegisterRunnerV1RunnerRegisterPostRequest.parse_obj({
             "name": obj.get("name"),
-            "series": obj.get("series"),
-            "arch": obj.get("arch"),
-            "labels": obj.get("labels"),
-            "vm_size": obj.get("vm_size")
+            "labels": obj.get("labels")
         })
         return _obj
 
