@@ -1,0 +1,149 @@
+06:24:31 WARNING unexpected facade SSHServer received from the controller
+06:24:31 INFO Adding model github-pr-c3380-lxd:test-charm-metrics-failure-h3r5 on cloud localhost
+06:24:32 WARNING unexpected facade SSHServer received from the controller
+06:24:32 WARNING unexpected facade SSHSession received from the controller
+06:24:32 WARNING unexpected facade SSHTunneler received from the controller
+06:24:32 INFO GitHub token rate limit: Rate(reset=2025-06-06 07:07:34+00:00, remaining=4898, limit=5000)
+06:24:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+06:25:08 INFO Deploying local:jammy/github-runner-0
+06:25:09 INFO Waiting for model:
+  test-vly4avzd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vly4avzd/0 [allocating] waiting: waiting for machine
+06:25:39 INFO Waiting for model:
+  test-vly4avzd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vly4avzd/0 [allocating] waiting: waiting for machine
+06:26:09 INFO Waiting for model:
+  test-vly4avzd/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vly4avzd/0 [allocating] waiting: agent initialising
+06:26:40 INFO Waiting for model:
+  test-vly4avzd/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vly4avzd/0 [executing] maintenance: Setting up Builder.
+06:27:10 INFO Waiting for model:
+  test-vly4avzd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vly4avzd/0 [executing] maintenance: Setting up Builder.
+06:27:40 INFO Waiting for model:
+  test-vly4avzd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vly4avzd/0 [executing] maintenance: Setting up Builder.
+06:28:10 INFO Waiting for model:
+  test-vly4avzd/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vly4avzd/0 [executing] maintenance: Setting up Builder.
+06:28:40 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:29:11 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:29:41 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:30:12 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:30:42 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:31:12 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:31:43 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:32:13 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:32:44 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:33:14 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:33:44 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:34:15 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:34:45 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:35:15 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:35:46 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:36:16 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:36:46 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:37:17 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:37:47 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:38:18 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:38:48 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:39:19 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:39:49 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:40:19 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:40:49 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:41:20 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:41:50 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:42:20 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:42:51 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:43:21 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:43:51 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:44:21 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:44:52 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:45:22 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:45:53 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:46:23 INFO Waiting for model:
+  test-vly4avzd/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vly4avzd/0 [executing] active: Building image.
+06:46:53 INFO Waiting for model:
+  test-vly4avzd/0 [executing] maintenance: Reconciling runners
+06:47:34 INFO Waiting for model:
+  test-vly4avzd/0 [executing] maintenance: Reconciling runners
+06:48:04 INFO Waiting for model:
+  test-vly4avzd/0 [idle] active:
+06:54:53 INFO Waiting for model:
+  test-vly4avzd/0 [executing] active: 
+06:55:23 INFO Waiting for model:
+  test-vly4avzd/0 [idle] active: 
+06:55:31 INFO [TEST SETUP] Exposing port 8080 on test-vly4avzd-0-n-7a1698fa55c5
+06:55:31 WARNING dict_values([])
