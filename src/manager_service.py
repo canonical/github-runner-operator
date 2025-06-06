@@ -19,6 +19,7 @@ from charm_state import CharmState
 from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerApplicationStartError,
+    RunnerManagerApplicationStopError,
     SubprocessError,
 )
 from factories import create_application_configuration
@@ -76,11 +77,7 @@ def install_package() -> None:
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
-    try:
-        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
-    except SystemdError as err:
-        raise RunnerManagerApplicationInstallError(_SERVICE_STOP_ERROR_MESSAGE) from err
+    _stop()
 
     logger.info("Ensure pipx is at latest version")
     try:
@@ -108,6 +105,23 @@ def install_package() -> None:
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
+
+
+def stop() -> None:
+    _stop()
+
+
+def _stop() -> None:
+    """Stop the GitHub runner manager service.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to stop the service.
+    """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
 
 
 def _get_log_file_path(unit_name: str) -> Path:

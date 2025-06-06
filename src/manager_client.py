@@ -162,13 +162,13 @@ class GitHubRunnerManagerClient:
 
     def wait_till_ready(self) -> None:
         """Wait till the runner manager service is ready for requests."""
-        for _ in range(5):
+        for _ in range(8):
             try:
                 self.health_check()
             except RunnerManagerServiceNotReadyError:
                 pass
             else:
                 return
-            sleep(60)
+            sleep(15)
         # RunnerManagerServiceNotReadyError will be raised if the service is still not unhealthy.
         self.health_check()

@@ -395,8 +395,10 @@ class CharmConfig(BaseModel):
         Returns:
             The validated reconcile_interval value.
         """
-        # The reconcile_interval should be greater than 0.
-        if reconcile_interval < 1:
+        # The reconcile_interval should be at least 2.
+        # Due to possible race condition with the message acknowledgement with job status checking
+        # in reactive process.
+        if reconcile_interval <= 1:
             logger.error(
                 "The %s configuration must be greater than or equal to 1",
                 RECONCILE_INTERVAL_CONFIG_NAME,

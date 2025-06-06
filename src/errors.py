@@ -70,6 +70,10 @@ class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
     """Represents an error raised when github-runner-manager application start failed."""
 
 
+class RunnerManagerApplicationStopError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application stop failed."""
+
+
 class RunnerManagerServiceError(Exception):
     """Represents an error raised with request to github-runner-manager service."""
 

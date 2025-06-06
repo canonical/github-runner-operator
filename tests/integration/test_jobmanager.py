@@ -101,7 +101,8 @@ async def app_fixture(
             PATH_CONFIG_NAME: "",
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            # Disable reconcile since the test controls when the reconcile happens.
+            # Disable reconcile by setting it to a long time period since the test controls when
+            # the reconcile happens.
             RECONCILE_INTERVAL_CONFIG_NAME: "60",
         }
     )
