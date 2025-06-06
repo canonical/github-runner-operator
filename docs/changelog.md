@@ -5,7 +5,7 @@
 - Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
 between reconciling the current and intended number of runners. The value should be kept low, 
 unless Github API rate limiting is encountered.
-- Removed the reconcile-runners juju action.
+- Removed the reconcile-runners Juju action.
 
 ### 2025-06-03
 
