@@ -127,9 +127,11 @@ def catch_charm_errors(
         except ImageIntegrationMissingError:
             logger.exception("Missing image integration.")
             self.unit.status = BlockedStatus("Please provide image integration.")
+            manager_service.stop()
         except ImageNotFoundError:
             logger.exception("Missing image in image integration.")
             self.unit.status = WaitingStatus("Waiting for image over integration.")
+            manager_service.stop()
 
     return func_with_catch_errors
 
