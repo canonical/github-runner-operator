@@ -108,6 +108,7 @@ def install_package() -> None:
 
 
 def stop() -> None:
+    """Stop the GitHub runner manager service."""
     _stop()
 
 
