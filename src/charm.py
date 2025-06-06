@@ -202,6 +202,10 @@ class GithubRunnerCharm(CharmBase):
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
         )
+        self.framework.observe(
+            self.on[IMAGE_INTEGRATION_NAME].relation_departed,
+            self._on_image_relation_departed,
+        )
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
@@ -456,6 +460,11 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client.flush_runner()
 
+    @catch_charm_errors
+    def _on_image_relation_departed(self, _: ops.RelationChangedEvent) -> None:
+        """Handle image relation departed event."""
+        self._get_set_image_ready_status()
+
     def _get_set_image_ready_status(self) -> bool:
         """Check if image is ready for Openstack and charm status accordingly.
 
@@ -465,9 +474,11 @@ class GithubRunnerCharm(CharmBase):
         openstack_image = OpenstackImage.from_charm(self)
         if openstack_image is None:
             self.unit.status = BlockedStatus("Please provide image integration.")
+            manager_service.stop()
             return False
         if not openstack_image.id:
             self.unit.status = WaitingStatus("Waiting for image over integration.")
+            manager_service.stop()
             return False
         self.unit.status = ActiveStatus()
         return True
