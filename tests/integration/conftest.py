@@ -448,7 +448,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=1,
+            reconcile_interval=2,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
