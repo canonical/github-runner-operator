@@ -88,3 +88,11 @@ class RunnerManagerServiceResponseError(RunnerManagerServiceError):
 
 class RunnerManagerServiceNotReadyError(RunnerManagerServiceError):
     """Represents the github-runner-manager service is not ready for requests."""
+
+
+class ImageIntegrationMissingError(Exception):
+    """Represents the missing image integration."""
+
+
+class ImageNotFoundError(Exception):
+    """Represents not founding the image in the image integration."""

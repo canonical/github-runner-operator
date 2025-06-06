@@ -54,6 +54,8 @@ from charm_state import (
 )
 from errors import (
     ConfigurationError,
+    ImageIntegrationMissingError,
+    ImageNotFoundError,
     LogrotateSetupError,
     MissingMongoDBError,
     RunnerManagerApplicationError,
@@ -122,6 +124,12 @@ def catch_charm_errors(
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")
             self.unit.status = WaitingStatus(str(err))
+        except ImageIntegrationMissingError:
+            logger.exception("Missing image integration.")
+            self.unit.status = BlockedStatus("Please provide image integration.")
+        except ImageNotFoundError:
+            logger.exception("Missing image in image integration.")
+            self.unit.status = WaitingStatus("Waiting for image over integration.")
 
     return func_with_catch_errors
 
@@ -201,10 +209,6 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
-        )
-        self.framework.observe(
-            self.on[IMAGE_INTEGRATION_NAME].relation_departed,
-            self._on_image_relation_departed,
         )
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
@@ -293,7 +297,8 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_start(self, _: StartEvent) -> None:
         """Handle the start of the charm."""
-        self._get_set_image_ready_status()
+        self._check_image_ready()
+        self.unit.status = ActiveStatus()
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
@@ -317,14 +322,14 @@ class GithubRunnerCharm(CharmBase):
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
             flush_runners = True
 
-        if not self._get_set_image_ready_status():
-            return
+        self._check_image_ready()
 
         self._setup_service(state)
 
         if flush_runners:
             logger.info("Flush runners on config-changed")
             self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -429,13 +434,13 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        if not self._get_set_image_ready_status():
-            return
+        self._check_image_ready()
 
         state = self._setup_state()
         self._setup_service(state)
 
         self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
@@ -452,36 +457,26 @@ class GithubRunnerCharm(CharmBase):
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
         self.unit.status = MaintenanceStatus("Update image for runners")
-        if not self._get_set_image_ready_status():
-            return
+        self._check_image_ready()
 
         state = self._setup_state()
         self._setup_service(state)
 
         self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
-    @catch_charm_errors
-    def _on_image_relation_departed(self, _: ops.RelationChangedEvent) -> None:
-        """Handle image relation departed event."""
-        self._get_set_image_ready_status()
+    def _check_image_ready(self) -> None:
+        """Check if image is ready raises error if not.
 
-    def _get_set_image_ready_status(self) -> bool:
-        """Check if image is ready for Openstack and charm status accordingly.
-
-        Returns:
-            Whether the Openstack image is ready via image integration.
+        Raises:
+            ImageIntegrationMissingError: No image integration found.
+            ImageNotFoundError: No image found in the image integration.
         """
         openstack_image = OpenstackImage.from_charm(self)
         if openstack_image is None:
-            self.unit.status = BlockedStatus("Please provide image integration.")
-            manager_service.stop()
-            return False
+            raise ImageIntegrationMissingError("No image integration found")
         if not openstack_image.id:
-            self.unit.status = WaitingStatus("Waiting for image over integration.")
-            manager_service.stop()
-            return False
-        self.unit.status = ActiveStatus()
-        return True
+            raise ImageNotFoundError("No image found in the image integration")
 
     @staticmethod
     def _create_labels(state: CharmState) -> list[str]:
