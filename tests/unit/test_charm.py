@@ -234,7 +234,7 @@ def test_on_config_changed_failure(harness: Harness):
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
 
 
-def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and runner scaler mock.
     act: Trigger stop event.
@@ -244,11 +244,14 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
     harness.charm._manager_client = manager_client_mock
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
     mock_event = MagicMock()
 
     harness.charm._on_stop(mock_event)
 
     manager_client_mock.flush_runner.assert_called_once_with(busy=True)
+    mock_manager_service.stop.assert_called_once()
 
 
 @pytest.mark.parametrize(
