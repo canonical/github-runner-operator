@@ -136,7 +136,7 @@ def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_va
         url: HttpUrl
 
     # we can pass a string here, mypy doesn't understand it
-    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234/health").url  # type: ignore
+    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234").url  # type: ignore
 
     assert platform.check_job_been_picked_up(metadata, job_url) == picked_up
 
@@ -167,7 +167,7 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
         url: HttpUrl
 
     # we can pass a string here, mypy doesn't understand it
-    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234/health").url  # type: ignore
+    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234").url  # type: ignore
 
     with pytest.raises(PlatformApiError):
         platform.check_job_been_picked_up(metadata, job_url)

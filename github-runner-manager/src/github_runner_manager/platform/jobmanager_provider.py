@@ -239,11 +239,11 @@ class JobManagerPlatform(PlatformProvider):
         configuration = jobmanager_client.Configuration(host=self._url)
         #
         # job_url has the path:
-        # "/v1/job/<job_id>/health"
+        # "/v1/job/<job_id>"
         path = job_url.path
         # we know that path is not empty as it is validated by the JobDetails model
         job_url_path_parts = path.split("/")  # type: ignore
-        job_id = job_url_path_parts[-2]
+        job_id = job_url_path_parts[-1]
         logging.debug(
             "Parsed job_id: %s from job_url path %s",
             job_id,
@@ -253,7 +253,7 @@ class JobManagerPlatform(PlatformProvider):
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.JobsApi(api_client)
             try:
-                job = api_instance.get_health_v1_jobs_job_id_health_get(int(job_id))
+                job = api_instance.get_job_v1_jobs_job_id_get(int(job_id))
                 # the api returns a generic object, ignore the type for status
                 if job.status != JobStatus.PENDING:  # type: ignore
                     return True

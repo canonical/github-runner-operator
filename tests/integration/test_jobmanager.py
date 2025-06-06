@@ -7,6 +7,7 @@ import asyncio
 import json
 import logging
 import socket
+from platform import architecture
 from typing import AsyncIterator
 
 import pytest
@@ -27,13 +28,13 @@ from pytest_operator.plugin import OpsTest
 
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
-    EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
 from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import \
     GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+from jobmanager.client.jobmanager_client.models.job_read import JobRead
 from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import \
     RegisterRunnerV1RunnerRegisterPost200Response
 from tests.integration.helpers.charm_metrics import clear_metrics_log
@@ -89,10 +90,29 @@ def httpserver_listen_address(httpserver_listen_port: int):
     return ("0.0.0.0", httpserver_listen_port)
 
 
+@pytest.fixture(scope="session", name="jobmanager_ip_address")
+def jb_ip_address_fixture() -> str:
+    """IP address for the jobmanager tests."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    ip_address = s.getsockname()[0]
+    logger.info("IP Address to use as the fake jobmanager: %s", ip_address)
+    s.close()
+    return ip_address
+
+@pytest.fixture(scope="session", name="jobmanager_base_url")
+def jobmanager_base_url_fixture(
+    jobmanager_ip_address: str,
+    httpserver_listen_port: int,
+) -> str:
+    """Jobmanager base URL for the tests."""
+    return f"http://{jobmanager_ip_address}:{httpserver_listen_port}"
+
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
     ops_test: OpsTest,
     app_for_reactive: Application,
+    jobmanager_base_url: str,
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     app_for_jobmanager = app_for_reactive
@@ -102,8 +122,8 @@ async def app_fixture(
 
     await app_for_jobmanager.set_config(
         {
-            TOKEN_CONFIG_NAME: EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
-            PATH_CONFIG_NAME: "",
+            TOKEN_CONFIG_NAME: "",
+            PATH_CONFIG_NAME: jobmanager_base_url,
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
         }
@@ -125,6 +145,8 @@ async def test_jobmanager(
     app: Application,
     ops_test: OpsTest,
     httpserver: HTTPServer,
+    jobmanager_base_url: str,
+    jobmanager_ip_address: str,
 ):
     """
     This is a full test for the happy path of the jobmanager.
@@ -152,21 +174,17 @@ async def test_jobmanager(
     # The http server simulates the jobmanager. Both the github-runner application
     # and the builder-agent will interact with the jobmanager. An alternative is
     # to create a test with a real jobmanager, and this could be done in the future.
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    ip_address = s.getsockname()[0]
-    logger.info("IP Address to use as the fake jobmanager: %s", ip_address)
-    s.close()
 
-    jobmanager_base_url = f"http://{ip_address}:{httpserver.port}"
 
     mongodb_uri = await get_mongodb_uri(ops_test, app)
     labels = {app.name, "x64"}
 
     job_id = 99
     job_path = f"/v1/jobs/{job_id}"
-    job_path_health = f"/v1/jobs/{job_id}/health"
     job_url = f"{jobmanager_base_url}{job_path}"
+
+    runner_id = 1234
+    runner_health_path = f"/v1/runner/{runner_id}/health"
 
     job = JobDetails(
         labels=labels,
@@ -176,7 +194,7 @@ async def test_jobmanager(
     # The first interaction with the jobmanager after the runner manager gets
     # a message in the queue is to check if the job has been picked up. If it is pending,
     # the github-runner will spawn a reactive runner.
-    returned_job = Job(job_id=job_id, status=JobStatus.PENDING.value)
+    returned_job = JobRead(id=job_id, status=JobStatus.PENDING.value, architecture="x64", base_series="jammy", requested_by="foobar")
 
     httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
@@ -200,7 +218,6 @@ async def test_jobmanager(
 
     # The runner manager will request a token to spawn the runner.
     runner_register = f"/v1/runner/register"
-    runner_id = "1234"
     token = "token"
     returned_token = RegisterRunnerV1RunnerRegisterPost200Response(id=runner_id, token=token)
     httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
@@ -217,7 +234,7 @@ async def test_jobmanager(
     # status can be: IDLE, EXECUTING, FINISHED,
     # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
     base_builder_agent_health_request = {
-        "uri": job_path_health,
+        "uri": runner_health_path,
         "method": "PUT",
         "headers": {"Authorization": f"Bearer {token}"},
     }
@@ -243,7 +260,7 @@ async def test_jobmanager(
         status="PENDING",
         deletable=False,
     )
-    health_get_handler = httpserver.expect_request(uri=job_path_health, method="GET")
+    health_get_handler = httpserver.expect_request(uri=runner_health_path, method="GET")
     health_get_handler.respond_with_json(health_response.to_dict())
 
     unit = app.units[0]
@@ -251,7 +268,7 @@ async def test_jobmanager(
     async def _prepare_runner() -> bool:
         """Prepare the tunner so the runner builder-agent can get to the jobmanager."""
         return await _prepare_runner_tunnel_for_builder_agent(
-            instance_helper, unit, ip_address, httpserver.port
+            instance_helper, unit, jobmanager_ip_address, httpserver.port
         )
 
     await wait_for(_prepare_runner, check_interval=10, timeout=600)
@@ -312,10 +329,10 @@ async def test_jobmanager(
     await action.wait()
     logger.info("check-runners after first reconcile: %s", action.results)
     assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["busy"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+    assert action.results["online"] == "1", "Runner should be online after first reconcile"
+    assert action.results["busy"] == "1", "Runner should be busy after first reconcile"
+    assert action.results["offline"] == "0", "Runner should not be offline after first reconcile"
+    assert action.results["unknown"] == "0", "Runner should not be unknown after first reconcile"
 
     logger.info("handlers %s", httpserver.format_matchers())
     logger.info("handler health %s", health_get_handler)
@@ -337,10 +354,10 @@ async def test_jobmanager(
     await action.wait()
     logger.info("check-runner runners after second reconcile: %s", action.results)
     assert action.status == "completed"
-    assert action.results["online"] == "0"
-    assert action.results["busy"] == "0"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
+    assert action.results["online"] == "0", "No runners should be online after second reconcile"
+    assert action.results["busy"] == "0", "No runners should be busy after second reconcile"
+    assert action.results["offline"] == "0", "No runners should be offline after second reconcile"
+    assert action.results["unknown"] == "0", "No runners should be unknown after second reconcile"
 
     assert_queue_is_empty(mongodb_uri, app.name)
 

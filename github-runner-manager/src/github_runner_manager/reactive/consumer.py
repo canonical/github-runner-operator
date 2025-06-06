@@ -178,8 +178,7 @@ def _build_runner_metadata(job_url: str) -> RunnerMetadata:
         logger.error("Invalid URL for a job. url: %s", job_url)
         raise ValueError(f"Invalid format for job url {job_url}")
     base_url = parsed_url._replace(path=match_result.group(1)).geturl()
-    runner_id = match_result.group(2)
-    return RunnerMetadata(platform_name="jobmanager", url=base_url, runner_id=runner_id)
+    return RunnerMetadata(platform_name="jobmanager", url=base_url)
 
 
 def _parse_job_details(msg: Message) -> JobDetails:

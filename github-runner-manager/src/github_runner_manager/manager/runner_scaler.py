@@ -138,6 +138,7 @@ class RunnerScaler:
         platform_provider = MultiplexerPlatform.build(
             prefix=application_configuration.openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
+            jobmanager_configuration=application_configuration.jobmanager_config
         )
 
         runner_manager = RunnerManager(
@@ -160,6 +161,7 @@ class RunnerScaler:
                 queue=reactive_config.queue,
                 manager_name=application_configuration.name,
                 github_configuration=application_configuration.github_config,
+                jobmanager_configuration=application_configuration.jobmanager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 supported_labels=supported_labels,
                 labels=labels,
