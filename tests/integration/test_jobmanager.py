@@ -32,6 +32,10 @@ from charm_state import (
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
+from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import \
+    GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import \
+    RegisterRunnerV1RunnerRegisterPost200Response
 from tests.integration.helpers.charm_metrics import clear_metrics_log
 from tests.integration.helpers.common import reconcile, wait_for
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
@@ -195,9 +199,11 @@ async def test_jobmanager(
     job_get_handler.respond_with_json(returned_job.to_dict())
 
     # The runner manager will request a token to spawn the runner.
-    token_path = f"/v1/jobs/{job_id}/token"
-    returned_token = V1JobsJobIdTokenPost200Response(token="token")
-    httpserver.expect_oneshot_request(token_path).respond_with_json(returned_token.to_dict())
+    runner_register = f"/v1/runner/register"
+    runner_id = "1234"
+    token = "token"
+    returned_token = RegisterRunnerV1RunnerRegisterPost200Response(id=runner_id, token=token)
+    httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
 
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for get token.")
@@ -213,7 +219,7 @@ async def test_jobmanager(
     base_builder_agent_health_request = {
         "uri": job_path_health,
         "method": "PUT",
-        "headers": {"Authorization": "Bearer token"},
+        "headers": {"Authorization": f"Bearer {token}"},
     }
     json_idle = {"json": {"label": app.name, "status": "IDLE"}}
     json_executing = {"json": {"label": app.name, "status": "EXECUTING"}}
@@ -226,10 +232,10 @@ async def test_jobmanager(
     # At this point the openstack instance will be spawned.
 
     # For the github runner manager, at this point, the jobmanager will return
-    # that the job health is pending and not deletable
-    # '/v1/jobs/{job_id}/health', 'GET',
-    # Returns V1JobsJobIdHealthGet200Response
-    health_response = V1JobsJobIdHealthGet200Response(
+    # that the runner health is pending and not deletable
+    # '/v1/runner/<runner_id>/health', 'GET',
+    # Returns GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+    health_response = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
         label="label",
         cpu_usage="1",
         ram_usage="1",
