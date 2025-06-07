@@ -1,0 +1,127 @@
+06:23:29 WARNING unexpected facade SSHServer received from the controller
+06:23:29 INFO Adding model github-pr-c3380-lxd:test-charm-metrics-failure-xi7x on cloud localhost
+06:23:29 WARNING unexpected facade SSHServer received from the controller
+06:23:29 WARNING unexpected facade SSHSession received from the controller
+06:23:29 WARNING unexpected facade SSHTunneler received from the controller
+06:23:30 INFO GitHub token rate limit: Rate(reset=2025-06-07 07:20:11+00:00, remaining=4982, limit=5000)
+06:23:45 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+06:24:03 INFO Deploying local:jammy/github-runner-0
+06:24:03 INFO Waiting for model:
+  test-haf4pdza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-haf4pdza/0 [allocating] waiting: waiting for machine
+06:24:33 INFO Waiting for model:
+  test-haf4pdza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-haf4pdza/0 [allocating] waiting: waiting for machine
+06:25:03 INFO Waiting for model:
+  test-haf4pdza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-haf4pdza/0 [executing] maintenance: Setting up Builder.
+06:25:33 INFO Waiting for model:
+  test-haf4pdza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-haf4pdza/0 [executing] maintenance: Setting up Builder.
+06:26:04 INFO Waiting for model:
+  test-haf4pdza/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-haf4pdza/0 [executing] maintenance: Setting up Builder.
+06:26:34 INFO Waiting for model:
+  test-haf4pdza/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-haf4pdza/0 [executing] maintenance: Setting up Builder.
+06:27:04 INFO Waiting for model:
+  test-haf4pdza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-haf4pdza/0 [executing] maintenance: Setting up Builder.
+06:27:35 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:28:05 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:28:35 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:29:06 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:29:36 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:30:06 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:30:36 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:31:06 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:31:37 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:32:07 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:32:37 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:33:08 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:33:38 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:34:08 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:34:39 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:35:09 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:35:40 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:37:11 INFO Waiting for model:
+  test-haf4pdza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-haf4pdza/0 [executing] active: Building image.
+06:37:41 INFO Waiting for model:
+  test-haf4pdza/0 [executing] maintenance: Reconciling runners
+06:38:12 INFO Waiting for model:
+  test-haf4pdza/0 [executing] active:
+06:41:40 INFO Waiting for model:
+  test-haf4pdza/0 [executing] active: 
+06:42:09 INFO [TEST SETUP] Exposing port 8080 on test-haf4pdza-0-n-37db35c2a24d
+06:42:09 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.69', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:bb:8a:54'}]])
+06:42:10 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-haf4pdza-0-n-37db35c2a24d.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.69 &
+06:42:11 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.69' (ED25519) to the list of known hosts.
+
+06:42:12 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-haf4pdza-0-n-37db35c2a24d
+06:42:12 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.69', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:bb:8a:54'}]])
+06:42:13 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-haf4pdza-0-n-37db35c2a24d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.69 nc -z localhost 8080'
+06:42:14 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:42:16 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-haf4pdza-0-n-37db35c2a24d
+06:42:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.69', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:bb:8a:54'}]])
+06:42:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-haf4pdza-0-n-37db35c2a24d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.69 curl http://localhost:8080'
+06:42:18 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  50822      0 --:--:-- --:--:-- --:--:-- 51750
+'
+06:42:20 INFO Wait for condition not met, sleeping 10
+06:42:59 INFO Waiting for model:
+  test-haf4pdza/0 [executing] active: 
+06:43:29 INFO Waiting for model:
+  test-haf4pdza/0 [idle] active: 
+06:43:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1749278477.0, "event": "runner_installed", "flavor": "test-haf4pdza", "duration": 90.0}
+{"timestamp": 1749278544.0, "event": "runner_start", "flavor": "test-haf4pdza", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 67.0, "queue_duration": 1.0}
+{"timestamp": 1749278544.0, "event": "runner_stop", "flavor": "test-haf4pdza", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1749278578.6431248, "event": "reconciliation", "flavor": "test-haf4pdza", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.257802486419678}
+{"timestamp": 1749278607.7237678, "event": "reconciliation", "flavor": "test-haf4pdza", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.794383764266968}

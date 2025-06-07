@@ -1,0 +1,113 @@
+06:23:37 INFO Adding model github-pr-c3380-lxd:test-debug-ssh-41ui on cloud localhost
+06:23:37 WARNING unexpected facade AgentLifeFlag received from the controller
+06:23:37 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:23:37 WARNING unexpected facade SecretsDrain received from the controller
+06:23:39 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+06:23:59 INFO Deploying local:jammy/github-runner-0
+06:24:00 INFO Waiting for model:
+  test-iual2s8z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iual2s8z/0 [allocating] waiting: waiting for machine
+06:24:30 INFO Waiting for model:
+  test-iual2s8z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iual2s8z/0 [allocating] waiting: waiting for machine
+06:25:00 INFO Waiting for model:
+  test-iual2s8z/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:25:30 INFO Waiting for model:
+  test-iual2s8z/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:26:00 INFO Waiting for model:
+  test-iual2s8z/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:26:30 INFO Waiting for model:
+  test-iual2s8z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:27:00 INFO Waiting for model:
+  test-iual2s8z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:27:30 INFO Waiting for model:
+  test-iual2s8z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iual2s8z/0 [executing] maintenance: Setting up Builder.
+06:27:38 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-41ui  github-pr-c3380-lxd  localhost/localhost  3.1.10   unsupported  06:27:38Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-iual2s8z           error        1  github-runner-image-builder  latest/edge   84  no       hook failed: "install"
+test-iual2s8z                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-iual2s8z/0*  error     idle   0        10.223.73.151          hook failed: "install"
+test-iual2s8z/0*                         blocked   idle   1        10.223.73.247          Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.223.73.151  juju-a528df-0  ubuntu@22.04      Running
+1        started  10.223.73.247  juju-a528df-1  ubuntu@22.04      Running
+
+06:27:38 INFO Juju error logs:
+
+machine-0: 06:24:37 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:24:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-iual2s8z-0: 06:24:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:24:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:57 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-test-iual2s8z-0: 06:24:57 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-iual2s8z-0: 06:25:25 ERROR unit.github-runner-image-builder-iual2s8z/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-github-runner-image-builder-iual2s8z-0: 06:27:36 ERROR unit.github-runner-image-builder-iual2s8z/0.juju-log Failed to initialize builder, code: 1, out: None, err: None
+unit-github-runner-image-builder-iual2s8z-0: 06:27:36 ERROR unit.github-runner-image-builder-iual2s8z/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/src/builder.py", line 156, in _initialize_image_builder
+    subprocess.run(
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/sudo', '/home/ubuntu/.local/bin/github-runner-image-builder', 'init', '--cloud-name', 'builder', '--arch', 'x64', '--prefix', 'github-runner-image-builder-iual2s8z']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/src/builder.py", line 92, in initialize
+    _initialize_image_builder(  # pragma: no cover
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/src/builder.py", line 171, in _initialize_image_builder
+    raise ImageBuilderInitializeError from exc
+exceptions.ImageBuilderInitializeError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/./src/charm.py", line 300, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/__init__.py", line 359, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/_main.py", line 474, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/_main.py", line 458, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/_main.py", line 402, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/_main.py", line 437, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/framework.py", line 923, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/venv/ops/framework.py", line 1029, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/./src/charm.py", line 75, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/./src/charm.py", line 171, in _setup_builder
+    builder.initialize(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-iual2s8z-0/charm/src/builder.py", line 101, in initialize
+    raise BuilderInitError from exc
+exceptions.BuilderInitError
+unit-github-runner-image-builder-iual2s8z-0: 06:27:36 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:27:39 INFO Forgetting model main...
