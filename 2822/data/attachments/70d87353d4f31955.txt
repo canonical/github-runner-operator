@@ -1,0 +1,90 @@
+18:47:23 WARNING unexpected facade SSHServer received from the controller
+18:47:23 INFO Adding model github-pr-c3380-lxd:test-charm-metrics-success-h7yj on cloud localhost
+18:47:23 WARNING unexpected facade SSHServer received from the controller
+18:47:23 WARNING unexpected facade SSHSession received from the controller
+18:47:23 WARNING unexpected facade SSHTunneler received from the controller
+18:47:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+18:47:42 INFO Deploying local:jammy/github-runner-0
+18:47:42 INFO Waiting for model:
+  test-jqjg9vd2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jqjg9vd2/0 [allocating] waiting: waiting for machine
+18:48:13 INFO Waiting for model:
+  test-jqjg9vd2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jqjg9vd2/0 [allocating] waiting: waiting for machine
+18:48:43 INFO Waiting for model:
+  test-jqjg9vd2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jqjg9vd2/0 [allocating] waiting: agent initialising
+18:49:13 INFO Waiting for model:
+  test-jqjg9vd2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jqjg9vd2/0 [executing] maintenance: Setting up Builder.
+18:49:43 INFO Waiting for model:
+  test-jqjg9vd2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jqjg9vd2/0 [executing] maintenance: Setting up Builder.
+18:50:14 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] maintenance: Setting up Builder.
+18:50:44 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] maintenance: Setting up Builder.
+18:51:14 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:51:45 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:52:15 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:52:45 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:53:16 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:53:46 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:54:16 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:54:47 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:55:17 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:55:48 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:56:18 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:56:48 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:57:19 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:57:49 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:58:19 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:58:49 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:59:20 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jqjg9vd2/0 [executing] active: Building image.
+18:59:50 INFO Waiting for model:
+  test-jqjg9vd2/0 [idle] active:
+19:01:49 INFO Waiting for model:
+  test-jqjg9vd2/0 [executing] maintenance: Reconciling runners
+19:02:46 INFO Waiting for model:
+  test-jqjg9vd2/0 [executing] maintenance: Reconciling runners
+19:03:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1749409308.139459, "event": "reconciliation", "flavor": "test-jqjg9vd2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 109.6522319316864}
+{"timestamp": 1749409320.8531036, "event": "reconciliation", "flavor": "test-jqjg9vd2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.455149412155151}
+{"timestamp": 1749409276.0, "event": "runner_installed", "flavor": "test-jqjg9vd2", "duration": 70.0}
+{"timestamp": 1749409365.3234982, "event": "reconciliation", "flavor": "test-jqjg9vd2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.29910135269165}
+{"timestamp": 1749409372.3255546, "event": "reconciliation", "flavor": "test-jqjg9vd2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.736015558242798}
