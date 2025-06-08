@@ -1,0 +1,170 @@
+06:45:35 INFO Adding model github-pr-c3380-lxd:test-charm-scheduled-events-ua3s on cloud localhost
+06:45:35 WARNING unexpected facade AgentLifeFlag received from the controller
+06:45:35 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:45:35 WARNING unexpected facade SecretsDrain received from the controller
+06:45:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+06:45:56 INFO Deploying local:jammy/github-runner-0
+06:45:56 INFO Waiting for model:
+  test-f1570iqw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f1570iqw/0 [allocating] waiting: waiting for machine
+06:46:26 INFO Waiting for model:
+  test-f1570iqw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f1570iqw/0 [allocating] waiting: waiting for machine
+06:46:57 INFO Waiting for model:
+  test-f1570iqw/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-f1570iqw/0 [executing] maintenance: Setting up Builder.
+06:47:27 INFO Waiting for model:
+  test-f1570iqw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-f1570iqw/0 [executing] maintenance: Setting up Builder.
+06:47:57 INFO Waiting for model:
+  test-f1570iqw/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-f1570iqw/0 [executing] maintenance: Setting up Builder.
+06:48:27 INFO Waiting for model:
+  test-f1570iqw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-f1570iqw/0 [executing] maintenance: Setting up Builder.
+06:48:57 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] blocked: image integration required.
+06:49:27 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:49:57 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:50:27 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:50:57 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:51:27 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:51:57 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:52:27 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:52:57 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:53:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:53:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:54:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:54:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:55:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:55:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:56:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:56:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:57:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:57:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:58:28 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:58:58 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:59:29 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+06:59:59 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:00:29 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:00:59 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:01:29 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:01:59 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:02:29 INFO Waiting for model:
+  test-f1570iqw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-f1570iqw/0 [executing] active: Building image.
+07:02:59 INFO Waiting for model:
+  test-f1570iqw/0 [idle] active: 
+  github-runner-image-builder-f1570iqw/0 [idle] active: 
+07:03:13 INFO Waiting for model:
+  test-f1570iqw/0 [idle] active: 
+07:03:43 INFO Waiting for model:
+  test-f1570iqw/0 [executing] maintenance: Reconciling runners
+07:04:13 INFO Waiting for model:
+  test-f1570iqw/0 [executing] maintenance: Reconciling runners
+07:04:43 INFO Waiting for model:
+  test-f1570iqw/0 [executing] maintenance: Reconciling runners
+07:05:13 INFO Waiting for model:
+  test-f1570iqw/0 [idle] active: 
+07:05:31 INFO Waiting for model:
+  test-f1570iqw/0 [idle] active:
+07:05:55 INFO Wait for condition not met, sleeping 3
+07:05:58 INFO Wait for condition not met, sleeping 3
+07:06:02 INFO Wait for 10 minutes
+07:16:02 INFO Waiting for model:
+  github-runner-image-builder-f1570iqw/0 [idle] active: 
+  test-f1570iqw/0 [executing] maintenance: Reconciling runners
+07:16:32 INFO Waiting for model:
+  test-f1570iqw/0 [executing] maintenance: Reconciling runners
+07:17:02 INFO Waiting for model:
+  test-f1570iqw/0 [idle] active:
+07:17:13 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-ua3s  github-pr-c3380-lxd  localhost/localhost  3.1.10   unsupported  07:17:13Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-f1570iqw           active      1  github-runner-image-builder  latest/edge   84  no       
+test-f1570iqw                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-f1570iqw/0*  active    idle   0        10.101.177.29          
+test-f1570iqw/0*                         active    idle   1        10.101.177.119         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.101.177.29   juju-5d06b1-0  ubuntu@22.04      Running
+1        started  10.101.177.119  juju-5d06b1-1  ubuntu@22.04      Running
+
+07:17:13 INFO Juju error logs:
+
+machine-0: 06:46:33 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 06:46:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:46:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-f1570iqw-0: 06:46:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:46:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:46:53 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:46:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-f1570iqw-0: 06:46:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-f1570iqw-0: 06:47:09 ERROR unit.github-runner-image-builder-f1570iqw/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-github-runner-image-builder-f1570iqw-0: 06:54:31 ERROR unit.github-runner-image-builder-f1570iqw/0.juju-log image:0: Image build failed, code: 1, out: hello world
+............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+, err: None, stdout: hello world
+............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+
+
+07:17:14 INFO Forgetting model main...

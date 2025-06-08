@@ -1,0 +1,331 @@
+06:23:13 WARNING unexpected facade SSHServer received from the controller
+06:23:13 INFO Adding model github-pr-c3380-lxd:test-jobmanager-wlut on cloud localhost
+06:23:13 WARNING unexpected facade SSHServer received from the controller
+06:23:13 WARNING unexpected facade SSHSession received from the controller
+06:23:13 WARNING unexpected facade SSHTunneler received from the controller
+06:23:14 INFO Deploying ch:amd64/jammy/mongodb-215
+06:23:16 INFO Deploying ch:amd64/jammy/github-runner-image-builder-84
+06:23:35 INFO Deploying local:jammy/github-runner-0
+06:23:35 INFO Waiting for model:
+  test-q3qofa65/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q3qofa65/0 [allocating] waiting: waiting for machine
+06:24:05 INFO Waiting for model:
+  test-q3qofa65/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q3qofa65/0 [allocating] waiting: waiting for machine
+06:24:35 INFO Waiting for model:
+  test-q3qofa65/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-q3qofa65/0 [allocating] waiting: waiting for machine
+06:25:06 INFO Waiting for model:
+  test-q3qofa65/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q3qofa65/0 [allocating] waiting: waiting for machine
+06:25:36 INFO Waiting for model:
+  test-q3qofa65/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:26:07 INFO Waiting for model:
+  test-q3qofa65/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:26:37 INFO Waiting for model:
+  test-q3qofa65/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:27:07 INFO Waiting for model:
+  test-q3qofa65/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:27:38 INFO Waiting for model:
+  test-q3qofa65/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:28:08 INFO Waiting for model:
+  test-q3qofa65/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q3qofa65/0 [executing] maintenance: Setting up Builder.
+06:28:39 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:29:09 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:29:39 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:30:10 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:30:40 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:31:10 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:31:41 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:32:11 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:32:41 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:33:11 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:33:41 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:34:11 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:34:41 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:35:12 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:35:42 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:36:12 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:36:42 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:37:13 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:37:43 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:38:13 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:38:44 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:39:14 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:39:44 INFO Waiting for model:
+  test-q3qofa65/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q3qofa65/0 [executing] active: Building image.
+06:40:15 INFO Waiting for model:
+  test-q3qofa65/0 [idle] active: 
+06:40:24 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:40:24 INFO Waiting for model:
+  test-q3qofa65/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:40:55 INFO Waiting for model:
+  test-q3qofa65/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+06:41:51 INFO Waiting for model:
+  test-q3qofa65/0 [executing] active: 
+06:42:21 INFO Waiting for model:
+  test-q3qofa65/0 [idle] active:
+06:42:27 INFO IP Address to use as the fake jobmanager: 10.145.216.150
+06:42:27 INFO Waiting for first check job status.
+06:42:27 INFO 10.228.203.206 - - [08/Jun/2025 06:42:27] "GET /v1/jobs/99 HTTP/1.1" 200 -
+06:42:27 INFO server log: [(<Request 'http://10.145.216.150:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>)] 
+06:42:27 INFO Waiting for get token.
+06:42:27 INFO 10.228.203.206 - - [08/Jun/2025 06:42:27] "POST /v1/jobs/99/token HTTP/1.1" 200 -
+06:42:27 INFO server log: [(<Request 'http://10.145.216.150:8000/v1/jobs/99' [GET]>, <Response 45 bytes [200 OK]>), (<Request 'http://10.145.216.150:8000/v1/jobs/99/token' [POST]>, <Response 24 bytes [200 OK]>)] 
+06:42:27 INFO trying to prepare tunnel for builder agent
+06:42:29 INFO no runner or two or more runners in unit, return False
+06:42:29 INFO Wait for condition not met, sleeping 10
+06:42:39 INFO trying to prepare tunnel for builder agent
+06:42:40 INFO no addresses yet, return False
+06:42:40 INFO Wait for condition not met, sleeping 10
+06:42:50 INFO trying to prepare tunnel for builder agent
+06:42:51 INFO no addresses yet, return False
+06:42:51 INFO Wait for condition not met, sleeping 10
+06:43:01 INFO trying to prepare tunnel for builder agent
+06:43:01 INFO no addresses yet, return False
+06:43:01 INFO Wait for condition not met, sleeping 10
+06:43:11 INFO trying to prepare tunnel for builder agent
+06:43:13 INFO no addresses yet, return False
+06:43:13 INFO Wait for condition not met, sleeping 10
+06:43:23 INFO trying to prepare tunnel for builder agent
+06:43:24 INFO no addresses yet, return False
+06:43:24 INFO Wait for condition not met, sleeping 10
+06:43:34 INFO trying to prepare tunnel for builder agent
+06:43:35 INFO no addresses yet, return False
+06:43:35 INFO Wait for condition not met, sleeping 10
+06:43:45 INFO trying to prepare tunnel for builder agent
+06:43:55 INFO no addresses yet, return False
+06:43:55 INFO Wait for condition not met, sleeping 10
+06:44:05 INFO trying to prepare tunnel for builder agent
+06:44:06 INFO no addresses yet, return False
+06:44:06 INFO Wait for condition not met, sleeping 10
+06:44:16 INFO trying to prepare tunnel for builder agent
+06:44:16 INFO no addresses yet, return False
+06:44:16 INFO Wait for condition not met, sleeping 10
+06:44:26 INFO trying to prepare tunnel for builder agent
+06:44:27 INFO no addresses yet, return False
+06:44:27 INFO Wait for condition not met, sleeping 10
+06:44:37 INFO trying to prepare tunnel for builder agent
+06:44:38 INFO no addresses yet, return False
+06:44:38 INFO Wait for condition not met, sleeping 10
+06:44:48 INFO trying to prepare tunnel for builder agent
+06:44:49 INFO no addresses yet, return False
+06:44:49 INFO Wait for condition not met, sleeping 10
+06:44:59 INFO trying to prepare tunnel for builder agent
+06:44:59 INFO no addresses yet, return False
+06:44:59 INFO Wait for condition not met, sleeping 10
+06:45:09 INFO trying to prepare tunnel for builder agent
+06:45:12 INFO no addresses yet, return False
+06:45:12 INFO Wait for condition not met, sleeping 10
+06:45:22 INFO trying to prepare tunnel for builder agent
+06:45:23 INFO no addresses yet, return False
+06:45:23 INFO Wait for condition not met, sleeping 10
+06:45:33 INFO trying to prepare tunnel for builder agent
+06:45:33 INFO no addresses yet, return False
+06:45:33 INFO Wait for condition not met, sleeping 10
+06:45:43 INFO trying to prepare tunnel for builder agent
+06:45:44 INFO no addresses yet, return False
+06:45:44 INFO Wait for condition not met, sleeping 10
+06:45:54 INFO trying to prepare tunnel for builder agent
+06:45:56 INFO no addresses yet, return False
+06:45:56 INFO Wait for condition not met, sleeping 10
+06:46:06 INFO trying to prepare tunnel for builder agent
+06:46:07 INFO no addresses yet, return False
+06:46:07 INFO Wait for condition not met, sleeping 10
+06:46:17 INFO trying to prepare tunnel for builder agent
+06:46:18 INFO no addresses yet, return False
+06:46:18 INFO Wait for condition not met, sleeping 10
+06:46:28 INFO trying to prepare tunnel for builder agent
+06:46:28 INFO no addresses yet, return False
+06:46:28 INFO Wait for condition not met, sleeping 10
+06:46:38 INFO trying to prepare tunnel for builder agent
+06:46:39 INFO no addresses yet, return False
+06:46:39 INFO Wait for condition not met, sleeping 10
+06:46:49 INFO trying to prepare tunnel for builder agent
+06:46:50 INFO no addresses yet, return False
+06:46:50 INFO Wait for condition not met, sleeping 10
+06:47:00 INFO trying to prepare tunnel for builder agent
+06:47:01 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/ports: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+06:47:02 INFO no addresses yet, return False
+06:47:02 INFO Wait for condition not met, sleeping 10
+06:47:12 INFO trying to prepare tunnel for builder agent
+06:47:13 INFO no addresses yet, return False
+06:47:13 INFO Wait for condition not met, sleeping 10
+06:47:23 INFO trying to prepare tunnel for builder agent
+06:47:24 INFO no addresses yet, return False
+06:47:24 INFO Wait for condition not met, sleeping 10
+06:47:34 INFO trying to prepare tunnel for builder agent
+06:47:35 INFO no runner or two or more runners in unit, return False
+06:47:35 INFO Wait for condition not met, sleeping 10
+06:47:45 INFO trying to prepare tunnel for builder agent
+06:47:45 INFO no runner or two or more runners in unit, return False
+06:47:45 INFO Wait for condition not met, sleeping 10
+06:47:55 INFO trying to prepare tunnel for builder agent
+06:47:57 INFO no runner or two or more runners in unit, return False
+06:47:57 INFO Wait for condition not met, sleeping 10
+06:48:07 INFO trying to prepare tunnel for builder agent
+06:48:07 INFO no runner or two or more runners in unit, return False
+06:48:07 INFO Wait for condition not met, sleeping 10
+06:48:17 INFO trying to prepare tunnel for builder agent
+06:48:18 INFO no runner or two or more runners in unit, return False
+06:48:18 INFO Wait for condition not met, sleeping 10
+06:48:28 INFO trying to prepare tunnel for builder agent
+06:48:30 INFO no runner or two or more runners in unit, return False
+06:48:30 INFO Wait for condition not met, sleeping 10
+06:48:40 INFO trying to prepare tunnel for builder agent
+06:48:40 INFO no runner or two or more runners in unit, return False
+06:48:40 INFO Wait for condition not met, sleeping 10
+06:48:50 INFO trying to prepare tunnel for builder agent
+06:48:52 INFO no runner or two or more runners in unit, return False
+06:48:52 INFO Wait for condition not met, sleeping 10
+06:49:02 INFO trying to prepare tunnel for builder agent
+06:49:03 INFO no runner or two or more runners in unit, return False
+06:49:03 INFO Wait for condition not met, sleeping 10
+06:49:13 INFO trying to prepare tunnel for builder agent
+06:49:13 INFO no runner or two or more runners in unit, return False
+06:49:13 INFO Wait for condition not met, sleeping 10
+06:49:23 INFO trying to prepare tunnel for builder agent
+06:49:24 INFO no runner or two or more runners in unit, return False
+06:49:24 INFO Wait for condition not met, sleeping 10
+06:49:34 INFO trying to prepare tunnel for builder agent
+06:49:35 INFO no runner or two or more runners in unit, return False
+06:49:35 INFO Wait for condition not met, sleeping 10
+06:49:45 INFO trying to prepare tunnel for builder agent
+06:49:46 INFO no runner or two or more runners in unit, return False
+06:49:46 INFO Wait for condition not met, sleeping 10
+06:49:56 INFO trying to prepare tunnel for builder agent
+06:49:57 INFO no runner or two or more runners in unit, return False
+06:49:57 INFO Wait for condition not met, sleeping 10
+06:50:07 INFO trying to prepare tunnel for builder agent
+06:50:09 INFO no runner or two or more runners in unit, return False
+06:50:09 INFO Wait for condition not met, sleeping 10
+06:50:19 INFO trying to prepare tunnel for builder agent
+06:50:19 INFO no runner or two or more runners in unit, return False
+06:50:19 INFO Wait for condition not met, sleeping 10
+06:50:29 INFO trying to prepare tunnel for builder agent
+06:50:30 INFO no runner or two or more runners in unit, return False
+06:50:30 INFO Wait for condition not met, sleeping 10
+06:50:40 INFO trying to prepare tunnel for builder agent
+06:50:40 INFO no runner or two or more runners in unit, return False
+06:50:40 INFO Wait for condition not met, sleeping 10
+06:50:50 INFO trying to prepare tunnel for builder agent
+06:50:51 INFO no runner or two or more runners in unit, return False
+06:50:51 INFO Wait for condition not met, sleeping 10
+06:51:01 INFO trying to prepare tunnel for builder agent
+06:51:02 WARNING Failure: Unable to establish connection to https://neutron.ps6.canonical.com:9696/v2.0/ports: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response')). Retrying in 0.5s.1 retries left
+06:51:03 INFO no runner or two or more runners in unit, return False
+06:51:03 INFO Wait for condition not met, sleeping 10
+06:51:13 INFO trying to prepare tunnel for builder agent
+06:51:13 INFO no runner or two or more runners in unit, return False
+06:51:13 INFO Wait for condition not met, sleeping 10
+06:51:23 INFO trying to prepare tunnel for builder agent
+06:51:24 INFO no runner or two or more runners in unit, return False
+06:51:24 INFO Wait for condition not met, sleeping 10
+06:51:34 INFO trying to prepare tunnel for builder agent
+06:51:35 INFO no runner or two or more runners in unit, return False
+06:51:35 INFO Wait for condition not met, sleeping 10
+06:51:45 INFO trying to prepare tunnel for builder agent
+06:51:46 INFO no runner or two or more runners in unit, return False
+06:51:46 INFO Wait for condition not met, sleeping 10
+06:51:56 INFO trying to prepare tunnel for builder agent
+06:51:56 INFO no runner or two or more runners in unit, return False
+06:51:56 INFO Wait for condition not met, sleeping 10
+06:52:06 INFO trying to prepare tunnel for builder agent
+06:52:07 INFO no runner or two or more runners in unit, return False
+06:52:07 INFO Wait for condition not met, sleeping 10
+06:52:17 INFO trying to prepare tunnel for builder agent
+06:52:17 INFO no runner or two or more runners in unit, return False
+06:52:17 INFO Wait for condition not met, sleeping 10
+06:52:27 INFO trying to prepare tunnel for builder agent
+06:52:28 INFO no runner or two or more runners in unit, return False
+06:52:56 INFO Waiting for model:
+  test-q3qofa65/0 [executing] active: 
+06:53:20 INFO Model status:
+
+Model                 Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-wlut  github-pr-c3380-lxd  localhost/localhost  3.6.6    unsupported  06:53:20Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-q3qofa65           active      1  github-runner-image-builder  latest/edge   84  no       
+mongodb                               6.0.6    active      1  mongodb                      6/edge       215  no       
+test-q3qofa65                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-q3qofa65/0*  active    idle   1        10.228.203.65              
+mongodb/0*                               active    idle   0        10.228.203.23   27017/tcp  Primary
+test-q3qofa65/0*                         active    idle   2        10.228.203.206             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.228.203.23   juju-b26a05-0  ubuntu@22.04      Running
+1        started  10.228.203.65   juju-b26a05-1  ubuntu@22.04      Running
+2        started  10.228.203.206  juju-b26a05-2  ubuntu@22.04      Running
+
+06:53:20 INFO Juju error logs:
+
+machine-0: 06:24:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:24:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:24:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:24:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-q3qofa65-0: 06:24:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:24:55 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:24:55 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:25:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-q3qofa65-0: 06:25:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-q3qofa65-0: 06:26:00 ERROR unit.github-runner-image-builder-q3qofa65/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:53:20 INFO Forgetting model main...
