@@ -137,7 +137,7 @@ async def test_manager_service_started(
     assert return_code == 0
 
     # Wait for more log lines.
-    await sleep(4 * 60)
+    await wait_for_reconcile()
 
     log = await get_github_runner_manager_service_log(unit)
     assert RECONCILE_SERVICE_START_MSG not in log
