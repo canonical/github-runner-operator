@@ -1,0 +1,28 @@
+06:46:55 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-81tu  github-pr-c3380-lxd  localhost/localhost  3.6.6    unsupported  06:46:55Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pgy8jud8           active      1  github-runner-image-builder  latest/edge   85  no       
+test-pgy8jud8                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-pgy8jud8/0*  active    idle   0        10.33.4.68             
+test-pgy8jud8/0*                         active    idle   1        10.33.4.21             
+
+Machine  State    Address     Inst id        Base          AZ  Message
+0        started  10.33.4.68  juju-d3724b-0  ubuntu@22.04      Running
+1        started  10.33.4.21  juju-d3724b-1  ubuntu@22.04      Running
+
+06:46:55 INFO Juju error logs:
+
+machine-0: 06:27:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pgy8jud8-0: 06:27:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pgy8jud8-0: 06:27:16 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pgy8jud8-0: 06:27:48 ERROR unit.github-runner-image-builder-pgy8jud8/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:46:55 INFO Forgetting model main...
