@@ -12,7 +12,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
+from tests.integration.helpers.common import run_in_unit, wait_for, wait_for_reconcile
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +152,7 @@ class OpenStackInstanceHelper:
             num_runners: The number of runners.
         """
         await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
-        await reconcile(app=app, model=app.model)
+        await wait_for_reconcile(app=app, model=app.model)
 
     async def get_runner_names(self, unit: Unit) -> list[str]:
         """Get the name of all the runners in the unit.
