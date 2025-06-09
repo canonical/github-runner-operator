@@ -3,7 +3,6 @@
 
 """Integration tests for github-runner charm with no runner."""
 import logging
-from asyncio import sleep
 
 import pytest
 from github_runner_manager.reconcile_service import (
@@ -137,7 +136,7 @@ async def test_manager_service_started(
     assert return_code == 0
 
     # Wait for more log lines.
-    await wait_for_reconcile()
+    await wait_for_reconcile(app, app.model)
 
     log = await get_github_runner_manager_service_log(unit)
     assert RECONCILE_SERVICE_START_MSG not in log
