@@ -1,5 +1,12 @@
 # Changelog
 
+### 2025-06-04
+
+- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
+between reconciling the current and intended number of runners. The value should be kept low, 
+unless Github API rate limiting is encountered.
+- Removed the reconcile-runners Juju action.
+
 ### 2025-06-03
 
 - Redirect HKP protocol traffic (port 11371) to aproxy
@@ -8,6 +15,7 @@
 
 - Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
 network/infrastructure specific things.
+
 
 ### 2025-05-09
 
