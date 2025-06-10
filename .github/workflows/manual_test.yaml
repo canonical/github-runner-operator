@@ -6,29 +6,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  stg-reactive-test:
-    runs-on: [self-hosted,staging,amd64,self-hosted-linux-amd64-jammy-staging,stg-reactive]
-    steps:
-    - run: lscpu
-    - run: df -h
-    - run: free -h
-    - run: uname -a
-    - run: lsb_release -a
-    - run: echo $HTTP_PROXY
-    - run: echo $HTTPS_PROXY
-    - run: echo $NO_PROXY
-    - run: echo $DOCKERHUB_MIRROR
-    - uses: canonical/setup-lxd@v0.1.1
-    - run: lxd init --auto
-      if: ${{ always() }}
-    - run: lxc list
-      if: ${{ always() }}
-    - run: time sudo snap install juju
-      if: ${{ always() }}
-    - run: time juju bootstrap localhost localhost
-      if: ${{ always() }}
-  self-host-x64:
-    name: self-hosted x64 test
+  # stg-reactive-test:
+  #   runs-on: [self-hosted,staging,amd64,self-hosted-linux-amd64-jammy-staging,stg-reactive]
+  #   steps:
+  #   - run: lscpu
+  #   - run: df -h
+  #   - run: free -h
+  #   - run: uname -a
+  #   - run: lsb_release -a
+  #   - run: echo $HTTP_PROXY
+  #   - run: echo $HTTPS_PROXY
+  #   - run: echo $NO_PROXY
+  #   - run: echo $DOCKERHUB_MIRROR
+  #   - uses: canonical/setup-lxd@v0.1.1
+  #   - run: lxd init --auto
+  #     if: ${{ always() }}
+  #   - run: lxc list
+  #     if: ${{ always() }}
+  #   - run: time sudo snap install juju
+  #     if: ${{ always() }}
+  #   - run: time juju bootstrap localhost localhost
+  #     if: ${{ always() }}
+  stg-test:
     strategy:
       fail-fast: false
       matrix:
@@ -45,7 +44,7 @@ jobs:
       - run: echo $NO_PROXY
       - run: echo $DOCKERHUB_MIRROR
       - uses: canonical/setup-lxd@v0.1.1
-      - run: lxd init --auto
+      - run: sudo lxd init --auto
         if: ${{ always() }}
       - run: lxc list
         if: ${{ always() }}
