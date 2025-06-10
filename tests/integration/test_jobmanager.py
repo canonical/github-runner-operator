@@ -134,7 +134,6 @@ async def test_jobmanager(
     monkeypatch: pytest.MonkeyPatch,
     instance_helper: OpenStackInstanceHelper,
     app: Application,
-    ops_test: OpsTest,
     httpserver: HTTPServer,
     jobmanager_base_url: str,
     jobmanager_ip_address: str,
@@ -142,71 +141,30 @@ async def test_jobmanager(
     """
     This is a full test for the happy path of the jobmanager.
 
-    A message is created that will target the jobmamanager. A fake http server will
-    simulate all interactions with the jobmanager. The main steps in this test are:
-     1. Create a job and put it in mongodb.
-     2. The jobmanager will reply to the github-runner manager that the job is "PENDING"
-     3. The github-runner manager will get a token from the jobmanager for the runner and
-        will spawn a reactive runner with this token.
+    A fake http server will simulate all interactions with the jobmanager.
+
+    The main steps in this test are:
+     1. Change config to spawn a runner.
+     2. The github-runner manager will register a runner on the jobmanager.
+     3. The jobmanager will return a health response with "PENDING" status and not deletable.
      4. A tunnel will be prepared in the test so the reactive runner can get to the jobmanager.
         This is specific to this test and in production it should not be needed.
-     5. After some time, the reactive runner will hit the jobmanager health endpoint indicating
+     5. After some time, the runner will hit the jobmanager health endpoint indicating
         IDLE status.
      6. The jobmanager will change the health response to "IN_PROGRESS" and will send a job
         to the builder-agent. The job will be a sleep 30 seconds.
-     7. The builder-agent will run the the job. While running the job it will send the status
+     7. The builder-agent will run the job. While running the job it will send the status
         EXECUTING and after it is finished it will send the status FINISHED.
      8. Run reconcile in the github-runner manager. As the jobmanager fake health response is
         still "IN_PROGRESS" and not deletable, the runner should not be deleted.
      9. Change the health response from the fake jobmanager to reply COMPLETED and deletable.
      10. Run reconcile in the github-runner manager. The runner should be deleted at this point.
-         The mongodb should be empty.
     """
     # The http server simulates the jobmanager. Both the github-runner application
     # and the builder-agent will interact with the jobmanager. An alternative is
     # to create a test with a real jobmanager, and this could be done in the future.
 
-
-    # mongodb_uri = await get_mongodb_uri(ops_test, app)
-    labels = {app.name, "x64"}
-
-    # job_id = 99
-    # job_path = f"/v1/jobs/{job_id}"
-    # job_url = f"{jobmanager_base_url}{job_path}"
-
-    runner_id = 1234
-    runner_health_path = f"/v1/runner/{runner_id}/health"
-
-    # job = JobDetails(
-    #     labels=labels,
-    #     url=job_url,
-    # )
-
-    # The first interaction with the jobmanager after the runner manager gets
-    # a message in the queue is to check if the job has been picked up. If it is pending,
-    # the github-runner will spawn a reactive runner.
-    # returned_job = JobRead(id=job_id, status=JobStatus.PENDING.value, architecture="x64", base_series="jammy", requested_by="foobar")
-    #
-    # httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
-
-    # with httpserver.wait(
-    #     raise_assertions=False, stop_on_nohandler=False, timeout=60 * 2
-    # ) as waiting:
-    #     add_to_queue(
-    #         json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
-    #         mongodb_uri,
-    #         app.name,
-    #     )
-    #     logger.info("Waiting for first check job status.")
-    # logger.info("server log: %s ", (httpserver.log))
-    # assert waiting.result, "Failed Waiting for first check job status."
-
-    # From this point, the github-runner reactive process will check if the job has been picked
-    # up. The jobmanager will return pending until the builder-agent is alive (that is,
-    # the server is alive and running).
-    # job_get_handler = httpserver.expect_request(job_path)
-    # job_get_handler.respond_with_json(returned_job.to_dict())
-
+    # 1. Change config to spawn a runner.
     await app.set_config(
         {
             TOKEN_CONFIG_NAME: "",
@@ -216,18 +174,45 @@ async def test_jobmanager(
         }
     )
 
-    # The runner manager will request a token to spawn the runner.
+    #  2. The github-runner manager will register a runner on the jobmanager.
+    runner_id = 1234
+    runner_health_path = f"/v1/runner/{runner_id}/health"
     runner_register = f"/v1/runner/register"
     token = "token"
     returned_token = RegisterRunnerV1RunnerRegisterPost200Response(id=runner_id, token=token)
     httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
 
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
-        logger.info("Waiting for get token.")
+        logger.info("Waiting for runner to be registered.")
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "Failed waiting for get token in the jobmanager."
 
+    # 3. The jobmanager will return a health response with "PENDING" status and not deletable.
+    # '/v1/runner/<runner_id>/health', 'GET',
+    # Returns GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+    health_response = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+        label="label",
+        cpu_usage="1",
+        ram_usage="1",
+        disk_usage="1",
+        status="PENDING",
+        deletable=False,
+    )
+    health_get_handler = httpserver.expect_request(uri=runner_health_path, method="GET")
+    health_get_handler.respond_with_json(health_response.to_dict())
 
+    # 4.  A tunnel will be prepared in the test so the reactive runner can get to the jobmanager.
+    #         This is specific to this test and in production it should not be needed.
+    async def _prepare_runner() -> bool:
+        """Prepare the tunner so the runner builder-agent can get to the jobmanager."""
+        return await _prepare_runner_tunnel_for_builder_agent(
+            instance_helper, unit, jobmanager_ip_address, httpserver.port
+        )
+
+    await wait_for(_prepare_runner, check_interval=10, timeout=600)
+
+    # 5. After some time, the runner will hit the jobmanager health endpoint indicating
+    #   IDLE status.
     # The builder-agent can get to us at any point.
     # the builder-agent will make PUT requests to
     # http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
@@ -247,35 +232,6 @@ async def test_jobmanager(
         "OK"
     )
 
-    # At this point the openstack instance will be spawned.
-
-    # For the github runner manager, at this point, the jobmanager will return
-    # that the runner health is pending and not deletable
-    # '/v1/runner/<runner_id>/health', 'GET',
-    # Returns GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
-    health_response = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
-        label="label",
-        cpu_usage="1",
-        ram_usage="1",
-        disk_usage="1",
-        status="PENDING",
-        deletable=False,
-    )
-    health_get_handler = httpserver.expect_request(uri=runner_health_path, method="GET")
-    health_get_handler.respond_with_json(health_response.to_dict())
-
-    unit = app.units[0]
-
-    async def _prepare_runner() -> bool:
-        """Prepare the tunner so the runner builder-agent can get to the jobmanager."""
-        return await _prepare_runner_tunnel_for_builder_agent(
-            instance_helper, unit, jobmanager_ip_address, httpserver.port
-        )
-
-    logger.info(" i am before wait_for")
-    await wait_for(_prepare_runner, check_interval=10, timeout=600)
-
-    logger.info(" I am here")
     # We want to hear from the builder-agent that runs in the instance at least once.
     httpserver.expect_oneshot_request(
         **base_builder_agent_health_request | json_idle
@@ -285,20 +241,24 @@ async def test_jobmanager(
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "builder-agent did not contact us."
 
+    # 6. The jobmanager will change the health response to "IN_PROGRESS" and will send a job
+    #         to the builder-agent. The job will be a sleep 30 seconds.
     # ok, at this point reply from the jobmanager that the runner is in progress.
     health_response.status = "IN_PROGRESS"
     health_response.deletable = False
     health_get_handler.respond_with_json(health_response.to_dict())
 
-    # returned_job.status = JobStatus.IN_PROGRESS.value
-    # job_get_handler.respond_with_json(returned_job.to_dict())
-
     httpserver.check_assertions()
+
+    unit = app.units[0]
 
     # Ok, at this point, we want to tell the builder-agent to execute some command,
     # specifically a sleep so we can check that it goes over executing and finished statuses.
     await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
+
+    # 7. The builder-agent will run the job. While running the job it will send the status
+    #         EXECUTING and after it is finished it will send the status FINISHED.
     httpserver.expect_oneshot_request(
         **base_builder_agent_health_request | json_executing
     ).respond_with_data("OK")
@@ -318,9 +278,9 @@ async def test_jobmanager(
     assert waiting.result, "builder-agent did not execute or finished."
 
     httpserver.check_assertions()
-    # assert_queue_is_empty(mongodb_uri, app.name)
 
-    # The health check is not returning deletable yet. Reconcile should not kill the runner.
+    #      8. Run reconcile in the github-runner manager. As the jobmanager fake health response is
+    #         still "IN_PROGRESS" and not deletable, the runner should not be deleted.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
     action: Action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
@@ -340,13 +300,14 @@ async def test_jobmanager(
     logger.info("handlers %s", httpserver.format_matchers())
     logger.info("handler health %s", health_get_handler)
 
-    # from here, reply that the thing is deletable.
+    # 9. Change the health response from the fake jobmanager to reply COMPLETED and deletable.
     health_response.deletable = True
     health_response.status = "COMPLETED"
     health_get_handler.respond_with_json(health_response.to_dict())
     logger.info("handler health %s", health_get_handler)
     logger.info("handlers %s", httpserver.format_matchers())
 
+    # 10. Run reconcile in the github-runner manager. The runner should be deleted at this point.
     logger.info("Second reconcile call: %s", action.results)
     action = await app.units[0].run_action("reconcile-runners")
     await action.wait()
@@ -362,7 +323,6 @@ async def test_jobmanager(
     assert action.results["offline"] == "0", "No runners should be offline after second reconcile"
     assert action.results["unknown"] == "0", "No runners should be unknown after second reconcile"
 
-    # assert_queue_is_empty(mongodb_uri, app.name)
 
 
 async def _prepare_runner_tunnel_for_builder_agent(
