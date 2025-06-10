@@ -21,7 +21,6 @@ from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
 from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
     V1JobsJobIdTokenPost200Response,
 )
-from juju.action import Action
 from juju.application import Application
 from pytest_httpserver import HTTPServer
 from pytest_operator.plugin import OpsTest
@@ -30,6 +29,7 @@ from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME,
     PATH_CONFIG_NAME,
+    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
 from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import \
@@ -38,7 +38,7 @@ from jobmanager.client.jobmanager_client.models.job_read import JobRead
 from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import \
     RegisterRunnerV1RunnerRegisterPost200Response
 from tests.integration.helpers.charm_metrics import clear_metrics_log
-from tests.integration.helpers.common import reconcile, wait_for
+from tests.integration.helpers.common import wait_for, wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.integration.utils_reactive import (
     add_to_queue,
@@ -46,7 +46,6 @@ from tests.integration.utils_reactive import (
     clear_queue,
     get_mongodb_uri,
 )
-from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
@@ -121,12 +120,11 @@ async def app_fixture(
     # assert_queue_is_empty(mongodb_uri, app_for_jobmanager.name)
 
 
-
     yield app_for_jobmanager
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_jobmanager.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
 
 
 @pytest.mark.abort_on_fail
@@ -282,10 +280,10 @@ async def test_jobmanager(
     #      8. Run reconcile in the github-runner manager. As the jobmanager fake health response is
     #         still "IN_PROGRESS" and not deletable, the runner should not be deleted.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
-    action: Action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
-    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
-    logger.info("First reconcile result %s %s", action.status, action.results)
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
+    # to restart the reconcile service.
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "10"})
+    await wait_for_reconcile(app, app.model)
 
     # At this point there should be a runner
     action = await app.units[0].run_action("check-runners")
@@ -308,11 +306,10 @@ async def test_jobmanager(
     logger.info("handlers %s", httpserver.format_matchers())
 
     # 10. Run reconcile in the github-runner manager. The runner should be deleted at this point.
-    logger.info("Second reconcile call: %s", action.results)
-    action = await app.units[0].run_action("reconcile-runners")
-    await action.wait()
-    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
-    logger.info("Second reconcile result %s %s", action.status, action.results)
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
+    # to restart the reconcile service.
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "5"})
+    await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

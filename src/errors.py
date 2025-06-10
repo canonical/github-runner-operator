@@ -70,6 +70,10 @@ class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
     """Represents an error raised when github-runner-manager application start failed."""
 
 
+class RunnerManagerApplicationStopError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application stop failed."""
+
+
 class RunnerManagerServiceError(Exception):
     """Represents an error raised with request to github-runner-manager service."""
 
@@ -80,3 +84,15 @@ class RunnerManagerServiceConnectionError(RunnerManagerServiceError):
 
 class RunnerManagerServiceResponseError(RunnerManagerServiceError):
     """Represents a issue with the response to github-runner-manager service."""
+
+
+class RunnerManagerServiceNotReadyError(RunnerManagerServiceError):
+    """Represents the github-runner-manager service is not ready for requests."""
+
+
+class ImageIntegrationMissingError(Exception):
+    """Represents the missing image integration."""
+
+
+class ImageNotFoundError(Exception):
+    """Represents not founding the image in the image integration."""

@@ -46,6 +46,7 @@ class ApplicationConfiguration(BaseModel):
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
         openstack_configuration: Configuration for authorization to a OpenStack host.
+        reconcile_interval: Seconds to wait between reconciliation.
     """
 
     name: str
@@ -56,6 +57,7 @@ class ApplicationConfiguration(BaseModel):
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
     openstack_configuration: OpenStackConfiguration
+    reconcile_interval: int
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":

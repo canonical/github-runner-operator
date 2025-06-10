@@ -352,7 +352,7 @@ def test_check_reconcile_interval_invalid(reconcile_interval: int):
         CharmConfig.check_reconcile_interval(reconcile_interval)
     assert (
         str(exc_info.value)
-        == "The reconcile-interval configuration needs to be greater or equal to 2"
+        == "The reconcile-interval configuration needs to be greater or equal to 1"
     )
 
 
