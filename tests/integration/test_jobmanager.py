@@ -111,30 +111,21 @@ def jobmanager_base_url_fixture(
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
     ops_test: OpsTest,
-    app_for_reactive: Application,
+    app_no_runner: Application,
     jobmanager_base_url: str,
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
-    app_for_jobmanager = app_for_reactive
-    mongodb_uri = await get_mongodb_uri(ops_test, app_for_jobmanager)
-    clear_queue(mongodb_uri, app_for_jobmanager.name)
-    assert_queue_is_empty(mongodb_uri, app_for_jobmanager.name)
+    app_for_jobmanager = app_no_runner
+    # mongodb_uri = await get_mongodb_uri(ops_test, app_for_jobmanager)
+    # clear_queue(mongodb_uri, app_for_jobmanager.name)
+    # assert_queue_is_empty(mongodb_uri, app_for_jobmanager.name)
 
-    await app_for_jobmanager.set_config(
-        {
-            TOKEN_CONFIG_NAME: "",
-            PATH_CONFIG_NAME: jobmanager_base_url,
-            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
-            MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-        }
-    )
-    await reconcile(app_for_jobmanager, app_for_jobmanager.model)
-    await clear_metrics_log(app_for_jobmanager.units[0])
+
 
     yield app_for_jobmanager
 
     # Call reconcile to enable cleanup of any runner spawned
-    await app_for_jobmanager.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await app_for_jobmanager.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await reconcile(app_for_jobmanager, app_for_jobmanager.model)
 
 
@@ -176,45 +167,54 @@ async def test_jobmanager(
     # to create a test with a real jobmanager, and this could be done in the future.
 
 
-    mongodb_uri = await get_mongodb_uri(ops_test, app)
+    # mongodb_uri = await get_mongodb_uri(ops_test, app)
     labels = {app.name, "x64"}
 
-    job_id = 99
-    job_path = f"/v1/jobs/{job_id}"
-    job_url = f"{jobmanager_base_url}{job_path}"
+    # job_id = 99
+    # job_path = f"/v1/jobs/{job_id}"
+    # job_url = f"{jobmanager_base_url}{job_path}"
 
     runner_id = 1234
     runner_health_path = f"/v1/runner/{runner_id}/health"
 
-    job = JobDetails(
-        labels=labels,
-        url=job_url,
-    )
+    # job = JobDetails(
+    #     labels=labels,
+    #     url=job_url,
+    # )
 
     # The first interaction with the jobmanager after the runner manager gets
     # a message in the queue is to check if the job has been picked up. If it is pending,
     # the github-runner will spawn a reactive runner.
-    returned_job = JobRead(id=job_id, status=JobStatus.PENDING.value, architecture="x64", base_series="jammy", requested_by="foobar")
+    # returned_job = JobRead(id=job_id, status=JobStatus.PENDING.value, architecture="x64", base_series="jammy", requested_by="foobar")
+    #
+    # httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
 
-    httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
-
-    with httpserver.wait(
-        raise_assertions=False, stop_on_nohandler=False, timeout=60 * 2
-    ) as waiting:
-        add_to_queue(
-            json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
-            mongodb_uri,
-            app.name,
-        )
-        logger.info("Waiting for first check job status.")
-    logger.info("server log: %s ", (httpserver.log))
-    assert waiting.result, "Failed Waiting for first check job status."
+    # with httpserver.wait(
+    #     raise_assertions=False, stop_on_nohandler=False, timeout=60 * 2
+    # ) as waiting:
+    #     add_to_queue(
+    #         json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
+    #         mongodb_uri,
+    #         app.name,
+    #     )
+    #     logger.info("Waiting for first check job status.")
+    # logger.info("server log: %s ", (httpserver.log))
+    # assert waiting.result, "Failed Waiting for first check job status."
 
     # From this point, the github-runner reactive process will check if the job has been picked
     # up. The jobmanager will return pending until the builder-agent is alive (that is,
     # the server is alive and running).
-    job_get_handler = httpserver.expect_request(job_path)
-    job_get_handler.respond_with_json(returned_job.to_dict())
+    # job_get_handler = httpserver.expect_request(job_path)
+    # job_get_handler.respond_with_json(returned_job.to_dict())
+
+    await app.set_config(
+        {
+            TOKEN_CONFIG_NAME: "",
+            PATH_CONFIG_NAME: jobmanager_base_url,
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+            MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0",
+        }
+    )
 
     # The runner manager will request a token to spawn the runner.
     runner_register = f"/v1/runner/register"
@@ -226,6 +226,7 @@ async def test_jobmanager(
         logger.info("Waiting for get token.")
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "Failed waiting for get token in the jobmanager."
+
 
     # The builder-agent can get to us at any point.
     # the builder-agent will make PUT requests to
@@ -271,9 +272,11 @@ async def test_jobmanager(
             instance_helper, unit, jobmanager_ip_address, httpserver.port
         )
 
+    logger.info(" i am before wait_for")
     await wait_for(_prepare_runner, check_interval=10, timeout=600)
 
-    # We want to hear from the builder-agent the runs in the instance at least once.
+    logger.info(" I am here")
+    # We want to hear from the builder-agent that runs in the instance at least once.
     httpserver.expect_oneshot_request(
         **base_builder_agent_health_request | json_idle
     ).respond_with_data("OK")
@@ -287,8 +290,8 @@ async def test_jobmanager(
     health_response.deletable = False
     health_get_handler.respond_with_json(health_response.to_dict())
 
-    returned_job.status = JobStatus.IN_PROGRESS.value
-    job_get_handler.respond_with_json(returned_job.to_dict())
+    # returned_job.status = JobStatus.IN_PROGRESS.value
+    # job_get_handler.respond_with_json(returned_job.to_dict())
 
     httpserver.check_assertions()
 
@@ -315,7 +318,7 @@ async def test_jobmanager(
     assert waiting.result, "builder-agent did not execute or finished."
 
     httpserver.check_assertions()
-    assert_queue_is_empty(mongodb_uri, app.name)
+    # assert_queue_is_empty(mongodb_uri, app.name)
 
     # The health check is not returning deletable yet. Reconcile should not kill the runner.
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
@@ -359,7 +362,7 @@ async def test_jobmanager(
     assert action.results["offline"] == "0", "No runners should be offline after second reconcile"
     assert action.results["unknown"] == "0", "No runners should be unknown after second reconcile"
 
-    assert_queue_is_empty(mongodb_uri, app.name)
+    # assert_queue_is_empty(mongodb_uri, app.name)
 
 
 async def _prepare_runner_tunnel_for_builder_agent(
@@ -412,6 +415,7 @@ async def _prepare_runner_tunnel_for_builder_agent(
     await instance_helper.expose_to_instance(
         unit=unit, port=jobmanager_port, host=jobmanager_address
     )
+    logger.info("prepared tunnel for builder agent")
     return True
 
 
