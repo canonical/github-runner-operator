@@ -77,6 +77,7 @@ def config_fixture() -> dict:
                 "region_name": "test_region",
             },
         },
+        "reconcile_interval": 1,
     }
 
 

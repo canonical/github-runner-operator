@@ -39,8 +39,8 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
-    reconcile,
     wait_for,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
@@ -185,6 +185,9 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     auth_url = pytestconfig.getoption("--openstack-auth-url-amd64")
     password = pytestconfig.getoption("--openstack-password-amd64")
     password = password or os.environ.get("INTEGRATION_OPENSTACK_PASSWORD_AMD64")
+    assert (
+        password
+    ), "Please specify the --openstack-password-amd64 option or INTEGRATION_OPENSTACK_PASSWORD_AMD64 environment variable"
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name-amd64")
     project_name = pytestconfig.getoption("--openstack-project-name-amd64")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name-amd64")
@@ -205,7 +208,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
         return None
     return {
         "auth_url": auth_url,
-        "password": password,
+        "password": str(password),
         "project_domain_name": project_domain_name,
         "project_name": project_name,
         "user_domain_name": user_domain_name,
@@ -285,7 +288,9 @@ def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
 
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
-    clouds_yaml_contents: str, app_name: str
+    clouds_yaml_contents: str,
+    app_name: str,
+    existing_app_suffix: str,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -295,23 +300,31 @@ def openstack_connection_fixture(
     with openstack.connect(first_cloud) as connection:
         yield connection
 
-    # servers, keys, security groups, security rules, images are created by the charm.
-    # don't remove security groups & rules since they are single instances.
-    # don't remove images since it will be moved to image-builder
-    for server in connection.list_servers():
-        server_name: str = server.name
-        if server_name.startswith(app_name):
-            connection.delete_server(server_name)
-    for key in connection.list_keypairs():
-        key_name: str = key.name
-        if key_name.startswith(app_name):
-            connection.delete_keypair(key_name)
+    if not existing_app_suffix:
+        # servers, keys, security groups, security rules, images are created by the charm.
+        # don't remove security groups & rules since they are single instances.
+        # don't remove images since it will be moved to image-builder
+        for server in connection.list_servers():
+            server_name: str = server.name
+            if server_name.startswith(app_name):
+                connection.delete_server(server_name)
+        for key in connection.list_keypairs():
+            key_name: str = key.name
+            if key_name.startswith(app_name):
+                connection.delete_keypair(key_name)
 
 
-@pytest.fixture(scope="module")
-def model(ops_test: OpsTest) -> Model:
+@pytest_asyncio.fixture(scope="module")
+async def model(ops_test: OpsTest, http_proxy: str, https_proxy: str, no_proxy: str) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
+    await ops_test.model.set_config(
+        {
+            "juju-http-proxy": http_proxy,
+            "juju-https-proxy": https_proxy,
+            "juju-no-proxy": no_proxy,
+        }
+    )
     return ops_test.model
 
 
@@ -396,12 +409,14 @@ async def image_builder_fixture(
     else:
         app = model.applications[image_builder_app_name]
     yield app
-    # The github-image-builder does not clean keypairs. Until it does,
-    # we clean them manually here.
-    for key in openstack_connection.list_keypairs():
-        key_name: str = key.name
-        if key_name.startswith(image_builder_app_name):
-            openstack_connection.delete_keypair(key_name)
+
+    if not existing_app_suffix:
+        # The github-image-builder does not clean keypairs. Until it does,
+        # we clean them manually here.
+        for key in openstack_connection.list_keypairs():
+            key_name: str = key.name
+            if key_name.startswith(image_builder_app_name):
+                openstack_connection.delete_keypair(key_name)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
@@ -433,7 +448,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=60,
+            reconcile_interval=2,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
@@ -442,7 +457,7 @@ async def app_openstack_runner_fixture(
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
-                USE_APROXY_CONFIG_NAME: "true",
+                USE_APROXY_CONFIG_NAME: bool(openstack_http_proxy),
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
@@ -467,7 +482,7 @@ async def app_scheduled_events_fixture(
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
-    await reconcile(app=application, model=model)
+    await wait_for_reconcile(app=application, model=model)
     return application
 
 
@@ -478,9 +493,7 @@ async def app_no_wait_tmate_fixture(
 ):
     """Application to check tmate ssh with openstack without waiting for active."""
     application = app_openstack_runner
-    await application.set_config(
-        {"reconcile-interval": "60", BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"}
-    )
+    await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     return application
 
 
@@ -506,7 +519,7 @@ async def app_runner(
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
-        reconcile_interval=60,
+        reconcile_interval=1,
     )
     return application
 
@@ -532,7 +545,7 @@ async def app_no_wait_fixture(
         http_proxy=http_proxy,
         https_proxy=https_proxy,
         no_proxy=no_proxy,
-        reconcile_interval=60,
+        reconcile_interval=1,
         wait_idle=False,
     )
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})

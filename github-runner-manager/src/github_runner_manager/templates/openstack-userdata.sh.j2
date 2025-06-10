@@ -21,12 +21,12 @@ flush table ip aproxy
 table ip aproxy {
       chain prerouting {
               type nat hook prerouting priority dstnat; policy accept;
-              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:54969
+              ip daddr != \$private-ips tcp dport { 80, 443, 11371 } counter dnat to \$default-ip:54969
       }
 
       chain output {
               type nat hook output priority -100; policy accept;
-              ip daddr != \$private-ips tcp dport { 80, 443 } counter dnat to \$default-ip:54969
+              ip daddr != \$private-ips tcp dport { 80, 443, 11371 } counter dnat to \$default-ip:54969
       }
 }
 EOF
@@ -70,10 +70,10 @@ systemctl restart docker
 # Prepare metrics
 su - ubuntu -c 'mkdir "{{ metrics_exchange_path }}"'
 
-# Insert pre-job script
-cat << 'EOF' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
+# Insert pre-job script, we use a special end marker and not EOF or EOT to avoid that the same is reused inside the script
+cat << '35c681d7-e0b1-43aa-afdc-ff7d1c4810ca' | su - ubuntu -c 'tee /home/ubuntu/actions-runner/pre-job.sh'
 {{ pre_job_contents | safe }}
-EOF
+35c681d7-e0b1-43aa-afdc-ff7d1c4810ca
 
 
 write_post_metrics(){

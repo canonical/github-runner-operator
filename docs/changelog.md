@@ -1,5 +1,22 @@
 # Changelog
 
+### 2025-06-04
+
+- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
+between reconciling the current and intended number of runners. The value should be kept low, 
+unless Github API rate limiting is encountered.
+- Removed the reconcile-runners Juju action.
+
+### 2025-06-03
+
+- Redirect HKP protocol traffic (port 11371) to aproxy
+
+### 2025-05-22
+
+- Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
+network/infrastructure specific things.
+
+
 ### 2025-05-09
 
 - The log rotation is done by copying the logs then truncating. There is a small chance some log might be lost during the log rotation. This affects the github-runner-manager service logs, and the reactive spawning logs.
