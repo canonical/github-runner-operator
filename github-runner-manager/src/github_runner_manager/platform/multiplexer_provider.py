@@ -40,7 +40,12 @@ class MultiplexerPlatform(PlatformProvider):
     platform providers simultaneously. In that way, one runner manager can use for example
     GitHub and JobManager providers together. The multiplexer will route the requests
     to the adequate provider..
+
+    Attributes:
+        name: Name of the platform provider.
     """
+
+    name = "multiplexer"
 
     def __init__(self, providers: dict[str, PlatformProvider]):
         """Construct the object.

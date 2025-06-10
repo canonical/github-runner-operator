@@ -33,6 +33,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
+from github_runner_manager.platform import Platform
 from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform
 from github_runner_manager.platform.platform_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -138,7 +139,7 @@ class RunnerScaler:
         platform_provider = MultiplexerPlatform.build(
             prefix=application_configuration.openstack_configuration.vm_prefix,
             github_configuration=application_configuration.github_config,
-            jobmanager_configuration=application_configuration.jobmanager_config
+            jobmanager_configuration=application_configuration.jobmanager_config,
         )
 
         runner_manager = RunnerManager(
@@ -173,6 +174,9 @@ class RunnerScaler:
             user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
+            platform_name=(
+                Platform.GITHUB if application_configuration.github_config else Platform.JOBMANAGER
+            ),
         )
 
     # The `user` argument will be removed once the charm no longer uses the github-runner-manager
@@ -187,6 +191,7 @@ class RunnerScaler:
         user: UserInfo,
         base_quantity: int,
         max_quantity: int,
+        platform_name: Platform = Platform.GITHUB,
     ):
         """Construct the object.
 
@@ -196,12 +201,14 @@ class RunnerScaler:
             user: The user to run the reactive process.
             base_quantity: The number of intended non-reactive runners.
             max_quantity: The number of maximum runners for reactive.
+            platform_name: The name of the platform used for spawning runners.
         """
         self._manager = runner_manager
         self._reactive_config = reactive_process_config
         self._user = user
         self._base_quantity = base_quantity
         self._max_quantity = max_quantity
+        self._platform_name = platform_name
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -329,7 +336,9 @@ class RunnerScaler:
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
             try:
-                self._manager.create_runners(num=runner_diff, metadata=RunnerMetadata())
+                self._manager.create_runners(
+                    num=runner_diff, metadata=RunnerMetadata(platform_name=self._platform_name)
+                )
             except MissingServerConfigError:
                 logging.exception(
                     "Unable to spawn runner due to missing server configuration, "

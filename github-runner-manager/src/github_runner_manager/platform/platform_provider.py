@@ -16,6 +16,7 @@ from github_runner_manager.manager.models import (
     RunnerIdentity,
     RunnerMetadata,
 )
+from github_runner_manager.platform import Platform
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 
@@ -40,7 +41,13 @@ class TokenError(PlatformError):
 
 
 class PlatformProvider(abc.ABC):
-    """Base class for a Platform Provider."""
+    """Base class for a Platform Provider.
+
+    Attributes:
+        name: Name of the platform provider.
+    """
+
+    name: Platform
 
     @abc.abstractmethod
     def get_runner_health(self, runner_identity: RunnerIdentity) -> "PlatformRunnerHealth":

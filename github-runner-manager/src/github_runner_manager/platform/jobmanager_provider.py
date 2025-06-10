@@ -19,6 +19,7 @@ from github_runner_manager.manager.models import (
     RunnerIdentity,
     RunnerMetadata,
 )
+from github_runner_manager.platform import Platform
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformApiError,
@@ -36,7 +37,13 @@ logger = logging.getLogger(__name__)
 
 
 class JobManagerPlatform(PlatformProvider):
-    """Manage self-hosted runner on the JobManager."""
+    """Manage self-hosted runner on the JobManager.
+
+    Attributes:
+        name: Name of the platform.
+    """
+
+    name = Platform.JOBMANAGER
 
     def __init__(self, url: str):
         """Construct the object.
@@ -73,7 +80,7 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
            The health of the runner in the jobmanager.
         """
-        configuration = jobmanager_client.Configuration(host=runner_identity.metadata.url)
+        configuration = jobmanager_client.Configuration(host=self._url)
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.RunnersApi(api_client)
             try:

@@ -19,6 +19,7 @@ class ReactiveProcessConfig(BaseModel):
     Attributes:
         queue: The queue configuration.
         manager_name: Name of the manager.
+        jobmanager_configuration: Configuration for JobManager.
         github_configuration: Configuration for GitHub.
         cloud_runner_manager: The OpenStack runner manager configuration.
         supported_labels: The supported labels for the runner.
