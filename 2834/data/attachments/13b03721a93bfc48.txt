@@ -1,0 +1,107 @@
+18:24:40 WARNING unexpected facade SSHServer received from the controller
+18:24:40 INFO Adding model github-pr-b0a58-lxd:test-reactive-zk0l on cloud localhost
+18:24:40 WARNING unexpected facade SSHServer received from the controller
+18:24:40 WARNING unexpected facade SSHSession received from the controller
+18:24:40 WARNING unexpected facade SSHTunneler received from the controller
+18:24:41 INFO GitHub token rate limit: Rate(reset=2025-06-10 19:21:41+00:00, remaining=4985, limit=5000)
+18:24:45 INFO Deploying ch:amd64/jammy/mongodb-215
+18:24:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+18:25:06 INFO Deploying local:jammy/github-runner-0
+18:25:06 INFO Waiting for model:
+  test-pu07z22p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pu07z22p/0 [allocating] waiting: waiting for machine
+18:25:36 INFO Waiting for model:
+  test-pu07z22p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pu07z22p/0 [allocating] waiting: waiting for machine
+18:26:07 INFO Waiting for model:
+  test-pu07z22p/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pu07z22p/0 [allocating] waiting: waiting for machine
+18:26:37 INFO Waiting for model:
+  test-pu07z22p/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pu07z22p/0 [allocating] waiting: waiting for machine
+18:27:07 INFO Waiting for model:
+  test-pu07z22p/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pu07z22p/0 [executing] maintenance: Setting up Builder.
+18:27:37 INFO Waiting for model:
+  test-pu07z22p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pu07z22p/0 [executing] maintenance: Setting up Builder.
+18:28:08 INFO Waiting for model:
+  test-pu07z22p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pu07z22p/0 [executing] maintenance: Setting up Builder.
+18:28:38 INFO Waiting for model:
+  test-pu07z22p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pu07z22p/0 [executing] maintenance: Setting up Builder.
+18:29:09 INFO Waiting for model:
+  test-pu07z22p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pu07z22p/0 [executing] maintenance: Setting up Builder.
+18:29:39 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:30:09 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:30:39 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:31:09 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:31:40 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:32:10 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:32:40 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:33:10 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:33:41 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:34:11 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:34:41 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:35:11 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:35:42 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:36:12 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:36:42 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:37:12 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:37:42 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:38:12 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:38:43 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:39:13 INFO Waiting for model:
+  test-pu07z22p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pu07z22p/0 [executing] active: Building image.
+18:39:43 INFO Waiting for model:
+  test-pu07z22p/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pu07z22p/0 [idle] active: 
+18:40:06 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:40:06 INFO Waiting for model:
+  test-pu07z22p/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+18:40:33 INFO Waiting for model:
+  test-pu07z22p/0 [idle] active: 
+18:41:03 INFO Waiting for model:
+  test-pu07z22p/0 [idle] active:
