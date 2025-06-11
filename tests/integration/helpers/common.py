@@ -92,7 +92,7 @@ async def get_reconcile_id(unit: Unit) -> str:
     """
     _, stdout, _ = await run_in_unit(
         unit,
-        "cat /var/log/reconcile.id",
+        "cat /home/runner-manager/reconcile.id",
         assert_on_failure=True,
         assert_msg="Unable to get reconcile ID",
     )
