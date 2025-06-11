@@ -9,8 +9,9 @@ import secrets
 import string
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Generator, Iterator, Optional
+from typing import Any, AsyncIterator, Generator, Iterator, Optional, cast
 
+import jubilant
 import nest_asyncio
 import openstack
 import pytest
@@ -44,6 +45,8 @@ from tests.integration.helpers.common import (
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
+
+DEFAULT_RECONCILE_INTERVAL = 2
 
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
 
@@ -448,7 +451,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=2,
+            reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
@@ -743,3 +746,34 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     """Instance helper fixture."""
     openstack_connection = request.getfixturevalue("openstack_connection")
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
+
+
+@pytest.fixture(scope="session")
+def juju(request: pytest.FixtureRequest) -> Generator[jubilant.Juju, None, None]:
+    """Pytest fixture that wraps :meth:`jubilant.with_model`."""
+
+    def show_debug_log(juju: jubilant.Juju):
+        if request.session.testsfailed:
+            log = juju.debug_log(limit=1000)
+            print(log, end="")
+
+    use_existing = request.config.getoption("--use-existing", default=False)
+    if use_existing:
+        juju = jubilant.Juju()
+        yield juju
+        show_debug_log(juju)
+        return
+
+    model = request.config.getoption("--model")
+    if model:
+        juju = jubilant.Juju(model=model)
+        yield juju
+        show_debug_log(juju)
+        return
+
+    keep_models = cast(bool, request.config.getoption("--keep-models"))
+    with jubilant.temp_model(keep=keep_models) as juju:
+        juju.wait_timeout = 10 * 60
+        yield juju
+        show_debug_log(juju)
+        return
