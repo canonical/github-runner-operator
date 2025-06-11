@@ -576,3 +576,27 @@ def test_metric_log_ownership_for_upgrade(mock_side_effects, tmp_path: Path, mon
         user=constants.RUNNER_MANAGER_USER,
         group=constants.RUNNER_MANAGER_GROUP,
     )
+
+
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("database_created", id="Database Created"),
+        pytest.param("endpoints_changed", id="Endpoints Changed"),
+    ],
+)
+def test_database_integration_events_setup_service(
+    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._setup_service.
+    act: Fire mongodb relation events.
+    assert: _setup_service has been called.
+    """
+    setup_service_mock = MagicMock()
+    relation_mock = MagicMock()
+    relation_mock.name = "mongodb"
+    relation_mock.id = 0
+    monkeypatch.setattr("charm.GithubRunnerCharm._setup_service", setup_service_mock)
+    getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
+    setup_service_mock.assert_called_once()

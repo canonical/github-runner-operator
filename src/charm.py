@@ -220,6 +220,8 @@ class GithubRunnerCharm(CharmBase):
         self.database = DatabaseRequires(
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
         )
+        self.framework.observe(self.database.on.database_created, self._on_database_created)
+        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
@@ -468,6 +470,18 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_database_created(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB database created event."""
+        state = self._setup_state()
+        self._setup_service(state)
+
+    @catch_charm_errors
+    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB endpoints changed event."""
+        state = self._setup_state()
+        self._setup_service(state)
 
     def _check_image_ready(self) -> None:
         """Check if image is ready raises error if not.
