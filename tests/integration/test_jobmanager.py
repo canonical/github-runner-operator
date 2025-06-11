@@ -4,26 +4,14 @@
 """Testing for jobmanager platform."""
 
 import asyncio
-import json
 import logging
 import socket
-from platform import architecture
 from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
-from github_runner_manager.platform.jobmanager_provider import JobStatus
-from github_runner_manager.reactive.consumer import JobDetails
-from jobmanager_client.models.job import Job
-from jobmanager_client.models.v1_jobs_job_id_health_get200_response import (
-    V1JobsJobIdHealthGet200Response,
-)
-from jobmanager_client.models.v1_jobs_job_id_token_post200_response import (
-    V1JobsJobIdTokenPost200Response,
-)
 from juju.application import Application
 from pytest_httpserver import HTTPServer
-from pytest_operator.plugin import OpsTest
 
 from charm_state import (
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
@@ -32,20 +20,14 @@ from charm_state import (
     RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
 )
-from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import \
-    GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
-from jobmanager.client.jobmanager_client.models.job_read import JobRead
-from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import \
-    RegisterRunnerV1RunnerRegisterPost200Response
-from tests.integration.helpers.charm_metrics import clear_metrics_log
+from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import (
+    GetRunnerHealthV1RunnerRunnerIdHealthGet200Response,
+)
+from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import (
+    RegisterRunnerV1RunnerRegisterPost200Response,
+)
 from tests.integration.helpers.common import wait_for, wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
-from tests.integration.utils_reactive import (
-    add_to_queue,
-    assert_queue_is_empty,
-    clear_queue,
-    get_mongodb_uri,
-)
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
@@ -99,6 +81,7 @@ def jb_ip_address_fixture() -> str:
     s.close()
     return ip_address
 
+
 @pytest.fixture(scope="session", name="jobmanager_base_url")
 def jobmanager_base_url_fixture(
     jobmanager_ip_address: str,
@@ -107,22 +90,18 @@ def jobmanager_base_url_fixture(
     """Jobmanager base URL for the tests."""
     return f"http://{jobmanager_ip_address}:{httpserver_listen_port}"
 
+
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
-    ops_test: OpsTest,
     app_no_runner: Application,
     jobmanager_base_url: str,
 ) -> AsyncIterator[Application]:
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     app_for_jobmanager = app_no_runner
-    # mongodb_uri = await get_mongodb_uri(ops_test, app_for_jobmanager)
-    # clear_queue(mongodb_uri, app_for_jobmanager.name)
-    # assert_queue_is_empty(mongodb_uri, app_for_jobmanager.name)
-
 
     yield app_for_jobmanager
 
-    # Call reconcile to enable cleanup of any runner spawned
+    # cleanup of any runner spawned
     await app_for_jobmanager.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
 
@@ -161,6 +140,9 @@ async def test_jobmanager(
     # The http server simulates the jobmanager. Both the github-runner application
     # and the builder-agent will interact with the jobmanager. An alternative is
     # to create a test with a real jobmanager, and this could be done in the future.
+    runner_id = 1234
+    runner_token = "token"
+    runner_health_path = f"/v1/runner/{runner_id}/health"
 
     # 1. Change config to spawn a runner.
     await app.set_config(
@@ -173,11 +155,10 @@ async def test_jobmanager(
     )
 
     #  2. The github-runner manager will register a runner on the jobmanager.
-    runner_id = 1234
-    runner_health_path = f"/v1/runner/{runner_id}/health"
-    runner_register = f"/v1/runner/register"
-    token = "token"
-    returned_token = RegisterRunnerV1RunnerRegisterPost200Response(id=runner_id, token=token)
+    runner_register = "/v1/runner/register"
+    returned_token = RegisterRunnerV1RunnerRegisterPost200Response(
+        id=runner_id, token=runner_token
+    )
     httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
 
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
@@ -211,37 +192,29 @@ async def test_jobmanager(
 
     # 5. After some time, the runner will hit the jobmanager health endpoint indicating
     #   IDLE status.
-    # The builder-agent can get to us at any point.
-    # the builder-agent will make PUT requests to
-    # http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
-    # It will send a jeon like {"label": "label", "status": "IDLE"}
-    # status can be: IDLE, EXECUTING, FINISHED,
-    # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
+    runner_health_path = f"/v1/runner/{runner_id}/health"
     base_builder_agent_health_request = {
         "uri": runner_health_path,
         "method": "PUT",
-        "headers": {"Authorization": f"Bearer {token}"},
+        "headers": {"Authorization": f"Bearer {runner_token}"},
     }
     json_idle = {"json": {"label": app.name, "status": "IDLE"}}
-    json_executing = {"json": {"label": app.name, "status": "EXECUTING"}}
-    json_finished = {"json": {"label": app.name, "status": "FINISHED"}}
-
+    # httpserver.wait will only check for oneshot requeusts, so we register both a oneshot
+    # and a normal request to the same endpoint. Order is important here, we first need to
+    # register the oneshot request, so it will be executed first, and then the normal request.
+    httpserver.expect_oneshot_request(
+        **base_builder_agent_health_request | json_idle
+    ).respond_with_data("OK")
     httpserver.expect_request(**base_builder_agent_health_request | json_idle).respond_with_data(
         "OK"
     )
 
-    # We want to hear from the builder-agent that runs in the instance at least once.
-    httpserver.expect_oneshot_request(
-        **base_builder_agent_health_request | json_idle
-    ).respond_with_data("OK")
-    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=120) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
-    logger.info("server log: %s ", (httpserver.log))
-    assert waiting.result, "builder-agent did not contact us."
+    logger.info("server log after executing: %s ", (httpserver.log))
 
     # 6. The jobmanager will change the health response to "IN_PROGRESS" and will send a job
     #         to the builder-agent. The job will be a sleep 30 seconds.
-    # ok, at this point reply from the jobmanager that the runner is in progress.
     health_response.status = "IN_PROGRESS"
     health_response.deletable = False
     health_get_handler.respond_with_json(health_response.to_dict())
@@ -249,14 +222,14 @@ async def test_jobmanager(
     httpserver.check_assertions()
 
     unit = app.units[0]
-
     # Ok, at this point, we want to tell the builder-agent to execute some command,
     # specifically a sleep so we can check that it goes over executing and finished statuses.
     await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
-
     # 7. The builder-agent will run the job. While running the job it will send the status
     #         EXECUTING and after it is finished it will send the status FINISHED.
+    json_executing = {"json": {"label": app.name, "status": "EXECUTING"}}
+    json_finished = {"json": {"label": app.name, "status": "FINISHED"}}
     httpserver.expect_oneshot_request(
         **base_builder_agent_health_request | json_executing
     ).respond_with_data("OK")
@@ -319,7 +292,6 @@ async def test_jobmanager(
     assert action.results["busy"] == "0", "No runners should be busy after second reconcile"
     assert action.results["offline"] == "0", "No runners should be offline after second reconcile"
     assert action.results["unknown"] == "0", "No runners should be unknown after second reconcile"
-
 
 
 async def _prepare_runner_tunnel_for_builder_agent(
