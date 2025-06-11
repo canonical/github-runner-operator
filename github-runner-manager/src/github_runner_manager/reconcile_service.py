@@ -18,8 +18,7 @@ from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 logger = logging.getLogger(__name__)
 
-RECONCILE_ID_FILE = Path("/var/log/reconcile.id")
-
+RECONCILE_ID_FILE = Path("~").expanduser() / "reconcile.id"
 RECONCILE_SERVICE_START_MSG = "Starting the reconcile service..."
 RECONCILE_START_MSG = "Start reconciliation"
 RECONCILE_END_MSG = "End reconciliation"

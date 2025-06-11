@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-06-10
+
+- Fix issue with upgraded charm unit unable to issue metrics due to metric log ownership issues.
+
 ### 2025-06-04
 
 - Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
