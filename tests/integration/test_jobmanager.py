@@ -4,12 +4,16 @@
 """Testing for jobmanager platform."""
 
 import asyncio
+import json
 import logging
 import socket
 from typing import AsyncIterator
 
+import jubilant
 import pytest
 import pytest_asyncio
+from github_runner_manager.platform.jobmanager_provider import JobStatus
+from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from pytest_httpserver import HTTPServer
 
@@ -23,11 +27,19 @@ from charm_state import (
 from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import (
     GetRunnerHealthV1RunnerRunnerIdHealthGet200Response,
 )
+from jobmanager.client.jobmanager_client.models.job_read import JobRead
 from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import (
     RegisterRunnerV1RunnerRegisterPost200Response,
 )
+from tests.integration.conftest import DEFAULT_RECONCILE_INTERVAL
 from tests.integration.helpers.common import wait_for, wait_for_reconcile
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
+from tests.integration.utils_reactive import (
+    add_to_queue,
+    assert_queue_is_empty,
+    clear_queue,
+    get_mongodb_uri,
+)
 
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
@@ -99,11 +111,55 @@ async def app_fixture(
     """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
     app_for_jobmanager = app_no_runner
 
+    await app_for_jobmanager.set_config(
+        {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL)}
+    )
+    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+
     yield app_for_jobmanager
 
     # cleanup of any runner spawned
     await app_for_jobmanager.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
     await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+
+
+@pytest_asyncio.fixture(name="app_for_reactive")
+async def app_for_reactive_fixture(
+    ops_test,
+    juju: jubilant.Juju,
+    app: Application,
+    mongodb: Application,
+    jobmanager_base_url: str,
+) -> AsyncIterator[Application]:
+    """Setup the reactive charm with 1 virtual machine and tear down afterwards."""
+    app_for_reactive = app
+
+    relation = (f"{app_for_reactive.name}:mongodb", f"{mongodb.name}:database")
+
+    juju.integrate(*relation)
+
+    juju.wait(lambda status: jubilant.all_active(status, app_for_reactive.name, mongodb.name))
+
+    mongodb_uri = await get_mongodb_uri(ops_test, app_for_reactive)
+    clear_queue(mongodb_uri, app_for_reactive.name)
+    assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
+
+    await app_for_reactive.set_config(
+        {
+            TOKEN_CONFIG_NAME: "",
+            PATH_CONFIG_NAME: jobmanager_base_url,
+            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
+            MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+        }
+    )
+    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+
+    yield app_for_reactive
+
+    juju.remove_relation(*relation)
+
+    await app_for_reactive.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
 
 
 @pytest.mark.abort_on_fail
@@ -143,6 +199,17 @@ async def test_jobmanager(
     runner_id = 1234
     runner_token = "token"
     runner_health_path = f"/v1/runner/{runner_id}/health"
+
+    # The builder-agent can get to us at any point after runner is spawned, so we already
+    # register the health endpoint.
+    base_builder_agent_health_request = {
+        "uri": runner_health_path,
+        "method": "PUT",
+        "headers": {"Authorization": f"Bearer {runner_token}"},
+    }
+    json_idle = {"json": {"label": app.name, "status": "IDLE"}}
+    builder_agent_idle_health_request_parms = base_builder_agent_health_request | json_idle
+    httpserver.expect_request(**builder_agent_idle_health_request_parms).respond_with_data("OK")
 
     unit = app.units[0]
 
@@ -194,26 +261,16 @@ async def test_jobmanager(
 
     # 5. After some time, the runner will hit the jobmanager health endpoint indicating
     #   IDLE status.
-    runner_health_path = f"/v1/runner/{runner_id}/health"
-    base_builder_agent_health_request = {
-        "uri": runner_health_path,
-        "method": "PUT",
-        "headers": {"Authorization": f"Bearer {runner_token}"},
-    }
-    json_idle = {"json": {"label": app.name, "status": "IDLE"}}
-    # httpserver.wait will only check for oneshot requeusts, so we register both a oneshot
-    # and a normal request to the same endpoint. Order is important here, we first need to
-    # register the oneshot request, so it will be executed first, and then the normal request.
-    httpserver.expect_oneshot_request(
-        **base_builder_agent_health_request | json_idle
-    ).respond_with_data("OK")
-    httpserver.expect_request(**base_builder_agent_health_request | json_idle).respond_with_data(
+    # httpserver.wait will only check for oneshot requests, so we register as oneshot handler.
+    httpserver.expect_oneshot_request(**builder_agent_idle_health_request_parms).respond_with_data(
         "OK"
     )
 
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=120) as waiting:
         logger.info("Waiting for builder-agent to contact us.")
     logger.info("server log after executing: %s ", (httpserver.log))
+    assert waiting.result, "builder-agent did not contact us with IDLE status."
+    httpserver.check_assertions()
 
     # 6. The jobmanager will change the health response to "IN_PROGRESS" and will send a job
     #         to the builder-agent. The job will be a sleep 30 seconds.
@@ -221,9 +278,6 @@ async def test_jobmanager(
     health_response.deletable = False
     health_get_handler.respond_with_json(health_response.to_dict())
 
-    httpserver.check_assertions()
-
-    unit = app.units[0]
     # Ok, at this point, we want to tell the builder-agent to execute some command,
     # specifically a sleep so we can check that it goes over executing and finished statuses.
     await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
@@ -257,7 +311,7 @@ async def test_jobmanager(
     logger.info("First reconcile that should not delete the runner, as it is still healthy.")
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
-    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "10"})
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)})
     await wait_for_reconcile(app, app.model)
 
     # At this point there should be a runner
@@ -283,7 +337,7 @@ async def test_jobmanager(
     # 10. Run reconcile in the github-runner manager. The runner should be deleted at this point.
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
-    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "5"})
+    await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 2)})
     await wait_for_reconcile(app, app.model)
 
     action = await app.units[0].run_action("check-runners")
@@ -294,6 +348,171 @@ async def test_jobmanager(
     assert action.results["busy"] == "0", "No runners should be busy after second reconcile"
     assert action.results["offline"] == "0", "No runners should be offline after second reconcile"
     assert action.results["unknown"] == "0", "No runners should be unknown after second reconcile"
+
+
+@pytest.mark.abort_on_fail
+async def test_jobmanager_reactive(
+    ops_test,
+    monkeypatch: pytest.MonkeyPatch,
+    instance_helper: OpenStackInstanceHelper,
+    app_for_reactive: Application,
+    httpserver: HTTPServer,
+    jobmanager_base_url: str,
+    jobmanager_ip_address: str,
+):
+    """
+    Test reactive mode together with jobmanager.
+
+    Test that after putting a job in the queue that the runner is registered and the
+    job is picked up.
+
+    So,
+    1. Put job in the queue
+    2. Wait for runner to be registered
+    3. Wait for reactive process to ask for job status
+    4. Mark job deletable
+    5. Reconcile
+    6. Assert queue is empty
+    """
+    runner_id = 1234
+    runner_token = "token"
+    runner_health_path = f"/v1/runner/{runner_id}/health"
+
+    # The builder-agent can get to us at any point.
+    # the builder-agent will make PUT requests to
+    # http://{ip_address}:{httpserver.port}/v1/jobs/{job_id}/health.
+    # It will send a jeon like {"label": "label", "status": "IDLE"}
+    # status can be: IDLE, EXECUTING, FINISHED,
+    # It should have an Authorization header like: ("Authorization", "Bearer "+BEARER_TOKEN)
+    base_builder_agent_health_request = {
+        "uri": runner_health_path,
+        "method": "PUT",
+        "headers": {"Authorization": f"Bearer {runner_token}"},
+    }
+    json_idle = {"json": {"label": app_for_reactive.name, "status": "IDLE"}}
+    json_executing = {"json": {"label": app_for_reactive.name, "status": "EXECUTING"}}
+    json_finished = {"json": {"label": app_for_reactive.name, "status": "FINISHED"}}
+
+    httpserver.expect_request(**base_builder_agent_health_request | json_idle).respond_with_data(
+        "OK"
+    )
+    httpserver.expect_request(
+        **base_builder_agent_health_request | json_executing
+    ).respond_with_data("OK")
+    httpserver.expect_request(
+        **base_builder_agent_health_request | json_finished
+    ).respond_with_data("OK")
+
+    # 1. Put job in the queue
+    mongodb_uri = await get_mongodb_uri(ops_test, app_for_reactive)
+    labels = {app_for_reactive.name, "x64"}
+
+    job_id = 99
+    job_path = f"/v1/jobs/{job_id}"
+    job_url = f"{jobmanager_base_url}{job_path}"
+
+    job = JobDetails(
+        labels=labels,
+        url=job_url,
+    )
+
+    # The first interaction with the jobmanager after the runner manager gets
+    # a message in the queue is to check if the job has been picked up. If it is pending,
+    # the github-runner will spawn a reactive runner.
+    returned_job = JobRead(
+        id=job_id,
+        status=JobStatus.PENDING.value,
+        architecture="x64",
+        base_series="jammy",
+        requested_by="foobar",
+    )
+    httpserver.expect_oneshot_request(job_path).respond_with_json(returned_job.to_dict())
+
+    with httpserver.wait(
+        raise_assertions=False, stop_on_nohandler=False, timeout=60 * 2
+    ) as waiting:
+        add_to_queue(
+            json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
+            mongodb_uri,
+            app_for_reactive.name,
+        )
+        logger.info("Waiting for first check job status.")
+    logger.info("server log: %s ", (httpserver.log))
+    assert waiting.result, "Failed Waiting for first check job status."
+
+    # From this point, the github-runner reactive process will check if the job has been picked
+    # up. The jobmanager will return pending until the builder-agent is alive (that is,
+    # the server is alive and running).
+    job_get_handler = httpserver.expect_request(job_path)
+    job_get_handler.respond_with_json(returned_job.to_dict())
+
+    # 2. Wait for runner to be registered
+    runner_register = "/v1/runner/register"
+    returned_token = RegisterRunnerV1RunnerRegisterPost200Response(
+        id=runner_id, token=runner_token
+    )
+    httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
+
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
+        logger.info("Waiting for runner to be registered.")
+    logger.info("server log: %s ", (httpserver.log))
+    assert waiting.result, "Failed waiting for runner registering in the jobmanager."
+
+    # For the github runner manager, at this point, the jobmanager will return
+    # that the runner health is pending and not deletable
+    # '/v1/runner/<runner_id>/health', 'GET',
+    # Returns GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+    health_response = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+        label="label",
+        cpu_usage="1",
+        ram_usage="1",
+        disk_usage="1",
+        status="PENDING",
+        deletable=False,
+    )
+    health_get_handler = httpserver.expect_request(uri=runner_health_path, method="GET")
+    health_get_handler.respond_with_json(health_response.to_dict())
+
+    unit = app_for_reactive.units[0]
+
+    async def _prepare_runner() -> bool:
+        """Prepare the tunner so the runner builder-agent can get to the jobmanager."""
+        return await _prepare_runner_tunnel_for_builder_agent(
+            instance_helper, unit, jobmanager_ip_address, httpserver.port
+        )
+
+    await wait_for(_prepare_runner, check_interval=10, timeout=600)
+    # 3. Wait for reactive process to ask for job status
+    health_response.status = "IN_PROGRESS"
+    health_response.deletable = False
+    health_get_handler.respond_with_json(health_response.to_dict())
+
+    returned_job.status = JobStatus.IN_PROGRESS.value
+    job_get_handler = httpserver.expect_oneshot_request(job_path)
+    job_get_handler.respond_with_json(returned_job.to_dict())
+
+    with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
+        logger.info("Waiting for job status to be queried.")
+    logger.info("server log: %s ", (httpserver.log))
+    assert waiting.result, "Failed waiting for job status to be queried."
+
+    # 4. Mark job deletable
+    health_response.deletable = True
+    health_response.status = "COMPLETED"
+    health_get_handler.respond_with_json(health_response.to_dict())
+    logger.info("handler health %s", health_get_handler)
+    logger.info("handlers %s", httpserver.format_matchers())
+
+    # 5. Reconcile
+    # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
+    # to restart the reconcile service.
+    await app_for_reactive.set_config(
+        {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)}
+    )
+    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+
+    # 6. Assert queue is empty
+    assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
 
 
 async def _prepare_runner_tunnel_for_builder_agent(
