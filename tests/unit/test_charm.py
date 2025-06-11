@@ -7,16 +7,19 @@ import secrets
 import typing
 import unittest
 import urllib.error
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
+from github_runner_manager import constants
 from github_runner_manager.platform.platform_provider import TokenError
 from ops.model import BlockedStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
 from charm import (
     GithubRunnerCharm,
+    _setup_runner_manager_user,
     catch_action_errors,
     catch_charm_errors,
 )
@@ -547,3 +550,29 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     harness.charm.on.config_changed.emit()
 
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
+
+
+def test_metric_log_ownership_for_upgrade(mock_side_effects, tmp_path: Path, monkeypatch):
+    """
+    arrange: Metric log exists.
+    act: Upgrade charm.
+    assert: Call to change the metric ownership is called.
+
+    For context, older revision the metric log is owned by root.
+    The current revision the metric log is owned by the runner manager.
+    This is to test on upgrade the charm ensures the log file has the correct owner.
+    """
+    mock_metric_log_path = tmp_path
+    mock_metric_log_path.touch(exist_ok=True)
+    shutil_mock = MagicMock()
+    monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
+    monkeypatch.setattr("charm.shutil", shutil_mock)
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+
+    _setup_runner_manager_user()
+
+    shutil_mock.chown.assert_called_once_with(
+        mock_metric_log_path,
+        user=constants.RUNNER_MANAGER_USER,
+        group=constants.RUNNER_MANAGER_GROUP,
+    )
