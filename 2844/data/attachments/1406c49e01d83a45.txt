@@ -1,0 +1,170 @@
+18:24:11 INFO Adding model github-pr-7a194-lxd:test-charm-upgrade-kljv on cloud localhost
+18:24:12 WARNING unexpected facade AgentLifeFlag received from the controller
+18:24:12 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+18:24:12 WARNING unexpected facade SecretsDrain received from the controller
+18:24:14 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+18:24:39 INFO Deploying local:jammy/github-runner-0
+18:24:39 INFO Waiting for model:
+  test-cfp8vzs2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cfp8vzs2/0 [allocating] waiting: waiting for machine
+18:25:09 INFO Waiting for model:
+  test-cfp8vzs2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cfp8vzs2/0 [allocating] waiting: agent initialising
+18:25:39 INFO Waiting for model:
+  test-cfp8vzs2/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cfp8vzs2/0 [executing] maintenance: Setting up Builder.
+18:26:09 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cfp8vzs2/0 [executing] maintenance: Setting up Builder.
+18:26:39 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] maintenance: Setting up Builder.
+18:27:09 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] maintenance: Setting up Builder.
+18:27:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:28:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:28:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:29:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:29:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:30:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:30:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:31:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:31:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:32:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:32:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:33:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:33:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:34:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:34:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:35:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:35:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:36:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:36:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:37:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:37:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:38:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:38:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:39:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cfp8vzs2/0 [executing] active: Building image.
+18:39:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cfp8vzs2/0 [idle] active: 
+18:40:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: Update image for runners
+18:40:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: Update image for runners
+18:41:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: Update image for runners
+18:41:40 INFO Waiting for model:
+  test-cfp8vzs2/0 [executing] maintenance: Update image for runners
+18:42:10 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] active: 
+18:43:49 INFO Waiting for model:
+  test-cfp8vzs2/0 [idle] active:
+18:44:22 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-kljv  github-pr-7a194-lxd  localhost/localhost  3.1.10   unsupported  18:44:22Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cfp8vzs2           active      1  github-runner-image-builder  latest/edge   86  no       
+test-cfp8vzs2                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-cfp8vzs2/0*  active    idle   0        10.241.20.186          
+test-cfp8vzs2/0*                         active    idle   1        10.241.20.168          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.241.20.186  juju-f20abe-0  ubuntu@22.04      Running
+1        started  10.241.20.168  juju-f20abe-1  ubuntu@22.04      Running
+
+18:44:22 INFO Juju error logs:
+
+machine-0: 18:25:07 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-0: 18:25:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-cfp8vzs2-0: 18:25:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:33 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 18:25:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cfp8vzs2-0: 18:25:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-cfp8vzs2-0: 18:25:44 ERROR unit.github-runner-image-builder-cfp8vzs2/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-cfp8vzs2-0: 18:26:38 ERROR unit.test-cfp8vzs2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 329, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cfp8vzs2-0: 18:26:40 ERROR unit.test-cfp8vzs2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 304, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cfp8vzs2-0: 18:27:30 ERROR unit.test-cfp8vzs2/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 464, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cfp8vzs2-0/charm/./src/charm.py", line 483, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:44:23 INFO Forgetting model main...

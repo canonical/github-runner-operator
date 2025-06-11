@@ -1,0 +1,98 @@
+18:24:40 WARNING unexpected facade SSHServer received from the controller
+18:24:41 INFO Adding model github-pr-7a194-lxd:test-charm-no-runner-774w on cloud localhost
+18:24:41 WARNING unexpected facade SSHServer received from the controller
+18:24:41 WARNING unexpected facade SSHSession received from the controller
+18:24:41 WARNING unexpected facade SSHTunneler received from the controller
+18:24:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+18:25:07 INFO Deploying local:jammy/github-runner-0
+18:25:07 INFO Waiting for model:
+  test-qjsa928a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qjsa928a/0 [allocating] waiting: waiting for machine
+18:25:37 INFO Waiting for model:
+  test-qjsa928a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qjsa928a/0 [allocating] waiting: waiting for machine
+18:26:08 INFO Waiting for model:
+  test-qjsa928a/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qjsa928a/0 [allocating] waiting: agent initialising
+18:26:38 INFO Waiting for model:
+  test-qjsa928a/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qjsa928a/0 [executing] maintenance: Setting up Builder.
+18:27:08 INFO Waiting for model:
+  test-qjsa928a/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qjsa928a/0 [executing] maintenance: Setting up Builder.
+18:27:38 INFO Waiting for model:
+  test-qjsa928a/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qjsa928a/0 [executing] maintenance: Setting up Builder.
+18:28:09 INFO Waiting for model:
+  test-qjsa928a/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qjsa928a/0 [executing] maintenance: Setting up Builder.
+18:28:39 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] blocked: image integration required.
+18:29:09 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:29:40 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:30:10 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:30:41 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:31:11 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:31:41 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:32:12 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:32:42 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:33:12 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:33:43 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:34:13 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:34:44 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:35:14 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:35:44 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:36:14 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:36:44 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:37:14 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:37:44 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:38:14 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:38:45 INFO Waiting for model:
+  test-qjsa928a/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qjsa928a/0 [executing] active: Building image.
+18:39:15 INFO Waiting for model:
+  test-qjsa928a/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-qjsa928a/0 [idle] active: 
+18:39:45 INFO Waiting for model:
+  test-qjsa928a/0 [idle] active: 
+18:39:50 INFO Waiting for model:
+  test-qjsa928a/0 [idle] active:

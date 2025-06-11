@@ -1,0 +1,178 @@
+18:24:39 WARNING unexpected facade SSHServer received from the controller
+18:24:39 INFO Adding model github-pr-7a194-lxd:test-charm-fork-repo-kmp5 on cloud localhost
+18:24:40 WARNING unexpected facade SSHServer received from the controller
+18:24:40 WARNING unexpected facade SSHSession received from the controller
+18:24:40 WARNING unexpected facade SSHTunneler received from the controller
+18:24:41 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+18:24:58 INFO Deploying local:jammy/github-runner-0
+18:24:59 INFO Waiting for model:
+  test-svapzpij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-svapzpij/0 [allocating] waiting: waiting for machine
+18:25:29 INFO Waiting for model:
+  test-svapzpij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-svapzpij/0 [allocating] waiting: waiting for machine
+18:25:59 INFO Waiting for model:
+  test-svapzpij/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-svapzpij/0 [allocating] waiting: agent initialising
+18:26:29 INFO Waiting for model:
+  test-svapzpij/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-svapzpij/0 [executing] maintenance: Setting up Builder.
+18:27:00 INFO Waiting for model:
+  test-svapzpij/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-svapzpij/0 [executing] maintenance: Setting up Builder.
+18:27:30 INFO Waiting for model:
+  test-svapzpij/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-svapzpij/0 [executing] maintenance: Setting up Builder.
+18:28:00 INFO Waiting for model:
+  test-svapzpij/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-svapzpij/0 [executing] maintenance: Setting up Builder.
+18:28:30 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] blocked: image integration required.
+18:29:00 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:29:31 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:30:01 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:30:31 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:31:02 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:31:32 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:32:02 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:32:32 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:33:03 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:33:33 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:34:04 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:34:34 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:35:05 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:35:35 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:36:06 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:36:36 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:37:07 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:37:37 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:38:08 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:38:38 INFO Waiting for model:
+  test-svapzpij/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-svapzpij/0 [executing] active: Building image.
+18:39:08 INFO Waiting for model:
+  test-svapzpij/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-svapzpij/0 [idle] active: 
+18:39:39 INFO Waiting for model:
+  test-svapzpij/0 [idle] active: 
+18:39:43 INFO GitHub token rate limit: Rate(reset=2025-06-11 19:38:27+00:00, remaining=4892, limit=5000)
+18:40:46 INFO Waiting for model:
+  test-svapzpij/0 [idle] active: 
+18:41:16 INFO Waiting for model:
+  test-svapzpij/0 [idle] active: 
+18:43:23 INFO [TEST SETUP] Exposing port 8080 on test-svapzpij-0-n-2bd5431c6f45
+18:43:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.186', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:5b:26'}]])
+18:43:24 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-svapzpij-0-n-2bd5431c6f45.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.186 &
+18:43:25 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.186' (ED25519) to the list of known hosts.
+
+18:43:26 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-svapzpij-0-n-2bd5431c6f45
+18:43:26 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.186', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:5b:26'}]])
+18:43:27 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-svapzpij-0-n-2bd5431c6f45.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.186 nc -z localhost 8080'
+18:43:28 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:43:29 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-svapzpij-0-n-2bd5431c6f45
+18:43:29 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.186', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:5b:26'}]])
+18:43:30 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-svapzpij-0-n-2bd5431c6f45.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.186 curl http://localhost:8080'
+18:43:31 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  83704      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:43:33 INFO Wait for condition not met, sleeping 10
+18:43:50 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-kmp5  github-pr-7a194-lxd  localhost/localhost  3.6.7    unsupported  18:43:50Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-svapzpij           active      1  github-runner-image-builder  latest/edge   86  no       
+test-svapzpij                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-svapzpij/0*  active    idle   0        10.199.186.155            
+test-svapzpij/0*                         active    idle   1        10.199.186.201  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.199.186.155  juju-54af61-0  ubuntu@22.04      Running
+1        started  10.199.186.201  juju-54af61-1  ubuntu@22.04      Running
+
+18:43:50 INFO Juju error logs:
+
+machine-0: 18:25:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-svapzpij-0: 18:25:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-svapzpij-0: 18:26:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-svapzpij-0: 18:26:38 ERROR unit.github-runner-image-builder-svapzpij/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-svapzpij-0: 18:27:10 ERROR unit.test-svapzpij/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 329, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-svapzpij-0: 18:27:12 ERROR unit.test-svapzpij/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 304, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-svapzpij-0: 18:28:26 ERROR unit.test-svapzpij/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 464, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-svapzpij-0/charm/./src/charm.py", line 483, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:43:50 INFO Forgetting model main...
