@@ -17,12 +17,14 @@ import functools
 import json
 import logging
 import pathlib
+import shutil
 from typing import Any, Callable, Sequence, TypeVar
 
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
 from github_runner_manager import constants
+from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.platform.platform_provider import TokenError
 from github_runner_manager.utilities import set_env_var
 from ops.charm import (
@@ -525,6 +527,16 @@ def _setup_runner_manager_user() -> None:
     execute_command(["/usr/bin/chmod", "700", f"/home/{constants.RUNNER_MANAGER_USER}/.ssh"])
     # Give the user access to write to /var/log
     execute_command(["/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER])
+    execute_command(["/usr/bin/chmod", "g+w", "/var/log"])
+
+    # For charm upgrade, previous revision root owns the metric logs, this is changed to runner
+    # manager.
+    if METRICS_LOG_PATH.exists():
+        shutil.chown(
+            METRICS_LOG_PATH,
+            user=constants.RUNNER_MANAGER_USER,
+            group=constants.RUNNER_MANAGER_GROUP,
+        )
 
 
 if __name__ == "__main__":
