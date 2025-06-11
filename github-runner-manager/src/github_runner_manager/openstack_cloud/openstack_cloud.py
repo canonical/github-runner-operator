@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+import contextlib
 import copy
 import functools
 import logging
@@ -321,6 +322,7 @@ class OpenstackCloud:
             raise OpenStackError(f"Failed to remove openstack runner {instance_id}") from err
 
     @_catch_openstack_errors
+    @contextlib.contextmanager
     def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
         """Get SSH connection to an OpenStack instance.
 
@@ -345,25 +347,25 @@ class OpenstackCloud:
 
         for ip in instance.addresses:
             try:
-                connection = SSHConnection(
+                with SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
                     gateway=self._proxy_command,
-                )
-                result = connection.run(
-                    f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
-                )
-                if not result.ok:
-                    logger.warning(
-                        "SSH test connection failed, server: %s, address: %s",
-                        instance.instance_id.name,
-                        ip,
+                ) as connection:
+                    result = connection.run(
+                        f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
                     )
-                    continue
-                if _TEST_STRING in result.stdout:
-                    return connection
+                    if not result.ok:
+                        logger.warning(
+                            "SSH test connection failed, server: %s, address: %s",
+                            instance.instance_id.name,
+                            ip,
+                        )
+                        continue
+                    if _TEST_STRING in result.stdout:
+                        yield connection
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
