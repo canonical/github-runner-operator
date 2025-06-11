@@ -144,6 +144,8 @@ async def test_jobmanager(
     runner_token = "token"
     runner_health_path = f"/v1/runner/{runner_id}/health"
 
+    unit = app.units[0]
+
     # 1. Change config to spawn a runner.
     await app.set_config(
         {
