@@ -1,0 +1,154 @@
+06:33:11 WARNING unexpected facade SSHServer received from the controller
+06:33:11 INFO Adding model github-pr-7a194-lxd:test-charm-fork-path-change-aoka on cloud localhost
+06:33:11 WARNING unexpected facade SSHServer received from the controller
+06:33:11 WARNING unexpected facade SSHSession received from the controller
+06:33:11 WARNING unexpected facade SSHTunneler received from the controller
+06:33:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+06:33:34 INFO Deploying local:jammy/github-runner-0
+06:33:34 INFO Waiting for model:
+  test-pj42ugne/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pj42ugne/0 [allocating] waiting: waiting for machine
+06:34:05 INFO Waiting for model:
+  test-pj42ugne/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pj42ugne/0 [allocating] waiting: waiting for machine
+06:34:35 INFO Waiting for model:
+  test-pj42ugne/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pj42ugne/0 [allocating] waiting: agent initialising
+06:35:05 INFO Waiting for model:
+  test-pj42ugne/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pj42ugne/0 [executing] maintenance: Setting up Builder.
+06:35:35 INFO Waiting for model:
+  test-pj42ugne/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pj42ugne/0 [executing] maintenance: Setting up Builder.
+06:36:05 INFO Waiting for model:
+  test-pj42ugne/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pj42ugne/0 [executing] maintenance: Setting up Builder.
+06:36:36 INFO Waiting for model:
+  test-pj42ugne/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pj42ugne/0 [executing] maintenance: Setting up Builder.
+06:37:06 INFO Waiting for model:
+  test-pj42ugne/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Waiting for first image.
+06:37:36 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:38:07 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:38:37 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:39:07 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:39:38 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:40:08 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:40:38 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:41:08 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:41:39 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:42:09 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:42:39 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:43:10 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:43:40 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:44:10 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:44:41 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:45:11 INFO Waiting for model:
+  test-pj42ugne/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pj42ugne/0 [executing] active: Building image.
+06:45:41 INFO Waiting for model:
+  test-pj42ugne/0 [executing] maintenance: Update image for runners
+06:46:01 INFO GitHub token rate limit: Rate(reset=2025-06-11 07:25:51+00:00, remaining=4699, limit=5000)
+06:46:12 INFO test_path_config_change
+06:46:12 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:46:43 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:47:09 INFO Ensure there is a runner (this calls reconcile)
+06:47:09 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:47:39 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:49:44 INFO Reconciling (again)
+06:49:44 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:50:14 INFO Waiting for model:
+  test-pj42ugne/0 [idle] active: 
+06:54:33 INFO runners: ['test-pj42ugne-0-n-7702e35599df']
+06:54:34 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-0890b0db5ff4"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-3cfd9411e673"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-3e6973c3886a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-413f084a7383"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-48483c98a9ad"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-4c63d0a0fa68"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-4e0054db2975"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-5cb247baf2f6"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-8c08d824aedf"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-be889b2ea94c"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-3-n-ca75a4bbcece"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-ff8cdf1cec23"), SelfHostedActionsRunner(name="test-aqc2cd9x-0-n-07481db34a57"), SelfHostedActionsRunner(name="test-cw3cc9b3-0-n-b6ab761fb9dd"), SelfHostedActionsRunner(name="test-dkx6fzlr-0-n-8c8ea1cee578"), SelfHostedActionsRunner(name="test-dwe56i4g-0-n-46eb34e6aa68"), SelfHostedActionsRunner(name="test-elom7u0h-0-n-c7766df0ebd4"), SelfHostedActionsRunner(name="test-f3xesaxl-0-n-c1ff08f9f102"), SelfHostedActionsRunner(name="test-feh3o8mj-0-n-d4f0d01e6165"), SelfHostedActionsRunner(name="test-gimrmlhq-0-n-3af9791a3cc2"), SelfHostedActionsRunner(name="test-kdtj7beu-0-n-c308b76c6940"), SelfHostedActionsRunner(name="test-mfnfwjmp-0-n-7370e5303bdd"), SelfHostedActionsRunner(name="test-mshflv7x-0-n-792ec8c55358"), SelfHostedActionsRunner(name="test-odatlwm5-0-n-93daf2a59dff"), SelfHostedActionsRunner(name="test-p4likpke-0-n-f5e534d215ff"), SelfHostedActionsRunner(name="test-pj42ugne-0-n-7702e35599df"), SelfHostedActionsRunner(name="test-qc9w6ixq-0-n-526bd94670d5"), SelfHostedActionsRunner(name="test-qoowj7d0-0-n-2443bdfb8cae"), SelfHostedActionsRunner(name="test-r867wrf2-0-n-64e7ec32ed81"), SelfHostedActionsRunner(name="test-rmq3yqgh-0-n-0ed7681ee66a"), SelfHostedActionsRunner(name="test-rwkhq1bc-0-n-caea25819134"), SelfHostedActionsRunner(name="test-t5kd9sz6-0-n-7c0431892e31"), SelfHostedActionsRunner(name="test-tmheb5fv-0-n-2f2bd2d3079f"), SelfHostedActionsRunner(name="test-tmheb5fv-0-n-830fab7e3b21"), SelfHostedActionsRunner(name="test-tmheb5fv-0-n-9110c15e276e"), SelfHostedActionsRunner(name="test-tmheb5fv-0-n-edbd7ac6fc62"), SelfHostedActionsRunner(name="test-v606psmu-0-n-4b0cb38142e7"), SelfHostedActionsRunner(name="test-v606psmu-0-n-776ea5b6ebec"), SelfHostedActionsRunner(name="test-v606psmu-0-n-8d226de93272"), SelfHostedActionsRunner(name="test-v606psmu-0-n-e11d9b48087e"), SelfHostedActionsRunner(name="test-z76j7iwm-0-n-945adf98d796")]
+06:54:37 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-aoka  github-pr-7a194-lxd  localhost/localhost  3.6.7    unsupported  06:54:37Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pj42ugne           active      1  github-runner-image-builder  latest/edge   86  no       
+test-pj42ugne                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-pj42ugne/0*  active    idle   0        10.69.201.2            
+test-pj42ugne/0*                         active    idle   1        10.69.201.100          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.69.201.2    juju-32a79a-0  ubuntu@22.04      Running
+1        started  10.69.201.100  juju-32a79a-1  ubuntu@22.04      Running
+
+06:54:38 INFO Juju error logs:
+
+machine-0: 06:34:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:34:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pj42ugne-0: 06:34:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:34:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:34:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pj42ugne-0: 06:34:35 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pj42ugne-0: 06:35:12 ERROR unit.github-runner-image-builder-pj42ugne/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-pj42ugne-0: 06:35:35 ERROR unit.test-pj42ugne/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 329, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pj42ugne-0: 06:35:37 ERROR unit.test-pj42ugne/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 304, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pj42ugne-0: 06:37:08 ERROR unit.test-pj42ugne/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 464, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pj42ugne-0/charm/./src/charm.py", line 483, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:54:38 INFO Forgetting model main...

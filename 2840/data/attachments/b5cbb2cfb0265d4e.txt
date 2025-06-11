@@ -1,0 +1,150 @@
+06:43:24 INFO Adding model github-pr-7a194-lxd:test-charm-scheduled-events-0lu0 on cloud localhost
+06:43:24 WARNING unexpected facade AgentLifeFlag received from the controller
+06:43:24 WARNING unknown common facade version for AgentLifeFlag,
+versions known to client : [2, 3]
+versions known to controller : [1]
+06:43:24 WARNING unexpected facade SecretsDrain received from the controller
+06:43:26 INFO Deploying ch:amd64/jammy/github-runner-image-builder-86
+06:43:46 INFO Deploying local:jammy/github-runner-0
+06:43:46 INFO Waiting for model:
+  test-t0uif3cg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t0uif3cg/0 [allocating] waiting: waiting for machine
+06:44:16 INFO Waiting for model:
+  test-t0uif3cg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t0uif3cg/0 [allocating] waiting: waiting for machine
+06:44:46 INFO Waiting for model:
+  test-t0uif3cg/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-t0uif3cg/0 [executing] maintenance: Setting up Builder.
+06:45:16 INFO Waiting for model:
+  test-t0uif3cg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t0uif3cg/0 [executing] maintenance: Setting up Builder.
+06:45:46 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] maintenance: Setting up Builder.
+06:46:16 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] maintenance: Setting up Builder.
+06:46:46 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] blocked: image integration required.
+06:47:16 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:47:46 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:48:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:48:47 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:49:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:49:47 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:50:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:50:47 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:51:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:51:47 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:52:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:52:47 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:53:17 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:53:48 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:54:18 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:54:48 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:55:18 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t0uif3cg/0 [executing] active: Building image.
+06:55:48 INFO Waiting for model:
+  test-t0uif3cg/0 [executing] maintenance: Update image for runners
+06:56:09 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] active: 
+06:56:39 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] active: 
+06:56:41 INFO Waiting for model:
+  test-t0uif3cg/0 [idle] active:
+06:59:05 INFO Wait for condition not met, sleeping 3
+06:59:09 INFO Wait for 10 minutes
+07:09:09 INFO Waiting for model:
+  github-runner-image-builder-t0uif3cg/0 [idle] active: 
+  test-t0uif3cg/0 [idle] active:
+07:09:28 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-scheduled-events-0lu0  github-pr-7a194-lxd  localhost/localhost  3.1.10   unsupported  07:09:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-t0uif3cg           active      1  github-runner-image-builder  latest/edge   86  no       
+test-t0uif3cg                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-t0uif3cg/0*  active    idle   0        10.184.119.19          
+test-t0uif3cg/0*                         active    idle   1        10.184.119.47          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.184.119.19  juju-3267c9-0  ubuntu@22.04      Running
+1        started  10.184.119.47  juju-3267c9-1  ubuntu@22.04      Running
+
+07:09:28 INFO Juju error logs:
+
+machine-0: 06:44:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:44:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:44:21 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+unit-github-runner-image-builder-t0uif3cg-0: 06:44:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:44:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:44:39 ERROR juju.worker.dependency "broker-tracker" manifold worker returned unexpected error: no container types determined
+machine-1: 06:44:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t0uif3cg-0: 06:44:39 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-t0uif3cg-0: 06:44:58 ERROR unit.github-runner-image-builder-t0uif3cg/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-t0uif3cg-0: 06:45:37 ERROR unit.test-t0uif3cg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 329, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-t0uif3cg-0: 06:45:39 ERROR unit.test-t0uif3cg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 304, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 481, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-t0uif3cg-0: 06:46:40 ERROR unit.test-t0uif3cg/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 464, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t0uif3cg-0/charm/./src/charm.py", line 483, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:09:29 INFO Forgetting model main...
