@@ -138,7 +138,10 @@ async def app_for_reactive_fixture(
 
     juju.integrate(*relation)
 
-    juju.wait(lambda status: jubilant.all_active(status, app_for_reactive.name, mongodb.name))
+    juju.wait(
+        lambda status: jubilant.all_active(status, app_for_reactive.name, mongodb.name)
+        and jubilant.all_agents_idle(status, app_for_reactive.name, mongodb.name)
+    )
 
     mongodb_uri = await get_mongodb_uri(ops_test, app_for_reactive)
     clear_queue(mongodb_uri, app_for_reactive.name)

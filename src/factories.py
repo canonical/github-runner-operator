@@ -18,7 +18,6 @@ from github_runner_manager.configuration import (
     UserInfo,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
-
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
