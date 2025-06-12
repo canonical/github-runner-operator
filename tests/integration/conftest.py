@@ -748,7 +748,7 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juju, None, None]:
     """Pytest fixture that wraps :meth:`jubilant.with_model`."""
 
