@@ -347,25 +347,25 @@ class OpenstackCloud:
 
         for ip in instance.addresses:
             try:
-                with SSHConnection(
+                connection = SSHConnection(
                     host=ip,
                     user="ubuntu",
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
                     gateway=self._proxy_command,
-                ) as connection:
-                    result = connection.run(
-                        f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
+                ) 
+                result = connection.run(
+                    f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
+                )
+                if not result.ok:
+                    logger.warning(
+                        "SSH test connection failed, server: %s, address: %s",
+                        instance.instance_id.name,
+                        ip,
                     )
-                    if not result.ok:
-                        logger.warning(
-                            "SSH test connection failed, server: %s, address: %s",
-                            instance.instance_id.name,
-                            ip,
-                        )
-                        continue
-                    if _TEST_STRING in result.stdout:
-                        yield connection
+                    continue
+                if _TEST_STRING in result.stdout:
+                    yield connection
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
@@ -382,6 +382,8 @@ class OpenstackCloud:
                     exc_info=True,
                 )
                 continue
+            finally:
+                connection.close()
         raise SSHError(
             f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
             f"addresses: {instance.addresses}"
