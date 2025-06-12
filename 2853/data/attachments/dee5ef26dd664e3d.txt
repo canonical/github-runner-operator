@@ -1,0 +1,106 @@
+06:45:48 WARNING unexpected facade SSHServer received from the controller
+06:45:48 INFO Adding model github-pr-7a194-lxd:test-reactive-h4rv on cloud localhost
+06:45:49 WARNING unexpected facade SSHServer received from the controller
+06:45:49 WARNING unexpected facade SSHSession received from the controller
+06:45:49 WARNING unexpected facade SSHTunneler received from the controller
+06:45:49 INFO GitHub token rate limit: Rate(reset=2025-06-12 07:38:59+00:00, remaining=4666, limit=5000)
+06:45:54 INFO Deploying ch:amd64/jammy/mongodb-215
+06:45:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-87
+06:46:13 INFO Deploying local:jammy/github-runner-0
+06:46:14 INFO Waiting for model:
+  test-zxqghkuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zxqghkuf/0 [allocating] waiting: waiting for machine
+06:46:44 INFO Waiting for model:
+  test-zxqghkuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zxqghkuf/0 [allocating] waiting: waiting for machine
+06:47:15 INFO Waiting for model:
+  test-zxqghkuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zxqghkuf/0 [allocating] waiting: waiting for machine
+06:47:45 INFO Waiting for model:
+  test-zxqghkuf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zxqghkuf/0 [allocating] waiting: waiting for machine
+06:48:15 INFO Waiting for model:
+  test-zxqghkuf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zxqghkuf/0 [allocating] waiting: agent initialising
+06:48:45 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] maintenance: Setting up Builder.
+06:49:15 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] maintenance: Setting up Builder.
+06:49:46 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] maintenance: Setting up Builder.
+06:50:16 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] maintenance: Setting up Builder.
+06:50:47 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] blocked: image integration required.
+06:51:17 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:51:47 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:52:17 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:52:47 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:53:18 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:53:48 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:54:19 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:54:49 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:55:19 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:55:49 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:56:19 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:56:49 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:57:19 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:57:49 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:58:20 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:58:50 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zxqghkuf/0 [executing] active: Building image.
+06:59:21 INFO Waiting for model:
+  test-zxqghkuf/0 [executing] maintenance: Update image for runners
+06:59:51 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active: 
+06:59:52 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:59:52 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active: 
+  mongodb/0 [idle] active: Primary
+07:00:18 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active: 
+07:00:48 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active:
+07:03:57 INFO Wait for condition not met, sleeping 10
+07:04:19 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active:
+07:05:37 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active: 
+07:06:07 INFO Waiting for model:
+  test-zxqghkuf/0 [idle] active:

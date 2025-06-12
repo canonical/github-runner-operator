@@ -1,0 +1,95 @@
+06:25:24 WARNING unexpected facade SSHServer received from the controller
+06:25:24 INFO Adding model github-pr-7a194-lxd:test-charm-metrics-success-li44 on cloud localhost
+06:25:25 WARNING unexpected facade SSHServer received from the controller
+06:25:25 WARNING unexpected facade SSHSession received from the controller
+06:25:25 WARNING unexpected facade SSHTunneler received from the controller
+06:25:26 INFO Deploying ch:amd64/jammy/github-runner-image-builder-87
+06:25:47 INFO Deploying local:jammy/github-runner-0
+06:25:47 INFO Waiting for model:
+  test-vzf0pysh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vzf0pysh/0 [allocating] waiting: waiting for machine
+06:26:17 INFO Waiting for model:
+  test-vzf0pysh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vzf0pysh/0 [allocating] waiting: waiting for machine
+06:26:48 INFO Waiting for model:
+  test-vzf0pysh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vzf0pysh/0 [allocating] waiting: agent initialising
+06:27:18 INFO Waiting for model:
+  test-vzf0pysh/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vzf0pysh/0 [executing] maintenance: Setting up Builder.
+06:27:48 INFO Waiting for model:
+  test-vzf0pysh/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vzf0pysh/0 [executing] maintenance: Setting up Builder.
+06:28:19 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] maintenance: Setting up Builder.
+06:28:49 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] maintenance: Setting up Builder.
+06:29:19 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] blocked: image integration required.
+06:29:49 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:30:20 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:30:50 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:31:20 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:31:51 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:32:21 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:32:51 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:33:22 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:33:52 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:34:53 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:35:23 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:35:53 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:36:23 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:36:53 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzf0pysh/0 [executing] active: Building image.
+06:37:54 INFO Waiting for model:
+  test-vzf0pysh/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-vzf0pysh/0 [idle] active: 
+06:38:25 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] active:
+06:38:33 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] active: 
+06:39:03 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] active: 
+06:41:07 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] active: 
+06:41:37 INFO Waiting for model:
+  test-vzf0pysh/0 [idle] active: 
+06:42:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1749710434.4413939, "event": "reconciliation", "flavor": "test-vzf0pysh", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 119.50622463226318}
+{"timestamp": 1749710406.0, "event": "runner_installed", "flavor": "test-vzf0pysh", "duration": 81.0}
+{"timestamp": 1749710500.1402907, "event": "reconciliation", "flavor": "test-vzf0pysh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 30.512608766555786}
