@@ -19,7 +19,6 @@ from github_runner_manager.configuration import (
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
 
-#  TODO copy that config over to the charm
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
