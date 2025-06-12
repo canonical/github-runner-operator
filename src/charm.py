@@ -49,12 +49,13 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
-    build_proxy_config_from_charm, MONGO_DB_INTEGRATION_NAME,
+    build_proxy_config_from_charm,
 )
 from errors import (
     ConfigurationError,
@@ -226,7 +227,9 @@ class GithubRunnerCharm(CharmBase):
         )
         self.framework.observe(self.database.on.database_created, self._on_database_created)
         self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
-        self.framework.observe(self.on[MONGO_DB_INTEGRATION_NAME].relation_broken, self._on_mongodb_relation_broken)
+        self.framework.observe(
+            self.on[MONGO_DB_INTEGRATION_NAME].relation_broken, self._on_mongodb_relation_broken
+        )
 
         self._manager_client = GitHubRunnerManagerClient(
             host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,

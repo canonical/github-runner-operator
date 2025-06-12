@@ -28,6 +28,7 @@ from charm import (
 from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -35,7 +36,7 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     Arch,
     OpenStackCloudsYAML,
-    OpenstackImage, MONGO_DB_INTEGRATION_NAME,
+    OpenstackImage,
 )
 from errors import (
     ConfigurationError,
