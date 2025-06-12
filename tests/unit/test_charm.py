@@ -8,6 +8,7 @@ import typing
 import unittest
 import urllib.error
 from pathlib import Path
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -19,9 +20,8 @@ from ops.testing import Harness
 
 from charm import (
     LEGACY_RECONCILE_SERVICE,
+    LEGACY_RECONCILE_TIMER_SERVICE,
     GithubRunnerCharm,
-    _disable_legacy_service,
-    _setup_runner_manager_user,
     catch_action_errors,
     catch_charm_errors,
 )
@@ -224,7 +224,7 @@ def test_common_install_code(
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
-    monkeypatch.setattr("charm.systemd", MagicMock()) 
+    monkeypatch.setattr("charm.systemd", MagicMock())
 
     getattr(harness.charm.on, hook).emit()
 
@@ -557,7 +557,9 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
 
-def test_metric_log_ownership_for_upgrade(harness: Harness,mock_side_effects, tmp_path: Path, monkeypatch):
+def test_metric_log_ownership_for_upgrade(
+    harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
+):
     """
     arrange: Metric log exists.
     act: Upgrade charm.
@@ -574,7 +576,7 @@ def test_metric_log_ownership_for_upgrade(harness: Harness,mock_side_effects, tm
     monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
     monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
-    
+
     harness.charm.on.upgrade_charm.emit()
 
     shutil_mock.chown.assert_called_once_with(
@@ -583,21 +585,27 @@ def test_metric_log_ownership_for_upgrade(harness: Harness,mock_side_effects, tm
         group=constants.RUNNER_MANAGER_GROUP,
     )
 
-def test_attempting_disable_legacy_service_for_upgrade(harness: Harness, mock_side_effects, monkeypatch):
+
+def test_attempting_disable_legacy_service_for_upgrade(
+    harness: Harness, mock_side_effects, monkeypatch
+):
     """
     arrange: None.
     act: Upgrade charm.
-    assert: Calls to stop the legacy service is performed. 
+    assert: Calls to stop the legacy service is performed.
     """
     harness.charm._setup_state = MagicMock()
-    monkeypatch.setattr("charm.systemd", mock_systemd:=MagicMock())
+    monkeypatch.setattr("charm.systemd", mock_systemd := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    monkeypatch.setattr("charm.pathlib", MagicMock())
 
     harness.charm.on.upgrade_charm.emit()
-    
-    mock_systemd.service_disable.assert_called_once_with(
-        LEGACY_RECONCILE_SERVICE
+
+    mock_systemd.service_disable.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
     )
-    mock_systemd.service_stop.assert_called_once_with(
-        LEGACY_RECONCILE_SERVICE
+    mock_systemd.service_stop.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
     )
