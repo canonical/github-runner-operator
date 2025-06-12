@@ -4,6 +4,7 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -23,6 +24,7 @@ from typing import Any, Callable, Sequence, TypeVar
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager import constants
 from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.platform.platform_provider import TokenError
@@ -83,6 +85,8 @@ FAILED_RECONCILE_ACTION_ERR_MSG = (
     "Failed to reconcile runners. Look at the juju logs for more information."
 )
 UPGRADE_MSG = "Upgrading github-runner charm."
+LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
+LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 
 
 logger = logging.getLogger(__name__)
@@ -309,6 +313,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         logger.info(UPGRADE_MSG)
         self._common_install_code()
+        _disable_legacy_service()
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
@@ -537,6 +542,36 @@ def _setup_runner_manager_user() -> None:
             user=constants.RUNNER_MANAGER_USER,
             group=constants.RUNNER_MANAGER_GROUP,
         )
+
+
+def _disable_legacy_service() -> None:
+    """Disable any legacy service."""
+    logger.info("Attempting to stop legacy services")
+    try:
+        systemd.service_disable(LEGACY_RECONCILE_TIMER_SERVICE)
+        systemd.service_stop(LEGACY_RECONCILE_TIMER_SERVICE)
+    except systemd.SystemdError:
+        pass
+    try:
+        systemd.service_disable(LEGACY_RECONCILE_SERVICE)
+        systemd.service_stop(LEGACY_RECONCILE_SERVICE)
+    except systemd.SystemdError:
+        pass
+
+    try:
+        timer_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_TIMER_SERVICE
+        service_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_SERVICE
+        timer_path.unlink(missing_ok=True)
+        service_path.unlink(missing_ok=True)
+    except OSError:
+        logger.warning(
+            "Unexpected exception during removal of legacy systemd service files", exc_info=True
+        )
+
+    try:
+        systemd.daemon_reload()
+    except systemd.SystemdError:
+        logger.warning("Unable to reload systemd daemon", exc_info=True)
 
 
 if __name__ == "__main__":

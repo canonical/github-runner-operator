@@ -8,6 +8,7 @@ import typing
 import unittest
 import urllib.error
 from pathlib import Path
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -18,8 +19,9 @@ from ops.model import BlockedStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
 from charm import (
+    LEGACY_RECONCILE_SERVICE,
+    LEGACY_RECONCILE_TIMER_SERVICE,
     GithubRunnerCharm,
-    _setup_runner_manager_user,
     catch_action_errors,
     catch_charm_errors,
 )
@@ -54,6 +56,7 @@ def side_effect_fixture(monkeypatch, tmpdir):
     monkeypatch.setattr("charm.pathlib.Path.mkdir", MagicMock())
     monkeypatch.setattr("charm.pathlib.Path.write_text", MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock())
+    monkeypatch.setattr("charm.systemd", MagicMock())
     monkeypatch.setattr("manager_service.yaml_safe_dump", MagicMock())
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
     monkeypatch.setattr("manager_service.Path.mkdir", MagicMock())
@@ -221,6 +224,7 @@ def test_common_install_code(
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
+    monkeypatch.setattr("charm.systemd", MagicMock())
 
     getattr(harness.charm.on, hook).emit()
 
@@ -279,6 +283,7 @@ def test_on_install_failure(
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := unittest.mock.MagicMock())
+    monkeypatch.setattr("charm.systemd", MagicMock())
 
     setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
     with pytest.raises(LogrotateSetupError) as exc:
@@ -552,7 +557,9 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
 
 
-def test_metric_log_ownership_for_upgrade(mock_side_effects, tmp_path: Path, monkeypatch):
+def test_metric_log_ownership_for_upgrade(
+    harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
+):
     """
     arrange: Metric log exists.
     act: Upgrade charm.
@@ -562,17 +569,43 @@ def test_metric_log_ownership_for_upgrade(mock_side_effects, tmp_path: Path, mon
     The current revision the metric log is owned by the runner manager.
     This is to test on upgrade the charm ensures the log file has the correct owner.
     """
+    harness.charm._setup_state = MagicMock()
+
     mock_metric_log_path = tmp_path
     mock_metric_log_path.touch(exist_ok=True)
-    shutil_mock = MagicMock()
     monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
-    monkeypatch.setattr("charm.shutil", shutil_mock)
+    monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
 
-    _setup_runner_manager_user()
+    harness.charm.on.upgrade_charm.emit()
 
     shutil_mock.chown.assert_called_once_with(
         mock_metric_log_path,
         user=constants.RUNNER_MANAGER_USER,
         group=constants.RUNNER_MANAGER_GROUP,
+    )
+
+
+def test_attempting_disable_legacy_service_for_upgrade(
+    harness: Harness, mock_side_effects, monkeypatch
+):
+    """
+    arrange: None.
+    act: Upgrade charm.
+    assert: Calls to stop the legacy service is performed.
+    """
+    harness.charm._setup_state = MagicMock()
+    monkeypatch.setattr("charm.systemd", mock_systemd := MagicMock())
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    monkeypatch.setattr("charm.pathlib", MagicMock())
+
+    harness.charm.on.upgrade_charm.emit()
+
+    mock_systemd.service_disable.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
+    )
+    mock_systemd.service_stop.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
     )
