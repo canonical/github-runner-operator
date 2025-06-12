@@ -4,6 +4,7 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+from charms.operator_libs_linux.v1 import systemd
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -83,6 +84,7 @@ FAILED_RECONCILE_ACTION_ERR_MSG = (
     "Failed to reconcile runners. Look at the juju logs for more information."
 )
 UPGRADE_MSG = "Upgrading github-runner charm."
+LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.timer"
 
 
 logger = logging.getLogger(__name__)
@@ -309,6 +311,7 @@ class GithubRunnerCharm(CharmBase):
         """Handle the update of charm."""
         logger.info(UPGRADE_MSG)
         self._common_install_code()
+        _disable_legacy_service()
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
@@ -538,6 +541,15 @@ def _setup_runner_manager_user() -> None:
             group=constants.RUNNER_MANAGER_GROUP,
         )
 
+def _disable_legacy_service() -> None:
+    """Disable any legacy service."""
+    logger.info("Attempting to stop legacy services")
+    try:
+        systemd.service_disable(LEGACY_RECONCILE_SERVICE)
+        systemd.service_stop(LEGACY_RECONCILE_SERVICE)
+    except systemd.SystemdError:
+        pass
+    
 
 if __name__ == "__main__":
     ops.main(GithubRunnerCharm)
