@@ -564,7 +564,7 @@ def _disable_legacy_service() -> None:
         timer_path.unlink(missing_ok=True)
         service_path.unlink(missing_ok=True)
     # The FileNotFoundError should not be raised since `missing_ok=True`. Catching just in case.
-    except (PermissionError, OSError, IsADirectoryError, FileNotFoundError):
+    except OSError:
         logger.warning(
             "Unexpected exception during removal of legacy systemd service files", exc_info=True
         )
