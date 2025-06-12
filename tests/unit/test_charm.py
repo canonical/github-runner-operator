@@ -35,7 +35,7 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     Arch,
     OpenStackCloudsYAML,
-    OpenstackImage,
+    OpenstackImage, MONGO_DB_INTEGRATION_NAME,
 )
 from errors import (
     ConfigurationError,
@@ -616,6 +616,7 @@ def test_attempting_disable_legacy_service_for_upgrade(
     [
         pytest.param("database_created", id="Database Created"),
         pytest.param("endpoints_changed", id="Endpoints Changed"),
+        pytest.param("mongodb_relation_broken", id="MongoDB Relation Departed"),
     ],
 )
 def test_database_integration_events_setup_service(
@@ -631,5 +632,8 @@ def test_database_integration_events_setup_service(
     relation_mock.name = "mongodb"
     relation_mock.id = 0
     monkeypatch.setattr("charm.GithubRunnerCharm._setup_service", setup_service_mock)
-    getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
+    if hook.startswith(MONGO_DB_INTEGRATION_NAME):
+        getattr(harness.charm.on, hook).emit(relation=relation_mock)
+    else:
+        getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
     setup_service_mock.assert_called_once()
