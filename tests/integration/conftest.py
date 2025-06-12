@@ -749,7 +749,7 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
 
 
 @pytest.fixture(scope="session")
-def juju(request: pytest.FixtureRequest) -> Generator[jubilant.Juju, None, None]:
+def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juju, None, None]:
     """Pytest fixture that wraps :meth:`jubilant.with_model`."""
 
     def show_debug_log(juju: jubilant.Juju):
@@ -762,16 +762,8 @@ def juju(request: pytest.FixtureRequest) -> Generator[jubilant.Juju, None, None]
             log = juju.debug_log(limit=1000)
             print(log, end="")
 
-    use_existing = request.config.getoption("--use-existing", default=False)
-    if use_existing:
-        juju = jubilant.Juju()
-        yield juju
-        show_debug_log(juju)
-        return
-
-    model = request.config.getoption("--model")
     if model:
-        juju = jubilant.Juju(model=model)
+        juju = jubilant.Juju(model=model.name)
         yield juju
         show_debug_log(juju)
         return
