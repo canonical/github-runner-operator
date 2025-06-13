@@ -96,6 +96,7 @@ async def get_reconcile_id(unit: Unit) -> str:
         assert_on_failure=True,
         assert_msg="Unable to get reconcile ID",
     )
+    logger.info("Current reconcile ID: %s", stdout)
     assert stdout is not None, "Got empty reconcile ID, this should be impossible"
     return stdout
 

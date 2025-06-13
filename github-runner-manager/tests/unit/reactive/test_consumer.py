@@ -106,7 +106,7 @@ def test_consume_job_manager(queue_config: QueueConfig):
     )
 
     expected_metadata = RunnerMetadata(
-        platform_name="jobmanager", url="https://jobmanager.example.com/subpath", runner_id=job_id
+        platform_name="jobmanager", url="https://jobmanager.example.com/subpath"
     )
     runner_manager_mock.create_runners.assert_called_once_with(
         1, metadata=expected_metadata, reactive=True

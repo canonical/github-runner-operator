@@ -28,6 +28,7 @@ from charm import (
 from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     PATH_CONFIG_NAME,
@@ -609,3 +610,31 @@ def test_attempting_disable_legacy_service_for_upgrade(
         [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
         any_order=True,
     )
+
+
+@pytest.mark.parametrize(
+    "hook",
+    [
+        pytest.param("database_created", id="Database Created"),
+        pytest.param("endpoints_changed", id="Endpoints Changed"),
+        pytest.param("mongodb_relation_broken", id="MongoDB Relation Departed"),
+    ],
+)
+def test_database_integration_events_setup_service(
+    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
+):
+    """
+    arrange: Mock charm._setup_service.
+    act: Fire mongodb relation events.
+    assert: _setup_service has been called.
+    """
+    setup_service_mock = MagicMock()
+    relation_mock = MagicMock()
+    relation_mock.name = "mongodb"
+    relation_mock.id = 0
+    monkeypatch.setattr("charm.GithubRunnerCharm._setup_service", setup_service_mock)
+    if hook.startswith(MONGO_DB_INTEGRATION_NAME):
+        getattr(harness.charm.on, hook).emit(relation=relation_mock)
+    else:
+        getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
+    setup_service_mock.assert_called_once()

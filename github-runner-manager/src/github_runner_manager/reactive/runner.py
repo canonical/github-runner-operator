@@ -54,6 +54,7 @@ def main() -> None:
     github_provider = MultiplexerPlatform.build(
         prefix=runner_config.cloud_runner_manager.prefix,
         github_configuration=runner_config.github_configuration,
+        jobmanager_configuration=runner_config.jobmanager_configuration,
     )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,

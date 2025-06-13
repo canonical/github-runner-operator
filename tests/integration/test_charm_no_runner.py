@@ -62,9 +62,7 @@ async def test_reconcile_runners(
     arrange: A working application with no runners.
     act:
         1.  a. Set virtual-machines config to 1.
-            b. Run reconcile_runners action.
         2.  a. Set virtual-machines config to 0.
-            b. Run reconcile_runners action.
     assert:
         1. One runner should exist.
         2. No runner should exist.
