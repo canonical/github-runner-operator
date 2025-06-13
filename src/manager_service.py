@@ -68,6 +68,10 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     log_file_path = _get_log_file_path(unit_name)
     log_file_path.touch(exist_ok=True)
     _setup_service_file(config_file, log_file_path)
+    try:
+        systemd.daemon_reload()
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     _enable_service()
 
 
