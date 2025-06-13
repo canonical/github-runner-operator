@@ -70,12 +70,6 @@ from errors import (
 )
 from manager_client import GitHubRunnerManagerClient
 
-# The reconcile loop can get stuck in a charm upgrade. Put a timeout so
-# we can get out of that issue.
-# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
-RECONCILIATION_INTERVAL_TIMEOUT_MINUTES = 50
-RECONCILE_RUNNERS_EVENT = "reconcile-runners"
-
 # This is currently hardcoded and may be moved to a config option in the future.
 REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
 
