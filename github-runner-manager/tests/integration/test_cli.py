@@ -11,6 +11,7 @@ from tests.integration.helper import get_app_log, health_check
 
 logger = logging.getLogger(__name__)
 
+
 def test_app_reconcile(app: subprocess.Popen):
     """
     arrange: Run the github-runner-manager CLI application.

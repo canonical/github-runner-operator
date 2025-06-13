@@ -323,7 +323,7 @@ class OpenstackCloud:
 
     @_catch_openstack_errors
     @contextlib.contextmanager
-    def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
+    def get_ssh_connection(self, instance: OpenstackInstance) -> Iterator[SSHConnection]:
         """Get SSH connection to an OpenStack instance.
 
         Args:
@@ -333,7 +333,7 @@ class OpenstackCloud:
             SSHError: Unable to get a working SSH connection to the instance.
             KeyfileError: Unable to find the keyfile to connect to the instance.
 
-        Returns:
+        Yields:
             SSH connection object.
         """
         key_path = self._get_key_path(instance.instance_id.name)
@@ -353,7 +353,7 @@ class OpenstackCloud:
                     connect_kwargs={"key_filename": str(key_path)},
                     connect_timeout=_SSH_TIMEOUT,
                     gateway=self._proxy_command,
-                ) 
+                )
                 result = connection.run(
                     f"echo {_TEST_STRING}", warn=True, timeout=_SSH_TIMEOUT, hide=True
                 )
