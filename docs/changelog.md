@@ -1,8 +1,10 @@
 # Changelog
 
+
 ### 2025-06-12
 
 - Disable and remove any legacy service on upgrade. This fixes issue with the legacy service in upgraded units.
+
 
 ### 2025-06-10
 
