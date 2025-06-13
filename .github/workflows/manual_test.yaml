@@ -6,52 +6,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  # stg-reactive-test:
-  #   runs-on: [self-hosted,staging,amd64,self-hosted-linux-amd64-jammy-staging,stg-reactive]
-  #   steps:
-  #   - run: lscpu
-  #   - run: df -h
-  #   - run: free -h
-  #   - run: uname -a
-  #   - run: lsb_release -a
-  #   - run: echo $HTTP_PROXY
-  #   - run: echo $HTTPS_PROXY
-  #   - run: echo $NO_PROXY
-  #   - run: echo $DOCKERHUB_MIRROR
-  #   - uses: canonical/setup-lxd@v0.1.1
-  #   - run: lxd init --auto
-  #     if: ${{ always() }}
-  #   - run: lxc list
-  #     if: ${{ always() }}
-  #   - run: time sudo snap install juju
-  #     if: ${{ always() }}
-  #   - run: time juju bootstrap localhost localhost
-  #     if: ${{ always() }}
-  edge-test:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    runs-on: [self-hosted, edge,arm64,self-hosted-linux-arm64-noble-edge,reactive]
+  stg-reactive-test:
+    runs-on: [self-hosted,test-yjpus3iu]
     steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - run: echo $HTTP_PROXY
-      - run: echo $HTTPS_PROXY
-      - run: echo $NO_PROXY
-      - run: echo $DOCKERHUB_MIRROR
-      - uses: canonical/setup-lxd@v0.1.1
-      - run: sudo lxd init --auto
-        if: ${{ always() }}
-      - run: lxc list
-        if: ${{ always() }}
-      - run: time sudo snap install juju
-        if: ${{ always() }}
-      - run: time juju bootstrap localhost localhost
-        if: ${{ always() }}
+    - run: lscpu
+    - run: df -h
+    - run: free -h
+    - run: uname -a
+    - run: lsb_release -a
+    - run: echo $HTTP_PROXY
+    - run: echo $HTTPS_PROXY
+    - run: echo $NO_PROXY
+    - run: echo $DOCKERHUB_MIRROR
+    # - uses: canonical/setup-lxd@v0.1.1
+    # - run: lxd init --auto
+    #   if: ${{ always() }}
+    # - run: lxc list
+    #   if: ${{ always() }}
+    # - run: time sudo snap install juju
+    #   if: ${{ always() }}
+    # - run: time juju bootstrap localhost localhost
+    #   if: ${{ always() }}
+  # edge-test:
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  #   runs-on: [self-hosted, edge,arm64,self-hosted-linux-arm64-noble-edge,reactive]
+  #   steps:
+  #     - run: lscpu
+  #     - run: df -h
+  #     - run: free -h
+  #     - run: uname -a
+  #     - run: lsb_release -a
+  #     - run: echo $HTTP_PROXY
+  #     - run: echo $HTTPS_PROXY
+  #     - run: echo $NO_PROXY
+  #     - run: echo $DOCKERHUB_MIRROR
+  #     - uses: canonical/setup-lxd@v0.1.1
+  #     - run: sudo lxd init --auto
+  #       if: ${{ always() }}
+  #     - run: lxc list
+  #       if: ${{ always() }}
+  #     - run: time sudo snap install juju
+  #       if: ${{ always() }}
+  #     - run: time juju bootstrap localhost localhost
+  #       if: ${{ always() }}
   # reactive-focal-large-long-label:
   #   name: reactive focal large with long label
   #   runs-on: [self-hosted, reactive, self-hosted-linux-amd64-focal-large]
