@@ -51,6 +51,8 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
         stderr=subprocess.PIPE,
     )
     assert process.stderr is not None, "Test setup failure: Missing stderr stream"
+    import pytest
+    pytest.set_trace()
     for _ in range(6):
         try:
             health_check()
