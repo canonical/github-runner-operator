@@ -26,7 +26,7 @@ def config_fixture() -> dict:
         "non_reactive_configuration": {
             "combinations": [
                 {
-                    "base_virtual_machines": 1,
+                    "base_virtual_machines": 0,
                     "flavor": {"labels": ["flavorlabel"], "name": "flavor"},
                     "image": {"labels": ["arm64", "noble"], "name": "image_id"},
                 }
@@ -35,7 +35,7 @@ def config_fixture() -> dict:
         "reactive_configuration": {
             "flavors": [{"labels": ["flavorlabel"], "name": "flavor"}],
             "images": [{"labels": ["arm64", "noble"], "name": "image_id"}],
-            "max_total_virtual_machines": 2,
+            "max_total_virtual_machines": 0,
             "queue": {
                 "mongodb_uri": "mongodb://user:password@localhost:27017",
                 "queue_name": "app_name",
