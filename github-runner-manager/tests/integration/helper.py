@@ -63,5 +63,5 @@ def start_app(config_file: Path, extra_args: Sequence[str]) -> subprocess.Popen:
 
 def health_check() -> None:
     """Get health check status."""
-    response = requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/health")
+    response = requests.get(f"http://{GITHUB_RUNNER_MANAGER_ADDRESS}/health", timeout=30)
     assert response.status_code == 204, "Health check failed"
