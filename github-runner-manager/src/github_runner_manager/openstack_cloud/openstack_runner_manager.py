@@ -213,8 +213,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         pulled_metrics = runner_metrics.PulledMetrics()
         try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
+            with self._openstack_cloud.get_ssh_connection(instance) as ssh_conn:
+                pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id
