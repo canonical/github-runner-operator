@@ -2,6 +2,7 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+import contextlib
 import copy
 import functools
 import logging
@@ -321,7 +322,8 @@ class OpenstackCloud:
             raise OpenStackError(f"Failed to remove openstack runner {instance_id}") from err
 
     @_catch_openstack_errors
-    def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
+    @contextlib.contextmanager
+    def get_ssh_connection(self, instance: OpenstackInstance) -> Iterator[SSHConnection]:
         """Get SSH connection to an OpenStack instance.
 
         Args:
@@ -331,7 +333,7 @@ class OpenstackCloud:
             SSHError: Unable to get a working SSH connection to the instance.
             KeyfileError: Unable to find the keyfile to connect to the instance.
 
-        Returns:
+        Yields:
             SSH connection object.
         """
         key_path = self._get_key_path(instance.instance_id.name)
@@ -363,7 +365,7 @@ class OpenstackCloud:
                     )
                     continue
                 if _TEST_STRING in result.stdout:
-                    return connection
+                    yield connection
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
@@ -380,6 +382,8 @@ class OpenstackCloud:
                     exc_info=True,
                 )
                 continue
+            finally:
+                connection.close()
         raise SSHError(
             f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
             f"addresses: {instance.addresses}"
