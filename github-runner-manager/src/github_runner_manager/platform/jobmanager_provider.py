@@ -244,7 +244,7 @@ class JobManagerPlatform(PlatformProvider):
             True if the job has been picked up, False otherwise.
         """
         configuration = jobmanager_client.Configuration(host=self._url)
-        #
+
         # job_url has the path:
         # "/v1/job/<job_id>"
         path = job_url.path
