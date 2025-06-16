@@ -142,7 +142,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 server_config=server_config,
                 cloud_init=cloud_init,
                 ingress_tcp_ports=runner_context.ingress_tcp_ports,
-                wait=False,
             )
         except OpenStackError as err:
             raise RunnerCreateError(

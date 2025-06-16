@@ -253,7 +253,7 @@ class OpenstackCloud:
                     userdata=cloud_init,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
-                    wait=True,
+                    wait=False,
                     meta=meta,
                 )
             except openstack.exceptions.ResourceTimeout as err:
