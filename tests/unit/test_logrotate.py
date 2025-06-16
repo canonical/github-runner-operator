@@ -77,11 +77,13 @@ def test_setup_writes_logrotate_config(logrotate_dir: Path):
 
 @pytest.mark.parametrize("create", [True, False])
 @pytest.mark.parametrize("notifempty", [True, False])
+@pytest.mark.parametrize("copytruncate", [True, False])
 @pytest.mark.parametrize("frequency", [freq for freq in logrotate.LogrotateFrequency])
 @pytest.mark.usefixtures("logrotate_dir")
 def test__write_config(
     create: bool,
     notifempty: bool,
+    copytruncate: bool,
     frequency: logrotate.LogrotateFrequency,
     logrotate_dir: Path,
     tmp_path: Path,
@@ -103,6 +105,7 @@ def test__write_config(
         create=create,
         notifempty=notifempty,
         frequency=frequency,
+        copytruncate=copytruncate
     )
 
     logrotate._write_config(logrotate_config)
@@ -110,7 +113,7 @@ def test__write_config(
     expected_logrotate_config = f"""{log_path_glob_pattern} {{
 {frequency}
 rotate {rotate}
-copytruncate
+{"copytruncate" if copytruncate else "nocopytruncate"}
 missingok
 {"notifempty" if notifempty else "ifempty"}
 {"create" if create else "nocreate"}

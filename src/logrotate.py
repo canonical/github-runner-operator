@@ -43,6 +43,7 @@ class LogrotateConfig(BaseModel):
         log_path_glob_pattern: The glob pattern for the log path.
         rotate: The number of log files to keep.
         create: Whether to create the log file if it does not exist.
+        copytruncate: Whether to copy the log file and truncate it after rotation.
         notifempty: Whether to not rotate the log file if it is empty.
         frequency: The frequency of log rotation.
     """
@@ -51,6 +52,7 @@ class LogrotateConfig(BaseModel):
     log_path_glob_pattern: str
     rotate: int
     create: bool
+    copytruncate: bool = False
     notifempty: bool = True
     frequency: LogrotateFrequency = LogrotateFrequency.WEEKLY
 
@@ -134,7 +136,7 @@ def _write_config(logrotate_config: LogrotateConfig) -> None:
         f"""{logrotate_config.log_path_glob_pattern} {{
 {logrotate_config.frequency}
 rotate {logrotate_config.rotate}
-copytruncate
+{"copytruncate" if logrotate_config.copytruncate else "nocopytruncate"}
 missingok
 {"notifempty" if logrotate_config.notifempty else "ifempty"}
 {"create" if logrotate_config.create else "nocreate"}
