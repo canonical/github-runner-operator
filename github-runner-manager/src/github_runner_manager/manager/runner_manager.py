@@ -522,15 +522,6 @@ class RunnerManager:
                 runner_identity=runner_identity,
                 runner_context=runner_context,
             )
-
-            # This wait should be deleted to make the runner creation as
-            # quick as possible. The waiting should only be done in the
-            # reactive case, before checking that a job was taken.
-            RunnerManager.wait_for_runner_online(
-                platform_provider=args.platform_provider,
-                runner_identity=runner_identity,
-            )
-
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
             args.platform_provider.delete_runner(github_runner.identity)
