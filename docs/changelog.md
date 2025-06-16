@@ -1,5 +1,7 @@
 # Changelog
 
+This changelog documents user-relevant changes to the GitHub runner charm.
+
 ### 2025-06-16
 
 - Revert copytruncate logrotate method for reactive processes, as copytruncate keeps log files on disks and does not remove them, and each process is writing to a new file leading to a huge and increasing amount
@@ -62,7 +64,7 @@ disappear for the GitHub case.
 - Add proxy configuration options for charm to facilitate its use in corporate environments.
   - manager-ssh-proxy-command: ProxyCommand ssh-config option used to ssh from the manager to the runners.
   - runner-http-proxy: Allows the proxy in the runner to be different to the proxy in the
-    juju model config for the manager.
+    Juju model config for the manager.
   - use-runner-proxy-for-tmate: Whether to proxy the ssh connection from the runner to the tmate-server
     using the runner http proxy.
 

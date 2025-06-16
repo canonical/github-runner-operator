@@ -29,7 +29,7 @@ The first cloud in the `clouds.yaml` is used by the charm.
 
 Here is a sample of the `clouds.yaml`:
 
-```yaml
+```
 clouds:
   cloud:
     auth:

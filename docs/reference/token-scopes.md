@@ -1,5 +1,8 @@
 # Token scopes
 
+In order to use the GitHub runner charm, a personal access token with the necessary permissions
+is required.
+
 ## Fine grained access token scopes
 
 **Note**: In addition to having a token with the necessary permissions, the user who owns the
@@ -29,6 +32,9 @@ repository runner.
 - Metadata: read
 
 ## Personal access token scopes
+
+Depending on whether the charm is used for GitHub organisations or repositories, the following scopes
+should be selected when creating a personal access token.
 
 ### Organizational Runners
 

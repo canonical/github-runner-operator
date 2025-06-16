@@ -8,7 +8,7 @@ For the github-runner-operator charm, this includes:
 * Configurable resource limits.
 * Ability to redeploy without losing any data (no need to back up).
 * Supported observability through the `cos-agent` integration.
-* Scheduled dependences upgrades to mitigate security risks. Furthermore, the landscape-client charm can be deployed with this charm to ensure other dependencies are kept up to date.
+* Scheduled dependences upgrades to mitigate security risks. Furthermore, the Landscape Client charm can be deployed with this charm to ensure other dependencies are kept up to date.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 Just like GitHub's runners, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
