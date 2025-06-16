@@ -52,7 +52,7 @@ class LogrotateConfig(BaseModel):
     log_path_glob_pattern: str
     rotate: int
     create: bool
-    copytruncate: bool = False
+    copytruncate: bool = True
     notifempty: bool = True
     frequency: LogrotateFrequency = LogrotateFrequency.WEEKLY
 
@@ -74,6 +74,7 @@ REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     create=False,
     notifempty=False,
     frequency=LogrotateFrequency.DAILY,
+    copytruncate=False,
 )
 
 GITHUB_RUNNER_MANAGER_CONFIG = LogrotateConfig(
