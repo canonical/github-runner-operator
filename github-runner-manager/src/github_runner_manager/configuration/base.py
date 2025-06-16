@@ -45,6 +45,7 @@ class ApplicationConfiguration(BaseModel):
         non_reactive_configuration: Configuration for non-reactive mode.
         reactive_configuration: Configuration for reactive mode.
         openstack_configuration: Configuration for authorization to a OpenStack host.
+        reconcile_interval: Seconds to wait between reconciliation.
     """
 
     name: str
@@ -54,6 +55,7 @@ class ApplicationConfiguration(BaseModel):
     non_reactive_configuration: "NonReactiveConfiguration"
     reactive_configuration: "ReactiveConfiguration | None"
     openstack_configuration: OpenStackConfiguration
+    reconcile_interval: int
 
     @staticmethod
     def from_yaml_file(file: TextIO) -> "ApplicationConfiguration":
@@ -80,6 +82,7 @@ class SupportServiceConfig(BaseModel):
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
+        custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
     manager_proxy_command: str | None = None
@@ -89,6 +92,7 @@ class SupportServiceConfig(BaseModel):
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"
+    custom_pre_job_script: str | None
 
     @root_validator(pre=False, skip_on_failure=True)
     @classmethod

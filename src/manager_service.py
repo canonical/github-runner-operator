@@ -5,6 +5,7 @@
 
 import json
 import logging
+import os
 import textwrap
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from charm_state import CharmState
 from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerApplicationStartError,
+    RunnerManagerApplicationStopError,
     SubprocessError,
 )
 from factories import create_application_configuration
@@ -51,13 +53,25 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
         state: The state of the charm.
         app_name: The Juju application name.
         unit_name: The Juju unit.
+
+    Raises:
+        RunnerManagerApplicationStartError: Setup of the runner manager service has failed.
     """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
     log_file_path = _get_log_file_path(unit_name)
     log_file_path.touch(exist_ok=True)
     _setup_service_file(config_file, log_file_path)
+    try:
+        systemd.daemon_reload()
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     _enable_service()
 
 
@@ -67,11 +81,7 @@ def install_package() -> None:
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
-    try:
-        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
-    except SystemdError as err:
-        raise RunnerManagerApplicationInstallError(_SERVICE_STOP_ERROR_MESSAGE) from err
+    _stop()
 
     logger.info("Ensure pipx is at latest version")
     try:
@@ -99,6 +109,24 @@ def install_package() -> None:
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
+
+
+def stop() -> None:
+    """Stop the GitHub runner manager service."""
+    _stop()
+
+
+def _stop() -> None:
+    """Stop the GitHub runner manager service.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to stop the service.
+    """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
 
 
 def _get_log_file_path(unit_name: str) -> Path:
@@ -151,6 +179,7 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         config_file: The configuration file for the service.
         log_file: The file location to store the logs.
     """
+    python_path = Path(os.getcwd()) / "venv"
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -161,8 +190,9 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT}
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)}
         Restart=on-failure
+        KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
 

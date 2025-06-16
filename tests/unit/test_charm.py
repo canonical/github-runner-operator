@@ -7,20 +7,20 @@ import secrets
 import typing
 import unittest
 import urllib.error
+from pathlib import Path
+from unittest import mock
 from unittest.mock import MagicMock, patch
 
 import pytest
 import yaml
-from github_runner_manager.errors import ReconcileError
-from github_runner_manager.manager.runner_manager import FlushMode
-from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager import constants
 from github_runner_manager.platform.platform_provider import TokenError
-from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, StatusBase, WaitingStatus
+from ops.model import BlockedStatus, StatusBase, WaitingStatus
 from ops.testing import Harness
 
 from charm import (
-    ACTIVE_STATUS_RECONCILIATION_FAILED_MSG,
-    FAILED_RECONCILE_ACTION_ERR_MSG,
+    LEGACY_RECONCILE_SERVICE,
+    LEGACY_RECONCILE_TIMER_SERVICE,
     GithubRunnerCharm,
     catch_action_errors,
     catch_charm_errors,
@@ -39,12 +39,14 @@ from charm_state import (
 )
 from errors import (
     ConfigurationError,
+    ImageIntegrationMissingError,
+    ImageNotFoundError,
     LogrotateSetupError,
     MissingMongoDBError,
     RunnerError,
     SubprocessError,
 )
-from event_timer import EventTimer, TimerEnableError
+from manager_client import GitHubRunnerManagerClient
 
 TEST_PROXY_SERVER_URL = "http://proxy.server:1234"
 
@@ -54,6 +56,7 @@ def side_effect_fixture(monkeypatch, tmpdir):
     monkeypatch.setattr("charm.pathlib.Path.mkdir", MagicMock())
     monkeypatch.setattr("charm.pathlib.Path.write_text", MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock())
+    monkeypatch.setattr("charm.systemd", MagicMock())
     monkeypatch.setattr("manager_service.yaml_safe_dump", MagicMock())
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: tmpdir)
     monkeypatch.setattr("manager_service.Path.mkdir", MagicMock())
@@ -169,7 +172,6 @@ def setup_charm_harness(monkeypatch: pytest.MonkeyPatch) -> Harness:
         }
     )
     harness.begin()
-    monkeypatch.setattr("charm.EventTimer.ensure_event_timer", MagicMock())
     monkeypatch.setattr("charm.logrotate.setup", MagicMock())
     return harness
 
@@ -222,8 +224,7 @@ def test_common_install_code(
     harness.charm._setup_state = MagicMock(return_value=state_mock)
 
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
-    event_timer_mock = MagicMock(spec=EventTimer)
-    harness.charm._event_timer = event_timer_mock
+    monkeypatch.setattr("charm.systemd", MagicMock())
 
     getattr(harness.charm.on, hook).emit()
 
@@ -242,80 +243,7 @@ def test_on_config_changed_failure(harness: Harness):
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
 
 
-def test_on_flush_runners_reconcile_error_fail(harness: Harness, monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: Set up charm with Openstack mode and ReconcileError.
-    act: Run flush runner action.
-    assert: Action fails with generic message and goes in ActiveStatus.
-    """
-    state_mock = MagicMock()
-    harness.charm._setup_state = MagicMock(return_value=state_mock)
-
-    runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
-
-    mock_event = MagicMock()
-    harness.charm._on_flush_runners_action(mock_event)
-    mock_event.fail.assert_called_with(FAILED_RECONCILE_ACTION_ERR_MSG)
-    assert harness.charm.unit.status.name == ActiveStatus.name
-    assert harness.charm.unit.status.message == ACTIVE_STATUS_RECONCILIATION_FAILED_MSG
-
-
-def test_on_reconcile_runners_action_reconcile_error_fail(
-    harness: Harness, monkeypatch: pytest.MonkeyPatch
-):
-    """
-    arrange: Set up charm with Openstack mode, ready image, and ReconcileError.
-    act: Run reconcile runners action.
-    assert: Action fails with generic message and goes in ActiveStatus
-    """
-    state_mock = MagicMock()
-    harness.charm._setup_state = MagicMock(return_value=state_mock)
-
-    runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
-    monkeypatch.setattr(
-        OpenstackImage,
-        "from_charm",
-        MagicMock(return_value=OpenstackImage(id="test", tags=["test"])),
-    )
-
-    mock_event = MagicMock()
-    harness.charm._on_reconcile_runners_action(mock_event)
-
-    mock_event.fail.assert_called_with(FAILED_RECONCILE_ACTION_ERR_MSG)
-    assert harness.charm.unit.status.name == ActiveStatus.name
-    assert harness.charm.unit.status.message == ACTIVE_STATUS_RECONCILIATION_FAILED_MSG
-
-
-def test_on_reconcile_runners_reconcile_error(harness: Harness, monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: Set up charm with Openstack mode, ready image, and ReconcileError.
-    act: Trigger reconcile_runners event.
-    assert: Unit goes into ActiveStatus with error message.
-    """
-    state_mock = MagicMock()
-    harness.charm._setup_state = MagicMock(return_value=state_mock)
-
-    runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    runner_scaler_mock.reconcile.side_effect = ReconcileError("mock error")
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
-    monkeypatch.setattr(
-        OpenstackImage,
-        "from_charm",
-        MagicMock(return_value=OpenstackImage(id="test", tags=["test"])),
-    )
-
-    mock_event = MagicMock()
-    harness.charm._on_reconcile_runners(mock_event)
-
-    assert harness.charm.unit.status.name == ActiveStatus.name
-    assert harness.charm.unit.status.message == ACTIVE_STATUS_RECONCILIATION_FAILED_MSG
-
-
-def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
+def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     arrange: Set up charm with Openstack mode and runner scaler mock.
     act: Trigger stop event.
@@ -323,13 +251,16 @@ def test_on_stop_busy_flush(harness: Harness, monkeypatch: pytest.MonkeyPatch):
     """
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
-    runner_scaler_mock = MagicMock(spec=RunnerScaler)
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
     mock_event = MagicMock()
 
     harness.charm._on_stop(mock_event)
 
-    runner_scaler_mock.flush.assert_called_once_with(FlushMode.FLUSH_BUSY)
+    manager_client_mock.flush_runner.assert_called_once_with(busy=True)
+    mock_manager_service.stop.assert_called_once()
 
 
 @pytest.mark.parametrize(
@@ -352,6 +283,7 @@ def test_on_install_failure(
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := unittest.mock.MagicMock())
+    monkeypatch.setattr("charm.systemd", MagicMock())
 
     setup_logrotate.side_effect = LogrotateSetupError("Failed to setup logrotate")
     with pytest.raises(LogrotateSetupError) as exc:
@@ -381,87 +313,17 @@ def test_charm_goes_into_waiting_state_on_missing_integration_data(
     assert "mock error" in harness.charm.unit.status.message
 
 
-@pytest.mark.parametrize(
-    "hook",
-    [
-        pytest.param("database_created", id="Database Created"),
-        pytest.param("endpoints_changed", id="Endpoints Changed"),
-    ],
-)
-def test_database_integration_events_trigger_reconciliation(
-    hook: str, monkeypatch: pytest.MonkeyPatch, harness: Harness
-):
-    """
-    arrange: Mock charm._trigger_reconciliation.
-    act: Fire mongodb relation events.
-    assert: _trigger_reconciliation has been called.
-    """
-    reconciliation_mock = MagicMock()
-    relation_mock = MagicMock()
-    relation_mock.name = "mongodb"
-    relation_mock.id = 0
-    monkeypatch.setattr("charm.GithubRunnerCharm._trigger_reconciliation", reconciliation_mock)
-    getattr(harness.charm.database.on, hook).emit(relation=relation_mock)
-    reconciliation_mock.assert_called_once()
-
-
-# New tests should not be added here. This should be refactored to pytest over time.
-# New test should be written with pytest, similar to the above tests.
-# Consider to rewrite test with pytest if the tests below needs to be changed.
-class TestCharm(unittest.TestCase):
-    """Test the GithubRunner charm."""
-
-    @patch("pathlib.Path.mkdir")
-    @patch("pathlib.Path.write_text")
-    @patch("subprocess.run")
-    def test_on_update_status(self, run, wt, mkdir):
-        """
-        arrange: reconciliation event timer mocked to be \
-          1. active. \
-          2. inactive. \
-          3. inactive with error thrown for ensure_event_timer.
-        act: Emit update_status
-        assert:
-            1. ensure_event_timer is not called.
-            2. ensure_event_timer is called.
-            3. Charm throws error.
-        """
-        harness = Harness(GithubRunnerCharm)
-
-        harness.update_config({PATH_CONFIG_NAME: "mockorg/repo", TOKEN_CONFIG_NAME: "mocktoken"})
-        harness.begin()
-
-        event_timer_mock = MagicMock(spec=EventTimer)
-        harness.charm._event_timer = event_timer_mock
-        event_timer_mock.is_active.return_value = True
-
-        # 1. event timer is active
-        harness.charm.on.update_status.emit()
-        assert event_timer_mock.ensure_event_timer.call_count == 0
-        assert not isinstance(harness.charm.unit.status, BlockedStatus)
-
-        # 2. event timer is not active
-        event_timer_mock.is_active.return_value = False
-        harness.charm.on.update_status.emit()
-        event_timer_mock.ensure_event_timer.assert_called_once()
-        assert not isinstance(harness.charm.unit.status, BlockedStatus)
-
-        # 3. ensure_event_timer throws error.
-        event_timer_mock.ensure_event_timer.side_effect = TimerEnableError("mock error")
-        with pytest.raises(TimerEnableError):
-            harness.charm.on.update_status.emit()
-
-
 def test_check_runners_action_with_errors():
     mock_event = MagicMock()
 
     harness = Harness(GithubRunnerCharm)
     harness.begin()
+    harness.charm._manager_client.wait_till_ready = MagicMock()
 
     # No config
     harness.charm._on_check_runners_action(mock_event)
     mock_event.fail.assert_called_with(
-        "Failed check runner request: Failed request due to connection failure"
+        "Failed runner manager request: Failed request due to connection failure"
     )
 
 
@@ -550,16 +412,15 @@ def test_catch_action_errors(
 
 
 @pytest.mark.parametrize(
-    "openstack_image, expected_status, expected_value",
+    "openstack_image, error",
     [
-        pytest.param(None, BlockedStatus, False, id="Image integration missing."),
+        pytest.param(None, ImageIntegrationMissingError, id="Image integration missing."),
         pytest.param(
-            OpenstackImage(id=None, tags=None), WaitingStatus, False, id="Image not ready."
+            OpenstackImage(id=None, tags=None), ImageNotFoundError, id="Image not ready."
         ),
         pytest.param(
             OpenstackImage(id="test", tags=["test"]),
-            MaintenanceStatus,
-            True,
+            None,
             id="Valid image integration.",
         ),
     ],
@@ -567,8 +428,7 @@ def test_catch_action_errors(
 def test_openstack_image_ready_status(
     monkeypatch: pytest.MonkeyPatch,
     openstack_image: OpenstackImage | None,
-    expected_status: typing.Type[StatusBase],
-    expected_value: bool,
+    error: typing.Type[Exception] | None,
 ):
     """
     arrange: given a monkeypatched OpenstackImage.from_charm that returns different values.
@@ -579,16 +439,18 @@ def test_openstack_image_ready_status(
     harness = Harness(GithubRunnerCharm)
     harness.begin()
 
-    is_ready = harness.charm._get_set_image_ready_status()
+    if error is None:
+        harness.charm._check_image_ready()
+        return
 
-    assert isinstance(harness.charm.unit.status, expected_status)
-    assert is_ready == expected_value
+    with pytest.raises(error):
+        harness.charm._check_image_ready()
 
 
-def test__on_image_relation_image_not_ready():
+def test__on_image_relation_image_not_ready(monkeypatch):
     """
     arrange: given a charm with OpenStack instance type and a monkeypatched \
-        _get_set_image_ready_status that returns False denoting image not ready.
+        with no image integration.
     act: when _on_image_relation_changed is called.
     assert: nothing happens since _get_set_image_ready_status should take care of status set.
     """
@@ -596,12 +458,11 @@ def test__on_image_relation_image_not_ready():
     harness.begin()
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
-    harness.charm._get_set_image_ready_status = MagicMock(return_value=False)
 
     harness.charm._on_image_relation_changed(MagicMock())
 
     # the unit is in maintenance status since nothing has happened.
-    assert harness.charm.unit.status.name == MaintenanceStatus.name
+    assert harness.charm.unit.status.name == BlockedStatus.name
 
 
 def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
@@ -609,21 +470,19 @@ def test__on_image_relation_image_ready(monkeypatch: pytest.MonkeyPatch):
     arrange: given a charm with OpenStack instance type and a monkeypatched \
         _get_set_image_ready_status that returns True denoting image ready.
     act: when _on_image_relation_changed is called.
-    assert: runner flush and reconcile is called.
+    assert: runner flush is called.
     """
     harness = Harness(GithubRunnerCharm)
     harness.begin()
     state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
     harness.charm._setup_state = MagicMock(return_value=state_mock)
-    harness.charm._get_set_image_ready_status = MagicMock(return_value=True)
-    runner_scaler_mock = MagicMock()
-    monkeypatch.setattr("charm.create_runner_scaler", MagicMock(return_value=runner_scaler_mock))
+    harness.charm._check_image_ready = MagicMock(return_value=True)
 
     harness.charm._on_image_relation_changed(MagicMock())
 
-    assert harness.charm.unit.status.name == ActiveStatus.name
-    runner_scaler_mock.flush.assert_called_once()
-    runner_scaler_mock.reconcile.assert_called_once()
+    harness.charm._manager_client.flush_runner.assert_called_once()
 
 
 def test__on_image_relation_joined():
@@ -696,3 +555,57 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
     harness.charm.on.config_changed.emit()
 
     assert harness.charm.unit.status == BlockedStatus("Please provide image integration.")
+
+
+def test_metric_log_ownership_for_upgrade(
+    harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
+):
+    """
+    arrange: Metric log exists.
+    act: Upgrade charm.
+    assert: Call to change the metric ownership is called.
+
+    For context, older revision the metric log is owned by root.
+    The current revision the metric log is owned by the runner manager.
+    This is to test on upgrade the charm ensures the log file has the correct owner.
+    """
+    harness.charm._setup_state = MagicMock()
+
+    mock_metric_log_path = tmp_path
+    mock_metric_log_path.touch(exist_ok=True)
+    monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
+    monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+
+    harness.charm.on.upgrade_charm.emit()
+
+    shutil_mock.chown.assert_called_once_with(
+        mock_metric_log_path,
+        user=constants.RUNNER_MANAGER_USER,
+        group=constants.RUNNER_MANAGER_GROUP,
+    )
+
+
+def test_attempting_disable_legacy_service_for_upgrade(
+    harness: Harness, mock_side_effects, monkeypatch
+):
+    """
+    arrange: None.
+    act: Upgrade charm.
+    assert: Calls to stop the legacy service is performed.
+    """
+    harness.charm._setup_state = MagicMock()
+    monkeypatch.setattr("charm.systemd", mock_systemd := MagicMock())
+    monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    monkeypatch.setattr("charm.pathlib", MagicMock())
+
+    harness.charm.on.upgrade_charm.emit()
+
+    mock_systemd.service_disable.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
+    )
+    mock_systemd.service_stop.assert_has_calls(
+        [mock.call(LEGACY_RECONCILE_TIMER_SERVICE), mock.call(LEGACY_RECONCILE_SERVICE)],
+        any_order=True,
+    )
