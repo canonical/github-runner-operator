@@ -1,5 +1,8 @@
 # Deploy the GitHub runner charm for the first time
 
+This tutorial shows you how to deploy the GitHub runner charm for the first time using Juju on a local LXD controller.
+The charm will deploy a self-hosted runner that can be used to run GitHub Actions jobs.
+
 ## What you'll do
 
 - Set up a GitHub repository

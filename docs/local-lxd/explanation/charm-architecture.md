@@ -41,11 +41,13 @@ The software installed in the image includes:
   - `yq`
 
 The configurations applied in the image include:
-
+<!-- vale Canonical.005-Industry-product-names = NO -->
 - Creating a group named `microk8s`.
 - Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this preconfigures the group for users who install the package.
 - Adding the `ubuntu` user to the `docker` group.
 - Adding iptables rules to accept traffic for the DOCKER-USER chain. This resolves a networking conflict with LXD.
+<!-- vale Canonical.005-Industry-product-names = NO -->
+
 
 ## Network configuration
 
