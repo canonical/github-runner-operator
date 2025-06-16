@@ -105,7 +105,7 @@ def test__write_config(
         create=create,
         notifempty=notifempty,
         frequency=frequency,
-        copytruncate=copytruncate
+        copytruncate=copytruncate,
     )
 
     logrotate._write_config(logrotate_config)
