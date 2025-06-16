@@ -5,6 +5,7 @@
 
 import logging
 from collections import defaultdict
+from enum import Enum
 
 from pydantic import HttpUrl
 
@@ -33,19 +34,26 @@ _JOBMANAGER_PLATFORM_KEY = "jobmanager"
 logger = logging.getLogger(__name__)
 
 
+class Platform(str, Enum):
+    """Enum for supported platforms.
+
+    Attributes:
+        GITHUB: GitHub platform.
+        JOBMANAGER: JobManager platform.
+    """
+
+    GITHUB = _GITHUB_PLATFORM_KEY
+    JOBMANAGER = _JOBMANAGER_PLATFORM_KEY
+
+
 class MultiplexerPlatform(PlatformProvider):
     """Manage self-hosted runner on the Multiplexer.
 
     The Multiplexer platform provider serves as an interface to use several
     platform providers simultaneously. In that way, one runner manager can use for example
     GitHub and JobManager providers together. The multiplexer will route the requests
-    to the adequate provider..
-
-    Attributes:
-        name: Name of the platform provider.
+    to the adequate provider.
     """
-
-    name = "multiplexer"
 
     def __init__(self, providers: dict[str, PlatformProvider]):
         """Construct the object.
