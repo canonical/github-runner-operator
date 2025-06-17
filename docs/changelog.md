@@ -2,7 +2,7 @@
 
 ### 2025-06-17
 
-- Fix bug where SSH connection error is always appear in the logs.
+- Fix bug where SSH connection error always appears in the logs.
 
 ### 2025-06-16
 
