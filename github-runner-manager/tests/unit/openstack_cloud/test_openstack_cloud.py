@@ -32,6 +32,7 @@ FAKE_PREFIX = "fake_prefix"
 
 logger = logging.getLogger(__name__)
 
+
 @pytest.fixture(name="openstack_cloud", scope="function")
 def openstack_cloud_fixture(monkeypatch):
     # Mock expanduser as this is used in OpenstackCloud constructor
@@ -69,7 +70,10 @@ def openstack_cloud_fixture(monkeypatch):
     ],
 )
 def test_raises_openstack_error(
-    openstack_cloud: OpenstackCloud,public_method: str, args: dict[Any, Any], monkeypatch: pytest.MonkeyPatch
+    openstack_cloud: OpenstackCloud,
+    public_method: str,
+    args: dict[Any, Any],
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Mock OpenstackCloud and openstack.connect to raise an Openstack api exception.
@@ -150,7 +154,9 @@ def test_missing_security_rules(security_rules, extra_ports, expected_missing_ru
     assert missing == expected_missing_rules
 
 
-def test_keypair_cleanup_freshly_created_keypairs(openstack_cloud: OpenstackCloud, monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+def test_keypair_cleanup_freshly_created_keypairs(
+    openstack_cloud: OpenstackCloud, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
     """
     arrange: Keypairs with different creation time.
     act: Call cleanup.
@@ -240,6 +246,7 @@ def _mock_datetime_now(monkeypatch):
     )
     return now
 
+
 def test_get_ssh_connection_success(openstack_cloud, monkeypatch):
     """
     arrange: Setup SSH connection to succeed.
@@ -248,15 +255,25 @@ def test_get_ssh_connection_success(openstack_cloud, monkeypatch):
     """
     mock_result = MagicMock(ok=True, stdout=_TEST_STRING)
     mock_connection = MagicMock(run=MagicMock(return_value=mock_result))
-    def mock_ssh_connection(*args, **kwargs):
+
+    def mock_ssh_connection(*_args, **_kwargs) -> MagicMock:
+        """Mock get_ssh_connection function.
+
+        Returns:
+            The mocked connection.
+        """
         return mock_connection
-    monkeypatch.setattr("github_runner_manager.openstack_cloud.openstack_cloud.SSHConnection", mock_ssh_connection)
-    
+
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.SSHConnection", mock_ssh_connection
+    )
+
     mock_instance = MagicMock()
     mock_instance.addresses = ["mock_ip"]
-    with openstack_cloud.get_ssh_connection(mock_instance) as conn:
+    with openstack_cloud.get_ssh_connection(mock_instance):
         pass
-    
+
+
 def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
     """
     arrange: Setup SSH connection to fail.
@@ -265,15 +282,23 @@ def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
     """
     mock_result = MagicMock(ok=False, stdout=_TEST_STRING)
     mock_connection = MagicMock(run=MagicMock(return_value=mock_result))
-    def mock_ssh_connection(*args, **kwargs):
+
+    def mock_ssh_connection(*_args, **_kwargs) -> MagicMock:
+        """Mock get_ssh_connection function.
+
+        Returns:
+            The mocked connection.
+        """
         return mock_connection
-    monkeypatch.setattr("github_runner_manager.openstack_cloud.openstack_cloud.SSHConnection", mock_ssh_connection)
-    
+
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.SSHConnection", mock_ssh_connection
+    )
+
     mock_instance = MagicMock()
     mock_instance.addresses = ["mock_ip"]
     with pytest.raises(SSHError) as err:
-        with openstack_cloud.get_ssh_connection(mock_instance) as conn:
+        with openstack_cloud.get_ssh_connection(mock_instance):
             pass
 
     assert "No connectable SSH addresses found" in str(err.value)
-    
