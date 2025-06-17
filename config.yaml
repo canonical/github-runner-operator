@@ -38,7 +38,7 @@ options:
     description: >-
       (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy)
       will be installed within the runners. It will forward all HTTP(S) traffic to standard ports
-      (80, 443) to a proxy server configured by the juju model config 'juju-http-proxy'
+      (80, 443, 11371) to a proxy server configured by the juju model config 'juju-http-proxy'
       (or, if this is not set, 'juju-https-proxy' will be used).
       This is useful when the charm is deployed in a network that requires a proxy to access the
       internet.
@@ -67,13 +67,11 @@ options:
       "{owner}/{repo}" format.
   reconcile-interval:
     type: int
-    default: 10
+    default: 5
     description: >-
       Minutes between each reconciliation of the current runners state and their targeted state.
-      On reconciliation, the charm polls the state of runners and see if actions are needed. A
-      random delay of 25% is added. Changes to this time interval will apply when next interval is
-      triggered. Prior to reconciliation, any packages, and services used by the software will be
-      updated.
+      On reconciliation, the charm polls the state of runners and see if actions are needed. The
+      value should be kept low, unless Github API rate limiting is encountered.
   repo-policy-compliance-token:
     type: string
     description: >-
@@ -136,6 +134,23 @@ options:
       machine runners from the runner manager. It is equivalent to ProxyCommand in ssh-config,
       but without a shell. For example, a value could be something like:
       `bash -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
+  pre-job-script:
+    type: string
+    description: >-
+      Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM. 
+      This can e.g. be useful for specific infrastructure related configurations 
+      (e.g. usage of certain proxies or custom routes).
+      Note that the user executing the script is the ubuntu user (which has sudo rights).
+      Example script:
+      #!/usr/bin/env bash
+      cat > ~/.ssh/config <<EOF
+      host github.com
+          user git
+          hostname github.com
+          port 22
+          proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+      EOF
+
   runner-http-proxy:
     type: string
     default: ""

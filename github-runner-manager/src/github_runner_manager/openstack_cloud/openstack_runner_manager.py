@@ -213,8 +213,8 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """
         pulled_metrics = runner_metrics.PulledMetrics()
         try:
-            ssh_conn = self._openstack_cloud.get_ssh_connection(instance)
-            pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
+            with self._openstack_cloud.get_ssh_connection(instance) as ssh_conn:
+                pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id
@@ -268,6 +268,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             "issue_metrics": True,
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
+            "custom_pre_job_script": service_config.custom_pre_job_script,
         }
         repo_policy = self._get_repo_policy_compliance_client()
         if repo_policy is not None:

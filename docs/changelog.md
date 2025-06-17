@@ -1,8 +1,45 @@
 # Changelog
 
+
+### 2025-06-17
+
+- Fix bug where SSH connection error always appears in the logs.
+- Change the repository panel to show the number of jobs per workflow per repository.
+
+### 2025-06-16
+
+- Revert copytruncate logrotate method for reactive processes, as copytruncate keeps log files on disks and does not remove them, and each process is writing to a new file leading to a huge and increasing amount
+of zero sized files in the reactive log directory. This is a temporary fix until a better solution is implemented, as it has the downside that long lived reactive processes may write to deleted log files.
+
+
+### 2025-06-12
+
+- Disable and remove any legacy service on upgrade. This fixes issue with the legacy service in upgraded units.
+
+### 2025-06-10
+
+- Fix issue with upgraded charm unit unable to issue metrics due to metric log ownership issues.
+
+### 2025-06-04
+
+- Reduce the reconcile-interval configuration from 10 minutes to 5 minutes. This is the interval 
+between reconciling the current and intended number of runners. The value should be kept low, 
+unless Github API rate limiting is encountered.
+- Removed the reconcile-runners Juju action.
+
+### 2025-06-03
+
+- Redirect HKP protocol traffic (port 11371) to aproxy
+
+### 2025-05-22
+
+- Add possibility to run a script in the pre-job phase of a runner. This can be useful to setup 
+network/infrastructure specific things.
+
+
 ### 2025-05-09
 
-- Change the repository panel to show the number of jobs per workflow per repository.
+- The log rotation is done by copying the logs then truncating. There is a small chance some log might be lost during the log rotation. This affects the github-runner-manager service logs, and the reactive spawning logs.
 
 ### 2025-05-06
 
