@@ -270,8 +270,8 @@ def test_get_ssh_connection_success(openstack_cloud, monkeypatch):
 
     mock_instance = MagicMock()
     mock_instance.addresses = ["mock_ip"]
-    with openstack_cloud.get_ssh_connection(mock_instance):
-        pass
+    with openstack_cloud.get_ssh_connection(mock_instance) as conn:
+        assert conn == mock_connection
 
 
 def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
