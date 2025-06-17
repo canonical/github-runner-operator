@@ -120,6 +120,28 @@ async def wait_for_reconcile(app: Application) -> None:
             return
 
 
+async def wait_for_runner_ready(app: Application) -> None:
+    """Wait until a runner is ready.
+
+    Uses the first unit found in the application.
+
+    Args:
+        app: The GitHub Runner Charm application.
+    """
+    await wait_for_reconcile(app)
+
+    for _ in range(10):
+        action = await app.units[0].run_action("check-runners")
+        await action.wait()
+
+        if action.status == "completed" and int(action.results["online"]) >= 1:
+            break
+
+        await sleep(30)
+    else:
+        assert False, "Timeout waiting for runner to be ready"
+
+
 async def deploy_github_runner_charm(
     model: Model,
     charm_file: str,
