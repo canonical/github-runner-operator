@@ -54,7 +54,6 @@ async def test_check_runners_no_runners(app_no_runner: Application) -> None:
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_reconcile_runners(
-    model: Model,
     app_no_runner: Application,
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
@@ -80,7 +79,7 @@ async def test_reconcile_runners(
     # 1.
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
 
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     async def _runners_number(number) -> bool:
         """Check if there is the expected number of runners."""
@@ -91,7 +90,7 @@ async def test_reconcile_runners(
     # 2.
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
 
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await wait_for(lambda: _runners_number(0), timeout=10 * 60, check_interval=10)
 
@@ -136,7 +135,7 @@ async def test_manager_service_started(
     assert return_code == 0
 
     # Wait for more log lines.
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     log = await get_github_runner_manager_service_log(unit)
     assert RECONCILE_SERVICE_START_MSG not in log

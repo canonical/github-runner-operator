@@ -152,7 +152,7 @@ class OpenStackInstanceHelper:
             num_runners: The number of runners.
         """
         await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
-        await wait_for_reconcile(app=app, model=app.model)
+        await wait_for_reconcile(app=app)
 
     async def get_runner_names(self, unit: Unit) -> list[str]:
         """Get the name of all the runners in the unit.

@@ -26,7 +26,6 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model,
     basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
@@ -36,7 +35,7 @@ async def app_fixture(
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(basic_app, basic_app.model)
+    await wait_for_reconcile(basic_app)
 
 
 @pytest.mark.openstack
@@ -102,7 +101,7 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -164,7 +163,7 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         }
     )
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     workflow_run = await dispatch_workflow(
         app=app,

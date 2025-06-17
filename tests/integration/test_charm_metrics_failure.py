@@ -32,7 +32,7 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_r
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterator[Application]:
+async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
@@ -46,7 +46,7 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
             "repo-policy-compliance-url": "",
         }
     )
-    await wait_for_reconcile(app=app_for_metric, model=model)
+    await wait_for_reconcile(app=app_for_metric)
 
     yield app_for_metric
 
@@ -55,7 +55,6 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_failed_repo_policy(
-    model: Model,
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
@@ -95,7 +94,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await assert_events_after_reconciliation(
         app=app,
@@ -108,7 +107,6 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_abnormal_termination(
-    model: Model,
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -158,7 +156,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await assert_events_after_reconciliation(
         app=app,

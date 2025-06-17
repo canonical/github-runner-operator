@@ -106,14 +106,14 @@ async def app_fixture(
             RECONCILE_INTERVAL_CONFIG_NAME: "60",
         }
     )
-    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager)
     await clear_metrics_log(app_for_jobmanager.units[0])
 
     yield app_for_jobmanager
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_jobmanager.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager)
 
 
 @pytest.mark.abort_on_fail
@@ -301,7 +301,7 @@ async def test_jobmanager(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "10"})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     # At this point there should be a runner
     action = await app.units[0].run_action("check-runners")
@@ -327,7 +327,7 @@ async def test_jobmanager(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: "5"})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()

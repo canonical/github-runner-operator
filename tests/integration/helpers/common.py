@@ -100,17 +100,16 @@ async def get_reconcile_id(unit: Unit) -> str:
     return stdout
 
 
-async def wait_for_reconcile(app: Application, model: Model) -> None:
+async def wait_for_reconcile(app: Application) -> None:
     """Wait until a reconcile has happened.
 
     Uses the first unit found in the application.
 
     Args:
         app: The GitHub Runner Charm application.
-        model: The machine charm model.
     """
     # Wait the application is actively reconciling. Avoid waiting for image, etc.
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
 
     unit = app.units[0]
     base_id = await get_reconcile_id(unit)
