@@ -240,10 +240,25 @@ class JobManagerPlatform(PlatformProvider):
 
         # job_url has the path:
         # "/v1/job/<job_id>"
+        job_path_prefix = "/v1/job/"
+
         path = job_url.path
-        # we know that path is not empty as it is validated by the JobDetails model
-        job_url_path_parts = path.split("/")  # type: ignore
-        job_id = job_url_path_parts[-1]
+        if not path.startswith("/v1/job/"):
+            logger.error(
+                "Job URL path does not start with '%s'. Received %s", job_path_prefix, path
+            )
+            raise ValueError(f'Job URL path does not start with "{job_path_prefix}"')
+        try:
+            job_id = int(path[len(job_path_prefix) :])  # Extract job_id from the path
+        except ValueError:
+            logger.error(
+                "Job URL path %s does not contain a valid job_id after '%s'",
+                path,
+                job_path_prefix,
+            )
+            raise ValueError(
+                f"Job URL path does not contain a valid job_id after '{job_path_prefix}'"
+            )
         logging.debug(
             "Parsed job_id: %s from job_url path %s",
             job_id,
@@ -253,7 +268,7 @@ class JobManagerPlatform(PlatformProvider):
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.JobsApi(api_client)
             try:
-                job = api_instance.get_job_v1_jobs_job_id_get(int(job_id))
+                job = api_instance.get_job_v1_jobs_job_id_get(job_id)
                 # the api returns a generic object, ignore the type for status
                 if job.status != JobStatus.PENDING:  # type: ignore
                     return True

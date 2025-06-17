@@ -174,6 +174,57 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
 
 
 @pytest.mark.parametrize(
+    "job_url, expected_msg",
+    [
+        pytest.param(
+            "http://jobmanager.com/v1/runner",
+            'Job URL path does not start with "/v1/job/"',
+            id="wrong path",
+        ),
+        pytest.param(
+            "http://jobmanager.com/v1/job/",
+            "Job URL path does not contain a valid job_id after '/v1/job/'",
+            id="job id missing",
+        ),
+        pytest.param(
+            "http://jobmanager.com/v1/job/",
+            "Job URL path does not contain a valid job_id after '/v1/job/'",
+            id="job id non-int",
+        ),
+        # pytest.param("http://jobmanager.com/v1/job", "Job URL path does not contain job_id",
+        #              id="job id missing"),
+    ],
+)
+def test_check_job_been_picked_up_job_url_validation_err(
+    job_url: str, expected_msg: str, monkeypatch: pytest.MonkeyPatch
+):
+    call_api_mock = MagicMock()
+    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
+    call_api_mock.side_effect = [Job(status=JobStatus.IN_PROGRESS.value)]
+
+    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
+    metadata = RunnerMetadata(platform_name="jobmanager", runner_id="3", url=job_url)
+
+    # we use a BaseModel to convert a url string to a HttpUrl
+    class JobUrlModel(BaseModel):
+        """Model for job URL.
+
+        Attributes:
+            url: The URL of the job.
+        """
+
+        url: HttpUrl
+
+    # we can pass a string here, mypy doesn't understand it
+    job_url = JobUrlModel(url=job_url).url  # type: ignore
+
+    with pytest.raises(ValueError) as exc_info:
+        platform.check_job_been_picked_up(metadata, job_url)
+
+    assert expected_msg in str(exc_info.value)
+
+
+@pytest.mark.parametrize(
     "job_status,job_deletable,expected_online,expected_busy,expected_deletable",
     [
         pytest.param("PENDING", False, False, True, False, id="pending runner"),
