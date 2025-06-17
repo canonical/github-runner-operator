@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
+from prometheus_client import generate_latest
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import CloudError, LockError
@@ -85,6 +86,18 @@ def flush_runner() -> tuple[str, int]:
             return (str(err), 500)
         app.logger.info("Flushed %s runners", num_flushed)
     return ("", 204)
+
+
+@app.route("/metrics", methods=["GET"])
+def metrics():
+    """Endpoint for generating latest prometheus metrics from the default collector registry.
+
+    For metrics being generated, see the metrics module.
+
+    Returns:
+        The latest metric values.
+    """
+    return generate_latest()
 
 
 def get_lock() -> Lock:
