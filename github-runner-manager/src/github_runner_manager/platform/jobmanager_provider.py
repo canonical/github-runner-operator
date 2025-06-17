@@ -232,6 +232,7 @@ class JobManagerPlatform(PlatformProvider):
 
         Raises:
             PlatformApiError: Problem with the underlying client.
+            ValueError: Raised when the job_url is malformed.
 
         Returns:
             True if the job has been picked up, False otherwise.
@@ -243,14 +244,14 @@ class JobManagerPlatform(PlatformProvider):
         job_path_prefix = "/v1/job/"
 
         path = job_url.path
-        if not path.startswith("/v1/job/"):
+        if not (path and path.startswith("/v1/job/")):
             logger.error(
                 "Job URL path does not start with '%s'. Received %s", job_path_prefix, path
             )
             raise ValueError(f'Job URL path does not start with "{job_path_prefix}"')
         try:
             job_id = int(path[len(job_path_prefix) :])  # Extract job_id from the path
-        except ValueError:
+        except ValueError as exc:
             logger.error(
                 "Job URL path %s does not contain a valid job_id after '%s'",
                 path,
@@ -258,7 +259,7 @@ class JobManagerPlatform(PlatformProvider):
             )
             raise ValueError(
                 f"Job URL path does not contain a valid job_id after '{job_path_prefix}'"
-            )
+            ) from exc
         logging.debug(
             "Parsed job_id: %s from job_url path %s",
             job_id,

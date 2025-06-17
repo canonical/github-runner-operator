@@ -182,6 +182,16 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
             id="wrong path",
         ),
         pytest.param(
+            "http://jobmanager.com/",
+            'Job URL path does not start with "/v1/job/"',
+            id="no path",
+        ),
+        pytest.param(
+            "http://jobmanager.com",
+            'Job URL path does not start with "/v1/job/"',
+            id="no path and no trailing slash",
+        ),
+        pytest.param(
             "http://jobmanager.com/v1/job/",
             "Job URL path does not contain a valid job_id after '/v1/job/'",
             id="job id missing",
@@ -191,8 +201,6 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
             "Job URL path does not contain a valid job_id after '/v1/job/'",
             id="job id non-int",
         ),
-        # pytest.param("http://jobmanager.com/v1/job", "Job URL path does not contain job_id",
-        #              id="job id missing"),
     ],
 )
 def test_check_job_been_picked_up_job_url_validation_err(
