@@ -1,6 +1,6 @@
 # Integrations
 
-This is a list of integrations supported by the GitHub Runner charm.
+This is a list of relations supported by the GitHub Runner charm.
 
 ## debug-ssh
 

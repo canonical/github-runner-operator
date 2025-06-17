@@ -24,5 +24,5 @@ to be further developed.
 - Userspace programs (e.g. qemu): unsupported.
 
 Therefore, it is currently necessary that the charm is deployed on a bare metal instance.
-E.g., you can use any of the [ARM64 metal instances](https://aws.amazon.com/ec2/instance-types/) to provide Juju
+For instance, you can use any of the [ARM64 metal instances](https://aws.amazon.com/ec2/instance-types/) to provide Juju
 with ARM64 bare metal instances. Some of the examples include: a1.metal, m7g.metal.
