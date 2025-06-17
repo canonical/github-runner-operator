@@ -1,5 +1,10 @@
 # Changelog
 
+### 2025-06-16
+
+- Revert copytruncate logrotate method for reactive processes, as copytruncate keeps log files on disks and does not remove them, and each process is writing to a new file leading to a huge and increasing amount
+of zero sized files in the reactive log directory. This is a temporary fix until a better solution is implemented, as it has the downside that long lived reactive processes may write to deleted log files.
+
 
 ### 2025-06-12
 
