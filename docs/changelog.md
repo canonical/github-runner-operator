@@ -1,5 +1,9 @@
 # Changelog
 
+### 2025-06-17
+
+- Fix bug where SSH connection error always appears in the logs.
+
 ### 2025-06-16
 
 - Revert copytruncate logrotate method for reactive processes, as copytruncate keeps log files on disks and does not remove them, and each process is writing to a new file leading to a huge and increasing amount
