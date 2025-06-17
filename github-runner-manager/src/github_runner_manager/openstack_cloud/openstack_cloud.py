@@ -366,6 +366,7 @@ class OpenstackCloud:
                     continue
                 if _TEST_STRING in result.stdout:
                     yield connection
+                    break
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
@@ -384,10 +385,11 @@ class OpenstackCloud:
                 continue
             finally:
                 connection.close()
-        raise SSHError(
-            f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
-            f"addresses: {instance.addresses}"
-        )
+        else:
+            raise SSHError(
+                f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
+                f"addresses: {instance.addresses}"
+            )
 
     @_catch_openstack_errors
     def get_instances(self) -> tuple[OpenstackInstance, ...]:
