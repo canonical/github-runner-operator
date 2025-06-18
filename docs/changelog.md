@@ -1,8 +1,10 @@
 # Changelog
 
+
 ### 2025-06-17
 
 - Fix bug where SSH connection error always appears in the logs.
+- Change the repository panel to show the number of jobs per workflow per repository.
 
 ### 2025-06-16
 
