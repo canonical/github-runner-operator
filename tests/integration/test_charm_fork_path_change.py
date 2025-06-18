@@ -14,7 +14,7 @@ from juju.model import Model
 from ops.model import ActiveStatus
 
 from charm_state import PATH_CONFIG_NAME
-from tests.integration.helpers.common import wait_for_reconcile, wait_for_runner_ready
+from tests.integration.helpers.common import wait_for_runner_ready
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)

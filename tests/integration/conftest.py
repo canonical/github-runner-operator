@@ -40,7 +40,6 @@ from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
     wait_for,
-    wait_for_reconcile,
     wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs

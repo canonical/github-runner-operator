@@ -10,7 +10,6 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.action import Action
 from juju.application import Application
-from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
 from tests.integration.helpers.common import (

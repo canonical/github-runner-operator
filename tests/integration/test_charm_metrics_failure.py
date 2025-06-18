@@ -12,7 +12,6 @@ from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
 from juju.application import Application
-from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (

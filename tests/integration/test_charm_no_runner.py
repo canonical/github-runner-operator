@@ -10,7 +10,6 @@ from github_runner_manager.reconcile_service import (
     RECONCILE_START_MSG,
 )
 from juju.application import Application
-from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_NAME
