@@ -240,11 +240,11 @@ class JobManagerPlatform(PlatformProvider):
         configuration = jobmanager_client.Configuration(host=self._url)
 
         # job_url has the path:
-        # "/v1/job/<job_id>"
-        job_path_prefix = "/v1/job/"
+        # "/v1/jobs/<job_id>"
+        job_path_prefix = "/v1/jobs/"
 
         path = job_url.path
-        if not (path and path.startswith("/v1/job/")):
+        if not (path and path.startswith(job_path_prefix)):
             logger.error(
                 "Job URL path does not start with '%s'. Received %s", job_path_prefix, path
             )

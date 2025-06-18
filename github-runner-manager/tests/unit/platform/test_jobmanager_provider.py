@@ -136,7 +136,7 @@ def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_va
         url: HttpUrl
 
     # we can pass a string here, mypy doesn't understand it
-    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234").url  # type: ignore
+    job_url = JobUrlModel(url="http://jobmanager.com/v1/jobs/1234").url  # type: ignore
 
     assert platform.check_job_been_picked_up(metadata, job_url) == picked_up
 
@@ -167,7 +167,7 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
         url: HttpUrl
 
     # we can pass a string here, mypy doesn't understand it
-    job_url = JobUrlModel(url="http://jobmanager.com/v1/job/1234").url  # type: ignore
+    job_url = JobUrlModel(url="http://jobmanager.com/v1/jobs/1234").url  # type: ignore
 
     with pytest.raises(PlatformApiError):
         platform.check_job_been_picked_up(metadata, job_url)
@@ -178,27 +178,27 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
     [
         pytest.param(
             "http://jobmanager.com/v1/runner",
-            'Job URL path does not start with "/v1/job/"',
+            'Job URL path does not start with "/v1/jobs/"',
             id="wrong path",
         ),
         pytest.param(
             "http://jobmanager.com/",
-            'Job URL path does not start with "/v1/job/"',
+            'Job URL path does not start with "/v1/jobs/"',
             id="no path",
         ),
         pytest.param(
             "http://jobmanager.com",
-            'Job URL path does not start with "/v1/job/"',
+            'Job URL path does not start with "/v1/jobs/"',
             id="no path and no trailing slash",
         ),
         pytest.param(
-            "http://jobmanager.com/v1/job/",
-            "Job URL path does not contain a valid job_id after '/v1/job/'",
+            "http://jobmanager.com/v1/jobs/",
+            "Job URL path does not contain a valid job_id after '/v1/jobs/'",
             id="job id missing",
         ),
         pytest.param(
-            "http://jobmanager.com/v1/job/",
-            "Job URL path does not contain a valid job_id after '/v1/job/'",
+            "http://jobmanager.com/v1/jobs/",
+            "Job URL path does not contain a valid job_id after '/v1/jobs/'",
             id="job id non-int",
         ),
     ],
