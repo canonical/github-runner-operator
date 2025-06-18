@@ -26,7 +26,6 @@ from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
     wait_for_reconcile,
-    wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
@@ -46,7 +45,7 @@ async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]
             "repo-policy-compliance-url": "",
         }
     )
-    await wait_for_runner_ready(app=app_for_metric)
+    await wait_for_reconcile(app=app_for_metric)
 
     yield app_for_metric
 
