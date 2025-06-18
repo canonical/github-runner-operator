@@ -227,6 +227,8 @@ async def runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
+    runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    await wait_runner_amount(runner_manager, 0)
     runner_manager.create_runners(1, RunnerMetadata())
     runner_list = runner_manager.get_runners()
     try:
