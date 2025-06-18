@@ -283,17 +283,29 @@ async def wait_runner_amount(
 
     # The openstack server can take sometime to fully clean up or create.
     await wait_for(
-        lambda: len(
-            [
-                runner
-                for runner in runner_manager.get_runners()
-                if runner.cloud_state == CloudRunnerState.ACTIVE
-            ]
-        )
-        == num,
+        lambda: check_runners_amount_and_active(runner_manager, num),
         timeout=timeout,
         check_interval=check_interval,
     )
+
+
+def check_runners_amount_and_active(runner_manager: RunnerManager, num: int) -> bool:
+    """Check if the number of runners match the expected amount and all runners are active.
+
+    Args:
+        runner_manager: The RunnerManager instance to use.
+        num: The expected number of runners.
+
+    Returns:
+        Whether the expected number of runner is spawned and active.
+    """
+    runners = runner_manager.get_runners()
+    active_runners = [
+        runner for runner in runners if runner.cloud_state == CloudRunnerState.ACTIVE
+    ]
+    if len(runners) == len(active_runners) and len(runners) == num:
+        return True
+    return False
 
 
 @pytest.mark.openstack
