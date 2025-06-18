@@ -28,5 +28,6 @@
       "matchUpdateTypes": ["major", "minor", "patch"],
       "enabled": false
     }
-  ]
+  ],
+  "ignorePaths": ["jobmanager/client/.gitlab-ci.yml", "jobmanager/client/test-requirements.txt"]
 }
