@@ -283,7 +283,14 @@ async def wait_runner_amount(
 
     # The openstack server can take sometime to fully clean up or create.
     await wait_for(
-        lambda: len(runner_manager.get_runners()) == num,
+        lambda: len(
+            [
+                runner
+                for runner in runner_manager.get_runners()
+                if runner.cloud_state == CloudRunnerState.ACTIVE
+            ]
+        )
+        == num,
         timeout=timeout,
         check_interval=check_interval,
     )

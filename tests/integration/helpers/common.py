@@ -130,7 +130,8 @@ async def wait_for_runner_ready(app: Application) -> None:
     """
     await wait_for_reconcile(app)
 
-    for _ in range(10):
+    # Wait for 10 minutes for the runner to come online.
+    for _ in range(20):
         action = await app.units[0].run_action("check-runners")
         await action.wait()
 
