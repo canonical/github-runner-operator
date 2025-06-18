@@ -49,6 +49,7 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
@@ -68,12 +69,6 @@ from errors import (
     SubprocessError,
 )
 from manager_client import GitHubRunnerManagerClient
-
-# The reconcile loop can get stuck in a charm upgrade. Put a timeout so
-# we can get out of that issue.
-# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
-RECONCILIATION_INTERVAL_TIMEOUT_SECONDS = 3000
-RECONCILE_RUNNERS_EVENT = "reconcile-runners"
 
 # This is currently hardcoded and may be moved to a config option in the future.
 REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
@@ -223,6 +218,11 @@ class GithubRunnerCharm(CharmBase):
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
             self, relation_name="mongodb", database_name=REACTIVE_MQ_DB_NAME
+        )
+        self.framework.observe(self.database.on.database_created, self._on_database_created)
+        self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
+        self.framework.observe(
+            self.on[MONGO_DB_INTEGRATION_NAME].relation_broken, self._on_mongodb_relation_broken
         )
 
         self._manager_client = GitHubRunnerManagerClient(
@@ -473,6 +473,24 @@ class GithubRunnerCharm(CharmBase):
 
         self._manager_client.flush_runner()
         self.unit.status = ActiveStatus()
+
+    @catch_charm_errors
+    def _on_database_created(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB database created event."""
+        state = self._setup_state()
+        self._setup_service(state)
+
+    @catch_charm_errors
+    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB endpoints changed event."""
+        state = self._setup_state()
+        self._setup_service(state)
+
+    @catch_charm_errors
+    def _on_mongodb_relation_broken(self, _: ops.RelationDepartedEvent) -> None:
+        """Handle the MongoDB relation broken event."""
+        state = self._setup_state()
+        self._setup_service(state)
 
     def _check_image_ready(self) -> None:
         """Check if image is ready raises error if not.

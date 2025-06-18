@@ -41,9 +41,9 @@ network/infrastructure specific things.
 
 ### 2025-05-06
 
-- The ssh health checks are removed and the platform providers (GitHub or the JobManager) are used instead to get the runners health
+- The ssh health checks are removed and GitHub is used instead to get the runners health
 information. This implies many changes in both the structure of the project and its functionality. Potentially, many race conditions should
-disappear for the GitHub case. 
+disappear.
 
 ### 2025-04-28
 
