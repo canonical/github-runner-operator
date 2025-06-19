@@ -33,6 +33,8 @@ from charm_state import (
     RUNNER_HTTP_PROXY_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
+    APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME,
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
     Arch,
@@ -1053,11 +1055,12 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
 
 
 @pytest.mark.parametrize(
-    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy,"
-    "expected_proxy, expected_runner_proxy",
+    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy, "
+    "aproxy_exclude_addresses, aproxy_redirect_ports, expected_proxy, "
+    "expected_runner_proxy",
     [
         pytest.param(
-            "", "", "", "", False, ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
+            "", "", "", "", False, "", "", ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
         ),
         pytest.param(
             "",
@@ -1065,6 +1068,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "localhost",
             "",
             False,
+            "",
+            "",
             ProxyConfig(),
             ProxyConfig(),
             id="No proxy with only no_proxy. No aproxy",
@@ -1075,6 +1080,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "",
             False,
+            "",
+            "",
             ProxyConfig(http="http://example.com:3128"),
             ProxyConfig(http="http://example.com:3128"),
             id="Only proxy from juju. No aproxy.",
@@ -1085,6 +1092,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "http://runner.example.com:3128",
             False,
+            "",
+            "",
             ProxyConfig(http="http://manager.example.com:3128"),
             ProxyConfig(http="http://runner.example.com:3128"),
             id="Both juju and runner proxy. No aproxy.",
@@ -1095,6 +1104,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "http://runner.example.com:3128",
             True,
+            "",
+            "",
             ProxyConfig(),
             ProxyConfig(http="http://runner.example.com:3128"),
             id="Only proxy in runner. aproxy configured.",
@@ -1105,6 +1116,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "127.0.0.1",
             "http://runner.example.com:3128",
             True,
+            "",
+            "",
             ProxyConfig(
                 http="http://manager.example.com:3128",
                 https="http://securemanager.example.com:3128",
@@ -1115,6 +1128,24 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             ),
             id="Proxy in juju and the runner. aproxy configured.",
         ),
+        pytest.param(
+            "http://manager.example.com:3128",
+            "http://securemanager.example.com:3128",
+            "127.0.0.1",
+            "http://runner.example.com:3128",
+            True,
+            "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+            "80, 443",
+            ProxyConfig(
+                http="http://manager.example.com:3128",
+                https="http://securemanager.example.com:3128",
+                no_proxy="127.0.0.1",
+            ),
+            ProxyConfig(
+                http="http://runner.example.com:3128",
+            ),
+            id="Proxy in juju and the runner. aproxy configured with exclude addresses and redirect ports.",
+        ),
     ],
 )
 def test_proxy_config(
@@ -1124,6 +1155,8 @@ def test_proxy_config(
     juju_no_proxy: str,
     runner_http: str,
     use_aproxy: bool,
+    aproxy_exclude_addresses: str,
+    aproxy_redirect_ports: str,
     expected_proxy: ProxyConfig,
     expected_runner_proxy: ProxyConfig,
 ):
@@ -1140,7 +1173,8 @@ def test_proxy_config(
     monkeypatch.setenv("JUJU_CHARM_NO_PROXY", juju_no_proxy)
     mock_charm.config[USE_APROXY_CONFIG_NAME] = use_aproxy
     mock_charm.config[RUNNER_HTTP_PROXY_CONFIG_NAME] = runner_http
-
+    mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
+    mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
     mock_database = MagicMock(spec=DatabaseRequires)
     mock_database.relations = []
@@ -1148,5 +1182,7 @@ def test_proxy_config(
     charm_state = CharmState.from_charm(mock_charm, mock_database)
 
     assert charm_state.charm_config.use_aproxy == use_aproxy
+    assert charm_state.charm_config.aproxy_exclude_addresses == aproxy_exclude_addresses
+    assert charm_state.charm_config.aproxy_redirect_ports == aproxy_redirect_ports
     assert charm_state.proxy_config == expected_proxy
     assert charm_state.runner_proxy_config == expected_runner_proxy

@@ -59,6 +59,8 @@ TEST_MODE_CONFIG_NAME = "test-mode"
 # bandit thinks this is a hardcoded password.
 TOKEN_CONFIG_NAME = "token"  # nosec
 USE_APROXY_CONFIG_NAME = "experimental-use-aproxy"
+APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME = "aproxy-exclude-addresses"
+APROXY_REDIRECT_PORTS_CONFIG_NAME = "aproxy-redirect-ports"
 USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
@@ -340,6 +342,8 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
+        aproxy_exclude_addresses: a comma-separated list of addresses to exclude from the aproxy proxy.
+        aproxy_redirect_ports: a comma-separated list of ports to redirect to the aproxy proxy.
         custom_pre_job_script: Custom pre-job script to run before the job.
         jobmanager_url: Base URL of the job manager service.
     """
@@ -353,6 +357,8 @@ class CharmConfig(BaseModel):
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
+    aproxy_exclude_addresses: str | None
+    aproxy_redirect_ports: str | None
     custom_pre_job_script: str | None
     jobmanager_url: AnyHttpUrl | None
 
@@ -514,6 +520,8 @@ class CharmConfig(BaseModel):
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
+            aproxy_exclude_addresses=charm.config.get(APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME),
+            aproxy_redirect_ports=charm.config.get(APROXY_REDIRECT_PORTS_CONFIG_NAME),
             custom_pre_job_script=custom_pre_job_script,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
         )
