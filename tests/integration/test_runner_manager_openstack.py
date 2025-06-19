@@ -278,12 +278,6 @@ async def wait_runner_amount(
         timeout: The timeout in seconds.
         check_interval: The interval to check in seconds.
     """
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    if len(runner_list) == num:
-        return
-
-    pytest.set_trace()
     # The openstack server can take sometime to fully clean up or create.
     await wait_for(
         lambda: check_runners_amount_and_active(runner_manager, num),
@@ -354,7 +348,6 @@ async def test_runner_normal_idle_lifecycle(
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
 
-    pytest.set_trace()
     try:
         await wait_runner_amount(runner_manager, 1)
     except TimeoutError as err:
