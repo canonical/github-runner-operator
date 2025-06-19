@@ -7,7 +7,7 @@ on:
 
 jobs:
   edge:
-    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-large]
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-large,reactive]
     steps:
       - run: lscpu
       - run: df -h
