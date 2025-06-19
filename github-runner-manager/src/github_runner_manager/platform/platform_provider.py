@@ -39,6 +39,40 @@ class TokenError(PlatformError):
     """Represents an error when the token is invalid or has not enough permissions."""
 
 
+class Platform(str, Enum):
+    """Supported platforms.
+
+    Attributes:
+        GITHUB: GitHub actions runner.
+        LAUNCHPAD: Launchpad builders.
+    """
+
+    GITHUB = "GITHUB"
+    LAUNCHPAD = "LAUNCHPAD"
+
+    # This method is to make the Platform enum case insensitive.
+    @classmethod
+    def _missing_(cls, value: str):
+        value = value.upper()
+        for member in cls:
+            if member.upper() == value:
+                return member
+        return None
+
+
+@dataclass
+class PlatformRunner:
+    """A platform runner instance.
+
+    Attributes:
+        identity: Identity of the runner.
+        status: Status of the runner.
+    """
+
+    identity: RunnerIdentity
+    status: "PlatformRunnerState"
+
+
 class PlatformProvider(abc.ABC):
     """Base class for a Platform Provider."""
 

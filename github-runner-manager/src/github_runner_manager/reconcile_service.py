@@ -14,7 +14,7 @@ from time import sleep
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.configuration.base import UserInfo
-from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.manager.reconciler import Reconciler
 
 logger = logging.getLogger(__name__)
 
@@ -22,22 +22,6 @@ RECONCILE_ID_FILE = Path("~").expanduser() / "reconcile.id"
 RECONCILE_SERVICE_START_MSG = "Starting the reconcile service..."
 RECONCILE_START_MSG = "Start reconciliation"
 RECONCILE_END_MSG = "End reconciliation"
-
-
-def get_runner_scaler(
-    app_config: ApplicationConfiguration, python_path: str | None = None
-) -> RunnerScaler:
-    """Get runner scaler.
-
-    Args:
-        app_config: The configuration of github-runner-manager.
-        python_path: The PYTHONPATH to access the github-runner-manager library.
-
-    Returns:
-        The RunnerScaler object.
-    """
-    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
-    return RunnerScaler.build(app_config, user, python_path)
 
 
 def start_reconcile_service(
@@ -54,14 +38,25 @@ def start_reconcile_service(
 
     # This is used for in test to distinguish which reconcile run the unit is at.
     RECONCILE_ID_FILE.write_text(str(uuid.uuid4()), encoding="utf-8")
+    platform_service = get_platform_service()
+    reconciler = Reconciler(
+        platform_provider=platform_service,
+        cloud_provider=cloud_service,
+        metrics_provider=metrics_service,
+        config={},
+        algorithm_config=algorithmconfig,
+    )
 
     while True:
         with lock:
             logger.info(RECONCILE_START_MSG)
-            runner_scaler = get_runner_scaler(app_config, python_path=python_path)
-            delta = runner_scaler.reconcile()
-            logger.info("Change in number of runner after reconcile: %s", delta)
+            reconciler.reconcile()
         logger.info(RECONCILE_END_MSG)
         RECONCILE_ID_FILE.write_text(str(uuid.uuid4()), encoding="utf-8")
 
         sleep(app_config.reconcile_interval * 60)
+
+
+def get_platform_service() -> PlatformService:
+    """Get the platform service."""
+    return PlatformService()

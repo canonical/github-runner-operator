@@ -16,12 +16,12 @@ class OpenStackServerConfig:
     Attributes:
         image: The image name for runners to use.
         flavor: The flavor name for runners to use.
-        network: The network name for runners to use.
+        # network: The network name for runners to use.
     """
 
     image: str
     flavor: str
-    network: str
+    # network: str
 
 
 @dataclass

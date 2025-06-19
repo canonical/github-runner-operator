@@ -25,9 +25,7 @@ from github_runner_manager.manager.models import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.github_provider import (
-    PlatformRunnerState,
-)
+from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,

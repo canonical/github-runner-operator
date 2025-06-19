@@ -11,7 +11,7 @@ class OpenStackConfiguration(BaseModel):
     """OpenStack configuration.
 
     Attributes:
-        vm_prefix: Prefix to use for the instances managed by this application.
+        prefix: Prefix to use for the instances managed by this application.
         network: Network to use to spawn instances.
         credentials: OpenStack credentials.
     """

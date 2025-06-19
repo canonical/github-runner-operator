@@ -28,7 +28,10 @@ from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
+from github_runner_manager.openstack_cloud.configuration import (
+    OpenStackConfiguration,
+    OpenStackCredentials,
+)
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 
@@ -187,13 +190,7 @@ class OpenstackCloud:
     instance_id. It is the same as the server name.
     """
 
-    def __init__(
-        self,
-        credentials: OpenStackCredentials,
-        prefix: str,
-        system_user: str,
-        proxy_command: str | None = None,
-    ):
+    def __init__(self, config: OpenStackConfiguration):
         """Create the object.
 
         Args:

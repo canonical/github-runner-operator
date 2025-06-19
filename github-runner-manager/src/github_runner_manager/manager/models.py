@@ -6,6 +6,8 @@
 import secrets
 from dataclasses import asdict, dataclass, field
 
+from github_runner_manager.platform.platform_provider import Platform
+
 INSTANCE_SUFFIX_LENGTH = 12
 
 
@@ -168,7 +170,7 @@ class RunnerMetadata:
         url: URL for the runner.
     """
 
-    platform_name: str = "github"
+    platform_name: Platform | str = Platform.GITHUB
     runner_id: str | None = None
     url: str | None = None
 
