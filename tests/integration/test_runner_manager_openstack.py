@@ -283,6 +283,7 @@ async def wait_runner_amount(
     if len(runner_list) == num:
         return
 
+    pytest.set_trace()
     # The openstack server can take sometime to fully clean up or create.
     await wait_for(
         lambda: check_runners_amount_and_active(runner_manager, num),
