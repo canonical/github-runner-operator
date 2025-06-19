@@ -118,7 +118,7 @@ def test_create_application_configuration(
             flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
-            vm_prefix="unit_name",
+            prefix="unit_name",
             network="network",
             credentials=OpenStackCredentials(
                 auth_url="auth_url",
@@ -145,7 +145,7 @@ def test_create_openstack_configuration(complete_charm_state: charm_state.CharmS
     openstack_configuration = factories.create_openstack_configuration(state, "unit_name")
 
     assert openstack_configuration == OpenStackConfiguration(
-        vm_prefix="unit_name",
+        prefix="unit_name",
         network="network",
         credentials=OpenStackCredentials(
             auth_url="auth_url",

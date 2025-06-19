@@ -198,7 +198,7 @@ def create_openstack_configuration(state: CharmState, unit_name: str) -> OpenSta
         region_name=first_cloud_config["region_name"],
     )
     return OpenStackConfiguration(
-        vm_prefix=unit_name.replace("/", "-"),
+        prefix=unit_name.replace("/", "-"),
         network=state.runner_config.openstack_network,
         credentials=credentials,
     )

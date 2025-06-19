@@ -16,7 +16,7 @@ class OpenStackConfiguration(BaseModel):
         credentials: OpenStack credentials.
     """
 
-    vm_prefix: str
+    prefix: str
     network: str
     credentials: "OpenStackCredentials"
 

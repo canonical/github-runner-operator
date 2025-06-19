@@ -183,7 +183,7 @@ def application_configuration_fixture() -> ApplicationConfiguration:
             flavors=[Flavor(name="flavor", labels=["flavorlabel"])],
         ),
         openstack_configuration=OpenStackConfiguration(
-            vm_prefix="unit_name",
+            prefix="unit_name",
             network="network",
             credentials=OpenStackCredentials(
                 auth_url="auth_url",
