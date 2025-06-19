@@ -4,7 +4,6 @@
 """Utilities for reactive mode."""
 
 import json
-import re
 
 from github.WorkflowRun import WorkflowRun
 from github_runner_manager.reactive.consumer import JobDetails
@@ -28,7 +27,7 @@ async def get_mongodb_uri(ops_test: OpsTest, app: Application) -> str:
     """
     mongodb_uri = await get_mongodb_uri_from_integration_data(ops_test, app.units[0])
     if not mongodb_uri:
-        mongodb_uri = await get_mongodb_uri_from_secrets(ops_test, app.model)
+        mongodb_uri = await get_mongodb_uri_from_secrets(ops_test, app.units[0], app.model)
     assert mongodb_uri, "mongodb uri not found in integration data or secret"
     return mongodb_uri
 
@@ -58,11 +57,12 @@ async def get_mongodb_uri_from_integration_data(ops_test: OpsTest, unit: Unit) -
     return mongodb_uri
 
 
-async def get_mongodb_uri_from_secrets(ops_test, model: Model) -> str | None:
+async def get_mongodb_uri_from_secrets(ops_test, unit: Unit, model: Model) -> str | None:
     """Get the mongodb uri from the secrets.
 
     Args:
         ops_test: The ops_test plugin.
+        unit: The juju unit containing the secret.
         model: The juju model containing the unit.
 
     Returns:
@@ -76,18 +76,24 @@ async def get_mongodb_uri_from_secrets(ops_test, model: Model) -> str | None:
     if not isinstance(juju_secrets, list):
         juju_secrets = juju_secrets["results"]
 
-    for secret in juju_secrets:
-        if re.match(r"^database.\d+.user.secret$", secret.label):
-            _, show_secret, _ = await ops_test.juju(
-                "show-secret", secret.uri, "--reveal", "--format", "json"
-            )
-            show_secret = json.loads(show_secret)
-            for value in show_secret.values():
-                if "content" in value:
-                    mongodb_uri = value["content"]["Data"]["uris"]
-                    break
-            if mongodb_uri:
+    mongodb_secret_id = None
+    _, unit_data, _ = await ops_test.juju("show-unit", unit.name, "--format", "json")
+    unit_data = json.loads(unit_data)
+    for rel_info in unit_data[unit.name]["relation-info"]:
+        if rel_info["endpoint"] == "mongodb":
+            try:
+                mongodb_secret_id = rel_info["application-data"]["secret-user"]
                 break
+            except KeyError:
+                return None
+
+    _, show_secret, _ = await ops_test.juju(
+        "show-secret", mongodb_secret_id, "--reveal", "--format", "json"
+    )
+    show_secret = json.loads(show_secret)
+    for value in show_secret.values():
+        mongodb_uri = value["content"]["Data"]["uris"]
+        break
     return mongodb_uri
 
 

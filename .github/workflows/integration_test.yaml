@@ -9,32 +9,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # test option values defined at test/conftest.py are passed on via repository secret
-  # INTEGRATION_TEST_ARGS to operator-workflows automatically.
-  integration-tests-juju2:
-    name: Integration test with juju 2.9
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 2.9/stable
-      pre-run-script: scripts/pre-integration-test.sh
-      provider: lxd
-      test-tox-env: integration-juju2.9
-      modules: '["test_charm_base_image", "test_charm_fork_repo", "test_charm_no_runner", "test_charm_scheduled_events", "test_charm_lxd_runner", "test_charm_runner", "test_charm_metrics_success", "test_charm_metrics_failure", "test_self_hosted_runner", "test_charm_with_proxy", "test_charm_with_juju_storage", "test_debug_ssh", "test_charm_upgrade"]'
-  integration-tests:
-    name: Integration test with juju 3.1
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@self-hosted-runner-integration-test
-    secrets: inherit
-    with:
-      juju-channel: 3.1/stable
-      pre-run-script: scripts/setup-integration-tests.sh
-      provider: lxd
-      test-tox-env: integration-juju3.1
-      modules: '["test_charm_scheduled_events", "test_debug_ssh", "test_charm_upgrade"]'
-      extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
-      self-hosted-runner: true
-      self-hosted-runner-label: stg-private-endpoint
-      test-timeout: 90
   openstack-interface-tests-private-endpoint:
     name: openstack interface test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -57,14 +31,13 @@ jobs:
       pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_reactive", "test_jobmanager"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
-      - integration-tests
       - openstack-interface-tests-private-endpoint
       - openstack-integration-tests-private-endpoint
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main

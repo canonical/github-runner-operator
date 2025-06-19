@@ -20,7 +20,6 @@ from charm_state import (
     CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     DOCKERHUB_MIRROR_CONFIG_NAME,
-    EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE,
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     GROUP_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
@@ -55,7 +54,7 @@ from tests.unit.factories import MockGithubRunnerCharmFactory
 def test_github_config_from_charm_invalid_path():
     """
     arrange: Create an invalid GitHub path string and runner group name.
-    act: Call parse_github_path with the invalid path string and runner group name.
+    act: Call from_charm .
     assert: Verify that the function raises CharmConfigInvalidError.
     """
     mock_charm = MockGithubRunnerCharmFactory()
@@ -66,9 +65,16 @@ def test_github_config_from_charm_invalid_path():
         GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_empty_path():
+@pytest.mark.parametrize(
+    "config_cls",
+    [
+        pytest.param(GithubConfig, id="GithubConfig"),
+        pytest.param(charm_state.JobManagerConfig, id="JobManagerConfig"),
+    ],
+)
+def test_github_jobmanager_config_from_charm_empty_path(config_cls):
     """
-    arrange: Create a mock CharmBase instance with an empty path configuration.
+    arrange: Create an empty path configuration and prepare the config class to test.
     act: Call from_charm method with the mock CharmBase instance.
     assert: Verify that the method raises CharmConfigInvalidError.
     """
@@ -76,7 +82,7 @@ def test_github_config_from_charm_empty_path():
     mock_charm.config[PATH_CONFIG_NAME] = ""
 
     with pytest.raises(CharmConfigInvalidError):
-        GithubConfig.from_charm(mock_charm)
+        config_cls.from_charm(mock_charm)
 
 
 def test_github_config_from_charm_invalid_token():
@@ -92,17 +98,30 @@ def test_github_config_from_charm_invalid_token():
         GithubConfig.from_charm(mock_charm)
 
 
-def test_github_config_from_charm_special_token_returns_none():
+def test_github_config_from_charm_url_path_returns_none():
     """
     arrange: Create a mock CharmBase instance with an empty path and token configuration.
     act: Call from_charm method with the mock CharmBase instance.
     assert: Verify that the method returns None.
     """
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = ""
-    mock_charm.config[TOKEN_CONFIG_NAME] = charm_state.EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE
+    mock_charm.config[PATH_CONFIG_NAME] = "https://jobmanager/"
 
     result = GithubConfig.from_charm(mock_charm)
+
+    assert result is None
+
+
+def test_jobmanager_config_from_charm_non_http_path_returns_none():
+    """
+    arrange: Create a mock CharmBase instance with a non-HTTP path configuration.
+    act: Call from_charm method with the mock CharmBase instance.
+    assert: Verify that the method returns None.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "owner/repo"
+
+    result = charm_state.JobManagerConfig.from_charm(mock_charm)
 
     assert result is None
 
@@ -377,18 +396,19 @@ def test_charm_config_from_charm_invalid_labels():
     assert "Invalid labels config" in str(exc_info.value)
 
 
-def test_charm_config_from_charm_missing_github_config():
+def test_charm_config_from_charm_sets_jobmanager_config():
     """
-    arrange: Create a mock CharmBase instance with special token value and empty path.
+    arrange: Create a mock CharmBase instance with a path being equal to a url.
     act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that token and path is set to none.
+    assert: Verify that job manager setting is set and github configs not.
     """
+    jobmanager_url = "http://jobmanager.url:80"
     mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = ""
-    mock_charm.config[TOKEN_CONFIG_NAME] = EXPERIMENTAL_JOB_MANAGER_ONLY_TOKEN_VALUE
+    mock_charm.config[PATH_CONFIG_NAME] = jobmanager_url
 
     config = CharmConfig.from_charm(mock_charm)
 
+    assert config.jobmanager_url == jobmanager_url
     assert config.token is None
     assert config.path is None
 

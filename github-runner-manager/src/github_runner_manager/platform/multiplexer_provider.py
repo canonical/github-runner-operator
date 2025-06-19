@@ -5,10 +5,12 @@
 
 import logging
 from collections import defaultdict
+from enum import Enum
 
 from pydantic import HttpUrl
 
 from github_runner_manager.configuration.github import GitHubConfiguration
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -19,6 +21,7 @@ from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
+    PlatformError,
     PlatformProvider,
     PlatformRunnerHealth,
     RunnersHealthResponse,
@@ -31,13 +34,25 @@ _JOBMANAGER_PLATFORM_KEY = "jobmanager"
 logger = logging.getLogger(__name__)
 
 
+class Platform(str, Enum):
+    """Enum for supported platforms.
+
+    Attributes:
+        GITHUB: GitHub platform.
+        JOBMANAGER: JobManager platform.
+    """
+
+    GITHUB = _GITHUB_PLATFORM_KEY
+    JOBMANAGER = _JOBMANAGER_PLATFORM_KEY
+
+
 class MultiplexerPlatform(PlatformProvider):
     """Manage self-hosted runner on the Multiplexer.
 
     The Multiplexer platform provider serves as an interface to use several
     platform providers simultaneously. In that way, one runner manager can use for example
     GitHub and JobManager providers together. The multiplexer will route the requests
-    to the adequate provider..
+    to the adequate provider.
     """
 
     def __init__(self, providers: dict[str, PlatformProvider]):
@@ -50,25 +65,42 @@ class MultiplexerPlatform(PlatformProvider):
 
     @classmethod
     def build(
-        cls, prefix: str, github_configuration: GitHubConfiguration | None
+        cls,
+        prefix: str,
+        github_configuration: GitHubConfiguration | None,
+        jobmanager_configuration: JobManagerConfiguration | None = None,
     ) -> "MultiplexerPlatform":
         """Build a new MultiplexerPlatform.
+
+        Multiple platform providers can be used simultaneously, such as GitHub and JobManager.
+        At least one is required to create the MultiplexerPlatform.
 
         Args:
             prefix: The prefix in the name to identify the runners managed by this instance.
             github_configuration: GitHub configuration
+            jobmanager_configuration: JobManager configuration
+
+        Raises:
+            PlatformError: If no configuration is provided for any platform.
 
         Returns:
             A new MultiplexerPlatform.
         """
-        providers: dict[str, PlatformProvider] = {
-            _JOBMANAGER_PLATFORM_KEY: JobManagerPlatform.build()
-        }
+        providers: dict[str, PlatformProvider] = {}
+
+        if jobmanager_configuration is None:
+            logger.debug("JobManager configuration not provided, skipping JobManager provider.")
+        else:
+            jobmanager_platform = JobManagerPlatform.build(jobmanager_configuration)
+            providers.update({_JOBMANAGER_PLATFORM_KEY: jobmanager_platform})
         if github_configuration is None:
             logger.debug("GitHub configuration not provided, skipping GitHub provider.")
         else:
             github_platform = GitHubRunnerPlatform.build(prefix, github_configuration)
             providers.update({_GITHUB_PLATFORM_KEY: github_platform})
+
+        if not providers:
+            raise PlatformError("Either GitHub or JobManager configuration must be provided.")
         return cls(providers)
 
     def get_runner_health(

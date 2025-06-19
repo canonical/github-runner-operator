@@ -32,7 +32,7 @@ class DeleteRunnerBusyError(PlatformError):
 
 
 class PlatformApiError(PlatformError):
-    """Represents an error when the GitHub API returns an error."""
+    """Represents an error when one of the Platform APIs returns an error."""
 
 
 class TokenError(PlatformError):

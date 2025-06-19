@@ -1,5 +1,7 @@
 # Integrations
 
+This document provides an overview of the integrations supported by the GitHub Runner charm.
+
 ### debug-ssh
 
 _Interface_: debug-ssh    
