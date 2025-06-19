@@ -300,7 +300,6 @@ def check_runners_amount_and_active(runner_manager: RunnerManager, num: int) -> 
     active_runners = [
         runner for runner in runners if runner.cloud_state == CloudRunnerState.ACTIVE
     ]
-    pytest.set_trace()
     if len(runners) == len(active_runners) and len(runners) == num:
         return True
     return False
