@@ -13,7 +13,7 @@ from jobmanager_client import (
     RunnerHealthResponse,
     RunnerRegisterResponse,
 )
-from jobmanager_client.models.job import Job
+from jobmanager_client.models.job_read import JobRead
 from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import BaseModel, HttpUrl
 
@@ -94,8 +94,28 @@ def test_get_runner_context_fails(
 @pytest.mark.parametrize(
     "api_return_value, picked_up",
     [
-        pytest.param(Job(status=JobStatus.IN_PROGRESS.value), True, id="in progress job"),
-        pytest.param(Job(status=JobStatus.PENDING.value), False, id="pending job"),
+        pytest.param(
+            JobRead(
+                status=JobStatus.IN_PROGRESS.value,
+                architecture="arm64",
+                base_series="jammy",
+                id=1,
+                requested_by="foobar",
+            ),
+            True,
+            id="in progress job",
+        ),
+        pytest.param(
+            JobRead(
+                status=JobStatus.PENDING.value,
+                architecture="arm64",
+                base_series="jammy",
+                id=1,
+                requested_by="foobar",
+            ),
+            False,
+            id="pending job",
+        ),
     ],
 )
 def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_value, picked_up):
@@ -196,7 +216,15 @@ def test_check_job_been_picked_up_job_url_validation_err(
 ):
     call_api_mock = MagicMock()
     monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = [Job(status=JobStatus.IN_PROGRESS.value)]
+    call_api_mock.side_effect = [
+        JobRead(
+            status=JobStatus.IN_PROGRESS.value,
+            architecture="arm64",
+            base_series="jammy",
+            id=1,
+            requested_by="foobar",
+        )
+    ]
 
     platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
     metadata = RunnerMetadata(platform_name="jobmanager", runner_id="3", url=job_url)
