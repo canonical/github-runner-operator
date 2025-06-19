@@ -25,6 +25,9 @@ jobs:
       extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
+      # TODO: DEBUG
+      tmate-debug: true
+      tmate-timeout: 3000
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -38,6 +41,9 @@ jobs:
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
+      # TODO: DEBUG
+      tmate-debug: true
+      tmate-timeout: 3000
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:

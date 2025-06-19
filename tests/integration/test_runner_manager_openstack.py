@@ -227,6 +227,8 @@ async def runner_manager_fixture(
 
 @pytest_asyncio.fixture(scope="function", name="runner_manager_with_one_runner")
 async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) -> RunnerManager:
+    runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
+    await wait_runner_amount(runner_manager, 0)
     runner_manager.create_runners(1, RunnerMetadata())
     runner_list = runner_manager.get_runners()
     try:
@@ -276,17 +278,32 @@ async def wait_runner_amount(
         timeout: The timeout in seconds.
         check_interval: The interval to check in seconds.
     """
-    runner_list = runner_manager.get_runners()
-    assert isinstance(runner_list, tuple)
-    if len(runner_list) == num:
-        return
-
     # The openstack server can take sometime to fully clean up or create.
     await wait_for(
-        lambda: len(runner_manager.get_runners()) == num,
+        lambda: check_runners_amount_and_active(runner_manager, num),
         timeout=timeout,
         check_interval=check_interval,
     )
+
+
+def check_runners_amount_and_active(runner_manager: RunnerManager, num: int) -> bool:
+    """Check if the number of runners match the expected amount and all runners are active.
+
+    Args:
+        runner_manager: The RunnerManager instance to use.
+        num: The expected number of runners.
+
+    Returns:
+        Whether the expected number of runner is spawned and active.
+    """
+    runners = runner_manager.get_runners()
+    active_runners = [
+        runner for runner in runners if runner.cloud_state == CloudRunnerState.ACTIVE
+    ]
+    pytest.set_trace()
+    if len(runners) == len(active_runners) and len(runners) == num:
+        return True
+    return False
 
 
 @pytest.mark.openstack
