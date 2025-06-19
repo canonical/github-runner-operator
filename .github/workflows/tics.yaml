@@ -21,8 +21,6 @@ jobs:
           rm -rf .tox
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
-        env:
-          PYTHONPATH: "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src"
         with:
           mode: qserver
           project: github-runner-operator
