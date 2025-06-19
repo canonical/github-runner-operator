@@ -7,12 +7,10 @@ import logging
 from juju.application import Application
 from pytest_httpserver import HTTPServer, RequestHandler
 
-from jobmanager.client.jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import (
-    GetRunnerHealthV1RunnerRunnerIdHealthGet200Response,
-)
-from jobmanager.client.jobmanager_client.models.register_runner_v1_runner_register_post200_response import (
-    RegisterRunnerV1RunnerRegisterPost200Response,
-)
+
+from jobmanager.client.jobmanager_client.models.runner_health_response import RunnerHealthResponse
+from jobmanager.client.jobmanager_client.models.runner_register_response import \
+    RunnerRegisterResponse
 
 logger = logging.getLogger(__name__)
 
@@ -89,9 +87,9 @@ class GetRunnerHealthEndpoint:
             status: The status of the runner, e.g., "PENDING", "IDLE", "IN_PROGRESS", "COMPLETED".
             deletable: Whether the runner is deletable or not.
         """
-        # '/v1/runner/<runner_id>/health', 'GET',
+        # '/v1/runners/<runner_id>/health', 'GET',
         # Returns GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
-        health_response = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+        health_response =RunnerHealthResponse(
             label="label",
             cpu_usage="1",
             ram_usage="1",
@@ -117,8 +115,8 @@ async def wait_for_runner_to_be_registered(
         runner_id: The ID of the runner.
         runner_token: The token of the runner.
     """
-    runner_register = "/v1/runner/register"
-    returned_token = RegisterRunnerV1RunnerRegisterPost200Response(
+    runner_register = "/v1/runners/register"
+    returned_token = RunnerRegisterResponse(
         id=runner_id, token=runner_token
     )
     httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
