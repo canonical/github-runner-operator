@@ -77,7 +77,7 @@ class JobManagerPlatform(PlatformProvider):
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.RunnersApi(api_client)
             try:
-                response = api_instance.get_runner_health_v1_runner_runner_id_health_get(
+                response = api_instance.get_runner_health_v1_runners_runner_id_health_get(
                     int(runner_identity.metadata.runner_id)
                 )
             except NotFoundException:
@@ -174,24 +174,20 @@ class JobManagerPlatform(PlatformProvider):
         with jobmanager_client.ApiClient(configuration) as api_client:
             api_instance = jobmanager_client.RunnersApi(api_client)
             try:
-                runner_register_request = (
-                    jobmanager_client.RegisterRunnerV1RunnerRegisterPostRequest(
-                        name=instance_id.name, labels=labels
-                    )
+                runner_register_request = jobmanager_client.RunnerCreate(
+                    name=instance_id.name, labels=labels
                 )
 
-                response = api_instance.register_runner_v1_runner_register_post(
+                response = api_instance.register_runner_v1_runners_register_post(
                     runner_register_request
                 )
-                if not response.id:
-                    raise PlatformApiError("No runner ID from jobmanager API")
                 updated_metadata = RunnerMetadata(
                     platform_name=metadata.platform_name, url=self._url
                 )
                 updated_metadata.runner_id = str(response.id)
                 if token := response.token:
                     jobmanager_endpoint = (
-                        f"{self._url}/v1/runner/{updated_metadata.runner_id}/health"
+                        f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
                     )
                     # For now, use the first label
                     label = "undefined"

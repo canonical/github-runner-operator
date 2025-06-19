@@ -10,8 +10,8 @@ from unittest.mock import MagicMock
 
 import pytest
 from jobmanager_client import (
-    GetRunnerHealthV1RunnerRunnerIdHealthGet200Response,
-    RegisterRunnerV1RunnerRegisterPost200Response,
+    RunnerHealthResponse,
+    RunnerRegisterResponse,
 )
 from jobmanager_client.models.job import Job
 from jobmanager_client.rest import ApiException, NotFoundException
@@ -39,9 +39,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
     runner_id = random.randint(1, 1000)
     token = secrets.token_hex(16)
-    call_api_mock.return_value = RegisterRunnerV1RunnerRegisterPost200Response(
-        id=runner_id, token=token
-    )
+    call_api_mock.return_value = RunnerRegisterResponse(id=runner_id, token=token)
 
     metadata = RunnerMetadata(platform_name="jobmanager", runner_id=None, url=None)
     instance_id = InstanceID.build(prefix="unit-0")
@@ -61,19 +59,9 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     "api_return_value, error_message",
     [
         pytest.param(
-            RegisterRunnerV1RunnerRegisterPost200Response(id=random.randint(1, 10)),
-            "Empty token",
-            id="No token",
-        ),
-        pytest.param(
-            RegisterRunnerV1RunnerRegisterPost200Response(id=random.randint(1, 10), token=""),
+            RunnerRegisterResponse(id=random.randint(1, 10), token=""),
             "Empty token",
             id="Empty token",
-        ),
-        pytest.param(
-            RegisterRunnerV1RunnerRegisterPost200Response(token=secrets.token_hex(16)),
-            "No runner ID",
-            id="No runner id",
         ),
         pytest.param(ApiException, "API error", id="Exception from api"),
     ],
@@ -257,10 +245,13 @@ def test_get_runner_health(
     call_api_mock = MagicMock()
     monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
 
-    api_return_value = GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+    api_return_value = RunnerHealthResponse(
         label="label",
         status=job_status,
         deletable=job_deletable,
+        cpu_usage="10%",
+        ram_usage="20%",
+        disk_usage="30%",
     )
     call_api_mock.side_effect = [api_return_value]
 
@@ -307,10 +298,13 @@ def test_get_runner_health(
                 ),
             ],
             [
-                GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+                RunnerHealthResponse(
                     label="label",
                     status="IN_PROGRESS",
                     deletable=False,
+                    cpu_usage="10%",
+                    ram_usage="20%",
+                    disk_usage="30%",
                 ),
                 ApiException,
             ],
@@ -349,10 +343,13 @@ def test_get_runner_health(
                 ),
             ],
             [
-                GetRunnerHealthV1RunnerRunnerIdHealthGet200Response(
+                RunnerHealthResponse(
                     label="label",
                     status="FAILED",
                     deletable=True,
+                    cpu_usage="10%",
+                    ram_usage="20%",
+                    disk_usage="30%",
                 ),
                 NotFoundException,
             ],
