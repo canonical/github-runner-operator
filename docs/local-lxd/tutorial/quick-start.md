@@ -1,5 +1,8 @@
 # Deploy the GitHub runner charm for the first time
 
+This tutorial shows you how to deploy the GitHub runner charm for the first time using Juju on a local LXD controller.
+The charm will deploy a self-hosted runner that can be used to run GitHub Actions jobs.
+
 ## What you'll do
 
 - Set up a GitHub repository
@@ -80,7 +83,7 @@ Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the G
 
 The `--constraints` option for the `juju deploy` sets the resource requirements for the Juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
 
-The `--storage` option mounts a juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
+The `--storage` option mounts a Juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
 
 The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the Juju machine and reboot the Juju machine. During reboot, the Juju machine will go into the `down` state; this is a part of the normal reboot process and the Juju machine should be restarted after a while.
 

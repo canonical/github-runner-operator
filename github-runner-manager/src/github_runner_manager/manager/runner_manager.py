@@ -508,13 +508,13 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_context, github_runner = args.platform_provider.get_runner_context(
+        runner_context, runner_info = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
         # Update the runner id if necessary
         if not args.metadata.runner_id:
-            args.metadata.runner_id = str(github_runner.id)
+            args.metadata.runner_id = str(runner_info.id)
 
         runner_identity = RunnerIdentity(instance_id=instance_id, metadata=args.metadata)
         try:
@@ -533,7 +533,7 @@ class RunnerManager:
 
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
-            args.platform_provider.delete_runner(github_runner.identity)
+            args.platform_provider.delete_runner(runner_info.identity)
             raise
         return instance_id
 
