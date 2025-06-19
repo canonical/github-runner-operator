@@ -230,12 +230,12 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     runner_manager.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
     await wait_runner_amount(runner_manager, 0)
     runner_manager.create_runners(1, RunnerMetadata())
-    runner_list = runner_manager.get_runners()
     try:
         await wait_runner_amount(runner_manager, 1)
     except TimeoutError as err:
         raise AssertionError("Test arrange failed: Expect one runner") from err
 
+    runner_list = runner_manager.get_runners()
     runner = runner_list[0]
     assert (
         runner.cloud_state == CloudRunnerState.ACTIVE
@@ -300,7 +300,6 @@ def check_runners_amount_and_active(runner_manager: RunnerManager, num: int) -> 
     active_runners = [
         runner for runner in runners if runner.cloud_state == CloudRunnerState.ACTIVE
     ]
-    pytest.set_trace()
     if len(runners) == len(active_runners) and len(runners) == num:
         return True
     return False
