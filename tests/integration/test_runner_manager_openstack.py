@@ -354,6 +354,7 @@ async def test_runner_normal_idle_lifecycle(
     assert len(runner_id_list) == 1
     runner_id = runner_id_list[0]
 
+    pytest.set_trace()
     try:
         await wait_runner_amount(runner_manager, 1)
     except TimeoutError as err:
