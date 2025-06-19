@@ -1,6 +1,7 @@
 .github/workflows/python.yml
 .gitignore
 .gitlab-ci.yml
+.openapi-generator-ignore
 .travis.yml
 README.md
 docs/DefaultApi.md
@@ -49,8 +50,19 @@ setup.cfg
 setup.py
 test-requirements.txt
 test/__init__.py
+test/test_default_api.py
+test/test_http_validation_error.py
+test/test_job_create.py
+test/test_job_read.py
+test/test_job_update.py
+test/test_jobs_api.py
 test/test_runner_create.py
 test/test_runner_health_response.py
 test/test_runner_health_update_response.py
 test/test_runner_register_response.py
+test/test_runners_api.py
+test/test_tokens_api.py
+test/test_validation_error.py
+test/test_validation_error_loc_inner.py
+test/test_vm_dependencies.py
 tox.ini
