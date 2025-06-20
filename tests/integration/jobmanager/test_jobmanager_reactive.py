@@ -113,7 +113,7 @@ async def test_jobmanager_reactive(
     """
     runner_id = 1234
     runner_token = "token"
-    runner_health_path = f"/v1/runner/{runner_id}/health"
+    runner_health_path = f"/v1/runners/{runner_id}/health"
 
     # The builder-agent can get to us at any point.
     add_builder_agent_health_endpoint_response(
