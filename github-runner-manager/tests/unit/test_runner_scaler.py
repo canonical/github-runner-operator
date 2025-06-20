@@ -121,8 +121,6 @@ def runner_manager_fixture(
         cloud_runner_manager=mock_cloud,
         labels=["label1", "label2", "arm64", "noble", "flavorlabel"],
     )
-    # We do not want to wait in the unit tests for machines to be ready.
-    monkeypatch.setattr(runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", (0,))
     return runner_manager
 
 

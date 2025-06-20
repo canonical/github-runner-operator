@@ -56,14 +56,14 @@ async def app_fixture(
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
         }
     )
-    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
     await clear_metrics_log(app_for_reactive.units[0])
 
     yield app_for_reactive
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_reactive.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
 
 
 @pytest.mark.abort_on_fail
@@ -103,7 +103,7 @@ async def test_reactive_mode_spawns_runner(
 
     # There may be a race condition between getting the token and spawning the machine.
     await sleep(10)
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     try:
         await wait_for_completion(run, conclusion="success")
@@ -122,7 +122,7 @@ async def test_reactive_mode_spawns_runner(
             True if the runner_installed event is logged, False otherwise.
         """
         # trigger reconcile which extracts metrics
-        await wait_for_reconcile(app, app.model)
+        await wait_for_reconcile(app)
         metrics_log = await get_metrics_log(app.units[0])
         log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
         events = set(map(lambda line: line.get("event"), log_lines))
@@ -193,7 +193,7 @@ async def test_reactive_mode_scale_down(
     mongodb_uri = await get_mongodb_uri(ops_test, app)
 
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "2"})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     run = await dispatch_workflow(
         app=app,
@@ -214,7 +214,7 @@ async def test_reactive_mode_scale_down(
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     # we assume that the runner got deleted while running the job, so we expect a failed job
     await wait_for_completion(run, conclusion="failure")
@@ -236,7 +236,7 @@ async def test_reactive_mode_scale_down(
         app.name,
     )
 
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     run.update()
     assert run.status == "queued"

@@ -101,17 +101,16 @@ async def get_reconcile_id(unit: Unit) -> str:
     return stdout
 
 
-async def wait_for_reconcile(app: Application, model: Model) -> None:
+async def wait_for_reconcile(app: Application) -> None:
     """Wait until a reconcile has happened.
 
     Uses the first unit found in the application.
 
     Args:
         app: The GitHub Runner Charm application.
-        model: The machine charm model.
     """
     # Wait the application is actively reconciling. Avoid waiting for image, etc.
-    await model.wait_for_idle(apps=[app.name], status=ACTIVE)
+    await app.model.wait_for_idle(apps=[app.name], status=ACTIVE)
 
     unit = app.units[0]
     base_id = await get_reconcile_id(unit)
@@ -120,6 +119,29 @@ async def wait_for_reconcile(app: Application, model: Model) -> None:
         current_id = await get_reconcile_id(unit)
         if base_id != current_id:
             return
+
+
+async def wait_for_runner_ready(app: Application) -> None:
+    """Wait until a runner is ready.
+
+    Uses the first unit found in the application.
+
+    Args:
+        app: The GitHub Runner Charm application.
+    """
+    await wait_for_reconcile(app)
+
+    # Wait for 10 minutes for the runner to come online.
+    for _ in range(20):
+        action = await app.units[0].run_action("check-runners")
+        await action.wait()
+
+        if action.status == "completed" and int(action.results["online"]) >= 1:
+            break
+
+        await sleep(30)
+    else:
+        assert False, "Timeout waiting for runner to be ready"
 
 
 async def deploy_github_runner_charm(
