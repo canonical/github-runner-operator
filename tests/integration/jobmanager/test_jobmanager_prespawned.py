@@ -65,7 +65,7 @@ async def test_jobmanager(
     # to create a test with a real jobmanager, and this could be done in the future.
     runner_id = 1234
     runner_token = "token"
-    runner_health_path = f"/v1/runner/{runner_id}/health"
+    runner_health_path = f"/v1/runners/{runner_id}/health"
 
     # The builder-agent can get to us at any point after runner is spawned, so we already
     # register the health endpoint.

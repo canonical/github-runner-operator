@@ -95,23 +95,23 @@ Class | Method | HTTP request | Description
 *JobsApi* | [**get_jobs_v1_jobs_get**](docs/JobsApi.md#get_jobs_v1_jobs_get) | **GET** /v1/jobs | Get Jobs
 *JobsApi* | [**update_health_v1_jobs_job_id_health_put**](docs/JobsApi.md#update_health_v1_jobs_job_id_health_put) | **PUT** /v1/jobs/{job_id}/health | Update Health
 *JobsApi* | [**update_job_v1_jobs_job_id_put**](docs/JobsApi.md#update_job_v1_jobs_job_id_put) | **PUT** /v1/jobs/{job_id} | Update Job
-*RunnersApi* | [**get_runner_health_v1_runner_runner_id_health_get**](docs/RunnersApi.md#get_runner_health_v1_runner_runner_id_health_get) | **GET** /v1/runner/{runner_id}/health | Get Runner Health
-*RunnersApi* | [**register_runner_v1_runner_register_post**](docs/RunnersApi.md#register_runner_v1_runner_register_post) | **POST** /v1/runner/register | Register Runner
-*RunnersApi* | [**update_runner_health_v1_runner_runner_id_health_put**](docs/RunnersApi.md#update_runner_health_v1_runner_runner_id_health_put) | **PUT** /v1/runner/{runner_id}/health | Update Runner Health
+*RunnersApi* | [**get_runner_health_v1_runners_runner_id_health_get**](docs/RunnersApi.md#get_runner_health_v1_runners_runner_id_health_get) | **GET** /v1/runners/{runner_id}/health | Get Runner Health
+*RunnersApi* | [**register_runner_v1_runners_register_post**](docs/RunnersApi.md#register_runner_v1_runners_register_post) | **POST** /v1/runners/register | Register Runner
+*RunnersApi* | [**update_runner_health_v1_runners_runner_id_health_put**](docs/RunnersApi.md#update_runner_health_v1_runners_runner_id_health_put) | **PUT** /v1/runners/{runner_id}/health | Update Runner Health
 *TokensApi* | [**create_api_access_token_v1_api_access_token_post**](docs/TokensApi.md#create_api_access_token_v1_api_access_token_post) | **POST** /v1/api_access_token | Create Api Access Token
 *TokensApi* | [**revoke_api_access_token_v1_api_access_token_delete**](docs/TokensApi.md#revoke_api_access_token_v1_api_access_token_delete) | **DELETE** /v1/api_access_token | Revoke Api Access Token
 
 
 ## Documentation For Models
 
- - [GetRunnerHealthV1RunnerRunnerIdHealthGet200Response](docs/GetRunnerHealthV1RunnerRunnerIdHealthGet200Response.md)
  - [HTTPValidationError](docs/HTTPValidationError.md)
  - [JobCreate](docs/JobCreate.md)
  - [JobRead](docs/JobRead.md)
  - [JobUpdate](docs/JobUpdate.md)
- - [RegisterRunnerV1RunnerRegisterPost200Response](docs/RegisterRunnerV1RunnerRegisterPost200Response.md)
- - [RegisterRunnerV1RunnerRegisterPostRequest](docs/RegisterRunnerV1RunnerRegisterPostRequest.md)
- - [UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest](docs/UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest.md)
+ - [RunnerCreate](docs/RunnerCreate.md)
+ - [RunnerHealthResponse](docs/RunnerHealthResponse.md)
+ - [RunnerHealthUpdateResponse](docs/RunnerHealthUpdateResponse.md)
+ - [RunnerRegisterResponse](docs/RunnerRegisterResponse.md)
  - [ValidationError](docs/ValidationError.md)
  - [ValidationErrorLocInner](docs/ValidationErrorLocInner.md)
  - [VmDependencies](docs/VmDependencies.md)
@@ -120,17 +120,7 @@ Class | Method | HTTP request | Description
 <a id="documentation-for-authorization"></a>
 ## Documentation For Authorization
 
-
-Authentication schemes defined for the API:
-<a id="APIAccessToken"></a>
-### APIAccessToken
-
-- **Type**: HTTP basic authentication
-
-<a id="BuilderToken"></a>
-### BuilderToken
-
-- **Type**: HTTP basic authentication
+Endpoints do not require authorization.
 
 
 ## Author

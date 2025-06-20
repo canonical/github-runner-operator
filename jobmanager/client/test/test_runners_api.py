@@ -26,22 +26,22 @@ class TestRunnersApi(unittest.TestCase):
     def tearDown(self) -> None:
         self.api.api_client.close()
 
-    def test_get_runner_health_v1_runner_runner_id_health_get(self) -> None:
-        """Test case for get_runner_health_v1_runner_runner_id_health_get
+    def test_get_runner_health_v1_runners_runner_id_health_get(self) -> None:
+        """Test case for get_runner_health_v1_runners_runner_id_health_get
 
         Get Runner Health  # noqa: E501
         """
         pass
 
-    def test_register_runner_v1_runner_register_post(self) -> None:
-        """Test case for register_runner_v1_runner_register_post
+    def test_register_runner_v1_runners_register_post(self) -> None:
+        """Test case for register_runner_v1_runners_register_post
 
         Register Runner  # noqa: E501
         """
         pass
 
-    def test_update_runner_health_v1_runner_runner_id_health_put(self) -> None:
-        """Test case for update_runner_health_v1_runner_runner_id_health_put
+    def test_update_runner_health_v1_runners_runner_id_health_put(self) -> None:
+        """Test case for update_runner_health_v1_runners_runner_id_health_put
 
         Update Runner Health  # noqa: E501
         """
