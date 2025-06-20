@@ -16,16 +16,16 @@ stages:
 
 pytest-3.7:
   extends: .pytest
-  image: python:3.7-alpine
+  image: python:3.7-alpine@sha256:f3d31c8677d03f0b3c724446077f229a6ce9d3ac430f5c08cd7dff00292048c3
 pytest-3.8:
   extends: .pytest
-  image: python:3.8-alpine
+  image: python:3.8-alpine@sha256:3d93b1f77efce339aa77db726656872517b0d67837989aa7c4b35bd5ae7e81ba
 pytest-3.9:
   extends: .pytest
-  image: python:3.9-alpine
+  image: python:3.9-alpine@sha256:535a2eb2c2769d1ffe8188051b341f6b40c1afc6dc11b1b938e3c9031ca72139
 pytest-3.10:
   extends: .pytest
-  image: python:3.10-alpine
+  image: python:3.10-alpine@sha256:8d21601f9f531162bc0c37ae0ac9e7a070e512a6ae0ffc4090118866902c9caa
 pytest-3.11:
   extends: .pytest
-  image: python:3.11-alpine
+  image: python:3.11-alpine@sha256:8068890a42d68ece5b62455ef327253249b5f094dcdee57f492635a40217f6a3
