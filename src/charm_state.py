@@ -521,8 +521,12 @@ class CharmConfig(BaseModel):
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
-            aproxy_exclude_addresses=charm.config.get(APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME),
-            aproxy_redirect_ports=charm.config.get(APROXY_REDIRECT_PORTS_CONFIG_NAME),
+            aproxy_exclude_addresses=(
+                cast(str | None, charm.config.get(APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME))
+            ),
+            aproxy_redirect_ports=(
+                cast(str | None, charm.config.get(APROXY_REDIRECT_PORTS_CONFIG_NAME))
+            ),
             custom_pre_job_script=custom_pre_job_script,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
         )
