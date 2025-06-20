@@ -19,8 +19,7 @@ class ReactiveProcessConfig(BaseModel):
     Attributes:
         queue: The queue configuration.
         manager_name: Name of the manager.
-        jobmanager_configuration: Configuration for JobManager.
-        github_configuration: Configuration for GitHub.
+        platform_configuration: Configuration for runner provider platform.
         cloud_runner_manager: The OpenStack runner manager configuration.
         supported_labels: The supported labels for the runner.
         labels: Labels to use for the runners.
@@ -28,8 +27,7 @@ class ReactiveProcessConfig(BaseModel):
 
     queue: QueueConfig
     manager_name: str
-    github_configuration: GitHubConfiguration | None
-    jobmanager_configuration: JobManagerConfiguration | None
+    platform_configuration: GitHubConfiguration | JobManagerConfiguration
     cloud_runner_manager: OpenStackRunnerManagerConfig
     supported_labels: set[str]
     labels: list[str]

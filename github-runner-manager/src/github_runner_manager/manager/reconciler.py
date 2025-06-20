@@ -5,25 +5,24 @@
 import logging
 import multiprocessing
 import re
-import time
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Callable, Iterable, Protocol, Sequence, Type, cast
+from typing import Iterable, Protocol, Sequence, cast
 from urllib.parse import urlparse
 
-from kombu import Message
 from kombu.simple import SimpleQueue
-from pydantic import BaseModel, HttpUrl, ValidationError, validator
+from pydantic import BaseModel, HttpUrl, validator
 
+from github_runner_manager.cloud.openstack import CloudVM, VMConfig, VMStatus
 from github_runner_manager.errors import RunnerError
-from github_runner_manager.manager.cloud_runner_manager import CloudRunnerInstance, InstanceID
-from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
+from github_runner_manager.manager.cloud_runner_manager import InstanceID
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     Platform,
     PlatformApiError,
     PlatformRunner,
+    PlatformRunnerStatus,
     RunnerContext,
     RunnerIdentity,
     RunnerMetadata,
@@ -83,9 +82,22 @@ class ReactiveConfig(ReconcileConfigBase):
         algorithm: Reactive reconciliation algorithm.
     """
 
-    algorithm = ReconcileAlgorithm.REACTIVE
     queue: SimpleQueue
     supported_labels: set[str]
+    algorithm = ReconcileAlgorithm.REACTIVE
+
+
+@dataclass
+class _FlushActionPlan:
+    """A flush action plan for the reconciliation algorithm.
+
+    Attributes:
+        vms: The list of VMs to flush.
+        runners: The list of Runners to flush.
+    """
+
+    vms: list[CloudVM]
+    runners: list[PlatformRunner]
 
 
 class _ReconciliationAction(str, Enum):
@@ -126,28 +138,15 @@ class _PreaspawnReconcileActionPlan(_ReconcileActionPlanBase):
 
 
 @dataclass
-class _ReactiveReconcileActionPlan(_ReconcileActionPlanBase):
-    """Action plan generated after reconciling current state for Reactive runners.
+class ReconcilerConfig:
+    """Configuration for reconciler.
 
     Attributes:
-        spawn_runner_configs: List of runner configurations to spawn runners with.
-    """
-
-    spawn_runner_configs: list["_SpawnRunnerConfig"]
-
-
-@dataclass
-class ReconcileManagerConfig:
-    """Configuration for reconcile manager.
-
-    Attributes:
-        manager_name: The unique name of the reconcile manager, use to identify resources.
         labels: The labels to attach to the runners created by this manager, for the users to\
             target the desired runner for their jobs.
         python_path: The PYTHONPATH to access the github-runner-manager library.
     """
 
-    manager_name: str
     labels: list[str]
     python_path: str | None
 
@@ -207,17 +206,22 @@ class SupportsCloudProvider(Protocol):
         """
         ...
 
-    def create_vm(
-        self, *, runner_identity: RunnerIdentity, vm_config: OpenStackServerConfig
-    ) -> CloudRunnerInstance:
-        """Create new VM for a runner."""
-        ...
-
-    def list_vms(self) -> list[CloudRunnerInstance]:
+    def list_vms(self) -> list[CloudVM]:
         """List VMs owned by the applicadtion in the cloud."""
         ...
 
-    def delete_vms(self, *, vms: Sequence[CloudRunnerInstance]) -> list[CloudRunnerInstance]:
+    def create_vm(
+        self,
+        *,
+        instance_id: InstanceID,
+        vm_config: VMConfig,
+        metadata: dict[str, str],
+        workload_start_script: str,
+    ) -> CloudVM:
+        """Create new VM for a runner."""
+        ...
+
+    def delete_vms(self, *, vms: Sequence[CloudVM]) -> list[CloudVM]:
         """Request deletion of VMs."""
         ...
 
@@ -225,7 +229,7 @@ class SupportsCloudProvider(Protocol):
 class SupportsRunnerMetrics(Protocol):
     """Any service that supports propagating metrics of a completed runner."""
 
-    def propagate_metrics(self, vms: Sequence[CloudRunnerInstance]) -> None:
+    def propagate_metrics(self, vms: Sequence[CloudVM]) -> None:
         """Propagates metrics from completed runner VM."""
         ...
 
@@ -271,7 +275,7 @@ class Reconciler:
         platform_provider: SupportsPlatformProvider,
         cloud_provider: SupportsCloudProvider,
         metrics_provider: SupportsRunnerMetrics,
-        config: ReconcileManagerConfig,
+        config: ReconcilerConfig,
         algorithm_config: PrespawnConfig | ReactiveConfig,
     ):
         """Initialize the reconciler.
@@ -291,6 +295,20 @@ class Reconciler:
 
     def reconcile(self) -> None:
         """Run a single reconcile iteration."""
+        # flush online idle runners if there are no messages in the queue. This
+        # is because we cannot guarantee that the reactive-runner spanwed will
+        # pick up the targeted job (since another job might fit the label and
+        # pick it up), hence we might be over-provisioning reactive VM+runners.
+        if (
+            self._algorithm_config.algorithm == ReconcileAlgorithm.REACTIVE
+            and cast(ReactiveConfig, self._algorithm_config).queue.qsize() == 0
+        ):
+            vms = self._cloud.list_vms()
+            runners = self._platform.list_runners()
+            self._get_flush_action_plan(vms=vms, runners=runners)
+            self._platform.delete_runners(runners=runners)
+            self._cloud.delete_vms(vms=vms)
+
         # calculate resources to clean up
         vms = self._cloud.list_vms()
         runners = self._platform.list_runners()
@@ -309,19 +327,26 @@ class Reconciler:
         action_plan: _ReconcileActionPlanBase
         match self._algorithm_config.algorithm:
             case ReconcileAlgorithm.REACTIVE:
-                action_plan = self._plan_reactive_runners(vms=remaining_vms)
-                self._spawn_reactive_runners(plan=action_plan)
+                self.reactive_runner_manager.reconcile()
             case ReconcileAlgorithm.PRESPAWN:
                 action_plan = self._plan_prespawn_runners(vms=remaining_vms)
-                self._spawn_prespawn_runners(plan=action_plan)
+                match action_plan.action:
+                    case _ReconciliationAction.NOOP:
+                        return
+                    case _ReconciliationAction.DOWNSCALE:
+                        return
+                    case _ReconciliationAction.CREATE:
+                        self._spawn_prespawn_runners(plan=action_plan)
 
     def _get_vms_to_cleanup(
-        self, vms: Sequence[CloudRunnerInstance], runners: Sequence[PlatformRunner]
-    ) -> list[CloudRunnerInstance]:
+        self, vms: Sequence[CloudVM], runners: Sequence[PlatformRunner]
+    ) -> list[CloudVM]:
         """Get the VMs that need to be cleaned up.
 
         Cleanup algorithm:
-        - VMs that are older than 5 minutes that are not registered in the platform.
+        - VMs that are online for over 5 minutes that are not registered in the
+            platform.
+        - VMs that are in ERROR of SHUTOFF (irrecoverable) state.
 
         Args:
             vms: The list of VMs to check if they need to be cleaned up.
@@ -331,15 +356,40 @@ class Reconciler:
             The list of VMs that require cleaning up.
         """
         runner_instance_ids = {runner.identity.instance_id for runner in runners}
-        return [
+        vms_with_no_runner_registered_over_5_min = {
             vm
             for vm in vms
             if vm.instance_id not in runner_instance_ids
             and vm.created_at < datetime.now() - timedelta(minutes=5)
+        }
+        vms_not_recoverable: set[CloudVM] = {
+            vm for vm in vms if vm.vm_status in (VMStatus.ERROR, VMStatus.SHUTOFF)
+        }
+        return list(vms_with_no_runner_registered_over_5_min | vms_not_recoverable)
+
+    def _get_flush_action_plan(
+        self, runners: Sequence[PlatformRunner], vms: Sequence[CloudVM]
+    ) -> _FlushActionPlan:
+        """Get a list of runners and VMs to flush.
+
+        Flush online idle runners.
+
+        Args:
+            runners: The current state of the runners on platform provider.
+            vms: The current state of VMs on the cloud provider.
+
+        Returns:
+            The _FlushActionPlan.
+        """
+        runners_to_flush = [
+            runner for runner in runners if runner.identity == PlatformRunnerStatus.IDLE
         ]
+        instance_ids_to_flush = {runner.identity.instance_id for runner in runners_to_flush}
+        vms_to_flush = [vm for vm in vms if vm.instance_id in instance_ids_to_flush]
+        return _FlushActionPlan(vms=vms_to_flush, runners=runners_to_flush)
 
     def _get_runners_to_cleanup(
-        self, runners: Sequence[PlatformRunner], vms: Sequence[CloudRunnerInstance]
+        self, runners: Sequence[PlatformRunner], vms: Sequence[CloudVM]
     ) -> list[PlatformRunner]:
         """Get the runners that need to be cleaned up.
 
@@ -356,88 +406,7 @@ class Reconciler:
         vm_instance_ids = {vm.instance_id for vm in vms}
         return [runner for runner in runners if runner.identity.instance_id not in vm_instance_ids]
 
-    def _plan_reactive_runners(
-        self, vms: Iterable[CloudRunnerInstance]
-    ) -> _ReactiveReconcileActionPlan:
-        """Create the reactive runners.
-
-        Args:
-            vms: The current vms in the cloud.
-        """
-        reactive_config = cast(ReactiveConfig, self._algorithm_config)
-        queue_size = reactive_config.queue.qsize()
-        if not queue_size:
-            return _ReactiveReconcileActionPlan(
-                algorithm=ReconcileAlgorithm.REACTIVE,
-                action=_ReconciliationAction.NOOP,
-                spawn_runner_configs=[],
-            )
-
-        diff = reactive_config.base_quantity - len(tuple(vms))
-        num_reactive_to_spawn = min(diff, queue_size)
-        if num_reactive_to_spawn == 0:
-            return _ReactiveReconcileActionPlan(
-                algorithm=ReconcileAlgorithm.REACTIVE,
-                action=_ReconciliationAction.NOOP,
-                spawn_runner_configs=[],
-            )
-        elif num_reactive_to_spawn < 0:
-            return _ReactiveReconcileActionPlan(
-                algorithm=ReconcileAlgorithm.REACTIVE,
-                action=_ReconciliationAction.DOWNSCALE,
-                spawn_runner_configs=[],
-            )
-
-        reactive_job_configs = []
-        for _ in range(num_reactive_to_spawn):
-            reactive_msg: Message = reactive_config.queue.get(block=True, timeout=30)
-            if reactive_msg.payload == END_PROCESSING_PAYLOAD:
-                reactive_msg.ack()
-                break
-            try:
-                job = JobDetails.parse_raw(reactive_msg.payload)
-            except ValidationError:
-                reactive_msg.reject(requeue=False)
-                # handle something critical here
-                continue
-            # check all labels are supported
-            if not all(label in reactive_config.supported_labels for label in job.labels):
-                reactive_msg.reject(requeue=False)
-                # handle something critical here
-                continue
-            # build metadata
-            instance_id = InstanceID.build(
-                self._cloud.name_prefix,
-                reactive=False,
-            )
-            runner_metadata = _build_runner_metadata(job_url=job.url)
-            runner_context, runner = self._platform.get_runner_context(
-                instance_id=instance_id, metadata=runner_metadata, labels=self._config.labels
-            )
-            reactive_job_configs.append(
-                _SpawnRunnerConfig(
-                    platform_provider=self._platform,
-                    cloud_provider=self._cloud,
-                    instance_id=instance_id,
-                    algorithm=ReconcileAlgorithm.REACTIVE,
-                    vm_config=OpenStackServerConfig(
-                        image=reactive_config.vm_image,
-                        flavor=reactive_config.vm_flavor,
-                    ),
-                    runner=runner,
-                    runner_context=runner_context,
-                    runner_metadata=runner_metadata,
-                )
-            )
-        return _ReactiveReconcileActionPlan(
-            algorithm=ReconcileAlgorithm.REACTIVE,
-            action=_ReconciliationAction.CREATE,
-            spawn_runner_configs=reactive_job_configs,
-        )
-
-    def _plan_prespawn_runners(
-        self, vms: Iterable[CloudRunnerInstance]
-    ) -> _PreaspawnReconcileActionPlan:
+    def _plan_prespawn_runners(self, vms: Iterable[CloudVM]) -> _PreaspawnReconcileActionPlan:
         """Create prespawned runners.
 
         Args:
@@ -466,6 +435,9 @@ class Reconciler:
             quantity=-diff,
         )
 
+    # reconciling for reactive processes:
+    # 1. check for number of reactive processes + number of VMs.
+    # 2. scale up or down.
     def _spawn_reactive_runners(
         self, plan: _ReactiveReconcileActionPlan
     ) -> tuple[InstanceID, ...]:
@@ -489,7 +461,7 @@ class Reconciler:
     ) -> tuple[InstanceID, ...]:
         """Spawn runners in a prespawn manner."""
         instance_id_list = []
-        spawn_runner_configs: list[_SpawnRunnerConfig] = []
+        spawn_runner_configs: list[_PrespawnRunnerConfig] = []
         prespawn_config = cast(PrespawnConfig, self._algorithm_config)
         for _ in range(plan.quantity):
             instance_id = InstanceID.build(
@@ -501,12 +473,12 @@ class Reconciler:
                 instance_id=instance_id, metadata=metadata, labels=self._config.labels
             )
             spawn_runner_configs.append(
-                _SpawnRunnerConfig(
+                _PrespawnRunnerConfig(
                     platform_provider=self._platform,
                     cloud_provider=self._cloud,
                     instance_id=instance_id,
                     algorithm=ReconcileAlgorithm.PRESPAWN,
-                    vm_config=OpenStackServerConfig(
+                    vm_config=VMConfig(
                         image=prespawn_config.vm_image,
                         flavor=prespawn_config.vm_flavor,
                     ),
@@ -515,6 +487,8 @@ class Reconciler:
                     runner_metadata=metadata,
                 )
             )
+        # Subprocess.Popen, take logic from reactive process_manager
+        # Python3 call reactive script.
         with multiprocessing.Pool(processes=min(plan.quantity, 30)) as pool:
             jobs = pool.imap_unordered(func=spawn_runner, iterable=spawn_runner_configs)
             for _ in range(plan.quantity):
@@ -548,7 +522,7 @@ def _build_runner_metadata(job_url: str) -> RunnerMetadata:
 
 
 @dataclass
-class _SpawnRunnerConfig:
+class _SpawnRunnerConfigBase:
     """Configuration for spawning a runner.
 
     Attributes:
@@ -566,10 +540,15 @@ class _SpawnRunnerConfig:
     cloud_provider: SupportsCloudProvider
     instance_id: InstanceID
     algorithm: ReconcileAlgorithm
-    vm_config: OpenStackServerConfig
+    vm_config: VMConfig
     runner: SelfHostedRunner
     runner_context: RunnerContext
     runner_metadata: RunnerMetadata
+
+
+@dataclass
+class _PrespawnRunnerConfig(_SpawnRunnerConfigBase):
+    """Configurations for the prespawn runners."""
 
 
 # After a runner is created, there will be as many health checks as
@@ -579,7 +558,7 @@ RUNNER_CREATION_WAITING_TIMES = (60, 60, 120, 240, 480)
 JOB_PICKUP_TIMEOUT = 60 * 10
 
 
-def spawn_runner(config: _SpawnRunnerConfig) -> InstanceID:
+def spawn_runner(config: _PrespawnRunnerConfig) -> InstanceID:
     """Spawn runner.
 
     This function is to be called from a multiprocessed process, i.e. multiprocessing.Pool.
@@ -608,76 +587,89 @@ def spawn_runner(config: _SpawnRunnerConfig) -> InstanceID:
         config.vm_config.flavor,
     )
     vm = config.cloud_provider.create_vm(
-        runner_identity=runner_identity, vm_config=config.vm_config
+        instance_id=runner_identity.instance_id,
+        vm_config=config.vm_config,
+        metadata=config.runner_metadata.as_dict(),
+        workload_start_script=config.runner_context.shell_run_script,
     )
     logger.info("Created VM: %s", vm.instance_id)
-
-    if config.algorithm != ReconcileAlgorithm.REACTIVE:
-        return config.instance_id
-
-    try:
-        _wait_for(
-            callable=lambda: config.platform_provider.get_runner(runner_identity=runner_identity),
-            timeout=10 * 60,
-            interval=60,
-            interval_log="Waiting for runner to be created",
-            ignore_exception=PlatformApiError,
-        )
-    except TimeoutError:
-        logger.warning(
-            "Deleting runner %s from platform after creation failed", config.instance_id
-        )
-        config.platform_provider.delete_runner(runner_identity=runner_identity)
-        raise
-
-    try:
-        _wait_for(
-            callable=lambda: config.platform_provider.get_job(),
-            timeout=10 * 60,
-            interval=60,
-            interval_log="Waiting for Job to be picked up",
-        )
-    except TimeoutError:
-        logger.warning(
-            "Deleting runner %s from platform after job pickup failed", config.instance_id
-        )
-        config.platform_provider.delete_runner(runner_identity=runner_identity)
-        raise
 
     return config.instance_id
 
 
-def _wait_for(
-    callable: Callable,
-    timeout: int,
-    interval: int = 60,
-    interval_log: str = "",
-    ignore_exception: Type[Exception] | None = None,
-):
-    """Wait for a callable to return Truthy value within timeout.
+# def _plan_reactive_runners(self, vms: Iterable[OpenStackVM]) -> _ReactiveReconcileActionPlan:
+#     """Create the reactive runners.
 
-    Args:
-        callable: The function that should return a truthy value within timeout.
-        timeout: Timeout in seconds for the callable to be truthy.
-        interval: Interval in seconds between checks.
-        interval_log: Log message to print at each interval.
-        ignore_exception: Exception type to ignore during the wait.
-    """
-    start_time = time.time()
-    while time.time() - start_time > timeout:
-        logger.info(interval_log)
-        if ignore_exception:
-            try:
-                result = callable()
-                if not result:
-                    continue
-                return result
-            except ignore_exception:
-                pass
-            time.sleep(interval)
-        else:
-            result = callable()
-            if not result:
-                continue
-            return result
-    return TimeoutError("Timed out waiting for callable to be true")
+#     Args:
+#         vms: The current vms in the cloud.
+#     """
+#     reactive_config = cast(ReactiveConfig, self._algorithm_config)
+#     queue_size = reactive_config.queue.qsize()
+#     if not queue_size:
+#         return _ReactiveReconcileActionPlan(
+#             algorithm=ReconcileAlgorithm.REACTIVE,
+#             action=_ReconciliationAction.NOOP,
+#             spawn_runner_configs=[],
+#         )
+
+#     diff = reactive_config.base_quantity - len(tuple(vms))
+#     num_reactive_to_spawn = min(diff, queue_size)
+#     if num_reactive_to_spawn == 0:
+#         return _ReactiveReconcileActionPlan(
+#             algorithm=ReconcileAlgorithm.REACTIVE,
+#             action=_ReconciliationAction.NOOP,
+#             spawn_runner_configs=[],
+#         )
+#     elif num_reactive_to_spawn < 0:
+#         return _ReactiveReconcileActionPlan(
+#             algorithm=ReconcileAlgorithm.REACTIVE,
+#             action=_ReconciliationAction.DOWNSCALE,
+#             spawn_runner_configs=[],
+#         )
+
+#     reactive_job_configs = []
+#     for _ in range(num_reactive_to_spawn):
+#         reactive_msg: Message = reactive_config.queue.get(block=True, timeout=30)
+#         if reactive_msg.payload == END_PROCESSING_PAYLOAD:
+#             reactive_msg.ack()
+#             break
+#         try:
+#             job = JobDetails.parse_raw(reactive_msg.payload)
+#         except ValidationError:
+#             reactive_msg.reject(requeue=False)
+#             # handle something critical here
+#             continue
+#         # check all labels are supported
+#         if not all(label in reactive_config.supported_labels for label in job.labels):
+#             reactive_msg.reject(requeue=False)
+#             # handle something critical here
+#             continue
+#         # build metadata
+#         instance_id = InstanceID.build(
+#             self._cloud.name_prefix,
+#             reactive=False,
+#         )
+#         runner_metadata = _build_runner_metadata(job_url=job.url)
+#         runner_context, runner = self._platform.get_runner_context(
+#             instance_id=instance_id, metadata=runner_metadata, labels=self._config.labels
+#         )
+#         reactive_job_configs.append(
+#             _ReactiveReconcileActionPlan(
+#                 platform_provider=self._platform,
+#                 cloud_provider=self._cloud,
+#                 instance_id=instance_id,
+#                 algorithm=ReconcileAlgorithm.REACTIVE,
+#                 vm_config=VMConfig(
+#                     image=reactive_config.vm_image,
+#                     flavor=reactive_config.vm_flavor,
+#                 ),
+#                 runner=runner,
+#                 runner_context=runner_context,
+#                 runner_metadata=runner_metadata,
+#             )
+#         )
+#     return _ReactiveReconcileActionPlan(
+#         algorithm=ReconcileAlgorithm.REACTIVE,
+#         action=_ReconciliationAction.CREATE,
+#         spawn_runner_configs=reactive_job_configs,
+#     )

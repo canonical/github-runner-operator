@@ -20,7 +20,7 @@ from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
-    PlatformRunnerState,
+    PlatformRunnerStatus,
     RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -175,7 +175,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         )
         command_to_run = (
             "su - ubuntu -c "
-            f'"cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {token}"'
+            f'"cd ~/actions-runner && /home/ubuntu/actions-runner/run.sh --jitconfig {token} --name {name}"'
         )
         return RunnerContext(shell_run_script=command_to_run), runner
 
@@ -246,7 +246,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         )
 
     @staticmethod
-    def _is_runner_in_state(runner: SelfHostedRunner, states: set[PlatformRunnerState]) -> bool:
+    def _is_runner_in_state(runner: SelfHostedRunner, states: set[PlatformRunnerStatus]) -> bool:
         """Check that the runner is in one of the states provided.
 
         Args:
@@ -256,7 +256,7 @@ class GitHubRunnerPlatform(PlatformProvider):
         Returns:
             True if the runner is in one of the state, else false.
         """
-        return PlatformRunnerState.from_runner(runner) in states
+        return PlatformRunnerStatus.from_runner(runner) in states
 
 
 class JobPickedUpStates(str, Enum):

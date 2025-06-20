@@ -35,7 +35,7 @@ from github_runner_manager.openstack_cloud.models import (
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
 from github_runner_manager.platform.github_provider import (
     GitHubRunnerPlatform,
-    PlatformRunnerState,
+    PlatformRunnerStatus,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus
 from openstack.connection import Connection as OpenstackConnection
@@ -240,7 +240,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     ), "Test arrange failed: Expect runner in active state"
     try:
         await wait_for(
-            lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerState.IDLE,
+            lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerStatus.IDLE,
             timeout=120,
             check_interval=10,
         )
@@ -345,7 +345,7 @@ async def test_runner_normal_idle_lifecycle(
     assert runner.metadata.platform_name == "github"
     # Update on GitHub-side can take a bit of time.
     await wait_for(
-        lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerState.IDLE,
+        lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerStatus.IDLE,
         timeout=120,
         check_interval=10,
     )
@@ -411,7 +411,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.platform_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerStatus.BUSY
 
     # 2.
     runner_manager_with_one_runner.cleanup()
@@ -420,7 +420,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     runner = runner_list[0]
     assert runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.platform_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerStatus.BUSY
 
     # 3.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_IDLE)
@@ -428,7 +428,7 @@ async def test_runner_flush_busy_lifecycle(
     assert len(runner_list) == 1
     busy_runner = runner_list[0]
     assert busy_runner.cloud_state == CloudRunnerState.ACTIVE
-    assert busy_runner.platform_state == PlatformRunnerState.BUSY
+    assert busy_runner.platform_state == PlatformRunnerStatus.BUSY
 
     # 4.
     runner_manager_with_one_runner.flush_runners(flush_mode=FlushMode.FLUSH_BUSY)
@@ -488,7 +488,7 @@ async def test_runner_normal_lifecycle(
         """
         runners = runner_manager_with_one_runner.get_runners()
         assert len(runners) == 1
-        return runners[0].platform_state in (PlatformRunnerState.OFFLINE, None)
+        return runners[0].platform_state in (PlatformRunnerStatus.OFFLINE, None)
 
     await wait_for(is_runner_offline, check_interval=60, timeout=600)
 

@@ -190,22 +190,28 @@ class OpenstackCloud:
     instance_id. It is the same as the server name.
     """
 
-    def __init__(self, config: OpenStackConfiguration):
+    def __init__(self, config: OpenStackConfiguration, credentials: OpenStackCredentials):
         """Create the object.
 
         Args:
+            config: The OpenStack configuration for this application.
             credentials: The OpenStack authorization information.
-            prefix: Prefix attached to names of resource managed by this instance. Used for
-                identifying which resource belongs to this instance.
-            system_user: The system user to own the key files.
-            proxy_command: The gateway argument for fabric Connection. Similar to ProxyCommand in
-                ssh-config.
         """
-        self._credentials = credentials
-        self.prefix = prefix
-        self._system_user = system_user
-        self._ssh_key_dir = Path(f"~{system_user}").expanduser() / ".ssh"
-        self._proxy_command = proxy_command
+        self._config = config
+        self._conn = openstack.connect(
+            auth_url=credentials.auth_url,
+            project_name=credentials.project_name,
+            username=credentials.username,
+            password=credentials.password,
+            region_name=credentials.region_name,
+            user_domain_name=credentials.user_domain_name,
+            project_domain_name=credentials.project_domain_name,
+        )
+        self._conn.authorize()
+
+    def __exit__(self):
+        """Clean up OpenStack connection instance."""
+        self._conn.close()
 
     @_catch_openstack_errors
     def launch_instance(
@@ -233,6 +239,10 @@ class OpenstackCloud:
         logger.info("Creating openstack server with %s", runner_identity)
         instance_id = runner_identity.instance_id
         metadata = runner_identity.metadata
+
+        OpenstackCloud._ensure_security_group(
+            conn=self._conn,
+        )
 
         with _get_openstack_connection(credentials=self._credentials) as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)

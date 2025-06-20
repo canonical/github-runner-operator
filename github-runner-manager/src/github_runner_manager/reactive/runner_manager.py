@@ -11,7 +11,7 @@ from github_runner_manager.manager.runner_manager import (
     IssuedMetricEventsStats,
     RunnerManager,
 )
-from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.platform.github_provider import PlatformRunnerStatus
 from github_runner_manager.reactive import process_manager
 from github_runner_manager.reactive.consumer import get_queue_size
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -87,13 +87,7 @@ def reconcile(
         The number of reactive processes created. If negative, its absolute value is equal
         to the number of processes killed.
     """
-    cleanup_metric_stats = runner_manager.cleanup()
-    flush_metric_stats = {}
-    delete_metric_stats = {}
-
-    if get_queue_size(reactive_process_config.queue) == 0:
-        logger.info("Reactive reconcile. Flushing on empty queue")
-        flush_metric_stats = runner_manager.flush_runners(FlushMode.FLUSH_IDLE)
+    # Flush logic has been moved to the main reconciler in manager/reconciler.py
 
     # Only count runners which are online on GitHub to prevent machines to be just in
     # construction to be counted and then killed immediately by the process manager.
@@ -101,7 +95,7 @@ def reconcile(
     runners = [
         runner
         for runner in all_runners
-        if runner.platform_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
+        if runner.platform_state in (PlatformRunnerStatus.IDLE, PlatformRunnerStatus.BUSY)
     ]
     runner_diff = expected_quantity - len(runners)
 
@@ -113,11 +107,7 @@ def reconcile(
 
     metric_stats = {
         event_name: delete_metric_stats.get(event_name, 0)
-        + cleanup_metric_stats.get(event_name, 0)
-        + flush_metric_stats.get(event_name, 0)
         for event_name in set(delete_metric_stats)
-        | set(cleanup_metric_stats)
-        | set(flush_metric_stats)
     }
 
     processes_created = process_manager.reconcile(

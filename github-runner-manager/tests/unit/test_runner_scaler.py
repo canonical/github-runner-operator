@@ -45,7 +45,7 @@ from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.platform.github_provider import PlatformRunnerStatus
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
@@ -217,7 +217,7 @@ def runner_scaler_one_runner_fixture(
 
 def set_one_runner_state(
     runner_scaler: RunnerScaler,
-    platform_state: PlatformRunnerState | None = None,
+    platform_state: PlatformRunnerStatus | None = None,
     cloud_state: CloudRunnerState | None = None,
     health: bool | None = None,
     old_runner: bool = False,
@@ -551,7 +551,7 @@ def test_flush_busy_on_busy_runner(
     Assert: No runners.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.BUSY)
 
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
     assert_runner_info(runner_scaler, online=0)
@@ -566,7 +566,7 @@ def test_get_runner_one_busy_runner(
     Assert: One busy runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.BUSY)
 
     assert_runner_info(runner_scaler=runner_scaler, online=1, busy=1)
 
@@ -578,7 +578,7 @@ def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
     Assert: One offline runner.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.OFFLINE)
 
     assert_runner_info(runner_scaler=runner_scaler, offline=1)
 
@@ -604,7 +604,7 @@ def test_flush_idle_on_starting_offline_runner(
     Assert: The runner should not be deleted.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.OFFLINE)
     runners_before = runner_manager.get_runners()
 
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
@@ -623,7 +623,7 @@ def test_flush_idle_on_old_offline_runner(
     Assert: The runner should be deleted. No one should be created.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.OFFLINE, old_runner=True)
 
     runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
     assert_runner_info(runner_scaler, offline=0)
@@ -639,7 +639,7 @@ def test_reconcile_on_starting_offline_runner(
     Assert: The runner should not be deleted.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.OFFLINE)
     runners_before = runner_manager.get_runners()
 
     runner_scaler.reconcile()
@@ -658,7 +658,7 @@ def test_reconcile_on_old_offline_runner(
     Assert: The runner should be deleted. Another one will be created.
     """
     runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
+    set_one_runner_state(runner_scaler, PlatformRunnerStatus.OFFLINE, old_runner=True)
     runners_before = runner_manager.get_runners()
 
     runner_scaler.reconcile()
@@ -684,9 +684,9 @@ def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_in
     # See https://docs.python.org/3.7/library/stdtypes.html#dict.values
     runner_dict = runner_scaler._manager._platform.state.runners
     initial_mock_runners = list(runner_dict.values())
-    initial_mock_runners[0].platform_state = PlatformRunnerState.IDLE
-    initial_mock_runners[1].platform_state = PlatformRunnerState.OFFLINE
-    initial_mock_runners[2].platform_state = PlatformRunnerState.BUSY
+    initial_mock_runners[0].platform_state = PlatformRunnerStatus.IDLE
+    initial_mock_runners[1].platform_state = PlatformRunnerStatus.OFFLINE
+    initial_mock_runners[2].platform_state = PlatformRunnerStatus.BUSY
     initial_mock_runners[3].deletable = True
     initial_mock_runners[4].health = False  # Runner without health information
 

@@ -25,7 +25,7 @@ from github_runner_manager.manager.models import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.platform.github_provider import PlatformRunnerStatus
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
@@ -208,7 +208,7 @@ class MockRunner:
     instance_id: InstanceID
     metadata: RunnerMetadata
     cloud_state: CloudRunnerState
-    platform_state: PlatformRunnerState
+    platform_state: PlatformRunnerStatus
     health: bool
     created_at: datetime
     deletable: bool = False
@@ -223,7 +223,7 @@ class MockRunner:
         self.instance_id = instance_id
         self.metadata = RunnerMetadata()
         self.cloud_state = CloudRunnerState.ACTIVE
-        self.platform_state = PlatformRunnerState.IDLE
+        self.platform_state = PlatformRunnerStatus.IDLE
         self.health = True
         # By default a runner that has just being created.
         self.created_at = datetime.now(timezone.utc)
@@ -370,8 +370,8 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             runner = self.state.runners[runner_identity.instance_id]
             return PlatformRunnerHealth(
                 identity=runner_identity,
-                online=runner.platform_state != PlatformRunnerState.OFFLINE,
-                busy=runner.platform_state == PlatformRunnerState.BUSY,
+                online=runner.platform_state != PlatformRunnerStatus.OFFLINE,
+                busy=runner.platform_state == PlatformRunnerStatus.BUSY,
                 deletable=runner.deletable,
             )
         return PlatformRunnerHealth(
@@ -419,7 +419,7 @@ class MockGitHubRunnerPlatform(PlatformProvider):
         return RunnerContext(shell_run_script="fake-agent"), runner
 
     def get_runners(
-        self, states: Iterable[PlatformRunnerState] | None = None
+        self, states: Iterable[PlatformRunnerStatus] | None = None
     ) -> tuple[SelfHostedRunner, ...]:
         """Get the runners.
 
@@ -430,19 +430,19 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             List of runners.
         """
         if states is None:
-            states = [member.value for member in PlatformRunnerState]
+            states = [member.value for member in PlatformRunnerStatus]
 
         platform_state_set = set(states)
         runner_id = random.randint(1, 1000000)
         return tuple(
             SelfHostedRunner(
-                busy=runner.platform_state == PlatformRunnerState.BUSY,
+                busy=runner.platform_state == PlatformRunnerStatus.BUSY,
                 id=runner_id,
                 labels=[],
                 instance_id=InstanceID.build_from_name(self.name_prefix, runner.name),
                 status=(
                     GitHubRunnerStatus.OFFLINE
-                    if runner.platform_state == PlatformRunnerState.OFFLINE
+                    if runner.platform_state == PlatformRunnerStatus.OFFLINE
                     else GitHubRunnerStatus.ONLINE
                 ),
                 metadata=RunnerMetadata(platform_name="github", runner_id=str(runner_id)),

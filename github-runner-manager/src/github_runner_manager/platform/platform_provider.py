@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
 
-from pydantic import HttpUrl
+from pydantic import BaseModel, HttpUrl
 
 from github_runner_manager.manager.models import (
     InstanceID,
@@ -60,6 +60,12 @@ class Platform(str, Enum):
         return None
 
 
+class PlatformConfiguration(BaseModel):
+    """Configuration for a platform provider."""
+
+    platform: Platform
+
+
 @dataclass
 class PlatformRunner:
     """A platform runner instance.
@@ -70,7 +76,7 @@ class PlatformRunner:
     """
 
     identity: RunnerIdentity
-    status: "PlatformRunnerState"
+    status: "PlatformRunnerStatus"
 
 
 class PlatformProvider(abc.ABC):
@@ -209,7 +215,7 @@ class PlatformRunnerHealth:
 
 
 # Pending to review the coupling of this class with GitHub
-class PlatformRunnerState(str, Enum):
+class PlatformRunnerStatus(str, Enum):
     """State of the self-hosted runner.
 
     Attributes:
@@ -224,7 +230,7 @@ class PlatformRunnerState(str, Enum):
     OFFLINE = auto()
 
     @staticmethod
-    def from_runner(runner: SelfHostedRunner) -> "PlatformRunnerState":
+    def from_runner(runner: SelfHostedRunner) -> "PlatformRunnerStatus":
         """Construct the object from runner information.
 
         Args:
@@ -233,16 +239,16 @@ class PlatformRunnerState(str, Enum):
         Returns:
             The state of runner.
         """
-        state = PlatformRunnerState.OFFLINE
+        state = PlatformRunnerStatus.OFFLINE
         # A runner that is busy and offline is possible.
         if runner.busy:
-            state = PlatformRunnerState.BUSY
+            state = PlatformRunnerStatus.BUSY
         if runner.status == GitHubRunnerStatus.ONLINE and not runner.busy:
-            state = PlatformRunnerState.IDLE
+            state = PlatformRunnerStatus.IDLE
         return state
 
     @staticmethod
-    def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerState":
+    def from_platform_health(health: PlatformRunnerHealth) -> "PlatformRunnerStatus":
         """Construct the object from runner information.
 
         Args:
@@ -251,14 +257,14 @@ class PlatformRunnerState(str, Enum):
         Returns:
             The state of runner.
         """
-        state = PlatformRunnerState.OFFLINE
+        state = PlatformRunnerStatus.OFFLINE
 
         if health.deletable:
-            state = PlatformRunnerState.OFFLINE
+            state = PlatformRunnerStatus.OFFLINE
         elif health.busy:
-            state = PlatformRunnerState.BUSY
+            state = PlatformRunnerStatus.BUSY
         elif health.online:
-            state = PlatformRunnerState.IDLE
+            state = PlatformRunnerStatus.IDLE
         return state
 
 

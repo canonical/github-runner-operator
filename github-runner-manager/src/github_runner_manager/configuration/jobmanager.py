@@ -2,10 +2,12 @@
 #  See LICENSE file for licensing details.
 
 """Module containing JobManager Configuration."""
-from pydantic import BaseModel, HttpUrl
+from pydantic import HttpUrl
+
+from github_runner_manager.platform.platform_provider import PlatformConfiguration
 
 
-class JobManagerConfiguration(BaseModel):
+class JobManagerConfiguration(PlatformConfiguration):
     """JobManager configuration for the application.
 
     Attributes:

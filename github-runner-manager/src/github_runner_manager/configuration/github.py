@@ -5,10 +5,10 @@
 
 from typing import TypeAlias
 
-from pydantic import BaseModel
+from github_runner_manager.platform.platform_provider import PlatformConfiguration
 
 
-class GitHubConfiguration(BaseModel):
+class GitHubConfiguration(PlatformConfiguration):
     """GitHub configuration for the application.
 
     Attributes:

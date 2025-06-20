@@ -16,7 +16,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.metrics.events import RunnerStart, RunnerStop
-from github_runner_manager.platform.platform_provider import PlatformRunnerState
+from github_runner_manager.platform.platform_provider import PlatformRunnerStatus
 from github_runner_manager.reactive.runner_manager import reconcile
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
 
@@ -86,7 +86,7 @@ def test_reconcile_positive_runner_diff(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.platform_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerStatus.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
 
@@ -130,7 +130,7 @@ def test_reconcile_negative_runner_diff(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.platform_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerStatus.IDLE
 
     runner_manager.get_runners.return_value = tuple(runners)
     _set_queue_non_empty(monkeypatch)
@@ -302,7 +302,7 @@ def test_reconcile_returns_issued_metrics(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.platform_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerStatus.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats
@@ -440,7 +440,7 @@ def test_reconcile_empty_queue_returns_issued_metrics(
         for _ in range(runner_quantity)
     ]
     for runner in runners:
-        runner.platform_state = PlatformRunnerState.IDLE
+        runner.platform_state = PlatformRunnerStatus.IDLE
     runner_manager.get_runners.return_value = tuple(runners)
     runner_manager.cleanup.return_value = cleanup_metric_stats
     runner_manager.delete_runners.return_value = delete_metric_stats
