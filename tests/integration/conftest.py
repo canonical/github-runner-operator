@@ -29,6 +29,7 @@ from openstack.connection import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -461,6 +462,7 @@ async def app_openstack_runner_fixture(
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_http_proxy),
+                APROXY_REDIRECT_PORTS_CONFIG_NAME: "1-3127,3129-65535",
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,

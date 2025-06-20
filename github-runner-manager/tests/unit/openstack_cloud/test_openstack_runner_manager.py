@@ -3,6 +3,7 @@
 
 """Module for unit-testing OpenStack runner manager."""
 import logging
+import textwrap
 from datetime import datetime, timezone
 from typing import Iterable
 from unittest.mock import MagicMock
@@ -77,8 +78,87 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     return runner_metrics_mock
 
 
+@pytest.mark.parametrize(
+    "aproxy_redirect_ports, aproxy_exclude_addresses, aproxy_used, except_aproxy_script",
+    [
+        pytest.param(
+            "", "10.0.0.0/8", False, "", id="empty aproxy_redirect_ports disables aproxy"
+        ),
+        pytest.param(
+            "80, 443",
+            "10.0.0.0/8, 192.168.0.0/16",
+            True,
+            "10.0.0.0/8, 192.168.0.0/16",
+            id="aproxy with custom aproxy_exclude_addresses",
+        ),
+        pytest.param(
+            "0-3127, 3129-65535",
+            "10.0.0.0/8, 192.168.0.0/16",
+            True,
+            "0-3127, 3129-65535",
+            id="aproxy with custom aproxy_redirect_ports",
+        ),
+        pytest.param(
+            "80, 443",
+            "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+            True,
+            textwrap.dedent(
+                """\
+    table ip aproxy {
+          set exclude {
+              type ipv4_addr;
+              flags interval; auto-merge;
+
+              elements = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
+
+          }
+          chain prerouting {
+                  type nat hook prerouting priority dstnat; policy accept;
+                  ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
+          }
+          chain output {
+                  type nat hook output priority -100; policy accept;
+                  ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
+          }
+    }
+            """
+            ),
+            id="aproxy default config",
+        ),
+        pytest.param(
+            "80, 443",
+            "",
+            True,
+            textwrap.dedent(
+                """\
+    table ip aproxy {
+          set exclude {
+              type ipv4_addr;
+              flags interval; auto-merge;
+
+          }
+          chain prerouting {
+                  type nat hook prerouting priority dstnat; policy accept;
+                  ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
+          }
+          chain output {
+                  type nat hook output priority -100; policy accept;
+                  ip daddr != @exclude tcp dport { 80, 443 } counter dnat to \\$default-ipv4:54969
+          }
+    }
+            """
+            ),
+            id="aproxy with no aproxy_exclude_addresses",
+        ),
+    ],
+)
 def test_create_runner_with_aproxy(
-    runner_manager: OpenStackRunnerManager, monkeypatch: pytest.MonkeyPatch
+    aproxy_redirect_ports: str,
+    aproxy_exclude_addresses: str,
+    aproxy_used: str,
+    except_aproxy_script: str,
+    runner_manager: OpenStackRunnerManager,
+    monkeypatch: pytest.MonkeyPatch,
 ):
     """
     arrange: Prepare service config with aproxy enabled and a runner proxy config.
@@ -88,6 +168,8 @@ def test_create_runner_with_aproxy(
     # Pending to pass service_config as a dependency instead of mocking it this way.
     service_config = runner_manager._config.service_config
     service_config.use_aproxy = True
+    service_config.aproxy_redirect_ports = aproxy_redirect_ports
+    service_config.aproxy_exclude_addresses = aproxy_exclude_addresses
     service_config.runner_proxy_config = ProxyConfig(http="http://proxy.example.com:3128")
 
     prefix = "test"
@@ -101,10 +183,11 @@ def test_create_runner_with_aproxy(
 
     runner_manager.create_runner(identity, runner_context)
     openstack_cloud.launch_instance.assert_called_once()
-    assert (
-        "snap set aproxy proxy=proxy.example.com:3128"
-        in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
-    )
+
+    cloud_init = openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
+    assert ("snap set aproxy proxy=proxy.example.com:3128" in cloud_init) == aproxy_used
+    if aproxy_used:
+        assert except_aproxy_script in cloud_init
 
 
 def test_create_runner_without_aproxy(
