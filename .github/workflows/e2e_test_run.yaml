@@ -47,6 +47,21 @@ jobs:
         run: |
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
+      - name: test network connectivity
+        run: |
+          timeout 60 curl --noproxy "*" http://example.com -svS -o /dev/null
+          timeout 60 curl --noproxy "*" https://example.com -svS -o /dev/null
+          [ $(timeout 60 echo hello | nc -q 0  tcpbin.com 4242) == "hello!" ]
+      - name: test aproxy logs
+        run: |
+          sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
+          sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
+          sudo snap logs aproxy.aproxy | grep -Eq "[0-9.]+:4242"
+      - name: show aproxy logs
+        if: failure()
+        run: |
+          sudo snap logs aproxy.aproxy -n=all
+          sudo nft list ruleset
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
@@ -87,17 +102,3 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
-      - name: test network connectivity
-        run: |
-          timeout 60 curl --noproxy "*" http://example.com -svS -o /dev/null
-          timeout 60 curl --noproxy "*" https://example.com -svS -o /dev/null
-          [ $(timeout 60 echo hello | nc -q 0  tcpbin.com 4242) == "hello!" ]
-      - name: test aproxy logs
-        run: |
-          sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
-          sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
-          sudo snap logs aproxy.aproxy | grep -Eq "[0-9.]+:4242"
-      - name: show aproxy logs
-        if: failure()
-        run: |
-          sudo snap logs aproxy.aproxy -n=all

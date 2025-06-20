@@ -342,7 +342,8 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
-        aproxy_exclude_addresses: a comma-separated list of addresses to exclude from the aproxy proxy.
+        aproxy_exclude_addresses: a comma-separated list of addresses to exclude from the
+                                  aproxy proxy.
         aproxy_redirect_ports: a comma-separated list of ports to redirect to the aproxy proxy.
         custom_pre_job_script: Custom pre-job script to run before the job.
         jobmanager_url: Base URL of the job manager service.
