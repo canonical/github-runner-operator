@@ -29,6 +29,7 @@ from openstack.connection import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -36,7 +37,6 @@ from charm_state import (
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
-    APROXY_REDIRECT_PORTS_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
