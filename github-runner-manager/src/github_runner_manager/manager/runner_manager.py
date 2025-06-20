@@ -528,40 +528,6 @@ class RunnerManager:
             raise
         return instance_id
 
-    @staticmethod
-    def wait_for_runner_online(
-        platform_provider: PlatformProvider,
-        runner_identity: RunnerIdentity,
-    ) -> None:
-        """Wait until the runner is online.
-
-        The constant RUNNER_CREATION_WAITING_TIMES defines the time before calling
-        the platform provider to check if the runner is online. Besides online runner,
-        deletable runner will also be equivalent to online, as no more waiting should
-        be needed.
-
-        Args:
-            platform_provider: Platform provider to use for health checks.
-            runner_identity: Identity of the runner.
-
-        Raises:
-            RunnerError: If the runner did not come online after the specified time.
-
-        """
-        for wait_time in RUNNER_CREATION_WAITING_TIMES:
-            time.sleep(wait_time)
-            try:
-                runner_health = platform_provider.get_runner_health(runner_identity)
-            except PlatformApiError:
-                logger.exception("Error getting the runner health: %s", runner_identity)
-                continue
-            if runner_health.online or runner_health.deletable:
-                logger.info("Runner %s online", runner_identity)
-                break
-            logger.info("Runner %s not yet online", runner_identity)
-        else:
-            raise RunnerError(f"Runner {runner_identity} did not get online")
-
 
 def _filter_runner_to_delete(
     cloud_runner: CloudRunnerInstance,
