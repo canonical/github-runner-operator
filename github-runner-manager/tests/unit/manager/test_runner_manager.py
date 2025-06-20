@@ -3,12 +3,11 @@
 
 """Unit tests for the the runner_manager."""
 
-from unittest.mock import ANY, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
 
 from github_runner_manager.errors import RunnerCreateError
-from github_runner_manager.manager import runner_manager as runner_manager_module
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -22,7 +21,6 @@ from github_runner_manager.manager.models import (
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
-    PlatformRunnerHealth,
     RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -110,7 +108,6 @@ def test_create_runner() -> None:
     act: call runner_manager.create_runners.
     assert: The runner manager will create the runner.
     """
-
     cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
     cloud_runner_manager.name_prefix = "unit-0"
 
