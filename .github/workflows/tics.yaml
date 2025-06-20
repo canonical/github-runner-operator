@@ -19,10 +19,12 @@ jobs:
           pip install tox pylint flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
+      - name: Add to Python Path
+        run: echo "PYTHONPATH=$PYTHONPATH:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src" >> $GITHUB_ENV
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         env:
-          PYTHONPATH: "/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src"
+          PYTHONPATH: "$PYTHONPATH:"
         with:
           mode: qserver
           project: github-runner-operator
