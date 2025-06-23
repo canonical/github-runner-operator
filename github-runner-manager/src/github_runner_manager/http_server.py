@@ -73,7 +73,7 @@ def flush_runner() -> tuple[str, int]:
     if flush_busy_str in ("True", "true"):
         flush_busy = True
 
-    lock = get_lock()
+    lock = _get_lock()
     with lock:
         app.logger.info("Flushing runners...")
         runner_scaler = get_runner_scaler(app_config)
@@ -88,7 +88,7 @@ def flush_runner() -> tuple[str, int]:
     return ("", 204)
 
 
-def get_lock() -> Lock:
+def _get_lock() -> Lock:
     """Get the lock representing modification access to the set of runners.
 
     Raises:
