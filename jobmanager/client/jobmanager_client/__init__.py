@@ -31,14 +31,14 @@ __all__ = [
     "ApiKeyError",
     "ApiAttributeError",
     "ApiException",
-    "GetRunnerHealthV1RunnerRunnerIdHealthGet200Response",
     "HTTPValidationError",
     "JobCreate",
     "JobRead",
     "JobUpdate",
-    "RegisterRunnerV1RunnerRegisterPost200Response",
-    "RegisterRunnerV1RunnerRegisterPostRequest",
-    "UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest",
+    "RunnerCreate",
+    "RunnerHealthResponse",
+    "RunnerHealthUpdateResponse",
+    "RunnerRegisterResponse",
     "ValidationError",
     "ValidationErrorLocInner",
     "VmDependencies",
@@ -62,14 +62,14 @@ from jobmanager_client.exceptions import ApiAttributeError as ApiAttributeError
 from jobmanager_client.exceptions import ApiException as ApiException
 
 # import models into sdk package
-from jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import GetRunnerHealthV1RunnerRunnerIdHealthGet200Response as GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
 from jobmanager_client.models.http_validation_error import HTTPValidationError as HTTPValidationError
 from jobmanager_client.models.job_create import JobCreate as JobCreate
 from jobmanager_client.models.job_read import JobRead as JobRead
 from jobmanager_client.models.job_update import JobUpdate as JobUpdate
-from jobmanager_client.models.register_runner_v1_runner_register_post200_response import RegisterRunnerV1RunnerRegisterPost200Response as RegisterRunnerV1RunnerRegisterPost200Response
-from jobmanager_client.models.register_runner_v1_runner_register_post_request import RegisterRunnerV1RunnerRegisterPostRequest as RegisterRunnerV1RunnerRegisterPostRequest
-from jobmanager_client.models.update_runner_health_v1_runner_runner_id_health_put_request import UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest as UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest
+from jobmanager_client.models.runner_create import RunnerCreate as RunnerCreate
+from jobmanager_client.models.runner_health_response import RunnerHealthResponse as RunnerHealthResponse
+from jobmanager_client.models.runner_health_update_response import RunnerHealthUpdateResponse as RunnerHealthUpdateResponse
+from jobmanager_client.models.runner_register_response import RunnerRegisterResponse as RunnerRegisterResponse
 from jobmanager_client.models.validation_error import ValidationError as ValidationError
 from jobmanager_client.models.validation_error_loc_inner import ValidationErrorLocInner as ValidationErrorLocInner
 from jobmanager_client.models.vm_dependencies import VmDependencies as VmDependencies
