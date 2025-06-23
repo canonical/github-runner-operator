@@ -18,15 +18,15 @@ import re  # noqa: F401
 import json
 
 
-from typing import Optional
-from pydantic import BaseModel, StrictInt, StrictStr
 
-class RegisterRunnerV1RunnerRegisterPost200Response(BaseModel):
+from pydantic import BaseModel, Field, StrictInt, StrictStr
+
+class RunnerRegisterResponse(BaseModel):
     """
-    RegisterRunnerV1RunnerRegisterPost200Response
+    RunnerRegisterResponse
     """
-    id: Optional[StrictInt] = None
-    token: Optional[StrictStr] = None
+    id: StrictInt = Field(...)
+    token: StrictStr = Field(...)
     __properties = ["id", "token"]
 
     class Config:
@@ -43,8 +43,8 @@ class RegisterRunnerV1RunnerRegisterPost200Response(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> RegisterRunnerV1RunnerRegisterPost200Response:
-        """Create an instance of RegisterRunnerV1RunnerRegisterPost200Response from a JSON string"""
+    def from_json(cls, json_str: str) -> RunnerRegisterResponse:
+        """Create an instance of RunnerRegisterResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
@@ -56,15 +56,15 @@ class RegisterRunnerV1RunnerRegisterPost200Response(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> RegisterRunnerV1RunnerRegisterPost200Response:
-        """Create an instance of RegisterRunnerV1RunnerRegisterPost200Response from a dict"""
+    def from_dict(cls, obj: dict) -> RunnerRegisterResponse:
+        """Create an instance of RunnerRegisterResponse from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return RegisterRunnerV1RunnerRegisterPost200Response.parse_obj(obj)
+            return RunnerRegisterResponse.parse_obj(obj)
 
-        _obj = RegisterRunnerV1RunnerRegisterPost200Response.parse_obj({
+        _obj = RunnerRegisterResponse.parse_obj({
             "id": obj.get("id"),
             "token": obj.get("token")
         })
