@@ -29,7 +29,7 @@ jobs:
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         env:
-          PYTHONPATH: {{  env.PYTHONPATH  }}
+          PYTHONPATH: ${{  env.PYTHONPATH  }}
         with:
           mode: qserver
           project: github-runner-operator
