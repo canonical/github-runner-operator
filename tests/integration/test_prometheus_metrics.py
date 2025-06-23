@@ -70,11 +70,25 @@ async def test_prometheus_metrics(
     addresses = await get_model_unit_addresses(model=k8s_model, app_name=prometheus_app.name)
     assert addresses, f"Unit addresses not found for {prometheus_app.name}"
     address = addresses[0]
-    _get_active_target_patiently(prometheus_ip=address, target_name="github-runner")
-    assert False
+
+    _assert_app_in_prometheus_target_patiently(
+        prometheus_ip=address, target_name=app_openstack_runner.name
+    )
+    _assert_metrics_in_prometheus_labels_patiently(prometheus_ip=address, labels=["flavor"])
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=4, max=10))
-def _get_active_target_patiently(prometheus_ip: str, target_name: str):
-    query_targets = requests.get(f"http://{prometheus_ip}:9090/api/v1/targets", timeout=10).json()
-    assert target_name in query_targets["data"]["activeTargets"]
+def _assert_app_in_prometheus_target_patiently(prometheus_ip: str, target_name: str):
+    response = requests.get(f"http://{prometheus_ip}:9090/api/v1/targets", timeout=10).json()
+    assert any(
+        [
+            target["labels"]["juju_charm"] == target_name
+            for target in response["data"]["activeTargets"]
+        ]
+    )
+
+
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=4, max=10))
+def _assert_metrics_in_prometheus_labels_patiently(prometheus_ip: str, labels: list[str]):
+    response = requests.get(f"http://{prometheus_ip}:9090/api/v1/labels", timeout=10).json()
+    assert set(labels).issubset(set(response["data"]))
