@@ -51,7 +51,7 @@ jobs:
         run: |
           timeout 60 curl --noproxy "*" http://example.com -svS -o /dev/null
           timeout 60 curl --noproxy "*" https://example.com -svS -o /dev/null
-          [ "$(timeout 60 echo hello | nc -q 0  tcpbin.com 4242)" == "hello" ]
+          printf "" | timeout 60 nc github.com 22 | head -n 1 | grep SSH
       - name: test aproxy logs
         run: |
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
