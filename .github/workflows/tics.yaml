@@ -21,10 +21,10 @@ jobs:
           rm -rf .tox
       - name: Add to Python Path
         run: echo "PYTHONPATH=$PYTHONPATH:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src" >> $GITHUB_ENV
+      - name: Echo Python Path
+        run: echo $PYTHONPATH
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
-        env:
-          PYTHONPATH: "$PYTHONPATH:"
         with:
           mode: qserver
           project: github-runner-operator
