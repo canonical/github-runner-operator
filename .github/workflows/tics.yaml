@@ -28,6 +28,8 @@ jobs:
         run: echo $PYTHONPATH
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
+        env:
+          PYTHONPATH: {{  env.PYTHONPATH  }}
         with:
           mode: qserver
           project: github-runner-operator
