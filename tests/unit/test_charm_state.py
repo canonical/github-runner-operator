@@ -1182,7 +1182,7 @@ def test_proxy_config(
     charm_state = CharmState.from_charm(mock_charm, mock_database)
 
     assert charm_state.charm_config.use_aproxy == use_aproxy
-    assert charm_state.charm_config.aproxy_exclude_addresses == aproxy_exclude_addresses
-    assert charm_state.charm_config.aproxy_redirect_ports == aproxy_redirect_ports
+    assert ", ".join(charm_state.charm_config.aproxy_exclude_addresses) == aproxy_exclude_addresses
+    assert ", ".join(charm_state.charm_config.aproxy_redirect_ports) == aproxy_redirect_ports
     assert charm_state.proxy_config == expected_proxy
     assert charm_state.runner_proxy_config == expected_runner_proxy

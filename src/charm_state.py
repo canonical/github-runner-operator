@@ -3,7 +3,10 @@
 
 """State of the Charm."""
 
+# pylint: disable=too-many-lines
+
 import dataclasses
+import ipaddress
 import json
 import logging
 import platform
@@ -342,9 +345,8 @@ class CharmConfig(BaseModel):
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
-        aproxy_exclude_addresses: a comma-separated list of addresses to exclude from the
-                                  aproxy proxy.
-        aproxy_redirect_ports: a comma-separated list of ports to redirect to the aproxy proxy.
+        aproxy_exclude_addresses: a list of addresses to exclude from the aproxy proxy.
+        aproxy_redirect_ports: a list of ports to redirect to the aproxy proxy.
         custom_pre_job_script: Custom pre-job script to run before the job.
         jobmanager_url: Base URL of the job manager service.
     """
@@ -358,8 +360,8 @@ class CharmConfig(BaseModel):
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
-    aproxy_exclude_addresses: str | None
-    aproxy_redirect_ports: str | None
+    aproxy_exclude_addresses: list[str] = []
+    aproxy_redirect_ports: list[str] = []
     custom_pre_job_script: str | None
     jobmanager_url: AnyHttpUrl | None
 
@@ -457,6 +459,96 @@ class CharmConfig(BaseModel):
 
         return reconcile_interval
 
+    @validator("aproxy_exclude_addresses", pre=True)
+    @classmethod
+    def check_aproxy_exclude_addresses(
+        cls, aproxy_exclude_addresses: list[str] | str | None
+    ) -> list[str]:
+        """Parse and validate aproxy_exclude_addresses config value.
+
+        Args:
+            aproxy_exclude_addresses: The aproxy_exclude_addresses configuration input.
+
+        Raises:
+            CharmConfigInvalidError: invalid aproxy_exclude_addresses configuration input.
+
+        Returns:
+            Parsed aproxy_exclude_addresses configuration input.
+        """
+        if aproxy_exclude_addresses is None:
+            aproxy_exclude_addresses = []
+        if isinstance(aproxy_exclude_addresses, str):
+            aproxy_exclude_addresses = aproxy_exclude_addresses.split(",")
+        result = []
+        for address_range in aproxy_exclude_addresses:
+            address_range = address_range.strip()
+            if not address_range:
+                continue
+            if "-" in address_range:
+                start, end = address_range.split("-")
+                try:
+                    ipaddress.ip_address(start)
+                    ipaddress.ip_address(end)
+                except ValueError as exc:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config"
+                    ) from exc
+            else:
+                try:
+                    ipaddress.ip_network(address_range, strict=False)
+                except ValueError as exc:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config"
+                    ) from exc
+            result.append(address_range)
+        return result
+
+    @validator("aproxy_redirect_ports", pre=True)
+    @classmethod
+    def check_aproxy_redirect_ports(
+        cls, aproxy_redirect_ports: list[str] | str | None
+    ) -> list[str]:
+        """Parse and validate check_aproxy_redirect_ports config value.
+
+        Args:
+            aproxy_redirect_ports: The aproxy_exclude_addresses configuration input.
+
+        Raises:
+            CharmConfigInvalidError: invalid check_aproxy_redirect_ports configuration input.
+
+        Returns:
+            Parsed check_aproxy_redirect_ports configuration input.
+        """
+        if aproxy_redirect_ports is None:
+            aproxy_redirect_ports = []
+        if isinstance(aproxy_redirect_ports, str):
+            aproxy_redirect_ports = aproxy_redirect_ports.split(",")
+        result = []
+        for port_range in aproxy_redirect_ports:
+            port_range = port_range.strip()
+            if not port_range:
+                continue
+            if "-" in port_range:
+                start, end = port_range.split("-")
+                try:
+                    start_num = int(start)
+                    end_num = int(end)
+                except ValueError as exc:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                    ) from exc
+                if start_num < 0 or start_num > 65535 or end_num < 0 or end_num > 65535:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                    )
+            else:
+                if not port_range.isdecimal() or int(port_range) < 0 or int(port_range) > 65535:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                    )
+            result.append(port_range)
+        return result
+
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "CharmConfig":
         """Initialize the config from charm.
@@ -521,11 +613,12 @@ class CharmConfig(BaseModel):
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,
-            aproxy_exclude_addresses=(
-                cast(str | None, charm.config.get(APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME))
+            # mypy doesn't know about the validator
+            aproxy_exclude_addresses=charm.config.get(  # type: ignore
+                APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME
             ),
-            aproxy_redirect_ports=(
-                cast(str | None, charm.config.get(APROXY_REDIRECT_PORTS_CONFIG_NAME))
+            aproxy_redirect_ports=charm.config.get(  # type: ignore
+                APROXY_REDIRECT_PORTS_CONFIG_NAME
             ),
             custom_pre_job_script=custom_pre_job_script,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
