@@ -290,13 +290,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
             use_aproxy = False
         aproxy_exclude_addresses = service_config.aproxy_exclude_addresses
         aproxy_exclude_ipv4_addresses = []
-        if aproxy_exclude_addresses:
-            for address in aproxy_exclude_addresses.split(","):
-                address = address.strip()
-                if not address:
-                    continue
-                if ":" not in address:
-                    aproxy_exclude_ipv4_addresses.append(address)
+        for address in aproxy_exclude_addresses:
+            if ":" not in address:
+                aproxy_exclude_ipv4_addresses.append(address)
         return jinja.get_template("openstack-userdata.sh.j2").render(
             run_script=runner_context.shell_run_script,
             env_contents=env_contents,
