@@ -529,7 +529,7 @@ class CharmConfig(BaseModel):
             if not port_range:
                 continue
             if "-" in port_range:
-                start, end = port_range.split("-")
+                start, _, end = port_range.partition("-")
                 try:
                     start_num = int(start)
                     end_num = int(end)
