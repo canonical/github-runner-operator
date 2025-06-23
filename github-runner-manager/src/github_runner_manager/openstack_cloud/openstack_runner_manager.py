@@ -288,11 +288,9 @@ class OpenStackRunnerManager(CloudRunnerManager):
         aproxy_redirect_ports = service_config.aproxy_redirect_ports
         if not aproxy_redirect_ports:
             use_aproxy = False
-        aproxy_exclude_addresses = service_config.aproxy_exclude_addresses
-        aproxy_exclude_ipv4_addresses = []
-        for address in aproxy_exclude_addresses:
-            if ":" not in address:
-                aproxy_exclude_ipv4_addresses.append(address)
+        aproxy_exclude_ipv4_addresses = [
+            address for address in service_config.aproxy_exclude_addresses if ":" not in address
+        ]
         return jinja.get_template("openstack-userdata.sh.j2").render(
             run_script=runner_context.shell_run_script,
             env_contents=env_contents,
