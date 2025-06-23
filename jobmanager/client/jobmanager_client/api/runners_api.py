@@ -18,15 +18,12 @@ import warnings
 
 from pydantic import validate_arguments, ValidationError
 
-from typing_extensions import Annotated
-from pydantic import Field, StrictInt
+from pydantic import StrictInt
 
-from typing import Any, Dict
-
-from jobmanager_client.models.get_runner_health_v1_runner_runner_id_health_get200_response import GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
-from jobmanager_client.models.register_runner_v1_runner_register_post200_response import RegisterRunnerV1RunnerRegisterPost200Response
-from jobmanager_client.models.register_runner_v1_runner_register_post_request import RegisterRunnerV1RunnerRegisterPostRequest
-from jobmanager_client.models.update_runner_health_v1_runner_runner_id_health_put_request import UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest
+from jobmanager_client.models.runner_create import RunnerCreate
+from jobmanager_client.models.runner_health_response import RunnerHealthResponse
+from jobmanager_client.models.runner_health_update_response import RunnerHealthUpdateResponse
+from jobmanager_client.models.runner_register_response import RunnerRegisterResponse
 
 from jobmanager_client.api_client import ApiClient
 from jobmanager_client.api_response import ApiResponse
@@ -49,17 +46,17 @@ class RunnersApi:
         self.api_client = api_client
 
     @validate_arguments
-    def get_runner_health_v1_runner_runner_id_health_get(self, runner_id : Annotated[StrictInt, Field(..., description="Runner ID that can be used to retrieve the builder status")], **kwargs) -> GetRunnerHealthV1RunnerRunnerIdHealthGet200Response:  # noqa: E501
+    def get_runner_health_v1_runners_runner_id_health_get(self, runner_id : StrictInt, **kwargs) -> RunnerHealthResponse:  # noqa: E501
         """Get Runner Health  # noqa: E501
 
-        This endpoint is used by the Builder Manager to ask for builder status.  # noqa: E501
+        Get runner health status.  Args:     runner_id: Unique identifier of the runner     db: Database session dependency  Returns:     dict: Runner health metrics including CPU, RAM, disk usage and status  Raises:     HTTPException 404: If runner is not found  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_runner_health_v1_runner_runner_id_health_get(runner_id, async_req=True)
+        >>> thread = api.get_runner_health_v1_runners_runner_id_health_get(runner_id, async_req=True)
         >>> result = thread.get()
 
-        :param runner_id: Runner ID that can be used to retrieve the builder status (required)
+        :param runner_id: (required)
         :type runner_id: int
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
@@ -70,26 +67,26 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: GetRunnerHealthV1RunnerRunnerIdHealthGet200Response
+        :rtype: RunnerHealthResponse
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the get_runner_health_v1_runner_runner_id_health_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the get_runner_health_v1_runners_runner_id_health_get_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.get_runner_health_v1_runner_runner_id_health_get_with_http_info(runner_id, **kwargs)  # noqa: E501
+        return self.get_runner_health_v1_runners_runner_id_health_get_with_http_info(runner_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def get_runner_health_v1_runner_runner_id_health_get_with_http_info(self, runner_id : Annotated[StrictInt, Field(..., description="Runner ID that can be used to retrieve the builder status")], **kwargs) -> ApiResponse:  # noqa: E501
+    def get_runner_health_v1_runners_runner_id_health_get_with_http_info(self, runner_id : StrictInt, **kwargs) -> ApiResponse:  # noqa: E501
         """Get Runner Health  # noqa: E501
 
-        This endpoint is used by the Builder Manager to ask for builder status.  # noqa: E501
+        Get runner health status.  Args:     runner_id: Unique identifier of the runner     db: Database session dependency  Returns:     dict: Runner health metrics including CPU, RAM, disk usage and status  Raises:     HTTPException 404: If runner is not found  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.get_runner_health_v1_runner_runner_id_health_get_with_http_info(runner_id, async_req=True)
+        >>> thread = api.get_runner_health_v1_runners_runner_id_health_get_with_http_info(runner_id, async_req=True)
         >>> result = thread.get()
 
-        :param runner_id: Runner ID that can be used to retrieve the builder status (required)
+        :param runner_id: (required)
         :type runner_id: int
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
@@ -113,7 +110,7 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(GetRunnerHealthV1RunnerRunnerIdHealthGet200Response, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(RunnerHealthResponse, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
@@ -138,7 +135,7 @@ class RunnersApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method get_runner_health_v1_runner_runner_id_health_get" % _key
+                    " to method get_runner_health_v1_runners_runner_id_health_get" % _key
                 )
             _params[_key] = _val
         del _params['kwargs']
@@ -165,14 +162,15 @@ class RunnersApi:
             ['application/json'])  # noqa: E501
 
         # authentication setting
-        _auth_settings = ['APIAccessToken']  # noqa: E501
+        _auth_settings = []  # noqa: E501
 
         _response_types_map = {
-            '200': "GetRunnerHealthV1RunnerRunnerIdHealthGet200Response",
+            '200': "RunnerHealthResponse",
+            '422': "HTTPValidationError",
         }
 
         return self.api_client.call_api(
-            '/v1/runner/{runner_id}/health', 'GET',
+            '/v1/runners/{runner_id}/health', 'GET',
             _path_params,
             _query_params,
             _header_params,
@@ -189,18 +187,18 @@ class RunnersApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def register_runner_v1_runner_register_post(self, register_runner_v1_runner_register_post_request : RegisterRunnerV1RunnerRegisterPostRequest, **kwargs) -> RegisterRunnerV1RunnerRegisterPost200Response:  # noqa: E501
+    def register_runner_v1_runners_register_post(self, runner_create : RunnerCreate, **kwargs) -> RunnerRegisterResponse:  # noqa: E501
         """Register Runner  # noqa: E501
 
-        This endpoint is used by the Builder Manager to register a new runner. It sends metadata and its current capabilities so it can be tracked and assigned jobs.  # noqa: E501
+        Register a new runner.  Args:     runner_in: Runner registration data including name and labels     db: Database session dependency     token: API access token for authorization  Returns:     dict: Contains the runner ID and its authentication token  Raises:     HTTPException 500: If token generation fails  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.register_runner_v1_runner_register_post(register_runner_v1_runner_register_post_request, async_req=True)
+        >>> thread = api.register_runner_v1_runners_register_post(runner_create, async_req=True)
         >>> result = thread.get()
 
-        :param register_runner_v1_runner_register_post_request: (required)
-        :type register_runner_v1_runner_register_post_request: RegisterRunnerV1RunnerRegisterPostRequest
+        :param runner_create: (required)
+        :type runner_create: RunnerCreate
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
@@ -210,27 +208,27 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: RegisterRunnerV1RunnerRegisterPost200Response
+        :rtype: RunnerRegisterResponse
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the register_runner_v1_runner_register_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the register_runner_v1_runners_register_post_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.register_runner_v1_runner_register_post_with_http_info(register_runner_v1_runner_register_post_request, **kwargs)  # noqa: E501
+        return self.register_runner_v1_runners_register_post_with_http_info(runner_create, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def register_runner_v1_runner_register_post_with_http_info(self, register_runner_v1_runner_register_post_request : RegisterRunnerV1RunnerRegisterPostRequest, **kwargs) -> ApiResponse:  # noqa: E501
+    def register_runner_v1_runners_register_post_with_http_info(self, runner_create : RunnerCreate, **kwargs) -> ApiResponse:  # noqa: E501
         """Register Runner  # noqa: E501
 
-        This endpoint is used by the Builder Manager to register a new runner. It sends metadata and its current capabilities so it can be tracked and assigned jobs.  # noqa: E501
+        Register a new runner.  Args:     runner_in: Runner registration data including name and labels     db: Database session dependency     token: API access token for authorization  Returns:     dict: Contains the runner ID and its authentication token  Raises:     HTTPException 500: If token generation fails  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.register_runner_v1_runner_register_post_with_http_info(register_runner_v1_runner_register_post_request, async_req=True)
+        >>> thread = api.register_runner_v1_runners_register_post_with_http_info(runner_create, async_req=True)
         >>> result = thread.get()
 
-        :param register_runner_v1_runner_register_post_request: (required)
-        :type register_runner_v1_runner_register_post_request: RegisterRunnerV1RunnerRegisterPostRequest
+        :param runner_create: (required)
+        :type runner_create: RunnerCreate
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
@@ -253,13 +251,13 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(RegisterRunnerV1RunnerRegisterPost200Response, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(RunnerRegisterResponse, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
 
         _all_params = [
-            'register_runner_v1_runner_register_post_request'
+            'runner_create'
         ]
         _all_params.extend(
             [
@@ -278,7 +276,7 @@ class RunnersApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method register_runner_v1_runner_register_post" % _key
+                    " to method register_runner_v1_runners_register_post" % _key
                 )
             _params[_key] = _val
         del _params['kwargs']
@@ -297,8 +295,8 @@ class RunnersApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        if _params['register_runner_v1_runner_register_post_request'] is not None:
-            _body_params = _params['register_runner_v1_runner_register_post_request']
+        if _params['runner_create'] is not None:
+            _body_params = _params['runner_create']
 
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
@@ -312,14 +310,15 @@ class RunnersApi:
                 _header_params['Content-Type'] = _content_types_list
 
         # authentication setting
-        _auth_settings = ['APIAccessToken']  # noqa: E501
+        _auth_settings = []  # noqa: E501
 
         _response_types_map = {
-            '200': "RegisterRunnerV1RunnerRegisterPost200Response",
+            '200': "RunnerRegisterResponse",
+            '422': "HTTPValidationError",
         }
 
         return self.api_client.call_api(
-            '/v1/runner/register', 'POST',
+            '/v1/runners/register', 'POST',
             _path_params,
             _query_params,
             _header_params,
@@ -336,20 +335,18 @@ class RunnersApi:
             _request_auth=_params.get('_request_auth'))
 
     @validate_arguments
-    def update_runner_health_v1_runner_runner_id_health_put(self, runner_id : Annotated[StrictInt, Field(..., description="Runner ID that can be used to update the builder health status")], update_runner_health_v1_runner_runner_id_health_put_request : UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest, **kwargs) -> object:  # noqa: E501
+    def update_runner_health_v1_runners_runner_id_health_put(self, runner_id : StrictInt, **kwargs) -> RunnerHealthUpdateResponse:  # noqa: E501
         """Update Runner Health  # noqa: E501
 
-        This endpoint is used by Builder Agent (on a builder) to send to the Job Manager their health checks.  # noqa: E501
+        Update runner health metrics.  Args:     runner_id: Unique identifier of the runner     request: FastAPI request object containing health metrics     db: Database session dependency     token: Runner token for authorization  Returns:     dict: Success indicator  Raises:     HTTPException 404: If runner is not found  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.update_runner_health_v1_runner_runner_id_health_put(runner_id, update_runner_health_v1_runner_runner_id_health_put_request, async_req=True)
+        >>> thread = api.update_runner_health_v1_runners_runner_id_health_put(runner_id, async_req=True)
         >>> result = thread.get()
 
-        :param runner_id: Runner ID that can be used to update the builder health status (required)
+        :param runner_id: (required)
         :type runner_id: int
-        :param update_runner_health_v1_runner_runner_id_health_put_request: (required)
-        :type update_runner_health_v1_runner_runner_id_health_put_request: UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _request_timeout: timeout setting for this request.
@@ -359,29 +356,27 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: object
+        :rtype: RunnerHealthUpdateResponse
         """
         kwargs['_return_http_data_only'] = True
         if '_preload_content' in kwargs:
-            message = "Error! Please call the update_runner_health_v1_runner_runner_id_health_put_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
+            message = "Error! Please call the update_runner_health_v1_runners_runner_id_health_put_with_http_info method with `_preload_content` instead and obtain raw data from ApiResponse.raw_data"  # noqa: E501
             raise ValueError(message)
-        return self.update_runner_health_v1_runner_runner_id_health_put_with_http_info(runner_id, update_runner_health_v1_runner_runner_id_health_put_request, **kwargs)  # noqa: E501
+        return self.update_runner_health_v1_runners_runner_id_health_put_with_http_info(runner_id, **kwargs)  # noqa: E501
 
     @validate_arguments
-    def update_runner_health_v1_runner_runner_id_health_put_with_http_info(self, runner_id : Annotated[StrictInt, Field(..., description="Runner ID that can be used to update the builder health status")], update_runner_health_v1_runner_runner_id_health_put_request : UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest, **kwargs) -> ApiResponse:  # noqa: E501
+    def update_runner_health_v1_runners_runner_id_health_put_with_http_info(self, runner_id : StrictInt, **kwargs) -> ApiResponse:  # noqa: E501
         """Update Runner Health  # noqa: E501
 
-        This endpoint is used by Builder Agent (on a builder) to send to the Job Manager their health checks.  # noqa: E501
+        Update runner health metrics.  Args:     runner_id: Unique identifier of the runner     request: FastAPI request object containing health metrics     db: Database session dependency     token: Runner token for authorization  Returns:     dict: Success indicator  Raises:     HTTPException 404: If runner is not found  # noqa: E501
         This method makes a synchronous HTTP request by default. To make an
         asynchronous HTTP request, please pass async_req=True
 
-        >>> thread = api.update_runner_health_v1_runner_runner_id_health_put_with_http_info(runner_id, update_runner_health_v1_runner_runner_id_health_put_request, async_req=True)
+        >>> thread = api.update_runner_health_v1_runners_runner_id_health_put_with_http_info(runner_id, async_req=True)
         >>> result = thread.get()
 
-        :param runner_id: Runner ID that can be used to update the builder health status (required)
+        :param runner_id: (required)
         :type runner_id: int
-        :param update_runner_health_v1_runner_runner_id_health_put_request: (required)
-        :type update_runner_health_v1_runner_runner_id_health_put_request: UpdateRunnerHealthV1RunnerRunnerIdHealthPutRequest
         :param async_req: Whether to execute the request asynchronously.
         :type async_req: bool, optional
         :param _preload_content: if False, the ApiResponse.data will
@@ -404,14 +399,13 @@ class RunnersApi:
         :return: Returns the result object.
                  If the method is called asynchronously,
                  returns the request thread.
-        :rtype: tuple(object, status_code(int), headers(HTTPHeaderDict))
+        :rtype: tuple(RunnerHealthUpdateResponse, status_code(int), headers(HTTPHeaderDict))
         """
 
         _params = locals()
 
         _all_params = [
-            'runner_id',
-            'update_runner_health_v1_runner_runner_id_health_put_request'
+            'runner_id'
         ]
         _all_params.extend(
             [
@@ -430,7 +424,7 @@ class RunnersApi:
             if _key not in _all_params:
                 raise ApiTypeError(
                     "Got an unexpected keyword argument '%s'"
-                    " to method update_runner_health_v1_runner_runner_id_health_put" % _key
+                    " to method update_runner_health_v1_runners_runner_id_health_put" % _key
                 )
             _params[_key] = _val
         del _params['kwargs']
@@ -452,29 +446,20 @@ class RunnersApi:
         _files = {}
         # process the body parameter
         _body_params = None
-        if _params['update_runner_health_v1_runner_runner_id_health_put_request'] is not None:
-            _body_params = _params['update_runner_health_v1_runner_runner_id_health_put_request']
-
         # set the HTTP header `Accept`
         _header_params['Accept'] = self.api_client.select_header_accept(
             ['application/json'])  # noqa: E501
 
-        # set the HTTP header `Content-Type`
-        _content_types_list = _params.get('_content_type',
-            self.api_client.select_header_content_type(
-                ['application/json']))
-        if _content_types_list:
-                _header_params['Content-Type'] = _content_types_list
-
         # authentication setting
-        _auth_settings = ['BuilderToken']  # noqa: E501
+        _auth_settings = []  # noqa: E501
 
         _response_types_map = {
-            '200': "object",
+            '200': "RunnerHealthUpdateResponse",
+            '422': "HTTPValidationError",
         }
 
         return self.api_client.call_api(
-            '/v1/runner/{runner_id}/health', 'PUT',
+            '/v1/runners/{runner_id}/health', 'PUT',
             _path_params,
             _query_params,
             _header_params,
