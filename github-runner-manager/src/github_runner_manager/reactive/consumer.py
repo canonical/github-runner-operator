@@ -241,10 +241,8 @@ def _spawn_runner(
     logger.info("Reactive runner spawned %s", instance_ids)
 
     for iteration in range(5):
-        # Do not sleep on the first iteration — the job might already be taken.
+        sleep(60)
         logger.info("Checking if job picked up for reactive runner %s", instance_ids)
-        if iteration != 0:
-            sleep(60)
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
             msg.ack()
