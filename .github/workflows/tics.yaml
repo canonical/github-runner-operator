@@ -23,6 +23,7 @@ jobs:
         run: |
           echo "PYTHONPATH=$PYTHONPATH:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src" >> $GITHUB_ENV
           echo $PYTHONPATH
+          which pylint
       - name: Echo Python Path
         run: echo $PYTHONPATH
       - name: TICS GitHub Action
