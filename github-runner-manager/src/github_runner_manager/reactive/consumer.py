@@ -20,7 +20,7 @@ from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
-from github_runner_manager.platform.platform_provider import PlatformProvider
+from github_runner_manager.platform.platform_provider import JobNotFoundError, PlatformProvider
 from github_runner_manager.reactive.types_ import QueueConfig
 
 logger = logging.getLogger(__name__)
@@ -145,12 +145,18 @@ def consume(
                 except ValueError:
                     msg.reject(requeue=False)
                     break
-                if platform_provider.check_job_been_picked_up(
-                    metadata=metadata, job_url=job_details.url
-                ):
-                    logger.info("reactive job: %s already picked up.", job_details)
-                    msg.ack()
-                    continue
+                try:
+                    if platform_provider.check_job_been_picked_up(
+                        metadata=metadata, job_url=job_details.url
+                    ):
+                        logger.info("reactive job: %s already picked up.", job_details)
+                        msg.ack()
+                        continue
+                except JobNotFoundError:
+                    logger.warning(
+                        "Unable to find the job %s. Not retrying this job.", job_details.url
+                    )
+                    msg.reject(requeue=False)
                 _spawn_runner(
                     runner_manager=runner_manager,
                     job_url=job_details.url,
