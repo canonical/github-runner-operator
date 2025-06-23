@@ -3,29 +3,20 @@
 
 """Module for collecting metrics related to the reconciliation process."""
 
+import logging
 import secrets
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
-import pytest
 import pytest_asyncio
-from github.Branch import Branch
-from github.Repository import Repository
-from juju.action import Action
+import requests
 from juju.application import Application
 from juju.controller import Controller
 from juju.model import Model
-from openstack.connection import Connection
+from tenacity import retry, stop_after_attempt, wait_exponential
 
-from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
-from tests.integration.helpers.common import (
-    DISPATCH_TEST_WORKFLOW_FILENAME,
-    DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-    dispatch_workflow,
-    get_job_logs,
-    wait_for,
-    wait_for_reconcile,
-)
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.common import get_model_unit_addresses
+
+logger = logging.getLogger(__name__)
 
 
 @pytest_asyncio.fixture(scope="module", name="k8s_controller")
@@ -42,10 +33,11 @@ async def k8s_controller_fixture() -> AsyncGenerator[Controller, None]:
 
 @pytest_asyncio.fixture(scope="module", name="k8s_model")
 async def k8s_model_fixture(k8s_controller: Controller) -> AsyncGenerator[Model, None]:
-    """The machine model for jenkins agent machine charm."""
+    """The machine model for K8s charms."""
     k8s_model_name = f"k8s-{secrets.token_hex(2)}"
     model = await k8s_controller.add_model(k8s_model_name)
-    await model.connect(f"localhost:admin/{model.name}")
+    logger.info("Added model: %s", model.name)
+    await model.connect(f"microk8s:admin/{model.name}")
     yield model
     await k8s_controller.destroy_models(
         model.name, destroy_storage=True, force=True, max_wait=10 * 60
@@ -75,4 +67,14 @@ async def test_prometheus_metrics(
     await k8s_model.wait_for_idle(apps=[prometheus_app.name], timeout=300)
     await model.wait_for_idle(apps=[app_openstack_runner.name], timeout=300)
 
+    addresses = await get_model_unit_addresses(model=k8s_model, app_name=prometheus_app.name)
+    assert addresses, f"Unit addresses not found for {prometheus_app.name}"
+    address = addresses[0]
+    _get_active_target_patiently(prometheus_ip=address, target_name="github-runner")
     assert False
+
+
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=4, max=10))
+def _get_active_target_patiently(prometheus_ip: str, target_name: str):
+    query_targets = requests.get(f"http://{prometheus_ip}:9090/api/v1/targets", timeout=10).json()
+    assert target_name in query_targets["data"]["activeTargets"]

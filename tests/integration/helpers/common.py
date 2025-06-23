@@ -22,6 +22,7 @@ from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
 from juju.action import Action
 from juju.application import Application
+from juju.client._definitions import ApplicationStatus, FullStatus, UnitStatus
 from juju.model import Model
 from juju.unit import Unit
 
@@ -471,3 +472,27 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
     assert stdout is not None
     return stdout
+
+
+async def get_model_unit_addresses(model: Model, app_name: str) -> list[str]:
+    """Extract the address of a given unit.
+
+    Args:
+        model: Juju model
+        app_name: Juju application name
+
+    Returns:
+        the IP address of the Jenkins unit.
+    """
+    status: FullStatus = await model.get_status()
+    # mypy cannot infer the type ApplicationStatus but thinks its the base class type "Type".
+    application_status: ApplicationStatus | None = status.applications[app_name]  # type: ignore
+    assert application_status, f"Application status {app_name} not found in {status}"
+    # mypy cannot infer the type UnitStatus but thinks its the base class type "Type".
+    unit_status_map: dict[typing.Any, UnitStatus | None] = application_status.units  # type: ignore
+    units_statuses: list[UnitStatus | None] = list(unit_status_map.values())
+    return [
+        str(unit_status.address)
+        for unit_status in units_statuses
+        if unit_status and unit_status.address
+    ]
