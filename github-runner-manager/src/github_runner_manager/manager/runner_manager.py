@@ -24,6 +24,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerIdentity, Run
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
+from github_runner_manager.metrics.reconcile import CLEANED_RUNNERS_TOTAL
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (
@@ -301,6 +302,7 @@ class RunnerManager:
             )
             cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
 
+        CLEANED_RUNNERS_TOTAL.labels("flavor", len(cloud_runners_to_delete))
         return self._delete_cloud_runners(
             cloud_runners_to_delete,
             runners_health_response.requested_runners,

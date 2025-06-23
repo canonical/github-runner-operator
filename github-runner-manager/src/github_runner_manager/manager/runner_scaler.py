@@ -8,10 +8,7 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager.configuration import (
-    ApplicationConfiguration,
-    UserInfo,
-)
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,
@@ -28,6 +25,13 @@ from github_runner_manager.manager.runner_manager import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics.reconcile import (
+    BUSY_RUNNERS_COUNT,
+    CLEANED_RUNNERS_TOTAL,
+    EXPECTED_RUNNERS_COUNT,
+    IDLE_RUNNERS_COUNT,
+    RECONCILE_DURATION_SECONDS,
+)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
@@ -216,6 +220,8 @@ class RunnerScaler:
         self._platform_name = platform_name
         self._python_path = python_path
 
+        EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
+
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
 
@@ -243,6 +249,8 @@ class RunnerScaler:
                     offline += 1
                 case _:
                     unknown += 1
+        BUSY_RUNNERS_COUNT.labels("flavor", self._manager.manager_name).set(busy)
+        IDLE_RUNNERS_COUNT.labels("flavor", self._manager.manager_name).set(online)
         return RunnerInfo(
             online=online,
             busy=busy,
@@ -320,6 +328,9 @@ class RunnerScaler:
                 runner_list=runner_list,
                 flavor=self._manager.manager_name,
                 expected_runner_quantity=expected_runner_quantity,
+            )
+            RECONCILE_DURATION_SECONDS.labels("flavor", self._manager.manager_name).observe(
+                end_timestamp - start_timestamp
             )
             _issue_reconciliation_metric(reconcile_metric_data)
 
