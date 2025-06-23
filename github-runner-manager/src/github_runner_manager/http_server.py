@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
+from prometheus_client import generate_latest
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import CloudError, LockError
@@ -101,6 +102,12 @@ def get_lock() -> Lock:
         app.logger.info("Attempting to acquire the lock: %s", lock_state)
         return _lock
     raise LockError("Lock not configured")
+
+
+@app.route("/metrics", methods=["GET"])
+def metrics():
+    """Return prometheus metrics from default registry."""
+    return generate_latest()
 
 
 @dataclass
