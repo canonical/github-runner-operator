@@ -301,7 +301,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             use_aproxy=use_aproxy,
             aproxy_address=service_config.runner_proxy_config.proxy_address,
             aproxy_exclude_ipv4_addresses=", ".join(aproxy_exclude_ipv4_addresses),
-            aproxy_redirect_ports=aproxy_redirect_ports,
+            aproxy_redirect_ports=", ".join(aproxy_redirect_ports),
             dockerhub_mirror=service_config.dockerhub_mirror,
             ssh_debug_info=ssh_debug_info,
             runner_proxy_config=service_config.runner_proxy_config,
