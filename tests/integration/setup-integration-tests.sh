@@ -10,7 +10,6 @@
 
 # save original controller that is used for testing
 ORIGINAL_CONTROLLER=$(juju controllers --format json | jq '.controllers | keys | .[0]')
-
 echo "bootstrapping microk8s juju controller"
 sudo snap install microk8s --channel=1.32-strict/stable
 GROUP=snap_microk8s
@@ -21,3 +20,5 @@ fi
 sudo microk8s enable hostpath-storage
 microk8s status --wait-ready
 juju bootstrap microk8s microk8s
+unset JUJU_CONTROLLER
+juju switch $ORIGINAL_CONTROLLER
