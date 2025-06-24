@@ -90,7 +90,8 @@ def get_queue_size(queue_config: QueueConfig) -> int:
         raise QueueError("Error when communicating with the queue") from exc
 
 
-def consume(
+# Ignore `consume` too complex as it is pending re-design.
+def consume(  # noqa: C901
     queue_config: QueueConfig,
     runner_manager: RunnerManager,
     platform_provider: PlatformProvider,

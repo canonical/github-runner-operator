@@ -341,7 +341,7 @@ class GithubClient:
         Args:
             path: GitHub repository path in the format '<owner>/<repo>'.
             job_id: The job id.
-        
+
         Raises:
             JobNotFoundError: Cannot find job on GitHub.
 
