@@ -11,23 +11,23 @@ jobs:
       - name: Run Unit Tests (manager app)
         run: |
           cd github-runner-manager
-          pip install tox pylint flake8 -r ./requirements.txt
+          pip install tox flake8 -r ./requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
       - name: Run Unit Tests
         run: |
-          pip install tox pylint flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
+          pip install tox flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
           tox -e unit,coverage-report
           rm -rf .tox
       - name: Add to Python Path
         run: |
-          echo "PYTHONPATH=/usr/bin:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src" >> $GITHUB_ENV
+          echo "PYTHONPATH=/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/src:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/lib:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src/github_runner_manager:/home/ubuntu/actions-runner/_work/github-runner-operator/github-runner-operator/github-runner-manager/src" >> $GITHUB_ENV
           echo $PYTHONPATH
           which pylint
       - name: Echo Python Path
         run: echo $PYTHONPATH
       - name: Echo Python Path GitHub
-        run: ${{ env.PYTHONPATH }}
+        run: echo ${{ env.PYTHONPATH }}
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         env:
