@@ -1,0 +1,10 @@
+name: Auto-update charm libraries
+
+on:
+  schedule:
+    - cron: "0 1 * * *"
+
+jobs:
+  auto-update-libs:
+    uses: canonical/operator-workflows/.github/workflows/auto_update_charm_libs.yaml@main
+    secrets: inherit
