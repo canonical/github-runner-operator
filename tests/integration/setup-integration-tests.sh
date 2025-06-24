@@ -9,7 +9,7 @@
 # The COS observability stack are deployed on K8s models.
 
 # save original controller that is used for testing
-ORIGINAL_CONTROLLER=$(juju controllers --format json | jq '.controllers | keys | .[0]')
+ORIGINAL_CONTROLLER=$(juju controllers --format json | jq -r '.controllers | keys | .[0]')
 echo "bootstrapping microk8s juju controller"
 sudo snap install microk8s --channel=1.32-strict/stable
 GROUP=snap_microk8s
