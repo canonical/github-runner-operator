@@ -240,7 +240,7 @@ def _spawn_runner(
         return
     logger.info("Reactive runner spawned %s", instance_ids)
 
-    for iteration in range(5):
+    for _ in range(5):
         sleep(60)
         logger.info("Checking if job picked up for reactive runner %s", instance_ids)
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
