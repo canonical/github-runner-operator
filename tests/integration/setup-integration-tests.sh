@@ -8,7 +8,8 @@
 
 # The COS observability stack are deployed on K8s models.
 
-TESTING_MODEL="$(juju switch)"
+# save original controller that is used for testing
+ORIGINAL_CONTROLLER=$(juju controllers --format json | jq '.controllers | keys | .[0]')
 
 echo "bootstrapping microk8s juju controller"
 sudo snap install microk8s --channel=1.32-strict/stable
@@ -21,5 +22,5 @@ sudo microk8s enable hostpath-storage
 microk8s status --wait-ready
 juju bootstrap microk8s microk8s
 
-echo "Switching to testing model"
-juju switch $TESTING_MODEL
+echo "Switching to original controller $ORIGINAL_CONTROLLER"
+juju switch $ORIGINAL_CONTROLLER
