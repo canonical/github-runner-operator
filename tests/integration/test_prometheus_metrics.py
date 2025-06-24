@@ -7,6 +7,7 @@ import logging
 import secrets
 from typing import AsyncGenerator
 
+import pytest
 import pytest_asyncio
 import requests
 from juju.application import Application
@@ -52,6 +53,7 @@ async def prometheus_app_fixture(k8s_model: Model):
     return prometheus_app
 
 
+@pytest.mark.openstack
 async def test_prometheus_metrics(
     model: Model, k8s_model: Model, app_openstack_runner: Application, prometheus_app: Application
 ):
