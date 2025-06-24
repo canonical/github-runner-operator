@@ -161,6 +161,7 @@ async def test_reactive_mode_with_not_found_job(
         app.name,
     )
 
+    # There may be a race condition between getting the token and spawning the machine.
     await sleep(10)
     await wait_for_reconcile(app, app.model)
 
