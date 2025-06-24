@@ -163,7 +163,7 @@ async def test_reactive_mode_with_not_found_job(
 
     # There may be a race condition between getting the token and spawning the machine.
     await sleep(10)
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     assert_queue_is_empty(mongodb_uri, app.name)
 
