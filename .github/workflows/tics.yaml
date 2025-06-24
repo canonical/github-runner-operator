@@ -26,6 +26,8 @@ jobs:
           which pylint
       - name: Echo Python Path
         run: echo $PYTHONPATH
+      - name: Echo Python Path GitHub
+        run: ${{ env.PYTHONPATH }}
       - name: TICS GitHub Action
         uses: tiobe/tics-github-action@v3
         env:
