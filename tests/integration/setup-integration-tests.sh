@@ -21,6 +21,3 @@ fi
 sudo microk8s enable hostpath-storage
 microk8s status --wait-ready
 juju bootstrap microk8s microk8s
-
-echo "Switching to original controller $ORIGINAL_CONTROLLER"
-juju switch $ORIGINAL_CONTROLLER
