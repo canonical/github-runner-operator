@@ -3,12 +3,11 @@
 
 """Unit tests for the the runner_manager."""
 
-from unittest.mock import ANY, MagicMock
+from unittest.mock import MagicMock
 
 import pytest
 
 from github_runner_manager.errors import RunnerCreateError
-from github_runner_manager.manager import runner_manager as runner_manager_module
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
@@ -22,7 +21,6 @@ from github_runner_manager.manager.models import (
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
-    PlatformRunnerHealth,
     RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
@@ -104,55 +102,12 @@ def test_failed_runner_in_openstack_cleans_github(monkeypatch: pytest.MonkeyPatc
     github_provider.delete_runner.assert_called_once_with(github_runner.identity)
 
 
-@pytest.mark.parametrize(
-    "creation_waiting_times,runner_unhealthy,runner_healthy",
-    [
-        pytest.param(
-            (0,),
-            None,
-            PlatformRunnerHealth(
-                identity=MagicMock(),
-                online=True,
-                busy=False,
-                deletable=False,
-            ),
-            id="online runner",
-        ),
-        pytest.param(
-            (0, 0),
-            PlatformRunnerHealth(
-                identity=MagicMock(),
-                online=False,
-                busy=True,
-                deletable=False,
-            ),
-            PlatformRunnerHealth(
-                identity=MagicMock(),
-                online=False,
-                busy=False,
-                deletable=True,
-            ),
-            id="deletable runner",
-        ),
-    ],
-)
-def test_create_runner(
-    monkeypatch: pytest.MonkeyPatch,
-    creation_waiting_times: tuple[int, ...],
-    runner_unhealthy: PlatformRunnerHealth | None,
-    runner_healthy: PlatformRunnerHealth,
-):
+def test_create_runner() -> None:
     """
-    arrange: Given a specific pattern for creation waiting times and a list of.
-        PlatformRunnerHealth objects being the last one a healthy runner.
+    arrange: None.
     act: call runner_manager.create_runners.
-    assert: The runner manager will create the runner and make requests to check the health
-        until it gets a healthy state.
+    assert: The runner manager will create the runner.
     """
-    monkeypatch.setattr(
-        runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", creation_waiting_times
-    )
-
     cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
     cloud_runner_manager.name_prefix = "unit-0"
 
@@ -160,10 +115,6 @@ def test_create_runner(
     runner_context_mock = MagicMock()
     github_runner = MagicMock()
     platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
-
-    platform_provider.get_runner_health.side_effect = tuple(
-        runner_unhealthy for _ in range(len(creation_waiting_times) - 1)
-    ) + (runner_healthy,)
 
     runner_manager = RunnerManager(
         "managername",
@@ -176,54 +127,3 @@ def test_create_runner(
 
     assert instance_id
     cloud_runner_manager.create_runner.assert_called_once()
-    # The method to get the runner health was called three times
-    # until the runner was online.
-    assert platform_provider.get_runner_health.call_count == len(creation_waiting_times)
-    platform_provider.get_runner_health.assert_called()
-
-
-def test_create_runner_failed_waiting(monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: Given a specific pattern for creation waiting times and a list of.
-        PlatformRunnerHealth objects where none is healthy
-    act: call runner_manager.create_runners.
-    assert: The runner manager will create the runner, it will check for the health state,
-       but the runner will not get into healthy state and the platform api for deleting
-       the runner will be called.
-    """
-    runner_creation_waiting_times = (0, 0)
-    monkeypatch.setattr(
-        runner_manager_module, "RUNNER_CREATION_WAITING_TIMES", runner_creation_waiting_times
-    )
-
-    cloud_runner_manager = MagicMock(spec=CloudRunnerManager)
-    cloud_runner_manager.name_prefix = "unit-0"
-
-    platform_provider = MagicMock(spec=PlatformProvider)
-    runner_context_mock = MagicMock()
-    github_runner = MagicMock()
-    platform_provider.get_runner_context.return_value = (runner_context_mock, github_runner)
-
-    health_offline = PlatformRunnerHealth(
-        identity=MagicMock(), online=False, busy=False, deletable=False
-    )
-
-    platform_provider.get_runner_health.side_effect = (
-        health_offline,
-        health_offline,
-    )
-
-    runner_manager = RunnerManager(
-        "managername",
-        platform_provider=platform_provider,
-        cloud_runner_manager=cloud_runner_manager,
-        labels=["label1", "label2"],
-    )
-
-    () = runner_manager.create_runners(1, RunnerMetadata(), True)
-
-    # The runner was started even if it failed.
-    cloud_runner_manager.create_runner.assert_called_once()
-    assert platform_provider.get_runner_health.call_count == 2
-    platform_provider.get_runner_health.assert_called()
-    platform_provider.delete_runner.assert_called_once_with(ANY)
