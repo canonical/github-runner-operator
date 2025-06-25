@@ -68,8 +68,8 @@ async def test_prometheus_metrics(
     await model.integrate(
         app_openstack_runner.name, f"microk8s:admin/{k8s_model.name}.{offer_name}"
     )
-    await k8s_model.wait_for_idle(apps=[prometheus_app.name], timeout=300)
-    await model.wait_for_idle(apps=[app_openstack_runner.name], timeout=300)
+    await k8s_model.wait_for_idle(apps=[prometheus_app.name], raise_on_error=False, timeout=300)
+    await model.wait_for_idle(apps=[app_openstack_runner.name], raise_on_error=False, timeout=300)
 
     addresses = await get_model_unit_addresses(model=k8s_model, app_name=prometheus_app.name)
     assert addresses, f"Unit addresses not found for {prometheus_app.name}"
