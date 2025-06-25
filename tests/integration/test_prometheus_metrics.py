@@ -50,6 +50,7 @@ async def k8s_model_fixture(k8s_controller: Controller) -> AsyncGenerator[Model,
 async def prometheus_app_fixture(k8s_model: Model):
     """Deploy prometheus charm."""
     prometheus_app: Application = await k8s_model.deploy("prometheus-k8s", channel="1/stable")
+    await k8s_model.wait_for_idle(apps=[prometheus_app.name])
     return prometheus_app
 
 
@@ -62,9 +63,10 @@ async def test_prometheus_metrics(
     act: when GitHub runner is integrated.
     assert: the datasource is registered and basic metrics are available.
     """
-    offer = await k8s_model.create_offer(f"{prometheus_app.name}:metrics-endpoint", "metrics")
+    offer_name = "metrics"
+    await k8s_model.create_offer(f"{prometheus_app.name}:metrics-endpoint", offer_name)
     await model.integrate(
-        app_openstack_runner.name, f"microk8s:admin/{k8s_model.name}.{offer.name}"
+        app_openstack_runner.name, f"microk8s:admin/{k8s_model.name}.{offer_name}"
     )
     await k8s_model.wait_for_idle(apps=[prometheus_app.name], timeout=300)
     await model.wait_for_idle(apps=[app_openstack_runner.name], timeout=300)
