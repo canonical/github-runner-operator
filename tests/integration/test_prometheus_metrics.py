@@ -58,9 +58,24 @@ async def prometheus_app_fixture(k8s_model: Model):
     return prometheus_app
 
 
+@pytest_asyncio.fixture(scope="module", name="openstack_app_cos_agent")
+async def openstack_app_cos_agent_fixture(app_openstack_runner: Application):
+    """Deploy cos-agent subordinate charm on OpenStack runner application."""
+    model = app_openstack_runner.model
+    grafana_agent = await model.deploy("grafana-agent")
+    await model.relate(grafana_agent.name, app_openstack_runner.name)
+    await model.wait_for_idle(
+        apps=[grafana_agent.name, app_openstack_runner.name], raise_on_error=False
+    )
+    return app_openstack_runner
+
+
 @pytest.mark.openstack
 async def test_prometheus_metrics(
-    model: Model, k8s_model: Model, app_openstack_runner: Application, prometheus_app: Application
+    model: Model,
+    k8s_model: Model,
+    openstack_app_cos_agent_fixture: Application,
+    prometheus_app: Application,
 ):
     """
     arrange: given a prometheus charm application.
@@ -70,16 +85,18 @@ async def test_prometheus_metrics(
     offer_name = "metrics"
     await k8s_model.create_offer(f"{prometheus_app.name}:metrics-endpoint", offer_name)
     await model.consume(f"microk8s:admin/{k8s_model.name}.{offer_name}")
-    await model.integrate(app_openstack_runner.name, offer_name)
+    await model.integrate(openstack_app_cos_agent_fixture.name, offer_name)
     await k8s_model.wait_for_idle(apps=[prometheus_app.name], raise_on_error=False, timeout=300)
-    await model.wait_for_idle(apps=[app_openstack_runner.name], raise_on_error=False, timeout=300)
+    await model.wait_for_idle(
+        apps=[openstack_app_cos_agent_fixture.name], raise_on_error=False, timeout=300
+    )
 
     addresses = await get_model_unit_addresses(model=k8s_model, app_name=prometheus_app.name)
     assert addresses, f"Unit addresses not found for {prometheus_app.name}"
     address = addresses[0]
 
     _assert_app_in_prometheus_target_patiently(
-        prometheus_ip=address, target_name=app_openstack_runner.name
+        prometheus_ip=address, target_name=openstack_app_cos_agent_fixture.name
     )
     _assert_metrics_in_prometheus_labels_patiently(prometheus_ip=address, labels=["flavor"])
 
