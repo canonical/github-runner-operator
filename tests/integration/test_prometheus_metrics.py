@@ -65,9 +65,8 @@ async def test_prometheus_metrics(
     """
     offer_name = "metrics"
     await k8s_model.create_offer(f"{prometheus_app.name}:metrics-endpoint", offer_name)
-    await model.integrate(
-        app_openstack_runner.name, f"microk8s:admin/{k8s_model.name}.{offer_name}"
-    )
+    await model.consume(f"microk8s:admin/{k8s_model.name}.{offer_name}")
+    await model.integrate(app_openstack_runner.name, offer_name)
     await k8s_model.wait_for_idle(apps=[prometheus_app.name], raise_on_error=False, timeout=300)
     await model.wait_for_idle(apps=[app_openstack_runner.name], raise_on_error=False, timeout=300)
 
