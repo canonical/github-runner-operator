@@ -13,6 +13,7 @@ import requests
 from juju.application import Application
 from juju.controller import Controller
 from juju.model import Model
+from pytest_operator.plugin import OpsTest
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from tests.integration.helpers.common import get_model_unit_addresses
@@ -33,17 +34,20 @@ async def k8s_controller_fixture() -> AsyncGenerator[Controller, None]:
 
 
 @pytest_asyncio.fixture(scope="module", name="k8s_model")
-async def k8s_model_fixture(k8s_controller: Controller) -> AsyncGenerator[Model, None]:
+async def k8s_model_fixture(
+    ops_test: OpsTest, k8s_controller: Controller
+) -> AsyncGenerator[Model, None]:
     """The machine model for K8s charms."""
     k8s_model_name = f"k8s-{secrets.token_hex(2)}"
     model = await k8s_controller.add_model(k8s_model_name)
     logger.info("Added model: %s", model.name)
     await model.connect(f"microk8s:admin/{model.name}")
     yield model
+    if ops_test.keep_model:
+        return
     await k8s_controller.destroy_models(
         model.name, destroy_storage=True, force=True, max_wait=10 * 60
     )
-    await model.disconnect()
 
 
 @pytest_asyncio.fixture(scope="module", name="prometheus_app")
