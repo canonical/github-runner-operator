@@ -56,7 +56,7 @@ jobs:
         run: |
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
-          sudo snap logs aproxy.aproxy | grep -Eq "[0-9.]+:4242"
+          sudo snap logs aproxy.aproxy | grep -Eq "[0-9.]+:22"
       - name: show aproxy logs
         if: failure()
         run: |
