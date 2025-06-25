@@ -19,7 +19,8 @@ if [ $(id -gn) != $GROUP ]; then
 fi
 sudo microk8s enable hostpath-storage
 microk8s status --wait-ready
-juju bootstrap microk8s microk8s
+
 unset JUJU_CONTROLLER
 unset JUJU_MODEL
+juju bootstrap microk8s microk8s
 juju switch $ORIGINAL_CONTROLLER
