@@ -10,6 +10,7 @@ import pytest
 import pytest_asyncio
 from github import Branch, Repository
 from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from pytest_operator.plugin import OpsTest
 
@@ -134,6 +135,37 @@ async def test_reactive_mode_spawns_runner(
         assert False, "runner_installed event has not been logged"
 
     await _assert_metrics_are_logged(app, github_repository)
+
+
+@pytest.mark.abort_on_fail
+async def test_reactive_mode_with_not_found_job(
+    ops_test: OpsTest,
+    app: Application,
+):
+    """
+    arrange: Place a message in the queue with a non-existent job url.
+    act: Call reconcile.
+    assert: The message is removed from the queue.
+    """
+    mongodb_uri = await get_mongodb_uri(ops_test, app)
+
+    labels = {app.name, "x64"}  # The architecture label should be ignored in the
+    # label validation in the reactive consumer.
+    job = JobDetails(
+        labels=labels,
+        url="https://github.com/canonical/github-runner-operator/actions/runs/mock-run/job/mock-job",
+    )
+    add_to_queue(
+        json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
+        mongodb_uri,
+        app.name,
+    )
+
+    # There may be a race condition between getting the token and spawning the machine.
+    await sleep(10)
+    await wait_for_reconcile(app)
+
+    assert_queue_is_empty(mongodb_uri, app.name)
 
 
 @pytest.mark.abort_on_fail
