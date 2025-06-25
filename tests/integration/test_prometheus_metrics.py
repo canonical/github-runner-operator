@@ -63,7 +63,7 @@ async def openstack_app_cos_agent_fixture(app_openstack_runner: Application):
     """Deploy cos-agent subordinate charm on OpenStack runner application."""
     model = app_openstack_runner.model
     series = await app_openstack_runner.get_series()
-    grafana_agent = await model.deploy("grafana-agent", base=series)
+    grafana_agent = await model.deploy("grafana-agent", channel="1/stable", base=series)
     await model.relate(grafana_agent.name, app_openstack_runner.name)
     await model.wait_for_idle(
         apps=[grafana_agent.name, app_openstack_runner.name], raise_on_error=False
