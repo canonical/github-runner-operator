@@ -65,7 +65,7 @@ async def openstack_app_cos_agent_fixture(app_openstack_runner: Application):
     # do not use series, it returns jammy and isn't compatible with base tag which only accepts
     # ubuntu@<base version>. Hence hard code the base for now for testing only.
     # series = await app_openstack_runner.get_series()
-    grafana_agent = await model.deploy("grafana-agent", channel="1/stable", base="ubuntu@22.04")
+    grafana_agent = await model.deploy("grafana-agent", channel="1/stable", series="ubuntu@22.04")
     await model.relate(grafana_agent.name, app_openstack_runner.name)
     await model.wait_for_idle(
         apps=[grafana_agent.name, app_openstack_runner.name], raise_on_error=False
