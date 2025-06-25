@@ -1,0 +1,34 @@
+on: [pull_request]
+
+jobs:
+  TICS:
+    name: TICS
+    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Unit Tests (manager app)
+        run: |
+          cd github-runner-manager
+          pip install tox flake8 -r ./requirements.txt
+          tox -e unit,coverage-report
+          rm -rf .tox
+      - name: Run Unit Tests
+        run: |
+          pip install tox flake8 -r ./requirements.txt -r ./github-runner-manager/requirements.txt
+          tox -e unit,coverage-report
+          rm -rf .tox
+      - name: TICS GitHub Action
+        uses: tiobe/tics-github-action@v3
+        with:
+          mode: qserver
+          project: github-runner-operator
+          branchdir: ${{ github.workspace }}
+          viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
+          ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
+          installTics: true
+
+concurrency:
+  group: tics
+  cancel-in-progress: false
