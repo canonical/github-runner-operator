@@ -82,9 +82,9 @@ def main(
     http_server_args = FlaskArgs(host=host, port=port, debug=debug)
 
     thread_manager = ThreadManager()
-    thread_manager.add_thread(target=partial(start_http_server, config, lock, http_server_args))
+    thread_manager.add_thread(target=partial(start_http_server, config, lock, http_server_args), daemon=True)
     thread_manager.add_thread(
-        target=partial(start_reconcile_service, config, python_path_config, lock)
+        target=partial(start_reconcile_service, config, python_path_config, lock), daemon=True
     )
     thread_manager.start()
 
