@@ -27,7 +27,6 @@ from github_runner_manager.manager.runner_manager import (
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.reconcile import (
     BUSY_RUNNERS_COUNT,
-    CLEANED_RUNNERS_TOTAL,
     EXPECTED_RUNNERS_COUNT,
     IDLE_RUNNERS_COUNT,
     RECONCILE_DURATION_SECONDS,
@@ -249,8 +248,8 @@ class RunnerScaler:
                     offline += 1
                 case _:
                     unknown += 1
-        BUSY_RUNNERS_COUNT.labels("flavor", self._manager.manager_name).set(busy)
-        IDLE_RUNNERS_COUNT.labels("flavor", self._manager.manager_name).set(online)
+        BUSY_RUNNERS_COUNT.labels(self._manager.manager_name).set(busy)
+        IDLE_RUNNERS_COUNT.labels(self._manager.manager_name).set(online)
         return RunnerInfo(
             online=online,
             busy=busy,
@@ -329,7 +328,7 @@ class RunnerScaler:
                 flavor=self._manager.manager_name,
                 expected_runner_quantity=expected_runner_quantity,
             )
-            RECONCILE_DURATION_SECONDS.labels("flavor", self._manager.manager_name).observe(
+            RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
                 end_timestamp - start_timestamp
             )
             _issue_reconciliation_metric(reconcile_metric_data)

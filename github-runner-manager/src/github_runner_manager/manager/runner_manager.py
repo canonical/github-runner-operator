@@ -301,7 +301,7 @@ class RunnerManager:
             )
             cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
 
-        CLEANED_RUNNERS_TOTAL.labels("flavor", len(cloud_runners_to_delete))
+        CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(len(cloud_runners_to_delete))
         return self._delete_cloud_runners(
             cloud_runners_to_delete,
             runners_health_response.requested_runners,
