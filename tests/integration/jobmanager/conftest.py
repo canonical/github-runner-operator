@@ -98,7 +98,7 @@ async def app_fixture(
             PATH_CONFIG_NAME: jobmanager_base_url,
         }
     )
-    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager)
 
     httpserver.clear_all_handlers()
 
@@ -111,4 +111,4 @@ async def app_fixture(
             RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL),
         }
     )
-    await wait_for_reconcile(app_for_jobmanager, app_for_jobmanager.model)
+    await wait_for_reconcile(app_for_jobmanager)

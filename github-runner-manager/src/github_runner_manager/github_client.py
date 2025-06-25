@@ -342,14 +342,22 @@ class GithubClient:
             path: GitHub repository path in the format '<owner>/<repo>'.
             job_id: The job id.
 
+        Raises:
+            JobNotFoundError: Cannot find job on GitHub.
+
         Returns:
             The JSON response from the API.
         """
-        job_raw = self._client.actions.get_job_for_workflow_run(
-            owner=path.owner,
-            repo=path.repo,
-            job_id=job_id,
-        )
+        try:
+            job_raw = self._client.actions.get_job_for_workflow_run(
+                owner=path.owner,
+                repo=path.repo,
+                job_id=job_id,
+            )
+        except HTTPError as exc:
+            if exc.code == 404:
+                raise JobNotFoundError(f"Could not find job for job id {job_id}.") from exc
+            raise
         return self._to_job_info(job_raw)
 
     @staticmethod
