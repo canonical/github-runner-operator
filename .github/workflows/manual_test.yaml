@@ -1,0 +1,18 @@
+name: Manual test
+
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  edge:
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-large,reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+      - name: tmate ssh
+        uses: canonical/action-tmate@main
