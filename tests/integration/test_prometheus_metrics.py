@@ -56,13 +56,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    model_controller_name = k8s_juju.model
-    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
-    controller, model = model_controller_name.split(":")
-    subprocess.run(
-        [k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"],
-        env={"JUJU_CONTROLLER": controller, "JUJU_MODEL": model},
-    )
+    subprocess.run([k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"])
     return k8s_juju.status().apps["prometheus-k8s"]
 
 
@@ -73,13 +67,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    model_controller_name = k8s_juju.model
-    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
-    controller, model = model_controller_name.split(":")
-    subprocess.run(
-        [k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"],
-        env={"JUJU_CONTROLLER": controller, "JUJU_MODEL": model},
-    )
+    subprocess.run([k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"])
     return k8s_juju.status().apps["grafana-k8s"]
 
 
