@@ -2,18 +2,14 @@
 #  See LICENSE file for licensing details.
 
 """State of the Charm."""
-
-# pylint: disable=too-many-lines
-
 import dataclasses
 import ipaddress
 import json
 import logging
 import platform
 import re
-from enum import Enum
 from pathlib import Path
-from typing import TypedDict, cast
+from typing import cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -31,6 +27,7 @@ from pydantic import (
 )
 
 from errors import MissingMongoDBError
+from models import AnyHttpsUrl, Arch, FlavorLabel, OpenStackCloudsYAML
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -73,16 +70,6 @@ COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
-
-
-class AnyHttpsUrl(AnyHttpUrl):
-    """Represents an HTTPS URL.
-
-    Attributes:
-        allowed_schemes: Allowed schemes for the URL.
-    """
-
-    allowed_schemes = {"https"}
 
 
 @dataclasses.dataclass
@@ -171,18 +158,6 @@ class JobManagerConfig(BaseModel):
         return None
 
 
-class Arch(str, Enum):
-    """Supported system architectures.
-
-    Attributes:
-        ARM64: Represents an ARM64 system architecture.
-        X64: Represents an X64/AMD64 system architecture.
-    """
-
-    ARM64 = "arm64"
-    X64 = "x64"
-
-
 class CharmConfigInvalidError(Exception):
     """Raised when charm config is invalid.
 
@@ -197,21 +172,6 @@ class CharmConfigInvalidError(Exception):
             msg: Explanation of the error.
         """
         self.msg = msg
-
-
-def _valid_storage_size_str(size: str) -> bool:
-    """Validate the storage size string.
-
-    Args:
-        size: Storage size string.
-
-    Return:
-        Whether the string is valid.
-    """
-    # Checks whether the string confirms to using the KiB, MiB, GiB, TiB, PiB,
-    # EiB suffix for storage size as specified in config.yaml.
-    valid_suffixes = {"KiB", "MiB", "GiB", "TiB", "PiB", "EiB"}
-    return size[-3:] in valid_suffixes and size[:-3].isdigit()
 
 
 WORD_ONLY_REGEX = re.compile("^[\\w\\-]+$")
@@ -283,50 +243,6 @@ class RepoPolicyComplianceConfig(BaseModel):
 
         # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
         return cls(url=url, token=token)  # type: ignore
-
-
-class _OpenStackAuth(TypedDict):
-    """The OpenStack cloud connection authentication info.
-
-    Attributes:
-        auth_url: The OpenStack authentication URL (keystone).
-        password: The OpenStack project user's password.
-        project_domain_name: The project domain in which the project belongs to.
-        project_name: The OpenStack project to connect to.
-        user_domain_name: The user domain in which the user belongs to.
-        username: The user to authenticate as.
-    """
-
-    auth_url: str
-    password: str
-    project_domain_name: str
-    project_name: str
-    user_domain_name: str
-    username: str
-
-
-class _OpenStackCloud(TypedDict):
-    """The OpenStack cloud connection info.
-
-    See https://docs.openstack.org/python-openstackclient/pike/configuration/index.html.
-
-    Attributes:
-        auth: The connection authentication info.
-        region_name: The OpenStack region to authenticate to.
-    """
-
-    auth: _OpenStackAuth
-    region_name: str
-
-
-class OpenStackCloudsYAML(TypedDict):
-    """The OpenStack clouds YAML dict mapping.
-
-    Attributes:
-        clouds: The map of cloud name to cloud connection info.
-    """
-
-    clouds: dict[str, _OpenStackCloud]
 
 
 class CharmConfig(BaseModel):
@@ -692,20 +608,6 @@ class OpenstackImage(BaseModel):
                 tags=[tag.strip() for tag in relation_data.get("tags", "").split(",") if tag],
             )
         return OpenstackImage(id=None, tags=None)
-
-
-@dataclasses.dataclass
-class FlavorLabel:
-    """Combination of flavor and label.
-
-    Attributes:
-        flavor: Flavor for the VM.
-        label: Label associated with the flavor.
-    """
-
-    flavor: str
-    # Remove the None when several FlavorLabel combinations are supported.
-    label: str | None
 
 
 class OpenstackRunnerConfig(BaseModel):

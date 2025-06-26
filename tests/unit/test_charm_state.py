@@ -154,34 +154,6 @@ def test_parse_github_path(
         assert getattr(result, attr) == value
 
 
-@pytest.mark.parametrize(
-    "size, expected_result",
-    [
-        ("100KiB", True),
-        ("10MiB", True),
-        ("1GiB", True),
-        ("0TiB", True),
-        ("1000PiB", True),
-        ("10000EiB", True),
-        ("100KB", False),  # Invalid suffix
-        ("100GB", False),  # Invalid suffix
-        ("abc", False),  # Non-numeric characters
-        ("100", False),  # No suffix
-        ("100Ki", False),  # Incomplete suffix
-        ("100.5MiB", False),  # Non-integer size
-    ],
-)
-def test_valid_storage_size_str(size: str, expected_result: bool):
-    """
-    arrange: Provide storage size string.
-    act: Call _valid_storage_size_str with the provided storage size string.
-    assert: Verify that the function returns the expected result.
-    """
-    result = charm_state._valid_storage_size_str(size)
-
-    assert result == expected_result
-
-
 def test_parse_labels_invalid():
     """
     arrange: Provide labels string with an invalid label.
