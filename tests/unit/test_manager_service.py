@@ -42,7 +42,7 @@ def mock_systemd_fixture(monkeypatch):
 
 @pytest.fixture(name="mock_execute_command")
 def mock_execute_command_fixture(monkeypatch):
-    mock_execute_command = MagicMock()
+    mock_execute_command = MagicMock(return_value=("Mock", 0))
     monkeypatch.setattr("manager_service.execute_command", mock_execute_command)
     return mock_execute_command
 
