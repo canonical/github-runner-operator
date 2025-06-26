@@ -26,6 +26,7 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
 @pytest.fixture(scope="module", name="prometheus_app")
 def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
+    k8s_juju.model = f"microk8s:{k8s_juju.model}"
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
     k8s_juju.offer("prometheus-k8s", endpoint="receive-remote-write")
@@ -35,6 +36,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
 @pytest.fixture(scope="module", name="grafana_app")
 def grafana_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
+    k8s_juju.model = f"microk8s:{k8s_juju.model}"
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", "prometheus-k8s:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
@@ -45,6 +47,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju):
 @pytest.fixture(scope="module", name="grafana_password")
 def grafana_password_fixture(k8s_juju: jubilant.Juju, grafana_app: AppStatus):
     """Get Grafana dashboard password."""
+    k8s_juju.model = f"microk8s:{k8s_juju.model}"
     unit = next(iter(grafana_app.units.keys()))
     result = k8s_juju.run(unit, "get-admin-password")
     return result.results["admin-password"]
@@ -74,6 +77,7 @@ def test_prometheus_metrics(
     act: when GitHub runner is integrated.
     assert: the datasource is registered and basic metrics are available.
     """
+    k8s_juju.model = f"microk8s:{k8s_juju.model}"
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
     juju.cli(f"consume microk8s:{k8s_juju.model}.{prometheus_offer_name}")
