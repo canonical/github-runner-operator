@@ -459,6 +459,22 @@ class CharmConfig(BaseModel):
 
         return reconcile_interval
 
+    @staticmethod
+    def _parse_list(input_: str | list[str] | None) -> list[str]:
+        """Split a comma-separated list of strings into a list of strings.
+
+        Args:
+            input_: The comma-separated list of strings.
+
+        Returns:
+            A list of strings.
+        """
+        if input_ is None:
+            return []
+        if isinstance(input_, str):
+            input_ = input_.split(",")
+        return [i.strip() for i in input_ if i.strip()]
+
     @validator("aproxy_exclude_addresses", pre=True)
     @classmethod
     def check_aproxy_exclude_addresses(
@@ -475,23 +491,30 @@ class CharmConfig(BaseModel):
         Returns:
             Parsed aproxy_exclude_addresses configuration input.
         """
-        if aproxy_exclude_addresses is None:
-            aproxy_exclude_addresses = []
-        if isinstance(aproxy_exclude_addresses, str):
-            aproxy_exclude_addresses = aproxy_exclude_addresses.split(",")
+        aproxy_exclude_addresses = cls._parse_list(aproxy_exclude_addresses)
         result = []
         for address_range in aproxy_exclude_addresses:
-            address_range = address_range.strip()
             if not address_range:
                 continue
             if "-" in address_range:
-                start, end = address_range.split("-")
+                start, _, end = address_range.partition("-")
+                if not start:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config, "
+                        f"in {repr(address_range)}, missing start in range"
+                    )
+                if not end:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config, "
+                        f"in {repr(address_range)}, missing end in range"
+                    )
                 try:
                     ipaddress.ip_address(start)
                     ipaddress.ip_address(end)
                 except ValueError as exc:
                     raise CharmConfigInvalidError(
-                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config"
+                        f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config, "
+                        f"in {repr(address_range)}, not an IP address"
                     ) from exc
             else:
                 try:
@@ -499,6 +522,7 @@ class CharmConfig(BaseModel):
                 except ValueError as exc:
                     raise CharmConfigInvalidError(
                         f"Invalid {APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME} config"
+                        f"in {repr(address_range)}, not an IP address"
                     ) from exc
             result.append(address_range)
         return result
@@ -519,32 +543,39 @@ class CharmConfig(BaseModel):
         Returns:
             Parsed check_aproxy_redirect_ports configuration input.
         """
-        if aproxy_redirect_ports is None:
-            aproxy_redirect_ports = []
-        if isinstance(aproxy_redirect_ports, str):
-            aproxy_redirect_ports = aproxy_redirect_ports.split(",")
+        aproxy_redirect_ports = cls._parse_list(aproxy_redirect_ports)
         result = []
         for port_range in aproxy_redirect_ports:
-            port_range = port_range.strip()
-            if not port_range:
-                continue
             if "-" in port_range:
                 start, _, end = port_range.partition("-")
+                if not start:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config, "
+                        f"in {repr(port_range)}, missing start in range"
+                    )
+                if not end:
+                    raise CharmConfigInvalidError(
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config, "
+                        f"in {repr(port_range)}, missing end in range"
+                    )
                 try:
                     start_num = int(start)
                     end_num = int(end)
                 except ValueError as exc:
                     raise CharmConfigInvalidError(
-                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config, "
+                        f"in {repr(port_range)}, not a number"
                     ) from exc
                 if start_num < 0 or start_num > 65535 or end_num < 0 or end_num > 65535:
                     raise CharmConfigInvalidError(
-                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config, "
+                        f"in {repr(port_range)}, invalid port number"
                     )
             else:
                 if not port_range.isdecimal() or int(port_range) < 0 or int(port_range) > 65535:
                     raise CharmConfigInvalidError(
-                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config"
+                        f"Invalid {APROXY_REDIRECT_PORTS_CONFIG_NAME} config,"
+                        f"in {repr(port_range)}, port is not a number or invalid port number"
                     )
             result.append(port_range)
         return result

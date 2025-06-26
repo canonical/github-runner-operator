@@ -1186,3 +1186,38 @@ def test_proxy_config(
     assert ", ".join(charm_state.charm_config.aproxy_redirect_ports) == aproxy_redirect_ports
     assert charm_state.proxy_config == expected_proxy
     assert charm_state.runner_proxy_config == expected_runner_proxy
+
+
+@pytest.mark.parametrize(
+    "aproxy_exclude_addresses, aproxy_redirect_ports",
+    [
+        ["256.0.0.0/8", ""],
+        ["10.0.0.0-", ""],
+        ["-192.168.0.0", ""],
+        ["-", ""],
+        ["foobar", ""],
+        ["", "foobar"],
+        ["", "99999"],
+        ["", "-1"],
+        ["", "80-"],
+        ["", "-"],
+    ],
+)
+def test_invalid_aproxy_config_in_charm_state(
+    monkeypatch, aproxy_exclude_addresses: str, aproxy_redirect_ports: str
+):
+    """
+    arrange: Mock CharmBase and necessary methods to raise the specified exceptions.
+    act: Call CharmState.from_charm with invalid aproxy related configurations.
+    assert: Ensure CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = True
+    mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
+    mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+    mock_database = MagicMock(spec=DatabaseRequires)
+    mock_database.relations = []
+
+    with pytest.raises(CharmConfigInvalidError):
+        CharmState.from_charm(mock_charm, mock_database)
