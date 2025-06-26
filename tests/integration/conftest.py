@@ -766,6 +766,9 @@ async def juju(
 
     controller = await model.get_controller()
     if model:
+        # Currently juju has no way of switching controller context, this is required to operate
+        # in the right controller's right model when using multiple controllers.
+        # See: https://github.com/canonical/jubilant/issues/158
         juju = jubilant.Juju(model=f"{controller.controller_name}:{model.name}")
         yield juju
         show_debug_log(juju)
