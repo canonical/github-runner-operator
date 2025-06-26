@@ -31,20 +31,16 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
 @pytest.fixture(scope="function", name="switch_microk8s_controller")
 def switch_microk8s_controller_fixture(k8s_juju: jubilant.Juju, juju: jubilant.Juju):
     """Switch to the MicroK8s controller."""
-    original_model_controller_name = juju.model or ""
+    original_model_controller_name = juju.model
     assert (
-        ":" in original_model_controller_name
+        original_model_controller_name
     ), f"model & controller name not set: {original_model_controller_name}"
-    original_controller_name = original_model_controller_name.split(":")[0]
 
-    model_controller_name = k8s_juju.model or ""
-    assert (
-        ":" in model_controller_name
-    ), f"model & controller name not set: {model_controller_name}"
-    controller_name = model_controller_name.split(":")[0]
-    k8s_juju.cli("switch", controller_name)
+    model_controller_name = k8s_juju.model
+    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
+    k8s_juju.cli("switch", model_controller_name)
     yield
-    k8s_juju.cli("switch", original_controller_name)
+    k8s_juju.cli("switch", original_model_controller_name)
 
 
 @pytest.mark.usefixtures("switch_microk8s_controller")
