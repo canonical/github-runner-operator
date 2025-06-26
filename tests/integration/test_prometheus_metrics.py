@@ -4,6 +4,7 @@
 """Module for collecting metrics related to the reconciliation process."""
 
 import logging
+import os
 from typing import Generator, cast
 
 import jubilant
@@ -38,9 +39,14 @@ def switch_microk8s_controller_fixture(k8s_juju: jubilant.Juju, juju: jubilant.J
 
     model_controller_name = k8s_juju.model
     assert model_controller_name, f"model & controller name not set: {model_controller_name}"
+    controller, model = model_controller_name.split(":")
     k8s_juju.cli("switch", model_controller_name)
+    os.environ["JUJU_CONTROLLER"] = controller
+    os.environ["JUJU_MODEL"] = model
     yield
     k8s_juju.cli("switch", original_model_controller_name)
+    os.environ.pop("JUJU_CONTROLLER")
+    os.environ.pop("JUJU_MODEL")
 
 
 @pytest.mark.usefixtures("switch_microk8s_controller")
