@@ -56,7 +56,17 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    result = subprocess.run([k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"])
+    env = os.environ.copy()
+    model_controller_name = k8s_juju.model
+    logger.info("Model controller: %s", model_controller_name)
+    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
+    controller, model = model_controller_name.split(":")
+    logger.info("Controller: %s, Model: %s", controller, model)
+    env["JUJU_CONTROLLER"] = controller
+    env["JUJU_MODEL"] = model
+    result = subprocess.run(
+        [k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"], env=env
+    )
     assert (
         result.returncode == 0
     ), f"failed to create prometheus offer: {result.stdout} {result.stderr}"
@@ -70,7 +80,16 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    result = subprocess.run([k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"])
+    env = os.environ.copy()
+    model_controller_name = k8s_juju.model
+    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
+    controller, model = model_controller_name.split(":")
+    logger.info("Controller: %s, Model: %s", controller, model)
+    env["JUJU_CONTROLLER"] = controller
+    env["JUJU_MODEL"] = model
+    result = subprocess.run(
+        [k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"], env=env
+    )
     assert (
         result.returncode == 0
     ), f"failed to create grafana offer: {result.stdout} {result.stderr}"
