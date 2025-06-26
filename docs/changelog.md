@@ -2,11 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-06-24
+
+- Fix a bug where deleted GitHub Actions Job would cause an endless loop of retries.
 
 ### 2025-06-17
 
-- Fix bug where SSH connection error always appears in the logs.
-
+- Fix a bug where SSH connection error always appears in the logs.
 
 ### 2025-06-16
 
