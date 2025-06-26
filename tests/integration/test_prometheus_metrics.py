@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 @pytest_asyncio.fixture(scope="module", name="k8s_juju")
 def k8s_juju_fixture(
     juju: jubilant.Juju, request: pytest.FixtureRequest
-) -> Generator[jubilant.Juju, None]:
+) -> Generator[jubilant.Juju, None, None]:
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
     with jubilant.temp_model(keep=keep_models, controller="microk8s") as juju:
