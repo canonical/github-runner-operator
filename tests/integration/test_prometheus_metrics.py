@@ -37,10 +37,10 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
 
 
 @pytest.fixture(scope="module", name="grafana_app")
-def grafana_app_fixture(k8s_juju: jubilant.Juju):
+def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     """Deploy prometheus charm."""
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
-    k8s_juju.integrate("grafana-k8s:grafana-source", "prometheus-k8s:grafana-source")
+    k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
     k8s_juju.offer("grafana-k8s", endpoint="grafana-dashboard")
     return k8s_juju.status().apps["grafana-k8s"]
