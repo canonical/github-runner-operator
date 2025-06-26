@@ -56,7 +56,10 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    subprocess.run([k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"])
+    result = subprocess.run([k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"])
+    assert (
+        result.returncode == 0
+    ), f"failed to create prometheus offer: {result.stdout} {result.stderr}"
     return k8s_juju.status().apps["prometheus-k8s"]
 
 
@@ -67,7 +70,10 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    subprocess.run([k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"])
+    result = subprocess.run([k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"])
+    assert (
+        result.returncode == 0
+    ), f"failed to create grafana offer: {result.stdout} {result.stderr}"
     return k8s_juju.status().apps["grafana-k8s"]
 
 
@@ -106,8 +112,8 @@ def test_prometheus_metrics(
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
     # k8s_juju.model already has <controller>: prefixed.
-    juju.cli(f"consume {k8s_juju.model}.{prometheus_offer_name}")
-    juju.cli(f"consume {k8s_juju.model}.{grafana_offer_name}")
+    juju.cli(f"consume {k8s_juju.model}.{prometheus_offer_name}", include_model=False)
+    juju.cli(f"consume {k8s_juju.model}.{grafana_offer_name}", include_model=False)
     juju.integrate("grafana-agent", prometheus_offer_name)
     juju.integrate("grafana-agent", grafana_offer_name)
     juju.wait(
