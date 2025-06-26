@@ -9,8 +9,9 @@ import secrets
 import string
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Generator, Iterator, Optional
+from typing import Any, AsyncIterator, Generator, Iterator, Optional, cast
 
+import jubilant
 import nest_asyncio
 import openstack
 import pytest
@@ -40,10 +41,12 @@ from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
     wait_for,
-    wait_for_reconcile,
+    wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
+
+DEFAULT_RECONCILE_INTERVAL = 2
 
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
 
@@ -448,7 +451,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=2,
+            reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
@@ -482,7 +485,7 @@ async def app_scheduled_events_fixture(
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
-    await wait_for_reconcile(app=application, model=model)
+    await wait_for_runner_ready(app=application)
     return application
 
 
@@ -743,3 +746,31 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     """Instance helper fixture."""
     openstack_connection = request.getfixturevalue("openstack_connection")
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
+
+
+@pytest.fixture(scope="module")
+def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juju, None, None]:
+    """Pytest fixture that wraps :meth:`jubilant.with_model`."""
+
+    def show_debug_log(juju: jubilant.Juju):
+        """Show debug log if tests failed.
+
+        Args:
+            juju: The jubilant.Juju instance.
+        """
+        if request.session.testsfailed:
+            log = juju.debug_log(limit=1000)
+            print(log, end="")
+
+    if model:
+        juju = jubilant.Juju(model=model.name)
+        yield juju
+        show_debug_log(juju)
+        return
+
+    keep_models = cast(bool, request.config.getoption("--keep-models"))
+    with jubilant.temp_model(keep=keep_models) as juju:
+        juju.wait_timeout = 10 * 60
+        yield juju
+        show_debug_log(juju)
+        return

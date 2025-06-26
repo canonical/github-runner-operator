@@ -20,7 +20,7 @@ from pydantic import BaseModel, HttpUrl, ValidationError, validator
 
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerManager
-from github_runner_manager.platform.platform_provider import PlatformProvider
+from github_runner_manager.platform.platform_provider import JobNotFoundError, PlatformProvider
 from github_runner_manager.reactive.types_ import QueueConfig
 
 logger = logging.getLogger(__name__)
@@ -90,7 +90,8 @@ def get_queue_size(queue_config: QueueConfig) -> int:
         raise QueueError("Error when communicating with the queue") from exc
 
 
-def consume(
+# Ignore `consume` too complex as it is pending re-design.
+def consume(  # noqa: C901
     queue_config: QueueConfig,
     runner_manager: RunnerManager,
     platform_provider: PlatformProvider,
@@ -145,12 +146,18 @@ def consume(
                 except ValueError:
                     msg.reject(requeue=False)
                     break
-                if platform_provider.check_job_been_picked_up(
-                    metadata=metadata, job_url=job_details.url
-                ):
-                    logger.info("reactive job: %s already picked up.", job_details)
-                    msg.ack()
-                    continue
+                try:
+                    if platform_provider.check_job_been_picked_up(
+                        metadata=metadata, job_url=job_details.url
+                    ):
+                        logger.info("reactive job: %s already picked up.", job_details)
+                        msg.ack()
+                        continue
+                except JobNotFoundError:
+                    logger.warning(
+                        "Unable to find the job %s. Not retrying this job.", job_details.url
+                    )
+                    msg.reject(requeue=False)
                 _spawn_runner(
                     runner_manager=runner_manager,
                     job_url=job_details.url,
@@ -178,8 +185,7 @@ def _build_runner_metadata(job_url: str) -> RunnerMetadata:
         logger.error("Invalid URL for a job. url: %s", job_url)
         raise ValueError(f"Invalid format for job url {job_url}")
     base_url = parsed_url._replace(path=match_result.group(1)).geturl()
-    runner_id = match_result.group(2)
-    return RunnerMetadata(platform_name="jobmanager", url=base_url, runner_id=runner_id)
+    return RunnerMetadata(platform_name="jobmanager", url=base_url)
 
 
 def _parse_job_details(msg: Message) -> JobDetails:
@@ -241,11 +247,9 @@ def _spawn_runner(
         return
     logger.info("Reactive runner spawned %s", instance_ids)
 
-    for iteration in range(5):
-        # Do not sleep on the first iteration — the job might already be taken.
+    for _ in range(5):
+        sleep(60)
         logger.info("Checking if job picked up for reactive runner %s", instance_ids)
-        if iteration != 0:
-            sleep(60)
         if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
             logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
             msg.ack()
