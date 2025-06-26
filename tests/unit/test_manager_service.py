@@ -63,6 +63,7 @@ def test_setup_started(
     mock_service_path: Path,
     mock_home_path: Path,
     mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the service to be running.
@@ -93,7 +94,10 @@ def test_setup_started(
 
 
 def test_setup_no_started(
-    patch_file_paths: None, complete_charm_state: CharmState, mock_systemd: MagicMock
+    patch_file_paths: None,
+    complete_charm_state: CharmState,
+    mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the service to be not running.
@@ -108,7 +112,10 @@ def test_setup_no_started(
 
 
 def test_setup_systemd_error(
-    patch_file_paths: None, complete_charm_state: CharmState, mock_systemd: MagicMock
+    patch_file_paths: None,
+    complete_charm_state: CharmState,
+    mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the systemd to raise error.
