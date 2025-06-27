@@ -38,6 +38,7 @@ GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
+GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
 
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
@@ -62,6 +63,20 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
             systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
     except SystemdError as err:
         raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
+    # Currently, there is some multiprocess issues that cause leftover processes.
+    # This is a temp patch to clean them up.
+    output, code = execute_command(
+        ["/usr/bin/pkill", "-f", GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH], check_exit=False
+    )
+    if code == 1:
+        logger.info("No leftover github-runner-manager process to clean up.")
+    elif code == 0:
+        logger.warning("Clean up leftover processes.")
+    else:
+        logger.warning(
+            "Unexpected return code %s of pkill for cleanup processes: %s", code, output
+        )
+
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
