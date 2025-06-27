@@ -195,7 +195,9 @@ def _patiently_wait_for_prometheus_datasource(grafana_ip: str, grafana_password:
     assert any(datasource["type"] == "prometheus" for datasource in datasources)
 
 
-@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
+@retry(
+    stop=stop_after_attempt(10), wait=wait_exponential(multiplier=2, min=10, max=60), reraise=True
+)
 def _patiently_wait_for_prometheus_metrics(prometheus_ip: str, *metric_names: str):
     """Wait for the prometheus metrics to be available."""
     for metric_name in metric_names:
