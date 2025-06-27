@@ -82,25 +82,29 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     "aproxy_redirect_ports, aproxy_exclude_addresses, aproxy_used, except_aproxy_script",
     [
         pytest.param(
-            "", "10.0.0.0/8", False, "", id="empty aproxy_redirect_ports disables aproxy"
+            [],
+            ["10.0.0.0/8"],
+            False,
+            "",
+            id="empty aproxy_redirect_ports disables aproxy",
         ),
         pytest.param(
-            "80, 443",
-            "10.0.0.0/8, 192.168.0.0/16",
+            ["80", "443"],
+            ["10.0.0.0/8", "192.168.0.0/16"],
             True,
             "10.0.0.0/8, 192.168.0.0/16",
             id="aproxy with custom aproxy_exclude_addresses",
         ),
         pytest.param(
-            "0-3127, 3129-65535",
-            "10.0.0.0/8, 192.168.0.0/16",
+            ["0-3127", "3129-65535"],
+            ["10.0.0.0/8", "192.168.0.0/16"],
             True,
             "0-3127, 3129-65535",
             id="aproxy with custom aproxy_redirect_ports",
         ),
         pytest.param(
-            "80, 443",
-            "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+            ["80", "443"],
+            ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"],
             True,
             textwrap.dedent(
                 """\
@@ -126,8 +130,8 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
             id="aproxy default config",
         ),
         pytest.param(
-            "80, 443",
-            "",
+            ["80", "443"],
+            [],
             True,
             textwrap.dedent(
                 """\
@@ -153,8 +157,8 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     ],
 )
 def test_create_runner_with_aproxy(
-    aproxy_redirect_ports: str,
-    aproxy_exclude_addresses: str,
+    aproxy_redirect_ports: list[str],
+    aproxy_exclude_addresses: list[str],
     aproxy_used: str,
     except_aproxy_script: str,
     runner_manager: OpenStackRunnerManager,
