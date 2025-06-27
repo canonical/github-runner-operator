@@ -191,7 +191,7 @@ def test_prometheus_metrics(
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
 def _patiently_wait_for_prometheus_datasource(grafana_ip: str, grafana_password: str):
     """Wait for prometheus datasource to come up."""
-    response = requests.get(f"admin:{grafana_password}@{grafana_ip}:3000/api/datasources")
+    response = requests.get(f"http://admin:{grafana_password}@{grafana_ip}:3000/api/datasources")
     response.raise_for_status()
     datasources: list[dict[str, Any]] = response.json()
     assert any(datasource["type"] == "prometheus" for datasource in datasources)
@@ -202,7 +202,7 @@ def _patiently_wait_for_prometheus_metrics(prometheus_ip: str, *metric_names: st
     """Wait for the prometheus metrics to be available."""
     for metric_name in metric_names:
         response = requests.get(
-            f"{prometheus_ip}:9090/api/v1/series", params={"match[]": metric_name}
+            f"http://{prometheus_ip}:9090/api/v1/series", params={"match[]": metric_name}
         )
         response.raise_for_status()
         query_result = response.json()["data"]
