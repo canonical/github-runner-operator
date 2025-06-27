@@ -64,6 +64,8 @@ def catch_requests_errors(func: Callable) -> Callable:
             ) from err
         except requests.ConnectionError as err:
             raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
+        except requests.ReadTimeout as err:
+            raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
 
     return func_with_error_handling
 
@@ -122,7 +124,7 @@ class GitHubRunnerManagerClient:
             The information on the runners.
         """
         self.wait_till_ready()
-        response = self._request(_HTTPMethod.GET, "/runner/check")
+        response = self._request(_HTTPMethod.GET, "/runner/check", timeout=600)
         runner_info = json.loads(response.text)
         runner_info["runners"] = tuple(runner_info["runners"])
         runner_info["busy_runners"] = tuple(runner_info["busy_runners"])
@@ -138,7 +140,7 @@ class GitHubRunnerManagerClient:
         """
         self.wait_till_ready()
         params = {"flush-busy": str(busy)}
-        self._request(_HTTPMethod.POST, "/runner/flush", params=params)
+        self._request(_HTTPMethod.POST, "/runner/flush", params=params, timeout=600)
 
     def health_check(self) -> None:
         """Request a health check on the runner manager service.
@@ -151,7 +153,7 @@ class GitHubRunnerManagerClient:
                 API requests.
         """
         try:
-            response = self._request(_HTTPMethod.GET, "/health")
+            response = self._request(_HTTPMethod.GET, "/health", timeout=60)
         except requests.HTTPError as err:
             raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
         except requests.ConnectionError as err:
