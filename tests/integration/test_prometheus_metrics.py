@@ -4,15 +4,16 @@
 """Module for collecting metrics related to the reconciliation process."""
 
 import logging
-import os
 import subprocess
-from typing import Generator, cast
+from typing import Any, Generator, cast
 
 import jubilant
 import pytest
 import pytest_asyncio
+import requests
 from jubilant.statustypes import AppStatus
 from juju.application import Application
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 logger = logging.getLogger(__name__)
 
@@ -47,14 +48,11 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    env = os.environ.copy()
     model_controller_name = k8s_juju.model
     logger.info("Model controller: %s", model_controller_name)
     assert model_controller_name, f"model & controller name not set: {model_controller_name}"
     controller, model = model_controller_name.split(":")
     logger.info("Controller: %s, Model: %s", controller, model)
-    env["JUJU_CONTROLLER"] = controller
-    env["JUJU_MODEL"] = model
     # juju.offer has no controller parameter. Use the cli directly.
     result = subprocess.run(
         [
@@ -63,8 +61,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
             "-c",
             controller,
             f"{model}.prometheus-k8s:receive-remote-write",
-        ],
-        env=env,
+        ]
     )
     assert (
         result.returncode == 0
@@ -79,22 +76,28 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    env = os.environ.copy()
     model_controller_name = k8s_juju.model
     assert model_controller_name, f"model & controller name not set: {model_controller_name}"
     controller, model = model_controller_name.split(":")
     logger.info("Controller: %s, Model: %s", controller, model)
-    env["JUJU_CONTROLLER"] = controller
-    env["JUJU_MODEL"] = model
     # juju.offer has no controller parameter. Use the cli directly.
     result = subprocess.run(
-        [k8s_juju.cli_binary, "offer", "-c", controller, f"{model}.grafana-k8s:grafana-dashboard"],
-        env=env,
+        [k8s_juju.cli_binary, "offer", "-c", controller, f"{model}.grafana-k8s:grafana-dashboard"]
     )
     assert (
         result.returncode == 0
     ), f"failed to create grafana offer: {result.stdout} {result.stderr}"
     return k8s_juju.status().apps["grafana-k8s"]
+
+
+@pytest.fixture(scope="module", name="traefik_ingress")
+def traefik_ingress_fixture(
+    k8s_juju: jubilant.Juju, prometheus_app: AppStatus, grafana_app: AppStatus
+):
+    """Ingress for cross controller communication."""
+    k8s_juju.deploy("traefik-k8s", channel="latest/stable")
+    k8s_juju.integrate("traefik-k8s", f"{prometheus_app.charm_name}:ingress")
+    k8s_juju.integrate("traefik-k8s", f"{grafana_app.charm_name}:ingress")
 
 
 @pytest.fixture(scope="module", name="grafana_password")
@@ -116,6 +119,7 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: A
     return app_openstack_runner
 
 
+@pytest.mark.usefixtures("traefik_ingress")
 @pytest.mark.openstack
 def test_prometheus_metrics(
     juju: jubilant.Juju,
@@ -123,6 +127,7 @@ def test_prometheus_metrics(
     openstack_app_cos_agent: Application,
     grafana_app: AppStatus,
     grafana_password: str,
+    prometheus_app: AppStatus,
 ):
     """
     arrange: given a prometheus charm application.
@@ -166,4 +171,39 @@ def test_prometheus_metrics(
     )
 
     grafana_ip = grafana_app.units["grafana-k8s/0"].address
-    assert False, f"admin:{grafana_password}@{grafana_ip}:3000/"
+    _patiently_wait_for_prometheus_datasource(
+        grafana_ip=grafana_ip, grafana_password=grafana_password
+    )
+    prometheus_ip = prometheus_app.units["prometheus-k8s/0"].address
+    _patiently_wait_for_prometheus_metrics(
+        prometheus_ip=prometheus_ip,
+        metric_names=(
+            "openstack_http_requests_total",
+            "reconcile_duration_seconds",
+            "expected_runners_count",
+            "busy_runners_count",
+            "idle_runners_count",
+            "cleaned_runners_total",
+        ),
+    )
+
+
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
+def _patiently_wait_for_prometheus_datasource(grafana_ip: str, grafana_password: str):
+    """Wait for prometheus datasource to come up."""
+    response = requests.get(f"admin:{grafana_password}@{grafana_ip}:3000/api/datasources")
+    response.raise_for_status()
+    datasources: list[dict[str, Any]] = response.json()
+    assert any(datasource["type"] == "prometheus" for datasource in datasources)
+
+
+@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
+def _patiently_wait_for_prometheus_metrics(prometheus_ip: str, *metric_names: str):
+    """Wait for the prometheus metrics to be available."""
+    for metric_name in metric_names:
+        response = requests.get(
+            f"{prometheus_ip}:9090/api/v1/series", params={"match[]": metric_name}
+        )
+        response.raise_for_status()
+        query_result = response.json()["data"]
+        assert len(query_result), f"No data found for metric: {metric_name}"
