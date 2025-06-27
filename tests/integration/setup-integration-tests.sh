@@ -18,6 +18,8 @@ if [ $(id -gn) != $GROUP ]; then
   exec sg $GROUP "$0 $*"
 fi
 sudo microk8s enable hostpath-storage
+IPADDR=$(ip -4 -j route get 2.2.2.2 | jq -r '.[] | .prefsrc')
+sudo microk8s enable metallb:$IPADDR-$IPADDR
 microk8s status --wait-ready
 
 unset JUJU_CONTROLLER
