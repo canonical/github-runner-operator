@@ -174,7 +174,7 @@ def test_prometheus_metrics(
     _patiently_wait_for_prometheus_datasource(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
-    prometheus_ip = prometheus_app.units["prometheus-k8s/0"].address
+    prometheus_ip = prometheus_app.address
     _patiently_wait_for_prometheus_metrics(
         prometheus_ip,
         "openstack_http_requests_total",
