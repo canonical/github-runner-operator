@@ -26,7 +26,7 @@ The "GitHub Self-Hosted Runner Metrics" metrics dashboard presents the following
  regular expression on the `Repository` variable. The following metrics are displayed:
   - Proportion charts: Share of jobs by completion status, job conclusion, application, repo policy check failure http codes and github events over time.
   - Job duration observation
-  - Number of jobs per repository
+  - Number of jobs per workflow per repository
 
 The "GitHub Self-Hosted Runner Metrics (Long-Term)" metrics dashboard displays the following rows:
 
