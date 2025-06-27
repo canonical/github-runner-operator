@@ -38,16 +38,7 @@ def switch_microk8s_controller_fixture(k8s_juju: jubilant.Juju, juju: jubilant.J
         original_model_controller_name
     ), f"model & controller name not set: {original_model_controller_name}"
 
-    model_controller_name = k8s_juju.model
-    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
-    controller, model = model_controller_name.split(":")
-    k8s_juju.cli("switch", model_controller_name)
-    os.environ["JUJU_CONTROLLER"] = controller
-    os.environ["JUJU_MODEL"] = model
     yield
-    k8s_juju.cli("switch", original_model_controller_name)
-    os.environ.pop("JUJU_CONTROLLER")
-    os.environ.pop("JUJU_MODEL")
 
 
 @pytest.mark.usefixtures("switch_microk8s_controller")
@@ -64,6 +55,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     logger.info("Controller: %s, Model: %s", controller, model)
     env["JUJU_CONTROLLER"] = controller
     env["JUJU_MODEL"] = model
+    # juju.offer has no controller parameter. Use the cli directly.
     result = subprocess.run(
         [
             k8s_juju.cli_binary,
@@ -94,6 +86,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     logger.info("Controller: %s, Model: %s", controller, model)
     env["JUJU_CONTROLLER"] = controller
     env["JUJU_MODEL"] = model
+    # juju.offer has no controller parameter. Use the cli directly.
     result = subprocess.run(
         [k8s_juju.cli_binary, "offer", "-c", controller, f"{model}.grafana-k8s:grafana-dashboard"],
         env=env,
@@ -139,8 +132,8 @@ def test_prometheus_metrics(
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
     # k8s_juju.model already has <controller>: prefixed.
-    juju.cli(f"consume {k8s_juju.model}.{prometheus_offer_name}", include_model=False)
-    juju.cli(f"consume {k8s_juju.model}.{grafana_offer_name}", include_model=False)
+    juju.cli(f"consume {k8s_juju.model}.{prometheus_offer_name}")
+    juju.cli(f"consume {k8s_juju.model}.{grafana_offer_name}")
     juju.integrate("grafana-agent", prometheus_offer_name)
     juju.integrate("grafana-agent", grafana_offer_name)
     juju.wait(
