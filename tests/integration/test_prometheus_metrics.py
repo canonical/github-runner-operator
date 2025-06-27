@@ -65,7 +65,14 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     env["JUJU_CONTROLLER"] = controller
     env["JUJU_MODEL"] = model
     result = subprocess.run(
-        [k8s_juju.cli_binary, "offer", "prometheus-k8s:receive-remote-write"], env=env
+        [
+            k8s_juju.cli_binary,
+            "offer",
+            "-c",
+            controller,
+            f"{model}.prometheus-k8s:receive-remote-write",
+        ],
+        env=env,
     )
     assert (
         result.returncode == 0
@@ -88,7 +95,8 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     env["JUJU_CONTROLLER"] = controller
     env["JUJU_MODEL"] = model
     result = subprocess.run(
-        [k8s_juju.cli_binary, "offer", "grafana-k8s:grafana-dashboard"], env=env
+        [k8s_juju.cli_binary, "offer", "-c", controller, f"{model}.grafana-k8s:grafana-dashboard"],
+        env=env,
     )
     assert (
         result.returncode == 0
