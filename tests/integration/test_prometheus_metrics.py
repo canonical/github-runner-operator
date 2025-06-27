@@ -131,9 +131,32 @@ def test_prometheus_metrics(
     """
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
-    # k8s_juju.model already has <controller>: prefixed.
-    juju.cli(f"consume {k8s_juju.model}.{prometheus_offer_name}")
-    juju.cli(f"consume {k8s_juju.model}.{grafana_offer_name}")
+    # k8s_juju.model and juju.model already has <controller>: prefixed.
+    result = subprocess.run(
+        [
+            k8s_juju.cli_binary,
+            "consume",
+            "-m",
+            str(juju.model),
+            f"{str(k8s_juju.model)}.prometheus-k8s",
+        ]
+    )
+    assert (
+        result.returncode == 0
+    ), f"failed to consume prometheus offer: {result.stdout} {result.stderr}"
+    result = subprocess.run(
+        [
+            k8s_juju.cli_binary,
+            "consume",
+            "-m",
+            str(juju.model),
+            f"{str(k8s_juju.model)}.grafana-k8s",
+        ]
+    )
+    assert (
+        result.returncode == 0
+    ), f"failed to consume grafana offer: {result.stdout} {result.stderr}"
+
     juju.integrate("grafana-agent", prometheus_offer_name)
     juju.integrate("grafana-agent", grafana_offer_name)
     juju.wait(
@@ -141,5 +164,6 @@ def test_prometheus_metrics(
             status, openstack_app_cos_agent.name, "grafana-agent"
         )
     )
+
     grafana_ip = grafana_app.units["grafana-k8s/0"].address
     assert False, f"admin:{grafana_password}@{grafana_ip}:3000/"
