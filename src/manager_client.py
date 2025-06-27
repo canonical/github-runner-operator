@@ -64,6 +64,8 @@ def catch_requests_errors(func: Callable) -> Callable:
             ) from err
         except requests.ConnectionError as err:
             raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
+        except requests.ReadTimeout as err:
+            raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
 
     return func_with_error_handling
 
