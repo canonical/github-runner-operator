@@ -9,6 +9,10 @@
 =======
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-06-26
+
+- Fix a process leak internal to the charm.
+
 ## 2025-06-24
 
 - Fix a bug where deleted GitHub Actions Job would cause an endless loop of retries.

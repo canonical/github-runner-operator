@@ -250,6 +250,7 @@ async def test_reactive_mode_scale_down(
 
     # we assume that the runner got deleted while running the job, so we expect a failed job
     await wait_for_completion(run, conclusion="failure")
+    await wait_for_reconcile(app)
     assert_queue_is_empty(mongodb_uri, app.name)
 
     # 2. Spawn a job.
