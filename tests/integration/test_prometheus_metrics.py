@@ -176,15 +176,13 @@ def test_prometheus_metrics(
     )
     prometheus_ip = prometheus_app.units["prometheus-k8s/0"].address
     _patiently_wait_for_prometheus_metrics(
-        prometheus_ip=prometheus_ip,
-        metric_names=(
-            "openstack_http_requests_total",
-            "reconcile_duration_seconds",
-            "expected_runners_count",
-            "busy_runners_count",
-            "idle_runners_count",
-            "cleaned_runners_total",
-        ),
+        prometheus_ip,
+        "openstack_http_requests_total",
+        "reconcile_duration_seconds",
+        "expected_runners_count",
+        "busy_runners_count",
+        "idle_runners_count",
+        "cleaned_runners_total",
     )
 
 
