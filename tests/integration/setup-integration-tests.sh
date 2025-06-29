@@ -10,19 +10,21 @@
 
 # save original controller that is used for testing
 ORIGINAL_CONTROLLER=$(juju controllers --format json | jq -r '.controllers | keys | .[0]')
+
 echo "bootstrapping microk8s juju controller"
 sudo snap install microk8s --channel=1.32-strict/stable
 GROUP=snap_microk8s
-sudo usermod -a -G $GROUP $USER
-if [ $(id -gn) != "$GROUP" ]; then
-  exec sg $GROUP "$0 $*"
+sudo usermod -a -G "$GROUP" "$USER"
+if [ "$(id -gn)" != "$GROUP" ]; then
+  exec sg "$GROUP" "$0" "$*"
 fi
-sudo microk8s enable hostpath-storage
-IPADDR=$(ip -4 -j route get 2.2.2.2 | jq -r '.[] | .prefsrc')
-sudo microk8s enable metallb:$IPADDR-$IPADDR
+
+# Get preferred source IP address for metallb
+IPADDR=$( { ip -4 -j route get 2.2.2.2; jq -r '.[] | .prefsrc'; } )
+sudo microk8s enable "metallb:$IPADDR-$IPADDR" "hostpath-storage"
 microk8s status --wait-ready
 
 unset JUJU_CONTROLLER
 unset JUJU_MODEL
 juju bootstrap microk8s microk8s
-juju switch $ORIGINAL_CONTROLLER
+juju switch "$ORIGINAL_CONTROLLER"
