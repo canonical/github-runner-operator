@@ -18,7 +18,6 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_runner_manager_openstack"]'
@@ -31,7 +30,7 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-integration-tests.sh
+      pre-run-script: tests/integration/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive", "test_prometheus_metrics.py"]'
