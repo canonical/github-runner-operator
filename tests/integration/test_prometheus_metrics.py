@@ -178,10 +178,8 @@ def test_prometheus_metrics(
     _patiently_wait_for_prometheus_metrics(
         prometheus_ip,
         "openstack_http_requests_total",
-        "reconcile_duration_seconds",
+        "reconcile_duration_seconds_sum",
         "expected_runners_count",
-        "busy_runners_count",
-        "idle_runners_count",
         "cleaned_runners_total",
     )
 
