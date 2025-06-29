@@ -105,7 +105,7 @@ def _get_lock() -> Lock:
 
 
 @app.route("/metrics", methods=["GET"])
-def metrics():
+def metrics() -> bytes:
     """Return prometheus metrics from default registry.
 
     Returns:
