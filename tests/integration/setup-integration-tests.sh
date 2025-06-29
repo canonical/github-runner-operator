@@ -14,7 +14,7 @@ echo "bootstrapping microk8s juju controller"
 sudo snap install microk8s --channel=1.32-strict/stable
 GROUP=snap_microk8s
 sudo usermod -a -G $GROUP $USER
-if [ $(id -gn) != $GROUP ]; then
+if [ $(id -gn) != "$GROUP" ]; then
   exec sg $GROUP "$0 $*"
 fi
 sudo microk8s enable hostpath-storage

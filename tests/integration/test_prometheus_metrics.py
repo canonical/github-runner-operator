@@ -65,7 +65,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     )
     assert (
         result.returncode == 0
-    ), f"failed to create prometheus offer: {result.stdout} {result.stderr}"
+    ), f"failed to create prometheus offer: {str(result.stdout)} {str(result.stderr)}"
     return k8s_juju.status().apps["prometheus-k8s"]
 
 
@@ -86,7 +86,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     )
     assert (
         result.returncode == 0
-    ), f"failed to create grafana offer: {result.stdout} {result.stderr}"
+    ), f"failed to create grafana offer: {str(result.stdout)} {str(result.stderr)}"
     return k8s_juju.status().apps["grafana-k8s"]
 
 
@@ -148,7 +148,7 @@ def test_prometheus_metrics(
     )
     assert (
         result.returncode == 0
-    ), f"failed to consume prometheus offer: {result.stdout} {result.stderr}"
+    ), f"failed to consume prometheus offer: {str(result.stdout)} {str(result.stderr)}"
     result = subprocess.run(
         [
             k8s_juju.cli_binary,
@@ -160,7 +160,7 @@ def test_prometheus_metrics(
     )
     assert (
         result.returncode == 0
-    ), f"failed to consume grafana offer: {result.stdout} {result.stderr}"
+    ), f"failed to consume grafana offer: {str(result.stdout)} {str(result.stderr)}"
 
     juju.integrate("grafana-agent", prometheus_offer_name)
     juju.integrate("grafana-agent", grafana_offer_name)

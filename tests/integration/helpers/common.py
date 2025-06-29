@@ -22,7 +22,6 @@ from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
 from juju.action import Action
 from juju.application import Application
-from juju.client._definitions import ApplicationStatus, FullStatus, UnitStatus
 from juju.model import Model
 from juju.unit import Unit
 
