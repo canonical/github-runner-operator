@@ -7,7 +7,7 @@ on:
 
 jobs:
   test:
-    runs-on: [self-hosted, noble, large, jammy]
+    runs-on: [self-hosted, noble, large]
     steps:
       - run: lscpu
       - run: df -h
