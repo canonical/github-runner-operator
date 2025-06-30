@@ -26,9 +26,7 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.reconcile import (
-    BUSY_RUNNERS_COUNT,
     EXPECTED_RUNNERS_COUNT,
-    IDLE_RUNNERS_COUNT,
     RECONCILE_DURATION_SECONDS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
@@ -248,8 +246,6 @@ class RunnerScaler:
                     offline += 1
                 case _:
                     unknown += 1
-        BUSY_RUNNERS_COUNT.labels(self._manager.manager_name).set(busy)
-        IDLE_RUNNERS_COUNT.labels(self._manager.manager_name).set(online)
         return RunnerInfo(
             online=online,
             busy=busy,

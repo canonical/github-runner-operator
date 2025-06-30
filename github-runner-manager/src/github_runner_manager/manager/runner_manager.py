@@ -301,7 +301,6 @@ class RunnerManager:
             )
             cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
 
-        CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(len(cloud_runners_to_delete))
         return self._delete_cloud_runners(
             cloud_runners_to_delete,
             runners_health_response.requested_runners,
@@ -354,6 +353,7 @@ class RunnerManager:
                 logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
             else:
                 extracted_runner_metrics.append(runner_metric)
+        CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(len(cloud_runners))
         return extracted_runner_metrics
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
