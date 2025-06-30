@@ -15,7 +15,7 @@ from charm_state import (
     RECONCILE_INTERVAL_CONFIG_NAME,
 )
 from tests.integration.conftest import DEFAULT_RECONCILE_INTERVAL
-from tests.integration.helpers.common import wait_for, wait_for_reconcile
+from tests.integration.helpers.common import wait_for, wait_for_reconcile, wait_for_runner_ready
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.integration.jobmanager.helpers import (
     GetRunnerHealthEndpoint,
@@ -65,7 +65,7 @@ async def test_jobmanager(
     # to create a test with a real jobmanager, and this could be done in the future.
     runner_id = 1234
     runner_token = "token"
-    runner_health_path = f"/v1/runner/{runner_id}/health"
+    runner_health_path = f"/v1/runners/{runner_id}/health"
 
     # The builder-agent can get to us at any point after runner is spawned, so we already
     # register the health endpoint.
@@ -147,7 +147,7 @@ async def test_jobmanager(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_runner_ready(app)
 
     # At this point there should be a runner
     await _assert_runners(app, online=1, busy=1, offline=0, unknown=0)
@@ -159,6 +159,6 @@ async def test_jobmanager(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app.set_config({RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 2)})
-    await wait_for_reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     await _assert_runners(app, online=0, busy=0, offline=0, unknown=0)

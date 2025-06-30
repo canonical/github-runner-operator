@@ -75,7 +75,7 @@ async def app_for_reactive_fixture(
             RECONCILE_INTERVAL_CONFIG_NAME: "5",
         }
     )
-    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
 
     yield app_for_reactive
 
@@ -85,7 +85,7 @@ async def app_for_reactive_fixture(
             RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL),
         }
     )
-    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
 
 
 @pytest.mark.abort_on_fail
@@ -113,7 +113,7 @@ async def test_jobmanager_reactive(
     """
     runner_id = 1234
     runner_token = "token"
-    runner_health_path = f"/v1/runner/{runner_id}/health"
+    runner_health_path = f"/v1/runners/{runner_id}/health"
 
     # The builder-agent can get to us at any point.
     add_builder_agent_health_endpoint_response(
@@ -208,7 +208,7 @@ async def test_jobmanager_reactive(
     await app_for_reactive.set_config(
         {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)}
     )
-    await wait_for_reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
 
     # 6. Assert queue is empty
     assert_queue_is_empty(mongodb_uri, app_for_reactive.name)

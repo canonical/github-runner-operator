@@ -18,16 +18,20 @@ import re  # noqa: F401
 import json
 
 
-from typing import List, Optional
-from pydantic import BaseModel, Field, StrictStr, conlist
 
-class RegisterRunnerV1RunnerRegisterPostRequest(BaseModel):
+from pydantic import BaseModel, Field, StrictBool, StrictStr
+
+class RunnerHealthResponse(BaseModel):
     """
-    RegisterRunnerV1RunnerRegisterPostRequest
+    RunnerHealthResponse
     """
-    name: StrictStr = Field(...)
-    labels: Optional[conlist(StrictStr)] = None
-    __properties = ["name", "labels"]
+    label: StrictStr = Field(...)
+    cpu_usage: StrictStr = Field(...)
+    ram_usage: StrictStr = Field(...)
+    disk_usage: StrictStr = Field(...)
+    status: StrictStr = Field(...)
+    deletable: StrictBool = Field(...)
+    __properties = ["label", "cpu_usage", "ram_usage", "disk_usage", "status", "deletable"]
 
     class Config:
         """Pydantic configuration"""
@@ -43,8 +47,8 @@ class RegisterRunnerV1RunnerRegisterPostRequest(BaseModel):
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> RegisterRunnerV1RunnerRegisterPostRequest:
-        """Create an instance of RegisterRunnerV1RunnerRegisterPostRequest from a JSON string"""
+    def from_json(cls, json_str: str) -> RunnerHealthResponse:
+        """Create an instance of RunnerHealthResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self):
@@ -56,17 +60,21 @@ class RegisterRunnerV1RunnerRegisterPostRequest(BaseModel):
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: dict) -> RegisterRunnerV1RunnerRegisterPostRequest:
-        """Create an instance of RegisterRunnerV1RunnerRegisterPostRequest from a dict"""
+    def from_dict(cls, obj: dict) -> RunnerHealthResponse:
+        """Create an instance of RunnerHealthResponse from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
-            return RegisterRunnerV1RunnerRegisterPostRequest.parse_obj(obj)
+            return RunnerHealthResponse.parse_obj(obj)
 
-        _obj = RegisterRunnerV1RunnerRegisterPostRequest.parse_obj({
-            "name": obj.get("name"),
-            "labels": obj.get("labels")
+        _obj = RunnerHealthResponse.parse_obj({
+            "label": obj.get("label"),
+            "cpu_usage": obj.get("cpu_usage"),
+            "ram_usage": obj.get("ram_usage"),
+            "disk_usage": obj.get("disk_usage"),
+            "status": obj.get("status"),
+            "deletable": obj.get("deletable")
         })
         return _obj
 
