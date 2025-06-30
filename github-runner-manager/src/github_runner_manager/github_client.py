@@ -9,7 +9,7 @@ import functools
 import logging
 from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import requests
 
@@ -77,6 +77,7 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         try:
             return func(*args, **kwargs)
+        # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
             if exc.code in (401, 403):
                 if exc.code == 401:
@@ -85,6 +86,9 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                     msg = "Provided token has not enough permissions or has reached rate-limit."
                 raise TokenError(msg) from exc
             logger.warning("Error in GitHub request: %s", exc)
+            raise PlatformApiError from exc
+        except URLError as exc:
+            logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
             logger.warning("Error in GitHub request: %s", exc)
@@ -319,7 +323,12 @@ class GithubClient:
         Returns:
             Job information.
         """
-        paged_kwargs = {"owner": path.owner, "repo": path.repo, "run_id": workflow_run_id, "timeout": 60}
+        paged_kwargs = {
+            "owner": path.owner,
+            "repo": path.repo,
+            "run_id": workflow_run_id,
+            "timeout": 60,
+        }
         try:
             for wf_run_page in paged(
                 self._client.actions.list_jobs_for_workflow_run, **paged_kwargs
