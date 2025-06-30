@@ -186,7 +186,12 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kwargs)
         self._log_charm_status()
 
-        self._grafana_agent = COSAgentProvider(self)
+        self._grafana_agent = COSAgentProvider(
+            self,
+            metrics_endpoints=[
+                {"path": "/metrics", "port": int(manager_service.GITHUB_RUNNER_MANAGER_PORT)}
+            ],
+        )
 
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
