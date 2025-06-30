@@ -2,10 +2,12 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-### 2025-06-25
+### 2025-06-30
 - New configuration options aproxy-exclude-addresses and aproxy-redirect-ports for allowing aproxy to redirect arbitrary TCP traffic
 
-### 2025-06-24
+## 2025-06-26
+
+- Fix a process leak internal to the charm.
 
 - Fix a bug where deleted GitHub Actions Job would cause an endless loop of retries.
 
