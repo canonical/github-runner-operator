@@ -417,6 +417,7 @@ def _issue_reconciliation_metric(
 
     Args:
         reconcile_metric_data: The data used to issue the reconciliation metric.
+        manager_name: The name of the manager.
     """
     idle_runners = {
         runner.name
