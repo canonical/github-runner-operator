@@ -349,11 +349,11 @@ class RunnerManager:
 
             logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
             runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
+            CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(1)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
             else:
                 extracted_runner_metrics.append(runner_metric)
-        CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(len(cloud_runners))
         return extracted_runner_metrics
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
