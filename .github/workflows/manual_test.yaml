@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  edge:
-    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-large,reactive]
+  test:
+    runs-on: [self-hosted, noble, large, jammy]
     steps:
       - run: lscpu
       - run: df -h
