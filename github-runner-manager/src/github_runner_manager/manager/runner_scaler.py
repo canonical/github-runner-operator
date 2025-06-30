@@ -26,7 +26,9 @@ from github_runner_manager.manager.runner_manager import (
 )
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.reconcile import (
+    BUSY_RUNNERS_COUNT,
     EXPECTED_RUNNERS_COUNT,
+    IDLE_RUNNERS_COUNT,
     RECONCILE_DURATION_SECONDS,
 )
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
@@ -327,7 +329,7 @@ class RunnerScaler:
             RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
                 end_timestamp - start_timestamp
             )
-            _issue_reconciliation_metric(reconcile_metric_data)
+            _issue_reconciliation_metric(reconcile_metric_data, self._manager.manager_name)
 
         logger.info("Finished reconciliation.")
 
@@ -409,7 +411,7 @@ class RunnerScaler:
 
 
 def _issue_reconciliation_metric(
-    reconcile_metric_data: _ReconcileMetricData,
+    reconcile_metric_data: _ReconcileMetricData, manager_name: str
 ) -> None:
     """Issue the reconciliation metric.
 
@@ -436,6 +438,9 @@ def _issue_reconciliation_metric(
     }
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)
+
+    BUSY_RUNNERS_COUNT.labels(manager_name).set(len(active_runners))
+    IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
     try:
 

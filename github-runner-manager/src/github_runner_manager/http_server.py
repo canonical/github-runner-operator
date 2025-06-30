@@ -17,7 +17,6 @@ from prometheus_client import generate_latest
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import CloudError, LockError
 from github_runner_manager.manager.runner_manager import FlushMode
-from github_runner_manager.metrics.reconcile import BUSY_RUNNERS_COUNT, IDLE_RUNNERS_COUNT
 from github_runner_manager.reconcile_service import get_runner_scaler
 
 APP_CONFIG_NAME = "app_config"
@@ -51,8 +50,6 @@ def check_runner() -> tuple[str, int]:
     runner_scaler = get_runner_scaler(app_config)
     try:
         runner_info = runner_scaler.get_runner_info()
-        BUSY_RUNNERS_COUNT.labels(app_config.name).set(runner_info.busy)
-        IDLE_RUNNERS_COUNT.labels(app_config.name).set(runner_info.online)
     except CloudError as err:
         app.logger.exception("Cloud error encountered while getting runner info")
         return (str(err), 500)
