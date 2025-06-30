@@ -9,7 +9,7 @@ import functools
 import logging
 from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import requests
 
@@ -77,6 +77,7 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         try:
             return func(*args, **kwargs)
+        # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
             if exc.code in (401, 403):
                 if exc.code == 401:
@@ -86,8 +87,14 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 raise TokenError(msg) from exc
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
+        except URLError as exc:
+            logger.warning("General error in GitHub request: %s", exc)
+            raise PlatformApiError from exc
         except RequestException as exc:
             logger.warning("Error in GitHub request: %s", exc)
+            raise PlatformApiError from exc
+        except TimeoutError as exc:
+            logger.warning("Timeout in GitHub request: %s", exc)
             raise PlatformApiError from exc
 
     return wrapper
@@ -124,11 +131,11 @@ class GithubClient:
         try:
             if isinstance(path, GitHubRepo):
                 raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
-                    path.owner, path.repo, runner_id
+                    path.owner, path.repo, runner_id, timeout=60
                 )
             else:
                 raw_runner = self._client.actions.get_self_hosted_runner_for_org(
-                    path.org, runner_id
+                    path.org, runner_id, timeout=60
                 )
         except HTTP404NotFoundError as err:
             raise GithubRunnerNotFoundError from err
@@ -164,6 +171,7 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     per_page=100,
+                    timeout=60,
                 )
                 for item in page["runners"]
             ]
@@ -179,6 +187,7 @@ class GithubClient:
                     num_of_pages + 1,
                     org=path.org,
                     per_page=100,
+                    timeout=60,
                 )
                 for item in page["runners"]
             ]
@@ -217,6 +226,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=1,
                 labels=labels,
+                timeout=60,
             )
         elif isinstance(path, GitHubOrg):
             # We cannot cache it in here, as we are running in a forked process.
@@ -227,6 +237,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=runner_group_id,
                 labels=labels,
+                timeout=60,
             )
         else:
             assert_never(token)
@@ -282,11 +293,13 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     runner_id=runner_id,
+                    timeout=60,
                 )
             else:
                 self._client.actions.delete_self_hosted_runner_from_org(
                     org=path.org,
                     runner_id=runner_id,
+                    timeout=60,
                 )
         # The function delete_self_hosted_runner fails in GitHub if the runner does not exist,
         # so we do not have to worry about that.
@@ -310,7 +323,12 @@ class GithubClient:
         Returns:
             Job information.
         """
-        paged_kwargs = {"owner": path.owner, "repo": path.repo, "run_id": workflow_run_id}
+        paged_kwargs = {
+            "owner": path.owner,
+            "repo": path.repo,
+            "run_id": workflow_run_id,
+            "timeout": 60,
+        }
         try:
             for wf_run_page in paged(
                 self._client.actions.list_jobs_for_workflow_run, **paged_kwargs
@@ -353,6 +371,7 @@ class GithubClient:
                 owner=path.owner,
                 repo=path.repo,
                 job_id=job_id,
+                timeout=60,
             )
         except HTTPError as exc:
             if exc.code == 404:
