@@ -39,6 +39,8 @@ from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRu
 
 logger = logging.getLogger(__name__)
 
+TIMEOUT_IN_SECS = 60
+
 
 class GithubRunnerNotFoundError(Exception):
     """Represents an error when the runner could not be found on GitHub."""
@@ -131,11 +133,11 @@ class GithubClient:
         try:
             if isinstance(path, GitHubRepo):
                 raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
-                    path.owner, path.repo, runner_id, timeout=60
+                    path.owner, path.repo, runner_id, timeout=TIMEOUT_IN_SECS
                 )
             else:
                 raw_runner = self._client.actions.get_self_hosted_runner_for_org(
-                    path.org, runner_id, timeout=60
+                    path.org, runner_id, timeout=TIMEOUT_IN_SECS
                 )
         except HTTP404NotFoundError as err:
             raise GithubRunnerNotFoundError from err
@@ -171,7 +173,7 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     per_page=100,
-                    timeout=60,
+                    timeout=TIMEOUT_IN_SECS,
                 )
                 for item in page["runners"]
             ]
@@ -187,7 +189,7 @@ class GithubClient:
                     num_of_pages + 1,
                     org=path.org,
                     per_page=100,
-                    timeout=60,
+                    timeout=TIMEOUT_IN_SECS,
                 )
                 for item in page["runners"]
             ]
@@ -226,7 +228,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=1,
                 labels=labels,
-                timeout=60,
+                timeout=TIMEOUT_IN_SECS,
             )
         elif isinstance(path, GitHubOrg):
             # We cannot cache it in here, as we are running in a forked process.
@@ -237,7 +239,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=runner_group_id,
                 labels=labels,
-                timeout=60,
+                timeout=TIMEOUT_IN_SECS,
             )
         else:
             assert_never(token)
@@ -260,7 +262,7 @@ class GithubClient:
             "Authorization": f"Bearer {self._token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
-        response = requests.get(url, headers=headers, timeout=30)
+        response = requests.get(url, headers=headers, timeout=TIMEOUT_IN_SECS)
         response.raise_for_status()
         data = response.json()
         try:
@@ -293,13 +295,13 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     runner_id=runner_id,
-                    timeout=60,
+                    timeout=TIMEOUT_IN_SECS,
                 )
             else:
                 self._client.actions.delete_self_hosted_runner_from_org(
                     org=path.org,
                     runner_id=runner_id,
-                    timeout=60,
+                    timeout=TIMEOUT_IN_SECS,
                 )
         # The function delete_self_hosted_runner fails in GitHub if the runner does not exist,
         # so we do not have to worry about that.
@@ -371,7 +373,7 @@ class GithubClient:
                 owner=path.owner,
                 repo=path.repo,
                 job_id=job_id,
-                timeout=60,
+                timeout=TIMEOUT_IN_SECS,
             )
         except HTTPError as exc:
             if exc.code == 404:
