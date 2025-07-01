@@ -52,6 +52,7 @@ jobs:
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
-      - openstack-interface-tests-private-endpoint
+      - openstack-interface-tests-runner-manager-private-endpoint
       - openstack-integration-tests-private-endpoint
+      - openstack-integration-tests-cross-controller-private-endpoint
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
