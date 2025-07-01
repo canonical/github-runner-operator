@@ -17,6 +17,8 @@ from jobmanager_client.models.job_read import JobRead
 from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import BaseModel, HttpUrl
 
+from github_runner_manager.jobmanager_api import RunnerHealth, JobManagerAPI, \
+    JobManagerAPIException, JobManagerAPINotFoundException
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
 from github_runner_manager.platform.platform_provider import (
@@ -25,6 +27,8 @@ from github_runner_manager.platform.platform_provider import (
     RunnersHealthResponse,
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
+
+TEST_JOB_MANAGER_TOKEN = "token"
 
 TEST_JOB_MANAGER_URL = "http://jobmanager.example.com"
 
@@ -271,19 +275,17 @@ def test_get_runner_health(
     assert: Assert the correct health state is reported.
     """
     call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
 
-    api_return_value = RunnerHealthResponse(
-        label="label",
+    api_return_value = RunnerHealth(
         status=job_status,
         deletable=job_deletable,
-        cpu_usage="10%",
-        ram_usage="20%",
-        disk_usage="30%",
     )
     call_api_mock.side_effect = [api_return_value]
 
-    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_runner_health = MagicMock(return_value=api_return_value)
+    platform = JobManagerPlatform(jobmanager_api)
+
     instance_id = InstanceID.build(prefix="unit-0")
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
@@ -326,15 +328,11 @@ def test_get_runner_health(
                 ),
             ],
             [
-                RunnerHealthResponse(
-                    label="label",
+                RunnerHealth(
                     status="IN_PROGRESS",
                     deletable=False,
-                    cpu_usage="10%",
-                    ram_usage="20%",
-                    disk_usage="30%",
                 ),
-                ApiException,
+                JobManagerAPIException,
             ],
             RunnersHealthResponse(
                 requested_runners=[
@@ -371,15 +369,11 @@ def test_get_runner_health(
                 ),
             ],
             [
-                RunnerHealthResponse(
-                    label="label",
+                RunnerHealth(
                     status="FAILED",
                     deletable=True,
-                    cpu_usage="10%",
-                    ram_usage="20%",
-                    disk_usage="30%",
                 ),
-                NotFoundException,
+                JobManagerAPINotFoundException,
             ],
             RunnersHealthResponse(
                 requested_runners=[
@@ -413,11 +407,10 @@ def test_get_runners_health(
     assert: The expected health response with the correct requested_runners and
         runners with failed requests.
     """
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = jobmanager_side_effects
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_runner_health = MagicMock(side_effect=jobmanager_side_effects)
+    platform = JobManagerPlatform(jobmanager_api)
 
-    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
     runners_health_response = platform.get_runners_health(requested_runners)
 
     expected_health_response = expected_health_response

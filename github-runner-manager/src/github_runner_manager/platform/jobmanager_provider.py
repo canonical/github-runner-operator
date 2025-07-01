@@ -13,6 +13,8 @@ from pydantic.error_wrappers import ValidationError
 from urllib3.exceptions import RequestError
 
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
+from github_runner_manager.jobmanager_api import JobManagerAPI, JobManagerAPIException, \
+    JobManagerAPINotFoundException
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -38,13 +40,13 @@ logger = logging.getLogger(__name__)
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
-    def __init__(self, url: str):
+    def __init__(self, jobmanager_api: JobManagerAPI):
         """Construct the object.
 
         Args:
             url: The jobmanager base URL.
         """
-        self._url = url
+        self._jobmanager_api = jobmanager_api
 
     @classmethod
     def build(cls, jobmanager_configuration: JobManagerConfiguration) -> "JobManagerPlatform":
@@ -73,28 +75,23 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
            The health of the runner in the jobmanager.
         """
-        configuration = jobmanager_client.Configuration(host=self._url)
-        with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.RunnersApi(api_client)
-            try:
-                response = api_instance.get_runner_health_v1_runners_runner_id_health_get(
-                    int(runner_identity.metadata.runner_id)
-                )
-            except NotFoundException:
-                # Pending to test with the real JobManager.
-                # The last assumption is that the builder-agent did not contact
-                # the JobManager and so it returns a 404.
-                return PlatformRunnerHealth(
-                    identity=runner_identity,
-                    online=False,
-                    deletable=False,
-                    busy=False,
-                )
-            except (ApiException, RequestError, ValidationError) as exc:
-                logger.exception(
-                    "Error calling jobmanager api for runner %s. %s", runner_identity, exc
-                )
-                raise PlatformApiError("API error") from exc
+        try:
+            response = self._jobmanager_api.get_runner_health(int(runner_identity.metadata.runner_id))
+        except JobManagerAPINotFoundException:
+            # Pending to test with the real JobManager.
+            # The last assumption is that the builder-agent did not contact
+            # the JobManager and so it returns a 404.
+            return PlatformRunnerHealth(
+                identity=runner_identity,
+                online=False,
+                deletable=False,
+                busy=False,
+            )
+        except JobManagerAPIException as exc:
+            logger.exception(
+                "Error calling jobmanager api for runner %s. %s", runner_identity, exc
+            )
+            raise PlatformApiError("API error") from exc
 
         # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
         # We should review the jobmanager for any change in their statuses.

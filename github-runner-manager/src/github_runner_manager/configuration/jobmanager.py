@@ -13,3 +13,4 @@ class JobManagerConfiguration(BaseModel):
     """
 
     url: HttpUrl
+    token: str
