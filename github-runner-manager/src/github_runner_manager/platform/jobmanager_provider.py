@@ -12,8 +12,13 @@ from pydantic.error_wrappers import ValidationError
 from urllib3.exceptions import RequestError
 
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
-from github_runner_manager.jobmanager_api import JobManagerAPI, JobManagerAPIException, \
-    JobManagerAPINotFoundException, JobStatus, RunnerStatus
+from github_runner_manager.jobmanager_api import (
+    JobManagerAPI,
+    JobManagerAPIException,
+    JobManagerAPINotFoundException,
+    JobStatus,
+    RunnerStatus,
+)
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -44,6 +49,7 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             url: The jobmanager base URL.
+            jobmanager_api: The jobmanager API client to use.
         """
         self._url = url
         self._jobmanager_api = jobmanager_api
@@ -58,7 +64,12 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             New JobManagerPlatform.
         """
-        return cls(url=jobmanager_configuration.url, jobmanager_api=JobManagerAPI(url=jobmanager_configuration.url, token=jobmanager_configuration.token))
+        return cls(
+            url=jobmanager_configuration.url,
+            jobmanager_api=JobManagerAPI(
+                url=jobmanager_configuration.url, token=jobmanager_configuration.token
+            ),
+        )
 
     def get_runner_health(
         self,
@@ -76,7 +87,9 @@ class JobManagerPlatform(PlatformProvider):
            The health of the runner in the jobmanager.
         """
         try:
-            response = self._jobmanager_api.get_runner_health(int(runner_identity.metadata.runner_id))
+            response = self._jobmanager_api.get_runner_health(
+                int(runner_identity.metadata.runner_id)
+            )
         except JobManagerAPINotFoundException:
             # Pending to test with the real JobManager.
             # The last assumption is that the builder-agent did not contact
@@ -152,7 +165,7 @@ class JobManagerPlatform(PlatformProvider):
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
-        """Get a one time token for a runner.
+        """Get the runner context for a self-hosted runner.
 
         This token is used for registering self-hosted runners.
 
@@ -165,20 +178,15 @@ class JobManagerPlatform(PlatformProvider):
             PlatformApiError: Problem with the underlying API.
 
         Returns:
-            New runner token.
+            A tuple containing the runner context and the self-hosted runner.
         """
-
         try:
 
             response = self._jobmanager_api.register_runner(name=instance_id.name, labels=labels)
-            updated_metadata = RunnerMetadata(
-                platform_name=metadata.platform_name, url=self._url
-            )
+            updated_metadata = RunnerMetadata(platform_name=metadata.platform_name, url=self._url)
             updated_metadata.runner_id = str(response.id)
             if token := response.token:
-                jobmanager_endpoint = (
-                    f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
-                )
+                jobmanager_endpoint = f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
                 # For now, use the first label
                 label = "undefined"
                 if labels:
@@ -277,5 +285,3 @@ class JobManagerPlatform(PlatformProvider):
             PlatformApiError: This is not provided by this interface yet.
         """
         raise PlatformApiError("get_job_info not provided by the jobmanager")
-
-

@@ -5,7 +5,7 @@
 from enum import Enum
 
 import jobmanager_client
-from jobmanager_client.exceptions import NotFoundException, ApiException
+from jobmanager_client.exceptions import ApiException, NotFoundException
 from pydantic import BaseModel, ValidationError
 from urllib3.exceptions import RequestError
 
@@ -29,10 +29,18 @@ class JobStatus(str, Enum):
     IN_PROGRESS = "IN_PROGRESS"
     PENDING = "PENDING"
 
+
 class Job(BaseModel):
+    """Represents a job on the JobManagerAPI.
+
+    Attributes:
+        status: The status of the job.
+    """
 
     status: JobStatus
 
+
+# TODO: review possible values and use default fallback
 class RunnerStatus(str, Enum):
     """Status of a runner on the JobManager.
 
@@ -44,18 +52,37 @@ class RunnerStatus(str, Enum):
     IN_PROGRESS = "IN_PROGRESS"
     PENDING = "PENDING"
 
+
 class RunnerRegistration(BaseModel):
-    id : int
+    """Represents a runner registration response from the JobManagerAPI.
+
+    Attributes:
+        id: The ID of the registered runner.
+        token: The token for the registered runner.
+    """
+
+    id: int
     token: str
 
+
 class RunnerHealth(BaseModel):
-    status : str
+    """Represents the health status of a runner on the JobManagerAPI.
+
+    Attributes:
+        status: The health status of the runner.
+        deletable: Indicates if the runner can be deleted.
+    """
+
+    status: RunnerStatus
     deletable: bool
 
+
 class JobManagerAPI:
+    """Handles interactions with the JobManager API."""
 
     def __init__(self, token: str, url: str):
         """Initialize the JobManagerAPI with a token and URL.
+
         Args:
             token: The authentication token for the JobManager API.
             url: The base URL for the JobManager API.
@@ -67,6 +94,7 @@ class JobManagerAPI:
         self._runners_api = jobmanager_client.RunnersApi(api_client=self._api_client)
 
     def get_runner_health(self, id: int) -> RunnerHealth:
+        """Fetch the health status of a runner by its ID from the JobManager API."""
         try:
             response = self._runners_api.get_runner_health_v1_runners_runner_id_health_get(id)
         except NotFoundException as err:
@@ -77,28 +105,34 @@ class JobManagerAPI:
             raise JobManagerAPIException(
                 f"Error fetching runner health for ID {id}: {exc}"
             ) from exc
-        return RunnerHealth(
-            status=response.status,
-            deletable=response.deletable
-        )
+        return RunnerHealth(status=response.status, deletable=response.deletable)
 
     def register_runner(self, name: str, labels: list[str]):
-        runner_register_request = jobmanager_client.RunnerCreate(
-            name=name, labels=labels
-        )
+        """Register a new runner with the JobManager API.
+
+        Args:
+            name: The name of the runner to register.
+            labels: A list of labels to associate with the runner.
+        """
+        runner_register_request = jobmanager_client.RunnerCreate(name=name, labels=labels)
 
         try:
             response = self._runners_api.register_runner_v1_runners_register_post(
                 runner_register_request
             )
         except (ApiException, RequestError, ValueError) as exc:
-            raise JobManagerAPIException(
-                f"Error registering runner: {exc}"
-            ) from exc
+            raise JobManagerAPIException(f"Error registering runner: {exc}") from exc
         return RunnerRegistration(id=response.id, token=response.token)
 
-
     def get_job(self, id: int):
+        """Fetch a job by its ID from the JobManager API.
+
+        Args:
+            id: The ID of the job to fetch.
+
+        Returns:
+            Job: The job object containing its status.
+        """
         try:
             response = self._jobs_api.get_job_v1_jobs_job_id_get(id)
         except NotFoundException as err:
@@ -106,15 +140,9 @@ class JobManagerAPI:
                 f"Job with ID {id} not found in JobManager API."
             ) from err
         except (ApiException, RequestError, ValueError) as exc:
-            raise JobManagerAPIException(
-                f"Error fetching job with ID {id}: {exc}"
-            ) from exc
-        return Job(
-            status=response.status
-        )
+            raise JobManagerAPIException(f"Error fetching job with ID {id}: {exc}") from exc
+        return Job(status=response.status)
 
     def close(self):
         """Close the API client connection."""
         self._api_client.close()
-
-

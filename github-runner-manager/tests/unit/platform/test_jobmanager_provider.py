@@ -17,8 +17,15 @@ from jobmanager_client.models.job_read import JobRead
 from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import BaseModel, HttpUrl
 
-from github_runner_manager.jobmanager_api import RunnerHealth, JobManagerAPI, \
-    JobManagerAPIException, JobManagerAPINotFoundException, RunnerRegistration, JobStatus, Job
+from github_runner_manager.jobmanager_api import (
+    Job,
+    JobManagerAPI,
+    JobManagerAPIException,
+    JobManagerAPINotFoundException,
+    JobStatus,
+    RunnerHealth,
+    RunnerRegistration,
+)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
@@ -48,7 +55,9 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     instance_id = InstanceID.build(prefix="unit-0")
     labels = ["label"]
     jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
-    jobmanager_api.register_runner = MagicMock(return_value=RunnerRegistration(id=runner_id, token=token))
+    jobmanager_api.register_runner = MagicMock(
+        return_value=RunnerRegistration(id=runner_id, token=token)
+    )
     platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
 
     context, runner = platform.get_runner_context(metadata, instance_id, labels)
