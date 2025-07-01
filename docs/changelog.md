@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-07-01
+
+- Fix a possible process leak.
+
 ## 2025-06-26
 
 - Fix a process leak internal to the charm.
