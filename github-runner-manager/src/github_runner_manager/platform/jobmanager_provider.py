@@ -4,17 +4,16 @@
 """JobManager platform provider."""
 
 import logging
-from enum import Enum
 
 import jobmanager_client
-from jobmanager_client.rest import ApiException, NotFoundException
+from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
 from pydantic.error_wrappers import ValidationError
 from urllib3.exceptions import RequestError
 
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.jobmanager_api import JobManagerAPI, JobManagerAPIException, \
-    JobManagerAPINotFoundException
+    JobManagerAPINotFoundException, JobStatus, RunnerStatus
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -40,12 +39,13 @@ logger = logging.getLogger(__name__)
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
-    def __init__(self, jobmanager_api: JobManagerAPI):
+    def __init__(self, url: str, jobmanager_api: JobManagerAPI):
         """Construct the object.
 
         Args:
             url: The jobmanager base URL.
         """
+        self._url = url
         self._jobmanager_api = jobmanager_api
 
     @classmethod
@@ -98,7 +98,7 @@ class JobManagerPlatform(PlatformProvider):
         # Any other state besides PENDING means that no more waiting should be done
         # for the runner, so it is equivalent to online, although the jobmanager does
         # not provide an exact match with "online".
-        online = response.status not in [JobStatus.PENDING]
+        online = response.status not in [RunnerStatus.PENDING]
         # busy is complex in the jobmanager, as a completed job that is not deletable is really
         # busy. As so, every job that is not deletable is considered busy.
         busy = not response.deletable
@@ -167,54 +167,47 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             New runner token.
         """
-        configuration = jobmanager_client.Configuration(host=self._url)
-        with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.RunnersApi(api_client)
-            try:
-                runner_register_request = jobmanager_client.RunnerCreate(
-                    name=instance_id.name, labels=labels
-                )
 
-                response = api_instance.register_runner_v1_runners_register_post(
-                    runner_register_request
+        try:
+
+            response = self._jobmanager_api.register_runner(name=instance_id.name, labels=labels)
+            updated_metadata = RunnerMetadata(
+                platform_name=metadata.platform_name, url=self._url
+            )
+            updated_metadata.runner_id = str(response.id)
+            if token := response.token:
+                jobmanager_endpoint = (
+                    f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
                 )
-                updated_metadata = RunnerMetadata(
-                    platform_name=metadata.platform_name, url=self._url
+                # For now, use the first label
+                label = "undefined"
+                if labels:
+                    label = labels[0]
+                command_to_run = (
+                    f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
+                    f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
+                    "builder-agent"
                 )
-                updated_metadata.runner_id = str(response.id)
-                if token := response.token:
-                    jobmanager_endpoint = (
-                        f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
-                    )
-                    # For now, use the first label
-                    label = "undefined"
-                    if labels:
-                        label = labels[0]
-                    command_to_run = (
-                        f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
-                        f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
-                        "builder-agent"
-                    )
-                    return (
-                        RunnerContext(
-                            shell_run_script=command_to_run,
-                            ingress_tcp_ports=[8080],
+                return (
+                    RunnerContext(
+                        shell_run_script=command_to_run,
+                        ingress_tcp_ports=[8080],
+                    ),
+                    SelfHostedRunner(
+                        identity=RunnerIdentity(
+                            instance_id=instance_id,
+                            metadata=metadata,
                         ),
-                        SelfHostedRunner(
-                            identity=RunnerIdentity(
-                                instance_id=instance_id,
-                                metadata=metadata,
-                            ),
-                            busy=False,
-                            id=int(updated_metadata.runner_id),
-                            labels=[SelfHostedRunnerLabel(name=label) for label in labels],
-                            status=GitHubRunnerStatus.OFFLINE,
-                        ),
-                    )
-                raise PlatformApiError("Empty token from jobmanager API")
-            except (ApiException, RequestError, ValidationError) as exc:
-                logger.exception("Error calling jobmanager api.")
-                raise PlatformApiError("API error") from exc
+                        busy=False,
+                        id=int(updated_metadata.runner_id),
+                        labels=[SelfHostedRunnerLabel(name=label) for label in labels],
+                        status=GitHubRunnerStatus.OFFLINE,
+                    ),
+                )
+            raise PlatformApiError("Empty token from jobmanager API")
+        except (ApiException, RequestError, ValidationError) as exc:
+            logger.exception("Error calling jobmanager api.")
+            raise PlatformApiError("API error") from exc
 
     def check_job_been_picked_up(self, metadata: RunnerMetadata, job_url: HttpUrl) -> bool:
         """Check if the job has already been picked up.
@@ -259,16 +252,14 @@ class JobManagerPlatform(PlatformProvider):
             path,
         )
 
-        with jobmanager_client.ApiClient(configuration) as api_client:
-            api_instance = jobmanager_client.JobsApi(api_client)
-            try:
-                job = api_instance.get_job_v1_jobs_job_id_get(job_id)
-                # the api returns a generic object, ignore the type for status
-                if job.status != JobStatus.PENDING:  # type: ignore
-                    return True
-            except (ApiException, RequestError, ValidationError) as exc:
-                logger.exception("Error calling jobmanager api to get job information.")
-                raise PlatformApiError("API error") from exc
+        try:
+            job = self._jobmanager_api.get_job(job_id)
+            # the api returns a generic object, ignore the type for status
+            if job.status != JobStatus.PENDING:  # type: ignore
+                return True
+        except JobManagerAPIException as exc:
+            logger.exception("Error calling jobmanager api to get job information.")
+            raise PlatformApiError("API error") from exc
         return False
 
     def get_job_info(
@@ -288,13 +279,3 @@ class JobManagerPlatform(PlatformProvider):
         raise PlatformApiError("get_job_info not provided by the jobmanager")
 
 
-class JobStatus(str, Enum):
-    """Status of a job on the JobManager.
-
-    Attributes:
-        IN_PROGRESS: Represents a job that is in progress.
-        PENDING: Represents a job that is pending.
-    """
-
-    IN_PROGRESS = "IN_PROGRESS"
-    PENDING = "PENDING"

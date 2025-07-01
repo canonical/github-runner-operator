@@ -2,6 +2,8 @@
 #  See LICENSE file for licensing details.
 
 """Module containing logic to handle calls to the jobmanager api."""
+from enum import Enum
+
 import jobmanager_client
 from jobmanager_client.exceptions import NotFoundException, ApiException
 from pydantic import BaseModel, ValidationError
@@ -14,6 +16,33 @@ class JobManagerAPIException(Exception):
 
 class JobManagerAPINotFoundException(JobManagerAPIException):
     """Exception raised when a runner is not found in the JobManager API."""
+
+
+class JobStatus(str, Enum):
+    """Status of a job on the JobManager.
+
+    Attributes:
+        IN_PROGRESS: Represents a job that is in progress.
+        PENDING: Represents a job that is pending.
+    """
+
+    IN_PROGRESS = "IN_PROGRESS"
+    PENDING = "PENDING"
+
+class Job(BaseModel):
+
+    status: JobStatus
+
+class RunnerStatus(str, Enum):
+    """Status of a runner on the JobManager.
+
+    Attributes:
+        IN_PROGRESS: Represents a job that is in progress.
+        PENDING: Represents a job that is pending.
+    """
+
+    IN_PROGRESS = "IN_PROGRESS"
+    PENDING = "PENDING"
 
 class RunnerRegistration(BaseModel):
     id : int
@@ -34,6 +63,7 @@ class JobManagerAPI:
         config = jobmanager_client.Configuration(host=url)
         self._api_client = jobmanager_client.ApiClient(configuration=config)
         self._api_client.set_default_header("Authorization", f"Bearer {token}")
+        self._jobs_api = jobmanager_client.JobsApi(api_client=self._api_client)
         self._runners_api = jobmanager_client.RunnersApi(api_client=self._api_client)
 
     def get_runner_health(self, id: int) -> RunnerHealth:
@@ -61,16 +91,30 @@ class JobManagerAPI:
             response = self._runners_api.register_runner_v1_runners_register_post(
                 runner_register_request
             )
-        except NotFoundException as err:
-            raise JobManagerAPINotFoundException(
-                "Runner registration failed: JobManager API not found."
-            ) from err
         except (ApiException, RequestError, ValueError) as exc:
             raise JobManagerAPIException(
                 f"Error registering runner: {exc}"
             ) from exc
         return RunnerRegistration(id=response.id, token=response.token)
 
+
+    def get_job(self, id: int):
+        try:
+            response = self._jobs_api.get_job_v1_jobs_job_id_get(id)
+        except NotFoundException as err:
+            raise JobManagerAPINotFoundException(
+                f"Job with ID {id} not found in JobManager API."
+            ) from err
+        except (ApiException, RequestError, ValueError) as exc:
+            raise JobManagerAPIException(
+                f"Error fetching job with ID {id}: {exc}"
+            ) from exc
+        return Job(
+            status=response.status
+        )
+
     def close(self):
         """Close the API client connection."""
         self._api_client.close()
+
+
