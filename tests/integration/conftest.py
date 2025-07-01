@@ -9,7 +9,7 @@ import secrets
 import string
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Generator, Iterator, Optional, cast
+from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
 
 import jubilant
 import nest_asyncio
@@ -748,8 +748,10 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
 
 
-@pytest.fixture(scope="module")
-def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juju, None, None]:
+@pytest_asyncio.fixture(scope="module")
+async def juju(
+    request: pytest.FixtureRequest, model: Model
+) -> AsyncGenerator[jubilant.Juju, None]:
     """Pytest fixture that wraps :meth:`jubilant.with_model`."""
 
     def show_debug_log(juju: jubilant.Juju):
@@ -762,14 +764,19 @@ def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juj
             log = juju.debug_log(limit=1000)
             print(log, end="")
 
+    controller = await model.get_controller()
     if model:
-        juju = jubilant.Juju(model=model.name)
+        # Currently juju has no way of switching controller context, this is required to operate
+        # in the right controller's right model when using multiple controllers.
+        # See: https://github.com/canonical/jubilant/issues/158
+        juju = jubilant.Juju(model=f"{controller.controller_name}:{model.name}")
         yield juju
         show_debug_log(juju)
         return
 
     keep_models = cast(bool, request.config.getoption("--keep-models"))
-    with jubilant.temp_model(keep=keep_models) as juju:
+    with jubilant.temp_model(keep=keep_models, controller=controller.controller_name) as juju:
+        juju.model = f"{controller.controller_name}:{juju.model}"
         juju.wait_timeout = 10 * 60
         yield juju
         show_debug_log(juju)

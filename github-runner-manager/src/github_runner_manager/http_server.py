@@ -12,6 +12,7 @@ from dataclasses import dataclass
 from threading import Lock
 
 from flask import Flask, request
+from prometheus_client import generate_latest
 
 from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.errors import CloudError, LockError
@@ -44,7 +45,7 @@ def check_runner() -> tuple[str, int]:
     Returns:
         Information on the runners in JSON format.
     """
-    app_config = app.config[APP_CONFIG_NAME]
+    app_config: ApplicationConfiguration = app.config[APP_CONFIG_NAME]
     app.logger.info("Checking runners...")
     runner_scaler = get_runner_scaler(app_config)
     try:
@@ -72,7 +73,7 @@ def flush_runner() -> tuple[str, int]:
     if flush_busy_str in ("True", "true"):
         flush_busy = True
 
-    lock = get_lock()
+    lock = _get_lock()
     with lock:
         app.logger.info("Flushing runners...")
         runner_scaler = get_runner_scaler(app_config)
@@ -87,7 +88,7 @@ def flush_runner() -> tuple[str, int]:
     return ("", 204)
 
 
-def get_lock() -> Lock:
+def _get_lock() -> Lock:
     """Get the lock representing modification access to the set of runners.
 
     Raises:
@@ -101,6 +102,16 @@ def get_lock() -> Lock:
         app.logger.info("Attempting to acquire the lock: %s", lock_state)
         return _lock
     raise LockError("Lock not configured")
+
+
+@app.route("/metrics", methods=["GET"])
+def metrics() -> bytes:
+    """Return prometheus metrics from default registry.
+
+    Returns:
+        The latest metrics from the default Prometheus registry.
+    """
+    return generate_latest()
 
 
 @dataclass
