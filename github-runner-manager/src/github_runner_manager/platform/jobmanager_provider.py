@@ -58,7 +58,7 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             New JobManagerPlatform.
         """
-        return cls(url=jobmanager_configuration.url)
+        return cls(url=jobmanager_configuration.url, jobmanager_api=JobManagerAPI(url=jobmanager_configuration.url, token=jobmanager_configuration.token))
 
     def get_runner_health(
         self,
