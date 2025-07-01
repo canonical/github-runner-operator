@@ -140,6 +140,7 @@ class JobManagerConfig(BaseModel):
     """
 
     url: AnyHttpUrl
+    token: str
 
     @classmethod
     def from_charm(cls, charm: CharmBase) -> "JobManagerConfig | None":
@@ -158,9 +159,13 @@ class JobManagerConfig(BaseModel):
         if not url_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
 
+        token_str = cast(str, charm.config.get(TOKEN_CONFIG_NAME))
+        if not token_str:
+            raise CharmConfigInvalidError(f"Missing {TOKEN_CONFIG_NAME} configuration")
+
         try:
             # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
-            return cls(url=url_str)  # type: ignore
+            return cls(url=url_str, token=token_str)  # type: ignore
         except ValidationError as e:
             logger.info("Path is not a URL, will not use it as jobmanager url: %s", e)
         return None
@@ -355,6 +360,7 @@ class CharmConfig(BaseModel):
     use_aproxy: bool
     custom_pre_job_script: str | None
     jobmanager_url: AnyHttpUrl | None
+    jobmanager_token: str | None
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -516,6 +522,7 @@ class CharmConfig(BaseModel):
             use_aproxy=use_aproxy,
             custom_pre_job_script=custom_pre_job_script,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
+            jobmanager_token=jobmanager_config.token if jobmanager_config else None,
         )
 
 
