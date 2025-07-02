@@ -137,6 +137,7 @@ class JobManagerConfig(BaseModel):
 
     Attributes:
         url: The job manager base URL.
+        token: The job manager API token.
     """
 
     url: AnyHttpUrl
@@ -347,6 +348,7 @@ class CharmConfig(BaseModel):
         use_aproxy: Whether to use aproxy in the runner.
         custom_pre_job_script: Custom pre-job script to run before the job.
         jobmanager_url: Base URL of the job manager service.
+        jobmanager_token: Token for authentication with the job manager service.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None

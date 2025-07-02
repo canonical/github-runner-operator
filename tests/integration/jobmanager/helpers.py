@@ -75,6 +75,7 @@ class GetRunnerHealthEndpoint:
         Args:
             httpserver: The HTTP server to use for the endpoint.
             runner_health_path: The path for the runner health endpoint.
+            jobmanager_token: The token for the jobmanager for authentication.
         """
         self.httpserver = httpserver
         self.runner_health_path = runner_health_path
@@ -117,6 +118,7 @@ async def wait_for_runner_to_be_registered(
         httpserver: The HTTP server to use for the request.
         runner_id: The ID of the runner.
         runner_token: The token of the runner.
+        jobmanager_token: The token for authentication with the jobmanager.
     """
     runner_register = "/v1/runners/register"
     returned_token = RunnerRegisterResponse(id=runner_id, token=runner_token)

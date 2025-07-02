@@ -49,7 +49,7 @@ def jobmanager_api(token, url):
 
 def test_jobmanager_api_initialize(token, url):
     """
-    arrange: Arrange a dummy token and URL.
+    arrange: Arrange a test token and URL.
     act: Created jobmanager api object.
     assert: Default headers of underlying client are set to bearer authorization and url is set.
     """

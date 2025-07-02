@@ -100,7 +100,7 @@ def test_github_config_from_charm_invalid_token():
 
 def test_jobmanager_config_from_charm_empty_token():
     """
-    arrange:
+    arrange: Create a mock CharmBase instance with an empty token configuration.
     act: Call from_charm method with the mock CharmBase instance.
     assert:
     """
