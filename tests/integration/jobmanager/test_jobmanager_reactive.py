@@ -96,6 +96,7 @@ async def test_jobmanager_reactive(
     httpserver: HTTPServer,
     jobmanager_base_url: str,
     jobmanager_ip_address: str,
+    jobmanager_token: str,
 ):
     """
     Test reactive mode together with jobmanager.
@@ -170,11 +171,13 @@ async def test_jobmanager_reactive(
     job_get_handler.respond_with_json(returned_job.to_dict())
 
     # 2. Wait for runner to be registered
-    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token)
+    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token, jobmanager_token)
 
     # For the github runner manager, at this point, the jobmanager will return
     # that the runner health is pending and not deletable
-    runner_health_endpoint = GetRunnerHealthEndpoint(httpserver, runner_health_path)
+    runner_health_endpoint = GetRunnerHealthEndpoint(
+        httpserver, runner_health_path, jobmanager_token
+    )
     runner_health_endpoint.set(status="PENDING", deletable=False)
 
     unit = app_for_reactive.units[0]
@@ -191,7 +194,9 @@ async def test_jobmanager_reactive(
     runner_health_endpoint.set(status="IN_PROGRESS", deletable=False)
 
     returned_job.status = JobStatus.IN_PROGRESS.value
-    job_get_handler = httpserver.expect_oneshot_request(job_path)
+    job_get_handler = httpserver.expect_oneshot_request(
+        uri=job_path, method="GET", headers={"Authorization": f"Bearer {jobmanager_token}"}
+    )
     job_get_handler.respond_with_json(returned_job.to_dict())
 
     with httpserver.wait(raise_assertions=True, stop_on_nohandler=False, timeout=30) as waiting:
