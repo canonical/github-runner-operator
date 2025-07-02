@@ -55,11 +55,6 @@ jobs:
         run: |
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
-      - name: show aproxy logs
-        if: failure()
-        run: |
-          sudo snap logs aproxy.aproxy -n=all
-          sudo nft list ruleset
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
@@ -100,3 +95,9 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
+      - name: show aproxy logs
+        if: always()
+        run: |
+          sudo snap get aproxy
+          sudo snap logs aproxy.aproxy -n=all
+          sudo nft list ruleset
