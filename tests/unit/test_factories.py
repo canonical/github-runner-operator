@@ -38,10 +38,15 @@ import factories
             None,
             id="with_github_config",
         ),
-        pytest.param(False, None, JobManagerConfiguration(
-            url="http://jobmanager.internal",
-            token="jobmanagertoken",
-        ), id="with_jobmanager_config"),
+        pytest.param(
+            False,
+            None,
+            JobManagerConfiguration(
+                url="http://jobmanager.internal",
+                token="jobmanagertoken",
+            ),
+            id="with_jobmanager_config",
+        ),
     ],
 )
 def test_create_application_configuration(

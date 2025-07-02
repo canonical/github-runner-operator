@@ -73,7 +73,9 @@ def create_application_configuration(
         else None
     )
     jobmanager_configuration = (
-        JobManagerConfiguration(url=state.charm_config.jobmanager_url, token=state.charm_config.jobmanager_token)
+        JobManagerConfiguration(
+            url=state.charm_config.jobmanager_url, token=state.charm_config.jobmanager_token
+        )
         if state.charm_config.jobmanager_url
         else None
     )

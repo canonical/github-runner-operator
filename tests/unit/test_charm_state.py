@@ -72,7 +72,7 @@ def test_github_config_from_charm_invalid_path():
         pytest.param(charm_state.JobManagerConfig, id="JobManagerConfig"),
     ],
 )
-def  test_github_jobmanager_config_from_charm_empty_path(config_cls):
+def test_github_jobmanager_config_from_charm_empty_path(config_cls):
     """
     arrange: Create an empty path configuration and prepare the config class to test.
     act: Call from_charm method with the mock CharmBase instance.
@@ -97,6 +97,7 @@ def test_github_config_from_charm_invalid_token():
     with pytest.raises(CharmConfigInvalidError):
         GithubConfig.from_charm(mock_charm)
 
+
 def test_jobmanager_config_from_charm_empty_token():
     """
     arrange:
@@ -109,6 +110,7 @@ def test_jobmanager_config_from_charm_empty_token():
 
     with pytest.raises(CharmConfigInvalidError):
         charm_state.JobManagerConfig.from_charm(mock_charm)
+
 
 def test_github_config_from_charm_url_path_returns_none():
     """
