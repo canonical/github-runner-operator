@@ -13,6 +13,8 @@ class InstanceIDInvalidError(Exception):
     """Raised when the InstanceID naming will break the provider of GitHub."""
 
 
+# 20250702 TODO: The InstanceID should be renamed InstanceName and additionally
+# have the platform information.
 @dataclass(eq=True, frozen=True, order=True)
 class InstanceID:
     """Main identifier for a runner instance among all clouds and GitHub.
@@ -168,6 +170,7 @@ class RunnerMetadata:
         url: URL for the runner.
     """
 
+    # 20250702 TODO: Supported platforms should be enumerated.
     platform_name: str = "github"
     runner_id: str | None = None
     url: str | None = None

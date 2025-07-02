@@ -104,6 +104,28 @@ class RunnerInstance:
         self.cloud_state = cloud_instance.state
 
 
+@dataclass
+class _DeleteRunnerConfig:
+    """Configuration for deleting runner.
+
+    This dataclass is a wrapper to allow parallel deletion of runners via subprocess pool calls.
+
+    Attributes:
+        instance_id: The cloud VM ID.
+        runner_id: The platform runner ID.
+        delete_busy: Whether to delete busy runners.
+    """
+
+    instance_id: InstanceID
+    # 2025/06/02 TODO: The platform should be encoded into a InstanceID.
+    platform: str | None
+    runner_id: str | None
+    delete_busy: bool
+
+    platform_service: PlatformProvider
+    cloud_service: CloudRunnerManager
+
+
 class RunnerManager:
     """Manage the runners.
 
@@ -317,42 +339,96 @@ class RunnerManager:
         If delete_busy_runners is False, when the platform provider fails in deleting the
         runner because it can be busy, will mean that that runner should not be deleted.
         """
-        extracted_runner_metrics = []
-        health_runners_map = {health.identity.instance_id: health for health in runners_health}
-        for cloud_runner in cloud_runners:
-            logging.info("Trying to delete cloud_runner %s", cloud_runner)
-            runner_health = health_runners_map.get(cloud_runner.instance_id)
-            if runner_health and runner_health.runner_in_platform:
+        runner_identity_map = {
+            health_info.identity.instance_id: health_info.identity
+            for health_info in runners_health
+        }
+        delete_runner_configs = [
+            _DeleteRunnerConfig(
+                instance_id=runner.instance_id,
+                platform=(
+                    runner_identity_map[runner.instance_id].metadata.platform_name
+                    if runner.instance_id in runner_identity_map
+                    else None
+                ),
+                runner_id=(
+                    runner_identity_map[runner.instance_id].metadata.runner_id
+                    if runner.instance_id in runner_identity_map
+                    else None
+                ),
+                delete_busy=delete_busy_runners,
+                platform_service=self._platform,
+                cloud_service=self._cloud,
+            )
+            for runner in cloud_runners
+        ]
+        extracted_runner_metrics: list[runner_metrics.RunnerMetrics] = []
+        with Pool(processes=min(len(cloud_runners), 30)) as pool:
+            jobs = pool.imap_unordered(
+                func=RunnerManager._delete_cloud_runner, iterable=delete_runner_configs
+            )
+            for _ in range(len(delete_runner_configs)):
                 try:
-                    self._platform.delete_runner(runner_health.identity)
-                except DeleteRunnerBusyError:
-                    if not delete_busy_runners:
-                        logger.warning(
-                            "Skipping deletion as the runner is busy. %s", cloud_runner.instance_id
-                        )
-                        continue
-                    logger.info("Deleting busy runner: %s", cloud_runner.instance_id)
-                except PlatformApiError as exc:
-                    if not delete_busy_runners:
-                        logger.warning(
-                            "Failed to delete platform runner %s. %s. Skipping.",
-                            cloud_runner.instance_id,
-                            exc,
-                        )
-                        continue
-                    logger.warning(
-                        "Deleting runner: %s after platform failure %s.",
-                        cloud_runner.instance_id,
-                        exc,
-                    )
+                    extracted_metrics = next(jobs)
+                except RunnerError:
+                    logger.exception("Failed to delete a runner.")
+                except StopIteration:
+                    break
 
-            logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
-            runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
-            if not runner_metric:
-                logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
-            else:
-                extracted_runner_metrics.append(runner_metric)
-        return extracted_runner_metrics
+                if extracted_metrics:
+                    extracted_runner_metrics.append(extracted_metrics)
+        return tuple(extracted_runner_metrics)
+
+    @staticmethod
+    def _delete_cloud_runner(
+        delete_runner_config: _DeleteRunnerConfig,
+    ) -> runner_metrics.RunnerMetrics | None:
+        logging.info("Deleting cloud runner: %s", delete_runner_config.runner_id)
+        if delete_runner_config.runner_id and delete_runner_config.platform:
+            logger.info(
+                "Deleting runner from platform: %s, %s",
+                delete_runner_config.platform,
+                delete_runner_config.runner_id,
+            )
+            try:
+                delete_runner_config.platform_service.delete_runner(
+                    runner_identity=RunnerIdentity(
+                        instance_id=delete_runner_config.instance_id,
+                        metadata=RunnerMetadata(
+                            platform_name=delete_runner_config.platform,
+                            runner_id=delete_runner_config.runner_id,
+                        ),
+                    )
+                )
+            except DeleteRunnerBusyError:
+                if not delete_runner_config.delete_busy:
+                    logger.info(
+                        "Skipped deletion of busy runner: %s", delete_runner_config.runner_id
+                    )
+                    return None
+                logger.info(
+                    "Busy runner scheduled for VM deletion: %s", delete_runner_config.runner_id
+                )
+            except PlatformApiError:
+                logger.exception(
+                    "Failed to delete runner in platform. Runner: %s, delete_busy: %s",
+                    delete_runner_config.runner_id,
+                    delete_runner_config.delete_busy,
+                )
+                return None
+            logger.info(
+                "Deleted runner from platform: %s, %s",
+                delete_runner_config.platform,
+                delete_runner_config.runner_id,
+            )
+        logger.info("Deleting cloud VM: %s", delete_runner_config.instance_id)
+        extracted_metrics = delete_runner_config.cloud_service.delete_runner(
+            instance_id=delete_runner_config.instance_id
+        )
+        logger.info("Deleted cloud VM: %s", delete_runner_config.instance_id)
+        if not extracted_metrics:
+            logger.warning("No metrics extracted from runner: %s", delete_runner_config.runner_id)
+        return extracted_metrics
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
         """Clean the specified runners in the platform."""
