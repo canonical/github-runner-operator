@@ -37,7 +37,7 @@ jobs:
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-cross-controller-private-endpoint:
-    name: Integration test using private-endpoint
+    name: Cross controller integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
