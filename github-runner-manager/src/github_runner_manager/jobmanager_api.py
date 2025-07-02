@@ -37,10 +37,9 @@ class Job(BaseModel):
         status: The status of the job.
     """
 
-    status: JobStatus
+    status: str
 
 
-# TODO: review possible values and use default fallback
 class RunnerStatus(str, Enum):
     """Status of a runner on the JobManager.
 
@@ -73,7 +72,7 @@ class RunnerHealth(BaseModel):
         deletable: Indicates if the runner can be deleted.
     """
 
-    status: RunnerStatus
+    status: str
     deletable: bool
 
 
