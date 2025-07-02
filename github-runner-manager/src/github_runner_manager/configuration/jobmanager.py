@@ -10,6 +10,7 @@ class JobManagerConfiguration(BaseModel):
 
     Attributes:
        url: Base url of the job manager API.
+      token: Token to authenticate with the job manager API.
     """
 
     url: HttpUrl

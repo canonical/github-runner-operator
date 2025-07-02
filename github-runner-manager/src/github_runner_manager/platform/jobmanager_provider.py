@@ -5,17 +5,13 @@
 
 import logging
 
-import jobmanager_client
-from jobmanager_client.rest import ApiException
 from pydantic import HttpUrl
-from pydantic.error_wrappers import ValidationError
-from urllib3.exceptions import RequestError
 
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.jobmanager_api import (
     JobManagerAPI,
-    JobManagerAPIException,
-    JobManagerAPINotFoundException,
+    JobManagerAPIError,
+    JobManagerAPINotFoundError,
     JobStatus,
     RunnerStatus,
 )
@@ -90,7 +86,7 @@ class JobManagerPlatform(PlatformProvider):
             response = self._jobmanager_api.get_runner_health(
                 int(runner_identity.metadata.runner_id)
             )
-        except JobManagerAPINotFoundException:
+        except JobManagerAPINotFoundError:
             # Pending to test with the real JobManager.
             # The last assumption is that the builder-agent did not contact
             # the JobManager and so it returns a 404.
@@ -100,7 +96,7 @@ class JobManagerPlatform(PlatformProvider):
                 deletable=False,
                 busy=False,
             )
-        except JobManagerAPIException as exc:
+        except JobManagerAPIError as exc:
             logger.exception(
                 "Error calling jobmanager api for runner %s. %s", runner_identity, exc
             )
@@ -181,7 +177,6 @@ class JobManagerPlatform(PlatformProvider):
             A tuple containing the runner context and the self-hosted runner.
         """
         try:
-
             response = self._jobmanager_api.register_runner(name=instance_id.name, labels=labels)
             updated_metadata = RunnerMetadata(platform_name=metadata.platform_name, url=self._url)
             updated_metadata.runner_id = str(response.id)
@@ -213,7 +208,7 @@ class JobManagerPlatform(PlatformProvider):
                     ),
                 )
             raise PlatformApiError("Empty token from jobmanager API")
-        except (ApiException, RequestError, ValidationError) as exc:
+        except JobManagerAPIError as exc:
             logger.exception("Error calling jobmanager api.")
             raise PlatformApiError("API error") from exc
 
@@ -231,8 +226,6 @@ class JobManagerPlatform(PlatformProvider):
         Returns:
             True if the job has been picked up, False otherwise.
         """
-        configuration = jobmanager_client.Configuration(host=self._url)
-
         # job_url has the path:
         # "/v1/jobs/<job_id>"
         job_path_prefix = "/v1/jobs/"
@@ -262,10 +255,9 @@ class JobManagerPlatform(PlatformProvider):
 
         try:
             job = self._jobmanager_api.get_job(job_id)
-            # the api returns a generic object, ignore the type for status
-            if job.status != JobStatus.PENDING:  # type: ignore
+            if job.status != JobStatus.PENDING:
                 return True
-        except JobManagerAPIException as exc:
+        except JobManagerAPIError as exc:
             logger.exception("Error calling jobmanager api to get job information.")
             raise PlatformApiError("API error") from exc
         return False

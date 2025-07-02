@@ -9,19 +9,13 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from jobmanager_client import (
-    RunnerHealthResponse,
-    RunnerRegisterResponse,
-)
-from jobmanager_client.models.job_read import JobRead
-from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import BaseModel, HttpUrl
 
 from github_runner_manager.jobmanager_api import (
     Job,
     JobManagerAPI,
-    JobManagerAPIException,
-    JobManagerAPINotFoundException,
+    JobManagerAPIError,
+    JobManagerAPINotFoundError,
     JobStatus,
     RunnerHealth,
     RunnerRegistration,
@@ -77,7 +71,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
             "Empty token",
             id="Empty token",
         ),
-        pytest.param(ApiException, "API error", id="Exception from api"),
+        pytest.param(JobManagerAPIError, "API error", id="Exception from api"),
     ],
 )
 def test_get_runner_context_fails(
@@ -128,7 +122,6 @@ def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_va
     act: call check_job_been_picked_up.
     assert: Depending on the state of the job, it will be picked or not accordingly.
     """
-
     jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
     jobmanager_api.get_job = MagicMock(side_effect=[api_return_value])
     platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
@@ -159,7 +152,7 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
     assert: The PlatformApiError exception is raised from the jobmanager provider.
     """
     jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
-    jobmanager_api.get_job = MagicMock(side_effect=JobManagerAPIException)
+    jobmanager_api.get_job = MagicMock(side_effect=JobManagerAPIError)
     platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
@@ -320,7 +313,7 @@ def test_get_runner_health(
                     status="IN_PROGRESS",
                     deletable=False,
                 ),
-                JobManagerAPIException,
+                JobManagerAPIError,
             ],
             RunnersHealthResponse(
                 requested_runners=[
@@ -361,7 +354,7 @@ def test_get_runner_health(
                     status="FAILED",
                     deletable=True,
                 ),
-                JobManagerAPINotFoundException,
+                JobManagerAPINotFoundError,
             ],
             RunnersHealthResponse(
                 requested_runners=[

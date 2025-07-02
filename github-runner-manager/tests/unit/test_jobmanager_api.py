@@ -10,7 +10,6 @@ from jobmanager_client import (
     JobRead,
     RunnerHealthResponse,
     RunnerRegisterResponse,
-    ValidationError,
 )
 from jobmanager_client.exceptions import ApiException, NotFoundException
 from urllib3.exceptions import RequestError
@@ -18,8 +17,8 @@ from urllib3.exceptions import RequestError
 from github_runner_manager.jobmanager_api import (
     Job,
     JobManagerAPI,
-    JobManagerAPIException,
-    JobManagerAPINotFoundException,
+    JobManagerAPIError,
+    JobManagerAPINotFoundError,
     JobStatus,
     RunnerHealth,
     RunnerRegistration,
@@ -64,7 +63,7 @@ def test_jobmanager_api_initialize(token, url):
 
 def test_jobmanager_close(jobmanager_api):
     """
-    arrange: Create a jobmanager api object
+    arrange: Create a jobmanager api object.
     act: Call the JobManagerAPI close method
     assert: The api_client's close method is called
     """
@@ -75,7 +74,7 @@ def test_jobmanager_close(jobmanager_api):
 
 def test_jobmanager_api_get_runner_health(jobmanager_api):
     """
-    arrange: Create a jobmanager api object and stub the get_runner_health_v1_runners_runner_id_health_get method.
+    arrange: Create a jobmanager api object and stub the api client method.
     act: Call get_runner_health method.
     assert: The method returns a RunnerHealth object.
     """
@@ -89,13 +88,13 @@ def test_jobmanager_api_get_runner_health(jobmanager_api):
             disk_usage="30%",
         ),
     )
-    response = jobmanager_api.get_runner_health(id=123)
+    response = jobmanager_api.get_runner_health(runner_id=123)
     assert RunnerHealth(status=RunnerStatus.IN_PROGRESS, deletable=True) == response
 
 
 def test_jobmanager_api_get_runner_health_not_found(jobmanager_api):
     """
-    arrange: Create a jobmanager api object and stub the get_runner_health_v1_runners_runner_id_health_get method to return a 404
+    arrange: Create a jobmanager api object and stub the api client method to return a 404.
     act: Call get_runner_health method.
     assert: The method returns a JobManagerNotFound exception
     """
@@ -103,21 +102,21 @@ def test_jobmanager_api_get_runner_health_not_found(jobmanager_api):
         side_effect=NotFoundException("Runner not found")
     )
 
-    with pytest.raises(JobManagerAPINotFoundException):
-        jobmanager_api.get_runner_health(id=123)
+    with pytest.raises(JobManagerAPINotFoundError):
+        jobmanager_api.get_runner_health(runner_id=123)
 
 
 @pytest.mark.parametrize(
     "exception",
     [
         pytest.param(ApiException(), id="ApiException"),
-        pytest.param(RequestError(None, None, None), id="RequestError"),
+        pytest.param(RequestError(MagicMock(), MagicMock(), MagicMock()), id="RequestError"),
         pytest.param(ValueError(), id="ValueError"),
     ],
 )
 def test_jobmanager_api_get_runner_health_error(jobmanager_api, exception):
     """
-    arrange: Create a jobmanager api object and stub the get_runner_health_v1_runners_runner_id_health_get method to raise an exception
+    arrange: Create a jobmanager api object and stub the api client method to raise an exception.
     act: Call get_runner_health method.
     assert: The method raises the exception
     """
@@ -125,13 +124,13 @@ def test_jobmanager_api_get_runner_health_error(jobmanager_api, exception):
         side_effect=exception
     )
 
-    with pytest.raises(JobManagerAPIException):
-        jobmanager_api.get_runner_health(id=123)
+    with pytest.raises(JobManagerAPIError):
+        jobmanager_api.get_runner_health(runner_id=123)
 
 
 def test_jobmanager_api_register_runner(jobmanager_api):
     """
-    arrange: Create a jobmanager api object and stub the register_runner_v1_runners_register_post method.
+    arrange: Create a jobmanager api object and stub the api client method.
     act: Call register_runner method.
     assert: The method returns a RunnerRegistration object.
     """
@@ -146,13 +145,13 @@ def test_jobmanager_api_register_runner(jobmanager_api):
     "exception",
     [
         pytest.param(ApiException(), id="ApiException"),
-        pytest.param(RequestError(None, None, None), id="RequestError"),
+        pytest.param(RequestError(MagicMock(), MagicMock(), MagicMock()), id="RequestError"),
         pytest.param(ValueError(), id="ValueError"),
     ],
 )
 def test_jobmanager_api_register_runner_error(jobmanager_api, exception):
     """
-    arrange: Create a jobmanager api object and stub the register_runner_v1_runners_register_post method to raise an exception
+    arrange: Create a jobmanager api object and stub the api client method to raise an exception.
     act: Call get_runner_health method.
     assert: The method raises the exception
     """
@@ -160,32 +159,40 @@ def test_jobmanager_api_register_runner_error(jobmanager_api, exception):
         side_effect=exception
     )
 
-    with pytest.raises(JobManagerAPIException):
+    with pytest.raises(JobManagerAPIError):
         jobmanager_api.register_runner(name="test-runner", labels=["label1", "label2"])
 
 
-def test_jobmanager_api_get_job(jobmanager_api):
+@pytest.mark.parametrize(
+    "status",
+    [
+        pytest.param(JobStatus.PENDING.value, id="PENDING"),
+        pytest.param(JobStatus.IN_PROGRESS.value, id="IN_PROGRESS"),
+        pytest.param(None, id="None"),
+    ],
+)
+def test_jobmanager_api_get_job(jobmanager_api, status):
     """
-    arrange: Create a jobmanager api object and stub the get_job_v1_jobs_job_id_get method.
+    arrange: Create a jobmanager api object and stub the api client method.
     act: Call get_runner_health method.
     assert: The method returns a Job object.
     """
     jobmanager_api._jobs_api.get_job_v1_jobs_job_id_get = MagicMock(
         return_value=JobRead(
-            status=JobStatus.IN_PROGRESS.value,
+            status=status,
             architecture="arm64",
             base_series="jammy",
             id=1,
             requested_by="foobar",
         )
     )
-    response = jobmanager_api.get_job(id=123)
-    assert Job(status=JobStatus.IN_PROGRESS) == response
+    response = jobmanager_api.get_job(job_id=123)
+    assert Job(status=status) == response
 
 
 def test_jobmanager_api_get_job_not_found(jobmanager_api):
     """
-    arrange: Create a jobmanager api object and stub the get_job_v1_jobs_job_id_get method to return a 404
+    arrange: Create a jobmanager api object and stub the api client method to return a 404.
     act: Call get_job method.
     assert: The method returns a JobManagerNotFound exception
     """
@@ -193,25 +200,25 @@ def test_jobmanager_api_get_job_not_found(jobmanager_api):
         side_effect=NotFoundException("Job not found")
     )
 
-    with pytest.raises(JobManagerAPINotFoundException):
-        jobmanager_api.get_job(id=123)
+    with pytest.raises(JobManagerAPINotFoundError):
+        jobmanager_api.get_job(job_id=123)
 
 
 @pytest.mark.parametrize(
     "exception",
     [
         pytest.param(ApiException(), id="ApiException"),
-        pytest.param(RequestError(None, None, None), id="RequestError"),
+        pytest.param(RequestError(MagicMock(), MagicMock(), MagicMock()), id="RequestError"),
         pytest.param(ValueError(), id="ValueError"),
     ],
 )
 def test_jobmanager_api_get_job_error(jobmanager_api, exception):
     """
-    arrange: Create a jobmanager api object and stub the get_job_v1_jobs_job_id_get method to raise an exception
+    arrange: Create a jobmanager api object and stub the api client method to raise an exception.
     act: Call get_job method.
     assert: The method raises the exception
     """
     jobmanager_api._jobs_api.get_job_v1_jobs_job_id_get = MagicMock(side_effect=exception)
 
-    with pytest.raises(JobManagerAPIException):
-        jobmanager_api.get_job(id=123)
+    with pytest.raises(JobManagerAPIError):
+        jobmanager_api.get_job(job_id=123)
