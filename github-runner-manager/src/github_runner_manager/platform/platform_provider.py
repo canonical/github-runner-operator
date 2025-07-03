@@ -81,6 +81,14 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+        """Delete runners.
+
+        Args:
+            runner_ids: Runner IDs to delete.
+        """
+
+    @abc.abstractmethod
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
     ) -> tuple[RunnerContext, SelfHostedRunner]:
