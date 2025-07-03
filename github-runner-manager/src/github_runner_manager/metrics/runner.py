@@ -6,10 +6,10 @@
 import io
 import json
 import logging
+import multiprocessing
 from dataclasses import dataclass
-from datetime import datetime
 from json import JSONDecodeError
-from typing import Optional, Type
+from typing import Optional, Sequence, Type
 
 import paramiko
 import paramiko.ssh_exception
@@ -18,7 +18,6 @@ from pydantic import ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
 from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
     PostJobMetrics,
     PreJobMetrics,
     RunnerMetrics,
@@ -31,6 +30,7 @@ from github_runner_manager.openstack_cloud.constants import (
     PRE_JOB_METRICS_FILE_NAME,
     RUNNER_INSTALLED_TS_FILE_NAME,
 )
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 
 logger = logging.getLogger(__name__)
 
@@ -41,45 +41,123 @@ class PullFileError(Exception):
     """Represents an error while pulling a file from the runner instance."""
 
 
-def pull_runner_metrics(instance_id: InstanceID, ssh_conn: SSHConnection) -> "PulledMetrics":
+@dataclass
+class _PullRunnerMetricsConfig:
+    """Configurations for pulling runner metrics from a VM.
+
+    Attributes:
+        cloud_service: The OpenStack cloud service.
+        instance_id: The instance ID to fetch the runner metric from.
+    """
+
+    cloud_service: OpenstackCloud
+    instance_id: InstanceID
+
+
+# 2025/07/03 TODO: This should really be a service class with OpenStack service injected. The
+# interface will accept the openstack_service and instance_id to reduce the scope of refactoring.
+def pull_runner_metrics(
+    cloud_service: OpenstackCloud, instance_ids: Sequence[InstanceID]
+) -> "list[PulledMetrics]":
     """Pull metrics from runner.
 
+    This function uses multiprocessing to fetch metrics in parallel.
+
     Args:
-        instance_id: The name of the runner.
-        ssh_conn: The SSH connection to the runner.
+        cloud_service: The OpenStack cloud service.
+        instance_ids: The instance IDs to fetch the metrics from.
 
     Returns:
         Metrics pulled from the instance.
     """
-    logger.debug("Pulling metrics for %s", instance_id)
-    pulled_metrics = PulledMetrics()
-
-    try:
-        pulled_metrics.runner_installed = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-        pulled_metrics.pre_job_metrics = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(PRE_JOB_METRICS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-        pulled_metrics.post_job_metrics = ssh_pull_file(
-            ssh_conn=ssh_conn,
-            remote_path=str(POST_JOB_METRICS_FILE_NAME),
-            max_size=MAX_METRICS_FILE_SIZE,
-        )
-    except PullFileError as exc:
-        logger.warning(
-            "Failed to pull metrics for %s: %s . Will not be able to issue all metrics",
-            instance_id,
-            exc,
-        )
+    if not instance_ids:
+        return []
+    pull_metrics_configs = [
+        _PullRunnerMetricsConfig(cloud_service=cloud_service, instance_id=instance_id)
+        for instance_id in instance_ids
+    ]
+    pulled_metrics: list[PulledMetrics] = []
+    with multiprocessing.Pool(min(len(instance_ids), 10)) as pool:
+        for metrics in pool.imap_unordered(_pull_runner_metrics, pull_metrics_configs):
+            if not metrics:
+                continue
+            pulled_metrics.append(metrics)
     return pulled_metrics
 
 
-def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
+def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetrics | None":
+    """Pull metrics from a single runner via SSH file pull.
+
+    Args:
+        pull_config: Configurations for pulling the runner metrics.
+
+    Returns:
+        PulledMetrics if metrics were available. None otherwise.
+    """
+    instance = pull_config.cloud_service.get_instance(instance_id=pull_config.instance_id)
+    if not instance:
+        logger.warning(
+            "Skipping fetching metrics, instance not found: %s", pull_config.instance_id
+        )
+        return None
+
+    pulled_metrics = PulledMetrics(instance=instance)
+    try:
+        with pull_config.cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
+            try:
+                pulled_metrics.runner_installed = _ssh_pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+            except PullFileError as exc:
+                logger.warning(
+                    "Failed to pull runner_installed metrics for %s: %s.",
+                    pull_config.instance_id,
+                    exc,
+                )
+            try:
+                pulled_metrics.pre_job_metrics = _ssh_pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(PRE_JOB_METRICS_FILE_NAME),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+            except PullFileError as exc:
+                logger.warning(
+                    "Failed to pull pre_job metrics for %s: %s.",
+                    pull_config.instance_id,
+                    exc,
+                )
+            try:
+                pulled_metrics.post_job_metrics = _ssh_pull_file(
+                    ssh_conn=ssh_conn,
+                    remote_path=str(POST_JOB_METRICS_FILE_NAME),
+                    max_size=MAX_METRICS_FILE_SIZE,
+                )
+            except PullFileError as exc:
+                logger.warning(
+                    "Failed to pull post_job metrics for %s: %s.",
+                    pull_config.instance_id,
+                    exc,
+                )
+    except SSHError:
+        logger.warning(
+            "Failed to create SSH connection for pulling metrics: %s", instance.instance_id
+        )
+        return None
+
+    return (
+        pulled_metrics
+        if (
+            pulled_metrics.runner_installed
+            or pulled_metrics.pre_job_metrics
+            or pulled_metrics.post_job_metrics
+        )
+        else None
+    )
+
+
+def _ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
     """Pull file from the runner instance.
 
     Args:
@@ -145,28 +223,24 @@ class PulledMetrics:
     """Metrics pulled from a runner.
 
     Attributes:
+        instance: The instance in which the metrics were pulled from.
         runner_installed: String with the runner-installed file.
         pre_job_metrics: String with the pre-job-metrics file.
         post_job_metrics: String with the post-job-metrics file.
     """
 
+    instance: OpenstackInstance
     runner_installed: str | None = None
     pre_job_metrics: str | None = None
     post_job_metrics: str | None = None
 
-    def to_runner_metrics(
-        self, instance: CloudRunnerInstance, installation_start: datetime
-    ) -> RunnerMetrics | None:
-        """.
-
-        Args:
-           instance: Cloud runner instance.
-           installation_start: Creation time of the runner.
+    def to_runner_metrics(self) -> RunnerMetrics | None:
+        """Convert PulledMetrics to RunnerMetrics instance.
 
         Returns:
            The RunnerMetrics object for the runner or None if it can not be built.
         """
-        instance_id = instance.instance_id
+        instance_id = self.instance.instance_id
         if self.runner_installed is None:
             logger.error(
                 "Invalid pulled metrics. No runner_installed information for %s.", instance_id
@@ -203,7 +277,7 @@ class PulledMetrics:
 
         try:
             return RunnerMetrics(
-                installation_start_timestamp=installation_start.timestamp(),
+                installation_start_timestamp=self.instance.created_at.timestamp(),
                 installed_timestamp=float(self.runner_installed),
                 pre_job=(  # pylint: disable=not-a-mapping
                     PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
@@ -212,11 +286,14 @@ class PulledMetrics:
                     PostJobMetrics(**post_job_metrics) if post_job_metrics else None
                 ),
                 instance_id=instance_id,
-                metadata=instance.metadata,
+                metadata=self.instance.metadata,
             )
         except ValueError:
             logger.exception(
-                "Error creating RunnerMetrics %s, %s, %s", instance_id, installation_start, self
+                "Error creating RunnerMetrics %s, %s, %s",
+                instance_id,
+                self.instance.created_at,
+                self,
             )
             return None
 

@@ -142,15 +142,22 @@ class JobManagerPlatform(PlatformProvider):
             failed_requested_runners=failed_runners,
         )
 
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+    def delete_runners(self, runner_ids: list[str], platform: str = "jobmanager") -> list[str]:
         """Delete a runner from jobmanager.
 
         This method does nothing, as the jobmanager does not implement it.
 
         Args:
-            runner_identity: The identity of the runner to delete.
+            runner_ids: The runner IDs to delete.
+            platform: TODO: Unused argument due to the poor architecture of the provider
+                classes. The multiplexer provider should be a wrapper around the platforms, not on
+                the same level.
+
+        Returns:
+            The runner IDs requested for deletion.
         """
         logger.debug("No need to delete runners in the jobmanager.")
+        return runner_ids
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

@@ -80,7 +80,11 @@ select = ["E", "W", "F", "C", "N", "R", "D", "H"]
 # Ignore D107 Missing docstring in __init__
 ignore = ["W503", "D107", "E203"]
 # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
-per-file-ignores = ["tests/*:D100,D101,D102,D103,D104,D205,D212"]
+per-file-ignores = [
+    # Ignore no return values (DCO031) in docstring for abstract methods
+    "src/github_runner_manager/manager/cloud_runner_manager.py:DCO031",
+    "tests/*:D100,D101,D102,D103,D104,D205,D212"
+]
 docstring-convention = "google"
 # Check for properly formatted copyright header in each file
 copyright-check = "True"

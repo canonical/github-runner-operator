@@ -8,10 +8,7 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager.configuration import (
-    ApplicationConfiguration,
-    UserInfo,
-)
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,

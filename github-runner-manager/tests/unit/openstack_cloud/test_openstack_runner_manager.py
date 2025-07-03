@@ -3,20 +3,11 @@
 
 """Module for unit-testing OpenStack runner manager."""
 import logging
-from datetime import datetime, timezone
-from typing import Iterable
 from unittest.mock import MagicMock
 
 import pytest
 
 from github_runner_manager.configuration import ProxyConfig, SupportServiceConfig, UserInfo
-from github_runner_manager.manager.cloud_runner_manager import (
-    CodeInformation,
-    PostJobMetrics,
-    PostJobStatus,
-    PreJobMetrics,
-    RunnerMetrics,
-)
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -24,19 +15,12 @@ from github_runner_manager.manager.models import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics import runner
-from github_runner_manager.metrics.runner import PullFileError
-from github_runner_manager.openstack_cloud import openstack_cloud
-from github_runner_manager.openstack_cloud.constants import (
-    POST_JOB_METRICS_FILE_NAME,
-    PRE_JOB_METRICS_FILE_NAME,
-    RUNNER_INSTALLED_TS_FILE_NAME,
-)
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
+    runner_metrics,
 )
-from tests.unit.factories import openstack_factory
 
 logger = logging.getLogger(__name__)
 
@@ -134,158 +118,31 @@ def test_create_runner_without_aproxy(
     assert "aproxy" not in openstack_cloud.launch_instance.call_args.kwargs["cloud_init"]
 
 
-def _params_test_delete_extract_metrics():
-    """Builds parametrized input for the test_delete_extract_metrics.
-
-    The following values are returned:
-    runner_installed_metrics,pre_job_metrics,post_job_metrics,result
+def test_delete_vms(runner_manager: OpenStackRunnerManager):
     """
-    openstack_created_at = (
-        datetime.strptime(openstack_factory.SERVER_CREATED_AT, "%Y-%m-%dT%H:%M:%SZ")
-        .replace(tzinfo=timezone.utc)
-        .timestamp()
-    )
-    openstack_installed_at = openstack_created_at + 20
-    pre_job_timestamp = openstack_installed_at + 20
-    post_job_timestamp = openstack_installed_at + 20
-    pre_job_metrics_str = f"""{{
-    "timestamp": {pre_job_timestamp},
-    "workflow": "Workflow Dispatch Tests",
-    "workflow_run_id": "13831611664",
-    "repository": "canonical/github-runner-operator",
-    "event": "workflow_dispatch"
-    }}"""
-    post_job_metrics_str = f"""{{
-    "timestamp": {post_job_timestamp}, "status": "normal", "status_info": {{"code" : "200"}}
-    }}"""
-
-    return [
-        pytest.param(None, None, None, None, id="All None. No metrics returned."),
-        pytest.param(
-            "", None, None, None, id="Invalid runner-installed metrics. No metrics returned."
-        ),
-        pytest.param(
-            str(openstack_installed_at),
-            None,
-            None,
-            RunnerMetrics(
-                instance_id=InstanceID(
-                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                ),
-                installation_start_timestamp=openstack_created_at,
-                installed_timestamp=openstack_installed_at,
-                metadata=RunnerMetadata(),
-            ),
-            id="Only installed_timestamp. Metric returned.",
-        ),
-        pytest.param(
-            str(openstack_installed_at),
-            pre_job_metrics_str,
-            None,
-            RunnerMetrics(
-                instance_id=InstanceID(
-                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                ),
-                installation_start_timestamp=openstack_created_at,
-                installed_timestamp=openstack_installed_at,
-                pre_job=PreJobMetrics(
-                    timestamp=pre_job_timestamp,
-                    workflow="Workflow Dispatch Tests",
-                    workflow_run_id="13831611664",
-                    repository="canonical/github-runner-operator",
-                    event="workflow_dispatch",
-                ),
-                metadata=RunnerMetadata(),
-            ),
-            id="installed_timestamp and pre_job_metrics. Metric returned.",
-        ),
-        pytest.param(
-            str(openstack_installed_at),
-            pre_job_metrics_str,
-            post_job_metrics_str,
-            RunnerMetrics(
-                metadata=RunnerMetadata(),
-                instance_id=InstanceID(
-                    prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-                ),
-                installation_start_timestamp=openstack_created_at,
-                installed_timestamp=openstack_installed_at,
-                pre_job=PreJobMetrics(
-                    timestamp=pre_job_timestamp,
-                    workflow="Workflow Dispatch Tests",
-                    workflow_run_id="13831611664",
-                    repository="canonical/github-runner-operator",
-                    event="workflow_dispatch",
-                ),
-                post_job=PostJobMetrics(
-                    timestamp=post_job_timestamp,
-                    status=PostJobStatus.NORMAL,
-                    status_info=CodeInformation(code=200),
-                ),
-            ),
-            id="installed_timestamp, pre_job_metrics and post_job_metrics. Metric returned",
-        ),
-    ]
-
-
-@pytest.mark.parametrize(
-    "runner_installed_metrics,pre_job_metrics,post_job_metrics,result",
-    _params_test_delete_extract_metrics(),
-)
-def test_delete_extract_metrics(
-    runner_manager: OpenStackRunnerManager,
-    runner_installed_metrics: str | None,
-    pre_job_metrics: str | None,
-    post_job_metrics: str | None,
-    result: Iterable[RunnerMetrics],
-    monkeypatch: pytest.MonkeyPatch,
-):
+    arrange: given a mocked cloud service.
+    act: when delete_vms method is called.
+    assert: the mocked service call is made and the deleted instance IDs are returned.
     """
-    arrange: Given different values for values of metrics for a runner.
-    act: Delete the runner for those metrics.
-    assert: The expected RunnerMetrics object is obtained, or None if there should not be one.
+    test_instance_ids = [InstanceID(prefix="test-prefix", reactive=None, suffix="test-suffix")]
+    mock_cloud = MagicMock()
+    mock_cloud.delete_instances = MagicMock(return_value=test_instance_ids)
+    runner_manager._openstack_cloud = mock_cloud
+
+    assert test_instance_ids == runner_manager.delete_vms(instance_ids=test_instance_ids)
+    mock_cloud.delete_instances.assert_called_once()
+
+
+def test_extract_metrics(runner_manager: OpenStackRunnerManager, monkeypatch: pytest.MonkeyPatch):
     """
-    ssh_pull_file_mock = MagicMock()
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.runner.ssh_pull_file",
-        ssh_pull_file_mock,
+    arrange: given a mocked metrics service.
+    act: when extract_metrics method is called.
+    assert: converted metrics are returned.
+    """
+    pull_metrics_mock = MagicMock(
+        return_value=[(test_metric_one := MagicMock()), (test_metric_two := MagicMock())]
     )
+    monkeypatch.setattr(runner_metrics, "pull_runner_metrics", pull_metrics_mock)
 
-    def _ssh_pull_file(remote_path, *args, **kwargs):
-        """Get a file from the runner."""
-        logger.info("ssh_pull_file: remote_path %s", remote_path)
-        res = None
-        if remote_path == str(PRE_JOB_METRICS_FILE_NAME):
-            res = pre_job_metrics
-        elif remote_path == str(POST_JOB_METRICS_FILE_NAME):
-            res = post_job_metrics
-        elif remote_path == str(RUNNER_INSTALLED_TS_FILE_NAME):
-            res = runner_installed_metrics
-        if res is None:
-            raise PullFileError("Nothing found or invalid file.")
-        return res
-
-    ssh_pull_file_mock.side_effect = _ssh_pull_file
-
-    instance_id = InstanceID(
-        prefix=OPENSTACK_INSTANCE_PREFIX, reactive=False, suffix="unhealthy"
-    ).name
-    openstack_cloud_mock = _create_openstack_cloud_mock(instance_id)
-    runner_manager._openstack_cloud = openstack_cloud_mock
-
-    runner_metrics = runner_manager.delete_runner(instance_id)
-
-    assert runner_metrics == result
-
-
-def _create_openstack_cloud_mock(instance_name: str) -> MagicMock:
-    """Create an OpenstackCloud mock which returns servers with a given list of server names."""
-    openstack_cloud_mock = MagicMock(spec=OpenstackCloud)
-    openstack_cloud_mock.get_instance.return_value = openstack_cloud.OpenstackInstance(
-        server=openstack_factory.ServerFactory(
-            status="ACTIVE",
-            name=instance_name,
-        ),
-        prefix=OPENSTACK_INSTANCE_PREFIX,
-    )
-    return openstack_cloud_mock
+    metrics = runner_manager.extract_metrics(instance_ids=MagicMock())
+    assert metrics == [test_metric_one.to_runner_metrics(), test_metric_two.to_runner_metrics()]
