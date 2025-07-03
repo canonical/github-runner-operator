@@ -51,6 +51,7 @@ options:
     default: "10.0.0.0/8, 171.16.0.0/12, 192.168.0.0/16"
     description: >-
       A comma-separated list of IP addresses that should be excluded from redirection to aproxy.
+      127.0.0.0/8 are always excluded so you can omit if from the configuration.
   aproxy-redirect-ports:
     type: string
     default: "80, 443"

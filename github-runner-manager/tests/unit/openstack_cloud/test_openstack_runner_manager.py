@@ -112,9 +112,7 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           set exclude {
               type ipv4_addr;
               flags interval; auto-merge;
-
-              elements = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
-
+              elements = { 127.0.0.0/8, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;
@@ -139,7 +137,7 @@ def runner_metrics_mock_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
           set exclude {
               type ipv4_addr;
               flags interval; auto-merge;
-
+              elements = { 127.0.0.0/8,  }
           }
           chain prerouting {
                   type nat hook prerouting priority dstnat; policy accept;

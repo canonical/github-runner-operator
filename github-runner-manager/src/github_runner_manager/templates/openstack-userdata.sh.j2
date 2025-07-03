@@ -21,9 +21,7 @@ table ip aproxy {
       set exclude {
           type ipv4_addr;
           flags interval; auto-merge;
-{% if aproxy_exclude_ipv4_addresses %}
-          elements = { {{ aproxy_exclude_ipv4_addresses }} }
-{% endif %}
+          elements = { 127.0.0.0/8, {{ aproxy_exclude_ipv4_addresses }} }
       }
       chain prerouting {
               type nat hook prerouting priority dstnat; policy accept;
