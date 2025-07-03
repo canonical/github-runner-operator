@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  jammy-test:
-    runs-on: [self-hosted, jammy, large]
+  stg-test:
+    runs-on: [self-hosted, stg-private-endpoint]
     steps:
       - run: lscpu
       - run: df -h
