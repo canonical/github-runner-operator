@@ -275,14 +275,6 @@ class CloudRunnerManager(abc.ABC):
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID) -> RunnerMetrics | None:
-        """Delete self-hosted runner.
-
-        Args:
-            instance_id: The instance id of the runner to delete.
-        """
-
-    @abc.abstractmethod
     def delete_vms(self, instance_ids: Sequence[InstanceID]) -> list[InstanceID]:
         """Delete cloud VM instances.
 

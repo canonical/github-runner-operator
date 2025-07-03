@@ -60,7 +60,6 @@ class GitHubRunnerPlatform(PlatformProvider):
             path: GitHub path.
             github_client: GitHub client.
         """
-
         self._prefix = prefix
         self._path = path
         self._client = github_client
@@ -165,25 +164,16 @@ class GitHubRunnerPlatform(PlatformProvider):
             non_requested_runners=non_requested_runners,
         )
 
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a runner from GitHub.
-
-        This method will raise DeleteRunnerBusyError if the runner is not deletable, that is,
-        if it is busy. If the runner does not exist it will not fail.
-
-        Args:
-            runner_identity: Identity of the runner to delete.
-        """
-        logger.info("Delete runner in GitHub: %s", runner_identity)
-        self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
-
-    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+    def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
         """Delete runners from GitHub.
 
         This method will ignore DeleteRunnerBusyErrors and print a warning log.
 
         Args:
             runner_ids: The GitHub runner IDs to delete.
+            platform: TODO: Unused argument due to the poor architecture of the provider
+                classes. The multiplexer provider should be a wrapper around the platforms, not on
+                the same level.
 
         Returns:
             The runner IDs that were deleted successfully.
@@ -224,6 +214,9 @@ class GitHubRunnerPlatform(PlatformProvider):
                 path=delete_runner_config.path, runner_id=int(delete_runner_config.runner_id)
             )
         except DeleteRunnerBusyError:
+            logger.warning(
+                "Delete runner attempt failed, busy runner: %s", delete_runner_config.runner_id
+            )
             return None
         return delete_runner_config.runner_id
 

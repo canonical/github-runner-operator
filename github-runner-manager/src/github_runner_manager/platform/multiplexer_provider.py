@@ -140,12 +140,23 @@ class MultiplexerPlatform(PlatformProvider):
         return response
 
     def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a  runner.
+        """Delete a runner.
 
         Args:
             runner_identity: Runner to delete.
         """
         self._get_provider(runner_identity.metadata).delete_runner(runner_identity)
+
+    def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
+        """Delete runners from a provider.
+
+        Args:
+            runner_ids: The runner IDs to delete.
+
+        Returns:
+            List of deleted runner IDs.
+        """
+        return self._providers[platform].delete_runners(runner_ids)
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]

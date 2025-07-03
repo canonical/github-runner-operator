@@ -369,13 +369,15 @@ class RunnerManager:
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
         """Clean the specified runners in the platform."""
-        for runner in runners:
-            try:
-                self._platform.delete_runner(runner)
-            except DeleteRunnerBusyError:
-                logger.warning("Tried to delete busy runner in cleanup %s", runner)
-            except PlatformApiError:
-                logger.warning("Failed to delete platform runner %s", runner)
+        if not runners:
+            return
+
+        runner_ids_to_delete = [
+            runner.metadata.runner_id for runner in runners if runner.metadata.runner_id
+        ]
+        self._platform.delete_runners(
+            runner_ids=runner_ids_to_delete, platform=runners[0].metadata.platform_name
+        )
 
     @staticmethod
     def _spawn_runners(
