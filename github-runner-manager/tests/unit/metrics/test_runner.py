@@ -41,31 +41,6 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
-    """Create a RunnerMetrics object that is suitable for most tests.
-
-    Args:
-        instance_id: The test runner name.
-
-    Returns:
-        Test metrics data.
-    """
-    return RunnerMetrics(
-        installation_start_timestamp=1,
-        installed_timestamp=2,
-        pre_job=PreJobMetrics(
-            timestamp=3,
-            workflow="workflow1",
-            workflow_run_id="workflow_run_id1",
-            repository="org1/repository1",
-            event="push",
-        ),
-        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
-        instance_id=instance_id,
-        metadata=RunnerMetadata(),
-    )
-
-
 def test_issue_events(issue_event_mock: MagicMock):
     """
     arrange: A runner with all metrics.
@@ -123,6 +98,31 @@ def test_issue_events(issue_event_mock: MagicMock):
                 )
             ),
         ]
+    )
+
+
+def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
+    """Create a RunnerMetrics object that is suitable for most tests.
+
+    Args:
+        instance_id: The test runner name.
+
+    Returns:
+        Test metrics data.
+    """
+    return RunnerMetrics(
+        installation_start_timestamp=1,
+        installed_timestamp=2,
+        pre_job=PreJobMetrics(
+            timestamp=3,
+            workflow="workflow1",
+            workflow_run_id="workflow_run_id1",
+            repository="org1/repository1",
+            event="push",
+        ),
+        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
+        instance_id=instance_id,
+        metadata=RunnerMetadata(),
     )
 
 
