@@ -16,7 +16,6 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     OpenStackError,
     RunnerCreateError,
-    SSHError,
 )
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
@@ -174,62 +173,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             state=CloudRunnerState.from_openstack_server_status(instance.status),
             created_at=instance.created_at,
         )
-
-    def delete_runner(self, instance_id: InstanceID) -> runner_metrics.RunnerMetrics | None:
-        """Delete self-hosted runners.
-
-        Args:
-            instance_id: The instance id of the runner to delete.
-
-        Returns:
-            Any metrics collected during the deletion of the runner.
-        """
-        logger.debug("Delete instance %s", instance_id)
-        instance = self._openstack_cloud.get_instance(instance_id)
-        if instance is None:
-            logger.warning(
-                "Unable to delete instance %s as it is not found",
-                instance_id,
-            )
-            return None
-
-        pulled_metrics = self._delete_runner(instance)
-        logger.debug(
-            "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
-        )
-        logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
-        logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        return pulled_metrics.to_runner_metrics()
-
-    def _delete_runner(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
-        """Delete self-hosted runners by openstack instance.
-
-        Args:
-            instance: The OpenStack instance.
-        """
-        try:
-            pulled_metrics = runner_metrics.pull_runner_metrics(
-                cloud_service=self._openstack_cloud, instance_ids=[instance.instance_id]
-            )
-        except SSHError:
-            logger.exception(
-                "Failed to get SSH connection while removing %s", instance.instance_id
-            )
-            logger.warning(
-                "Skipping runner remove script for %s due to SSH issues", instance.instance_id
-            )
-
-        try:
-            self._openstack_cloud.delete_instance(instance.instance_id)
-        except OpenStackError:
-            logger.exception(
-                "Unable to delete openstack instance for runner %s", instance.instance_id
-            )
-        # 2025/07/03 TODO: This is done to keep the previous implementation which instantiates
-        # PulledMetrics and then assigns it. It is weird but it was what it was.
-        if not pulled_metrics:
-            return runner_metrics.PulledMetrics(instance=instance)
-        return pulled_metrics[0]
 
     def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.

@@ -348,17 +348,16 @@ class OpenstackCloud:
     def _delete_instance(delete_config: _DeleteVMConfig) -> InstanceID | None:
         """Delete a openstack instance.
 
-        Raises:
-            OpenStackError: Unable to delete OpenStack server.
-
         Args:
-            conn: The openstack connection to use.
-            instance_id: The full name of the server.
+            delete_config: The configuration used to delete a cloud VM instance.
+
+        Returns:
+            The deleted Instance ID.
         """
         try:
             logger.info("Deleting server %s", delete_config.instance_id.name)
             res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
-            logger.info("Deleted server %s: %s", delete_config.instance_id.name, res)
+            logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
         except (
             openstack.exceptions.SDKException,
             openstack.exceptions.ResourceTimeout,
@@ -397,6 +396,7 @@ class OpenstackCloud:
         if not instance_ids:
             return deleted_instance_ids
 
+        print(multiprocessing.Pool)
         with (
             _get_openstack_connection(credentials=self._credentials) as conn,
             multiprocessing.Pool(min(len(instance_ids), 30)) as pool,
@@ -717,7 +717,9 @@ class OpenstackCloud:
                 return None
         except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
             logger.warning(
-                "Failed to delete key: %s", delete_keypair_config.instance_id.name, stack_info=True
+                "Error attempting to delete key: %s",
+                delete_keypair_config.instance_id.name,
+                stack_info=True,
             )
             return None
 
