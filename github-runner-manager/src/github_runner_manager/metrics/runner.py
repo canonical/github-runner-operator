@@ -64,7 +64,8 @@ def pull_runner_metrics(
     This function uses multiprocessing to fetch metrics in parallel.
 
     Args:
-        ssh_conn: The SSH connection to the runner.
+        cloud_service: The OpenStack cloud service.
+        instance_ids: The instance IDs to fetch the metrics from.
 
     Returns:
         Metrics pulled from the instance.
@@ -88,7 +89,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
     """Pull metrics from a single runner via SSH file pull.
 
     Args:
-        pull_runner_metrics_config: Configurations for pulling the runner metrics.
+        pull_config: Configurations for pulling the runner metrics.
 
     Returns:
         PulledMetrics if metrics were available. None otherwise.
@@ -104,7 +105,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
     try:
         with pull_config.cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
             try:
-                pulled_metrics.runner_installed = ssh_pull_file(
+                pulled_metrics.runner_installed = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -116,7 +117,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
                     exc,
                 )
             try:
-                pulled_metrics.pre_job_metrics = ssh_pull_file(
+                pulled_metrics.pre_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(PRE_JOB_METRICS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -128,7 +129,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
                     exc,
                 )
             try:
-                pulled_metrics.post_job_metrics = ssh_pull_file(
+                pulled_metrics.post_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(POST_JOB_METRICS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -156,7 +157,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
     )
 
 
-def ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
+def _ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> str:
     """Pull file from the runner instance.
 
     Args:
@@ -222,7 +223,7 @@ class PulledMetrics:
     """Metrics pulled from a runner.
 
     Attributes:
-        instance_id: The instance in which the metrics were pulled from.
+        instance: The instance in which the metrics were pulled from.
         runner_installed: String with the runner-installed file.
         pre_job_metrics: String with the pre-job-metrics file.
         post_job_metrics: String with the post-job-metrics file.
@@ -234,10 +235,7 @@ class PulledMetrics:
     post_job_metrics: str | None = None
 
     def to_runner_metrics(self) -> RunnerMetrics | None:
-        """.
-
-        Args:
-           instance: Cloud runner instance.
+        """Convert PulledMetrics to RunnerMetrics instance.
 
         Returns:
            The RunnerMetrics object for the runner or None if it can not be built.

@@ -56,21 +56,6 @@ def openstack_cloud_fixture(monkeypatch):
     return OpenstackCloud(creds, FAKE_PREFIX, FAKE_ARG)
 
 
-@pytest.fixture(name="patch_multiprocess_pool", scope="function")
-def patch_multiprocess_pool_fixture(monkeypatch: pytest.MonkeyPatch):
-    """Patch multiprocessing pool call to call the function directly."""
-
-    def call_direct(func_var, params):
-        for param in params:
-            yield func_var(param)
-
-    pool_mock = MagicMock()
-    pool_mock.return_value = pool_mock
-    pool_mock.__enter__ = pool_mock
-    pool_mock.imap_unordered = call_direct
-    monkeypatch.setattr("multiprocessing.pool.Pool", pool_mock)
-
-
 @pytest.fixture(name="mock_openstack_conn", scope="function")
 def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
     """Patch OpenStack connection."""
@@ -385,7 +370,7 @@ def test__delete_keypair_error(
     assert f"Error attempting to delete key: {test_key_instance_id.name}" in caplog.messages
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool")
+@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_delete_instances_partial_server_delete_failure(
     openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
 ):
@@ -411,7 +396,7 @@ def test_delete_instances_partial_server_delete_failure(
     assert f"Failed to delete OpenStack VM instance: {timeout_id}" in caplog.messages
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool")
+@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_delete_instances(
     openstack_cloud: OpenstackCloud,
     mock_openstack_conn: MagicMock,
