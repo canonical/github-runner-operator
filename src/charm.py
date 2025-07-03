@@ -321,7 +321,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         flush_runners = False
-        if state.charm_config.token != self._stored.token:
+        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:

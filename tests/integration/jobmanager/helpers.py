@@ -69,16 +69,18 @@ async def _assert_runners(app: Application, online: int, busy: int, offline: int
 class GetRunnerHealthEndpoint:
     """Class modelling the runner health endpoint."""
 
-    def __init__(self, httpserver: HTTPServer, runner_health_path: str):
+    def __init__(self, httpserver: HTTPServer, runner_health_path: str, jobmanager_token: str):
         """Initialize the GetRunnerHealthEndpoint.
 
         Args:
             httpserver: The HTTP server to use for the endpoint.
             runner_health_path: The path for the runner health endpoint.
+            jobmanager_token: The token for the jobmanager for authentication.
         """
         self.httpserver = httpserver
         self.runner_health_path = runner_health_path
         self._handler: RequestHandler | None = None
+        self._jobmanager_token = jobmanager_token
 
     def set(self, status="PENDING", deletable=False):
         """Set the runner health endpoint.
@@ -99,14 +101,16 @@ class GetRunnerHealthEndpoint:
         )
         if not self._handler:
             self._handler = self.httpserver.expect_request(
-                uri=self.runner_health_path, method="GET"
+                uri=self.runner_health_path,
+                method="GET",
+                headers={"Authorization": f"Bearer {self._jobmanager_token}"},
             )
         self._handler.respond_with_json(health_response.to_dict())
         logger.info("handler health %s", self._handler)
 
 
 async def wait_for_runner_to_be_registered(
-    httpserver: HTTPServer, runner_id: int, runner_token: str
+    httpserver: HTTPServer, runner_id: int, runner_token: str, jobmanager_token: str
 ):
     """Wait for the runner to be registered in the jobmanager.
 
@@ -114,10 +118,17 @@ async def wait_for_runner_to_be_registered(
         httpserver: The HTTP server to use for the request.
         runner_id: The ID of the runner.
         runner_token: The token of the runner.
+        jobmanager_token: The token for authentication with the jobmanager.
     """
     runner_register = "/v1/runners/register"
     returned_token = RunnerRegisterResponse(id=runner_id, token=runner_token)
-    httpserver.expect_oneshot_request(runner_register).respond_with_json(returned_token.to_dict())
+    httpserver.expect_oneshot_request(
+        uri=runner_register,
+        method="POST",
+        headers={
+            "Authorization": f"Bearer {jobmanager_token}",
+        },
+    ).respond_with_json(returned_token.to_dict())
     with httpserver.wait(raise_assertions=False, stop_on_nohandler=False, timeout=30) as waiting:
         logger.info("Waiting for runner to be registered.")
     logger.info("server log: %s ", (httpserver.log))

@@ -37,6 +37,7 @@ async def test_jobmanager(
     httpserver: HTTPServer,
     jobmanager_base_url: str,
     jobmanager_ip_address: str,
+    jobmanager_token: str,
 ):
     """
     This is a full test for the happy path of the jobmanager.
@@ -84,10 +85,12 @@ async def test_jobmanager(
     )
 
     #  2. The github-runner manager will register a runner on the jobmanager.
-    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token)
+    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token, jobmanager_token)
 
     # 3. The jobmanager will return a health response with "PENDING" status and not deletable.
-    runner_health_endpoint = GetRunnerHealthEndpoint(httpserver, runner_health_path)
+    runner_health_endpoint = GetRunnerHealthEndpoint(
+        httpserver, runner_health_path, jobmanager_token
+    )
     runner_health_endpoint.set(status="PENDING", deletable=False)
 
     # 4.  A tunnel will be prepared in the test so the reactive runner can get to the jobmanager.
