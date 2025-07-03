@@ -6,13 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  stg-test:
-    runs-on: [self-hosted, stg-private-endpoint]
+  network-speed-test-stg:
+    name: Network speed test AMD64
+    runs-on: [self-hosted, stg-private-endpoint, X64]
     steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - name: tmate ssh
-        uses: canonical/action-tmate@main
+      - name: Librespeed test
+        run: |
+          wget https://github.com/librespeed/speedtest-cli/releases/download/v1.0.10/librespeed-cli_1.0.10_linux_amd64.tar.gz
+          tar -xvzf librespeed-cli_1.0.10_linux_amd64.tar.gz
+          ./librespeed-cli
+  network-speed-test-edge:
+    name: Network speed test AMD64
+    runs-on: [self-hosted, edge, X64]
+    steps:
+      - name: Librespeed test
+        run: |
+          wget https://github.com/librespeed/speedtest-cli/releases/download/v1.0.10/librespeed-cli_1.0.10_linux_amd64.tar.gz
+          tar -xvzf librespeed-cli_1.0.10_linux_amd64.tar.gz
+          ./librespeed-cli
