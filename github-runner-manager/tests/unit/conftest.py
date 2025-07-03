@@ -23,6 +23,15 @@ def patch_multiprocess_pool_imap_unordered_fixture(monkeypatch: pytest.MonkeyPat
     """Patch multiprocessing pool call to call the function directly."""
 
     def call_direct(func_var, params):
+        """Function to replace imap_unordered with, by calling functions directly.
+
+        Args:
+            func_var: The function to call in imap_unordered call.
+            params: The iterable parameters for target function.
+
+        Yields:
+            The function return value.
+        """
         for param in params:
             yield func_var(param)
 

@@ -139,19 +139,12 @@ class MultiplexerPlatform(PlatformProvider):
             response.append(provider_health_response)
         return response
 
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a runner.
-
-        Args:
-            runner_identity: Runner to delete.
-        """
-        self._get_provider(runner_identity.metadata).delete_runner(runner_identity)
-
     def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
         """Delete runners from a provider.
 
         Args:
             runner_ids: The runner IDs to delete.
+            platform: The platform in which the runners belong to.
 
         Returns:
             List of deleted runner IDs.

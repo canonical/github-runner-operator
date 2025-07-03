@@ -26,7 +26,6 @@ from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (
-    DeleteRunnerBusyError,
     PlatformApiError,
     PlatformProvider,
     PlatformRunnerHealth,

@@ -328,7 +328,7 @@ def test__delete_keypair_fail(
     openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
 ):
     """
-    arrange: given a mocked openstack delete_keypair method that returns False
+    arrange: given a mocked openstack delete_keypair method that returns False.
     act: when _delete_keypair method is called.
     assert: None is returned and the failure is logged.
     """
@@ -350,7 +350,7 @@ def test__delete_keypair_error(
     openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
 ):
     """
-    arrange: given a mocked openstack delete_keypair method that returns False
+    arrange: given a mocked openstack delete_keypair method that returns False.
     act: when _delete_keypair method is called.
     assert: None is returned and the failure is logged.
     """

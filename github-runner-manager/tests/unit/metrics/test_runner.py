@@ -55,7 +55,7 @@ def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     assert: no metrics are pulled and errors are logged.
     """
     test_instances = []
-    get_instance_side_effects = []
+    get_instance_side_effects: list[None | Exception] = []
     get_ssh_connection_side_effects = []
     # Setup for instance not exists
     test_instances.append(
