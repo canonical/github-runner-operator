@@ -283,5 +283,31 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
+    def delete_vms(self, instance_ids: Sequence[InstanceID]) -> list[InstanceID]:
+        """Delete cloud VM instances.
+
+        Args:
+            instance_ids: The ID of the VMs to request deletion.
+
+        Returns:
+            The deleted instance IDs.
+        """
+
+    @abc.abstractmethod
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
+        """Extract metrics from cloud VMs.
+
+        2025/07/03 TODO: This method should really live in another metrics extractor class (that
+        doesn't exist yet). Hence, this method is subject to refactor when the caller classes are
+        tidied up.
+
+        Args:
+            instance_ids: The VM instance IDs to fetch the metrics from.
+
+        Returns:
+            The fetched runner metrics.
+        """
+
+    @abc.abstractmethod
     def cleanup(self) -> None:
         """Cleanup runner dangling resources on the cloud."""
