@@ -22,12 +22,9 @@ from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
+    RunnerMetrics,
 )
-from github_runner_manager.manager.models import (
-    InstanceID,
-    RunnerContext,
-    RunnerIdentity,
-)
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
@@ -202,8 +199,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         )
         logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
         logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        cloud_instance = self._build_cloud_runner_instance(instance)
-        return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
+        return pulled_metrics.to_runner_metrics()
 
     def _delete_runner(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
         """Delete self-hosted runners by openstack instance.
@@ -211,10 +207,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Args:
             instance: The OpenStack instance.
         """
-        pulled_metrics = runner_metrics.PulledMetrics()
         try:
-            with self._openstack_cloud.get_ssh_connection(instance) as ssh_conn:
-                pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
+            pulled_metrics = runner_metrics.pull_runner_metrics(
+                cloud_service=self._openstack_cloud, instance_ids=[instance.instance_id]
+            )
         except SSHError:
             logger.exception(
                 "Failed to get SSH connection while removing %s", instance.instance_id
@@ -229,7 +225,11 @@ class OpenStackRunnerManager(CloudRunnerManager):
             logger.exception(
                 "Unable to delete openstack instance for runner %s", instance.instance_id
             )
-        return pulled_metrics
+        # 2025/07/03 TODO: This is done to keep the previous implementation which instantiates
+        # PulledMetrics and then assigns it. It is weird but it was what it was.
+        if not pulled_metrics:
+            return runner_metrics.PulledMetrics(instance=instance)
+        return pulled_metrics[0]
 
     def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.
@@ -308,3 +308,37 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 service_config.repo_policy_compliance.token,
             )
         return None
+
+    def delete_vms(
+        self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
+    ) -> list[InstanceID]:
+        """Delete VMs.
+
+        Args:
+            instance_ids: The ID of the VMs to request deletion.
+            wait: Whether to wait for the delete to be complete.
+            timeout: Timeout in seconds to wait for the deletion to complete.
+
+        Returns:
+            The instance IDs requested for deletion.
+        """
+        return self._openstack_cloud.delete_instances(
+            instance_ids=instance_ids, wait=wait, timeout=timeout
+        )
+
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
+        """Extract metrics from cloud VMs.
+
+        Args:
+            instance_ids: The ID of the VMs to fetch metrics from.
+
+        Returns:
+            Metrics from VMs.
+        """
+        return [
+            converted_metrics
+            for pulled_metrics in runner_metrics.pull_runner_metrics(
+                cloud_service=self._openstack_cloud, instance_ids=instance_ids
+            )
+            if (converted_metrics := pulled_metrics.to_runner_metrics())
+        ]
