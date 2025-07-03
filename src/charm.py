@@ -561,7 +561,6 @@ def _setup_runner_manager_user() -> None:
             group=constants.RUNNER_MANAGER_GROUP,
         )
 
-
 def _disable_legacy_service() -> None:
     """Disable any legacy service."""
     logger.info("Attempting to stop legacy services")
