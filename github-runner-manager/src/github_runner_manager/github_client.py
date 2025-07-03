@@ -23,11 +23,7 @@ from ghapi.page import paged
 from requests import RequestException
 from typing_extensions import assert_never
 
-from github_runner_manager.configuration.github import (
-    GitHubOrg,
-    GitHubPath,
-    GitHubRepo,
-)
+from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
