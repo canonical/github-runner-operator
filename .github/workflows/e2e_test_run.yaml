@@ -22,7 +22,7 @@ on:
 jobs:
   e2e-test:
     name: End-to-End Test Run
-    runs-on: [self-hosted, linux, "${{ inputs.runner-tag }}"]
+    runs-on: [ self-hosted, linux, "${{ inputs.runner-tag }}" ]
     steps:
       - name: Hostname is set to "github-runner"
         run: sudo hostnamectl hostname | grep github-runner
@@ -47,6 +47,14 @@ jobs:
         run: |
           [[ -z "${http_proxy}" && -z "${HTTP_PROXY}" ]] \
             || cat /home/ubuntu/.docker/config.json | grep httpProxy
+      - name: test network connectivity
+        run: |
+          timeout 60 curl --noproxy "*" http://example.com -svS -o /dev/null
+          timeout 60 curl --noproxy "*" https://example.com -svS -o /dev/null
+      - name: test aproxy logs
+        run: |
+          sudo snap logs aproxy.aproxy | grep -Fq "example.com:80"
+          sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
       - name: Wait for microk8s
@@ -87,3 +95,9 @@ jobs:
       # ~/.local/bin is added to path runner env through in scripts/env.j2
       - name: test check-jsonschema
         run: check-jsonschema --version
+      - name: show aproxy logs
+        if: always()
+        run: |
+          sudo snap get aproxy
+          sudo snap logs aproxy.aproxy -n=all
+          sudo nft list ruleset
