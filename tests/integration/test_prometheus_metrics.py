@@ -182,6 +182,8 @@ def test_prometheus_metrics(
         "expected_runners_count",
         "cleaned_runners_total",
     )
+    # for demo
+    assert False
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=2, max=60), reraise=True)
