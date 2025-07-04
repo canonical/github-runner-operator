@@ -175,6 +175,7 @@ def _get_openstack_connection(credentials: OpenStackCredentials) -> Iterator[Ope
         region_name=credentials.region_name,
         user_domain_name=credentials.user_domain_name,
         project_domain_name=credentials.project_domain_name,
+        compute_api_version='2.95'
     ) as conn:
         conn.authorize()
         yield conn
