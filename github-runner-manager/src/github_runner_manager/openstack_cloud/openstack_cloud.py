@@ -39,6 +39,7 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
+_MAX_NOVA_COMPUTE_API_VERSION = "2.95"  # due to https://bugs.launchpad.net/nova/+bug/2095364
 
 SecurityRuleDict = dict[str, Any]
 
@@ -153,33 +154,6 @@ def _catch_openstack_errors(func: Callable[P, T]) -> Callable[P, T]:
     return exception_handling_wrapper
 
 
-@contextmanager
-def _get_openstack_connection(credentials: OpenStackCredentials) -> Iterator[OpenstackConnection]:
-    """Create a connection context managed object, to be used within with statements.
-
-    Using the context manager ensures that the connection is properly closed after use.
-
-    Args:
-        credentials: The OpenStack authorization information.
-
-    Yields:
-        An openstack.connection.Connection object.
-    """
-    # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
-    # I could not reproduce it. Therefore, no catch here for such exception.
-    with openstack.connect(
-        auth_url=credentials.auth_url,
-        project_name=credentials.project_name,
-        username=credentials.username,
-        password=credentials.password,
-        region_name=credentials.region_name,
-        user_domain_name=credentials.user_domain_name,
-        project_domain_name=credentials.project_domain_name,
-    ) as conn:
-        conn.authorize()
-        yield conn
-
-
 class OpenstackCloud:
     """Client to interact with OpenStack cloud.
 
@@ -237,7 +211,7 @@ class OpenstackCloud:
         instance_id = runner_identity.instance_id
         metadata = runner_identity.metadata
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
             keypair = self._setup_keypair(conn, runner_identity.instance_id)
             meta = metadata.as_dict()
@@ -283,7 +257,7 @@ class OpenstackCloud:
         """
         logger.info("Getting openstack server with %s", instance_id)
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
             if server is not None:
                 return OpenstackInstance(server, self.prefix)
@@ -298,7 +272,7 @@ class OpenstackCloud:
         """
         logger.info("Deleting openstack server with %s", instance_id)
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             self._delete_instance(conn, instance_id)
 
     def _delete_instance(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
@@ -400,7 +374,7 @@ class OpenstackCloud:
         """
         logger.info("Getting all openstack servers managed by the charm")
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             instance_list = list(self._get_openstack_instances(conn))
             server_names = set(server.name for server in instance_list)
 
@@ -417,7 +391,7 @@ class OpenstackCloud:
     @_catch_openstack_errors
     def cleanup(self) -> None:
         """Cleanup unused key files and openstack keypairs."""
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             instances = self._get_openstack_instances(conn)
             exclude_keyfiles_set = {
                 self._get_key_path(InstanceID.build_from_name(self.prefix, server.name))
@@ -649,6 +623,83 @@ class OpenstackCloud:
                 security_group.id,
             )
         return security_group
+
+    @contextmanager
+    def _get_openstack_connection(self) -> Iterator[OpenstackConnection]:
+        """Create a connection context managed object, to be used within with statements.
+
+        Using the context manager ensures that the connection is properly closed after use.
+
+        Yields:
+            An openstack.connection.Connection object.
+        """
+        # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
+        # I could not reproduce it. Therefore, no catch here for such exception.
+
+        with openstack.connect(
+            auth_url=self._credentials.auth_url,
+            project_name=self._credentials.project_name,
+            username=self._credentials.username,
+            password=self._credentials.password,
+            region_name=self._credentials.region_name,
+            user_domain_name=self._credentials.user_domain_name,
+            project_domain_name=self._credentials.project_domain_name,
+            compute_api_version=self._max_compute_api_version,
+        ) as conn:
+            conn.authorize()
+            yield conn
+
+    @functools.cached_property
+    def _max_compute_api_version(self) -> str:
+        """Determine the maximum compute API version supported by the OpenStack cloud and client.
+
+        The sdk does not support versions greater than 2.95, so we need to ensure that the
+        maximum version returned by the OpenStack cloud is not greater than that.
+        https://bugs.launchpad.net/nova/+bug/2095364
+        """
+        max_version = self._determine_max_compute_api_version()
+        if self._version_greater_than(max_version, _MAX_NOVA_COMPUTE_API_VERSION):
+            logger.warning(
+                "The maximum compute API version %s is greater than the supported version %s. "
+                "Using the maximum supported version.",
+                max_version,
+                _MAX_NOVA_COMPUTE_API_VERSION,
+            )
+            return _MAX_NOVA_COMPUTE_API_VERSION
+        return max_version
+
+    def _determine_max_compute_api_version(self) -> str:
+        """Get the maximum compute API version supported by the OpenStack cloud.
+
+        Returns:
+            The maximum compute API version as a string.
+        """
+        with openstack.connect(
+            auth_url=self._credentials.auth_url,
+            project_name=self._credentials.project_name,
+            username=self._credentials.username,
+            password=self._credentials.password,
+            region_name=self._credentials.region_name,
+            user_domain_name=self._credentials.user_domain_name,
+            project_domain_name=self._credentials.project_domain_name,
+        ) as conn:
+            version_endpoint = conn.compute.get_endpoint()
+            resp = conn.session.get(version_endpoint)
+            return resp.json()["version"]["version"]
+
+    def _version_greater_than(self, version1: str, version2: str) -> bool:
+        """Compare two OpenStack API versions.
+
+        Args:
+            version1: The first version to compare.
+            version2: The second version to compare.
+
+        Returns:
+            True if version1 is greater than version2, False otherwise.
+        """
+        return tuple(int(x) for x in version1.split(".")) > tuple(
+            int(x) for x in version2.split(".")
+        )
 
 
 def get_missing_security_rules(
