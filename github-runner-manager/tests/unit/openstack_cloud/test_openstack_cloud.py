@@ -308,11 +308,17 @@ def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
 @pytest.mark.parametrize(
     "max_compute_api_version, expected_version",
     [
-        pytest.param("2.110", _MAX_NOVA_COMPUTE_API_VERSION, id="Max version 2.110"),
-        pytest.param("2.96", _MAX_NOVA_COMPUTE_API_VERSION, id="Max version 2.96"),
-        pytest.param("2.95", _MAX_NOVA_COMPUTE_API_VERSION, id="Max version 2.95"),
-        pytest.param("2.94", "2.94", id="Max version 2.94"),
-        pytest.param("2.1", "2.1", id="Max version 2.1"),
+        pytest.param(
+            "2.110",
+            _MAX_NOVA_COMPUTE_API_VERSION,
+            id="higher version but string is lexically smaller",
+        ),
+        pytest.param(
+            "2.92", _MAX_NOVA_COMPUTE_API_VERSION, id="one higher version than supported"
+        ),
+        pytest.param("2.91", _MAX_NOVA_COMPUTE_API_VERSION, id="highest supported version"),
+        pytest.param("2.90", "2.90", id="one version lower than supported"),
+        pytest.param("2.1", "2.1", id="really low version"),
     ],
 )
 def test_get_openstack_connection_sets_max_compute_api(

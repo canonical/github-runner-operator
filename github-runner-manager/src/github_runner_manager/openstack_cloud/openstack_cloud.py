@@ -39,7 +39,11 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
-_MAX_NOVA_COMPUTE_API_VERSION = "2.95"  # due to https://bugs.launchpad.net/nova/+bug/2095364
+# Max nova compute we support is 2.91, because
+# - 2.96 has a bug with server list  https://bugs.launchpad.net/nova/+bug/2095364
+# - 2.92 requires public key to be set in the keypair, which is not supported by the app
+#        https://docs.openstack.org/api-ref/compute/#import-or-create-keypair
+_MAX_NOVA_COMPUTE_API_VERSION = "2.91"  # due to
 
 SecurityRuleDict = dict[str, Any]
 
