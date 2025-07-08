@@ -37,13 +37,26 @@ options:
     default: false
     description: >-
       (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy)
-      will be installed within the runners. It will forward all HTTP(S) traffic to standard ports
-      (80, 443, 11371) to a proxy server configured by the juju model config 'juju-http-proxy'
+      will be installed within the runners. It will forward TCP traffic matching the 'aproxy-exclude-addresses'
+      and 'aproxy-redirect-ports' settings to a proxy server configured by the Juju model config 'juju-http-proxy'
       (or, if this is not set, 'juju-https-proxy' will be used).
       This is useful when the charm is deployed in a network that requires a proxy to access the
       internet.
-      Note that you should not specify a proxy server listening on port 80 or 443, as all traffic
-      to these ports is relayed to aproxy, which would cause an infinite loop.
+      Note that you should carefully choose values for the 'aproxy-exclude-addresses' and
+      'aproxy-redirect-ports' so that the network traffic from the runner to the HTTP proxy is not 
+      captured by aproxy. The simplest way to achieve this is to add the IP address of the HTTP proxy 
+      to 'aproxy-exclude-addresses' or exclude the HTTP proxy port from 'aproxy-redirect-ports'.
+  aproxy-exclude-addresses:
+    type: string
+    default: "10.0.0.0/8, 171.16.0.0/12, 192.168.0.0/16"
+    description: >-
+      A comma-separated list of IP addresses that should be excluded from redirection to aproxy.
+      127.0.0.0/8 are always excluded so you can omit if from the configuration.
+  aproxy-redirect-ports:
+    type: string
+    default: "80, 443"
+    description: >-
+      A comma-separated list of ports or port ranges that should be redirected to aproxy.
   group:
     type: string
     default: "default"
