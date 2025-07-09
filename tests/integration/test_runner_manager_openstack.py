@@ -297,6 +297,7 @@ def check_runners_amount_and_active(runner_manager: RunnerManager, num: int) -> 
         Whether the expected number of runner is spawned and active.
     """
     runners = runner_manager.get_runners()
+    logger.info("Checking for active runners amount. Runners: %s, expected num: %s", runners, num)
     active_runners = [
         runner for runner in runners if runner.cloud_state == CloudRunnerState.ACTIVE
     ]
