@@ -12,18 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  openstack-interface-tests-runner-manager-private-endpoint:
-    name: openstack interface test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.6/stable
-      provider: lxd
-      test-tox-env: integration-juju3.6
-      modules: '["test_runner_manager_openstack"]'
-      extra-arguments: '--log-format="%(asctime)s %(levelname)s %(message)s"'
-      self-hosted-runner: true
-      self-hosted-runner-label: stg-private-endpoint
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
@@ -52,7 +40,6 @@ jobs:
   allure-report:
     if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
     needs:
-      - openstack-interface-tests-runner-manager-private-endpoint
       - openstack-integration-tests-private-endpoint
       - openstack-integration-tests-cross-controller-private-endpoint
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
