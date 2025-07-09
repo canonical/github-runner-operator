@@ -19,6 +19,7 @@ from openstack.network.v2.security_group_rule import SecurityGroupRule
 
 from github_runner_manager.errors import OpenStackError, SSHError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
+    _MAX_NOVA_COMPUTE_API_VERSION,
     _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
     _TEST_STRING,
     DEFAULT_SECURITY_RULES,
@@ -302,3 +303,92 @@ def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
             pass
 
     assert "No connectable SSH addresses found" in str(err.value)
+
+
+@pytest.mark.parametrize(
+    "max_compute_api_version, expected_version",
+    [
+        pytest.param(
+            "2.110",
+            _MAX_NOVA_COMPUTE_API_VERSION,
+            id="higher version but string is lexically smaller",
+        ),
+        pytest.param(
+            "2.92", _MAX_NOVA_COMPUTE_API_VERSION, id="one higher version than supported"
+        ),
+        pytest.param("2.91", _MAX_NOVA_COMPUTE_API_VERSION, id="highest supported version"),
+        pytest.param("2.90", "2.90", id="one version lower than supported"),
+        pytest.param("2.1", "2.1", id="really low version"),
+    ],
+)
+def test_get_openstack_connection_sets_max_compute_api(
+    openstack_cloud,
+    monkeypatch: pytest.MonkeyPatch,
+    max_compute_api_version: str,
+    expected_version: str,
+):
+    """
+    arrange: Setup get_compute_api to return different max versions.
+    act: Get OpenStack connection using context manager
+    assert: The max compute API version is set to be < 2.95.
+    """
+    monkeypatch.setattr(
+        openstack_cloud,
+        "_determine_max_compute_api_version_by_cloud",
+        MagicMock(return_value=max_compute_api_version),
+    )
+    openstack_connect_mock = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
+        openstack_connect_mock,
+    )
+
+    with openstack_cloud._get_openstack_connection():
+        pass
+
+    assert openstack_connect_mock.call_args[1]["compute_api_version"] == expected_version
+
+
+def test_determine_max_api_version(
+    openstack_cloud: OpenstackCloud, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Mock the OpenStack connection to return a specific max API version.
+    act: Call _determine_max_compute_api_version.
+    assert: The returned version is as expected.
+    """
+    mock_connection = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
+        MagicMock(return_value=mock_connection),
+    )
+    mock_connection.__enter__.return_value = mock_connection
+
+    endpoint_resp_json = {
+        "version": {
+            "id": "v2.1",
+            "status": "CURRENT",
+            "version": "2.96",
+            "min_version": "2.1",
+            "updated": "2013-07-23T11:33:21Z",
+            "links": [
+                {"rel": "self", "href": "http://172.16.1.204/openstack-nova/v2.1/"},
+                {"rel": "describedby", "type": "text/html", "href": "http://docs.openstack.org/"},
+            ],
+            "media-types": [
+                {
+                    "base": "application/json",
+                    "type": "application/vnd.openstack.compute+json;version=2.1",
+                }
+            ],
+        }
+    }
+    endpoint_resp = MagicMock()
+    endpoint_resp.json.return_value = endpoint_resp_json
+
+    session_mock = MagicMock()
+    mock_connection.session = session_mock
+    session_mock.get = MagicMock(return_value=endpoint_resp)
+
+    max_version = openstack_cloud._determine_max_compute_api_version_by_cloud()
+    assert max_version == "2.96"
