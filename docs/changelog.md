@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-07-09
+
+- Specify max supported nova compute api to be 2.91. This fixes an issue where the charm could fail
+ due to a bug on the OpenStack side: https://bugs.launchpad.net/nova/+bug/2095364
+
 ### 2025-06-30
 - New configuration options aproxy-exclude-addresses and aproxy-redirect-ports for allowing aproxy to redirect arbitrary TCP traffic
 - Added prometheus metrics to the GitHub runner manager application.

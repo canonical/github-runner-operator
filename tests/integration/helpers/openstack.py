@@ -141,10 +141,10 @@ class OpenStackInstanceHelper:
         Args:
             app: The GitHub Runner Charm app to create the runner for.
         """
-        await OpenStackInstanceHelper._set_app_runner_amount(app, 1)
+        await OpenStackInstanceHelper.set_app_runner_amount(app, 1)
 
     @staticmethod
-    async def _set_app_runner_amount(app: Application, num_runners: int) -> None:
+    async def set_app_runner_amount(app: Application, num_runners: int) -> None:
         """Reconcile the application to a runner amount.
 
         Args:
