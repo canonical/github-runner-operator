@@ -87,9 +87,6 @@ class JobManagerPlatform(PlatformProvider):
                 int(runner_identity.metadata.runner_id)
             )
         except JobManagerAPINotFoundError:
-            # Pending to test with the real JobManager.
-            # The last assumption is that the builder-agent did not contact
-            # the JobManager and so it returns a 404.
             return PlatformRunnerHealth(
                 identity=runner_identity,
                 online=False,
