@@ -9,6 +9,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ### 2025-06-30
 - New configuration options aproxy-exclude-addresses and aproxy-redirect-ports for allowing aproxy to redirect arbitrary TCP traffic
+- Added prometheus metrics to the GitHub runner manager application.
 
 ## 2025-06-26
 
