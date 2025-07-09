@@ -23,6 +23,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerIdentity, Run
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
+from github_runner_manager.metrics.reconcile import CLEANED_RUNNERS_TOTAL
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (
@@ -348,6 +349,7 @@ class RunnerManager:
 
             logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
             runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
+            CLEANED_RUNNERS_TOTAL.labels(self.manager_name).inc(1)
             if not runner_metric:
                 logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
             else:
