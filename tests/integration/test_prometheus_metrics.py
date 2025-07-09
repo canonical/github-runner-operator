@@ -180,7 +180,8 @@ def test_prometheus_metrics(
         "openstack_http_requests_total",
         "reconcile_duration_seconds_sum",
         "expected_runners_count",
-        "cleaned_runners_total",
+        "busy_runners_count",
+        "idle_runners_count",
     )
 
 
