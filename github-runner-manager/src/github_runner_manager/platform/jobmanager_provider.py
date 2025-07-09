@@ -102,7 +102,7 @@ class JobManagerPlatform(PlatformProvider):
             )
             raise PlatformApiError("API error") from exc
 
-        online = response.status not in [RunnerStatus.PENDING]
+        online = response.status != RunnerStatus.PENDING
         # busy is complex in the jobmanager, as a completed job that is not deletable is really
         # busy. As so, every job that is not deletable is considered busy.
         busy = not response.deletable
