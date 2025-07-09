@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-07-09
+
+- Specify max supported nova compute api to be 2.91. This fixes an issue where the charm could fail
+ due to a bug on the OpenStack side: https://bugs.launchpad.net/nova/+bug/2095364
+
 ## 2025-06-26
 
 - Fix a process leak internal to the charm.
