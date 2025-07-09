@@ -39,7 +39,6 @@ CHARM_STATE_PATH = Path("charm_state.json")
 
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
-# bandit thinks this is a hardcoded password
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
 GROUP_CONFIG_NAME = "group"
 LABELS_CONFIG_NAME = "labels"
@@ -105,7 +104,6 @@ class GithubConfig:
         if not path_str:
             raise CharmConfigInvalidError(f"Missing {PATH_CONFIG_NAME} configuration")
 
-        # check if path_str is an url using pydantic
         if path_str.startswith("http://") or path_str.startswith("https://"):
             logger.info(
                 "Detected URL in %s configuration, will use experimental jobmanager mode",

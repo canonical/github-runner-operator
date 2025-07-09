@@ -102,11 +102,6 @@ class JobManagerPlatform(PlatformProvider):
             )
             raise PlatformApiError("API error") from exc
 
-        # Valid values for status are: PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED
-        # We should review the jobmanager for any change in their statuses.
-        # Any other state besides PENDING means that no more waiting should be done
-        # for the runner, so it is equivalent to online, although the jobmanager does
-        # not provide an exact match with "online".
         online = response.status not in [RunnerStatus.PENDING]
         # busy is complex in the jobmanager, as a completed job that is not deletable is really
         # busy. As so, every job that is not deletable is considered busy.
