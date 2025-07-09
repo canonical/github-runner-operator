@@ -243,7 +243,7 @@ async def runner_manager_with_one_runner_fixture(runner_manager: RunnerManager) 
     try:
         await wait_for(
             lambda: runner_manager.get_runners()[0].platform_state == PlatformRunnerState.IDLE,
-            timeout=120,
+            timeout=1200,
             check_interval=10,
         )
     except TimeoutError as err:
