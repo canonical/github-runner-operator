@@ -334,7 +334,7 @@ def test_get_openstack_connection_sets_max_compute_api(
     """
     monkeypatch.setattr(
         openstack_cloud,
-        "_determine_max_compute_api_version",
+        "_determine_max_compute_api_version_by_cloud",
         MagicMock(return_value=max_compute_api_version),
     )
     openstack_connect_mock = MagicMock()
@@ -390,5 +390,5 @@ def test_determine_max_api_version(
     mock_connection.session = session_mock
     session_mock.get = MagicMock(return_value=endpoint_resp)
 
-    max_version = openstack_cloud._determine_max_compute_api_version()
+    max_version = openstack_cloud._determine_max_compute_api_version_by_cloud()
     assert max_version == "2.96"

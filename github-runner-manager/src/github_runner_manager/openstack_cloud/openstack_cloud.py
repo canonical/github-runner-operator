@@ -43,7 +43,7 @@ _TEST_STRING = "test_string"
 # - 2.96 has a bug with server list  https://bugs.launchpad.net/nova/+bug/2095364
 # - 2.92 requires public key to be set in the keypair, which is not supported by the app
 #        https://docs.openstack.org/api-ref/compute/#import-or-create-keypair
-_MAX_NOVA_COMPUTE_API_VERSION = "2.91"  # due to
+_MAX_NOVA_COMPUTE_API_VERSION = "2.91"
 
 SecurityRuleDict = dict[str, Any]
 
@@ -655,13 +655,16 @@ class OpenstackCloud:
 
     @functools.cached_property
     def _max_compute_api_version(self) -> str:
-        """Determine the maximum compute API version supported by the OpenStack cloud and client.
+        """Determine the maximum compute API version supported by the client.
 
         The sdk does not support versions greater than 2.95, so we need to ensure that the
         maximum version returned by the OpenStack cloud is not greater than that.
         https://bugs.launchpad.net/nova/+bug/2095364
+
+        Returns:
+            The maximum compute API version to use for the client.
         """
-        max_version = self._determine_max_compute_api_version()
+        max_version = self._determine_max_compute_api_version_by_cloud()
         if self._version_greater_than(max_version, _MAX_NOVA_COMPUTE_API_VERSION):
             logger.warning(
                 "The maximum compute API version %s is greater than the supported version %s. "
@@ -672,8 +675,8 @@ class OpenstackCloud:
             return _MAX_NOVA_COMPUTE_API_VERSION
         return max_version
 
-    def _determine_max_compute_api_version(self) -> str:
-        """Get the maximum compute API version supported by the OpenStack cloud.
+    def _determine_max_compute_api_version_by_cloud(self) -> str:
+        """Determine the maximum compute API version supported by the OpenStack cloud.
 
         Returns:
             The maximum compute API version as a string.
