@@ -31,7 +31,6 @@ from github_runner_manager.platform.platform_provider import (
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     SelfHostedRunner,
-    SelfHostedRunnerLabel,
 )
 
 logger = logging.getLogger(__name__)
@@ -195,7 +194,7 @@ class JobManagerPlatform(PlatformProvider):
                         ),
                         busy=False,
                         id=int(updated_metadata.runner_id),
-                        labels=[SelfHostedRunnerLabel(name=label) for label in labels],
+                        labels=labels,
                         status=GitHubRunnerStatus.OFFLINE,
                     ),
                 )

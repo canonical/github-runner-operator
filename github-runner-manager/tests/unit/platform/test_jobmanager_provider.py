@@ -27,7 +27,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
+from github_runner_manager.types_.github import GitHubRunnerStatus
 
 TEST_JOB_MANAGER_TOKEN = "token"
 
@@ -57,7 +57,7 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     context, runner = platform.get_runner_context(metadata, instance_id, labels)
 
     assert "builder-agent" in context.shell_run_script
-    assert runner.labels == [SelfHostedRunnerLabel(name="label")]
+    assert runner.labels == ["label"]
     assert runner.identity.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE
     assert not runner.busy
