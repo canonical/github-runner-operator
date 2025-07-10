@@ -23,6 +23,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerIdentity, Run
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
+from github_runner_manager.metrics.reconcile import CLEANED_RUNNERS_TOTAL
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (

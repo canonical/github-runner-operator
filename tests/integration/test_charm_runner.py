@@ -47,13 +47,13 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
     act: Run check_runner action.
     assert: Action returns result with one runner.
     """
-    await instance_helper.ensure_charm_has_runner(app)
+    await instance_helper.set_app_runner_amount(app, 2)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["online"] == "1"
+    assert action.results["online"] == "2"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
 
@@ -68,17 +68,15 @@ async def test_flush_runner_and_resource_config(
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
-    arrange: A working application with one runner.
+    arrange: A working application with two runners.
     act:
-        1. Run Check_runner action. Record the runner name for later.
-        2. Nothing.
-        3. Change the virtual machine resource configuration.
-        4. Run flush_runner action.
-        5. Dispatch a workflow to make runner busy and call flush_runner action.
+        1. Run Check_runner action. Record the runner names for later.
+        2. Flush runners.
+        3. Dispatch a workflow to make runner busy and call flush_runner action.
 
     assert:
-        1. One runner exists.
-        2. Check the resource matches the configuration.
+        1. Two runner exists.
+        2. Runners are recreated.
         3. The runner is not flushed since by default it flushes idle.
 
     Test are combined to reduce number of runner spawned.

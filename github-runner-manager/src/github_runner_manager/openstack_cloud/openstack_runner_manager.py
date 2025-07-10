@@ -225,15 +225,24 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
-        aproxy_address = (
-            service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
-        )
+        use_aproxy = service_config.use_aproxy
+        if not service_config.runner_proxy_config.proxy_address:
+            use_aproxy = False
+        aproxy_redirect_ports = service_config.aproxy_redirect_ports
+        if not aproxy_redirect_ports:
+            use_aproxy = False
+        aproxy_exclude_ipv4_addresses = [
+            address for address in service_config.aproxy_exclude_addresses if ":" not in address
+        ]
         return jinja.get_template("openstack-userdata.sh.j2").render(
             run_script=runner_context.shell_run_script,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
-            aproxy_address=aproxy_address,
+            use_aproxy=use_aproxy,
+            aproxy_address=service_config.runner_proxy_config.proxy_address,
+            aproxy_exclude_ipv4_addresses=", ".join(aproxy_exclude_ipv4_addresses),
+            aproxy_redirect_ports=", ".join(aproxy_redirect_ports),
             dockerhub_mirror=service_config.dockerhub_mirror,
             ssh_debug_info=ssh_debug_info,
             runner_proxy_config=service_config.runner_proxy_config,

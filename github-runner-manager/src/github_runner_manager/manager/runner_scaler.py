@@ -25,6 +25,12 @@ from github_runner_manager.manager.runner_manager import (
     RunnerMetadata,
 )
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics.reconcile import (
+    BUSY_RUNNERS_COUNT,
+    EXPECTED_RUNNERS_COUNT,
+    IDLE_RUNNERS_COUNT,
+    RECONCILE_DURATION_SECONDS,
+)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
@@ -213,6 +219,8 @@ class RunnerScaler:
         self._platform_name = platform_name
         self._python_path = python_path
 
+        EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
+
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
 
@@ -318,7 +326,10 @@ class RunnerScaler:
                 flavor=self._manager.manager_name,
                 expected_runner_quantity=expected_runner_quantity,
             )
-            _issue_reconciliation_metric(reconcile_metric_data)
+            RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
+                end_timestamp - start_timestamp
+            )
+            _issue_reconciliation_metric(reconcile_metric_data, self._manager.manager_name)
 
         logger.info("Finished reconciliation.")
 
@@ -400,12 +411,13 @@ class RunnerScaler:
 
 
 def _issue_reconciliation_metric(
-    reconcile_metric_data: _ReconcileMetricData,
+    reconcile_metric_data: _ReconcileMetricData, manager_name: str
 ) -> None:
     """Issue the reconciliation metric.
 
     Args:
         reconcile_metric_data: The data used to issue the reconciliation metric.
+        manager_name: The name of the manager.
     """
     idle_runners = {
         runner.name
@@ -427,6 +439,9 @@ def _issue_reconciliation_metric(
     }
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)
+
+    BUSY_RUNNERS_COUNT.labels(manager_name).set(len(active_runners))
+    IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
     try:
 
