@@ -9,22 +9,27 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from jobmanager_client import (
-    RunnerHealthResponse,
-    RunnerRegisterResponse,
-)
-from jobmanager_client.models.job_read import JobRead
-from jobmanager_client.rest import ApiException, NotFoundException
 from pydantic import BaseModel, HttpUrl
 
+from github_runner_manager.jobmanager_api import (
+    Job,
+    JobManagerAPI,
+    JobManagerAPIError,
+    JobManagerAPINotFoundError,
+    JobStatus,
+    RunnerHealth,
+    RunnerRegistration,
+)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform, JobStatus
+from github_runner_manager.platform.jobmanager_provider import JobManagerPlatform
 from github_runner_manager.platform.platform_provider import (
     PlatformApiError,
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunnerLabel
+from github_runner_manager.types_.github import GitHubRunnerStatus
+
+TEST_JOB_MANAGER_TOKEN = "token"
 
 TEST_JOB_MANAGER_URL = "http://jobmanager.example.com"
 
@@ -39,17 +44,20 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
     runner_id = random.randint(1, 1000)
     token = secrets.token_hex(16)
-    call_api_mock.return_value = RunnerRegisterResponse(id=runner_id, token=token)
 
     metadata = RunnerMetadata(platform_name="jobmanager", runner_id=None, url=None)
     instance_id = InstanceID.build(prefix="unit-0")
     labels = ["label"]
-    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.register_runner = MagicMock(
+        return_value=RunnerRegistration(id=runner_id, token=token)
+    )
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
 
     context, runner = platform.get_runner_context(metadata, instance_id, labels)
 
     assert "builder-agent" in context.shell_run_script
-    assert runner.labels == [SelfHostedRunnerLabel(name="label")]
+    assert runner.labels == ["label"]
     assert runner.identity.metadata == metadata
     assert runner.status == GitHubRunnerStatus.OFFLINE
     assert not runner.busy
@@ -59,11 +67,11 @@ def test_get_runner_context_succeeds(monkeypatch: pytest.MonkeyPatch):
     "api_return_value, error_message",
     [
         pytest.param(
-            RunnerRegisterResponse(id=random.randint(1, 10), token=""),
+            RunnerRegistration(id=random.randint(1, 10), token=""),
             "Empty token",
             id="Empty token",
         ),
-        pytest.param(ApiException, "API error", id="Exception from api"),
+        pytest.param(JobManagerAPIError, "API error", id="Exception from api"),
     ],
 )
 def test_get_runner_context_fails(
@@ -74,16 +82,14 @@ def test_get_runner_context_fails(
     act: Call get_runner_context.
     assert: PlatformApiError should be raised with the expected message.
     """
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = [api_return_value]
-
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
     )
     instance_id = InstanceID.build(prefix="unit-0")
     labels = ["label"]
-    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.register_runner = MagicMock(side_effect=[api_return_value])
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
 
     with pytest.raises(PlatformApiError) as exc:
         _context, _runner = platform.get_runner_context(metadata, instance_id, labels)
@@ -95,23 +101,15 @@ def test_get_runner_context_fails(
     "api_return_value, picked_up",
     [
         pytest.param(
-            JobRead(
+            Job(
                 status=JobStatus.IN_PROGRESS.value,
-                architecture="arm64",
-                base_series="jammy",
-                id=1,
-                requested_by="foobar",
             ),
             True,
             id="in progress job",
         ),
         pytest.param(
-            JobRead(
+            Job(
                 status=JobStatus.PENDING.value,
-                architecture="arm64",
-                base_series="jammy",
-                id=1,
-                requested_by="foobar",
             ),
             False,
             id="pending job",
@@ -124,11 +122,9 @@ def test_check_job_been_picked_up(monkeypatch: pytest.MonkeyPatch, api_return_va
     act: call check_job_been_picked_up.
     assert: Depending on the state of the job, it will be picked or not accordingly.
     """
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = [api_return_value]
-
-    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_job = MagicMock(side_effect=[api_return_value])
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
     )
@@ -155,11 +151,9 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
     act: call check_job_been_picked_up.
     assert: The PlatformApiError exception is raised from the jobmanager provider.
     """
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = ApiException
-
-    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_job = MagicMock(side_effect=JobManagerAPIError)
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
     )
@@ -214,19 +208,10 @@ def test_check_job_been_picked_fails(monkeypatch: pytest.MonkeyPatch):
 def test_check_job_been_picked_up_job_url_validation_err(
     job_url: str, expected_msg: str, monkeypatch: pytest.MonkeyPatch
 ):
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = [
-        JobRead(
-            status=JobStatus.IN_PROGRESS.value,
-            architecture="arm64",
-            base_series="jammy",
-            id=1,
-            requested_by="foobar",
-        )
-    ]
 
-    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_job = MagicMock(return_value=Job(status=JobStatus.IN_PROGRESS))
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
     metadata = RunnerMetadata(platform_name="jobmanager", runner_id="3", url=job_url)
 
     # we use a BaseModel to convert a url string to a HttpUrl
@@ -271,19 +256,17 @@ def test_get_runner_health(
     assert: Assert the correct health state is reported.
     """
     call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
 
-    api_return_value = RunnerHealthResponse(
-        label="label",
+    api_return_value = RunnerHealth(
         status=job_status,
         deletable=job_deletable,
-        cpu_usage="10%",
-        ram_usage="20%",
-        disk_usage="30%",
     )
     call_api_mock.side_effect = [api_return_value]
 
-    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL)
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_runner_health = MagicMock(return_value=api_return_value)
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
+
     instance_id = InstanceID.build(prefix="unit-0")
     metadata = RunnerMetadata(
         platform_name="jobmanager", runner_id="3", url="http://jobmanager.example.com"
@@ -326,15 +309,11 @@ def test_get_runner_health(
                 ),
             ],
             [
-                RunnerHealthResponse(
-                    label="label",
+                RunnerHealth(
                     status="IN_PROGRESS",
                     deletable=False,
-                    cpu_usage="10%",
-                    ram_usage="20%",
-                    disk_usage="30%",
                 ),
-                ApiException,
+                JobManagerAPIError,
             ],
             RunnersHealthResponse(
                 requested_runners=[
@@ -371,15 +350,11 @@ def test_get_runner_health(
                 ),
             ],
             [
-                RunnerHealthResponse(
-                    label="label",
+                RunnerHealth(
                     status="FAILED",
                     deletable=True,
-                    cpu_usage="10%",
-                    ram_usage="20%",
-                    disk_usage="30%",
                 ),
-                NotFoundException,
+                JobManagerAPINotFoundError,
             ],
             RunnersHealthResponse(
                 requested_runners=[
@@ -413,11 +388,10 @@ def test_get_runners_health(
     assert: The expected health response with the correct requested_runners and
         runners with failed requests.
     """
-    call_api_mock = MagicMock()
-    monkeypatch.setattr("jobmanager_client.ApiClient.call_api", call_api_mock)
-    call_api_mock.side_effect = jobmanager_side_effects
+    jobmanager_api = JobManagerAPI(TEST_JOB_MANAGER_URL, TEST_JOB_MANAGER_TOKEN)
+    jobmanager_api.get_runner_health = MagicMock(side_effect=jobmanager_side_effects)
+    platform = JobManagerPlatform(url=TEST_JOB_MANAGER_URL, jobmanager_api=jobmanager_api)
 
-    platform = JobManagerPlatform(TEST_JOB_MANAGER_URL)
     runners_health_response = platform.get_runners_health(requested_runners)
 
     expected_health_response = expected_health_response

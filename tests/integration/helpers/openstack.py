@@ -12,11 +12,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import (
-    run_in_unit,
-    wait_for,
-    wait_for_runner_ready,
-)
+from tests.integration.helpers.common import run_in_unit, wait_for, wait_for_runner_ready
 
 logger = logging.getLogger(__name__)
 

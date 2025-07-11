@@ -28,6 +28,7 @@ from charm import (
 from charm_state import (
     FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME,
     IMAGE_INTEGRATION_NAME,
+    LABELS_CONFIG_NAME,
     MONGO_DB_INTEGRATION_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
@@ -242,6 +243,63 @@ def test_on_config_changed_failure(harness: Harness):
 
     assert isinstance(harness.charm.unit.status, BlockedStatus)
     assert "Invalid proxy configuration" in harness.charm.unit.status.message
+
+
+@pytest.mark.parametrize(
+    "config_option",
+    [
+        pytest.param(PATH_CONFIG_NAME, id="Path"),
+        pytest.param(TOKEN_CONFIG_NAME, id="Token"),
+        pytest.param(LABELS_CONFIG_NAME, id="Labels"),
+    ],
+)
+def test__on_config_changed_flush(monkeypatch: pytest.MonkeyPatch, config_option: str):
+    """
+    arrange: given a charm with OpenStack instance type and a certain config option value.
+    act: update the config option.
+    assert: runner flush is called.
+    """
+    harness = Harness(GithubRunnerCharm)
+    harness.update_config({config_option: secrets.token_hex(16)})
+    harness.begin()
+    state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._check_image_ready = MagicMock(return_value=True)
+
+    harness.update_config({config_option: secrets.token_hex(16)})
+
+    harness.charm._manager_client.flush_runner.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "config_option",
+    [
+        pytest.param(PATH_CONFIG_NAME, id="Path"),
+        pytest.param(TOKEN_CONFIG_NAME, id="Token"),
+        pytest.param(LABELS_CONFIG_NAME, id="Labels"),
+    ],
+)
+def test__on_config_changed_no_flush(monkeypatch: pytest.MonkeyPatch, config_option: str):
+    """
+    arrange: given a charm with OpenStack instance type and a certain config option value.
+    act: update the config option to be the same as before.
+    assert: runner flush is called.
+    """
+    config_option_val = secrets.token_hex(16)
+    harness = Harness(GithubRunnerCharm)
+    harness.update_config({config_option: config_option_val})
+    harness.begin()
+    state_mock = MagicMock()
+    monkeypatch.setattr("charm.manager_service", MagicMock())
+    harness.charm._manager_client = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._setup_state = MagicMock(return_value=state_mock)
+    harness.charm._check_image_ready = MagicMock(return_value=True)
+
+    harness.update_config({config_option: config_option_val})
+
+    harness.charm._manager_client.flush_runner.assert_not_called()
 
 
 def test_on_stop_busy_flush_and_stop_service(harness: Harness, monkeypatch: pytest.MonkeyPatch):
