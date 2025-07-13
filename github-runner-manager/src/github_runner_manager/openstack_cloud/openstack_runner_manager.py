@@ -160,16 +160,14 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """Cleanup runner and resource on the cloud."""
         self._openstack_cloud.cleanup()
 
-    def _build_cloud_runner_instance(
-        self, instance: OpenstackInstance, healthy: bool | None = None
-    ) -> CloudRunnerInstance:
+    def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> CloudRunnerInstance:
         """Build a new cloud runner instance from an openstack instance."""
         metadata = instance.metadata
         return CloudRunnerInstance(
             name=instance.instance_id.name,
             metadata=metadata,
             instance_id=instance.instance_id,
-            health=HealthState.from_value(healthy),
+            health=HealthState.UNKNOWN,
             state=CloudRunnerState.from_openstack_server_status(instance.status),
             created_at=instance.created_at,
         )

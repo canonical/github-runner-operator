@@ -81,6 +81,8 @@ select = ["E", "W", "F", "C", "N", "R", "D", "H"]
 ignore = ["W503", "D107", "E203"]
 # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
 per-file-ignores = [
+    # Ignore factory methods attributes docstring
+    "tests/unit/factories/*:DCO060",
     # Ignore no return values (DCO031) in docstring for abstract methods
     "src/github_runner_manager/manager/cloud_runner_manager.py:DCO031",
     "tests/*:D100,D101,D102,D103,D104,D205,D212"

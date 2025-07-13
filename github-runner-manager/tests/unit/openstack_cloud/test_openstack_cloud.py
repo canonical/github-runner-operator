@@ -83,7 +83,7 @@ def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
             id="launch_instance",
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
-        pytest.param("delete_instance", {"instance_id": FAKE_ARG}, id="delete_instance"),
+        pytest.param("delete_instances", {"instance_ids": FAKE_ARG}, id="delete_instances"),
         pytest.param("get_instances", {}, id="get_instances"),
         pytest.param("cleanup", {}, id="cleanup"),
     ],
