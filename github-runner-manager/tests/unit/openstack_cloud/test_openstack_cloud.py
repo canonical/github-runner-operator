@@ -11,20 +11,25 @@ from unittest.mock import MagicMock
 
 import keystoneauth1.exceptions
 import openstack
+import openstack.exceptions
 import pytest
 from openstack.compute.v2.keypair import Keypair
 from openstack.connection import Connection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from openstack.network.v2.security_group_rule import SecurityGroupRule
+from pytest import LogCaptureFixture
 
+import github_runner_manager.openstack_cloud.openstack_cloud
 from github_runner_manager.errors import OpenStackError, SSHError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
     _MAX_NOVA_COMPUTE_API_VERSION,
     _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
     _TEST_STRING,
     DEFAULT_SECURITY_RULES,
+    InstanceID,
     OpenstackCloud,
     OpenStackCredentials,
+    _DeleteKeypairConfig,
     get_missing_security_rules,
 )
 
@@ -52,6 +57,19 @@ def openstack_cloud_fixture(monkeypatch):
     return OpenstackCloud(creds, FAKE_PREFIX, FAKE_ARG)
 
 
+@pytest.fixture(name="mock_openstack_conn", scope="function")
+def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Patch OpenStack connection."""
+    connection_mock = MagicMock()
+    connection_mock.__enter__.return_value = connection_mock
+    monkeypatch.setattr(
+        github_runner_manager.openstack_cloud.openstack_cloud.openstack,
+        "connect",
+        MagicMock(return_value=connection_mock),
+    )
+    return connection_mock
+
+
 @pytest.mark.parametrize(
     "public_method, args",
     [
@@ -65,7 +83,6 @@ def openstack_cloud_fixture(monkeypatch):
             id="launch_instance",
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
-        pytest.param("delete_instance", {"instance_id": FAKE_ARG}, id="delete_instance"),
         pytest.param("get_instances", {}, id="get_instances"),
         pytest.param("cleanup", {}, id="cleanup"),
     ],
@@ -303,6 +320,101 @@ def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
             pass
 
     assert "No connectable SSH addresses found" in str(err.value)
+
+
+# We test this internal method because this fails silently without bubbling up exceptions due to
+# it's non-critical nature.
+def test__delete_keypair_fail(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack delete_keypair method that returns False.
+    act: when _delete_keypair method is called.
+    assert: None is returned and the failure is logged.
+    """
+    mock_openstack_conn.delete_keypair = MagicMock(return_value=False)
+    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+
+    assert (
+        openstack_cloud._delete_keypair(
+            _DeleteKeypairConfig(
+                keys_dir=MagicMock(), instance_id=test_key_instance_id, conn=mock_openstack_conn
+            )
+        )
+        is None
+    )
+    assert f"Failed to delete key: {test_key_instance_id.name}" in caplog.messages
+
+
+def test__delete_keypair_error(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack delete_keypair method that returns False.
+    act: when _delete_keypair method is called.
+    assert: None is returned and the failure is logged.
+    """
+    mock_openstack_conn.delete_keypair = MagicMock(
+        side_effect=[openstack.exceptions.ResourceTimeout()]
+    )
+    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+
+    assert (
+        openstack_cloud._delete_keypair(
+            _DeleteKeypairConfig(
+                keys_dir=MagicMock(), instance_id=test_key_instance_id, conn=mock_openstack_conn
+            )
+        )
+        is None
+    )
+    assert f"Error attempting to delete key: {test_key_instance_id.name}" in caplog.messages
+
+
+@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
+def test_delete_instances_partial_server_delete_failure(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack connection that errors on few failed requests.
+    act: when delete_instances method is called.
+    assert: successfully deleted instance IDs are returned and failed instances are logged.
+    """
+    mock_openstack_conn.delete_server = MagicMock(
+        side_effect=[True, False, openstack.exceptions.ResourceTimeout()]
+    )
+    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
+    timeout_id = InstanceID(prefix="timeout error", reactive=False, suffix="")
+
+    deleted_instance_ids = openstack_cloud.delete_instances(
+        instance_ids=[successful_delete_id, already_deleted_id, timeout_id]
+    )
+
+    assert successful_delete_id in deleted_instance_ids
+    assert already_deleted_id not in deleted_instance_ids
+    assert timeout_id not in deleted_instance_ids
+    assert f"Failed to delete OpenStack VM instance: {timeout_id}" in caplog.messages
+
+
+@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
+def test_delete_instances(
+    openstack_cloud: OpenstackCloud,
+    mock_openstack_conn: MagicMock,
+):
+    """
+    arrange: given a mocked openstack connection.
+    act: when delete_instances method is called.
+    assert: deleted instance IDs are returned.
+    """
+    mock_openstack_conn.delete_server = MagicMock(side_effect=[True, False])
+    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
+
+    deleted_instance_ids = openstack_cloud.delete_instances(
+        instance_ids=[successful_delete_id, already_deleted_id]
+    )
+
+    assert [successful_delete_id] == deleted_instance_ids
 
 
 @pytest.mark.parametrize(

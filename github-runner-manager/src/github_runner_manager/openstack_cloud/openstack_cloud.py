@@ -6,13 +6,14 @@ import contextlib
 import copy
 import functools
 import logging
+import multiprocessing
 import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import reduce
 from pathlib import Path
-from typing import Any, Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
+from typing import Any, Callable, Iterable, Iterator, ParamSpec, Sequence, TypeVar, cast
 
 import keystoneauth1.exceptions
 import openstack
@@ -158,6 +159,40 @@ def _catch_openstack_errors(func: Callable[P, T]) -> Callable[P, T]:
     return exception_handling_wrapper
 
 
+@dataclass
+class _DeleteVMConfig:
+    """Configurations for deleting a VM.
+
+    Attributes:
+        instance_id: The ID of the VM to request deletion.
+        conn: The OpenStack connection instance.
+        keys_dir: The path to the directory in which the SSH key files are stored.
+        wait: Whether to wait for the VM delete to complete.
+        timeout: Timeout in seconds for VM deletion to complete.
+    """
+
+    instance_id: InstanceID
+    conn: OpenstackConnection
+    keys_dir: Path
+    wait: bool = False
+    timeout: int = 10 * 60
+
+
+@dataclass
+class _DeleteKeypairConfig:
+    """Configurations for deleting an OpenStack keypair.
+
+    Attributes:
+        keys_dir: The path to the directory in which the SSH key files are stored.
+        instance_id: The instance ID of the key owner.
+        conn: The OpenStack connection instance.
+    """
+
+    keys_dir: Path
+    instance_id: InstanceID
+    conn: OpenstackConnection
+
+
 class OpenstackCloud:
     """Client to interact with OpenStack cloud.
 
@@ -240,11 +275,17 @@ class OpenstackCloud:
                     "Attempting clean up of openstack server %s that timeout during creation",
                     instance_id,
                 )
-                self._delete_instance(conn, instance_id)
+                OpenstackCloud._delete_instance(
+                    _DeleteVMConfig(instance_id=instance_id, conn=conn, keys_dir=self._ssh_key_dir)
+                )
                 raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", instance_id)
-                self._delete_keypair(conn, instance_id)
+                OpenstackCloud._delete_keypair(
+                    _DeleteKeypairConfig(
+                        keys_dir=self._ssh_key_dir, instance_id=instance_id, conn=conn
+                    )
+                )
                 raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
 
             return OpenstackInstance(server, self.prefix)
@@ -267,37 +308,80 @@ class OpenstackCloud:
                 return OpenstackInstance(server, self.prefix)
         return None
 
-    @_catch_openstack_errors
-    def delete_instance(self, instance_id: InstanceID) -> None:
+    @staticmethod
+    def _delete_instance(delete_config: _DeleteVMConfig) -> InstanceID | None:
         """Delete a openstack instance.
 
         Args:
-            instance_id: The instance ID of the instance to delete.
-        """
-        logger.info("Deleting openstack server with %s", instance_id)
+            delete_config: The configuration used to delete a cloud VM instance.
 
-        with self._get_openstack_connection() as conn:
-            self._delete_instance(conn, instance_id)
-
-    def _delete_instance(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
-        """Delete a openstack instance.
-
-        Raises:
-            OpenStackError: Unable to delete OpenStack server.
-
-        Args:
-            conn: The openstack connection to use.
-            instance_id: The full name of the server.
+        Returns:
+            The deleted Instance ID.
         """
         try:
-            res = conn.delete_server(name_or_id=instance_id.name)
-            logger.info("openstack delete result for %s: %s", instance_id, res)
-            self._delete_keypair(conn, instance_id)
+            logger.info("Deleting server %s", delete_config.instance_id.name)
+            res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
+            logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
         except (
             openstack.exceptions.SDKException,
             openstack.exceptions.ResourceTimeout,
-        ) as err:
-            raise OpenStackError(f"Failed to remove openstack runner {instance_id}") from err
+        ):
+            logger.exception(
+                "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
+            )
+            return None
+
+        OpenstackCloud._delete_keypair(
+            _DeleteKeypairConfig(
+                keys_dir=delete_config.keys_dir,
+                instance_id=delete_config.instance_id,
+                conn=delete_config.conn,
+            )
+        )
+        return delete_config.instance_id if res else None
+
+    def delete_instances(
+        self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
+    ) -> list[InstanceID]:
+        """Delete Openstack VM instances.
+
+        Args:
+            instance_ids: The VM instance IDs to requeest deletion.
+            wait: Whether to wait for VM deletion to complete.
+            timeout: Timeout in seconds to wait for VM deletion to complete.
+
+        Returns:
+            The deleted VM instance IDs if wait is True, deleted requested VM instance IDs
+            otherwise.
+        """
+        deleted_instance_ids: list[InstanceID] = []
+
+        # Guard no instance IDs since multiprocessing Pool may raise an exception.
+        if not instance_ids:
+            return deleted_instance_ids
+
+        with (
+            self._get_openstack_connection() as conn,
+            multiprocessing.Pool(min(len(instance_ids), 30)) as pool,
+        ):
+            delete_configs = [
+                _DeleteVMConfig(
+                    instance_id=instance_id,
+                    conn=conn,
+                    keys_dir=self._ssh_key_dir,
+                    wait=wait,
+                    timeout=timeout,
+                )
+                for instance_id in instance_ids
+            ]
+            for deleted_instance_id in pool.imap_unordered(
+                OpenstackCloud._delete_instance, delete_configs
+            ):
+                if not deleted_instance_id:
+                    continue
+                deleted_instance_ids.append(deleted_instance_id)
+
+        return deleted_instance_ids
 
     @_catch_openstack_errors
     @contextlib.contextmanager
@@ -314,7 +398,7 @@ class OpenstackCloud:
         Yields:
             SSH connection object.
         """
-        key_path = self._get_key_path(instance.instance_id.name)
+        key_path = self._get_key_path(instance.instance_id)
 
         if not key_path.exists():
             raise KeyfileError(
@@ -463,7 +547,13 @@ class OpenstackCloud:
                 if str(key.name) in exclude_keys:
                     continue
                 try:
-                    self._delete_keypair(conn, InstanceID.build_from_name(self.prefix, key.name))
+                    OpenstackCloud._delete_keypair(
+                        _DeleteKeypairConfig(
+                            keys_dir=self._ssh_key_dir,
+                            instance_id=InstanceID.build_from_name(self.prefix, key.name),
+                            conn=conn,
+                        )
+                    )
                 except openstack.exceptions.SDKException:
                     logger.warning(
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
@@ -570,23 +660,36 @@ class OpenstackCloud:
         key_path.chmod(0o400)
         return keypair
 
-    def _delete_keypair(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
+    @staticmethod
+    def _delete_keypair(delete_keypair_config: _DeleteKeypairConfig) -> str | None:
         """Delete OpenStack keypair.
 
         Args:
-            conn: The connection object to access OpenStack cloud.
-            instance_id: The name of the keypair.
+            delete_keypair_config: Configurations for deleting the KeyPair.
+
+        Returns:
+            Name of the successfully deleted key. None otherwise.
         """
-        logger.debug("Deleting keypair for %s", instance_id)
+        logger.info("Deleting key: %s", delete_keypair_config.instance_id)
         try:
             # Keypair have unique names, access by ID is not needed.
-            if not conn.delete_keypair(instance_id.name):
-                logger.warning("Unable to delete keypair for %s", instance_id)
+            if not delete_keypair_config.conn.delete_keypair(
+                delete_keypair_config.instance_id.name
+            ):
+                logger.warning("Failed to delete key: %s", delete_keypair_config.instance_id.name)
+                return None
         except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
-            logger.warning("Unable to delete keypair for %s", instance_id, stack_info=True)
+            logger.warning(
+                "Error attempting to delete key: %s",
+                delete_keypair_config.instance_id.name,
+                stack_info=True,
+            )
+            return None
 
-        key_path = self._get_key_path(instance_id.name)
+        key_path = delete_keypair_config.keys_dir / f"{delete_keypair_config.instance_id}.key"
         key_path.unlink(missing_ok=True)
+        logger.info("Deleted key: %s", delete_keypair_config.instance_id)
+        return delete_keypair_config.instance_id.name
 
     @staticmethod
     def _ensure_security_group(
