@@ -63,8 +63,8 @@ def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
     connection_mock = MagicMock()
     connection_mock.__enter__.return_value = connection_mock
     monkeypatch.setattr(
-        github_runner_manager.openstack_cloud.openstack_cloud,
-        "_get_openstack_connection",
+        github_runner_manager.openstack_cloud.openstack_cloud.openstack,
+        "connect",
         MagicMock(return_value=connection_mock),
     )
     return connection_mock
@@ -83,7 +83,6 @@ def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
             id="launch_instance",
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
-        pytest.param("delete_instances", {"instance_ids": FAKE_ARG}, id="delete_instances"),
         pytest.param("get_instances", {}, id="get_instances"),
         pytest.param("cleanup", {}, id="cleanup"),
     ],
