@@ -517,7 +517,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
 
     instance_id = InstanceID.build("test-runner")
 
-    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
+    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels, timeout):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
         assert name == instance_id.name
