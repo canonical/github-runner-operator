@@ -367,7 +367,7 @@ class RunnerManager:
         ]
         logger.info("Extracting metrics from cloud VMs: %s", cloud_vm_ids_to_delete)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=cloud_vm_ids_to_delete)
-        logger.info("Extracted metrics from cloud VMs.")
+        logger.info("Extracted metrics from cloud VMs: %s", extracted_metrics)
         logger.info("Deleting VMs %s", cloud_vm_ids_to_delete)
         deleted_vm_ids = self._cloud.delete_vms(instance_ids=cloud_vm_ids_to_delete)
         logger.info(
