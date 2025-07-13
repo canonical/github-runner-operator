@@ -374,6 +374,7 @@ class OpenstackCloud:
                 )
                 for instance_id in instance_ids
             ]
+            logger.info("Deleting instances: %s", delete_configs)
             for deleted_instance_id in pool.imap_unordered(
                 OpenstackCloud._delete_instance, delete_configs
             ):

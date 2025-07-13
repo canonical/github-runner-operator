@@ -16,6 +16,7 @@ from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
+    get_file_content,
     get_job_logs,
     wait_for,
     wait_for_reconcile,

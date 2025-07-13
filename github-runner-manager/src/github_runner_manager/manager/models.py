@@ -29,13 +29,13 @@ class InstanceID:
     Attributes:
         name: Name of the instance to use.
         prefix: Prefix corresponding to the application (charm application unit).
-        reactive: Identifies if the runner is reactive.
         suffix: Random suffix for the InstanceID.
+        reactive: Identifies if the runner is reactive.
     """
 
     prefix: str
-    reactive: bool | None
     suffix: str
+    reactive: bool = False
 
     @property
     def name(self) -> str:
