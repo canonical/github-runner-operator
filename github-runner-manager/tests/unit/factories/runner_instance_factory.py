@@ -119,11 +119,11 @@ class PlatformRunnerHealthFactory(factory.Factory):
 
         model = PlatformRunnerHealth
 
-    identity = factory.SubFactory(RunnerIdentityFactory)  # Create a related RunnerIdentity
-    online = factory.Faker("boolean")  # Random boolean for online status
-    busy = factory.Faker("boolean")  # Random boolean for busy status
-    deletable = factory.Faker("boolean")  # Random boolean for deletable status
-    runner_in_platform = factory.Faker("boolean", chance_of_getting_true=90)  # Mostly true
+    identity = factory.SubFactory(RunnerIdentityFactory)
+    online = factory.Faker("boolean")
+    busy = factory.Faker("boolean")
+    deletable = factory.Faker("boolean")
+    runner_in_platform = factory.Faker("boolean")
 
 
 class RunnerInstanceFactory(factory.Factory):
