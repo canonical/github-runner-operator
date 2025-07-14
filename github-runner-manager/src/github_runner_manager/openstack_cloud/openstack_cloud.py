@@ -8,6 +8,7 @@ import functools
 import logging
 import multiprocessing
 import shutil
+import traceback
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -319,32 +320,32 @@ class OpenstackCloud:
             The deleted Instance ID.
         """
         try:
-            Path("~/github-runner-delete.log").write_text(
-                f"Deleting server {delete_config.instance_id.name}"
-            )
-            # logger.info("Deleting server %s", delete_config.instance_id.name)
-            res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
-            Path("~/github-runner-delete.log").write_text(
-                f"Deleted server {delete_config.instance_id.name} (true delete: {res})",
-            )
-            # logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
-        except (
-            openstack.exceptions.SDKException,
-            openstack.exceptions.ResourceTimeout,
-        ):
-            logger.exception(
-                "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
-            )
-            return None
+            try:
+                logger.info("Deleting server %s", delete_config.instance_id.name)
+                res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
+                logger.info(
+                    "Deleted server %s (true delete: %s)", delete_config.instance_id.name, res
+                )
+            except (
+                openstack.exceptions.SDKException,
+                openstack.exceptions.ResourceTimeout,
+            ):
+                logger.exception(
+                    "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
+                )
+                return None
 
-        OpenstackCloud._delete_keypair(
-            _DeleteKeypairConfig(
-                keys_dir=delete_config.keys_dir,
-                instance_id=delete_config.instance_id,
-                conn=delete_config.conn,
+            OpenstackCloud._delete_keypair(
+                _DeleteKeypairConfig(
+                    keys_dir=delete_config.keys_dir,
+                    instance_id=delete_config.instance_id,
+                    conn=delete_config.conn,
+                )
             )
-        )
-        return delete_config.instance_id if res else None
+            return delete_config.instance_id if res else None
+        except Exception:
+            tb = traceback.format_exc()
+            Path("~/exception.log").write_text(tb, encoding="utf-8")
 
     def delete_instances(
         self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
