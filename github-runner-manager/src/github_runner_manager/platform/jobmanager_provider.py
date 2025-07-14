@@ -39,14 +39,12 @@ logger = logging.getLogger(__name__)
 class JobManagerPlatform(PlatformProvider):
     """Manage self-hosted runner on the JobManager."""
 
-    def __init__(self, url: str, jobmanager_api: JobManagerAPI):
+    def __init__(self, jobmanager_api: JobManagerAPI):
         """Construct the object.
 
         Args:
-            url: The jobmanager base URL.
             jobmanager_api: The jobmanager API client to use.
         """
-        self._url = url
         self._jobmanager_api = jobmanager_api
 
     @classmethod
@@ -60,7 +58,6 @@ class JobManagerPlatform(PlatformProvider):
             New JobManagerPlatform.
         """
         return cls(
-            url=jobmanager_configuration.url,
             jobmanager_api=JobManagerAPI(
                 url=jobmanager_configuration.url, token=jobmanager_configuration.token
             ),
@@ -169,10 +166,15 @@ class JobManagerPlatform(PlatformProvider):
         """
         try:
             response = self._jobmanager_api.register_runner(name=instance_id.name, labels=labels)
-            updated_metadata = RunnerMetadata(platform_name=metadata.platform_name, url=self._url)
+            jobmanager_base_url = self._jobmanager_api.url.rstrip("/")
+            updated_metadata = RunnerMetadata(
+                platform_name=metadata.platform_name, url=jobmanager_base_url
+            )
             updated_metadata.runner_id = str(response.id)
             if token := response.token:
-                jobmanager_endpoint = f"{self._url}/v1/runners/{updated_metadata.runner_id}/health"
+                jobmanager_endpoint = (
+                    f"{jobmanager_base_url}/v1/runners/{updated_metadata.runner_id}/health"
+                )
                 # For now, use the first label
                 label = "undefined"
                 if labels:

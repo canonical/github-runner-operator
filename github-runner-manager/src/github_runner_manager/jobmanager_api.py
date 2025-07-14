@@ -92,7 +92,7 @@ class JobManagerAPI:
             url: The base URL for the JobManager API.
         """
         self._token = token
-        self._url = url
+        self.url = url
 
     def get_runner_health(self, runner_id: int) -> RunnerHealth:
         """Fetch the health status of a runner by its ID from the JobManager API.
@@ -178,7 +178,7 @@ class JobManagerAPI:
             jobmanager_client.ApiClient: A new API client configured with the JobManager
             API URL and token.
         """
-        config = jobmanager_client.Configuration(host=self._url)
+        config = jobmanager_client.Configuration(host=self.url)
         api_client = jobmanager_client.ApiClient(configuration=config)
         api_client.set_default_header("Authorization", f"Bearer {self._token}")
         return api_client
