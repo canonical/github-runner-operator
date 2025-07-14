@@ -186,7 +186,7 @@ class SelfHostedRunnerLabelFactory(factory.Factory):
 
         model = SelfHostedRunnerLabel
 
-    name = factory.Faker("word")  # Generate a random word for the label name
+    name = factory.Faker("word")
 
 
 class SelfHostedRunnerFactory(factory.Factory):

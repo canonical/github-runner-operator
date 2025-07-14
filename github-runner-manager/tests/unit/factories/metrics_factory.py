@@ -53,7 +53,7 @@ class CodeInformationFactory(factory.Factory):
 
         model = CodeInformation
 
-    code = factory.Faker("random_int", min=100, max=599)  # Status code in the rang
+    code = factory.Faker("random_int", min=100, max=599)
 
 
 class RunnerStopFactory(EventFactory):
