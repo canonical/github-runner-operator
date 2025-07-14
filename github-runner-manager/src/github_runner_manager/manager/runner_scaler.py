@@ -444,7 +444,6 @@ def _issue_reconciliation_metric(
     IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
     try:
-
         metric_events.issue_event(
             metric_events.Reconciliation(
                 timestamp=time.time(),

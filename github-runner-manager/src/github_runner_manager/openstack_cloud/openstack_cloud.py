@@ -8,7 +8,6 @@ import functools
 import logging
 import multiprocessing
 import shutil
-import traceback
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -166,14 +165,16 @@ class _DeleteVMConfig:
 
     Attributes:
         instance_id: The ID of the VM to request deletion.
-        conn: The OpenStack connection instance.
+        credentials: The OpenStack connection credentials.
+        max_api_version: The OpenStack maximum compute API version.
         keys_dir: The path to the directory in which the SSH key files are stored.
         wait: Whether to wait for the VM delete to complete.
         timeout: Timeout in seconds for VM deletion to complete.
     """
 
     instance_id: InstanceID
-    conn: OpenstackConnection
+    credentials: OpenStackCredentials
+    max_api_version: str
     keys_dir: Path
     wait: bool = False
     timeout: int = 10 * 60
@@ -277,7 +278,13 @@ class OpenstackCloud:
                     instance_id,
                 )
                 OpenstackCloud._delete_instance(
-                    _DeleteVMConfig(instance_id=instance_id, conn=conn, keys_dir=self._ssh_key_dir)
+                    _DeleteVMConfig(
+                        instance_id=instance_id,
+                        credentials=self._credentials,
+                        max_api_version=self._max_compute_api_version,
+                        keys_dir=self._ssh_key_dir,
+                    ),
+                    conn=conn,
                 )
                 raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
             except openstack.exceptions.SDKException as err:
@@ -310,42 +317,57 @@ class OpenstackCloud:
         return None
 
     @staticmethod
-    def _delete_instance(delete_config: _DeleteVMConfig) -> InstanceID | None:
+    def _delete_instance(
+        delete_config: _DeleteVMConfig, conn: OpenstackConnection | None = None
+    ) -> InstanceID | None:
         """Delete a openstack instance.
 
         Args:
             delete_config: The configuration used to delete a cloud VM instance.
+            conn: The shared OpenStack connection instance if not running as as subprocess.
 
         Returns:
             The deleted Instance ID.
         """
-        try:
-            try:
-                logger.info("Deleting server %s", delete_config.instance_id.name)
-                res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
-                logger.info(
-                    "Deleted server %s (true delete: %s)", delete_config.instance_id.name, res
-                )
-            except (
-                openstack.exceptions.SDKException,
-                openstack.exceptions.ResourceTimeout,
-            ):
-                logger.exception(
-                    "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
-                )
-                return None
+        if conn is None:
+            conn = openstack.connect(
+                auth_url=delete_config.credentials.auth_url,
+                project_name=delete_config.credentials.project_name,
+                username=delete_config.credentials.username,
+                password=delete_config.credentials.password,
+                region_name=delete_config.credentials.region_name,
+                user_domain_name=delete_config.credentials.user_domain_name,
+                project_domain_name=delete_config.credentials.project_domain_name,
+                compute_api_version=delete_config.max_api_version,
+            )
+            close_connection = True
+        else:
+            close_connection = False
 
+        try:
+            logger.info("Deleting server %s", delete_config.instance_id.name)
+            res = conn.delete_server(name_or_id=delete_config.instance_id.name)
+            logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
             OpenstackCloud._delete_keypair(
                 _DeleteKeypairConfig(
                     keys_dir=delete_config.keys_dir,
                     instance_id=delete_config.instance_id,
-                    conn=delete_config.conn,
+                    conn=conn,
                 )
             )
-            return delete_config.instance_id if res else None
-        except Exception:
-            tb = traceback.format_exc()
-            Path("~/exception.log").write_text(tb, encoding="utf-8")
+        except (
+            openstack.exceptions.SDKException,
+            openstack.exceptions.ResourceTimeout,
+        ):
+            logger.exception(
+                "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
+            )
+            return None
+        finally:
+            if close_connection:
+                conn.close()
+
+        return delete_config.instance_id if res else None
 
     def delete_instances(
         self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
@@ -367,14 +389,12 @@ class OpenstackCloud:
         if not instance_ids:
             return deleted_instance_ids
 
-        with (
-            self._get_openstack_connection() as conn,
-            multiprocessing.Pool(min(len(instance_ids), 30)) as pool,
-        ):
+        with multiprocessing.Pool(min(len(instance_ids), 30)) as pool:
             delete_configs = [
                 _DeleteVMConfig(
                     instance_id=instance_id,
-                    conn=conn,
+                    credentials=self._credentials,
+                    max_api_version=self._max_compute_api_version,
                     keys_dir=self._ssh_key_dir,
                     wait=wait,
                     timeout=timeout,
