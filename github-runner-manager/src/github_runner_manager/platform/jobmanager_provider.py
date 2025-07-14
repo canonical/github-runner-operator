@@ -176,9 +176,7 @@ class JobManagerPlatform(PlatformProvider):
                     f"{jobmanager_base_url}/v1/runners/{updated_metadata.runner_id}/health"
                 )
                 # For now, use the first label
-                label = "undefined"
-                if labels:
-                    label = labels[0]
+                label = "undefined" if not labels else labels[0]
                 command_to_run = (
                     f"BUILDER_LABEL={label} JOB_MANAGER_BEARER_TOKEN={token} "
                     f"JOB_MANAGER_API_ENDPOINT={jobmanager_endpoint} "
