@@ -35,7 +35,6 @@ from charm_state import (
     PATH_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
-    Arch,
     OpenStackCloudsYAML,
     OpenstackImage,
 )
@@ -112,12 +111,11 @@ def raise_url_error(*args, **kwargs):
     raise urllib.error.URLError("mock error")
 
 
-def mock_get_latest_runner_bin_url(os_name: str = "linux", arch: Arch = Arch.X64):
+def mock_get_latest_runner_bin_url(os_name: str = "linux"):
     """Stub function to return test runner_bin_url data.
 
     Args:
         os_name: OS name placeholder argument.
-        arch: Architecture placeholder argument.
 
     Returns:
         MagicMock runner application.

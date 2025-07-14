@@ -6,7 +6,6 @@ import dataclasses
 import ipaddress
 import json
 import logging
-import platform
 import re
 from pathlib import Path
 from typing import cast
@@ -27,7 +26,7 @@ from pydantic import (
 )
 
 from errors import MissingMongoDBError
-from models import AnyHttpsUrl, Arch, FlavorLabel, OpenStackCloudsYAML
+from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
 from utilities import get_env_var
 
 logger = logging.getLogger(__name__)
@@ -715,41 +714,6 @@ def _build_runner_proxy_config_from_charm(charm: CharmBase) -> "ProxyConfig":
     return build_proxy_config_from_charm()
 
 
-class UnsupportedArchitectureError(Exception):
-    """Raised when given machine charm architecture is unsupported.
-
-    Attributes:
-        arch: The current machine architecture.
-    """
-
-    def __init__(self, arch: str) -> None:
-        """Initialize a new instance of the CharmConfigInvalidError exception.
-
-        Args:
-            arch: The current machine architecture.
-        """
-        self.arch = arch
-
-
-def _get_supported_arch() -> Arch:
-    """Get current machine architecture.
-
-    Raises:
-        UnsupportedArchitectureError: if the current architecture is unsupported.
-
-    Returns:
-        Arch: Current machine architecture.
-    """
-    arch = platform.machine()
-    match arch:
-        case arch if arch in ARCHITECTURES_ARM64:
-            return Arch.ARM64
-        case arch if arch in ARCHITECTURES_X86:
-            return Arch.X64
-        case _:
-            raise UnsupportedArchitectureError(arch=arch)
-
-
 def _build_ssh_debug_connection_from_charm(charm: CharmBase) -> list[SSHDebugConnection]:
     """Initialize the SSHDebugInfo from charm relation data.
 
@@ -842,7 +806,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
     """The charm state.
 
     Attributes:
-        arch: The underlying compute architecture, i.e. x86_64, amd64, arm64/aarch64.
         charm_config: Configuration of the juju charm.
         is_metrics_logging_available: Whether the charm is able to issue metrics.
         proxy_config: Proxy-related configuration.
@@ -852,7 +815,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         ssh_debug_connections: SSH debug connections configuration information.
     """
 
-    arch: Arch
     is_metrics_logging_available: bool
     proxy_config: ProxyConfig
     runner_proxy_config: ProxyConfig
@@ -954,12 +916,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
             charm_config.labels = (flavor_label_combination.label,) + charm_config.labels
 
         try:
-            arch = _get_supported_arch()
-        except UnsupportedArchitectureError as exc:
-            logger.error("Unsupported architecture: %s", exc.arch)
-            raise CharmConfigInvalidError(f"Unsupported architecture {exc.arch}") from exc
-
-        try:
             ssh_debug_connections = _build_ssh_debug_connection_from_charm(charm)
         except ValidationError as exc:
             logger.error("Invalid SSH debug info: %s.", exc)
@@ -968,7 +924,6 @@ class CharmState:  # pylint: disable=too-many-instance-attributes
         reactive_config = ReactiveConfig.from_database(database)
 
         state = cls(
-            arch=arch,
             is_metrics_logging_available=bool(charm.model.relations[COS_AGENT_INTEGRATION_NAME]),
             proxy_config=proxy_config,
             runner_proxy_config=runner_proxy_config,
