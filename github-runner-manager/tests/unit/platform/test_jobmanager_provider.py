@@ -31,8 +31,6 @@ TEST_JOB_MANAGER_TOKEN = "token"
 TEST_JOB_MANAGER_URL = "http://jobmanager.example.com"
 
 
-# ignore the doc string flake8 requirements
-# flake8: noqa
 class JobManagerAPIStub:
     """Stub for the JobManagerAPI to use in tests."""
 
