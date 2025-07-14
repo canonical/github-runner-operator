@@ -319,9 +319,15 @@ class OpenstackCloud:
             The deleted Instance ID.
         """
         try:
-            logger.info("Deleting server %s", delete_config.instance_id.name)
+            Path("~/github-runner-delete.log").write_text(
+                f"Deleting server {delete_config.instance_id.name}"
+            )
+            # logger.info("Deleting server %s", delete_config.instance_id.name)
             res = delete_config.conn.delete_server(name_or_id=delete_config.instance_id.name)
-            logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
+            Path("~/github-runner-delete.log").write_text(
+                f"Deleted server {delete_config.instance_id.name} (true delete: {res})",
+            )
+            # logger.info("Deleted server %s (true delete: %s)", delete_config.instance_id.name, res)
         except (
             openstack.exceptions.SDKException,
             openstack.exceptions.ResourceTimeout,
