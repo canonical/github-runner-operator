@@ -48,7 +48,7 @@ options:
       to 'aproxy-exclude-addresses' or exclude the HTTP proxy port from 'aproxy-redirect-ports'.
   aproxy-exclude-addresses:
     type: string
-    default: "10.0.0.0/8, 171.16.0.0/12, 192.168.0.0/16"
+    default: "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16"
     description: >-
       A comma-separated list of IP addresses that should be excluded from redirection to aproxy.
       127.0.0.0/8 are always excluded so you can omit if from the configuration.
