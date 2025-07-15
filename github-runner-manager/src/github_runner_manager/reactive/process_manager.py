@@ -90,6 +90,17 @@ def reconcile(
     return delta
 
 
+def kill_reactive_processes() -> None:
+    """Kill all reactive processes.
+
+    Raises:
+        ReactiveRunnerError: Failed to kill the reactive processes.
+    """
+    result = secure_run_subprocess(cmd=["pkill", "-f", REACTIVE_RUNNER_CMD_LINE_PREFIX])
+    if result.returncode != 0:
+        raise ReactiveRunnerError("Failed to kill the reactive processes")
+
+
 def _get_pids() -> list[int]:
     """Get the PIDs of the reactive runners processes.
 

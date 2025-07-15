@@ -319,6 +319,7 @@ class GithubRunnerCharm(CharmBase):
         logger.info(UPGRADE_MSG)
         self._common_install_code()
         _disable_legacy_service()
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:

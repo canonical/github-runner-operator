@@ -46,6 +46,10 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.reactive.process_manager import (
+    REACTIVE_RUNNER_CMD_LINE_PREFIX,
+    ReactiveRunnerError,
+)
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
@@ -96,6 +100,15 @@ def issue_events_mock_fixture(monkeypatch: pytest.MonkeyPatch):
         "github_runner_manager.manager.runner_scaler.metric_events.issue_event", issue_events_mock
     )
     return issue_events_mock
+
+
+@pytest.fixture(scope="function", name="mock_process_manager_subprocess_run")
+def mock_process_manager_subprocess_run_fixture(monkeypatch: pytest.MonkeyPatch):
+    mock_subprocess_run = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.reactive.process_manager.secure_run_subprocess", mock_subprocess_run
+    )
+    return mock_subprocess_run
 
 
 @pytest.fixture(scope="function", name="runner_manager")
@@ -195,6 +208,17 @@ def application_configuration_fixture() -> ApplicationConfiguration:
         ),
         reconcile_interval=10,
     )
+
+
+@pytest.fixture(scope="function", name="runner_scaler_reactive")
+def runner_scaler_reactive_fixture(
+    application_configuration: ApplicationConfiguration,
+    runner_manager: RunnerManager,
+    user_info: UserInfo,
+) -> RunnerScaler:
+    runner_scaler = RunnerScaler.build(application_configuration, user_info)
+    runner_scaler._manager = runner_manager
+    return runner_scaler
 
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
@@ -702,3 +726,42 @@ def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_in
     assert initial_mock_runners[2].instance_id in runner_dict
     # The runner without health information should not be deleted
     assert initial_mock_runners[4].instance_id in runner_dict
+
+
+def test_reactive_flush_success(
+    runner_scaler_reactive: RunnerScaler, mock_process_manager_subprocess_run: MagicMock
+):
+    """
+    arrange: Mock the subprocess run to succeed.
+    act: Run flush for reactive.
+    assert: Subprocess run executed a pkill for reactive processes.
+    """
+    mock_run = mock_process_manager_subprocess_run
+    mock_result = MagicMock()
+    mock_result.returncode = 0
+    mock_run.return_value = mock_result
+
+    runner_scaler_reactive.flush()
+
+    mock_run.assert_called_once_with(cmd=["pkill", "-f", REACTIVE_RUNNER_CMD_LINE_PREFIX])
+
+
+def test_reactive_flush_failed(
+    runner_scaler_reactive: RunnerScaler, mock_process_manager_subprocess_run: MagicMock
+):
+    """
+    arrange: Mock the subprocess run to fail.
+    act: Run flush for reactive.
+    assert: A error raised for the failed subprocess run.
+    """
+    mock_run = mock_process_manager_subprocess_run
+    mock_result = MagicMock()
+    mock_result.returncode = 1
+    mock_run.return_value = mock_result
+
+    with pytest.raises(ReactiveRunnerError) as err:
+        runner_scaler_reactive.flush()
+
+    assert "Failed to kill the reactive processes" in str(err.value)
+
+    mock_run.assert_called_once_with(cmd=["pkill", "-f", REACTIVE_RUNNER_CMD_LINE_PREFIX])

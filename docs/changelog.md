@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-07-15
+
+- Fix a issue where flushing runners does not include reactive processes. This cause some reactive runner to spawn with old code after upgrade.
+
 ## 2025-07-09
 
 - Specify max supported nova compute api to be 2.91. This fixes an issue where the charm could fail

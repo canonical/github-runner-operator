@@ -226,6 +226,7 @@ def test_common_install_code(
 
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
     monkeypatch.setattr("charm.systemd", MagicMock())
+    harness.charm._manager_client.flush_runner = MagicMock()
 
     getattr(harness.charm.on, hook).emit()
 
@@ -577,6 +578,7 @@ def test_metric_log_ownership_for_upgrade(
     monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
     monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
+    harness.charm._manager_client.flush_runner = MagicMock()
 
     harness.charm.on.upgrade_charm.emit()
 
@@ -599,6 +601,7 @@ def test_attempting_disable_legacy_service_for_upgrade(
     monkeypatch.setattr("charm.systemd", mock_systemd := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
     monkeypatch.setattr("charm.pathlib", MagicMock())
+    harness.charm._manager_client.flush_runner = MagicMock()
 
     harness.charm.on.upgrade_charm.emit()
 
