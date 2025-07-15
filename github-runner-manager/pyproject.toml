@@ -80,6 +80,7 @@ select = ["E", "W", "F", "C", "N", "R", "D", "H"]
 # Ignore D107 Missing docstring in __init__
 ignore = ["W503", "D107", "E203"]
 # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
+# DCO020, DCO030, DCO050: Ignore docstring argument,returns,raises sections in tests
 per-file-ignores = ["tests/*:D100,D101,D102,D103,D104,D205,D212, DCO020, DCO030, DCO050"]
 docstring-convention = "google"
 # Check for properly formatted copyright header in each file
