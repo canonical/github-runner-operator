@@ -3,7 +3,6 @@
 
 """Data classes and type definitions."""
 import dataclasses
-from enum import Enum
 from typing import TypedDict
 
 from pydantic import AnyHttpUrl
@@ -17,18 +16,6 @@ class AnyHttpsUrl(AnyHttpUrl):
     """
 
     allowed_schemes = {"https"}
-
-
-class Arch(str, Enum):
-    """Supported system architectures.
-
-    Attributes:
-        ARM64: Represents an ARM64 system architecture.
-        X64: Represents an X64/AMD64 system architecture.
-    """
-
-    ARM64 = "arm64"
-    X64 = "x64"
 
 
 class _OpenStackAuth(TypedDict):
