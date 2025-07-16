@@ -275,10 +275,6 @@ class CloudRunnerManager(abc.ABC):
     def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
         """Extract metrics from cloud VMs.
 
-        2025/07/03 TODO: This method should really live in another metrics extractor class (that
-        doesn't exist yet). Hence, this method is subject to refactor when the caller classes are
-        tidied up.
-
         Args:
             instance_ids: The VM instance IDs to fetch the metrics from.
 

@@ -28,10 +28,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import (
-    GitHubRunnerStatus,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -143,7 +140,7 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             runner_ids: The runner IDs to delete.
-            platform: TODO: Unused argument due to the poor architecture of the provider
+            platform: Unused argument due to the poor architecture of the provider
                 classes. The multiplexer provider should be a wrapper around the platforms, not on
                 the same level.
 

@@ -54,8 +54,6 @@ class _PullRunnerMetricsConfig:
     instance_id: InstanceID
 
 
-# 2025/07/03 TODO: This should really be a service class with OpenStack service injected. The
-# interface will accept the openstack_service and instance_id to reduce the scope of refactoring.
 def pull_runner_metrics(
     cloud_service: OpenstackCloud, instance_ids: Sequence[InstanceID]
 ) -> "list[PulledMetrics]":

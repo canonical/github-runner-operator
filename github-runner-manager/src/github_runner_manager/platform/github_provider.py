@@ -171,7 +171,7 @@ class GitHubRunnerPlatform(PlatformProvider):
 
         Args:
             runner_ids: The GitHub runner IDs to delete.
-            platform: TODO: Unused argument due to the poor architecture of the provider
+            platform: Unused argument due to the poor architecture of the provider
                 classes. The multiplexer provider should be a wrapper around the platforms, not on
                 the same level.
 
