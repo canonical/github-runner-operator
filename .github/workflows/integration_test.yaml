@@ -20,29 +20,26 @@ jobs:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_jobmanager_reactive"]'
-      # modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive"]'
+      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: stg-private-endpoint
-      tmate-debug: true
-      tmate-timeout: 3000
-  # openstack-integration-tests-cross-controller-private-endpoint:
-  #   name: Cross controller integration test using private-endpoint
-  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-  #   secrets: inherit
-  #   with:
-  #     juju-channel: 3.6/stable
-  #     pre-run-script: tests/integration/setup-integration-tests.sh
-  #     provider: lxd
-  #     test-tox-env: integration-juju3.6
-  #     modules: '["test_prometheus_metrics"]'
-  #     extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
-  #     self-hosted-runner: true
-  #     self-hosted-runner-label: stg-private-endpoint
-  # allure-report:
-  #   if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
-  #   needs:
-  #     - openstack-integration-tests-private-endpoint
-  #     - openstack-integration-tests-cross-controller-private-endpoint
-  #   uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+  openstack-integration-tests-cross-controller-private-endpoint:
+    name: Cross controller integration test using private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    secrets: inherit
+    with:
+      juju-channel: 3.6/stable
+      pre-run-script: tests/integration/setup-integration-tests.sh
+      provider: lxd
+      test-tox-env: integration-juju3.6
+      modules: '["test_prometheus_metrics"]'
+      extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
+      self-hosted-runner: true
+      self-hosted-runner-label: stg-private-endpoint
+  allure-report:
+    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
+    needs:
+      - openstack-integration-tests-private-endpoint
+      - openstack-integration-tests-cross-controller-private-endpoint
+    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
