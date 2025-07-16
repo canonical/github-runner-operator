@@ -118,7 +118,6 @@ def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
 def complete_charm_state_fixture():
     """Returns a fixture with a fully populated CharmState."""
     return charm_state.CharmState(
-        arch="arm64",
         is_metrics_logging_available=False,
         proxy_config=charm_state.ProxyConfig(
             http="http://httpproxy.example.com:3128",

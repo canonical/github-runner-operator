@@ -2,6 +2,7 @@
 #  See LICENSE file for licensing details.
 
 import logging
+import secrets
 import socket
 from typing import AsyncIterator
 
@@ -82,10 +83,17 @@ def jobmanager_base_url_fixture(
     return f"http://{jobmanager_ip_address}:{httpserver_listen_port}"
 
 
+@pytest.fixture(scope="session", name="jobmanager_token")
+def jobmanager_token_fixture() -> str:
+    """Token for the jobmanager tests."""
+    return secrets.token_hex(8)
+
+
 @pytest_asyncio.fixture(name="app")
 async def app_fixture(
     app_no_runner: Application,
     jobmanager_base_url: str,
+    jobmanager_token: str,
     httpserver: HTTPServer,
 ) -> AsyncIterator[Application]:
     """Setup and tear down for app."""
@@ -94,7 +102,7 @@ async def app_fixture(
     await app_for_jobmanager.set_config(
         {
             RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL),
-            TOKEN_CONFIG_NAME: "",
+            TOKEN_CONFIG_NAME: jobmanager_token,
             PATH_CONFIG_NAME: jobmanager_base_url,
         }
     )
