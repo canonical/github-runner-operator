@@ -5,6 +5,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-07-15
 
 - Split the reconcile_duration buckets for Prometheus metrics into a larger bucket set.
+- Fix the incorrect default value of the aproxy-exclude-addresses configuration.
 
 ## 2025-07-09
 

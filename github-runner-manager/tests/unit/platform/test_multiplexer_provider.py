@@ -138,7 +138,7 @@ def test_get_runners_health_returns_non_requested_runners_always(
         ),
         pytest.param(
             None,
-            JobManagerConfiguration(url="http://jobmanager.example.com"),
+            JobManagerConfiguration(url="http://jobmanager.example.com", token="token"),
             {"jobmanager"},
             id="JobManager only",
         ),
@@ -147,7 +147,7 @@ def test_get_runners_health_returns_non_requested_runners_always(
                 token=secrets.token_hex(5),
                 path=GitHubRepo(owner=secrets.token_hex(4), repo=secrets.token_hex(5)),
             ),
-            JobManagerConfiguration(url="http://jobmanager.example.com"),
+            JobManagerConfiguration(url="http://jobmanager.example.com", token="token"),
             {"github", "jobmanager"},
             id="Both GitHub and JobManager",
         ),
