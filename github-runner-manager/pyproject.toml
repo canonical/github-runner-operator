@@ -84,8 +84,6 @@ per-file-ignores = [
     "tests/unit/factories/*:DCO060",
     # Ignore no return values (DCO031) in docstring for abstract methods
     "src/github_runner_manager/manager/cloud_runner_manager.py:DCO031",
-    # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
-    "tests/*:D100,D101,D102,D103,D104,D205,D212",
     # DCO020, DCO030, DCO050: Ignore docstring argument,returns,raises sections in tests
     "tests/*:D100,D101,D102,D103,D104,D205,D212, DCO020, DCO030, DCO050",
 ]
