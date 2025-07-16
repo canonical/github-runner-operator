@@ -97,7 +97,11 @@ def kill_reactive_processes() -> None:
         ReactiveRunnerError: Failed to kill the reactive processes.
     """
     result = secure_run_subprocess(cmd=["pkill", "-f", REACTIVE_RUNNER_CMD_LINE_PREFIX])
-    if result.returncode != 0:
+    if result.returncode == 0:
+        logger.info("Flushed some reactive processes")
+    if result.returncode == 1:
+        logger.info("No reactive processes to flush")
+    else:
         raise ReactiveRunnerError("Failed to kill the reactive processes")
 
 
