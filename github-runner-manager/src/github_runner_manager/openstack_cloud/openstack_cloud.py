@@ -414,7 +414,9 @@ class OpenstackCloud:
             )
             for instance_id in instance_ids
         ]
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(len(instance_ids), 30)
+        ) as executor:
             submitted_future_config_map = {
                 executor.submit(OpenstackCloud._delete_instance, config): config
                 for config in delete_configs
