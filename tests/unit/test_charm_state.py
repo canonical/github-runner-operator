@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 import json
 import logging
-import platform
 import secrets
 from unittest.mock import MagicMock
 
@@ -37,7 +36,6 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    Arch,
     CharmConfig,
     CharmConfigInvalidError,
     CharmState,
@@ -47,7 +45,6 @@ from charm_state import (
     OpenstackRunnerConfig,
     ProxyConfig,
     SSHDebugConnection,
-    UnsupportedArchitectureError,
 )
 from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
@@ -98,6 +95,20 @@ def test_github_config_from_charm_invalid_token():
 
     with pytest.raises(CharmConfigInvalidError):
         GithubConfig.from_charm(mock_charm)
+
+
+def test_jobmanager_config_from_charm_empty_token():
+    """
+    arrange: Create a mock CharmBase instance with an empty token configuration.
+    act: Call from_charm method with the mock CharmBase instance.
+    assert:
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "https://jobmanager/"
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+
+    with pytest.raises(CharmConfigInvalidError):
+        charm_state.JobManagerConfig.from_charm(mock_charm)
 
 
 def test_github_config_from_charm_url_path_returns_none():
@@ -377,12 +388,15 @@ def test_charm_config_from_charm_sets_jobmanager_config():
     assert: Verify that job manager setting is set and github configs not.
     """
     jobmanager_url = "http://jobmanager.url:80"
+    jobmanager_token = secrets.token_hex(4)
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[PATH_CONFIG_NAME] = jobmanager_url
+    mock_charm.config[TOKEN_CONFIG_NAME] = jobmanager_token
 
     config = CharmConfig.from_charm(mock_charm)
 
     assert config.jobmanager_url == jobmanager_url
+    assert config.jobmanager_token == jobmanager_token
     assert config.token is None
     assert config.path is None
 
@@ -558,45 +572,6 @@ def test_proxy_config_from_charm(
     assert result.no_proxy is None
 
 
-@pytest.mark.parametrize(
-    "mocked_arch",
-    [
-        "ppc64le",  # Test with unsupported architecture
-        "sparc",  # Another example of unsupported architecture
-    ],
-)
-def test__get_supported_arch_unsupported(mocked_arch: str, monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: Mock the platform.machine() function to return an unsupported architecture.
-    act: Call the _get_supported_arch function.
-    assert: Verify that the function raises an UnsupportedArchitectureError.
-    """
-    monkeypatch.setattr(platform, "machine", MagicMock(return_value=mocked_arch))
-
-    with pytest.raises(UnsupportedArchitectureError):
-        charm_state._get_supported_arch()
-
-
-@pytest.mark.parametrize(
-    "mocked_arch, expected_result",
-    [
-        ("arm64", Arch.ARM64),  # Test with supported ARM64 architecture
-        ("x86_64", Arch.X64),  # Test with supported X64 architecture
-    ],
-)
-def test__get_supported_arch_supported(
-    mocked_arch: str, expected_result: Arch, monkeypatch: pytest.MonkeyPatch
-):
-    """
-    arrange: Mock the platform.machine() function to return a specific architecture.
-    act: Call the _get_supported_arch function.
-    assert: Verify that the function returns the expected supported architecture.
-    """
-    monkeypatch.setattr(platform, "machine", MagicMock(return_value=mocked_arch))
-
-    assert charm_state._get_supported_arch() == expected_result
-
-
 def test_ssh_debug_connection_from_charm_no_connections():
     """
     arrange: Mock CharmBase instance without relation.
@@ -770,7 +745,6 @@ class MockModel(BaseModel):
         (charm_state, "build_proxy_config_from_charm", ValueError),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
-        (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
         (charm_state, "_build_ssh_debug_connection_from_charm", ValidationError([], MockModel)),
     ],
 )
@@ -791,7 +765,6 @@ def test_charm_state_from_charm_invalid_cases(
     mock_charm_config_from_charm.return_value = mock_charm_config
     monkeypatch.setattr(CharmConfig, "from_charm", mock_charm_config_from_charm)
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(charm_state, "_build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
@@ -810,7 +783,6 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr("charm_state._build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
