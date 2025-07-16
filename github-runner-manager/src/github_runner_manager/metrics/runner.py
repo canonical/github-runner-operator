@@ -3,10 +3,10 @@
 
 """Classes and function to extract the metrics from storage and issue runner metrics events."""
 
+import concurrent.futures
 import io
 import json
 import logging
-import multiprocessing
 from dataclasses import dataclass
 from json import JSONDecodeError
 from typing import Optional, Sequence, Type
@@ -75,11 +75,19 @@ def pull_runner_metrics(
         for instance_id in instance_ids
     ]
     pulled_metrics: list[PulledMetrics] = []
-    with multiprocessing.Pool(min(len(instance_ids), 10)) as pool:
-        for metrics in pool.imap_unordered(_pull_runner_metrics, pull_metrics_configs):
-            if not metrics:
-                continue
-            pulled_metrics.append(metrics)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(instance_ids), 30)) as executor:
+        future_to_pull_metrics_config = {
+            executor.submit(_pull_runner_metrics, config): config
+            for config in pull_metrics_configs
+        }
+        for future in concurrent.futures.as_completed(future_to_pull_metrics_config):
+            pull_config = future_to_pull_metrics_config[future]
+            metric = future.result()
+            if not metric:
+                logger.warning("No metrics pulled for %s", pull_config.instance_id)
+            else:
+                pulled_metrics.append(metric)
+
     return pulled_metrics
 
 
@@ -99,11 +107,10 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         )
         return None
 
-    pulled_metrics = PulledMetrics(instance=instance)
     try:
         with pull_config.cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
             try:
-                pulled_metrics.runner_installed = _ssh_pull_file(
+                runner_installed = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -115,7 +122,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
                     exc,
                 )
             try:
-                pulled_metrics.pre_job_metrics = _ssh_pull_file(
+                pre_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(PRE_JOB_METRICS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -127,7 +134,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
                     exc,
                 )
             try:
-                pulled_metrics.post_job_metrics = _ssh_pull_file(
+                post_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
                     remote_path=str(POST_JOB_METRICS_FILE_NAME),
                     max_size=MAX_METRICS_FILE_SIZE,
@@ -145,12 +152,13 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         return None
 
     return (
-        pulled_metrics
-        if (
-            pulled_metrics.runner_installed
-            or pulled_metrics.pre_job_metrics
-            or pulled_metrics.post_job_metrics
+        PulledMetrics(
+            instance=instance,
+            runner_installed=runner_installed,
+            pre_job_metrics=pre_job_metrics,
+            post_job_metrics=post_job_metrics,
         )
+        if (runner_installed or pre_job_metrics or post_job_metrics)
         else None
     )
 
@@ -216,7 +224,7 @@ def _ssh_pull_file(ssh_conn: SSHConnection, remote_path: str, max_size: int) -> 
     return value
 
 
-@dataclass
+@dataclass(frozen=True)
 class PulledMetrics:
     """Metrics pulled from a runner.
 

@@ -47,7 +47,6 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     """
     arrange: given a mocked cloud service that raises exceptions are different points.
@@ -109,7 +108,6 @@ def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     )
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_pull_runner_metrics():
     """
     arrange: given a mock cloud service get_instance method and get_ssh_connection method.
@@ -128,23 +126,28 @@ def test_pull_runner_metrics():
     mock_instance_one, mock_instance_two = (MagicMock(), MagicMock())
     mock_cloud_service.get_instance.side_effect = [mock_instance_one, mock_instance_two]
 
-    assert pull_runner_metrics(
-        cloud_service=mock_cloud_service,
-        instance_ids=[mock_instance_one.instance_id, mock_instance_two.instance_id],
-    ) == [
-        PulledMetrics(
-            instance=mock_instance_one,
-            runner_installed=test_remote_file_contents,
-            pre_job_metrics=test_remote_file_contents,
-            post_job_metrics=test_remote_file_contents,
-        ),
-        PulledMetrics(
-            instance=mock_instance_two,
-            runner_installed=test_remote_file_contents,
-            pre_job_metrics=test_remote_file_contents,
-            post_job_metrics=test_remote_file_contents,
-        ),
-    ]
+    # Compare the set as the order is not guaranteed but it does not matter.
+    assert set(
+        pull_runner_metrics(
+            cloud_service=mock_cloud_service,
+            instance_ids=[mock_instance_one.instance_id, mock_instance_two.instance_id],
+        )
+    ) == set(
+        [
+            PulledMetrics(
+                instance=mock_instance_one,
+                runner_installed=test_remote_file_contents,
+                pre_job_metrics=test_remote_file_contents,
+                post_job_metrics=test_remote_file_contents,
+            ),
+            PulledMetrics(
+                instance=mock_instance_two,
+                runner_installed=test_remote_file_contents,
+                pre_job_metrics=test_remote_file_contents,
+                post_job_metrics=test_remote_file_contents,
+            ),
+        ]
+    )
 
 
 def test_issue_events(issue_event_mock: MagicMock):
