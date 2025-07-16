@@ -11,6 +11,7 @@ RECONCILE_DURATION_SECONDS = Histogram(
     name="reconcile_duration_seconds",
     documentation="Duration of reconciliation (seconds)",
     labelnames=[LABEL_FLAVOR],
+    buckets=[60, 2 * 60, 5 * 60, 10 * 60, 15 * 60, float("inf")],
 )
 EXPECTED_RUNNERS_COUNT = Gauge(
     name="expected_runners_count",
