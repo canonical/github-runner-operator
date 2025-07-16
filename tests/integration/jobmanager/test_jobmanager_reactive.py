@@ -214,6 +214,8 @@ async def test_jobmanager_reactive(
         {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)}
     )
     await wait_for_reconcile(app_for_reactive)
+    
+    pytest.set_trace()
 
     # 6. Assert queue is empty
     assert_queue_is_empty(mongodb_uri, app_for_reactive.name)
