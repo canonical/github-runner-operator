@@ -417,12 +417,12 @@ class OpenstackCloud:
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=min(len(instance_ids), 30)
         ) as executor:
-            submitted_future_config_map = {
+            future_to_delete_instance_config = {
                 executor.submit(OpenstackCloud._delete_instance, config): config
                 for config in delete_configs
             }
-            for future in concurrent.futures.as_completed(submitted_future_config_map):
-                delete_config = submitted_future_config_map[future]
+            for future in concurrent.futures.as_completed(future_to_delete_instance_config):
+                delete_config = future_to_delete_instance_config[future]
                 try:
                     if future.result():
                         deleted_instance_ids.append(delete_config.instance_id)
