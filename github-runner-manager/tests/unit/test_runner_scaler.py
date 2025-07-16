@@ -756,7 +756,7 @@ def test_reactive_flush_failed(
     """
     mock_run = mock_process_manager_subprocess_run
     mock_result = MagicMock()
-    mock_result.returncode = 1
+    mock_result.returncode = 10
     mock_run.return_value = mock_result
 
     with pytest.raises(ReactiveRunnerError) as err:
