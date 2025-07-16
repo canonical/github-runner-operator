@@ -32,6 +32,7 @@ from github_runner_manager.openstack_cloud.openstack_cloud import (
     _DeleteKeypairConfig,
     get_missing_security_rules,
 )
+from tests.unit.mock_runner_managers import MockOpenstackCloud
 
 FAKE_ARG = "fake"
 FAKE_PREFIX = "fake_prefix"
@@ -370,21 +371,26 @@ def test__delete_keypair_error(
     assert f"Error attempting to delete key: {test_key_instance_id.name}" in caplog.messages
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_delete_instances_partial_server_delete_failure(
-    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+    monkeypatch: pytest.MonkeyPatch, openstack_cloud: OpenstackCloud, caplog: LogCaptureFixture
 ):
     """
     arrange: given a mocked openstack connection that errors on few failed requests.
     act: when delete_instances method is called.
     assert: successfully deleted instance IDs are returned and failed instances are logged.
     """
-    mock_openstack_conn.delete_server = MagicMock(
-        side_effect=[True, False, openstack.exceptions.ResourceTimeout()]
-    )
     successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
     already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
     timeout_id = InstanceID(prefix="timeout error", reactive=False, suffix="")
+    mock_cloud = MockOpenstackCloud(
+        initial_servers=[successful_delete_id, timeout_id],
+        server_to_errors={timeout_id: openstack.exceptions.ResourceTimeout()},
+    )
+    monkeypatch.setattr(
+        github_runner_manager.openstack_cloud.openstack_cloud.openstack,
+        "connect",
+        MagicMock(return_value=mock_cloud),
+    )
 
     deleted_instance_ids = openstack_cloud.delete_instances(
         instance_ids=[successful_delete_id, already_deleted_id, timeout_id]
@@ -396,7 +402,6 @@ def test_delete_instances_partial_server_delete_failure(
     assert f"Failed to delete OpenStack VM instance: {timeout_id}" in caplog.messages
 
 
-@pytest.mark.usefixtures("patch_multiprocess_pool_imap_unordered")
 def test_delete_instances(
     openstack_cloud: OpenstackCloud,
     mock_openstack_conn: MagicMock,

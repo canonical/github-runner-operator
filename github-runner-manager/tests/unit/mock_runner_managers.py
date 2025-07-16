@@ -1,18 +1,14 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
-import hashlib
 import logging
-import secrets
-from dataclasses import dataclass
-from datetime import datetime, timezone
 from typing import Sequence
+from unittest.mock import MagicMock
 
 from pydantic import HttpUrl
 
 from github_runner_manager.manager.cloud_runner_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
-    CloudRunnerState,
 )
 from github_runner_manager.manager.models import (
     InstanceID,
@@ -22,19 +18,14 @@ from github_runner_manager.manager.models import (
 )
 from github_runner_manager.manager.runner_manager import RunnerInstance
 from github_runner_manager.metrics.runner import RunnerMetrics
-from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.openstack_cloud.openstack_cloud import _MAX_NOVA_COMPUTE_API_VERSION
 from github_runner_manager.platform.platform_provider import (
     JobInfo,
     PlatformProvider,
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import (
-    GitHubRunnerStatus,
-    JITConfig,
-    RunnerApplication,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 from tests.unit.factories.runner_instance_factory import CloudRunnerInstanceFactory
 
 logger = logging.getLogger(__name__)
@@ -51,212 +42,71 @@ TEST_BINARY = (
 )
 
 
-class MockGhapiClient:
-    """Mock for Ghapi client."""
+class MockOpenstackCloud:
+    """Mock of OpenstackCloud."""
 
-    def __init__(self, token: str):
-        """Initialization method for GhapiClient fake.
+    _MOCK_COMPUTE_ENDPOINT = "mock-compute-endpoint"
+    _MOCK_COMPUTE_ENDPOINT_RESPONSE = {"version": {"version": _MAX_NOVA_COMPUTE_API_VERSION}}
 
-        Args:
-            token: The client token value.
-        """
-        self.token = token
-        self.actions = MockGhapiActions()
+    def __init__(
+        self,
+        initial_servers: list[InstanceID],
+        server_to_errors: dict[InstanceID, Exception] | None = None,
+    ) -> None:
+        """Initialize the OpenstackCloud mock object."""
+        self.servers = {instance.name: instance for instance in initial_servers}
+        self._injected_errors = {
+            instance.name: exc for instance, exc in (server_to_errors or {}).items()
+        }
 
-    def last_page(self) -> int:
-        """Last page number stub.
+    def __enter__(self) -> "MockOpenstackCloud":
+        """Mock enter method for context entering."""
+        return self
 
-        Returns:
-            Always zero.
-        """
-        return 0
+    def __exit__(self, *args, **kwargs) -> None:
+        """Mock exit method for context exiting."""
+        return
 
+    def connect(self) -> "MockOpenstackCloud":
+        """Mock OpenStack lib's connect function."""
+        return self
 
-class MockGhapiActions:
-    """Mock for actions in Ghapi client."""
+    @property
+    def compute(self) -> "MockOpenstackCloud":
+        """Mock the compute API attribute."""
+        return self
 
-    def __init__(self):
-        """A placeholder method for test stub/fakes initialization."""
-        hash = hashlib.sha256()
-        hash.update(TEST_BINARY)
-        self.test_hash = hash.hexdigest()
-        self.registration_token_repo = secrets.token_hex()
-        self.registration_token_org = secrets.token_hex()
+    def get_endpoint(self) -> str:
+        """Mock endpoint string for compute endpoint."""
+        return self._MOCK_COMPUTE_ENDPOINT
 
-    def _list_runner_applications(self):
-        """A placeholder method for test fake.
+    @property
+    def session(self) -> dict:
+        """Mock the connection session attribute."""
+        compute_endpoint_mock = MagicMock()
+        compute_endpoint_mock.json.return_value = self._MOCK_COMPUTE_ENDPOINT_RESPONSE
+        return {self._MOCK_COMPUTE_ENDPOINT: compute_endpoint_mock}
 
-        Returns:
-            A fake runner applications list.
-        """
-        runners = []
-        runners.append(
-            RunnerApplication(
-                os="linux",
-                architecture="x64",
-                download_url="https://www.example.com",
-                filename="test_runner_binary",
-                sha256_checksum=self.test_hash,
-            )
-        )
-        return runners
+    def delete_server(
+        self,
+        name_or_id: str,
+        wait: bool = False,
+        timeout: int = 180,
+        delete_ips: bool = False,
+        delete_ip_retry: int = 1,
+    ) -> bool:
+        """Mock method for deleting server."""
+        injected_test_error = self._injected_errors.pop(name_or_id, None)
+        if injected_test_error:
+            raise injected_test_error
 
-    def list_runner_applications_for_repo(self, owner: str, repo: str):
-        """A placeholder method for test stub.
+        if self.servers.pop(name_or_id, None):
+            return True
+        return False
 
-        Args:
-            owner: Placeholder for repository owner.
-            repo: Placeholder for repository name.
-
-        Returns:
-            A fake runner applications list.
-        """
-        return self._list_runner_applications()
-
-    def list_runner_applications_for_org(self, org: str):
-        """A placeholder method for test stub.
-
-        Args:
-            org: Placeholder for repository owner.
-
-        Returns:
-            A fake runner applications list.
-        """
-        return self._list_runner_applications()
-
-    def create_registration_token_for_repo(self, owner: str, repo: str):
-        """A placeholder method for test stub.
-
-        Args:
-            owner: Placeholder for repository owner.
-            repo: Placeholder for repository name.
-
-        Returns:
-            Registration token stub.
-        """
-        return JITConfig(
-            {"token": self.registration_token_repo, "expires_at": "2020-01-22T12:13:35.123-08:00"}
-        )
-
-    def list_self_hosted_runners_for_repo(
-        self, owner: str, repo: str, per_page: int, page: int = 0
-    ):
-        """A placeholder method for test stub.
-
-        Args:
-            owner: Placeholder for repository owner.
-            repo: Placeholder for repository name.
-            per_page: Placeholder for responses per page.
-            page: Placeholder for response page number.
-
-        Returns:
-            Empty runners stub.
-        """
-        return {"runners": []}
-
-    def list_self_hosted_runners_for_org(self, org: str, per_page: int, page: int = 0):
-        """A placeholder method for test stub.
-
-        Args:
-            org: Placeholder for repository owner.
-            per_page: Placeholder for responses per page.
-            page: Placeholder for response page number.
-
-        Returns:
-            Empty runners stub.
-        """
-        return {"runners": []}
-
-    def delete_self_hosted_runner_from_repo(self, owner: str, repo: str, runner_id: str):
-        """A placeholder method for test stub.
-
-        Args:
-            owner: Placeholder for repository owner.
-            repo: Placeholder for repository name.
-            runner_id: Placeholder for runenr_id.
-        """
+    def delete_keypair(self, *args, **kwargs):
+        """Mock delete keypair method."""
         pass
-
-    def delete_self_hosted_runner_from_org(self, org: str, runner_id: str):
-        """A placeholder method for test stub.
-
-        Args:
-            org: Placeholder for organisation.
-            runner_id: Placeholder for runner id.
-        """
-        pass
-
-
-@dataclass
-class MockRunner:
-    """Mock of a runner.
-
-    Attributes:
-        name: The name of the runner.
-        instance_id: The instance id of the runner.
-        metadata: Metadata of the server.
-        cloud_state: The cloud state of the runner.
-        platform_state: The github state of the runner.
-        health: The health state of the runner.
-        created_at: The cloud creation time of the runner.
-        deletable: If the runner is deletable.
-    """
-
-    name: str
-    instance_id: InstanceID
-    metadata: RunnerMetadata
-    cloud_state: CloudRunnerState
-    platform_state: PlatformRunnerState
-    health: bool
-    created_at: datetime
-    deletable: bool = False
-
-    def __init__(self, instance_id: InstanceID):
-        """Construct the object.
-
-        Args:
-            instance_id: InstanceID of the runner.
-        """
-        self.name = instance_id.name
-        self.instance_id = instance_id
-        self.metadata = RunnerMetadata()
-        self.cloud_state = CloudRunnerState.ACTIVE
-        self.platform_state = PlatformRunnerState.IDLE
-        self.health = True
-        # By default a runner that has just being created.
-        self.created_at = datetime.now(timezone.utc)
-
-    def to_cloud_runner(self) -> CloudRunnerInstance:
-        """Construct CloudRunnerInstance from this object.
-
-        Returns:
-            The CloudRunnerInstance instance.
-        """
-        return CloudRunnerInstance(
-            name=self.name,
-            metadata=self.metadata,
-            instance_id=self.instance_id,
-            health=self.health,
-            state=self.cloud_state,
-            created_at=self.created_at,
-        )
-
-
-@dataclass
-class SharedMockRunnerManagerState:
-    """State shared by mock runner managers.
-
-    For sharing the mock runner states between MockCloudRunnerManager and MockGitHubRunnerPlatform.
-
-    Attributes:
-        runners: The runners.
-    """
-
-    runners: dict[InstanceID, MockRunner]
-
-    def __init__(self):
-        """Construct the object."""
-        self.runners = {}
 
 
 class MockCloudRunnerManager(CloudRunnerManager):

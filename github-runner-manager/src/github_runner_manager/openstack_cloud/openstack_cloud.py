@@ -2,11 +2,11 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+import concurrent.futures
 import contextlib
 import copy
 import functools
 import logging
-import multiprocessing
 import shutil
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -74,6 +74,29 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
 # the openstack server is in construction but not yet returned by the API, and the keypair gets
 # deleted.
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
+
+
+class OpenStackVMDeleteError(openstack.exceptions.SDKException):
+    """Represents an error while deleting a VM instance.
+
+    Attributes:
+        instance_id: The instance ID that was failed to delete.
+    """
+
+    instance_id: InstanceID
+
+    def __init__(
+        self, instance_id: InstanceID, message: str | None = None, extra_data: Any = None
+    ):
+        """Initialize the OpenstackVMDeleteError.
+
+        Args:
+            instance_id: The instance ID of the failed delete VM.
+            message: The delete error message for parent SDKException.
+            extra_data: Extra data for parent SDKException if any.
+        """
+        self.instance_id = instance_id
+        super().__init__(message, extra_data)
 
 
 @dataclass
@@ -316,14 +339,14 @@ class OpenstackCloud:
         return None
 
     @staticmethod
-    def _delete_instance(delete_config: _DeleteVMConfig) -> InstanceID | None:
+    def _delete_instance(delete_config: _DeleteVMConfig) -> bool:
         """Delete a openstack instance.
 
         Args:
             delete_config: The configuration used to delete a cloud VM instance.
 
-        Returns:
-            The deleted Instance ID.
+        Raises:
+            OpenStackVMDeleteError: If there was an error deleting the VM instance.
         """
         with openstack.connect(
             auth_url=delete_config.credentials.auth_url,
@@ -335,30 +358,30 @@ class OpenstackCloud:
             project_domain_name=delete_config.credentials.project_domain_name,
             compute_api_version=delete_config.max_api_version,
         ) as conn:
-
             try:
                 logger.info("Deleting server %s", delete_config.instance_id.name)
-                res = conn.delete_server(name_or_id=delete_config.instance_id.name)
+                deleted = conn.delete_server(name_or_id=delete_config.instance_id.name)
                 logger.info(
-                    "Deleted server %s (true delete: %s)", delete_config.instance_id.name, res
-                )
-                OpenstackCloud._delete_keypair(
-                    _DeleteKeypairConfig(
-                        keys_dir=delete_config.keys_dir,
-                        instance_id=delete_config.instance_id,
-                        conn=conn,
-                    )
+                    "Deleted server %s (true delete: %s)", delete_config.instance_id.name, deleted
                 )
             except (
                 openstack.exceptions.SDKException,
                 openstack.exceptions.ResourceTimeout,
-            ):
-                logger.exception(
-                    "Failed to delete OpenStack VM instance: %s", delete_config.instance_id.name
-                )
-                return None
+            ) as e:
+                raise OpenStackVMDeleteError(
+                    instance_id=delete_config.instance_id,
+                    message=f"Failed to delete server {delete_config.instance_id.name}",
+                ) from e
 
-        return delete_config.instance_id if res else None
+            OpenstackCloud._delete_keypair(
+                _DeleteKeypairConfig(
+                    keys_dir=delete_config.keys_dir,
+                    instance_id=delete_config.instance_id,
+                    conn=conn,
+                )
+            )
+
+        return deleted
 
     def delete_instances(
         self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
@@ -380,25 +403,29 @@ class OpenstackCloud:
         if not instance_ids:
             return deleted_instance_ids
 
-        with multiprocessing.Pool(min(len(instance_ids), 30)) as pool:
-            delete_configs = [
-                _DeleteVMConfig(
-                    instance_id=instance_id,
-                    credentials=self._credentials,
-                    max_api_version=self._max_compute_api_version,
-                    keys_dir=self._ssh_key_dir,
-                    wait=wait,
-                    timeout=timeout,
-                )
-                for instance_id in instance_ids
-            ]
-            logger.info("Deleting instances: %s", delete_configs)
-            for deleted_instance_id in pool.imap_unordered(
-                OpenstackCloud._delete_instance, delete_configs
-            ):
-                if not deleted_instance_id:
-                    continue
-                deleted_instance_ids.append(deleted_instance_id)
+        delete_configs = [
+            _DeleteVMConfig(
+                instance_id=instance_id,
+                credentials=self._credentials,
+                max_api_version=self._max_compute_api_version,
+                keys_dir=self._ssh_key_dir,
+                wait=wait,
+                timeout=timeout,
+            )
+            for instance_id in instance_ids
+        ]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+            submitted_future_config_map = {
+                executor.submit(OpenstackCloud._delete_instance, config): config
+                for config in delete_configs
+            }
+            for future in concurrent.futures.as_completed(submitted_future_config_map):
+                delete_config = submitted_future_config_map[future]
+                try:
+                    if future.result():
+                        deleted_instance_ids.append(delete_config.instance_id)
+                except OpenStackVMDeleteError as e:
+                    logger.error("Failed to delete OpenStack VM instance: %s", e.instance_id)
 
         return deleted_instance_ids
 
