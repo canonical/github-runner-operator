@@ -19,7 +19,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     PlatformRunnerState,
 )
-from github_runner_manager.types_.github import SelfHostedRunner, SelfHostedRunnerLabel
+from github_runner_manager.types_.github import SelfHostedRunner
 
 
 class InstanceIDFactory(factory.Factory):
@@ -174,21 +174,6 @@ class RunnerInstanceFactory(factory.Factory):
         )
 
 
-class SelfHostedRunnerLabelFactory(factory.Factory):
-    """Factory for creating SelfHostedRunnerLabel instances."""
-
-    class Meta:
-        """Meta class for RunnerInstance.
-
-        Attributes:
-            model: The metadata reference model.
-        """
-
-        model = SelfHostedRunnerLabel
-
-    name = factory.Faker("word")
-
-
 class SelfHostedRunnerFactory(factory.Factory):
     """Factory for creating SelfHostedRunner instances."""
 
@@ -203,9 +188,9 @@ class SelfHostedRunnerFactory(factory.Factory):
 
     busy = factory.Faker("boolean")
     id = factory.Faker("random_int", min=1, max=10000)
-    labels = factory.List([factory.SubFactory(SelfHostedRunnerLabelFactory) for _ in range(3)])
+    labels = factory.List([factory.Faker("word") for _ in range(3)])
     status = factory.Faker("word", ext_word_list=["online", "offline"])
-    deletable = factory.Faker("boolean", chance_of_getting_true=50)
+    deletable = factory.Faker("boolean")
     # identity.metadata.runner_id should be equal to the id attribute.
     identity = factory.LazyAttribute(
         lambda obj: RunnerIdentityFactory(
