@@ -30,13 +30,16 @@ from github_runner_manager.configuration.github import (
     GitHubPath,
     GitHubRepo,
 )
-from github_runner_manager.errors import CloudError, ReconcileError
 from github_runner_manager.manager import runner_manager as runner_manager_module
 from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.manager.runner_manager import FlushMode, RunnerManager
-from github_runner_manager.manager.runner_scaler import RunnerScaler
-from github_runner_manager.metrics.events import Reconciliation
+from github_runner_manager.manager.runner_manager import (
+    IssuedMetricEventsStats,
+    RunnerInstance,
+    RunnerManager,
+)
+from github_runner_manager.manager.runner_scaler import FlushMode, RunnerInfo, RunnerScaler
+from github_runner_manager.metrics.events import RunnerStart, RunnerStop
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -47,11 +50,7 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
-from tests.unit.mock_runner_managers import (
-    MockCloudRunnerManager,
-    MockGitHubRunnerPlatform,
-    SharedMockRunnerManagerState,
-)
+from tests.unit.factories.runner_instance_factory import RunnerInstanceFactory
 
 logger = logging.getLogger(__name__)
 
@@ -77,16 +76,6 @@ def mock_runner_manager_spawn_runners(
 @pytest.fixture(scope="function", name="github_path")
 def github_path_fixture() -> GitHubPath:
     return GitHubRepo(owner="mock_owner", repo="mock_repo")
-
-
-@pytest.fixture(scope="function", name="mock_runner_managers")
-def mock_runner_managers_fixture(
-    github_path: GitHubPath,
-) -> tuple[MockCloudRunnerManager, MockGitHubRunnerPlatform]:
-    state = SharedMockRunnerManagerState()
-    mock_cloud = MockCloudRunnerManager(state)
-    mock_github = MockGitHubRunnerPlatform(mock_cloud.name_prefix, github_path, state)
-    return (mock_cloud, mock_github)
 
 
 @pytest.fixture(scope="function", name="issue_events_mock")
@@ -377,328 +366,188 @@ def test_build_runner_scaler(
     )
 
 
-def test_get_no_runner(runner_manager: RunnerManager, user_info: UserInfo):
-    """
-    Arrange: A RunnerScaler with no runners.
-    Act: Get runner information.
-    Assert: Information should contain no runners.
-    """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=0, max_quantity=0)
-    assert_runner_info(runner_scaler, online=0)
-
-
-def test_flush_no_runner(runner_manager: RunnerManager, user_info: UserInfo):
-    """
-    Arrange: A RunnerScaler with no runners.
-    Act:
-        1. Flush idle runners.
-        2. Flush busy runners.
-    Assert:
-        1. No change in number of runners. Runner info should contain no runners.
-        2. No change in number of runners.
-    """
-    # 1.
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=0, max_quantity=0)
-    diff = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-    assert diff == 0
-    assert_runner_info(runner_scaler, online=0)
-
-    # 2.
-    diff = runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
-    assert diff == 0
-    assert_runner_info(runner_scaler, online=0)
-
-
-def test_reconcile_runner_create_one(runner_manager: RunnerManager, user_info: UserInfo):
-    """
-    Arrange: A RunnerScaler with no runners.
-    Act: Reconcile to no runners.
-    Assert: No changes. Runner info should contain no runners.
-    """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=0, max_quantity=0)
-    diff = runner_scaler.reconcile()
-    assert diff == 0
-    assert_runner_info(runner_scaler, online=0)
-
-
-def test_reconcile_runner_create_one_reactive(
-    monkeypatch: pytest.MonkeyPatch, runner_manager: RunnerManager, user_info: UserInfo
+@pytest.mark.parametrize(
+    "runners, expected_runner_info",
+    [
+        pytest.param(
+            [],
+            RunnerInfo(online=0, busy=0, offline=0, unknown=0, runners=(), busy_runners=()),
+            id="No runners",
+        ),
+        pytest.param(
+            [busy_runner := RunnerInstanceFactory(platform_state=PlatformRunnerState.BUSY)],
+            RunnerInfo(
+                online=1,
+                busy=1,
+                offline=0,
+                unknown=0,
+                runners=(busy_runner.name,),
+                busy_runners=(busy_runner.name,),
+            ),
+            id="One busy runner",
+        ),
+        pytest.param(
+            [idle_runner := RunnerInstanceFactory(platform_state=PlatformRunnerState.IDLE)],
+            RunnerInfo(
+                online=1,
+                busy=0,
+                offline=0,
+                unknown=0,
+                runners=(idle_runner.name,),
+                busy_runners=(),
+            ),
+            id="One idle runner",
+        ),
+        pytest.param(
+            [offline_runner := RunnerInstanceFactory(platform_state=PlatformRunnerState.OFFLINE)],
+            RunnerInfo(
+                online=0,
+                busy=0,
+                offline=1,
+                unknown=0,
+                runners=(),
+                busy_runners=(),
+            ),
+            id="One offline runner",
+        ),
+        pytest.param(
+            [unknown_runner := RunnerInstanceFactory(platform_state=None)],
+            RunnerInfo(
+                online=0,
+                busy=0,
+                offline=0,
+                unknown=1,
+                runners=(),
+                busy_runners=(),
+            ),
+            id="One unknown runner",
+        ),
+        pytest.param(
+            [busy_runner, idle_runner, offline_runner, unknown_runner],
+            RunnerInfo(
+                online=2,
+                busy=1,
+                offline=1,
+                unknown=1,
+                runners=(busy_runner.name, idle_runner.name),
+                busy_runners=(busy_runner.name,),
+            ),
+            id="One runner of each type",
+        ),
+    ],
+)
+def test_runner_scaler_get_runner_info(
+    runners: list[RunnerInstance], expected_runner_info: RunnerInfo
 ):
     """
-    Arrange: Prepare one RunnerScaler in reactive mode.
-       Fake the reconcile function in reactive to return its input.
-    Act: Call reconcile with base quantity 0 and max quantity 5.
-    Assert: 5 processes should be returned in the result of the reconcile.
+    arrange: given a mock runner manager.
+    act: when RunnerScaler.get_runner_info is called.
+    assert the expected runner info is extracted.
     """
-    reactive_process_config = MagicMock()
+    runner_manager = MagicMock()
+    runner_manager.get_runners.return_value = runners
     runner_scaler = RunnerScaler(
-        runner_manager, reactive_process_config, user_info, base_quantity=0, max_quantity=5
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        user=MagicMock(),
+        base_quantity=0,
+        max_quantity=0,
     )
 
-    from github_runner_manager.reactive.runner_manager import ReconcileResult
+    assert runner_scaler.get_runner_info() == expected_runner_info
 
-    def _fake_reactive_reconcile(
-        expected_quantity: int, runner_manager, reactive_process_config, user, python_path
-    ):
-        """Reactive reconcile fake."""
-        return ReconcileResult(processes_diff=expected_quantity, metric_stats={"event": ""})
 
-    monkeypatch.setattr(
-        "github_runner_manager.reactive.runner_manager.reconcile",
-        MagicMock(side_effect=_fake_reactive_reconcile),
+@pytest.mark.parametrize(
+    "cleanup_metrics, flush_metrics, expected_flushed",
+    [
+        pytest.param({}, {}, 0, id="No changes"),
+        pytest.param({RunnerStart: 1}, {}, 0, id="No runner stop metrics"),
+        pytest.param({RunnerStop: 1}, {}, 1, id="Runner stop metric from cleanup"),
+        pytest.param({}, {RunnerStop: 1}, 1, id="Runner stop metric from flush"),
+        pytest.param(
+            {RunnerStop: 1},
+            {RunnerStop: 1},
+            2,
+            id="Runner stop metrics from cleanup and flush",
+        ),
+    ],
+)
+def test_runner_scaler_flush_extract_metrics(
+    cleanup_metrics: IssuedMetricEventsStats,
+    flush_metrics: IssuedMetricEventsStats,
+    expected_flushed: int,
+):
+    """
+    arrange: given a mocked runner manager with that returns the given metrics.
+    act: when RunnerScaler.flush is called.
+    assert: the expected number of flushed runners from metrics is returned.
+    """
+    runner_manager = MagicMock()
+    runner_manager.cleanup.return_value = cleanup_metrics
+    runner_manager.flush_runners.return_value = flush_metrics
+
+    runner_scaler = RunnerScaler(
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        user=MagicMock(),
+        base_quantity=0,
+        max_quantity=0,
     )
-    diff = runner_scaler.reconcile()
-    assert diff == 5
-    assert_runner_info(runner_scaler, online=0)
+
+    assert runner_scaler.flush() == expected_flushed
 
 
-def test_reconcile_error_still_issue_metrics(
-    runner_manager: RunnerManager,
-    monkeypatch: pytest.MonkeyPatch,
-    issue_events_mock: MagicMock,
-    user_info: UserInfo,
+@pytest.mark.parametrize(
+    "flush_mode, expected_flush_mode",
+    [
+        pytest.param(FlushMode.FLUSH_IDLE, FlushMode.FLUSH_IDLE, id="flush_idle"),
+        pytest.param(FlushMode.FLUSH_BUSY, FlushMode.FLUSH_BUSY, id="flush_busy"),
+    ],
+)
+def test_runner_scaler_flush_mode(flush_mode: FlushMode, expected_flush_mode: FlushMode):
+    """
+    arrange: given a mocked runner manager.
+    act: when RunnerScaler.flush is called with the given flush mode.
+    assert: flush_runners is called with expected mode.
+    """
+    runner_manager = MagicMock()
+
+    RunnerScaler(
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        user=MagicMock(),
+        base_quantity=0,
+        max_quantity=0,
+    ).flush(flush_mode=flush_mode)
+
+    runner_manager.flush_runners.assert_called_with(flush_mode=expected_flush_mode)
+
+
+@pytest.mark.parametrize(
+    "runners, quantity, expected_diff",
+    [
+        pytest.param([], 0, 0, id="no difference"),
+        pytest.param([], 1, 1, id="scale up one runner"),
+        pytest.param([RunnerInstanceFactory()], 0, -1, id="scale down one runner"),
+    ],
+)
+def test_runner_scaler__reconcile_non_reactive(
+    runners: list[RunnerInstance], quantity: int, expected_diff: int
 ):
     """
-    Arrange: A RunnerScaler with no runners which raises an error on reconcile.
-    Act: Reconcile to one runner.
-    Assert: ReconciliationEvent should be issued.
+    arrange: given a mocked runner manager.
+    act: when RunnerScaler._reconcile_non_reactive is called.
+    assert: expected runner diff is returned.
     """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=1, max_quantity=0)
-    monkeypatch.setattr(
-        runner_scaler._manager, "cleanup", MagicMock(side_effect=Exception("Mock error"))
-    )
-    with pytest.raises(Exception):
-        runner_scaler.reconcile()
-    issue_events_mock.assert_called_once()
-    issued_event = issue_events_mock.call_args[0][0]
-    assert isinstance(issued_event, Reconciliation)
+    runner_manager = MagicMock()
+    runner_manager.get_runners.return_value = runners
 
+    result = RunnerScaler(
+        runner_manager=runner_manager,
+        reactive_process_config=None,
+        user=MagicMock(),
+        base_quantity=0,
+        max_quantity=0,
+    )._reconcile_non_reactive(expected_quantity=quantity)
 
-def test_reconcile_raises_reconcile_error(
-    runner_manager: RunnerManager,
-    monkeypatch: pytest.MonkeyPatch,
-    issue_events_mock: MagicMock,
-    user_info: UserInfo,
-):
-    """
-    Arrange: A RunnerScaler with no runners which raises a Cloud error on reconcile.
-    Act: Reconcile to one runner.
-    Assert: ReconcileError should be raised.
-    """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=1, max_quantity=0)
-    monkeypatch.setattr(
-        runner_scaler._manager, "cleanup", MagicMock(side_effect=CloudError("Mock error"))
-    )
-    with pytest.raises(ReconcileError) as exc:
-        runner_scaler.reconcile()
-    assert "Failed to reconcile runners." in str(exc.value)
-
-
-def test_one_runner(runner_manager: RunnerManager, user_info: UserInfo):
-    """
-    Arrange: A RunnerScaler with no runners.
-    Act:
-        1. Reconcile to one runner.
-        2. Reconcile to one runner.
-        3. Flush idle runners.
-        4. Reconcile to one runner.
-    Assert:
-        1. Runner info has one runner.
-        2. No changes to number of runner.
-        3. Runner info has one runner.
-    """
-    # 1.
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=1, max_quantity=0)
-    diff = runner_scaler.reconcile()
-    assert diff == 1
-    assert_runner_info(runner_scaler, online=1)
-
-    # 2.
-    diff = runner_scaler.reconcile()
-    assert diff == 0
-    assert_runner_info(runner_scaler, online=1)
-
-    # 3.
-    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-    assert_runner_info(runner_scaler, online=0)
-
-    # 3.
-    diff = runner_scaler.reconcile()
-    assert diff == 1
-    assert_runner_info(runner_scaler, online=1)
-
-
-def test_flush_busy_on_idle_runner(runner_scaler_one_runner: RunnerScaler):
-    """
-    Arrange: A RunnerScaler with one idle runner.
-    Act: Run flush busy runner.
-    Assert: No runners.
-    """
-    runner_scaler = runner_scaler_one_runner
-
-    runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
-    assert_runner_info(runner_scaler, online=0)
-
-
-def test_flush_busy_on_busy_runner(
-    runner_scaler_one_runner: RunnerScaler,
-):
-    """
-    Arrange: A RunnerScaler with one busy runner.
-    Act: Run flush busy runner.
-    Assert: No runners.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
-
-    runner_scaler.flush(flush_mode=FlushMode.FLUSH_BUSY)
-    assert_runner_info(runner_scaler, online=0)
-
-
-def test_get_runner_one_busy_runner(
-    runner_scaler_one_runner: RunnerScaler,
-):
-    """
-    Arrange: A RunnerScaler with one busy runner.
-    Act: Run get runners.
-    Assert: One busy runner.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.BUSY)
-
-    assert_runner_info(runner_scaler=runner_scaler, online=1, busy=1)
-
-
-def test_get_runner_offline_runner(runner_scaler_one_runner: RunnerScaler):
-    """
-    Arrange: A RunnerScaler with one offline runner.
-    Act: Run get runners.
-    Assert: One offline runner.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
-
-    assert_runner_info(runner_scaler=runner_scaler, offline=1)
-
-
-def test_get_runner_unknown_runner(runner_scaler_one_runner: RunnerScaler):
-    """
-    Arrange: A RunnerScaler with one offline runner.
-    Act: Run get runners.
-    Assert: One offline runner.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, health=False)
-    assert_runner_info(runner_scaler=runner_scaler, unknown=1)
-
-
-def test_flush_idle_on_starting_offline_runner(
-    runner_scaler_one_runner: RunnerScaler,
-    runner_manager: RunnerManager,
-):
-    """
-    Arrange: A RunnerScaler with one offline runner that could be starting.
-    Act: Run flush idle runner.
-    Assert: The runner should not be deleted.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
-    runners_before = runner_manager.get_runners()
-
-    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-    assert_runner_info(runner_scaler, offline=1)
-    runners_after = runner_manager.get_runners()
-    assert runners_before[0].instance_id == runners_after[0].instance_id
-
-
-def test_flush_idle_on_old_offline_runner(
-    runner_scaler_one_runner: RunnerScaler,
-    runner_manager: RunnerManager,
-):
-    """
-    Arrange: A RunnerScaler with one offline runner that had enough time to start.
-    Act: Run flush idle runner.
-    Assert: The runner should be deleted. No one should be created.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
-
-    runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-    assert_runner_info(runner_scaler, offline=0)
-
-
-def test_reconcile_on_starting_offline_runner(
-    runner_scaler_one_runner: RunnerScaler,
-    runner_manager: RunnerManager,
-):
-    """
-    Arrange: A RunnerScaler with one offline runner that could be starting.
-    Act: Run reconcile.
-    Assert: The runner should not be deleted.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE)
-    runners_before = runner_manager.get_runners()
-
-    runner_scaler.reconcile()
-    assert_runner_info(runner_scaler, offline=1)
-    runners_after = runner_manager.get_runners()
-    assert runners_before[0].instance_id == runners_after[0].instance_id
-
-
-def test_reconcile_on_old_offline_runner(
-    runner_scaler_one_runner: RunnerScaler,
-    runner_manager: RunnerManager,
-):
-    """
-    Arrange: A RunnerScaler with one offline not busy runner that could have failed to start.
-    Act: Run reconcile.
-    Assert: The runner should be deleted. Another one will be created.
-    """
-    runner_scaler = runner_scaler_one_runner
-    set_one_runner_state(runner_scaler, PlatformRunnerState.OFFLINE, old_runner=True)
-    runners_before = runner_manager.get_runners()
-
-    runner_scaler.reconcile()
-    assert_runner_info(runner_scaler, online=1, offline=0)
-    runners_after = runner_manager.get_runners()
-    assert runners_before[0].instance_id != runners_after[0].instance_id
-
-
-def test_delete_some_runners_in_reconcile(runner_manager: RunnerManager, user_info: UserInfo):
-    """
-    Arrange: Run a reconcile to get 5 runners online.
-    Act: In a different runner_scaler, reconcile with 2 runners.
-    Assert: 3 runners should be delete and 2 runners should be online. The busy runner and the
-        runner without health information should be retained based on the desired ordering.
-    """
-    runner_scaler = RunnerScaler(runner_manager, None, user_info, base_quantity=5, max_quantity=0)
-    diff = runner_scaler.reconcile()
-    assert diff == 5
-    assert_runner_info(runner_scaler, online=5)
-
-    # Update the runner_dict, so we can check that runners are deleted in order of "inconvenience".
-    # This test depends on the preservation of insertion order.
-    # See https://docs.python.org/3.7/library/stdtypes.html#dict.values
-    runner_dict = runner_scaler._manager._platform.state.runners
-    initial_mock_runners = list(runner_dict.values())
-    initial_mock_runners[0].platform_state = PlatformRunnerState.IDLE
-    initial_mock_runners[1].platform_state = PlatformRunnerState.OFFLINE
-    initial_mock_runners[2].platform_state = PlatformRunnerState.BUSY
-    initial_mock_runners[3].deletable = True
-    initial_mock_runners[4].health = False  # Runner without health information
-
-    second_runner_scaler = RunnerScaler(
-        runner_manager, None, user_info, base_quantity=2, max_quantity=0
-    )
-    diff = second_runner_scaler.reconcile()
-    # Even as 3 runners were deleted, the deletable one was deleted in the cleanup, so
-    # the runner_scaler returns -2.
-    assert diff == -2
-    assert_runner_info(second_runner_scaler, online=1, busy=1, unknown=1)
-
-    assert len(runner_dict) == 2
-    # The busy runner should not be deleted.
-    assert initial_mock_runners[2].instance_id in runner_dict
-    # The runner without health information should not be deleted
-    assert initial_mock_runners[4].instance_id in runner_dict
+    assert result.runner_diff == expected_diff

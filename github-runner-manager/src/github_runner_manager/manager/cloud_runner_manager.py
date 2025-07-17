@@ -35,20 +35,6 @@ class HealthState(Enum):
     UNHEALTHY = auto()
     UNKNOWN = auto()
 
-    @staticmethod
-    def from_value(health: bool | None) -> "HealthState":
-        """Create from a health value.
-
-        Args:
-            health: The health value as boolean or None.
-
-        Returns:
-            The health state.
-        """
-        if health is None:
-            return HealthState.UNKNOWN
-        return HealthState.HEALTHY if health else HealthState.UNHEALTHY
-
 
 class CloudRunnerState(str, Enum):
     """Represent state of the instance hosting the runner.
@@ -275,11 +261,25 @@ class CloudRunnerManager(abc.ABC):
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID) -> RunnerMetrics | None:
-        """Delete self-hosted runner.
+    def delete_vms(self, instance_ids: Sequence[InstanceID]) -> list[InstanceID]:
+        """Delete cloud VM instances.
 
         Args:
-            instance_id: The instance id of the runner to delete.
+            instance_ids: The ID of the VMs to request deletion.
+
+        Returns:
+            The deleted instance IDs.
+        """
+
+    @abc.abstractmethod
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
+        """Extract metrics from cloud VMs.
+
+        Args:
+            instance_ids: The VM instance IDs to fetch the metrics from.
+
+        Returns:
+            The fetched runner metrics.
         """
 
     @abc.abstractmethod
