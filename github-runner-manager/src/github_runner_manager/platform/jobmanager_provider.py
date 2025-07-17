@@ -140,9 +140,7 @@ class JobManagerPlatform(PlatformProvider):
 
         Args:
             runner_ids: The runner IDs to delete.
-            platform: Unused argument due to the poor architecture of the provider
-                classes. The multiplexer provider should be a wrapper around the platforms, not on
-                the same level.
+            platform: Unused argument.
 
         Returns:
             The runner IDs requested for deletion.
