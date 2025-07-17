@@ -76,7 +76,7 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
 
 
-class OpenStackVMDeleteError(openstack.exceptions.SDKException):
+class DeleteVMError(openstack.exceptions.SDKException):
     """Represents an error while deleting a VM instance.
 
     Attributes:
@@ -367,11 +367,11 @@ class OpenstackCloud:
             except (
                 openstack.exceptions.SDKException,
                 openstack.exceptions.ResourceTimeout,
-            ) as e:
-                raise OpenStackVMDeleteError(
+            ) as exc:
+                raise DeleteVMError(
                     instance_id=delete_config.instance_id,
                     message=f"Failed to delete server {delete_config.instance_id.name}",
-                ) from e
+                ) from exc
 
             OpenstackCloud._delete_keypair(
                 _DeleteKeypairConfig(
@@ -426,8 +426,8 @@ class OpenstackCloud:
                 try:
                     if future.result():
                         deleted_instance_ids.append(delete_config.instance_id)
-                except OpenStackVMDeleteError as e:
-                    logger.error("Failed to delete OpenStack VM instance: %s", e.instance_id)
+                except DeleteVMError as exc:
+                    logger.error("Failed to delete OpenStack VM instance: %s", exc.instance_id)
 
         return deleted_instance_ids
 
