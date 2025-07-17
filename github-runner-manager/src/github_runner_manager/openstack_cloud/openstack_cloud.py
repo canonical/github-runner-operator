@@ -346,7 +346,7 @@ class OpenstackCloud:
             delete_config: The configuration used to delete a cloud VM instance.
 
         Raises:
-            OpenStackVMDeleteError: If there was an error deleting the VM instance.
+            DeleteVMError: If there was an error deleting the VM instance.
         """
         with openstack.connect(
             auth_url=delete_config.credentials.auth_url,
