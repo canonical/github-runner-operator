@@ -32,7 +32,7 @@ from github_runner_manager.openstack_cloud.openstack_cloud import (
     _DeleteKeypairConfig,
     get_missing_security_rules,
 )
-from tests.unit.mock_runner_managers import MockOpenstackCloud
+from tests.unit.fake_runner_managers import FakeOpenstackCloud
 
 FAKE_ARG = "fake"
 FAKE_PREFIX = "fake_prefix"
@@ -382,7 +382,7 @@ def test_delete_instances_partial_server_delete_failure(
     successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
     already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
     timeout_id = InstanceID(prefix="timeout error", reactive=False, suffix="")
-    mock_cloud = MockOpenstackCloud(
+    mock_cloud = FakeOpenstackCloud(
         initial_servers=[successful_delete_id, timeout_id],
         server_to_errors={timeout_id: openstack.exceptions.ResourceTimeout()},
     )

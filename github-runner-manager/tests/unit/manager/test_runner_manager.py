@@ -20,7 +20,7 @@ from tests.unit.factories.runner_instance_factory import (
     RunnerInstanceFactory,
     SelfHostedRunnerFactory,
 )
-from tests.unit.mock_runner_managers import MockCloudRunnerManager, MockGitHubRunnerPlatform
+from tests.unit.fake_runner_managers import FakeCloudRunnerManager, FakeGitHubRunnerPlatform
 
 
 @pytest.mark.parametrize(
@@ -107,8 +107,8 @@ def test_flush_runners(
     act: Call flush in the RunnerManager instance.
     assert: Expected github runners and cloud runners are flushed.
     """
-    mock_platform = MockGitHubRunnerPlatform(initial_runners=initial_runners)
-    mock_cloud = MockCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
         "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
     )
@@ -180,8 +180,8 @@ def test_runner_maanger_cleanup(
     act: Call cleanup in the RunnerManager instance.
     assert: Expected github runners and cloud runners cleanup is run.
     """
-    mock_platform = MockGitHubRunnerPlatform(initial_runners=initial_runners)
-    mock_cloud = MockCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
         "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
     )
@@ -254,8 +254,8 @@ def test_runner_manager_get_runners(
     act: when RunnerManager.get_runners is called.
     assert: expected RunnerInstances are returned.
     """
-    mock_platform = MockGitHubRunnerPlatform(initial_runners=initial_runners)
-    mock_cloud = MockCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
         "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
     )
@@ -308,8 +308,8 @@ def test_runner_manager_deterministic_delete_runners(
     act: when RunnerManager.delete_runners is called.
     assert: expected cloud & platform runners remain.
     """
-    mock_platform = MockGitHubRunnerPlatform(initial_runners=initial_runners)
-    mock_cloud = MockCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
         "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
     )
@@ -351,8 +351,8 @@ def test_runner_manager_non_deterministic_delete_runners(
     act: when RunnerManager.delete_runners is called.
     assert: expected cloud & platform runners remain.
     """
-    mock_platform = MockGitHubRunnerPlatform(initial_runners=initial_runners)
-    mock_cloud = MockCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
+    mock_platform = FakeGitHubRunnerPlatform(initial_runners=initial_runners)
+    mock_cloud = FakeCloudRunnerManager(initial_cloud_runners=initial_cloud_runners)
     manager = RunnerManager(
         "test-manager", platform_provider=mock_platform, cloud_runner_manager=mock_cloud, labels=[]
     )

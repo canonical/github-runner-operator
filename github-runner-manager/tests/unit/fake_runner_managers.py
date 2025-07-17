@@ -16,7 +16,6 @@ from github_runner_manager.manager.models import (
     RunnerIdentity,
     RunnerMetadata,
 )
-from github_runner_manager.manager.runner_manager import RunnerInstance
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.openstack_cloud import _MAX_NOVA_COMPUTE_API_VERSION
 from github_runner_manager.platform.platform_provider import (
@@ -42,8 +41,8 @@ TEST_BINARY = (
 )
 
 
-class MockOpenstackCloud:
-    """Mock of OpenstackCloud."""
+class FakeOpenstackCloud:
+    """Fake implementation of OpenstackCloud."""
 
     _MOCK_COMPUTE_ENDPOINT = "mock-compute-endpoint"
     _MOCK_COMPUTE_ENDPOINT_RESPONSE = {"version": {"version": _MAX_NOVA_COMPUTE_API_VERSION}}
@@ -59,30 +58,30 @@ class MockOpenstackCloud:
             instance.name: exc for instance, exc in (server_to_errors or {}).items()
         }
 
-    def __enter__(self) -> "MockOpenstackCloud":
-        """Mock enter method for context entering."""
+    def __enter__(self) -> "FakeOpenstackCloud":
+        """Fake enter method for context entering."""
         return self
 
     def __exit__(self, *args, **kwargs) -> None:
-        """Mock exit method for context exiting."""
+        """Fake exit method for context exiting."""
         return
 
-    def connect(self) -> "MockOpenstackCloud":
-        """Mock OpenStack lib's connect function."""
+    def connect(self) -> "FakeOpenstackCloud":
+        """Fake OpenStack lib's connect function."""
         return self
 
     @property
-    def compute(self) -> "MockOpenstackCloud":
-        """Mock the compute API attribute."""
+    def compute(self) -> "FakeOpenstackCloud":
+        """Fake the compute API attribute."""
         return self
 
     def get_endpoint(self) -> str:
-        """Mock endpoint string for compute endpoint."""
+        """Fake endpoint string for compute endpoint."""
         return self._MOCK_COMPUTE_ENDPOINT
 
     @property
     def session(self) -> dict:
-        """Mock the connection session attribute."""
+        """Fake the connection session attribute."""
         compute_endpoint_mock = MagicMock()
         compute_endpoint_mock.json.return_value = self._MOCK_COMPUTE_ENDPOINT_RESPONSE
         return {self._MOCK_COMPUTE_ENDPOINT: compute_endpoint_mock}
@@ -95,7 +94,7 @@ class MockOpenstackCloud:
         delete_ips: bool = False,
         delete_ip_retry: int = 1,
     ) -> bool:
-        """Mock method for deleting server."""
+        """Fake method for deleting server."""
         injected_test_error = self._injected_errors.pop(name_or_id, None)
         if injected_test_error:
             raise injected_test_error
@@ -105,14 +104,14 @@ class MockOpenstackCloud:
         return False
 
     def delete_keypair(self, *args, **kwargs):
-        """Mock delete keypair method."""
+        """Fake delete keypair method."""
         pass
 
 
-class MockCloudRunnerManager(CloudRunnerManager):
-    """Mock of CloudRunnerManager.
+class FakeCloudRunnerManager(CloudRunnerManager):
+    """Fake of CloudRunnerManager.
 
-    Metrics is not supported in this mock.
+    Metrics is not supported in this fake.
 
     Attributes:
         name_prefix: The naming prefix for runners managed.
@@ -121,7 +120,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
     @property
     def name_prefix(self) -> str:
         """The naming prefix for runners managed."""
-        return "mock_cloud_runner_manager"
+        return "fake_cloud_runner_manager"
 
     def __init__(self, initial_cloud_runners: list[CloudRunnerInstance]) -> None:
         """Initialize the Cloud Runner Manager.
@@ -175,7 +174,7 @@ class MockCloudRunnerManager(CloudRunnerManager):
     def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
         """Extract metrics from VMs with given instance ids.
 
-        The mock runner manager does not implement this.
+        The fake runner manager does not implement this.
 
         Args:
             instance_ids: A list of instance ids to extract metrics from.
@@ -188,16 +187,16 @@ class MockCloudRunnerManager(CloudRunnerManager):
     def cleanup(self) -> None:
         """Cleanup cloud resources.
 
-        The mock runner manager does not implement this.
+        The fake runner manager does not implement this.
         """
         pass
 
 
-class MockGitHubRunnerPlatform(PlatformProvider):
-    """Mock GitHub platform provider."""
+class FakeGitHubRunnerPlatform(PlatformProvider):
+    """Fake GitHub platform provider."""
 
     def __init__(self, initial_runners: Sequence[SelfHostedRunner]) -> None:
-        """Initialize the mock platform.
+        """Initialize the fake platform.
 
         Args:
             initial_runners: Runners to instantiate the platform with.
@@ -318,15 +317,3 @@ class MockGitHubRunnerPlatform(PlatformProvider):
             NotImplementedError: This method is not tested with this mock.
         """
         raise NotImplementedError
-
-
-class MockRunnerManager:
-    """Mock Runner manager for testing."""
-
-    def __init__(self, runners: Sequence[RunnerInstance]) -> None:
-        """Initialize the mock runner manager.
-
-        Args:
-            runners: The runners to initialize the RunnerManager with.
-        """
-        self._runners = runners
