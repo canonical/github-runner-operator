@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-07-19
+
+- Fix an issue with infinite retry of a reactive job message.
+
 ## 2025-07-18
 
 - Fix an issue where flushing runners does not include reactive processes. This cause some reactive runner to spawn with old code after upgrade.
