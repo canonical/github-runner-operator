@@ -46,6 +46,10 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
+from github_runner_manager.reactive.process_manager import (
+    REACTIVE_RUNNER_CMD_LINE_PREFIX,
+    ReactiveRunnerError,
+)
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
@@ -195,6 +199,17 @@ def application_configuration_fixture() -> ApplicationConfiguration:
         ),
         reconcile_interval=10,
     )
+
+
+@pytest.fixture(scope="function", name="runner_scaler_reactive")
+def runner_scaler_reactive_fixture(
+    application_configuration: ApplicationConfiguration,
+    runner_manager: RunnerManager,
+    user_info: UserInfo,
+) -> RunnerScaler:
+    runner_scaler = RunnerScaler.build(application_configuration, user_info)
+    runner_scaler._manager = runner_manager
+    return runner_scaler
 
 
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")

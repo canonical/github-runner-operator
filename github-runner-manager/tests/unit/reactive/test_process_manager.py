@@ -15,6 +15,7 @@ from github_runner_manager.reactive.process_manager import (
     PYTHON_BIN,
     REACTIVE_RUNNER_SCRIPT_MODULE,
     ReactiveRunnerError,
+    kill_reactive_processes,
     reconcile,
 )
 from github_runner_manager.reactive.types_ import QueueConfig, ReactiveProcessConfig
@@ -196,3 +197,17 @@ def _arrange_reactive_processes(secure_run_subprocess_mock: MagicMock, count: in
         stdout=f"CMD\n{process_cmds_before}".encode("utf-8"),
         stderr=b"",
     )
+
+
+def test_reactive_flush(
+    os_kill_mock: MagicMock,
+    secure_run_subprocess_mock: MagicMock,
+):
+    """
+    arrange: Mock 3 reactive processes.
+    act: Run flush for reactive.
+    assert: Find 3 os.kill calls.
+    """
+    _arrange_reactive_processes(secure_run_subprocess_mock, count=3)
+    kill_reactive_processes()
+    assert os_kill_mock.call_count == 3

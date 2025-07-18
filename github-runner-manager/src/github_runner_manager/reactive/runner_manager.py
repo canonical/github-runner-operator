@@ -128,3 +128,8 @@ def reconcile(
     )
 
     return ReconcileResult(processes_diff=processes_created, metric_stats=metric_stats)
+
+
+def flush_reactive_processes() -> None:
+    """Flush all the reactive processes."""
+    process_manager.kill_reactive_processes()
