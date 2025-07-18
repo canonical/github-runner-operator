@@ -3,8 +3,8 @@
 
 import secrets
 from contextlib import closing
-from datetime import datetime, timezone
 from random import randint
+from unittest import mock
 from unittest.mock import ANY, MagicMock
 
 import pytest
@@ -16,9 +16,15 @@ from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.reactive import consumer
-from github_runner_manager.reactive.consumer import JobError, Labels, get_queue_size
+from github_runner_manager.reactive.consumer import (
+    PROCESS_COUNT_HEADER_NAME,
+    RETRY_LIMIT,
+    WAIT_TIME_IN_SEC,
+    JobError,
+    Labels,
+    get_queue_size,
+)
 from github_runner_manager.reactive.types_ import QueueConfig
-from github_runner_manager.types_.github import JobConclusion, JobInfo, JobStatus
 
 IN_MEMORY_URI = "memory://"
 FAKE_JOB_ID = "8200803099"
@@ -35,9 +41,10 @@ def queue_config_fixture() -> QueueConfig:
 
 
 @pytest.fixture(name="mock_sleep", autouse=True)
-def mock_sleep_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
+def mock_sleep_fixture(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
     """Mock the sleep function."""
-    monkeypatch.setattr(consumer, "sleep", lambda _: None)
+    monkeypatch.setattr(consumer, "sleep", mock_sleep := MagicMock())
+    return mock_sleep
 
 
 @pytest.mark.parametrize(
@@ -49,11 +56,11 @@ def mock_sleep_fixture(monkeypatch: pytest.MonkeyPatch) -> None:
         pytest.param({"LaBeL1", "label2"}, {"label1", "laBeL2"}, id="case insensitive labels"),
     ],
 )
-def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueConfig):
+def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueConfig, mock_sleep):
     """
     arrange: A job with valid labels placed in the message queue which has not yet been picked up.
     act: Call consume.
-    assert: A runner is created and the message is removed from the queue.
+    assert: A runner is created, the message is removed from the queue, sleep is called once.
     """
     job_details = consumer.JobDetails(
         labels=labels,
@@ -75,6 +82,8 @@ def test_consume(labels: Labels, supported_labels: Labels, queue_config: QueueCo
     runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
 
     _assert_queue_is_empty(queue_config.queue_name)
+
+    mock_sleep.assert_called_once_with(WAIT_TIME_IN_SEC)
 
 
 def test_consume_job_manager(queue_config: QueueConfig):
@@ -187,7 +196,9 @@ def test_consume_reject_if_job_gets_not_picked_up(queue_config: QueueConfig):
         supported_labels=labels,
     )
 
-    _assert_msg_has_been_requeued(queue_config.queue_name, job_details.json())
+    _assert_msg_has_been_requeued(
+        queue_config.queue_name, job_details.json(), headers={PROCESS_COUNT_HEADER_NAME: 1}
+    )
 
 
 def test_consume_reject_if_spawning_failed(queue_config: QueueConfig):
@@ -216,7 +227,9 @@ def test_consume_reject_if_spawning_failed(queue_config: QueueConfig):
         supported_labels=labels,
     )
 
-    _assert_msg_has_been_requeued(queue_config.queue_name, job_details.json())
+    _assert_msg_has_been_requeued(
+        queue_config.queue_name, job_details.json(), headers={PROCESS_COUNT_HEADER_NAME: 1}
+    )
 
 
 def test_consume_raises_queue_error(monkeypatch: pytest.MonkeyPatch, queue_config: QueueConfig):
@@ -351,34 +364,119 @@ def test_consume_reject_if_labels_not_supported(
     _assert_queue_is_empty(queue_config.queue_name)
 
 
-def _create_job_info(status: JobStatus) -> JobInfo:
-    """Create a JobInfo object with the given status.
-
-    Args:
-        status: The status of the job.
-
-    Returns:
-        The JobInfo object.
+def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: MagicMock):
     """
-    return JobInfo(
-        created_at=datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc),
-        started_at=datetime(2021, 10, 1, 1, 0, 0, tzinfo=timezone.utc),
-        conclusion=JobConclusion.SUCCESS,
-        status=status,
-        job_id=randint(1, 1000),
+    arrange: A job placed in the message queue which is processed before.
+    act: Call consume.
+    assert: A runner is spawned, the message is removed from the queue, and sleep is called two
+        times.
+    """
+    labels = {secrets.token_hex(16), secrets.token_hex(16)}
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=FAKE_JOB_URL,
+    )
+    _put_in_queue(
+        job_details.json(), queue_config.queue_name, headers={PROCESS_COUNT_HEADER_NAME: 1}
     )
 
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    platform_mock = MagicMock(spec=PlatformProvider)
+    platform_mock.check_job_been_picked_up.side_effect = [False, True]
 
-def _put_in_queue(msg: str, queue_name: str) -> None:
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_mock,
+        supported_labels=labels,
+    )
+
+    runner_manager_mock.create_runners.assert_called_once_with(1, metadata=ANY, reactive=True)
+
+    _assert_queue_is_empty(queue_config.queue_name)
+
+    mock_sleep.assert_has_calls([mock.call(WAIT_TIME_IN_SEC), mock.call(WAIT_TIME_IN_SEC)])
+
+
+def test_consume_retried_job_failure(queue_config: QueueConfig, mock_sleep: MagicMock):
+    """
+    arrange: A job placed in the message queue which is processed before. Mock runner spawn fail.
+    act: Call consume.
+    assert: The message requeued. Sleep called once.
+    """
+    labels = {secrets.token_hex(16), secrets.token_hex(16)}
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=FAKE_JOB_URL,
+    )
+    _put_in_queue(
+        job_details.json(), queue_config.queue_name, headers={PROCESS_COUNT_HEADER_NAME: 1}
+    )
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    runner_manager_mock.create_runners.return_value = tuple()
+
+    platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+    platform_mock.check_job_been_picked_up.side_effect = [False]
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_mock,
+        supported_labels=labels,
+    )
+
+    _assert_msg_has_been_requeued(
+        queue_config.queue_name, job_details.json(), headers={PROCESS_COUNT_HEADER_NAME: 2}
+    )
+
+    mock_sleep.assert_called_once_with(WAIT_TIME_IN_SEC)
+
+
+def test_consume_retried_job_failure_past_limit(queue_config: QueueConfig, mock_sleep: MagicMock):
+    """
+    arrange: A job placed in the message queue which is at the retry limit.
+    act: Call consume.
+    assert: Message not requeue, and not processed.
+    """
+    labels = {secrets.token_hex(16), secrets.token_hex(16)}
+    job_details = consumer.JobDetails(
+        labels=labels,
+        url=FAKE_JOB_URL,
+    )
+    _put_in_queue(
+        job_details.json(),
+        queue_config.queue_name,
+        headers={PROCESS_COUNT_HEADER_NAME: RETRY_LIMIT},
+    )
+    _put_in_queue(consumer.END_PROCESSING_PAYLOAD, queue_config.queue_name)
+
+    runner_manager_mock = MagicMock(spec=consumer.RunnerManager)
+    platform_mock = MagicMock(spec=GitHubRunnerPlatform)
+
+    consumer.consume(
+        queue_config=queue_config,
+        runner_manager=runner_manager_mock,
+        platform_provider=platform_mock,
+        supported_labels=labels,
+    )
+
+    runner_manager_mock.create_runners.assert_not_called()
+    platform_mock.check_job_been_picked_up.assert_not_called()
+    _assert_queue_is_empty(queue_config.queue_name)
+
+
+def _put_in_queue(msg: str, queue_name: str, headers: dict[str, str | int] | None = None) -> None:
     """Put a job in the message queue.
 
     Args:
         msg: The job details.
         queue_name: The name of the queue
+        headers: The message headers. Not set if None.
     """
     with Connection(IN_MEMORY_URI) as conn:
         with closing(conn.SimpleQueue(queue_name)) as simple_queue:
-            simple_queue.put(msg, retry=True)
+            simple_queue.put(msg, headers=headers, retry=True)
 
 
 def _consume_from_queue(queue_name: str) -> Message:
@@ -406,7 +504,9 @@ def _assert_queue_is_empty(queue_name: str) -> None:
             assert simple_queue.qsize() == 0
 
 
-def _assert_msg_has_been_requeued(queue_name: str, payload: str) -> None:
+def _assert_msg_has_been_requeued(
+    queue_name: str, payload: str, headers: dict[str, str | int] | None
+) -> None:
     """Assert that the message is requeued.
 
     This will consume message from the queue and assert that the payload is the same as the given.
@@ -414,7 +514,11 @@ def _assert_msg_has_been_requeued(queue_name: str, payload: str) -> None:
     Args:
         queue_name: The name of the queue.
         payload: The payload of the message to assert.
+        headers: The headers to assert for if present.
     """
     with Connection(IN_MEMORY_URI) as conn:
         with closing(conn.SimpleQueue(queue_name)) as simple_queue:
-            assert simple_queue.get(block=False).payload == payload
+            msg = simple_queue.get(block=False)
+            assert msg.payload == payload
+            if headers is not None:
+                assert msg.headers == headers

@@ -40,6 +40,11 @@ from tests.integration.utils_reactive import (
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
 
+# This is tied to the wait time in reactive processes.
+REACTIVE_WAIT_TIME = 60
+# Set to a higher reconcile time, due to flush on empty queue in reconcile can affect the tests.
+RECONCILE_INTERVAL = 15
+
 
 @pytest_asyncio.fixture(name="app_for_reactive")
 async def app_for_reactive_fixture(
@@ -70,9 +75,7 @@ async def app_for_reactive_fixture(
         {
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            # set larger recon interval as the default due to race condition
-            # killing reactive process
-            RECONCILE_INTERVAL_CONFIG_NAME: "5",
+            RECONCILE_INTERVAL_CONFIG_NAME: str(RECONCILE_INTERVAL),
         }
     )
     await wait_for_reconcile(app_for_reactive)
@@ -199,7 +202,9 @@ async def test_jobmanager_reactive(
     )
     job_get_handler.respond_with_json(returned_job.to_dict())
 
-    with httpserver.wait(raise_assertions=True, stop_on_nohandler=False, timeout=30) as waiting:
+    with httpserver.wait(
+        raise_assertions=True, stop_on_nohandler=False, timeout=REACTIVE_WAIT_TIME + 30
+    ) as waiting:
         logger.info("Waiting for job status to be queried.")
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "Failed waiting for job status to be queried."
@@ -211,7 +216,7 @@ async def test_jobmanager_reactive(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app_for_reactive.set_config(
-        {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)}
+        {RECONCILE_INTERVAL_CONFIG_NAME: str(RECONCILE_INTERVAL + 1)}
     )
     await wait_for_reconcile(app_for_reactive)
 
