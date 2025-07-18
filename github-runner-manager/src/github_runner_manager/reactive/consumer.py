@@ -29,6 +29,7 @@ Labels = set[str]
 
 PROCESS_COUNT_HEADER_NAME = "X-Process-Count"
 WAIT_TIME_IN_SEC = 60
+RETRY_LIMIT = 5
 # This control message is for testing. The reactive process will stop consuming messages
 # when the message is sent. This message does not come from the router.
 END_PROCESSING_PAYLOAD = "__END__"
@@ -131,12 +132,27 @@ def consume(  # noqa: C901
                 msg.headers[PROCESS_COUNT_HEADER_NAME] = (
                     msg.headers.get(PROCESS_COUNT_HEADER_NAME, 0) + 1
                 )
-                # Avoid rapid retrying to prevent overloading services, e.g., OpenStack API.
-                if msg.headers[PROCESS_COUNT_HEADER_NAME] > 1:
-                    sleep(WAIT_TIME_IN_SEC)
+                msg_process_count = msg.headers[PROCESS_COUNT_HEADER_NAME]
 
                 job_details = _parse_job_details(msg)
                 logger.info("Received reactive job: %s", job_details)
+
+                if msg_process_count > RETRY_LIMIT:
+                    logger.warning(
+                        "Retry limit reach for job %s with labels: %s",
+                        job_details.url,
+                        job_details.labels,
+                    )
+                    msg.reject(requeue=False)
+                    continue
+
+                if msg_process_count > 1:
+                    logger.info(
+                        "Pause job %s with retry count %s", job_details.url, msg_process_count
+                    )
+                    # Avoid rapid retrying to prevent overloading services, e.g., OpenStack API.
+                    sleep(WAIT_TIME_IN_SEC)
+
                 if not _validate_labels(
                     labels=job_details.labels, supported_labels=supported_labels
                 ):
