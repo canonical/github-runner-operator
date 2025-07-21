@@ -360,7 +360,11 @@ class OpenstackCloud:
         ) as conn:
             try:
                 logger.info("Deleting server %s", delete_config.instance_id.name)
-                deleted = conn.delete_server(name_or_id=delete_config.instance_id.name)
+                deleted = conn.delete_server(
+                    name_or_id=delete_config.instance_id.name,
+                    wait=delete_config.wait,
+                    timeout=delete_config.timeout,
+                )
                 logger.info(
                     "Deleted server %s (true delete: %s)", delete_config.instance_id.name, deleted
                 )
