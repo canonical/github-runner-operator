@@ -186,6 +186,17 @@ def application_configuration_fixture() -> ApplicationConfiguration:
     )
 
 
+@pytest.fixture(scope="function", name="runner_scaler_reactive")
+def runner_scaler_reactive_fixture(
+    application_configuration: ApplicationConfiguration,
+    runner_manager: RunnerManager,
+    user_info: UserInfo,
+) -> RunnerScaler:
+    runner_scaler = RunnerScaler.build(application_configuration, user_info)
+    runner_scaler._manager = runner_manager
+    return runner_scaler
+
+
 @pytest.fixture(scope="function", name="runner_scaler_one_runner")
 def runner_scaler_one_runner_fixture(
     runner_manager: RunnerManager, user_info: UserInfo
