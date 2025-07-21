@@ -91,11 +91,7 @@ def reconcile(
 
 
 def kill_reactive_processes() -> None:
-    """Kill all reactive processes.
-
-    Raises:
-        ReactiveRunnerError: Failed to kill the reactive processes.
-    """
+    """Kill all reactive processes."""
     pids = _get_pids()
     if pids:
         for pid in pids:

@@ -46,10 +46,6 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
 from github_runner_manager.platform.github_provider import PlatformRunnerState
-from github_runner_manager.reactive.process_manager import (
-    REACTIVE_RUNNER_CMD_LINE_PREFIX,
-    ReactiveRunnerError,
-)
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 from tests.unit.mock_runner_managers import (
     MockCloudRunnerManager,
