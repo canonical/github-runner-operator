@@ -713,7 +713,7 @@ class OpenstackCloud:
         return keypair
 
     @staticmethod
-    def _delete_keypair(delete_keypair_config: _DeleteKeypairConfig) -> str | None:
+    def _delete_keypair(delete_keypair_config: _DeleteKeypairConfig) -> None:
         """Delete OpenStack keypair.
 
         Args:
@@ -741,7 +741,6 @@ class OpenstackCloud:
         key_path = delete_keypair_config.keys_dir / f"{delete_keypair_config.instance_id}.key"
         key_path.unlink(missing_ok=True)
         logger.info("Deleted key: %s", delete_keypair_config.instance_id)
-        return delete_keypair_config.instance_id.name
 
     @staticmethod
     def _ensure_security_group(
