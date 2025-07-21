@@ -718,9 +718,6 @@ class OpenstackCloud:
 
         Args:
             delete_keypair_config: Configurations for deleting the KeyPair.
-
-        Returns:
-            Name of the successfully deleted key. None otherwise.
         """
         logger.info("Deleting key: %s", delete_keypair_config.instance_id)
         try:
@@ -729,14 +726,14 @@ class OpenstackCloud:
                 delete_keypair_config.instance_id.name
             ):
                 logger.warning("Failed to delete key: %s", delete_keypair_config.instance_id.name)
-                return None
+                return
         except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
             logger.warning(
                 "Error attempting to delete key: %s",
                 delete_keypair_config.instance_id.name,
                 stack_info=True,
             )
-            return None
+            return
 
         key_path = delete_keypair_config.keys_dir / f"{delete_keypair_config.instance_id}.key"
         key_path.unlink(missing_ok=True)
