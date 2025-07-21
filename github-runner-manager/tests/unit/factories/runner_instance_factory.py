@@ -26,7 +26,7 @@ class InstanceIDFactory(factory.Factory):
     """Factory class for creating InstanceID."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for InstanceID.
 
         Attributes:
             model: The metadata reference model.
@@ -43,7 +43,7 @@ class RunnerMetadataFactory(factory.Factory):
     """Factory for creating RunnerMetadata instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for RunnerMetadata.
 
         Attributes:
             model: The metadata reference model.
@@ -60,7 +60,7 @@ class CloudRunnerInstanceFactory(factory.Factory):
     """Factory for creating CloudRunnerInstance instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for CloudRunnerInstance.
 
         Attributes:
             model: The metadata reference model.
@@ -95,7 +95,7 @@ class RunnerIdentityFactory(factory.Factory):
     """Factory for creating RunnerIdentity instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for RunnerIdentity.
 
         Attributes:
             model: The metadata reference model.
@@ -111,7 +111,7 @@ class PlatformRunnerHealthFactory(factory.Factory):
     """Factory for creating PlatformRunnerHealth instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for PlatformRunnerHealth.
 
         Attributes:
             model: The metadata reference model.
@@ -178,7 +178,7 @@ class SelfHostedRunnerFactory(factory.Factory):
     """Factory for creating SelfHostedRunner instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for SelfHostedRunner.
 
         Attributes:
             model: The metadata reference model.

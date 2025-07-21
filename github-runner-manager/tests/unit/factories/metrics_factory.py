@@ -13,7 +13,7 @@ class EventFactory(factory.Factory):
     """Factory for creating Event instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for Event.
 
         Attributes:
             model: The metadata reference model.
@@ -29,7 +29,7 @@ class RunnerInstalledFactory(EventFactory):
     """Factory for creating RunnerInstalled instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for RunnerInstalled.
 
         Attributes:
             model: The metadata reference model.
@@ -45,7 +45,7 @@ class CodeInformationFactory(factory.Factory):
     """Factory for creating CodeInformation instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for CodeInformation.
 
         Attributes:
             model: The metadata reference model.
@@ -60,7 +60,7 @@ class RunnerStopFactory(EventFactory):
     """Factory for creating RunnerStop instances."""
 
     class Meta:
-        """Meta class for RunnerInstance.
+        """Meta class for RunnerStop.
 
         Attributes:
             model: The metadata reference model.
