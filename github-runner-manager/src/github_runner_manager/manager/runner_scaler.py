@@ -267,6 +267,8 @@ class RunnerScaler:
             Number of runners flushed.
         """
         metric_stats = self._manager.cleanup()
+        if self._reactive_config is not None:
+            reactive_runner_manager.flush_reactive_processes()
         delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
         events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
