@@ -107,6 +107,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         )
         return None
 
+    runner_installed, pre_job_metrics, post_job_metrics = "", "", ""
     try:
         with pull_config.cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
             try:
