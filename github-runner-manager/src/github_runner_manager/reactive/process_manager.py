@@ -91,18 +91,20 @@ def reconcile(
 
 
 def kill_reactive_processes() -> None:
-    """Kill all reactive processes.
-
-    Raises:
-        ReactiveRunnerError: Failed to kill the reactive processes.
-    """
-    result = secure_run_subprocess(cmd=["pkill", "-f", REACTIVE_RUNNER_CMD_LINE_PREFIX])
-    if result.returncode == 0:
-        logger.info("Flushed some reactive processes")
-    elif result.returncode == 1:
-        logger.info("No reactive processes to flush")
+    """Kill all reactive processes."""
+    pids = _get_pids()
+    if pids:
+        for pid in pids:
+            try:
+                logger.info("Killing reactive runner process with pid %s", pid)
+                os.kill(pid, signal.SIGTERM)
+            except ProcessLookupError:
+                logger.info(
+                    "Failed to kill process with pid %s. Process might have terminated it self.",
+                    pid,
+                )
     else:
-        raise ReactiveRunnerError("Failed to kill the reactive processes")
+        logger.info("No reactive processes to flush")
 
 
 def _get_pids() -> list[int]:

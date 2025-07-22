@@ -2,7 +2,7 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2025-07-19
+## 2025-07-22
 
 - Fix an issue with infinite retry of a reactive job message.
 
