@@ -86,12 +86,11 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete runners.
 
         Args:
             runner_ids: Runner IDs to delete.
-            platform: The Platform in which to delete the runners in.
         """
 
     @abc.abstractmethod

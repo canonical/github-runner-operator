@@ -133,14 +133,13 @@ class JobManagerPlatform(PlatformProvider):
             failed_requested_runners=failed_runners,
         )
 
-    def delete_runners(self, runner_ids: list[str], platform: str = "jobmanager") -> list[str]:
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete a runner from jobmanager.
 
         This method does nothing, as the jobmanager does not implement it.
 
         Args:
             runner_ids: The runner IDs to delete.
-            platform: Unused argument.
 
         Returns:
             The runner IDs requested for deletion.

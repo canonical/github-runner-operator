@@ -244,12 +244,11 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
             response.non_requested_runners.append(runner.identity)
         return response
 
-    def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete runners from platform.
 
         Args:
             runner_ids: The runner IDs to delete.
-            platform: The target platform.
 
         Returns:
             The successfully deleted runners.

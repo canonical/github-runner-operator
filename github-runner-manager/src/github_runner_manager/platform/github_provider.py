@@ -164,14 +164,13 @@ class GitHubRunnerPlatform(PlatformProvider):
             non_requested_runners=non_requested_runners,
         )
 
-    def delete_runners(self, runner_ids: list[str], platform: str = "github") -> list[str]:
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete runners from GitHub.
 
         This method will ignore DeleteRunnerBusyErrors and print a warning log.
 
         Args:
             runner_ids: The GitHub runner IDs to delete.
-            platform: Unused argument.
 
         Returns:
             The runner IDs that were deleted successfully.

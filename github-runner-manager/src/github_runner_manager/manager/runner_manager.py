@@ -345,8 +345,7 @@ class RunnerManager:
         ]
         logger.info("Deleting runners from platform: %s", platform_runner_ids_to_delete)
         deleted_runner_ids = self._platform.delete_runners(
-            runner_ids=platform_runner_ids_to_delete,
-            platform=cloud_runners[0].metadata.platform_name,
+            runner_ids=platform_runner_ids_to_delete
         )
         logger.info(
             "Deleted runners from platform: %s (diff: %s)",
@@ -385,9 +384,7 @@ class RunnerManager:
         runner_ids_to_delete = [
             runner.metadata.runner_id for runner in runners if runner.metadata.runner_id
         ]
-        self._platform.delete_runners(
-            runner_ids=runner_ids_to_delete, platform=runners[0].metadata.platform_name
-        )
+        self._platform.delete_runners(runner_ids=runner_ids_to_delete)
 
     @staticmethod
     def _spawn_runners(
