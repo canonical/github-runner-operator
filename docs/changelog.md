@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-07-22
 
-- Removed support for multiple platforms in the platform provider.
+- Removed support for using both jobmaanger and GitHub at the same time.
 
 ## 2025-07-18
 
