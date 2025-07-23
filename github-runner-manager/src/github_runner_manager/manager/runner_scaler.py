@@ -36,8 +36,8 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform, Platform
-from github_runner_manager.platform.platform_provider import PlatformRunnerState
+from github_runner_manager.platform.factory import platform_factory
+from github_runner_manager.platform.platform_provider import Platform, PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -141,10 +141,10 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        platform_provider = MultiplexerPlatform.build(
-            prefix=application_configuration.openstack_configuration.vm_prefix,
-            github_configuration=application_configuration.github_config,
-            jobmanager_configuration=application_configuration.jobmanager_config,
+        platform_provider = platform_factory(
+            vm_prefix=application_configuration.openstack_configuration.vm_prefix,
+            github_config=application_configuration.github_config,
+            jobmanager_config=application_configuration.jobmanager_config,
         )
 
         runner_manager = RunnerManager(
