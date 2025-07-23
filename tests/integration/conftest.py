@@ -296,6 +296,7 @@ def openstack_connection_fixture(
     clouds_yaml_contents: str,
     app_name: str,
     existing_app_suffix: str,
+    request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -306,7 +307,13 @@ def openstack_connection_fixture(
         yield connection
 
     servers = connection.list_servers(filters={"name": app_name})
-    logging.info("OpenStack servers: %s", servers)
+
+    if request.session.testsfailed:
+        logging.info("OpenStack servers: %s", servers)
+        for server in servers:
+            console_log = connection.get_server_console(server=server)
+            logging.info("Server %s console log:\n%s", console_log)
+
     if not existing_app_suffix:
         # servers, keys, security groups, security rules, images are created by the charm.
         # don't remove security groups & rules since they are single instances.
@@ -441,6 +448,7 @@ async def app_openstack_runner_fixture(
     flavor_name: str,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app_suffix:
@@ -479,11 +487,12 @@ async def app_openstack_runner_fixture(
 
     yield application
 
-    try:
-        app_log = await get_github_runner_manager_service_log(unit=application.units[0])
-        logging.info("Application log: \n%s", app_log)
-    except AssertionError:
-        logging.warning("Failed to get application log.")
+    if request.session.testsfailed:
+        try:
+            app_log = await get_github_runner_manager_service_log(unit=application.units[0])
+            logging.info("Application log: \n%s", app_log)
+        except AssertionError:
+            logging.warning("Failed to get application log.")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
