@@ -312,7 +312,7 @@ def openstack_connection_fixture(
         logging.info("OpenStack servers: %s", servers)
         for server in servers:
             console_log = connection.get_server_console(server=server)
-            logging.info("Server %s console log:\n%s", console_log)
+            logging.info("Server %s console log:\n%s", server.name, console_log)
 
     if not existing_app_suffix:
         # servers, keys, security groups, security rules, images are created by the charm.
