@@ -41,6 +41,7 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
+    get_github_runner_manager_service_log,
     wait_for,
     wait_for_runner_ready,
 )
@@ -295,6 +296,7 @@ def openstack_connection_fixture(
     clouds_yaml_contents: str,
     app_name: str,
     existing_app_suffix: str,
+    request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -304,11 +306,19 @@ def openstack_connection_fixture(
     with openstack.connect(first_cloud) as connection:
         yield connection
 
+    servers = connection.list_servers(filters={"name": app_name})
+
+    if request.session.testsfailed:
+        logging.info("OpenStack servers: %s", servers)
+        for server in servers:
+            console_log = connection.get_server_console(server=server)
+            logging.info("Server %s console log:\n%s", server.name, console_log)
+
     if not existing_app_suffix:
         # servers, keys, security groups, security rules, images are created by the charm.
         # don't remove security groups & rules since they are single instances.
         # don't remove images since it will be moved to image-builder
-        for server in connection.list_servers():
+        for server in servers:
             server_name: str = server.name
             if server_name.startswith(app_name):
                 connection.delete_server(server_name)
@@ -438,6 +448,7 @@ async def app_openstack_runner_fixture(
     flavor_name: str,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app_suffix:
@@ -474,7 +485,14 @@ async def app_openstack_runner_fixture(
         timeout=IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS,
     )
 
-    return application
+    yield application
+
+    if request.session.testsfailed:
+        try:
+            app_log = await get_github_runner_manager_service_log(unit=application.units[0])
+            logging.info("Application log: \n%s", app_log)
+        except AssertionError:
+            logging.warning("Failed to get application log.")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
