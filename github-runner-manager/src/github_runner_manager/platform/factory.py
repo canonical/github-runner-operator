@@ -2,8 +2,6 @@
 # See LICENSE file for licensing details.
 
 """Factory for instantiating platform provider."""
-import typing
-
 from github_runner_manager.configuration.github import GitHubConfiguration
 from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.platform.github_provider import GitHubRunnerPlatform
@@ -29,12 +27,10 @@ def platform_factory(
     Returns:
         A concrete platform provider.
     """
-    if not (github_config or jobmanager_config):
-        raise ValueError("Missing configuration.")
     if github_config and jobmanager_config:
         raise ValueError("Multiple configuration provided.")
     if github_config:
         return GitHubRunnerPlatform.build(prefix=vm_prefix, github_configuration=github_config)
-    # Either or case is not caught by the above check for jobmanager_config.
-    jobmanager_config = typing.cast(JobManagerConfiguration, jobmanager_config)
-    return JobManagerPlatform.build(jobmanager_configuration=jobmanager_config)
+    if jobmanager_config:
+        return JobManagerPlatform.build(jobmanager_configuration=jobmanager_config)
+    raise ValueError("Missing configuration.")
