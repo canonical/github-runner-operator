@@ -94,7 +94,7 @@ class _ReconcileMetricData:
     start_timestamp: float
     end_timestamp: float
     metric_stats: IssuedMetricEventsStats
-    runner_list: tuple[RunnerInstance]
+    runner_list: tuple[RunnerInstance, ...]
     flavor: str
     expected_runner_quantity: int
 
@@ -375,7 +375,7 @@ class RunnerScaler:
         return _ReconcileResult(runner_diff=runner_diff, metric_stats=metric_stats)
 
     @staticmethod
-    def _log_runners(runner_list: tuple[RunnerInstance]) -> None:
+    def _log_runners(runner_list: tuple[RunnerInstance, ...]) -> None:
         """Log information about the runners found.
 
         Args:
@@ -446,7 +446,6 @@ def _issue_reconciliation_metric(
     IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
     try:
-
         metric_events.issue_event(
             metric_events.Reconciliation(
                 timestamp=time.time(),

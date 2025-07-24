@@ -15,6 +15,7 @@ from github_runner_manager.platform.github_provider import (
     GitHubRunnerPlatform,
 )
 from github_runner_manager.platform.platform_provider import (
+    DeleteRunnerBusyError,
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
@@ -239,3 +240,34 @@ def test_get_runners_health(
     runners_health_response = platform.get_runners_health(requested_runners)
 
     assert runners_health_response == expected_health_response
+
+
+def test_github_provider_delete_busy_runner_error():
+    """
+    arrange: given a mocked GitHub client that raises DeleteRunnerBusyError.
+    act: when GitHubRunnerPlatform.delete_runners is called.
+    assert: act: no ids are returned.
+    """
+    mock_github_client = MagicMock()
+    mock_github_client.delete_runner.side_effect = DeleteRunnerBusyError
+    github_provider = GitHubRunnerPlatform(
+        prefix="test", path="test", github_client=mock_github_client
+    )
+    test_delete_ids = ["1", "2", "3"]
+
+    assert github_provider.delete_runners(test_delete_ids) == []
+
+
+def test_github_provider_delete_runners():
+    """
+    arrange: given a mocked GitHub client.
+    act: when GitHubRunnerPlatform.delete_runners is called.
+    assert: act: the deleted runner IDs are returned.
+    """
+    mock_github_client = MagicMock()
+    github_provider = GitHubRunnerPlatform(
+        prefix="test", path="test", github_client=mock_github_client
+    )
+    test_delete_ids = ["1", "2", "3"]
+
+    assert sorted(github_provider.delete_runners(test_delete_ids)) == sorted(test_delete_ids)
