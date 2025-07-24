@@ -195,8 +195,8 @@ class GitHubRunnerPlatform(PlatformProvider):
             for future in concurrent.futures.as_completed(future_to_delete_runner_config):
                 delete_config = future_to_delete_runner_config[future]
                 try:
-                    if future.result():
-                        deleted_runner_ids.append(delete_config.runner_id)
+                    future.result()
+                    deleted_runner_ids.append(delete_config.runner_id)
                 except DeleteRunnerBusyError:
                     logger.warning(
                         "Delete runner attempt failed, busy runner: %s",
