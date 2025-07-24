@@ -28,10 +28,7 @@ from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     RunnersHealthResponse,
 )
-from github_runner_manager.types_.github import (
-    GitHubRunnerStatus,
-    SelfHostedRunner,
-)
+from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
 
@@ -136,15 +133,19 @@ class JobManagerPlatform(PlatformProvider):
             failed_requested_runners=failed_runners,
         )
 
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
         """Delete a runner from jobmanager.
 
         This method does nothing, as the jobmanager does not implement it.
 
         Args:
-            runner_identity: The identity of the runner to delete.
+            runner_ids: The runner IDs to delete.
+
+        Returns:
+            The runner IDs requested for deletion.
         """
         logger.debug("No need to delete runners in the jobmanager.")
+        return runner_ids
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
