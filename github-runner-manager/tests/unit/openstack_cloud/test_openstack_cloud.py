@@ -419,7 +419,7 @@ def test_delete_instances(
         instance_ids=[successful_delete_id, already_deleted_id]
     )
 
-    assert [successful_delete_id] == deleted_instance_ids
+    assert deleted_instance_ids == [successful_delete_id]
 
 
 @pytest.mark.parametrize(

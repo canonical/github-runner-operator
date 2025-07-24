@@ -428,7 +428,8 @@ class OpenstackCloud:
             for future in concurrent.futures.as_completed(future_to_delete_instance_config):
                 delete_config = future_to_delete_instance_config[future]
                 try:
-                    future.result()
+                    if not future.result():
+                        continue
                     deleted_instance_ids.append(delete_config.instance_id)
                 except DeleteVMError as exc:
                     logger.error("Failed to delete OpenStack VM instance: %s", exc.instance_id)
