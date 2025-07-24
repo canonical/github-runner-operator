@@ -86,13 +86,11 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a  runner.
-
-        Can raise DeleteRunnerBusyError
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+        """Delete runners.
 
         Args:
-            runner_identity: Runner to delete.
+            runner_ids: Runner IDs to delete.
         """
 
     @abc.abstractmethod

@@ -21,7 +21,13 @@ from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
 from github_runner_manager.metrics.events import RunnerInstalled, RunnerStart, RunnerStop
-from github_runner_manager.metrics.runner import PullFileError, ssh_pull_file
+from github_runner_manager.metrics.runner import (
+    PulledMetrics,
+    PullFileError,
+    SSHError,
+    _ssh_pull_file,
+    pull_runner_metrics,
+)
 from github_runner_manager.types_.github import JobConclusion
 
 
@@ -41,28 +47,106 @@ def runner_fs_base_fixture(tmp_path: Path) -> Path:
     return runner_fs_base
 
 
-def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
-    """Create a RunnerMetrics object that is suitable for most tests.
-
-    Args:
-        instance_id: The test runner name.
-
-    Returns:
-        Test metrics data.
+def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     """
-    return RunnerMetrics(
-        installation_start_timestamp=1,
-        installed_timestamp=2,
-        pre_job=PreJobMetrics(
-            timestamp=3,
-            workflow="workflow1",
-            workflow_run_id="workflow_run_id1",
-            repository="org1/repository1",
-            event="push",
-        ),
-        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
-        instance_id=instance_id,
-        metadata=RunnerMetadata(),
+    arrange: given a mocked cloud service that raises exceptions are different points.
+    act: when pull_runner_metrics function is called.
+    assert: no metrics are pulled and errors are logged.
+    """
+    test_instances = []
+    get_instance_side_effects: list[None | Exception] = []
+    get_ssh_connection_side_effects = []
+    # Setup for instance not exists
+    test_instances.append(
+        (
+            not_exists_instance := InstanceID(
+                prefix="instance-not-exists", reactive=False, suffix="1"
+            )
+        )
+    )
+    get_instance_side_effects.append(None)
+    # Setup for instance fail ssh connection
+    test_instances.append(
+        (fail_ssh_conn_instance := InstanceID(prefix="fail-ssh-conn", reactive=False, suffix="2"))
+    )
+    fail_ssh_conn_instance_mock = MagicMock()
+    fail_ssh_conn_instance_mock.instance_id = fail_ssh_conn_instance
+    get_instance_side_effects.append(fail_ssh_conn_instance_mock)
+    get_ssh_connection_side_effects.append(SSHError())
+    # Setup for instance fail pull file
+    test_instances.append(
+        (
+            fail_pull_file_instance := InstanceID(
+                prefix="fail-pull-file", reactive=False, suffix="3"
+            )
+        )
+    )
+    fail_pull_file_instance_mock = MagicMock()
+    fail_pull_file_instance_mock.instance_id = fail_pull_file_instance
+    get_instance_side_effects.append(fail_pull_file_instance_mock)
+    ssh_connection_mock = MagicMock()
+    ssh_connection_mock.return_value = ssh_connection_mock
+    ssh_connection_mock.__enter__ = ssh_connection_mock
+    ssh_connection_mock.run.side_effect = [TimeoutError]
+    get_ssh_connection_side_effects.append(ssh_connection_mock)
+    # Mock cloud service setup
+    mock_cloud_service = MagicMock()
+    mock_cloud_service.get_instance = MagicMock(side_effect=get_instance_side_effects)
+    mock_cloud_service.get_ssh_connection = MagicMock(side_effect=get_ssh_connection_side_effects)
+
+    assert pull_runner_metrics(cloud_service=mock_cloud_service, instance_ids=test_instances) == []
+    assert (
+        f"Skipping fetching metrics, instance not found: {not_exists_instance}" in caplog.messages
+    )
+    assert (
+        f"Failed to create SSH connection for pulling metrics: {fail_ssh_conn_instance}"
+        in caplog.messages
+    )
+    assert (
+        f"Failed to create SSH connection for pulling metrics: {fail_pull_file_instance}"
+        in caplog.messages
+    )
+
+
+def test_pull_runner_metrics():
+    """
+    arrange: given a mock cloud service get_instance method and get_ssh_connection method.
+    act: when pull_runner_metrics function is called.
+    assert: metrics are pulled from corresponding instances correctly.
+    """
+    mock_cloud_service = MagicMock()
+    mock_ssh_conn = MagicMock()
+    mock_ssh_conn.return_value = mock_ssh_conn
+    mock_ssh_conn.__enter__ = mock_ssh_conn
+    test_remote_file_contents = "test-contents"
+    mock_ssh_conn.get = lambda remote, local: local.write(
+        bytes(test_remote_file_contents, encoding="utf-8")
+    )
+    mock_cloud_service.get_ssh_connection = mock_ssh_conn
+    mock_instance_one, mock_instance_two = (MagicMock(), MagicMock())
+    mock_cloud_service.get_instance.side_effect = [mock_instance_one, mock_instance_two]
+
+    # Compare the set as the order is not guaranteed but it does not matter.
+    assert set(
+        pull_runner_metrics(
+            cloud_service=mock_cloud_service,
+            instance_ids=[mock_instance_one.instance_id, mock_instance_two.instance_id],
+        )
+    ) == set(
+        [
+            PulledMetrics(
+                instance=mock_instance_one,
+                runner_installed=test_remote_file_contents,
+                pre_job_metrics=test_remote_file_contents,
+                post_job_metrics=test_remote_file_contents,
+            ),
+            PulledMetrics(
+                instance=mock_instance_two,
+                runner_installed=test_remote_file_contents,
+                pre_job_metrics=test_remote_file_contents,
+                post_job_metrics=test_remote_file_contents,
+            ),
+        ]
     )
 
 
@@ -123,6 +207,31 @@ def test_issue_events(issue_event_mock: MagicMock):
                 )
             ),
         ]
+    )
+
+
+def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
+    """Create a RunnerMetrics object that is suitable for most tests.
+
+    Args:
+        instance_id: The test runner name.
+
+    Returns:
+        Test metrics data.
+    """
+    return RunnerMetrics(
+        installation_start_timestamp=1,
+        installed_timestamp=2,
+        pre_job=PreJobMetrics(
+            timestamp=3,
+            workflow="workflow1",
+            workflow_run_id="workflow_run_id1",
+            repository="org1/repository1",
+            event="push",
+        ),
+        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
+        instance_id=instance_id,
+        metadata=RunnerMetadata(),
     )
 
 
@@ -363,7 +472,7 @@ def test_ssh_pull_file():
 
     ssh_conn.get.side_effect = _ssh_get
 
-    response = ssh_pull_file(ssh_conn, remote_path, max_size)
+    response = _ssh_pull_file(ssh_conn, remote_path, max_size)
 
     assert response == "content from the file"
 
@@ -400,7 +509,7 @@ def test_ssh_pull_file_invalid_size_real():
     ssh_conn.get.side_effect = _ssh_get
 
     with pytest.raises(PullFileError) as exc:
-        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+        _ = _ssh_pull_file(ssh_conn, remote_path, max_size)
         assert "max" in str(exc)
 
 
@@ -426,5 +535,5 @@ def test_ssh_pull_file_invalid_size_reported():
     ssh_conn.run.side_effect = _ssh_run
 
     with pytest.raises(PullFileError) as exc:
-        _ = ssh_pull_file(ssh_conn, remote_path, max_size)
+        _ = _ssh_pull_file(ssh_conn, remote_path, max_size)
     assert "too large" in str(exc)
