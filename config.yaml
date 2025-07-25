@@ -163,6 +163,7 @@ options:
           port 22
           proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
       EOF
+      test
 
   runner-http-proxy:
     type: string
