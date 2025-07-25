@@ -1,5 +1,12 @@
 # Changelog
 
+<<<<<<< minor-dashboard-improvement
+
+### 2025-06-17
+
+- Fix bug where SSH connection error always appears in the logs.
+- Change the repository panel to show the number of jobs per workflow per repository.
+=======
 This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-07-22
@@ -33,6 +40,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ### 2025-06-17
 
 - Fix a bug where SSH connection error always appears in the logs.
+>>>>>>> main
 
 ### 2025-06-16
 
