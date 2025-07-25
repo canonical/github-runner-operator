@@ -6,21 +6,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  network-speed-test-stg:
-    name: Network speed test AMD64
-    runs-on: [self-hosted, stg-private-endpoint, X64]
+  edge:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    runs-on: [self-hosted, edge, amd64, reactive]
     steps:
-      - name: Librespeed test
-        run: |
-          wget https://github.com/librespeed/speedtest-cli/releases/download/v1.0.10/librespeed-cli_1.0.10_linux_amd64.tar.gz
-          tar -xvzf librespeed-cli_1.0.10_linux_amd64.tar.gz
-          ./librespeed-cli
-  network-speed-test-edge:
-    name: Network speed test AMD64
-    runs-on: [self-hosted, edge, X64]
-    steps:
-      - name: Librespeed test
-        run: |
-          wget https://github.com/librespeed/speedtest-cli/releases/download/v1.0.10/librespeed-cli_1.0.10_linux_amd64.tar.gz
-          tar -xvzf librespeed-cli_1.0.10_linux_amd64.tar.gz
-          ./librespeed-cli
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
