@@ -49,6 +49,7 @@ of zero sized files in the reactive log directory. This is a temporary fix until
 
 - Disable and remove any legacy service on upgrade. This fixes issue with the legacy service in upgraded units.
 
+
 ### 2025-06-10
 
 - Fix issue with upgraded charm unit unable to issue metrics due to metric log ownership issues.

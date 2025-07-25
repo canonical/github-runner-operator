@@ -1,0 +1,20 @@
+name: Manual test
+
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  edge:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1]
+    runs-on: [self-hosted, large, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
