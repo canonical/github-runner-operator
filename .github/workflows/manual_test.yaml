@@ -10,8 +10,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-    runs-on: [self-hosted, edge, arm64, reactive]
+        index: [0, 1]
+    runs-on: [self-hosted, large, arm64, reactive]
     steps:
       - run: lscpu
       - run: df -h
