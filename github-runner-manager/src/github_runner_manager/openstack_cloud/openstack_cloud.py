@@ -293,6 +293,8 @@ class OpenstackCloud:
                     timeout=CREATE_SERVER_TIMEOUT,
                     wait=False,
                     meta=meta,
+                    # 2025/07/24 - This option is set to mitigate CVE-2024-6174
+                    config_drive=True,
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)
