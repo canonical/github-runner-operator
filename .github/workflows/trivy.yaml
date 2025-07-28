@@ -10,5 +10,4 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
-      trivy-image-enabled: true
       trivy-image-config: trivy.yaml
