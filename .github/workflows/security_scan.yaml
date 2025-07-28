@@ -1,0 +1,62 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, add-vulnurability-scan]
+  pull_request:
+  workflow_call:
+    inputs:
+      run_scan:
+        description: 'Whether to run the Trivy filesystem scan'
+        required: false
+        type: boolean
+        default: true
+      upload_sarif:
+        description: 'Upload SARIF results to GitHub Security tab'
+        required: false
+        type: boolean
+        default: false
+
+
+## TODO: To be moved into inputs
+env:
+  INPUTS_TRIVY_CONFIG_PATH: 'trivy.yaml'
+  INPUTS_RUN_TRIVY_FS: true
+  INPUT_UPLOAD_RESULTS: false
+
+jobs:
+  trivy-scan:
+    name: Run Trivy Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run default Trivy scan for logs
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: $INPUTS_TRIVY_CONFIG_PATH
+
+      - name: Run Trivy scan for SARIF report
+        if: env.INPUT_UPLOAD_RESULTS == 'true'
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: $INPUTS_TRIVY_CONFIG_PATH
+          # Override settings to produce the required SARIF output
+          format: 'template'
+          template: '@/contrib/sarif.tpl'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          
+      - name: Upload SARIF to GitHub Security tab
+        if: env.INPUT_UPLOAD_RESULTS == 'true'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
