@@ -16,7 +16,7 @@ on:
 ## TODO: To be moved into inputs
 env:
   INPUTS_TRIVY_CONFIG_PATH: 'trivy.yaml'
-  INPUT_UPLOAD_RESULTS: false
+  INPUT_UPLOAD_RESULTS: true
 
 jobs:
   trivy-scan:
