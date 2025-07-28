@@ -2,23 +2,19 @@ name: Security Scan
 
 on:
   push:
-    branches: [main, add-vulnurability-scan]
+    branches: [main]
   pull_request:
-  workflow_call:
+  workflow_dispatch:
     inputs:
-      upload_sarif:
-        description: 'Upload SARIF results to GitHub Security tab'
+      upload_results:
+        description: "Upload SARIF and SBOM results"
         required: false
         type: boolean
         default: false
 
-permissions:
-  contents: read # Set the GITHUB_TOKEN permissions to read-only
-
-## TODO: To be moved into inputs
 env:
-  INPUTS_TRIVY_CONFIG_PATH: 'trivy.yaml'
-  INPUT_UPLOAD_RESULTS: true
+  # This value is used for push and pull_request triggers
+  UPLOAD_RESULTS: true
 
 jobs:
   trivy-scan:
@@ -36,55 +32,50 @@ jobs:
         with:
           scan-type: "fs"
           scan-ref: "."
-          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
+          trivy-config: "trivy.yaml"
 
       - name: Run Trivy scan for SARIF report
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
-          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
-          # Override settings to produce the required SARIF output
-          format: 'sarif'
+          trivy-config: "trivy.yaml"
+          format: "sarif"
           output: "trivy-results.sarif"
-          
+
       - name: Upload SARIF to GitHub Security tab
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
+        if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
 
       - name: Upload diagnostic SARIF artifact
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
+        if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
         uses: actions/upload-artifact@v4
         with:
           name: sarif-report
           path: "trivy-results.sarif"
           retention-days: 7
 
-
   generate-sbom:
     name: Generate SBOM from Filesystem
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: actions/checkout@v4
 
       - name: Run Trivy to generate SBOM
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
-          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
+          trivy-config: "trivy.yaml"
           format: "spdx-json"
           output: "dependency-results.sbom.json"
           github-pat: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload SBOM as an artifact
-        if: env.INPUT_UPLOAD_RESULTS == 'true'
+        if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
         uses: actions/upload-artifact@v4
         with:
           name: sbom
