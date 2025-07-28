@@ -1,13 +1,136 @@
-name: trivy
+name: Security Scan
 
 on:
-  pull_request:
-  workflow_dispatch:
   push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+    inputs:
+      upload_sarif:
+        description: 'Upload SARIF results to GitHub Security tab'
+        required: true
+        type: boolean
+        default: false
+
+
+## TODO: To be moved into inputs
+env:
+  REGISTRY: ghcr.io
+  OWNER: ${{ github.repository_owner }}
+  INPUT_BUILD_RUNNER_LABEL: "ubuntu-latest"
+  INPUT_IDENTIFIER: ""
+  INPUT_UPLOAD_IMAGE: ""
+  INPUT_WORKING_DIRECTORY: "./"
 
 jobs:
-  trivy:
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      trivy-image-config: trivy.yaml
+  plan:
+    name: Plan
+    runs-on: $INPUT_BUILD_RUNNER_LABEL
+    outputs:
+      plan: ${{ steps.plan.outputs.plan }}
+      has-code-changes: ${{ steps.changes.outputs.has_code_changes }}
+    steps:
+      - name: Validate input
+        run: |
+          # exit if runs-on and self-hosted-runner is both set
+            if [ -n "${{ inputs.runs-on }}" ] && [ "${{ inputs.self-hosted-runner }}" = "true" ]; then
+                echo "::error Both runs-on and self-hosted-runner cannot be set at the same time."
+                exit 1
+            fi
+      - uses: actions/checkout@v4.2.2
+        with:
+            fetch-depth: 0
+      - uses: canonical/operator-workflows/internal/plan@main
+        id: plan
+        with:
+          identifier: $INPUT_IDENTIFIER
+          upload-image: $INPUT_UPLOAD_IMAGE
+          working-directory: $INPUT_WORKING_DIRECTORY
+      - name: Find changes
+        id: changes
+        run: |
+          REMOTE=$(git remote show)
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE_REF="$REMOTE/${{ github.event.pull_request.base.ref }}"
+            HEAD_REF="${{ github.event.pull_request.head.sha }}"
+          else
+            # fallback for push events
+            BASE_REF="${{ github.event.before }}"
+            HEAD_REF="${{ github.sha }}"
+          fi
+
+          echo "Comparing $BASE_REF to $HEAD_REF"
+
+          CHANGED_FILES=$(git diff --name-only "$BASE_REF" "$HEAD_REF" || echo "")
+          CODE_FILE_CHANGES=$(echo "$CHANGED_FILES" | grep -v "\.md$" | wc -l)
+          echo "has_code_changes=$([[ $CODE_FILE_CHANGES -eq "0" ]] && echo 'False' || echo 'True')" >> $GITHUB_OUTPUT
+
+
+  build-rock:
+    name: Build rock container
+    runs-on: ubuntu-latest 
+    outputs:
+      image-name: ${{ steps.export.outputs.image-name }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up charmcraft
+        uses: canonical/setup-charmcraft@v2
+
+      - name: Build the rock
+        run: |
+          charmcraft pack --destructive-mode
+          echo "ROCK_NAME=$(basename *.rock)" >> $GITHUB_ENV
+
+      - name: Load rock into Docker
+        run: |
+          docker load -i *.rock
+          IMAGE_NAME="ghcr.io/${{ github.repository }}/rock:${{ github.sha }}"
+          docker tag $(docker images --format '{{.Repository}}:{{.Tag}}' | head -n1) $IMAGE_NAME
+          echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Push image to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push image
+        run: docker push ${{ steps.export.outputs.image-name }}
+
+      - name: Export image name
+        id: export
+        run: echo "image-name=$IMAGE_NAME" >> $GITHUB_OUTPUT
+
+  trivy-scan:
+    name: Run Trivy Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+
+    env:
+      IMAGE_NAME: ghcr.io/${{ github.repository }}:trivy-scan-${{ github.sha }}
+
+    steps:
+      - name: Run Trivy scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ needs.build-rock.outputs.image-name }}
+          format: table
+          severity: CRITICAL,HIGH
+          exit-code: 0
+          ignore-unfixed: true
+
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: trivy-results.sarif
+
+      # Optional: SBOM placeholder
+      - name: Generate SBOM (cyclonedx or syft)
+        run: |
+          echo "SBOM generation step"
+          # e.g., syft $IMAGE_NAME -o cyclonedx-json > sbom.json

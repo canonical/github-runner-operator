@@ -1,6 +1,7 @@
 name: integration-tests
 
 on:
+  push:
   pull_request:
 
   schedule:
@@ -43,3 +44,9 @@ jobs:
       - openstack-integration-tests-private-endpoint
       - openstack-integration-tests-cross-controller-private-endpoint
     uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+  trivy:
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@update-with-security-workflow
+    secrets: inherit
+    with:
+      trivy-image-enabled: true
+      trivy-image-config: trivy.yaml
