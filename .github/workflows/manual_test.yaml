@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, large, s390x]
+    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
     steps:
       - run: lscpu
       - run: df -h
@@ -47,7 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, large, ppc64le]
+    runs-on: [self-hosted, self-hosted-linux-ppc64el-noble-edge]
     steps:
       - run: lscpu
       - run: df -h
