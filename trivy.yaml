@@ -1,7 +1,10 @@
 timeout: 20m
 severity:
+  - UNKNOWN
+  - LOW
+  - MEDIUM
   - HIGH
   - CRITICAL
 vulnerability:
-  ignore-unfixed: true
+  ignore-unfixed: false
 exit-code: 0
