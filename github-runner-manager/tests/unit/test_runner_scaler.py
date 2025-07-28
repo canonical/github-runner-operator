@@ -87,6 +87,15 @@ def issue_events_mock_fixture(monkeypatch: pytest.MonkeyPatch):
     return issue_events_mock
 
 
+@pytest.fixture(scope="function", name="mock_process_manager_subprocess_run")
+def mock_process_manager_subprocess_run_fixture(monkeypatch: pytest.MonkeyPatch):
+    mock_subprocess_run = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.reactive.process_manager.secure_run_subprocess", mock_subprocess_run
+    )
+    return mock_subprocess_run
+
+
 @pytest.fixture(scope="function", name="runner_manager")
 def runner_manager_fixture(
     monkeypatch, mock_runner_managers, github_path: GitHubPath, issue_events_mock
