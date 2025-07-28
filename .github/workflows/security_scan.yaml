@@ -57,21 +57,26 @@ jobs:
   generate-sbom:
     name: Generate SBOM from Filesystem
     runs-on: ubuntu-latest
-    if: env.INPUT_UPLOAD_RESULTS == 'true'
     steps:
       - name: Checkout repository
+        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: actions/checkout@v4
 
       - name: Run Trivy to generate SBOM
+        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
           trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
-          format: 'cyclonedx'
-          output: 'sbom.json'
+          format: 'spdx-json'
+          output: 'dependency-results.sbom.json'
+          github-pat: ${{ secrets.GITHUB_TOKEN }}
+          severity: 'MEDIUM,HIGH,CRITICAL'
+          scanners: 'vuln'
 
       - name: Upload SBOM as an artifact
+        if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: sbom
