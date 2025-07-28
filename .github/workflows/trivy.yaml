@@ -3,6 +3,7 @@ name: trivy
 on:
   pull_request:
   workflow_dispatch:
+  push:
 
 jobs:
   trivy:
