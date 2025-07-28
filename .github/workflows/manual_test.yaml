@@ -6,12 +6,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  edge:
+  large-arm64:
     strategy:
       fail-fast: false
       matrix:
-        index: [0, 1]
+        index: [0]
     runs-on: [self-hosted, large, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-arm64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, edge, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-s390x:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, large, s390x]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-ppc64le:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, large, ppc64le]
     steps:
       - run: lscpu
       - run: df -h
