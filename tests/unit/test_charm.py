@@ -222,7 +222,10 @@ def test_common_install_code(
     """
     state_mock = MagicMock()
     harness.charm._setup_state = MagicMock(return_value=state_mock)
-
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
     monkeypatch.setattr("charm.logrotate.setup", setup_logrotate := MagicMock())
     monkeypatch.setattr("charm.systemd", MagicMock())
 
@@ -630,6 +633,10 @@ def test_metric_log_ownership_for_upgrade(
 
     mock_metric_log_path = tmp_path
     mock_metric_log_path.touch(exist_ok=True)
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
     monkeypatch.setattr("charm.METRICS_LOG_PATH", mock_metric_log_path)
     monkeypatch.setattr("charm.shutil", shutil_mock := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
@@ -652,6 +659,10 @@ def test_attempting_disable_legacy_service_for_upgrade(
     assert: Calls to stop the legacy service is performed.
     """
     harness.charm._setup_state = MagicMock()
+    manager_client_mock = MagicMock(spec=GitHubRunnerManagerClient)
+    harness.charm._manager_client = manager_client_mock
+    mock_manager_service = MagicMock()
+    monkeypatch.setattr("charm.manager_service", mock_manager_service)
     monkeypatch.setattr("charm.systemd", mock_systemd := MagicMock())
     monkeypatch.setattr("charm.execute_command", MagicMock(return_value=(0, "Mock_stdout")))
     monkeypatch.setattr("charm.pathlib", MagicMock())

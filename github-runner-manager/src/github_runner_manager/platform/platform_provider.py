@@ -18,6 +18,21 @@ from github_runner_manager.manager.models import (
 )
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
+_GITHUB_PLATFORM_KEY = "github"
+_JOBMANAGER_PLATFORM_KEY = "jobmanager"
+
+
+class Platform(str, Enum):
+    """Enum for supported platforms.
+
+    Attributes:
+        GITHUB: GitHub platform.
+        JOBMANAGER: JobManager platform.
+    """
+
+    GITHUB = _GITHUB_PLATFORM_KEY
+    JOBMANAGER = _JOBMANAGER_PLATFORM_KEY
+
 
 class PlatformError(Exception):
     """Base class for all platform provider errors."""
@@ -71,13 +86,11 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a  runner.
-
-        Can raise DeleteRunnerBusyError
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+        """Delete runners.
 
         Args:
-            runner_identity: Runner to delete.
+            runner_ids: Runner IDs to delete.
         """
 
     @abc.abstractmethod

@@ -36,8 +36,8 @@ from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform, Platform
-from github_runner_manager.platform.platform_provider import PlatformRunnerState
+from github_runner_manager.platform.factory import platform_factory
+from github_runner_manager.platform.platform_provider import Platform, PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -94,7 +94,7 @@ class _ReconcileMetricData:
     start_timestamp: float
     end_timestamp: float
     metric_stats: IssuedMetricEventsStats
-    runner_list: tuple[RunnerInstance]
+    runner_list: tuple[RunnerInstance, ...]
     flavor: str
     expected_runner_quantity: int
 
@@ -141,10 +141,10 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        platform_provider = MultiplexerPlatform.build(
-            prefix=application_configuration.openstack_configuration.vm_prefix,
-            github_configuration=application_configuration.github_config,
-            jobmanager_configuration=application_configuration.jobmanager_config,
+        platform_provider = platform_factory(
+            vm_prefix=application_configuration.openstack_configuration.vm_prefix,
+            github_config=application_configuration.github_config,
+            jobmanager_config=application_configuration.jobmanager_config,
         )
 
         runner_manager = RunnerManager(
@@ -267,6 +267,8 @@ class RunnerScaler:
             Number of runners flushed.
         """
         metric_stats = self._manager.cleanup()
+        if self._reactive_config is not None:
+            reactive_runner_manager.flush_reactive_processes()
         delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
         events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
@@ -373,7 +375,7 @@ class RunnerScaler:
         return _ReconcileResult(runner_diff=runner_diff, metric_stats=metric_stats)
 
     @staticmethod
-    def _log_runners(runner_list: tuple[RunnerInstance]) -> None:
+    def _log_runners(runner_list: tuple[RunnerInstance, ...]) -> None:
         """Log information about the runners found.
 
         Args:
@@ -444,7 +446,6 @@ def _issue_reconciliation_metric(
     IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
     try:
-
         metric_events.issue_event(
             metric_events.Reconciliation(
                 timestamp=time.time(),

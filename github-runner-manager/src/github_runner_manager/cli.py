@@ -3,6 +3,7 @@
 
 """The CLI entrypoint for github-runner-manager application."""
 
+import importlib.metadata
 import logging
 import sys
 from functools import partial
@@ -16,6 +17,8 @@ from github_runner_manager.configuration import ApplicationConfiguration
 from github_runner_manager.http_server import FlaskArgs, start_http_server
 from github_runner_manager.reconcile_service import start_reconcile_service
 from github_runner_manager.thread_manager import ThreadManager
+
+version = importlib.metadata.version("github-runner-manager")
 
 
 @click.command()
@@ -75,6 +78,7 @@ def main(
         stream=sys.stderr,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
+    logging.info("Starting GitHub runner manager service version: %s", version)
 
     lock = Lock()
     config_str = config_file.read()

@@ -3,13 +3,19 @@
 
 """Client for managing self-hosted runner on GitHub side."""
 
+import concurrent.futures
 import logging
+from dataclasses import dataclass
 from enum import Enum
 
 from pydantic import HttpUrl
 
-from github_runner_manager.configuration.github import GitHubConfiguration, GitHubRepo
-from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
+from github_runner_manager.configuration.github import GitHubConfiguration, GitHubPath, GitHubRepo
+from github_runner_manager.github_client import (
+    DeleteRunnerBusyError,
+    GithubClient,
+    GithubRunnerNotFoundError,
+)
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
@@ -28,10 +34,25 @@ from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRu
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class _DeleteRunnerConfig:
+    """Configurations for deleting a runner.
+
+    Attributes:
+        runner_id: The ID of the runner to delete.
+        path: The path (repository/org) in which the the runner was registered to.
+        github_client: The GitHub client to use to call delete runner.
+    """
+
+    runner_id: str
+    path: GitHubPath
+    github_client: GithubClient
+
+
 class GitHubRunnerPlatform(PlatformProvider):
     """Manage self-hosted runner on GitHub side."""
 
-    def __init__(self, prefix: str, path: str, github_client: GithubClient):
+    def __init__(self, prefix: str, path: GitHubPath, github_client: GithubClient):
         """Construct the object.
 
         Args:
@@ -143,17 +164,59 @@ class GitHubRunnerPlatform(PlatformProvider):
             non_requested_runners=non_requested_runners,
         )
 
-    def delete_runner(self, runner_identity: RunnerIdentity) -> None:
-        """Delete a runner from GitHub.
+    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+        """Delete runners from GitHub.
 
-        This method will raise DeleteRunnerBusyError if the runner is not deletable, that is,
-        if it is busy. If the runner does not exist it will not fail.
+        This method will ignore DeleteRunnerBusyErrors and print a warning log.
 
         Args:
-            runner_identity: Identity of the runner to delete.
+            runner_ids: The GitHub runner IDs to delete.
+
+        Returns:
+            The runner IDs that were deleted successfully.
         """
-        logger.info("Delete runner in GitHub: %s", runner_identity)
-        self._client.delete_runner(self._path, int(runner_identity.metadata.runner_id))
+        logger.info("Delete runners from GitHub provider: %s", runner_ids)
+        # Guard multiprocessing.Pool from having 0 processes which will raise an error.
+        if not runner_ids:
+            return []
+
+        delete_configs = [
+            _DeleteRunnerConfig(runner_id=runner_id, path=self._path, github_client=self._client)
+            for runner_id in runner_ids
+        ]
+        deleted_runner_ids: list[str] = []
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(len(runner_ids), 30)
+        ) as executor:
+            future_to_delete_runner_config = {
+                executor.submit(GitHubRunnerPlatform._delete_runner, config): config
+                for config in delete_configs
+            }
+            for future in concurrent.futures.as_completed(future_to_delete_runner_config):
+                delete_config = future_to_delete_runner_config[future]
+                try:
+                    future.result()
+                    deleted_runner_ids.append(delete_config.runner_id)
+                except DeleteRunnerBusyError:
+                    logger.warning(
+                        "Delete runner attempt failed, busy runner: %s",
+                        delete_config.runner_id,
+                    )
+
+        return deleted_runner_ids
+
+    @staticmethod
+    def _delete_runner(delete_runner_config: _DeleteRunnerConfig) -> None:
+        """Delete a single runner from GitHub.
+
+        This method is a wrapper to be called via multiprocessing pool for parallel deletion.
+
+        Args:
+            delete_runner_config: The configuration to use for deleting the runner.
+        """
+        delete_runner_config.github_client.delete_runner(
+            path=delete_runner_config.path, runner_id=int(delete_runner_config.runner_id)
+        )
 
     def get_runner_context(
         self, metadata: RunnerMetadata, instance_id: InstanceID, labels: list[str]
