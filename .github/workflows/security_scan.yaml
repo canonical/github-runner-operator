@@ -6,11 +6,6 @@ on:
   pull_request:
   workflow_call:
     inputs:
-      run_scan:
-        description: 'Whether to run the Trivy filesystem scan'
-        required: false
-        type: boolean
-        default: true
       upload_sarif:
         description: 'Upload SARIF results to GitHub Security tab'
         required: false
@@ -21,7 +16,6 @@ on:
 ## TODO: To be moved into inputs
 env:
   INPUTS_TRIVY_CONFIG_PATH: 'trivy.yaml'
-  INPUTS_RUN_TRIVY_FS: true
   INPUT_UPLOAD_RESULTS: false
 
 jobs:
@@ -35,12 +29,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run default Trivy scan for logs
+      - name: Run Trivy scan for logs
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
-          trivy-config: $INPUTS_TRIVY_CONFIG_PATH
+          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
 
       - name: Run Trivy scan for SARIF report
         if: env.INPUT_UPLOAD_RESULTS == 'true'
@@ -48,15 +42,38 @@ jobs:
         with:
           scan-type: "fs"
           scan-ref: "."
-          trivy-config: $INPUTS_TRIVY_CONFIG_PATH
+          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
           # Override settings to produce the required SARIF output
-          format: 'template'
-          template: '@/contrib/sarif.tpl'
+          format: 'sarif'
           output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
           
       - name: Upload SARIF to GitHub Security tab
         if: env.INPUT_UPLOAD_RESULTS == 'true'
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
+
+
+  generate-sbom:
+    name: Generate SBOM from Filesystem
+    runs-on: ubuntu-latest
+    if: env.INPUT_UPLOAD_RESULTS == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy to generate SBOM
+        uses: aquasecurity/trivy-action@0.32.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          trivy-config: ${{ env.INPUTS_TRIVY_CONFIG_PATH }}
+          format: 'cyclonedx'
+          output: 'sbom.json'
+
+      - name: Upload SBOM as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json 
+          retention-days: 7
