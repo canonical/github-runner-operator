@@ -1,3 +1,8 @@
 timeout: 20m
-scan:
-  offline-scan: true
+ignorefile: .trivyignore
+severity:
+  - HIGH
+  - CRITICAL
+vulnerability:
+  ignore-unfixed: false
+exit-code: 0

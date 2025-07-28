@@ -48,4 +48,5 @@ jobs:
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@update-with-security-workflow
     secrets: inherit
     with:
-      trivy-image-config: trivy.yaml
+      trivy-fs-config: trivy.yaml
+      trivy-fs-enabled: true
