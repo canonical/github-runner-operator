@@ -11,6 +11,7 @@ from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_D
 from pydantic import BaseModel
 
 from errors import LogrotateSetupError
+from manager_service import GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR
 
 LOG_ROTATE_TIMER_SYSTEMD_SERVICE = "logrotate.timer"
 
@@ -42,6 +43,7 @@ class LogrotateConfig(BaseModel):
         log_path_glob_pattern: The glob pattern for the log path.
         rotate: The number of log files to keep.
         create: Whether to create the log file if it does not exist.
+        copytruncate: Whether to copy the log file and truncate it after rotation.
         notifempty: Whether to not rotate the log file if it is empty.
         frequency: The frequency of log rotation.
     """
@@ -50,6 +52,7 @@ class LogrotateConfig(BaseModel):
     log_path_glob_pattern: str
     rotate: int
     create: bool
+    copytruncate: bool = True
     notifempty: bool = True
     frequency: LogrotateFrequency = LogrotateFrequency.WEEKLY
 
@@ -67,6 +70,16 @@ METRICS_LOGROTATE_CONFIG = LogrotateConfig(
 REACTIVE_LOGROTATE_CONFIG = LogrotateConfig(
     name="reactive-runner",
     log_path_glob_pattern=f"{REACTIVE_RUNNER_LOG_DIR}/*.log",
+    rotate=0,
+    create=False,
+    notifempty=False,
+    frequency=LogrotateFrequency.DAILY,
+    copytruncate=False,
+)
+
+GITHUB_RUNNER_MANAGER_CONFIG = LogrotateConfig(
+    name="github-runner-manager",
+    log_path_glob_pattern=f"{GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR}/*.log",
     rotate=0,
     create=False,
     notifempty=False,
@@ -110,6 +123,7 @@ def _configure() -> None:
     """Configure logrotate."""
     _write_config(REACTIVE_LOGROTATE_CONFIG)
     _write_config(METRICS_LOGROTATE_CONFIG)
+    _write_config(GITHUB_RUNNER_MANAGER_CONFIG)
 
 
 def _write_config(logrotate_config: LogrotateConfig) -> None:
@@ -123,6 +137,7 @@ def _write_config(logrotate_config: LogrotateConfig) -> None:
         f"""{logrotate_config.log_path_glob_pattern} {{
 {logrotate_config.frequency}
 rotate {logrotate_config.rotate}
+{"copytruncate" if logrotate_config.copytruncate else "nocopytruncate"}
 missingok
 {"notifempty" if logrotate_config.notifempty else "ifempty"}
 {"create" if logrotate_config.create else "nocreate"}

@@ -3,6 +3,7 @@
 
 """Test for HTTP server."""
 
+import json
 from multiprocessing import Process
 from threading import Lock
 from typing import Iterator
@@ -13,7 +14,7 @@ from flask.testing import FlaskClient
 
 from github_runner_manager.manager.runner_manager import FlushMode
 from src.github_runner_manager.http_server import APP_CONFIG_NAME, OPENSTACK_CONFIG_NAME, app
-from src.github_runner_manager.manager.runner_scaler import RunnerScaler
+from src.github_runner_manager.manager.runner_scaler import RunnerInfo, RunnerScaler
 
 
 @pytest.fixture(name="lock", scope="function")
@@ -37,7 +38,7 @@ def client_fixture(lock: Lock, monkeypatch) -> Iterator[FlaskClient]:
 def mock_runner_scaler_fixture(monkeypatch) -> MagicMock:
     mock = MagicMock(spec=RunnerScaler)
     monkeypatch.setattr(
-        "src.github_runner_manager.http_server.RunnerScaler.build", lambda x, z: mock
+        "src.github_runner_manager.reconcile_service.RunnerScaler.build", lambda x, y, z: mock
     )
     return mock
 
@@ -51,7 +52,6 @@ def test_flush_runner_default_args(
     assert: Should flush idle runners.
     """
     app.config["lock"] = lock
-    client = app.test_client()
 
     response = client.post("/runner/flush")
 
@@ -70,7 +70,6 @@ def test_flush_runner_flush_busy(
 
     """
     app.config["lock"] = lock
-    client = app.test_client()
 
     response = client.post("/runner/flush?flush-busy=true")
 
@@ -88,7 +87,6 @@ def test_flush_runner_unlocked(
     assert: The flush runner should run.
     """
     app.config["lock"] = lock
-    client = app.test_client()
 
     response = client.post("/runner/flush?flush-busy=false")
 
@@ -112,3 +110,28 @@ def test_flush_runner_locked(client: FlaskClient, lock: Lock) -> None:
     assert flush.is_alive(), "The flush runner call should still be waiting on the lock"
 
     flush.terminate()
+
+
+def test_check_runner(client: FlaskClient, lock: Lock, mock_runner_scaler: MagicMock) -> None:
+    """
+    arrange: Mock runner scaler to return mock data on get runner info.
+    act: HTTP Get to /runner/check
+    assert: Returns the correct status code and content.
+    """
+    app.config["lock"] = lock
+    mock_runner_scaler.get_runner_info.return_value = RunnerInfo(
+        online=1, busy=0, offline=0, unknown=0, runners=("mock_runner",), busy_runners=tuple()
+    )
+
+    response = client.get("/runner/check")
+
+    assert response.status_code == 200
+    assert not lock.locked()
+    assert json.loads(response.text) == {
+        "online": 1,
+        "busy": 0,
+        "offline": 0,
+        "unknown": 0,
+        "runners": ["mock_runner"],
+        "busy_runners": [],
+    }

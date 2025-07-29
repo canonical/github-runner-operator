@@ -90,7 +90,7 @@ This inconsistency can result in failed workflows, prompting the introduction of
 
 ### aproxy
 If the proxy configuration is utilised and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
-all HTTP(S) requests to standard ports (80, 443) within the GitHub workflow will be automatically directed 
+all HTTP(S) requests to standard ports (80, 443, 11371) within the GitHub workflow will be automatically directed 
 to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
 aproxy then forwards received packets to the designated HTTP(S) proxy. 
 Beyond that, the environment variables (`http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`)
@@ -104,7 +104,6 @@ would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
 
 - Requesting self-hosted runner registration tokens
-- Requesting self-hosted runner removal tokens
 - Requesting a list of runner applications
 - Requesting a list of self-hosted runners configured in an organization or repository
 - Deleting self-hosted runners

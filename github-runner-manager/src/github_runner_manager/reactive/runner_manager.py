@@ -37,6 +37,7 @@ def reconcile(
     runner_manager: RunnerManager,
     reactive_process_config: ReactiveProcessConfig,
     user: UserInfo,
+    python_path: str | None = None,
 ) -> ReconcileResult:
     """Reconcile runners reactively.
 
@@ -80,6 +81,7 @@ def reconcile(
         runner_manager: The runner manager to interact with current running runners.
         reactive_process_config: The reactive runner config.
         user: The user to run the reactive process.
+        python_path: The PYTHONPATH to access the github-runner-manager library.
 
     Returns:
         The number of reactive processes created. If negative, its absolute value is equal
@@ -95,9 +97,12 @@ def reconcile(
 
     # Only count runners which are online on GitHub to prevent machines to be just in
     # construction to be counted and then killed immediately by the process manager.
-    runners = runner_manager.get_runners(
-        github_states=[PlatformRunnerState.IDLE, PlatformRunnerState.BUSY]
-    )
+    all_runners = runner_manager.get_runners()
+    runners = [
+        runner
+        for runner in all_runners
+        if runner.platform_state in (PlatformRunnerState.IDLE, PlatformRunnerState.BUSY)
+    ]
     runner_diff = expected_quantity - len(runners)
 
     if runner_diff >= 0:
@@ -119,6 +124,12 @@ def reconcile(
         quantity=process_quantity,
         reactive_process_config=reactive_process_config,
         user=user,
+        python_path=python_path,
     )
 
     return ReconcileResult(processes_diff=processes_created, metric_stats=metric_stats)
+
+
+def flush_reactive_processes() -> None:
+    """Flush all the reactive processes."""
+    process_manager.kill_reactive_processes()

@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import http
+import io
 import json
 import random
 import secrets
@@ -12,22 +13,29 @@ from urllib.error import HTTPError
 import pytest
 import requests
 
-# HTTP404NotFoundError is not found by pylint
-from fastcore.net import HTTP404NotFoundError  # pylint: disable=no-name-in-module
+# These exceptions are not found by pylint
+from fastcore.net import (  # pylint: disable=no-name-in-module
+    HTTP404NotFoundError,
+    HTTP422UnprocessableEntityError,
+)
 from requests import HTTPError as RequestsHTTPError
 
 import github_runner_manager.github_client
 from github_runner_manager.configuration.github import GitHubOrg, GitHubRepo
-from github_runner_manager.errors import JobNotFoundError, PlatformApiError, TokenError
 from github_runner_manager.github_client import GithubClient, GithubRunnerNotFoundError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.platform.platform_provider import (
+    DeleteRunnerBusyError,
+    JobNotFoundError,
+    PlatformApiError,
+    TokenError,
+)
 from github_runner_manager.types_.github import (
     GitHubRunnerStatus,
     JobConclusion,
     JobInfo,
     JobStatus,
     SelfHostedRunner,
-    SelfHostedRunnerLabel,
 )
 
 JobStatsRawData = namedtuple(
@@ -324,7 +332,7 @@ def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPat
     assert len(runners) == 1
     runner0 = runners[0]
     assert runner0.id == response["runners"][0]["id"]  # type: ignore
-    assert runner0.instance_id.name == response["runners"][0]["name"]  # type: ignore
+    assert runner0.identity.instance_id.name == response["runners"][0]["name"]  # type: ignore
     assert runner0.busy == response["runners"][0]["busy"]  # type: ignore
     assert runner0.status == response["runners"][0]["status"]  # type: ignore
 
@@ -332,16 +340,16 @@ def test_list_runners(github_client: GithubClient, monkeypatch: pytest.MonkeyPat
 def test_catch_http_errors(github_client: GithubClient):
     """
     arrange: A mocked Github Client that raises a 500 HTTPError.
-    act: Call  an API endpoint.
+    act: Call an API endpoint.
     assert: A PlatformApiError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
+    github_client._client.actions.delete_self_hosted_runner_from_repo.side_effect = HTTPError(
         "http://test.com", 500, "", http.client.HTTPMessage(), None
     )
 
     with pytest.raises(PlatformApiError):
-        github_client.get_runner_remove_token(github_repo)
+        github_client.delete_runner(path=github_repo, runner_id=1)
 
 
 def test_catch_http_errors_token_issues(github_client: GithubClient):
@@ -351,12 +359,12 @@ def test_catch_http_errors_token_issues(github_client: GithubClient):
     assert: A TokenError is raised.
     """
     github_repo = GitHubRepo(owner=secrets.token_hex(16), repo=secrets.token_hex(16))
-    github_client._client.actions.create_remove_token_for_repo.side_effect = HTTPError(
+    github_client._client.actions.delete_self_hosted_runner_from_repo.side_effect = HTTPError(
         "http://test.com", 401, "", http.client.HTTPMessage(), None
     )
 
     with pytest.raises(TokenError):
-        github_client.get_runner_remove_token(github_repo)
+        github_client.delete_runner(path=github_repo, runner_id=1)
 
 
 def test_get_runner_context_repo(github_client: GithubClient):
@@ -390,12 +398,14 @@ def test_get_runner_context_repo(github_client: GithubClient):
 
     assert jittoken == "hugestringinhere"
     assert runner == SelfHostedRunner(
+        identity=RunnerIdentity(
+            instance_id=instance_id,
+            metadata=RunnerMetadata(platform_name="github", runner_id=113),
+        ),
         busy=False,
         id=113,
-        labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
+        labels=["label1", "label2"],
         status=GitHubRunnerStatus.OFFLINE,
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id=113),
     )
 
 
@@ -506,7 +516,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
 
     instance_id = InstanceID.build("test-runner")
 
-    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
+    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels, timeout):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
         assert name == instance_id.name
@@ -539,12 +549,14 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
 
     assert jittoken == "anotherhugetoken"
     assert github_runner == SelfHostedRunner(
+        identity=RunnerIdentity(
+            instance_id=instance_id,
+            metadata=RunnerMetadata(platform_name="github", runner_id=18),
+        ),
         busy=False,
         id=18,
-        labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
+        labels=["self-hosted", "X64"],
         status=GitHubRunnerStatus.OFFLINE,
-        instance_id=instance_id,
-        metadata=RunnerMetadata(platform_name="github", runner_id=18),
     )
 
 
@@ -596,7 +608,7 @@ def test_get_runner(
 
     assert github_runner
     assert github_runner.id == runner_id
-    assert github_runner.metadata.runner_id == str(runner_id)
+    assert github_runner.identity.metadata.runner_id == str(runner_id)
 
 
 def test_get_runner_not_found(
@@ -616,3 +628,30 @@ def test_get_runner_not_found(
     )
     with pytest.raises(GithubRunnerNotFoundError):
         _ = github_client.get_runner(path, prefix, runner_id)
+
+
+def test_delete_runner_busy(
+    github_client: GithubClient,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """
+    arrange: A mocked GhApi Github Client that raises 422 when a runner is requested.
+    act: Call get_runner in GithubClient.
+    assert: The exception GithubRunnerNotFoundError is raised.
+    """
+    path = GitHubOrg(org=secrets.token_hex(16), group=secrets.token_hex(16))
+    runner_id = 1
+
+    error_body = """
+        {
+        "message": "Bad request - Runner test-bs69mhr2-0-n-5dbb110595a9 is currently running a job and cannot be deleted.",
+        "documentation_url": "https://docs.github.com/rest/actions/self-hosted-runners#delete-a-self-hosted-runner-from-a-repository",
+        "status": "422"
+        }
+    """  # noqa: E501
+
+    github_client._client.actions.delete_self_hosted_runner_from_org.side_effect = (
+        HTTP422UnprocessableEntityError("https://github.com/endpoint", {}, io.StringIO(error_body))
+    )
+    with pytest.raises(DeleteRunnerBusyError):
+        _ = github_client.delete_runner(path, runner_id)

@@ -12,7 +12,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import reconcile, run_in_unit, wait_for
+from tests.integration.helpers.common import run_in_unit, wait_for, wait_for_runner_ready
 
 logger = logging.getLogger(__name__)
 
@@ -141,10 +141,10 @@ class OpenStackInstanceHelper:
         Args:
             app: The GitHub Runner Charm app to create the runner for.
         """
-        await OpenStackInstanceHelper._set_app_runner_amount(app, 1)
+        await OpenStackInstanceHelper.set_app_runner_amount(app, 1)
 
     @staticmethod
-    async def _set_app_runner_amount(app: Application, num_runners: int) -> None:
+    async def set_app_runner_amount(app: Application, num_runners: int) -> None:
         """Reconcile the application to a runner amount.
 
         Args:
@@ -152,7 +152,7 @@ class OpenStackInstanceHelper:
             num_runners: The number of runners.
         """
         await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: f"{num_runners}"})
-        await reconcile(app=app, model=app.model)
+        await wait_for_runner_ready(app=app)
 
     async def get_runner_names(self, unit: Unit) -> list[str]:
         """Get the name of all the runners in the unit.
@@ -222,6 +222,8 @@ async def setup_repo_policy(
     https_proxy: Optional[str],
 ) -> None:
     """Setup the repo policy compliance service for one runner.
+
+    Does also setup a runner if one is not present.
 
     Args:
         app: The GitHub Runner Charm app to create the runner for.

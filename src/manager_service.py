@@ -5,6 +5,7 @@
 
 import json
 import logging
+import os
 import textwrap
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from charm_state import CharmState
 from errors import (
     RunnerManagerApplicationInstallError,
     RunnerManagerApplicationStartError,
+    RunnerManagerApplicationStopError,
     SubprocessError,
 )
 from factories import create_application_configuration
@@ -35,6 +37,8 @@ JOB_MANAGER_PACKAGE = "jobmanager_client"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
 JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
+GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
+GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
 
 _INSTALL_ERROR_MESSAGE = "Unable to install github-runner-manager package from source"
 _SERVICE_SETUP_ERROR_MESSAGE = "Unable to enable or start the github-runner-manager application"
@@ -50,59 +54,107 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
         state: The state of the charm.
         app_name: The Juju application name.
         unit_name: The Juju unit.
+
+    Raises:
+        RunnerManagerApplicationStartError: Setup of the runner manager service has failed.
     """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
+    # Currently, there is some multiprocess issues that cause leftover processes.
+    # This is a temp patch to clean them up.
+    output, code = execute_command(
+        ["/usr/bin/pkill", "-f", GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH], check_exit=False
+    )
+    if code == 1:
+        logger.info("No leftover github-runner-manager process to clean up.")
+    elif code == 0:
+        logger.warning("Clean up leftover processes.")
+    else:
+        logger.warning(
+            "Unexpected return code %s of pkill for cleanup processes: %s", code, output
+        )
+
     config = create_application_configuration(state, app_name, unit_name)
     config_file = _setup_config_file(config)
-    _setup_service_file(config_file)
+    GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
+    log_file_path = _get_log_file_path(unit_name)
+    log_file_path.touch(exist_ok=True)
+    _setup_service_file(config_file, log_file_path)
+    try:
+        systemd.daemon_reload()
+    except SystemdError as err:
+        raise RunnerManagerApplicationStartError(_SERVICE_SETUP_ERROR_MESSAGE) from err
     _enable_service()
 
 
-# TODO: Use pipx over pip once the version that supports `pipx install --global` lands on apt.
 def install_package() -> None:
     """Install the GitHub runner manager package.
 
     Raises:
         RunnerManagerApplicationInstallError: Unable to install the application.
     """
-    try:
-        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
-            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
-    except SystemdError as err:
-        raise RunnerManagerApplicationInstallError(_SERVICE_STOP_ERROR_MESSAGE) from err
+    _stop()
 
-    logger.info("Upgrading pip")
+    logger.info("Ensure pipx is at latest version")
     try:
-        execute_command(["python3", "-m", "pip", "install", "--upgrade", "pip"])
+        execute_command(
+            ["pip", "install", "--prefix", "/usr", "--ignore-installed", "--upgrade", "pipx"]
+        )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
 
-    logger.info("Uninstalling previous version of packages")
+    logger.info("Installing github-runner-manager package as executable")
     try:
-        execute_command(["python3", "-m", "pip", "uninstall", GITHUB_RUNNER_MANAGER_PACKAGE])
-        execute_command(["python3", "-m", "pip", "uninstall", JOB_MANAGER_PACKAGE])
-    except SubprocessError:
-        logger.info(
-            "Unable to uninstall existing packages, likely due to previous version not installed"
+        # pipx with `--force` will always overwrite the current installation.
+        execute_command(
+            ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
         )
-
-    try:
-        # Use `--prefix` to install the package in a location (/usr) all user can use and
-        # `--ignore-installed` to force all dependencies be to installed under /usr.
         execute_command(
             [
-                "python3",
-                "-m",
-                "pip",
-                "install",
-                "--prefix",
-                "/usr",
-                "--ignore-installed",
-                GITHUB_RUNNER_MANAGER_PACKAGE_PATH,
+                "pipx",
+                "inject",
+                "--global",
+                "--force",
+                GITHUB_RUNNER_MANAGER_PACKAGE,
                 JOB_MANAGER_PACKAGE_PATH,
             ]
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
+
+
+def stop() -> None:
+    """Stop the GitHub runner manager service."""
+    _stop()
+
+
+def _stop() -> None:
+    """Stop the GitHub runner manager service.
+
+    Raises:
+        RunnerManagerApplicationStopError: Failed to stop the service.
+    """
+    try:
+        if systemd.service_running(GITHUB_RUNNER_MANAGER_SERVICE_NAME):
+            systemd.service_stop(GITHUB_RUNNER_MANAGER_SERVICE_NAME)
+    except SystemdError as err:
+        raise RunnerManagerApplicationStopError(_SERVICE_STOP_ERROR_MESSAGE) from err
+
+
+def _get_log_file_path(unit_name: str) -> Path:
+    """Get the log file path.
+
+    Args:
+        unit_name: The Juju unit name.
+
+    Returns:
+        The path to the log file.
+    """
+    log_name = unit_name.replace("/", "-") + ".log"
+    return GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR / log_name
 
 
 def _enable_service() -> None:
@@ -135,12 +187,14 @@ def _setup_config_file(config: ApplicationConfiguration) -> Path:
     return path
 
 
-def _setup_service_file(config_file: Path) -> None:
+def _setup_service_file(config_file: Path, log_file: Path) -> None:
     """Configure the systemd service.
 
     Args:
         config_file: The configuration file for the service.
+        log_file: The file location to store the logs.
     """
+    python_path = Path(os.getcwd()) / "venv"
     service_file_content = textwrap.dedent(
         f"""\
         [Unit]
@@ -151,8 +205,11 @@ def _setup_service_file(config_file: Path) -> None:
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT}
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)}
         Restart=on-failure
+        KillMode=process
+        StandardOutput=append:{log_file}
+        StandardError=append:{log_file}
 
         [Install]
         WantedBy=multi-user.target

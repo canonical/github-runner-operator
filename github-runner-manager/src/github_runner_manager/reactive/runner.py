@@ -12,7 +12,7 @@ import sys
 from github_runner_manager.configuration import UserInfo
 from github_runner_manager.manager.runner_manager import RunnerManager
 from github_runner_manager.openstack_cloud.openstack_runner_manager import OpenStackRunnerManager
-from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform
+from github_runner_manager.platform.factory import platform_factory
 from github_runner_manager.reactive.consumer import consume
 from github_runner_manager.reactive.process_manager import RUNNER_CONFIG_ENV_VAR
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
@@ -47,24 +47,25 @@ def main() -> None:
     setup_root_logging()
     queue_config = runner_config.queue
 
-    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()))
+    user = UserInfo(getpass.getuser(), grp.getgrgid(os.getgid()).gr_name)
     openstack_runner_manager = OpenStackRunnerManager(
         config=runner_config.cloud_runner_manager, user=user
     )
-    github_provider = MultiplexerPlatform.build(
-        prefix=runner_config.cloud_runner_manager.prefix,
-        github_configuration=runner_config.github_configuration,
+    platform_provider = platform_factory(
+        vm_prefix=runner_config.cloud_runner_manager.prefix,
+        github_config=runner_config.github_configuration,
+        jobmanager_config=runner_config.jobmanager_configuration,
     )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,
-        platform_provider=github_provider,
+        platform_provider=platform_provider,
         cloud_runner_manager=openstack_runner_manager,
         labels=runner_config.labels,
     )
     consume(
         queue_config=queue_config,
         runner_manager=runner_manager,
-        platform_provider=github_provider,
+        platform_provider=platform_provider,
         supported_labels=runner_config.supported_labels,
     )
 

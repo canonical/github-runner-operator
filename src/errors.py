@@ -9,9 +9,7 @@ from typing import Union
 # we import the errors from the module, these are used in the charm
 from github_runner_manager.errors import (  # noqa: F401  pylint: disable=unused-import
     GithubMetricsError,
-    PlatformClientError,
     RunnerError,
-    TokenError,
 )
 
 
@@ -70,3 +68,31 @@ class RunnerManagerApplicationInstallError(RunnerManagerApplicationError):
 
 class RunnerManagerApplicationStartError(RunnerManagerApplicationError):
     """Represents an error raised when github-runner-manager application start failed."""
+
+
+class RunnerManagerApplicationStopError(RunnerManagerApplicationError):
+    """Represents an error raised when github-runner-manager application stop failed."""
+
+
+class RunnerManagerServiceError(Exception):
+    """Represents an error raised with request to github-runner-manager service."""
+
+
+class RunnerManagerServiceConnectionError(RunnerManagerServiceError):
+    """Represents a connection failure to the github-runner-manager service."""
+
+
+class RunnerManagerServiceResponseError(RunnerManagerServiceError):
+    """Represents a issue with the response to github-runner-manager service."""
+
+
+class RunnerManagerServiceNotReadyError(RunnerManagerServiceError):
+    """Represents the github-runner-manager service is not ready for requests."""
+
+
+class ImageIntegrationMissingError(Exception):
+    """Represents the missing image integration."""
+
+
+class ImageNotFoundError(Exception):
+    """Represents not founding the image in the image integration."""

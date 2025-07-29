@@ -13,7 +13,7 @@ class InstanceIDInvalidError(Exception):
     """Raised when the InstanceID naming will break the provider of GitHub."""
 
 
-@dataclass(eq=True, frozen=True)
+@dataclass(eq=True, frozen=True, order=True)
 class InstanceID:
     """Main identifier for a runner instance among all clouds and GitHub.
 
@@ -32,8 +32,8 @@ class InstanceID:
     """
 
     prefix: str
-    reactive: bool | None
     suffix: str
+    reactive: bool | None = None
 
     @property
     def name(self) -> str:
@@ -155,7 +155,7 @@ class InstanceID:
         return f"InstanceID({self.name!r})"
 
 
-@dataclass
+@dataclass(order=True)
 class RunnerMetadata:
     """This class contains information about the runner and the platform it runs in.
 
@@ -179,6 +179,25 @@ class RunnerMetadata:
             metadata as a dict.
         """
         return {k: v for k, v in asdict(self).items() if v is not None}
+
+
+@dataclass(order=True)
+class RunnerIdentity:
+    """Identity for the runner.
+
+    The full identity of the runner is made of the instance_id and the
+    metadata. The instance_id is used for the name of the runner in the cloud
+    provider, and it should be immutable. The metadata is used to identify the
+    platform provider and other information that could be relevant to identify
+    the runner in the platform provider.
+
+    Attributes:
+        instance_id: InstanceID of the runner.
+        metadata: Metadata for the runner.
+    """
+
+    instance_id: InstanceID
+    metadata: RunnerMetadata
 
 
 @dataclass

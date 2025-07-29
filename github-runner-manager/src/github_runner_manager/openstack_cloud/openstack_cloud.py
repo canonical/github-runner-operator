@@ -2,6 +2,8 @@
 # See LICENSE file for licensing details.
 
 """Class for accessing OpenStack API for managing servers."""
+import concurrent.futures
+import contextlib
 import copy
 import functools
 import logging
@@ -11,7 +13,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import reduce
 from pathlib import Path
-from typing import Any, Callable, Iterable, Iterator, ParamSpec, TypeVar, cast
+from typing import Any, Callable, Iterable, Iterator, ParamSpec, Sequence, TypeVar, cast
 
 import keystoneauth1.exceptions
 import openstack
@@ -26,7 +28,7 @@ from openstack.network.v2.security_group_rule import SecurityGroupRule
 from paramiko.ssh_exception import NoValidConnectionsError
 
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
@@ -38,6 +40,11 @@ _SECURITY_GROUP_NAME = "github-runner-v1"
 
 _SSH_TIMEOUT = 30
 _TEST_STRING = "test_string"
+# Max nova compute we support is 2.91, because
+# - 2.96 has a bug with server list  https://bugs.launchpad.net/nova/+bug/2095364
+# - 2.92 requires public key to be set in the keypair, which is not supported by the app
+#        https://docs.openstack.org/api-ref/compute/#import-or-create-keypair
+_MAX_NOVA_COMPUTE_API_VERSION = "2.91"
 
 SecurityRuleDict = dict[str, Any]
 
@@ -67,6 +74,29 @@ DEFAULT_SECURITY_RULES: dict[str, SecurityRuleDict] = {
 # the openstack server is in construction but not yet returned by the API, and the keypair gets
 # deleted.
 _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION = 60
+
+
+class DeleteVMError(openstack.exceptions.SDKException):
+    """Represents an error while deleting a VM instance.
+
+    Attributes:
+        instance_id: The instance ID that was failed to delete.
+    """
+
+    instance_id: InstanceID
+
+    def __init__(
+        self, instance_id: InstanceID, message: str | None = None, extra_data: Any = None
+    ):
+        """Initialize the OpenstackVMDeleteError.
+
+        Args:
+            instance_id: The instance ID of the failed delete VM.
+            message: The delete error message for parent SDKException.
+            extra_data: Extra data for parent SDKException if any.
+        """
+        self.instance_id = instance_id
+        super().__init__(message, extra_data)
 
 
 @dataclass
@@ -102,7 +132,9 @@ class OpenstackInstance:
             for network_addresses in server.addresses.values()
             for address in network_addresses
         ]
-        self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ")
+        self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=timezone.utc
+        )
         self.instance_id = InstanceID.build_from_name(prefix, server.name)
         self.server_id = server.id
         self.status = server.status
@@ -150,31 +182,40 @@ def _catch_openstack_errors(func: Callable[P, T]) -> Callable[P, T]:
     return exception_handling_wrapper
 
 
-@contextmanager
-def _get_openstack_connection(credentials: OpenStackCredentials) -> Iterator[OpenstackConnection]:
-    """Create a connection context managed object, to be used within with statements.
+@dataclass
+class _DeleteVMConfig:
+    """Configurations for deleting a VM.
 
-    Using the context manager ensures that the connection is properly closed after use.
-
-    Args:
-        credentials: The OpenStack authorization information.
-
-    Yields:
-        An openstack.connection.Connection object.
+    Attributes:
+        instance_id: The ID of the VM to request deletion.
+        credentials: The OpenStack connection credentials.
+        max_api_version: The OpenStack maximum compute API version.
+        keys_dir: The path to the directory in which the SSH key files are stored.
+        wait: Whether to wait for the VM delete to complete.
+        timeout: Timeout in seconds for VM deletion to complete.
     """
-    # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
-    # I could not reproduce it. Therefore, no catch here for such exception.
-    with openstack.connect(
-        auth_url=credentials.auth_url,
-        project_name=credentials.project_name,
-        username=credentials.username,
-        password=credentials.password,
-        region_name=credentials.region_name,
-        user_domain_name=credentials.user_domain_name,
-        project_domain_name=credentials.project_domain_name,
-    ) as conn:
-        conn.authorize()
-        yield conn
+
+    instance_id: InstanceID
+    credentials: OpenStackCredentials
+    max_api_version: str
+    keys_dir: Path
+    wait: bool = False
+    timeout: int = 10 * 60
+
+
+@dataclass
+class _DeleteKeypairConfig:
+    """Configurations for deleting an OpenStack keypair.
+
+    Attributes:
+        keys_dir: The path to the directory in which the SSH key files are stored.
+        instance_id: The instance ID of the key owner.
+        conn: The OpenStack connection instance.
+    """
+
+    keys_dir: Path
+    instance_id: InstanceID
+    conn: OpenstackConnection
 
 
 class OpenstackCloud:
@@ -208,13 +249,10 @@ class OpenstackCloud:
         self._proxy_command = proxy_command
 
     @_catch_openstack_errors
-    # Pending to review the list of arguments
-    # pylint: disable=too-many-arguments, too-many-positional-arguments
     def launch_instance(
         self,
         *,
-        metadata: RunnerMetadata,
-        instance_id: InstanceID,
+        runner_identity: RunnerIdentity,
         server_config: OpenStackServerConfig,
         cloud_init: str,
         ingress_tcp_ports: list[int] | None = None,
@@ -222,8 +260,7 @@ class OpenstackCloud:
         """Create an OpenStack instance.
 
         Args:
-            metadata: Metadata for the runner.
-            instance_id: The instance ID to form the instance name.
+            runner_identity: Identity of the runner.
             server_config: Configuration for the instance to create.
             cloud_init: The cloud init userdata to startup the instance.
             ingress_tcp_ports: Ports to be allowed to connect to the new instance.
@@ -234,11 +271,13 @@ class OpenstackCloud:
         Returns:
             The OpenStack instance created.
         """
-        logger.info("Creating openstack server with %s", instance_id)
+        logger.info("Creating openstack server with %s", runner_identity)
+        instance_id = runner_identity.instance_id
+        metadata = runner_identity.metadata
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             security_group = OpenstackCloud._ensure_security_group(conn, ingress_tcp_ports)
-            keypair = self._setup_keypair(conn, instance_id)
+            keypair = self._setup_keypair(conn, runner_identity.instance_id)
             meta = metadata.as_dict()
             meta["prefix"] = self.prefix
             try:
@@ -252,8 +291,10 @@ class OpenstackCloud:
                     userdata=cloud_init,
                     auto_ip=False,
                     timeout=CREATE_SERVER_TIMEOUT,
-                    wait=True,
+                    wait=False,
                     meta=meta,
+                    # 2025/07/24 - This option is set to mitigate CVE-2024-6174
+                    config_drive=True,
                 )
             except openstack.exceptions.ResourceTimeout as err:
                 logger.exception("Timeout creating openstack server %s", instance_id)
@@ -261,11 +302,22 @@ class OpenstackCloud:
                     "Attempting clean up of openstack server %s that timeout during creation",
                     instance_id,
                 )
-                self._delete_instance(conn, instance_id)
+                OpenstackCloud._delete_instance(
+                    _DeleteVMConfig(
+                        instance_id=instance_id,
+                        credentials=self._credentials,
+                        max_api_version=self._max_compute_api_version,
+                        keys_dir=self._ssh_key_dir,
+                    )
+                )
                 raise OpenStackError(f"Timeout creating openstack server {instance_id}") from err
             except openstack.exceptions.SDKException as err:
                 logger.exception("Failed to create openstack server %s", instance_id)
-                self._delete_keypair(conn, instance_id)
+                OpenstackCloud._delete_keypair(
+                    _DeleteKeypairConfig(
+                        keys_dir=self._ssh_key_dir, instance_id=instance_id, conn=conn
+                    )
+                )
                 raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
 
             return OpenstackInstance(server, self.prefix)
@@ -282,47 +334,113 @@ class OpenstackCloud:
         """
         logger.info("Getting openstack server with %s", instance_id)
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
+        with self._get_openstack_connection() as conn:
+            server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
             if server is not None:
                 return OpenstackInstance(server, self.prefix)
         return None
 
-    @_catch_openstack_errors
-    def delete_instance(self, instance_id: InstanceID) -> None:
+    @staticmethod
+    def _delete_instance(delete_config: _DeleteVMConfig) -> bool:
         """Delete a openstack instance.
 
         Args:
-            instance_id: The instance ID of the instance to delete.
-        """
-        logger.info("Deleting openstack server with %s", instance_id)
-
-        with _get_openstack_connection(credentials=self._credentials) as conn:
-            self._delete_instance(conn, instance_id)
-
-    def _delete_instance(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
-        """Delete a openstack instance.
+            delete_config: The configuration used to delete a cloud VM instance.
 
         Raises:
-            OpenStackError: Unable to delete OpenStack server.
+            DeleteVMError: If there was an error deleting the VM instance.
+        """
+        with openstack.connect(
+            auth_url=delete_config.credentials.auth_url,
+            project_name=delete_config.credentials.project_name,
+            username=delete_config.credentials.username,
+            password=delete_config.credentials.password,
+            region_name=delete_config.credentials.region_name,
+            user_domain_name=delete_config.credentials.user_domain_name,
+            project_domain_name=delete_config.credentials.project_domain_name,
+            compute_api_version=delete_config.max_api_version,
+        ) as conn:
+            try:
+                logger.info("Deleting server %s", delete_config.instance_id.name)
+                deleted = conn.delete_server(
+                    name_or_id=delete_config.instance_id.name,
+                    wait=delete_config.wait,
+                    timeout=delete_config.timeout,
+                )
+                logger.info(
+                    "Deleted server %s (true delete: %s)", delete_config.instance_id.name, deleted
+                )
+            except (
+                openstack.exceptions.SDKException,
+                openstack.exceptions.ResourceTimeout,
+            ) as exc:
+                raise DeleteVMError(
+                    instance_id=delete_config.instance_id,
+                    message=f"Failed to delete server {delete_config.instance_id.name}",
+                ) from exc
+
+            OpenstackCloud._delete_keypair(
+                _DeleteKeypairConfig(
+                    keys_dir=delete_config.keys_dir,
+                    instance_id=delete_config.instance_id,
+                    conn=conn,
+                )
+            )
+
+        return deleted
+
+    def delete_instances(
+        self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
+    ) -> list[InstanceID]:
+        """Delete Openstack VM instances.
 
         Args:
-            conn: The openstack connection to use.
-            instance_id: The full name of the server.
+            instance_ids: The VM instance IDs to requeest deletion.
+            wait: Whether to wait for VM deletion to complete.
+            timeout: Timeout in seconds to wait for VM deletion to complete.
+
+        Returns:
+            The deleted VM instance IDs if wait is True, deleted requested VM instance IDs
+            otherwise.
         """
-        try:
-            server = OpenstackCloud._get_and_ensure_unique_server(conn, instance_id)
-            if server is not None:
-                conn.delete_server(name_or_id=server.id)
-            self._delete_keypair(conn, instance_id)
-        except (
-            openstack.exceptions.SDKException,
-            openstack.exceptions.ResourceTimeout,
-        ) as err:
-            raise OpenStackError(f"Failed to remove openstack runner {instance_id}") from err
+        deleted_instance_ids: list[InstanceID] = []
+
+        # Guard no instance IDs since multiprocessing Pool may raise an exception.
+        if not instance_ids:
+            return deleted_instance_ids
+
+        delete_configs = [
+            _DeleteVMConfig(
+                instance_id=instance_id,
+                credentials=self._credentials,
+                max_api_version=self._max_compute_api_version,
+                keys_dir=self._ssh_key_dir,
+                wait=wait,
+                timeout=timeout,
+            )
+            for instance_id in instance_ids
+        ]
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=min(len(instance_ids), 30)
+        ) as executor:
+            future_to_delete_instance_config = {
+                executor.submit(OpenstackCloud._delete_instance, config): config
+                for config in delete_configs
+            }
+            for future in concurrent.futures.as_completed(future_to_delete_instance_config):
+                delete_config = future_to_delete_instance_config[future]
+                try:
+                    if not future.result():
+                        continue
+                    deleted_instance_ids.append(delete_config.instance_id)
+                except DeleteVMError as exc:
+                    logger.error("Failed to delete OpenStack VM instance: %s", exc.instance_id)
+
+        return deleted_instance_ids
 
     @_catch_openstack_errors
-    def get_ssh_connection(self, instance: OpenstackInstance) -> SSHConnection:
+    @contextlib.contextmanager
+    def get_ssh_connection(self, instance: OpenstackInstance) -> Iterator[SSHConnection]:
         """Get SSH connection to an OpenStack instance.
 
         Args:
@@ -332,10 +450,10 @@ class OpenstackCloud:
             SSHError: Unable to get a working SSH connection to the instance.
             KeyfileError: Unable to find the keyfile to connect to the instance.
 
-        Returns:
+        Yields:
             SSH connection object.
         """
-        key_path = self._get_key_path(instance.instance_id.name)
+        key_path = self._get_key_path(instance.instance_id)
 
         if not key_path.exists():
             raise KeyfileError(
@@ -364,7 +482,8 @@ class OpenstackCloud:
                     )
                     continue
                 if _TEST_STRING in result.stdout:
-                    return connection
+                    yield connection
+                    break
             except NoValidConnectionsError as exc:
                 logger.warning(
                     "NoValidConnectionsError. Unable to SSH into %s with address %s. Error: %s",
@@ -381,10 +500,13 @@ class OpenstackCloud:
                     exc_info=True,
                 )
                 continue
-        raise SSHError(
-            f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
-            f"addresses: {instance.addresses}"
-        )
+            finally:
+                connection.close()
+        else:
+            raise SSHError(
+                f"No connectable SSH addresses found, server: {instance.instance_id.name}, "
+                f"addresses: {instance.addresses}"
+            )
 
     @_catch_openstack_errors
     def get_instances(self) -> tuple[OpenstackInstance, ...]:
@@ -395,7 +517,7 @@ class OpenstackCloud:
         """
         logger.info("Getting all openstack servers managed by the charm")
 
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             instance_list = list(self._get_openstack_instances(conn))
             server_names = set(server.name for server in instance_list)
 
@@ -412,7 +534,7 @@ class OpenstackCloud:
     @_catch_openstack_errors
     def cleanup(self) -> None:
         """Cleanup unused key files and openstack keypairs."""
-        with _get_openstack_connection(credentials=self._credentials) as conn:
+        with self._get_openstack_connection() as conn:
             instances = self._get_openstack_instances(conn)
             exclude_keyfiles_set = {
                 self._get_key_path(InstanceID.build_from_name(self.prefix, server.name))
@@ -480,7 +602,13 @@ class OpenstackCloud:
                 if str(key.name) in exclude_keys:
                     continue
                 try:
-                    self._delete_keypair(conn, InstanceID.build_from_name(self.prefix, key.name))
+                    OpenstackCloud._delete_keypair(
+                        _DeleteKeypairConfig(
+                            keys_dir=self._ssh_key_dir,
+                            instance_id=InstanceID.build_from_name(self.prefix, key.name),
+                            conn=conn,
+                        )
+                    )
                 except openstack.exceptions.SDKException:
                     logger.warning(
                         "Unable to delete OpenStack keypair associated with deleted key file %s ",
@@ -587,23 +715,32 @@ class OpenstackCloud:
         key_path.chmod(0o400)
         return keypair
 
-    def _delete_keypair(self, conn: OpenstackConnection, instance_id: InstanceID) -> None:
+    @staticmethod
+    def _delete_keypair(delete_keypair_config: _DeleteKeypairConfig) -> None:
         """Delete OpenStack keypair.
 
         Args:
-            conn: The connection object to access OpenStack cloud.
-            instance_id: The name of the keypair.
+            delete_keypair_config: Configurations for deleting the KeyPair.
         """
-        logger.debug("Deleting keypair for %s", instance_id)
+        logger.info("Deleting key: %s", delete_keypair_config.instance_id)
         try:
             # Keypair have unique names, access by ID is not needed.
-            if not conn.delete_keypair(instance_id.name):
-                logger.warning("Unable to delete keypair for %s", instance_id)
+            if not delete_keypair_config.conn.delete_keypair(
+                delete_keypair_config.instance_id.name
+            ):
+                logger.warning("Failed to delete key: %s", delete_keypair_config.instance_id.name)
+                return
         except (openstack.exceptions.SDKException, openstack.exceptions.ResourceTimeout):
-            logger.warning("Unable to delete keypair for %s", instance_id, stack_info=True)
+            logger.warning(
+                "Error attempting to delete key: %s",
+                delete_keypair_config.instance_id.name,
+                stack_info=True,
+            )
+            return
 
-        key_path = self._get_key_path(instance_id.name)
+        key_path = delete_keypair_config.keys_dir / f"{delete_keypair_config.instance_id}.key"
         key_path.unlink(missing_ok=True)
+        logger.info("Deleted key: %s", delete_keypair_config.instance_id)
 
     @staticmethod
     def _ensure_security_group(
@@ -644,6 +781,86 @@ class OpenstackCloud:
                 security_group.id,
             )
         return security_group
+
+    @contextmanager
+    def _get_openstack_connection(self) -> Iterator[OpenstackConnection]:
+        """Create a connection context managed object, to be used within with statements.
+
+        Using the context manager ensures that the connection is properly closed after use.
+
+        Yields:
+            An openstack.connection.Connection object.
+        """
+        # api documents that keystoneauth1.exceptions.MissingRequiredOptions can be raised but
+        # I could not reproduce it. Therefore, no catch here for such exception.
+
+        with openstack.connect(
+            auth_url=self._credentials.auth_url,
+            project_name=self._credentials.project_name,
+            username=self._credentials.username,
+            password=self._credentials.password,
+            region_name=self._credentials.region_name,
+            user_domain_name=self._credentials.user_domain_name,
+            project_domain_name=self._credentials.project_domain_name,
+            compute_api_version=self._max_compute_api_version,
+        ) as conn:
+            conn.authorize()
+            yield conn
+
+    @functools.cached_property
+    def _max_compute_api_version(self) -> str:
+        """Determine the maximum compute API version supported by the client.
+
+        The sdk does not support versions greater than 2.95, so we need to ensure that the
+        maximum version returned by the OpenStack cloud is not greater than that.
+        https://bugs.launchpad.net/nova/+bug/2095364
+
+        Returns:
+            The maximum compute API version to use for the client.
+        """
+        max_version = self._determine_max_compute_api_version_by_cloud()
+        if self._version_greater_than(max_version, _MAX_NOVA_COMPUTE_API_VERSION):
+            logger.warning(
+                "The maximum compute API version %s is greater than the supported version %s. "
+                "Using the maximum supported version.",
+                max_version,
+                _MAX_NOVA_COMPUTE_API_VERSION,
+            )
+            return _MAX_NOVA_COMPUTE_API_VERSION
+        return max_version
+
+    def _determine_max_compute_api_version_by_cloud(self) -> str:
+        """Determine the maximum compute API version supported by the OpenStack cloud.
+
+        Returns:
+            The maximum compute API version as a string.
+        """
+        with openstack.connect(
+            auth_url=self._credentials.auth_url,
+            project_name=self._credentials.project_name,
+            username=self._credentials.username,
+            password=self._credentials.password,
+            region_name=self._credentials.region_name,
+            user_domain_name=self._credentials.user_domain_name,
+            project_domain_name=self._credentials.project_domain_name,
+        ) as conn:
+            version_endpoint = conn.compute.get_endpoint()
+            resp = conn.session.get(version_endpoint)
+            return resp.json()["version"]["version"]
+
+    def _version_greater_than(self, version1: str, version2: str) -> bool:
+        """Compare two OpenStack API versions.
+
+        Args:
+            version1: The first version to compare.
+            version2: The second version to compare.
+
+        Returns:
+            True if version1 is greater than version2, False otherwise.
+        """
+        return tuple(int(x) for x in version1.split(".")) > tuple(
+            int(x) for x in version2.split(".")
+        )
 
 
 def get_missing_security_rules(

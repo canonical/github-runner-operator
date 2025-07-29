@@ -3,12 +3,14 @@
 
 """Testing reactive mode. This is only supported for the OpenStack cloud."""
 import json
+from asyncio import sleep
 from typing import AsyncIterator
 
 import pytest
 import pytest_asyncio
 from github import Branch, Repository
 from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from pytest_operator.plugin import OpsTest
 
@@ -22,9 +24,9 @@ from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    reconcile,
     wait_for,
     wait_for_completion,
+    wait_for_reconcile,
     wait_for_status,
 )
 from tests.integration.utils_reactive import (
@@ -55,14 +57,14 @@ async def app_fixture(
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
         }
     )
-    await reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
     await clear_metrics_log(app_for_reactive.units[0])
 
     yield app_for_reactive
 
     # Call reconcile to enable cleanup of any runner spawned
     await app_for_reactive.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app_for_reactive, app_for_reactive.model)
+    await wait_for_reconcile(app_for_reactive)
 
 
 @pytest.mark.abort_on_fail
@@ -99,7 +101,10 @@ async def test_reactive_mode_spawns_runner(
 
     # This reconcile call is to check that we are not killing machines that are under
     # construction in a subsequent reconciliation.
-    await reconcile(app, app.model)
+
+    # There may be a race condition between getting the token and spawning the machine.
+    await sleep(10)
+    await wait_for_reconcile(app)
 
     try:
         await wait_for_completion(run, conclusion="success")
@@ -118,7 +123,7 @@ async def test_reactive_mode_spawns_runner(
             True if the runner_installed event is logged, False otherwise.
         """
         # trigger reconcile which extracts metrics
-        await reconcile(app, app.model)
+        await wait_for_reconcile(app)
         metrics_log = await get_metrics_log(app.units[0])
         log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
         events = set(map(lambda line: line.get("event"), log_lines))
@@ -130,6 +135,37 @@ async def test_reactive_mode_spawns_runner(
         assert False, "runner_installed event has not been logged"
 
     await _assert_metrics_are_logged(app, github_repository)
+
+
+@pytest.mark.abort_on_fail
+async def test_reactive_mode_with_not_found_job(
+    ops_test: OpsTest,
+    app: Application,
+):
+    """
+    arrange: Place a message in the queue with a non-existent job url.
+    act: Call reconcile.
+    assert: The message is removed from the queue.
+    """
+    mongodb_uri = await get_mongodb_uri(ops_test, app)
+
+    labels = {app.name, "x64"}  # The architecture label should be ignored in the
+    # label validation in the reactive consumer.
+    job = JobDetails(
+        labels=labels,
+        url="https://github.com/canonical/github-runner-operator/actions/runs/mock-run/job/mock-job",
+    )
+    add_to_queue(
+        json.dumps(json.loads(job.json()) | {"ignored_noise": "foobar"}),
+        mongodb_uri,
+        app.name,
+    )
+
+    # There may be a race condition between getting the token and spawning the machine.
+    await sleep(10)
+    await wait_for_reconcile(app)
+
+    assert_queue_is_empty(mongodb_uri, app.name)
 
 
 @pytest.mark.abort_on_fail
@@ -189,7 +225,7 @@ async def test_reactive_mode_scale_down(
     mongodb_uri = await get_mongodb_uri(ops_test, app)
 
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "2"})
-    await reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     run = await dispatch_workflow(
         app=app,
@@ -210,10 +246,11 @@ async def test_reactive_mode_scale_down(
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     # we assume that the runner got deleted while running the job, so we expect a failed job
     await wait_for_completion(run, conclusion="failure")
+    await wait_for_reconcile(app)
     assert_queue_is_empty(mongodb_uri, app.name)
 
     # 2. Spawn a job.
@@ -232,7 +269,7 @@ async def test_reactive_mode_scale_down(
         app.name,
     )
 
-    await reconcile(app, app.model)
+    await wait_for_reconcile(app)
 
     run.update()
     assert run.status == "queued"

@@ -4,6 +4,7 @@
 # See LICENSE file for licensing details.
 
 """Charm for creating and managing GitHub self-hosted runner instances."""
+
 from utilities import execute_command, remove_residual_venv_dirs
 
 # This is a workaround for https://bugs.launchpad.net/juju/+bug/2058335
@@ -17,15 +18,17 @@ import functools
 import json
 import logging
 import pathlib
+import shutil
 from typing import Any, Callable, Sequence, TypeVar
 
 import ops
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from charms.grafana_agent.v0.cos_agent import COSAgentProvider
+from charms.operator_libs_linux.v1 import systemd
 from github_runner_manager import constants
-from github_runner_manager.errors import ReconcileError
-from github_runner_manager.manager.runner_manager import FlushMode
-from github_runner_manager.manager.runner_scaler import RunnerScaler
+from github_runner_manager.metrics.events import METRICS_LOG_PATH
+from github_runner_manager.platform.platform_provider import TokenError
+from github_runner_manager.utilities import set_env_var
 from ops.charm import (
     ActionEvent,
     CharmBase,
@@ -46,30 +49,26 @@ from charm_state import (
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
+    MONGO_DB_INTEGRATION_NAME,
     PATH_CONFIG_NAME,
-    RECONCILE_INTERVAL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     CharmConfigInvalidError,
     CharmState,
     OpenstackImage,
+    build_proxy_config_from_charm,
 )
 from errors import (
     ConfigurationError,
+    ImageIntegrationMissingError,
+    ImageNotFoundError,
     LogrotateSetupError,
     MissingMongoDBError,
     RunnerManagerApplicationError,
     RunnerManagerApplicationInstallError,
+    RunnerManagerServiceError,
     SubprocessError,
-    TokenError,
 )
-from event_timer import EventTimer, TimerStatusError
-from factories import create_runner_scaler
-
-# We assume a stuck reconcile event when it takes longer
-# than 10 times a normal interval. Currently, we are only aware of
-# https://bugs.launchpad.net/juju/+bug/2055184 causing a stuck reconcile event.
-RECONCILIATION_INTERVAL_TIMEOUT_FACTOR = 10
-RECONCILE_RUNNERS_EVENT = "reconcile-runners"
+from manager_client import GitHubRunnerManagerClient
 
 # This is currently hardcoded and may be moved to a config option in the future.
 REACTIVE_MQ_DB_NAME = "github-runner-webhook-router"
@@ -81,6 +80,8 @@ FAILED_RECONCILE_ACTION_ERR_MSG = (
     "Failed to reconcile runners. Look at the juju logs for more information."
 )
 UPGRADE_MSG = "Upgrading github-runner charm."
+LEGACY_RECONCILE_TIMER_SERVICE = "ghro.reconcile-runners.timer"
+LEGACY_RECONCILE_SERVICE = "ghro.reconcile-runners.service"
 
 
 logger = logging.getLogger(__name__)
@@ -124,6 +125,14 @@ def catch_charm_errors(
         except MissingMongoDBError as err:
             logger.exception("Missing integration data")
             self.unit.status = WaitingStatus(str(err))
+        except ImageIntegrationMissingError:
+            logger.exception("Missing image integration.")
+            self.unit.status = BlockedStatus("Please provide image integration.")
+            manager_service.stop()
+        except ImageNotFoundError:
+            logger.exception("Missing image in image integration.")
+            self.unit.status = WaitingStatus("Waiting for image over integration.")
+            manager_service.stop()
 
     return func_with_catch_errors
 
@@ -154,6 +163,9 @@ def catch_action_errors(
             logger.exception("Issue with charm configuration")
             self.unit.status = BlockedStatus(str(err))
             event.fail(str(err))
+        except RunnerManagerServiceError as err:
+            logger.exception("Failed runner manager request")
+            event.fail(f"Failed runner manager request: {str(err)}")
 
     return func_with_catch_errors
 
@@ -174,9 +186,12 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kwargs)
         self._log_charm_status()
 
-        self._grafana_agent = COSAgentProvider(self)
-
-        self._event_timer = EventTimer(self.unit.name)
+        self._grafana_agent = COSAgentProvider(
+            self,
+            metrics_endpoints=[
+                {"path": "/metrics", "port": int(manager_service.GITHUB_RUNNER_MANAGER_PORT)}
+            ],
+        )
 
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
@@ -203,9 +218,7 @@ class GithubRunnerCharm(CharmBase):
             self.on[IMAGE_INTEGRATION_NAME].relation_changed,
             self._on_image_relation_changed,
         )
-        self.framework.observe(self.on.reconcile_runners, self._on_reconcile_runners)
         self.framework.observe(self.on.check_runners_action, self._on_check_runners_action)
-        self.framework.observe(self.on.reconcile_runners_action, self._on_reconcile_runners_action)
         self.framework.observe(self.on.flush_runners_action, self._on_flush_runners_action)
         self.framework.observe(self.on.update_status, self._on_update_status)
         self.database = DatabaseRequires(
@@ -213,6 +226,14 @@ class GithubRunnerCharm(CharmBase):
         )
         self.framework.observe(self.database.on.database_created, self._on_database_created)
         self.framework.observe(self.database.on.endpoints_changed, self._on_endpoints_changed)
+        self.framework.observe(
+            self.on[MONGO_DB_INTEGRATION_NAME].relation_broken, self._on_mongodb_relation_broken
+        )
+
+        self._manager_client = GitHubRunnerManagerClient(
+            host=manager_service.GITHUB_RUNNER_MANAGER_ADDRESS,
+            port=manager_service.GITHUB_RUNNER_MANAGER_PORT,
+        )
 
     def _setup_state(self) -> CharmState:
         """Set up the charm state.
@@ -228,6 +249,20 @@ class GithubRunnerCharm(CharmBase):
         except CharmConfigInvalidError as exc:
             raise ConfigurationError(exc.msg) from exc
 
+    def _set_proxy_env_var(self) -> None:
+        """Set the HTTP proxy environment variables."""
+        proxy_config = build_proxy_config_from_charm()
+
+        if proxy_config.no_proxy is not None:
+            set_env_var("NO_PROXY", proxy_config.no_proxy)
+            set_env_var("no_proxy", proxy_config.no_proxy)
+        if proxy_config.http is not None:
+            set_env_var("HTTP_PROXY", proxy_config.http)
+            set_env_var("http_proxy", proxy_config.http)
+        if proxy_config.https is not None:
+            set_env_var("HTTPS_PROXY", proxy_config.https)
+            set_env_var("https_proxy", proxy_config.https)
+
     def _common_install_code(self) -> bool:
         """Installation code shared between install and upgrade hook.
 
@@ -238,6 +273,8 @@ class GithubRunnerCharm(CharmBase):
         Returns:
             True if installation was successful, False otherwise.
         """
+        self._set_proxy_env_var()
+
         try:
             self._install_deps()
         except SubprocessError:
@@ -273,98 +310,43 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_start(self, _: StartEvent) -> None:
         """Handle the start of the charm."""
-        state = self._setup_state()
-
-        self.unit.status = MaintenanceStatus("Starting runners")
-        if not self._get_set_image_ready_status():
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
-
-    def _set_reconcile_timer(self) -> None:
-        """Set the timer for regular reconciliation checks."""
-        self._event_timer.ensure_event_timer(
-            event_name="reconcile-runners",
-            interval=int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-            timeout=RECONCILIATION_INTERVAL_TIMEOUT_FACTOR
-            * int(self.config[RECONCILE_INTERVAL_CONFIG_NAME]),
-        )
-
-    def _ensure_reconcile_timer_is_active(self) -> None:
-        """Ensure the timer for reconciliation event is active."""
-        try:
-            reconcile_timer_is_active = self._event_timer.is_active(RECONCILE_RUNNERS_EVENT)
-        except TimerStatusError:
-            logger.exception("Failed to check the reconciliation event timer status")
-        else:
-            if not reconcile_timer_is_active:
-                logger.error("Reconciliation event timer is not activated")
-                self._set_reconcile_timer()
+        self._check_image_ready()
+        self.unit.status = ActiveStatus()
 
     @catch_charm_errors
     def _on_upgrade_charm(self, _: UpgradeCharmEvent) -> None:
         """Handle the update of charm."""
         logger.info(UPGRADE_MSG)
         self._common_install_code()
+        _disable_legacy_service()
+        state = self._setup_state()
+        self._setup_service(state)
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
         """Handle the configuration change."""
         state = self._setup_state()
-        self._set_reconcile_timer()
-        self._setup_service(state)
 
-        flush_and_reconcile = False
-        if state.charm_config.token != self._stored.token:
+        flush_runners = False
+        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:
             self._stored.path = self.config[PATH_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
-            flush_and_reconcile = True
+            flush_runners = True
 
-        state = self._setup_state()
+        self._check_image_ready()
 
-        if not self._get_set_image_ready_status():
-            return
-        if flush_and_reconcile:
-            logger.info("Flush and reconcile on config-changed")
-            runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-            runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-            self._reconcile_openstack_runners(
-                runner_scaler,
-            )
+        self._setup_service(state)
 
-    @catch_charm_errors
-    def _on_reconcile_runners(self, _: ReconcileRunnersEvent) -> None:
-        """Event handler for reconciling runners."""
-        self._trigger_reconciliation()
-
-    @catch_charm_errors
-    def _on_database_created(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB database created event."""
-        self._trigger_reconciliation()
-
-    @catch_charm_errors
-    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
-        """Handle the MongoDB endpoints changed event."""
-        self._trigger_reconciliation()
-
-    def _trigger_reconciliation(self) -> None:
-        """Trigger the reconciliation of runners."""
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        state = self._setup_state()
-
-        if not self._get_set_image_ready_status():
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
+        if flush_runners:
+            logger.info("Flush runners on config-changed")
+            self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
     @catch_action_errors
     def _on_check_runners_action(self, event: ActionEvent) -> None:
@@ -373,76 +355,17 @@ class GithubRunnerCharm(CharmBase):
         Args:
             event: The event fired on check_runners action.
         """
-        state = self._setup_state()
-
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        info = runner_scaler.get_runner_info()
-        event.set_results(
-            {
-                "online": info.online,
-                "busy": info.busy,
-                "offline": info.offline,
-                "unknown": info.unknown,
-                "runners": info.runners,
-                "busy-runners": info.busy_runners,
-            }
-        )
+        info = self._manager_client.check_runner()
+        event.set_results(info)
 
     @catch_action_errors
-    def _on_reconcile_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of reconcile of runner state.
-
-        Args:
-            event: Action event of reconciling the runner.
-        """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        state = self._setup_state()
-
-        if not self._get_set_image_ready_status():
-            event.fail("Openstack image not yet provided/ready.")
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            delta = runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-            event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
-            return
-
-        self.unit.status = ActiveStatus()
-        event.set_results({"delta": {"virtual-machines": delta}})
-
-    @catch_action_errors
-    def _on_flush_runners_action(self, event: ActionEvent) -> None:
-        """Handle the action of flushing all runner and reconciling afterwards.
-
-        Args:
-            event: Action event of flushing all runners.
-        """
-        state = self._setup_state()
-
-        # Flushing mode not implemented for OpenStack yet.
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        flushed = runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        logger.info("Flushed %s runners", flushed)
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            delta = runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-            event.fail(FAILED_RECONCILE_ACTION_ERR_MSG)
-            return
-        self.unit.status = ActiveStatus()
-        event.set_results({"delta": {"virtual-machines": delta}})
+    def _on_flush_runners_action(self, _: ActionEvent) -> None:
+        """Handle the action of flushing all runner and reconciling afterwards."""
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_update_status(self, _: UpdateStatusEvent) -> None:
         """Handle the update of charm status."""
-        self._ensure_reconcile_timer_is_active()
         self._log_juju_processes()
 
     def _setup_service(self, state: CharmState) -> None:
@@ -450,13 +373,17 @@ class GithubRunnerCharm(CharmBase):
 
         Args:
             state: The charm state.
+
+        Raises:
+            RunnerManagerApplicationError: The runner manager service is not ready for requests or
+                has errors.
         """
         try:
             manager_service.setup(state, self.app.name, self.unit.name)
         except RunnerManagerApplicationError:
             logging.exception("Unable to setup the github-runner-manager service")
-            # Not re-raising error for until the github-runner-manager service replaces the
-            # library.
+            raise
+        self._manager_client.wait_till_ready()
 
     @staticmethod
     def _log_juju_processes() -> None:
@@ -496,30 +423,13 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_stop(self, _: StopEvent) -> None:
         """Handle the stopping of the charm."""
-        self._event_timer.disable_event_timer("reconcile-runners")
-        state = self._setup_state()
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush(FlushMode.FLUSH_BUSY)
-
-    def _reconcile_openstack_runners(self, runner_scaler: RunnerScaler) -> None:
-        """Reconcile the current runners state and intended runner state for OpenStack mode.
-
-        Args:
-            runner_scaler: Scaler used to scale the amount of runners.
-        """
-        self.unit.status = MaintenanceStatus("Reconciling runners")
-        try:
-            runner_scaler.reconcile()
-        except ReconcileError:
-            logger.exception(FAILED_TO_RECONCILE_RUNNERS_MSG)
-            self.unit.status = ActiveStatus(ACTIVE_STATUS_RECONCILIATION_FAILED_MSG)
-        else:
-            self.unit.status = ActiveStatus()
+        self._manager_client.flush_runner(busy=True)
+        manager_service.stop()
 
     def _install_deps(self) -> None:
         """Install dependences for the charm."""
         logger.info("Installing charm dependencies.")
-        self._apt_install(["run-one", "python3-pip"])
+        self._apt_install(["run-one", "python3-pip", "python3-venv"])
 
     def _apt_install(self, packages: Sequence[str]) -> None:
         """Execute apt install command.
@@ -541,15 +451,13 @@ class GithubRunnerCharm(CharmBase):
     def _on_debug_ssh_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle debug ssh relation changed event."""
         self.unit.status = MaintenanceStatus("Added debug-ssh relation")
-        state = self._setup_state()
+        self._check_image_ready()
 
-        if not self._get_set_image_ready_status():
-            return
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush()
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
+        state = self._setup_state()
+        self._setup_service(state)
+
+        self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
     @catch_charm_errors
     def _on_image_relation_joined(self, _: ops.RelationJoinedEvent) -> None:
@@ -565,32 +473,45 @@ class GithubRunnerCharm(CharmBase):
     @catch_charm_errors
     def _on_image_relation_changed(self, _: ops.RelationChangedEvent) -> None:
         """Handle image relation changed event."""
-        state = self._setup_state()
         self.unit.status = MaintenanceStatus("Update image for runners")
+        self._check_image_ready()
 
-        if not self._get_set_image_ready_status():
-            return
+        state = self._setup_state()
+        self._setup_service(state)
 
-        runner_scaler = create_runner_scaler(state, self.app.name, self.unit.name)
-        runner_scaler.flush(flush_mode=FlushMode.FLUSH_IDLE)
-        self._reconcile_openstack_runners(
-            runner_scaler,
-        )
+        self._manager_client.flush_runner()
+        self.unit.status = ActiveStatus()
 
-    def _get_set_image_ready_status(self) -> bool:
-        """Check if image is ready for Openstack and charm status accordingly.
+    @catch_charm_errors
+    def _on_database_created(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB database created event."""
+        state = self._setup_state()
+        self._setup_service(state)
 
-        Returns:
-            Whether the Openstack image is ready via image integration.
+    @catch_charm_errors
+    def _on_endpoints_changed(self, _: ops.RelationEvent) -> None:
+        """Handle the MongoDB endpoints changed event."""
+        state = self._setup_state()
+        self._setup_service(state)
+
+    @catch_charm_errors
+    def _on_mongodb_relation_broken(self, _: ops.RelationDepartedEvent) -> None:
+        """Handle the MongoDB relation broken event."""
+        state = self._setup_state()
+        self._setup_service(state)
+
+    def _check_image_ready(self) -> None:
+        """Check if image is ready raises error if not.
+
+        Raises:
+            ImageIntegrationMissingError: No image integration found.
+            ImageNotFoundError: No image found in the image integration.
         """
         openstack_image = OpenstackImage.from_charm(self)
         if openstack_image is None:
-            self.unit.status = BlockedStatus("Please provide image integration.")
-            return False
+            raise ImageIntegrationMissingError("No image integration found")
         if not openstack_image.id:
-            self.unit.status = WaitingStatus("Waiting for image over integration.")
-            return False
-        return True
+            raise ImageNotFoundError("No image found in the image integration")
 
     @staticmethod
     def _create_labels(state: CharmState) -> list[str]:
@@ -635,6 +556,48 @@ def _setup_runner_manager_user() -> None:
         ]
     )
     execute_command(["/usr/bin/chmod", "700", f"/home/{constants.RUNNER_MANAGER_USER}/.ssh"])
+    # Give the user access to write to /var/log
+    execute_command(["/usr/sbin/usermod", "-a", "-G", "syslog", constants.RUNNER_MANAGER_USER])
+    execute_command(["/usr/bin/chmod", "g+w", "/var/log"])
+
+    # For charm upgrade, previous revision root owns the metric logs, this is changed to runner
+    # manager.
+    if METRICS_LOG_PATH.exists():
+        shutil.chown(
+            METRICS_LOG_PATH,
+            user=constants.RUNNER_MANAGER_USER,
+            group=constants.RUNNER_MANAGER_GROUP,
+        )
+
+
+def _disable_legacy_service() -> None:
+    """Disable any legacy service."""
+    logger.info("Attempting to stop legacy services")
+    try:
+        systemd.service_disable(LEGACY_RECONCILE_TIMER_SERVICE)
+        systemd.service_stop(LEGACY_RECONCILE_TIMER_SERVICE)
+    except systemd.SystemdError:
+        pass
+    try:
+        systemd.service_disable(LEGACY_RECONCILE_SERVICE)
+        systemd.service_stop(LEGACY_RECONCILE_SERVICE)
+    except systemd.SystemdError:
+        pass
+
+    try:
+        timer_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_TIMER_SERVICE
+        service_path = pathlib.Path("/etc/systemd/system") / LEGACY_RECONCILE_SERVICE
+        timer_path.unlink(missing_ok=True)
+        service_path.unlink(missing_ok=True)
+    except OSError:
+        logger.warning(
+            "Unexpected exception during removal of legacy systemd service files", exc_info=True
+        )
+
+    try:
+        systemd.daemon_reload()
+    except systemd.SystemdError:
+        logger.warning("Unable to reload systemd daemon", exc_info=True)
 
 
 if __name__ == "__main__":

@@ -28,6 +28,11 @@ def mock_home_path_fixture(tmp_path_factory):
     return tmp_path_factory.mktemp("home")
 
 
+@pytest.fixture(name="mock_log_path")
+def mock_log_path_fixture(tmp_path_factory):
+    return tmp_path_factory.mktemp("log") / "github-runner-manager"
+
+
 @pytest.fixture(name="mock_systemd")
 def mock_systemd_fixture(monkeypatch):
     mock_systemd = MagicMock()
@@ -37,17 +42,18 @@ def mock_systemd_fixture(monkeypatch):
 
 @pytest.fixture(name="mock_execute_command")
 def mock_execute_command_fixture(monkeypatch):
-    mock_execute_command = MagicMock()
+    mock_execute_command = MagicMock(return_value=("Mock", 0))
     monkeypatch.setattr("manager_service.execute_command", mock_execute_command)
     return mock_execute_command
 
 
 @pytest.fixture(name="patch_file_paths")
-def patch_file_paths(monkeypatch, mock_service_path, mock_home_path):
+def patch_file_paths(monkeypatch, mock_service_path, mock_home_path, mock_log_path):
     """Patch the file path used."""
     monkeypatch.setattr(
         "manager_service.GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH", mock_service_path
     )
+    monkeypatch.setattr("manager_service.GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR", mock_log_path)
     monkeypatch.setattr("manager_service.Path.expanduser", lambda x: mock_home_path)
 
 
@@ -57,6 +63,7 @@ def test_setup_started(
     mock_service_path: Path,
     mock_home_path: Path,
     mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the service to be running.
@@ -87,7 +94,10 @@ def test_setup_started(
 
 
 def test_setup_no_started(
-    patch_file_paths: None, complete_charm_state: CharmState, mock_systemd: MagicMock
+    patch_file_paths: None,
+    complete_charm_state: CharmState,
+    mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the service to be not running.
@@ -102,7 +112,10 @@ def test_setup_no_started(
 
 
 def test_setup_systemd_error(
-    patch_file_paths: None, complete_charm_state: CharmState, mock_systemd: MagicMock
+    patch_file_paths: None,
+    complete_charm_state: CharmState,
+    mock_systemd: MagicMock,
+    mock_execute_command: MagicMock,
 ):
     """
     arrange: Mock the systemd to raise error.
@@ -131,3 +144,27 @@ def test_install_package_failure(mock_execute_command: MagicMock):
         manager_service.install_package()
 
     assert manager_service._INSTALL_ERROR_MESSAGE in str(err.value)
+
+
+def test_stop_with_running_service(mock_systemd: MagicMock):
+    """
+    arrange: The service is running.
+    act: Run stop.
+    assert: There is a call for stopping service.
+    """
+    mock_systemd.service_running.return_value = True
+    manager_service.stop()
+    mock_systemd.service_running.assert_called_once()
+    mock_systemd.service_stop.assert_called_once()
+
+
+def test_stop_with_stopped_service(mock_systemd: MagicMock):
+    """
+    arrange: The service is stopped.
+    act: Run stop.
+    assert: There is no call for stopping service.
+    """
+    mock_systemd.service_running.return_value = False
+    manager_service.stop()
+    mock_systemd.service_running.assert_called_once()
+    mock_systemd.service_stop.assert_not_called()

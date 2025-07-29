@@ -9,11 +9,10 @@ from pathlib import Path
 
 import pytest
 from github_runner_manager.configuration.github import GitHubOrg
-from github_runner_manager.manager.runner_scaler import RunnerScaler
 
 import charm_state
 import utilities
-from tests.unit.mock import MockGhapiClient
+from models import FlavorLabel, OpenStackCloudsYAML
 
 
 @pytest.fixture(name="exec_command")
@@ -38,21 +37,8 @@ def disk_usage_mock(total_disk: int):
 
 @pytest.fixture(autouse=True)
 def mocks(monkeypatch, tmp_path, exec_command):
-    runner_scaler_mock = unittest.mock.MagicMock(spec=RunnerScaler)
-
-    cron_path = tmp_path / "cron.d"
-    cron_path.mkdir()
-
-    monkeypatch.setattr("charm.RunnerScaler", runner_scaler_mock)
     monkeypatch.setattr("charm.execute_command", exec_command)
     monkeypatch.setattr("charm_state.CHARM_STATE_PATH", Path(tmp_path / "charm_state.json"))
-    monkeypatch.setattr("event_timer.jinja2", unittest.mock.MagicMock())
-    monkeypatch.setattr("event_timer.execute_command", exec_command)
-    monkeypatch.setattr(
-        "github_runner_manager.metrics.events.METRICS_LOG_PATH", Path(tmp_path / "metrics.log")
-    )
-    monkeypatch.setattr("github_runner_manager.github_client.GhApi", MockGhapiClient)
-    monkeypatch.setattr("github_runner_manager.utilities.time", unittest.mock.MagicMock())
 
 
 @pytest.fixture(autouse=True, name="cloud_name")
@@ -132,7 +118,6 @@ def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
 def complete_charm_state_fixture():
     """Returns a fixture with a fully populated CharmState."""
     return charm_state.CharmState(
-        arch="arm64",
         is_metrics_logging_available=False,
         proxy_config=charm_state.ProxyConfig(
             http="http://httpproxy.example.com:3128",
@@ -147,7 +132,7 @@ def complete_charm_state_fixture():
         charm_config=charm_state.CharmConfig(
             dockerhub_mirror="https://docker.example.com",
             labels=("label1", "label2"),
-            openstack_clouds_yaml=charm_state.OpenStackCloudsYAML(
+            openstack_clouds_yaml=OpenStackCloudsYAML(
                 clouds={
                     "microstack": {
                         "auth": {
@@ -176,7 +161,7 @@ def complete_charm_state_fixture():
             base_virtual_machines=1,
             max_total_virtual_machines=2,
             flavor_label_combinations=[
-                charm_state.FlavorLabel(
+                FlavorLabel(
                     flavor="flavor",
                     label="flavorlabel",
                 )

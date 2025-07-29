@@ -138,3 +138,14 @@ if [[ -n "$DOCKERHUB_MIRROR" ]]; then
   logger -s "The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable."
   logger -s "For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits"
 fi
+
+{% if custom_pre_job_script %}
+# write the custom pre-job script to a temporary file, use special delimiter (and not EOF) to avoid same is reused in the script
+cat > /tmp/custom_pre_job_script <<'cc8eaf15-148a-4f10-8553-1b23fd5729d9'
+{{ custom_pre_job_script | safe }}
+cc8eaf15-148a-4f10-8553-1b23fd5729d9
+chmod +x /tmp/custom_pre_job_script
+logger -s "Running custom pre-job script"
+/tmp/custom_pre_job_script || logger -s "Custom pre-job script failed, continuing with the job"
+rm /tmp/custom_pre_job_script || logger -s "Failed to remove custom pre-job script"
+{% endif %}

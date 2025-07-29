@@ -12,7 +12,6 @@ from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
 from juju.application import Application
-from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME
 from tests.integration.helpers.charm_metrics import (
@@ -26,13 +25,13 @@ from tests.integration.helpers.common import (
     DISPATCH_CRASH_TEST_WORKFLOW_FILENAME,
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
-    reconcile,
+    wait_for_reconcile,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
-async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterator[Application]:
+async def app_fixture(app_for_metric: Application) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
 
     Clear the metrics log before each test.
@@ -46,7 +45,7 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
             "repo-policy-compliance-url": "",
         }
     )
-    await reconcile(app=app_for_metric, model=model)
+    await wait_for_reconcile(app=app_for_metric)
 
     yield app_for_metric
 
@@ -55,7 +54,6 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_failed_repo_policy(
-    model: Model,
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
@@ -95,7 +93,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
         }
     )
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await assert_events_after_reconciliation(
         app=app,
@@ -108,7 +106,6 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_for_abnormal_termination(
-    model: Model,
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -146,7 +143,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
     # Make the runner terminate abnormally by killing run.sh
     runner_name = await instance_helper.get_runner_name(unit)
     kill_run_sh_cmd = "pkill -9 run.sh"
-    ret_code, stdout, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
+    ret_code, _, stderr = await instance_helper.run_in_instance(unit, kill_run_sh_cmd)
     assert ret_code == 0, f"Failed to kill run.sh with code {ret_code}: {stderr}"
 
     # Cancel workflow and wait that the runner is marked offline
@@ -158,7 +155,7 @@ async def test_charm_issues_metrics_for_abnormal_termination(
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await assert_events_after_reconciliation(
         app=app,

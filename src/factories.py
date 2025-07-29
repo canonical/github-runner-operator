@@ -18,6 +18,7 @@ from github_runner_manager.configuration import (
     UserInfo,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration
+from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.manager.runner_scaler import RunnerScaler
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
@@ -63,10 +64,22 @@ def create_application_configuration(
         The created ApplicationConfiguration
     """
     extra_labels = list(state.charm_config.labels)
-    github_configuration = GitHubConfiguration(
-        token=state.charm_config.token,
-        path=state.charm_config.path,
+    github_configuration = (
+        GitHubConfiguration(
+            token=state.charm_config.token,
+            path=state.charm_config.path,
+        )
+        if state.charm_config.path
+        else None
     )
+    jobmanager_configuration = (
+        JobManagerConfiguration(
+            url=state.charm_config.jobmanager_url, token=state.charm_config.jobmanager_token
+        )
+        if state.charm_config.jobmanager_url
+        else None
+    )
+
     service_config = SupportServiceConfig(
         manager_proxy_command=state.charm_config.manager_proxy_command,
         proxy_config=state.proxy_config,
@@ -75,6 +88,9 @@ def create_application_configuration(
         ssh_debug_connections=state.ssh_debug_connections,
         repo_policy_compliance=state.charm_config.repo_policy_compliance,
         use_aproxy=state.charm_config.use_aproxy,
+        aproxy_exclude_addresses=state.charm_config.aproxy_exclude_addresses,
+        aproxy_redirect_ports=state.charm_config.aproxy_redirect_ports,
+        custom_pre_job_script=state.charm_config.custom_pre_job_script,
     )
     non_reactive_configuration = _get_non_reactive_configuration(state)
     reactive_configuration = _get_reactive_configuration(state, app_name)
@@ -83,10 +99,12 @@ def create_application_configuration(
         name=app_name,
         extra_labels=extra_labels,
         github_config=github_configuration,
+        jobmanager_config=jobmanager_configuration,
         service_config=service_config,
         non_reactive_configuration=non_reactive_configuration,
         reactive_configuration=reactive_configuration,
         openstack_configuration=openstack_configuration,
+        reconcile_interval=state.charm_config.reconcile_interval,
     )
 
 

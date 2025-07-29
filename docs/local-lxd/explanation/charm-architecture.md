@@ -41,11 +41,13 @@ The software installed in the image includes:
   - `yq`
 
 The configurations applied in the image include:
-
+<!-- vale Canonical.005-Industry-product-names = NO -->
 - Creating a group named `microk8s`.
 - Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this preconfigures the group for users who install the package.
 - Adding the `ubuntu` user to the `docker` group.
 - Adding iptables rules to accept traffic for the DOCKER-USER chain. This resolves a networking conflict with LXD.
+<!-- vale Canonical.005-Industry-product-names = YES -->
+
 
 ## Network configuration
 
@@ -61,7 +63,7 @@ This inconsistency can result in failed workflows, prompting the introduction of
 
 ### aproxy
 If the proxy configuration is utilized and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
-all HTTP(S) requests to standard ports (80, 443) within the GitHub workflow will be automatically directed 
+all HTTP(S) requests to standard ports (80, 443, 11371) within the GitHub workflow will be automatically directed 
 to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
 aproxy then forwards received packets to the designated HTTP(S) proxy. 
 Beyond that, the environment variables (`http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY`)
@@ -79,7 +81,6 @@ The nftables on the Juju machine are configured to deny traffic from the runner 
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
 
 - Requesting self-hosted runner registration tokens
-- Requesting self-hosted runner removal tokens
 - Requesting a list of runner applications
 - Requesting a list of self-hosted runners configured in an organization or repository
 - Deleting self-hosted runners
