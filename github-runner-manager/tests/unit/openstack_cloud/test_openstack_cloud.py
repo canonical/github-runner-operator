@@ -237,7 +237,7 @@ def test_keypair_cleanup_freshly_created_keypairs(
     openstack_connect_mock.return_value = openstack_connection_mock
 
     # act #
-    openstack_cloud.cleanup()
+    openstack_cloud.delete_expired_keys()
 
     # assert #
     # Check if only the old keypairs are deleted
