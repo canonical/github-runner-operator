@@ -28,5 +28,6 @@ Applicable spec: <link>
 - [ ] The documentation for charmhub is updated.
 - [ ] The PR is tagged with appropriate label (`urgent`, `trivial`, `complex`).
 - [ ] The changelog is updated with changes that affects the users of the charm.
+- [ ] The application version number is updated in `github-runner-manager/pyproject.toml`.
 
 <!-- Explanation for any unchecked items above -->
