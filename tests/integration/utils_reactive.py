@@ -164,6 +164,9 @@ def assert_queue_has_size(mongodb_uri: str, queue_name: str, size: int):
         mongodb_uri: The mongodb uri.
         queue_name: The name of the queue to check.
         size: The expected size of the queue.
+
+    Raises:
+        AssertionError: if an unexpected queue size was encountered.
     """
     queue_size = get_queue_size(mongodb_uri, queue_name)
     try:
