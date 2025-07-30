@@ -1,0 +1,207 @@
+18:26:54 WARNING unexpected facade SSHServer received from the controller
+18:26:54 INFO Adding model github-pr-de0b4-lxd:test-charm-fork-repo-b4x2 on cloud localhost
+18:26:54 WARNING unexpected facade SSHServer received from the controller
+18:26:54 WARNING unexpected facade SSHSession received from the controller
+18:26:54 WARNING unexpected facade SSHTunneler received from the controller
+18:26:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:27:29 INFO Deploying local:jammy/github-runner-0
+18:27:29 INFO Waiting for model:
+  test-als3c6wr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-als3c6wr/0 [allocating] waiting: waiting for machine
+18:28:00 INFO Waiting for model:
+  test-als3c6wr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-als3c6wr/0 [allocating] waiting: waiting for machine
+18:28:30 INFO Waiting for model:
+  test-als3c6wr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-als3c6wr/0 [allocating] waiting: agent initialising
+18:29:00 INFO Waiting for model:
+  test-als3c6wr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-als3c6wr/0 [executing] maintenance: Setting up Builder.
+18:29:31 INFO Waiting for model:
+  test-als3c6wr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-als3c6wr/0 [executing] maintenance: Setting up Builder.
+18:30:01 INFO Waiting for model:
+  test-als3c6wr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-als3c6wr/0 [executing] maintenance: Setting up Builder.
+18:30:31 INFO Waiting for model:
+  test-als3c6wr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-als3c6wr/0 [executing] maintenance: Setting up Builder.
+18:31:01 INFO Waiting for model:
+  test-als3c6wr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-als3c6wr/0 [executing] maintenance: Setting up Builder.
+18:31:32 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] blocked: image integration required.
+18:32:02 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:32:32 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:33:02 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:33:32 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:34:02 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:34:33 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:35:03 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:35:33 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:36:03 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:36:33 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:37:04 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:37:34 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:38:04 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:38:34 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:39:04 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:39:35 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:40:05 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:40:35 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:41:05 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:41:36 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:42:06 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:42:36 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:43:06 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:43:37 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:44:07 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:44:37 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:45:07 INFO Waiting for model:
+  test-als3c6wr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-als3c6wr/0 [executing] active: Building image.
+18:45:37 INFO Waiting for model:
+  test-als3c6wr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-als3c6wr/0 [idle] active: 
+18:46:08 INFO Waiting for model:
+  test-als3c6wr/0 [idle] active: 
+18:46:13 INFO GitHub token rate limit: Rate(reset=2025-07-30 19:26:38+00:00, remaining=4903, limit=5000)
+18:47:29 INFO Waiting for model:
+  test-als3c6wr/0 [idle] active: 
+18:47:59 INFO Waiting for model:
+  test-als3c6wr/0 [idle] active: 
+18:48:03 INFO Current reconcile ID: 84fd7e7f-3c62-43b8-a836-084477072eb7
+18:49:04 INFO Current reconcile ID: 84fd7e7f-3c62-43b8-a836-084477072eb7
+18:50:05 INFO Current reconcile ID: 8b0162a6-7e08-4786-9c4e-8370e7a4d391
+18:50:12 INFO [TEST SETUP] Exposing port 8080 on test-als3c6wr-0-n-60a17c5f1a82
+18:50:12 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.234', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:62:9a'}]])
+18:50:15 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-als3c6wr-0-n-60a17c5f1a82.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.234 &
+18:50:16 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.234' (ED25519) to the list of known hosts.
+
+18:50:18 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-als3c6wr-0-n-60a17c5f1a82
+18:50:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.234', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:62:9a'}]])
+18:50:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-als3c6wr-0-n-60a17c5f1a82.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.234 nc -z localhost 8080'
+18:50:20 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:50:21 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-als3c6wr-0-n-60a17c5f1a82
+18:50:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.234', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:62:9a'}]])
+18:50:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-als3c6wr-0-n-60a17c5f1a82.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.234 curl http://localhost:8080'
+18:50:23 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  41970      0 --:--:-- --:--:-- --:--:-- 51750
+'
+18:50:26 INFO Wait for condition not met, sleeping 10
+18:50:37 INFO Wait for condition not met, sleeping 60
+18:51:42 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-b4x2  github-pr-de0b4-lxd  localhost/localhost  3.6.8    unsupported  18:51:42Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-als3c6wr           active      1  github-runner-image-builder  latest/edge  100  no       
+test-als3c6wr                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-als3c6wr/0*  active    idle   0        10.66.235.79              
+test-als3c6wr/0*                         active    idle   1        10.66.235.212   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.66.235.79   juju-1e9748-0  ubuntu@22.04      Running
+1        started  10.66.235.212  juju-1e9748-1  ubuntu@22.04      Running
+
+18:51:42 INFO Juju error logs:
+
+machine-0: 18:28:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-als3c6wr-0: 18:28:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-als3c6wr-0: 18:28:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-als3c6wr-0: 18:29:13 ERROR unit.github-runner-image-builder-als3c6wr/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-als3c6wr-0: 18:30:20 ERROR unit.test-als3c6wr/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-als3c6wr-0: 18:30:23 ERROR unit.test-als3c6wr/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-als3c6wr-0: 18:31:26 ERROR unit.test-als3c6wr/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-als3c6wr-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:51:42 INFO Forgetting model main...
