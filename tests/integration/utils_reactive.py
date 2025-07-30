@@ -4,6 +4,7 @@
 """Utilities for reactive mode."""
 
 import json
+import logging
 
 from github.WorkflowRun import WorkflowRun
 from github_runner_manager.reactive.consumer import JobDetails
@@ -12,6 +13,8 @@ from juju.model import Model
 from juju.unit import Unit
 from kombu import Connection
 from pytest_operator.plugin import OpsTest
+
+logger = logging.getLogger(__name__)
 
 
 async def get_mongodb_uri(ops_test: OpsTest, app: Application) -> str:
@@ -162,7 +165,12 @@ def assert_queue_has_size(mongodb_uri: str, queue_name: str, size: int):
         queue_name: The name of the queue to check.
         size: The expected size of the queue.
     """
-    assert get_queue_size(mongodb_uri, queue_name) == size
+    queue_size = get_queue_size(mongodb_uri, queue_name)
+    try:
+        assert queue_size == size, f"Queue {queue_name} expected: {size}, received: {queue_size}"
+    except AssertionError:
+        _log_queue_contents(mongodb_uri=mongodb_uri, queue_name=queue_name)
+        raise
 
 
 def get_queue_size(mongodb_uri: str, queue_name: str) -> int:
@@ -178,3 +186,20 @@ def get_queue_size(mongodb_uri: str, queue_name: str) -> int:
     with Connection(mongodb_uri) as conn:
         with conn.SimpleQueue(queue_name) as simple_queue:
             return simple_queue.qsize()
+
+
+def _log_queue_contents(mongodb_uri: str, queue_name: str) -> None:
+    """Print contents of the queue for debugging.
+
+    Args:
+        mongodb_uri: The mongodb uri.
+        queue_name: The name of the queue to check.
+    """
+    with Connection(mongodb_uri) as conn:
+        with conn.SimpleQueue(queue_name) as simple_queue:
+            while simple_queue.qsize():
+                queue_item = simple_queue.get(timeout=10)
+                logger.info(
+                    "Queue item payload: %s, headers: %s", queue_item.payload, queue_item.headers
+                )
+                queue_item.ack()
