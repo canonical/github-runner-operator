@@ -85,7 +85,7 @@ def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
         pytest.param("get_instances", {}, id="get_instances"),
-        pytest.param("cleanup", {}, id="cleanup"),
+        pytest.param("delete_expired_keys", {}, id="delete_expired_keys"),
     ],
 )
 def test_raises_openstack_error(
