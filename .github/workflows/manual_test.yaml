@@ -1,0 +1,56 @@
+name: Manual test
+
+on:
+  # push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  large-arm64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, large, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-arm64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, edge, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-s390x:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-ppc64le:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, self-hosted-linux-ppc64el-noble-edge]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
