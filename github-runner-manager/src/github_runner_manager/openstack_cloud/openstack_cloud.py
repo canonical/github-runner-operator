@@ -532,7 +532,7 @@ class OpenstackCloud:
             )
 
     @_catch_openstack_errors
-    def cleanup(self) -> None:
+    def delete_expired_keys(self) -> None:
         """Cleanup unused key files and openstack keypairs."""
         with self._get_openstack_connection() as conn:
             instances = self._get_openstack_instances(conn)

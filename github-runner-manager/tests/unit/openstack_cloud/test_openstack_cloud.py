@@ -85,7 +85,7 @@ def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
         pytest.param("get_instances", {}, id="get_instances"),
-        pytest.param("cleanup", {}, id="cleanup"),
+        pytest.param("delete_expired_keys", {}, id="delete_expired_keys"),
     ],
 )
 def test_raises_openstack_error(
@@ -237,7 +237,7 @@ def test_keypair_cleanup_freshly_created_keypairs(
     openstack_connect_mock.return_value = openstack_connection_mock
 
     # act #
-    openstack_cloud.cleanup()
+    openstack_cloud.delete_expired_keys()
 
     # assert #
     # Check if only the old keypairs are deleted
