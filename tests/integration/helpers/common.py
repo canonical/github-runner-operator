@@ -115,8 +115,10 @@ async def wait_for_reconcile(app: Application) -> None:
     unit = app.units[0]
     base_id = await get_reconcile_id(unit)
     for _ in range(10):
+        logger.info("Waiting for reconcile ID: %s", base_id)
         await sleep(60)
         current_id = await get_reconcile_id(unit)
+        logger.info("Current reconcile ID: %s, expected reconcile ID: %s", current_id, base_id)
         if base_id != current_id:
             return
 
