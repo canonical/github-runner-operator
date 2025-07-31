@@ -1,0 +1,181 @@
+06:25:15 WARNING unexpected facade SSHServer received from the controller
+06:25:15 INFO Adding model github-pr-54d54-lxd:test-charm-fork-path-change-x11a on cloud localhost
+06:25:15 WARNING unexpected facade SSHServer received from the controller
+06:25:15 WARNING unexpected facade SSHSession received from the controller
+06:25:15 WARNING unexpected facade SSHTunneler received from the controller
+06:25:17 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:25:37 INFO Deploying local:jammy/github-runner-0
+06:25:38 INFO Waiting for model:
+  test-oozhsr5q/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oozhsr5q/0 [allocating] waiting: waiting for machine
+06:26:08 INFO Waiting for model:
+  test-oozhsr5q/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oozhsr5q/0 [allocating] waiting: waiting for machine
+06:26:38 INFO Waiting for model:
+  test-oozhsr5q/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oozhsr5q/0 [allocating] waiting: agent initialising
+06:27:09 INFO Waiting for model:
+  test-oozhsr5q/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:27:39 INFO Waiting for model:
+  test-oozhsr5q/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:28:09 INFO Waiting for model:
+  test-oozhsr5q/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:28:39 INFO Waiting for model:
+  test-oozhsr5q/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:29:10 INFO Waiting for model:
+  test-oozhsr5q/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:29:40 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] maintenance: Setting up Builder.
+06:30:10 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] blocked: image integration required.
+06:30:41 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:31:11 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:31:41 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:32:12 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:32:42 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:33:12 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:33:43 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:34:13 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:34:43 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:35:13 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:35:44 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:36:14 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:36:44 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:37:15 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:37:45 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:38:16 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:38:46 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:39:16 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:39:47 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:40:17 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-oozhsr5q/0 [executing] active: Building image.
+06:40:48 INFO Waiting for model:
+  test-oozhsr5q/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-oozhsr5q/0 [idle] active: 
+06:41:18 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:41:22 INFO GitHub token rate limit: Rate(reset=2025-07-31 07:01:46+00:00, remaining=4942, limit=5000)
+06:41:34 INFO test_path_config_change
+06:41:34 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:42:04 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:42:33 INFO Ensure there is a runner (this calls reconcile)
+06:42:33 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:43:03 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:43:06 INFO Current reconcile ID: 4ec7da45-02f2-453a-90fd-dc976e8cafa5
+06:44:07 INFO Current reconcile ID: 4ec7da45-02f2-453a-90fd-dc976e8cafa5
+06:45:08 INFO Current reconcile ID: 2f6dd7f5-6f50-4021-82b2-1d69c03349b3
+06:45:15 INFO Reconciling (again)
+06:45:15 INFO Waiting for model:
+  test-oozhsr5q/0 [idle] active: 
+06:45:45 INFO Waiting for model:
+  test-oozhsr5q/0 [executing] active: 
+06:46:07 INFO Current reconcile ID: 87f609a3-88ab-46b6-ad30-be3b62a4c115
+06:47:08 INFO Current reconcile ID: 87f609a3-88ab-46b6-ad30-be3b62a4c115
+06:48:09 INFO Current reconcile ID: 57a85565-8337-44c1-b2b5-6894bc597856
+06:49:30 INFO runners: ['test-oozhsr5q-0-n-dd23f83b47bf']
+06:49:31 INFO runners in github repo: [SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-509c7e8acc9b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-65fd55d3e1e3"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-82655e63d51b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-90d42545634b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-96b5ab0d93fe"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-a480bd359a4a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-ab342e6cef17"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-dc408837a00b"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-e799653bfb24"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-e8eef577420e"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-ed1d42e3a7a3"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-ffdac2040592"), SelfHostedActionsRunner(name="test-a2n48kkp-0-n-56a7dfa5e04c"), SelfHostedActionsRunner(name="test-a7h23caa-0-n-6b7cc4e30d25"), SelfHostedActionsRunner(name="test-c9zrzoqa-0-n-c628ef8a133d"), SelfHostedActionsRunner(name="test-cmrkyqj6-0-n-8ec974efbcb7"), SelfHostedActionsRunner(name="test-f8wij52i-0-n-a958d552b1c3"), SelfHostedActionsRunner(name="test-fgo60o78-0-n-7e12a488f540"), SelfHostedActionsRunner(name="test-fm8w9wl5-0-n-38a9ee034f39"), SelfHostedActionsRunner(name="test-g9jjg6oe-0-n-a905b731cae3"), SelfHostedActionsRunner(name="test-ga3neuza-0-n-bb4c7276c242"), SelfHostedActionsRunner(name="test-hj6rdgsm-0-n-cfd686b2c00e"), SelfHostedActionsRunner(name="test-hqflu75d-0-n-623bbb7ca21f"), SelfHostedActionsRunner(name="test-j03i792u-0-n-2cc23873dc78"), SelfHostedActionsRunner(name="test-ljhiufww-0-n-06536779544b"), SelfHostedActionsRunner(name="test-n05sxrn9-0-n-4d81a28b15ec"), SelfHostedActionsRunner(name="test-o0twcuq8-0-n-d8cef36a3301"), SelfHostedActionsRunner(name="test-of4xn70u-0-n-33c3bfe2e6a8"), SelfHostedActionsRunner(name="test-oo0pck43-0-n-37a3aefcbdaf"), SelfHostedActionsRunner(name="test-oozhsr5q-0-n-dd23f83b47bf"), SelfHostedActionsRunner(name="test-q8fl4cp7-0-n-82de6a4fda14"), SelfHostedActionsRunner(name="test-rwv277zm-0-n-ac6ea70b5121"), SelfHostedActionsRunner(name="test-sh3daukd-0-n-638c0a21b526"), SelfHostedActionsRunner(name="test-tesbkrbs-0-n-6b6decd1bd0b"), SelfHostedActionsRunner(name="test-tikeey37-0-n-caa0f969158c"), SelfHostedActionsRunner(name="test-u87bwy7o-0-n-7c71804cf5a5"), SelfHostedActionsRunner(name="test-unpkxejq-0-n-3737083fcf5c"), SelfHostedActionsRunner(name="test-wl7q1q3r-0-n-9df59d5d10de"), SelfHostedActionsRunner(name="test-yb282ejq-0-n-a15a73a22e54"), SelfHostedActionsRunner(name="test-yg55e75t-0-n-788633107666"), SelfHostedActionsRunner(name="test-yo5b5zbp-0-n-ef2fd141b0fe")]
+06:49:33 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-x11a  github-pr-54d54-lxd  localhost/localhost  3.6.8    unsupported  06:49:33Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-oozhsr5q           active      1  github-runner-image-builder  latest/edge  100  no       
+test-oozhsr5q                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-oozhsr5q/0*  active    idle   0        10.32.225.20           
+test-oozhsr5q/0*                         active    idle   1        10.32.225.61           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.32.225.20  juju-feccc0-0  ubuntu@22.04      Running
+1        started  10.32.225.61  juju-feccc0-1  ubuntu@22.04      Running
+
+06:49:33 INFO Juju error logs:
+
+machine-0: 06:26:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-oozhsr5q-0: 06:26:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-oozhsr5q-0: 06:27:35 ERROR unit.github-runner-image-builder-oozhsr5q/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:27:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-oozhsr5q-0: 06:27:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-oozhsr5q-0: 06:29:08 ERROR unit.test-oozhsr5q/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oozhsr5q-0: 06:29:10 ERROR unit.test-oozhsr5q/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-oozhsr5q-0: 06:30:04 ERROR unit.test-oozhsr5q/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-oozhsr5q-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:49:33 INFO Forgetting model main...
