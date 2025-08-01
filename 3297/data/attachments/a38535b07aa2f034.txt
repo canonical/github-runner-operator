@@ -1,0 +1,366 @@
+18:26:54 INFO IP Address to use as the fake jobmanager: 10.145.216.92
+18:26:54 WARNING unexpected facade SSHServer received from the controller
+18:26:54 INFO Adding model github-pr-54d54-lxd:test-jobmanager-prespawned-w5mf on cloud localhost
+18:26:55 WARNING unexpected facade SSHServer received from the controller
+18:26:55 WARNING unexpected facade SSHSession received from the controller
+18:26:55 WARNING unexpected facade SSHTunneler received from the controller
+18:26:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:27:29 INFO Deploying local:jammy/github-runner-0
+18:27:29 INFO Waiting for model:
+  test-eucaime3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eucaime3/0 [allocating] waiting: waiting for machine
+18:27:59 INFO Waiting for model:
+  test-eucaime3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eucaime3/0 [allocating] waiting: waiting for machine
+18:28:29 INFO Waiting for model:
+  test-eucaime3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-eucaime3/0 [allocating] waiting: agent initialising
+18:29:00 INFO Waiting for model:
+  test-eucaime3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-eucaime3/0 [executing] maintenance: Setting up Builder.
+18:29:30 INFO Waiting for model:
+  test-eucaime3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-eucaime3/0 [executing] maintenance: Setting up Builder.
+18:30:00 INFO Waiting for model:
+  test-eucaime3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-eucaime3/0 [executing] maintenance: Setting up Builder.
+18:30:30 INFO Waiting for model:
+  test-eucaime3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eucaime3/0 [executing] maintenance: Setting up Builder.
+18:31:01 INFO Waiting for model:
+  test-eucaime3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-eucaime3/0 [executing] maintenance: Setting up Builder.
+18:31:31 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:32:01 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:32:31 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:33:02 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:33:32 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:34:03 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:34:33 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:35:04 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:35:34 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:36:04 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:36:34 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:37:04 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:37:34 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:38:05 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:39:05 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:39:35 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:40:05 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:40:36 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:41:06 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:41:36 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:42:06 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:42:37 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:43:07 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:43:37 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:44:07 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:44:37 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:45:07 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:45:37 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:46:08 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:46:38 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:47:08 INFO Waiting for model:
+  test-eucaime3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-eucaime3/0 [executing] active: Building image.
+18:47:39 INFO Waiting for model:
+  test-eucaime3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-eucaime3/0 [idle] active: 
+18:48:09 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:48:21 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:48:36 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:49:07 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:49:19 INFO Current reconcile ID: 58dcb458-f7ee-4114-8281-5da12ff309dc
+18:50:20 INFO Current reconcile ID: 58dcb458-f7ee-4114-8281-5da12ff309dc
+18:51:21 INFO Current reconcile ID: 555f7f83-b585-4c2f-a708-a15e9bfaf7ae
+18:51:21 INFO Waiting for runner to be registered.
+18:51:34 INFO 10.208.248.169 - - [01/Aug/2025 18:51:34] "POST /v1/runners/register HTTP/1.1" 200 -
+18:51:34 INFO server log: [(<Request 'http://10.145.216.92:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+18:51:34 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 070f943079a61012'} data=None json=<UNDEFINED>>
+18:51:34 INFO trying to prepare tunnel for builder agent
+18:51:35 INFO no runner or two or more runners in unit, return False
+18:51:35 INFO Wait for condition not met, sleeping 10
+18:51:38 INFO 10.208.248.169 - - [01/Aug/2025 18:51:38] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:45 INFO trying to prepare tunnel for builder agent
+18:51:46 INFO no addresses yet, return False
+18:51:46 INFO Wait for condition not met, sleeping 10
+18:51:56 INFO trying to prepare tunnel for builder agent
+18:51:57 INFO no addresses yet, return False
+18:51:57 INFO Wait for condition not met, sleeping 10
+18:52:07 INFO trying to prepare tunnel for builder agent
+18:52:09 INFO no addresses yet, return False
+18:52:09 INFO Wait for condition not met, sleeping 10
+18:52:19 INFO trying to prepare tunnel for builder agent
+18:52:20 INFO no addresses yet, return False
+18:52:20 INFO Wait for condition not met, sleeping 10
+18:52:30 INFO trying to prepare tunnel for builder agent
+18:52:31 INFO no addresses yet, return False
+18:52:31 INFO Wait for condition not met, sleeping 10
+18:52:41 INFO trying to prepare tunnel for builder agent
+18:52:42 INFO no addresses yet, return False
+18:52:42 INFO Wait for condition not met, sleeping 10
+18:52:52 INFO trying to prepare tunnel for builder agent
+18:52:54 INFO no addresses yet, return False
+18:52:54 INFO Wait for condition not met, sleeping 10
+18:53:04 INFO trying to prepare tunnel for builder agent
+18:53:06 INFO [TEST SETUP] Run command 'echo hello' on test-eucaime3-0-n-7de4b14663e5
+18:53:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:53:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.99 'echo hello''
+18:53:09 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.99 port 22: Connection refused
+'
+18:53:09 INFO cannot ssh yet, return False
+18:53:09 INFO Wait for condition not met, sleeping 10
+18:53:19 INFO trying to prepare tunnel for builder agent
+18:53:21 INFO [TEST SETUP] Run command 'echo hello' on test-eucaime3-0-n-7de4b14663e5
+18:53:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:53:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.99 'echo hello''
+18:53:25 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.99' (ED25519) to the list of known hosts.
+'
+18:53:41 INFO 10.208.248.169 - - [01/Aug/2025 18:53:41] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:45 INFO 10.208.248.169 - - [01/Aug/2025 18:53:45] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:47 INFO 10.208.248.169 - - [01/Aug/2025 18:53:47] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:27 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.92 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-eucaime3-0-n-7de4b14663e5
+18:54:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:54:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.99 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.92 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+18:54:30 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.92 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+18:54:31 INFO [TEST SETUP] Exposing port 8000 on test-eucaime3-0-n-7de4b14663e5
+18:54:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:54:32 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.92:8000 -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.99 &
+18:54:33 INFO ssh tunnel result 0 None None
+18:54:34 INFO 10.208.248.169 - - [01/Aug/2025 18:54:34] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:35 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-eucaime3-0-n-7de4b14663e5
+18:54:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:54:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.99 nc -z localhost 8000'
+18:54:37 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+18:54:37 INFO prepared tunnel for builder agent
+18:54:37 INFO Waiting for builder-agent to contact us.
+18:54:39 INFO 10.208.248.169 - - [01/Aug/2025 18:54:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:39 INFO server log after executing: [(<Request 'http://10.145.216.92:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:54:39 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 070f943079a61012'} data=None json=<UNDEFINED>>
+18:54:39 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-eucaime3-0-n-7de4b14663e5
+18:54:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.99', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ed:13:7a'}]])
+18:54:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eucaime3-0-n-7de4b14663e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.99 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+18:54:41 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  16159  23764 --:--:-- --:--:-- --:--:-- 42000
+'
+18:54:41 INFO Waiting for builder-agent to contact us.
+18:54:44 INFO 10.208.248.169 - - [01/Aug/2025 18:54:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:49 INFO 10.208.248.169 - - [01/Aug/2025 18:54:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:54 INFO 10.208.248.169 - - [01/Aug/2025 18:54:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:59 INFO 10.208.248.169 - - [01/Aug/2025 18:54:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:04 INFO 10.208.248.169 - - [01/Aug/2025 18:55:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:09 INFO 10.208.248.169 - - [01/Aug/2025 18:55:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:14 INFO 10.208.248.169 - - [01/Aug/2025 18:55:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:14 INFO server log after executing: [(<Request 'http://10.145.216.92:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.92:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:55:14 INFO First reconcile that should not delete the runner, as it is still healthy.
+18:55:14 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:55:19 INFO 10.208.248.169 - - [01/Aug/2025 18:55:19] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:19 INFO 10.208.248.169 - - [01/Aug/2025 18:55:19] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:23 INFO 10.208.248.169 - - [01/Aug/2025 18:55:23] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:24 INFO 10.208.248.169 - - [01/Aug/2025 18:55:24] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:24 INFO 10.208.248.169 - - [01/Aug/2025 18:55:24] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:29 INFO 10.208.248.169 - - [01/Aug/2025 18:55:29] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:34 INFO 10.208.248.169 - - [01/Aug/2025 18:55:34] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:39 INFO 10.208.248.169 - - [01/Aug/2025 18:55:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:44 INFO 10.208.248.169 - - [01/Aug/2025 18:55:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:44 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:55:48 INFO Current reconcile ID: c7e4e994-1479-4d0a-89d3-649d6b0c8aae
+18:55:49 INFO 10.208.248.169 - - [01/Aug/2025 18:55:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:54 INFO 10.208.248.169 - - [01/Aug/2025 18:55:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:55:59 INFO 10.208.248.169 - - [01/Aug/2025 18:55:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:04 INFO 10.208.248.169 - - [01/Aug/2025 18:56:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:09 INFO 10.208.248.169 - - [01/Aug/2025 18:56:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:14 INFO 10.208.248.169 - - [01/Aug/2025 18:56:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:19 INFO 10.208.248.169 - - [01/Aug/2025 18:56:19] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:24 INFO 10.208.248.169 - - [01/Aug/2025 18:56:24] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:29 INFO 10.208.248.169 - - [01/Aug/2025 18:56:29] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:34 INFO 10.208.248.169 - - [01/Aug/2025 18:56:34] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:39 INFO 10.208.248.169 - - [01/Aug/2025 18:56:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:44 INFO 10.208.248.169 - - [01/Aug/2025 18:56:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:49 INFO 10.208.248.169 - - [01/Aug/2025 18:56:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:49 INFO Current reconcile ID: c7e4e994-1479-4d0a-89d3-649d6b0c8aae
+18:56:54 INFO 10.208.248.169 - - [01/Aug/2025 18:56:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:59 INFO 10.208.248.169 - - [01/Aug/2025 18:56:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:04 INFO 10.208.248.169 - - [01/Aug/2025 18:57:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:09 INFO 10.208.248.169 - - [01/Aug/2025 18:57:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:14 INFO 10.208.248.169 - - [01/Aug/2025 18:57:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:19 INFO 10.208.248.169 - - [01/Aug/2025 18:57:19] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:24 INFO 10.208.248.169 - - [01/Aug/2025 18:57:24] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:29 INFO 10.208.248.169 - - [01/Aug/2025 18:57:29] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:34 INFO 10.208.248.169 - - [01/Aug/2025 18:57:34] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:39 INFO 10.208.248.169 - - [01/Aug/2025 18:57:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:44 INFO 10.208.248.169 - - [01/Aug/2025 18:57:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:49 INFO 10.208.248.169 - - [01/Aug/2025 18:57:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:50 INFO Current reconcile ID: c7e4e994-1479-4d0a-89d3-649d6b0c8aae
+18:57:54 INFO 10.208.248.169 - - [01/Aug/2025 18:57:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:59 INFO 10.208.248.169 - - [01/Aug/2025 18:57:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:04 INFO 10.208.248.169 - - [01/Aug/2025 18:58:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:09 INFO 10.208.248.169 - - [01/Aug/2025 18:58:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:14 INFO 10.208.248.169 - - [01/Aug/2025 18:58:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:19 INFO 10.208.248.169 - - [01/Aug/2025 18:58:19] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:24 INFO 10.208.248.169 - - [01/Aug/2025 18:58:24] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:27 INFO 10.208.248.169 - - [01/Aug/2025 18:58:27] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:29 INFO 10.208.248.169 - - [01/Aug/2025 18:58:29] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:30 INFO 10.208.248.169 - - [01/Aug/2025 18:58:30] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:34 INFO 10.208.248.169 - - [01/Aug/2025 18:58:34] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:34 INFO 10.208.248.169 - - [01/Aug/2025 18:58:34] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:39 INFO 10.208.248.169 - - [01/Aug/2025 18:58:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:44 INFO 10.208.248.169 - - [01/Aug/2025 18:58:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:49 INFO 10.208.248.169 - - [01/Aug/2025 18:58:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:51 INFO Current reconcile ID: 85158847-8864-47ca-a755-dd1b44f2ec6e
+18:58:54 INFO 10.208.248.169 - - [01/Aug/2025 18:58:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:55 INFO 10.208.248.169 - - [01/Aug/2025 18:58:55] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:59 INFO 10.208.248.169 - - [01/Aug/2025 18:58:59] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:59 INFO 10.208.248.169 - - [01/Aug/2025 18:58:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:59 INFO check-runners: {'busy': '1', 'busy-runners': "('test-eucaime3-0-n-7de4b14663e5',)", 'offline': '0', 'online': '1', 'return-code': 0, 'runners': "('test-eucaime3-0-n-7de4b14663e5',)", 'unknown': '0'}
+18:58:59 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 070f943079a61012'} data=None json=<UNDEFINED>>
+18:58:59 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:59:04 INFO 10.208.248.169 - - [01/Aug/2025 18:59:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:04 INFO 10.208.248.169 - - [01/Aug/2025 18:59:04] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:09 INFO 10.208.248.169 - - [01/Aug/2025 18:59:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:14 INFO 10.208.248.169 - - [01/Aug/2025 18:59:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:16 INFO 10.208.248.169 - - [01/Aug/2025 18:59:16] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:30 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+18:59:33 INFO Current reconcile ID: 0f09f083-6f21-426b-ad75-d249f0fe1667
+19:00:34 INFO Current reconcile ID: 0f09f083-6f21-426b-ad75-d249f0fe1667
+19:01:35 INFO Current reconcile ID: 0f09f083-6f21-426b-ad75-d249f0fe1667
+19:02:36 INFO Current reconcile ID: 0f09f083-6f21-426b-ad75-d249f0fe1667
+19:03:23 INFO 10.208.248.169 - - [01/Aug/2025 19:03:23] "[35m[1mPOST /v1/runners/register HTTP/1.1[0m" 500 -
+19:03:37 INFO Current reconcile ID: 9ec134b6-24f9-4275-b07c-df6b4f839efd
+19:03:41 INFO check-runners: {'busy': '0', 'busy-runners': '()', 'offline': '0', 'online': '0', 'return-code': 0, 'runners': '()', 'unknown': '0'}
+19:03:41 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+19:04:12 INFO Waiting for model:
+  test-eucaime3/0 [idle] active: 
+19:04:15 INFO Current reconcile ID: d74af00d-bbab-458d-a205-d004120ad410
+19:05:16 INFO Current reconcile ID: d74af00d-bbab-458d-a205-d004120ad410
+19:06:17 INFO Current reconcile ID: adeed414-b48c-406c-ae98-7b2b4fb6d6d4
+19:06:18 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-w5mf  github-pr-54d54-lxd  localhost/localhost  3.6.8    unsupported  19:06:18Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-eucaime3           active      1  github-runner-image-builder  latest/edge  100  no       
+test-eucaime3                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-eucaime3/0*  active    idle   0        10.208.248.103         
+test-eucaime3/0*                         active    idle   1        10.208.248.169         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.208.248.103  juju-0920c1-0  ubuntu@22.04      Running
+1        started  10.208.248.169  juju-0920c1-1  ubuntu@22.04      Running
+
+19:06:18 INFO Juju error logs:
+
+machine-0: 18:28:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-eucaime3-0: 18:28:16 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-eucaime3-0: 18:28:30 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-eucaime3-0: 18:29:18 ERROR unit.github-runner-image-builder-eucaime3/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-eucaime3-0: 18:30:14 ERROR unit.test-eucaime3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-eucaime3-0: 18:30:18 ERROR unit.test-eucaime3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-eucaime3-0: 18:31:22 ERROR unit.test-eucaime3/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eucaime3-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:06:18 INFO Forgetting model main...

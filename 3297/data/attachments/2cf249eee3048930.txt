@@ -1,0 +1,59 @@
+18:58:59 INFO Waiting for model:
+  test-aashb9yf/0 [idle] active: 
+18:59:15 INFO Current reconcile ID: 03a242a5-46d2-4d88-b333-bdc7cd7b92fb
+19:00:16 INFO Current reconcile ID: fa77965f-0495-4d5e-ba9a-62ff7d6742f3
+19:00:18 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-1htg  github-pr-54d54-lxd  localhost/localhost  3.6.8    unsupported  19:00:18Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-aashb9yf           active      1  github-runner-image-builder  latest/edge  100  no       
+test-aashb9yf                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-aashb9yf/0*  active    idle   0        10.67.223.88           
+test-aashb9yf/0*                         active    idle   1        10.67.223.39           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.67.223.88  juju-ceca1c-0  ubuntu@22.04      Running
+1        started  10.67.223.39  juju-ceca1c-1  ubuntu@22.04      Running
+
+19:00:19 INFO Juju error logs:
+
+machine-0: 18:31:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:31:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-aashb9yf-0: 18:31:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:33:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:33:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-aashb9yf-0: 18:33:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-aashb9yf-0: 18:34:47 ERROR unit.github-runner-image-builder-aashb9yf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-aashb9yf-0: 18:38:17 ERROR unit.test-aashb9yf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aashb9yf-0: 18:38:21 ERROR unit.test-aashb9yf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-aashb9yf-0: 18:38:25 ERROR unit.test-aashb9yf/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-aashb9yf-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:00:19 INFO Forgetting model main...
