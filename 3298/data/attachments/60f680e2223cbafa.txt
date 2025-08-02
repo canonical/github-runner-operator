@@ -1,0 +1,146 @@
+06:24:57 WARNING unexpected facade SSHServer received from the controller
+06:24:57 INFO Adding model github-pr-54d54-lxd:test-charm-metrics-success-ktkx on cloud localhost
+06:24:57 WARNING unexpected facade SSHServer received from the controller
+06:24:57 WARNING unexpected facade SSHSession received from the controller
+06:24:57 WARNING unexpected facade SSHTunneler received from the controller
+06:24:58 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:25:21 INFO Deploying local:jammy/github-runner-0
+06:25:22 INFO Waiting for model:
+  test-nkonc9rr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nkonc9rr/0 [allocating] waiting: waiting for machine
+06:25:52 INFO Waiting for model:
+  test-nkonc9rr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nkonc9rr/0 [allocating] waiting: waiting for machine
+06:26:22 INFO Waiting for model:
+  test-nkonc9rr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-nkonc9rr/0 [allocating] waiting: agent initialising
+06:26:53 INFO Waiting for model:
+  test-nkonc9rr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nkonc9rr/0 [executing] maintenance: Setting up Builder.
+06:27:23 INFO Waiting for model:
+  test-nkonc9rr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nkonc9rr/0 [executing] maintenance: Setting up Builder.
+06:27:53 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] maintenance: Setting up Builder.
+06:28:23 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] maintenance: Setting up Builder.
+06:28:53 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] maintenance: Setting up Builder.
+06:29:23 INFO Waiting for model:
+  test-nkonc9rr/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Waiting for first image.
+06:29:54 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:30:24 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:30:54 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:31:24 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:31:54 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:32:25 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:32:55 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:33:25 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:33:56 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:34:26 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:34:56 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:35:27 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:35:57 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:36:27 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:36:58 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:37:28 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:37:58 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:38:29 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:38:59 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:39:29 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:40:00 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:40:30 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:41:01 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:41:31 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:42:01 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:42:32 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:43:02 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:43:32 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:44:03 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nkonc9rr/0 [executing] active: Building image.
+06:44:33 INFO Waiting for model:
+  test-nkonc9rr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-nkonc9rr/0 [idle] active: 
+06:45:03 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] active:
+06:45:07 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] active: 
+06:45:37 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] active: 
+06:45:42 INFO Current reconcile ID: 4122a56a-c79a-4ff4-a0d3-37bb3253bdef
+06:46:43 INFO Current reconcile ID: 4122a56a-c79a-4ff4-a0d3-37bb3253bdef
+06:47:44 INFO Current reconcile ID: 5b4de0c7-0ec0-44b6-9eb2-b4c531568936
+06:47:49 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] active: 
+06:48:20 INFO Waiting for model:
+  test-nkonc9rr/0 [idle] active: 
+06:48:23 INFO Current reconcile ID: b76e6bed-ea80-4f88-a085-e2973af90cf2
+06:49:24 INFO Current reconcile ID: b76e6bed-ea80-4f88-a085-e2973af90cf2
+06:50:25 INFO Current reconcile ID: b76e6bed-ea80-4f88-a085-e2973af90cf2
+06:51:26 INFO Current reconcile ID: 09886805-d1d8-41ab-940a-5f89f072d9ee
+06:51:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754117122.8118727, "event": "reconciliation", "flavor": "test-nkonc9rr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.522856712341309}
+{"timestamp": 1754117255.2492228, "event": "reconciliation", "flavor": "test-nkonc9rr", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.348222970962524}
+{"timestamp": 1754117196.0, "event": "runner_installed", "flavor": "test-nkonc9rr", "duration": 77.0}
+{"timestamp": 1754117299.9392922, "event": "reconciliation", "flavor": "test-nkonc9rr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.66510820388794}
+{"timestamp": 1754117431.9959013, "event": "reconciliation", "flavor": "test-nkonc9rr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.945910692214966}
