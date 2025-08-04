@@ -95,7 +95,7 @@ class CloudRunnerState(str, Enum):
 
 
 @dataclass
-class CloudRunnerInstance:
+class VM:
     """Information on the runner on the cloud.
 
     Attributes:
@@ -221,7 +221,7 @@ class CloudRunnerManager(abc.ABC):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -230,7 +230,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[VM]:
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod

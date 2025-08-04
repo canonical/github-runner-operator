@@ -9,7 +9,7 @@ import pytest
 
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerInstance, RunnerManager
-from github_runner_manager.manager.vm_manager import CloudRunnerInstance, CloudRunnerManager
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import SelfHostedRunner
 from tests.unit.factories.runner_instance_factory import (
@@ -94,9 +94,9 @@ from tests.unit.fake_runner_managers import FakeCloudRunnerManager, FakeGitHubRu
 )
 def test_flush_runners(
     initial_runners: list[SelfHostedRunner],
-    initial_cloud_runners: list[CloudRunnerInstance],
+    initial_cloud_runners: list[VM],
     expected_runners: list[SelfHostedRunner],
-    expected_cloud_runners: list[CloudRunnerInstance],
+    expected_cloud_runners: list[VM],
     flush_mode: FlushMode,
 ):
     """
@@ -168,9 +168,9 @@ def test_flush_runners(
 )
 def test_runner_maanger_cleanup(
     initial_runners: list[SelfHostedRunner],
-    initial_cloud_runners: list[CloudRunnerInstance],
+    initial_cloud_runners: list[VM],
     expected_runners: list[SelfHostedRunner],
-    expected_cloud_runners: list[CloudRunnerInstance],
+    expected_cloud_runners: list[VM],
 ):
     """
     arrange: Given GitHub runners and Cloud runners.
@@ -243,7 +243,7 @@ def test_runner_manager_create_runners() -> None:
 )
 def test_runner_manager_get_runners(
     initial_runners: list[SelfHostedRunner],
-    initial_cloud_runners: list[CloudRunnerInstance],
+    initial_cloud_runners: list[VM],
     expected_runner_instances: tuple[RunnerInstance],
 ):
     """
@@ -295,10 +295,10 @@ def test_runner_manager_get_runners(
 )
 def test_runner_manager_deterministic_delete_runners(
     initial_runners: list[SelfHostedRunner],
-    initial_cloud_runners: list[CloudRunnerInstance],
+    initial_cloud_runners: list[VM],
     num_delete: int,
     expected_runners: list[SelfHostedRunner],
-    expected_cloud_runners: list[CloudRunnerInstance],
+    expected_cloud_runners: list[VM],
 ):
     """
     arrange: given initial runners (platform and cloud).
@@ -338,7 +338,7 @@ def test_runner_manager_deterministic_delete_runners(
 )
 def test_runner_manager_non_deterministic_delete_runners(
     initial_runners: list[SelfHostedRunner],
-    initial_cloud_runners: list[CloudRunnerInstance],
+    initial_cloud_runners: list[VM],
     num_delete: int,
     expected_runners_count: int,
     expected_cloud_runners_count: int,

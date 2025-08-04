@@ -19,7 +19,7 @@ from github_runner_manager.errors import (
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
 from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.manager.vm_manager import (
-    CloudRunnerInstance,
+    VM,
     CloudRunnerManager,
     CloudRunnerState,
     RunnerMetrics,
@@ -94,7 +94,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -127,7 +127,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
 
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[VM]:
         """Get cloud self-hosted runners.
 
         Returns:
@@ -140,10 +140,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         """Cleanup runner and resource on the cloud."""
         self._openstack_cloud.delete_expired_keys()
 
-    def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> CloudRunnerInstance:
+    def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> VM:
         """Build a new cloud runner instance from an openstack instance."""
         metadata = instance.metadata
-        return CloudRunnerInstance(
+        return VM(
             name=instance.instance_id.name,
             metadata=metadata,
             instance_id=instance.instance_id,
