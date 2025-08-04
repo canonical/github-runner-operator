@@ -183,24 +183,21 @@ class RunnerManager:
             Information on the runners.
         """
         logger.debug("runner_manager::get_runners")
-        runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
         logger.info("clouds runners response %s", cloud_runners)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
-        for cloud_runner in cloud_runners:
-            if cloud_runner.instance_id not in health_runners_map:
-                runner_instance = RunnerInstance.from_cloud_and_platform_health(cloud_runner, None)
-                runner_instances.append(runner_instance)
-                continue
-            health_runner = health_runners_map[cloud_runner.instance_id]
-            runner_instance = RunnerInstance.from_cloud_and_platform_health(
-                cloud_runner, health_runner
-            )
-            runner_instances.append(runner_instance)
-        return cast(tuple[RunnerInstance], tuple(runner_instances))
+        return cast(
+            tuple[RunnerInstance],
+            tuple(
+                RunnerInstance.from_cloud_and_platform_health(
+                    cloud_runner, health_runners_map.get(cloud_runner.instance_id, None)
+                )
+                for cloud_runner in cloud_runners
+            ),
+        )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
         """Delete runners.
