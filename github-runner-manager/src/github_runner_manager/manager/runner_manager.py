@@ -14,12 +14,7 @@ from typing import Iterable, Iterator, Sequence, Type, cast
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.manager.vm_manager import (
-    VM,
-    CloudRunnerManager,
-    CloudRunnerState,
-    HealthState,
-)
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
@@ -78,7 +73,7 @@ class RunnerInstance:
     metadata: RunnerMetadata
     health: HealthState
     platform_state: PlatformRunnerState | None
-    cloud_state: CloudRunnerState
+    cloud_state: VMState
 
     @classmethod
     def from_cloud_and_platform_health(
@@ -96,7 +91,7 @@ class RunnerInstance:
             The RunnerInstance instantiated from cloud instance and platform state.
         """
         return cls(
-            name=cloud_instance.name,
+            name=cloud_instance.instance_id.name,
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
             health=cloud_instance.health,

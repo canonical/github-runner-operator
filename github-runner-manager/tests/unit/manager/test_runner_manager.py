@@ -226,7 +226,7 @@ def test_runner_manager_create_runners() -> None:
         pytest.param(
             [],
             [cloud_runner := CloudRunnerInstanceFactory()],
-            (RunnerInstanceFactory(name=cloud_runner.name),),
+            (RunnerInstanceFactory(name=cloud_runner.instance_id.name),),
             id="cloud runner without platform runner",
         ),
         pytest.param(
@@ -236,7 +236,7 @@ def test_runner_manager_create_runners() -> None:
                     self_hosted_runner=runner_with_cloud
                 )
             ],
-            (RunnerInstanceFactory(name=cloud_runner.name),),
+            (RunnerInstanceFactory(name=cloud_runner.instance_id.name),),
             id="platform runner with cloud runner",
         ),
     ],
