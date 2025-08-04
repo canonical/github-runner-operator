@@ -1,0 +1,564 @@
+06:28:46 INFO IP Address to use as the fake jobmanager: 10.145.216.108
+06:28:47 WARNING unexpected facade SSHServer received from the controller
+06:28:47 INFO Adding model github-pr-54d54-lxd:test-jobmanager-reactive-vq6g on cloud localhost
+06:28:47 WARNING unexpected facade SSHServer received from the controller
+06:28:47 WARNING unexpected facade SSHSession received from the controller
+06:28:47 WARNING unexpected facade SSHTunneler received from the controller
+06:28:47 WARNING unexpected facade SSHServer received from the controller
+06:28:49 INFO Deploying ch:amd64/jammy/mongodb-222
+06:28:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:29:15 INFO Deploying local:jammy/github-runner-0
+06:29:16 INFO Waiting for model:
+  test-cd0setg2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cd0setg2/0 [allocating] waiting: waiting for machine
+06:29:46 INFO Waiting for model:
+  test-cd0setg2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cd0setg2/0 [allocating] waiting: waiting for machine
+06:30:16 INFO Waiting for model:
+  test-cd0setg2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cd0setg2/0 [allocating] waiting: waiting for machine
+06:30:47 INFO Waiting for model:
+  test-cd0setg2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cd0setg2/0 [allocating] waiting: waiting for machine
+06:31:17 INFO Waiting for model:
+  test-cd0setg2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cd0setg2/0 [allocating] waiting: agent initialising
+06:31:48 INFO Waiting for model:
+  test-cd0setg2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cd0setg2/0 [executing] maintenance: Setting up Builder.
+06:32:18 INFO Waiting for model:
+  test-cd0setg2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cd0setg2/0 [executing] maintenance: Setting up Builder.
+06:32:48 INFO Waiting for model:
+  test-cd0setg2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cd0setg2/0 [executing] maintenance: Setting up Builder.
+06:33:18 INFO Waiting for model:
+  test-cd0setg2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cd0setg2/0 [executing] maintenance: Setting up Builder.
+06:33:48 INFO Waiting for model:
+  test-cd0setg2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cd0setg2/0 [executing] maintenance: Setting up Builder.
+06:34:19 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:34:49 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:35:19 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:35:50 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:36:20 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:37:50 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:38:51 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:39:21 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:39:52 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:40:22 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:40:52 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:41:22 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:41:52 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:42:23 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:42:53 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:43:24 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:43:54 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:44:24 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:44:55 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:45:25 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:45:55 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:46:26 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:46:56 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:47:27 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:47:57 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:48:27 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:48:57 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:49:27 INFO Waiting for model:
+  test-cd0setg2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cd0setg2/0 [executing] active: Building image.
+06:49:58 INFO Waiting for model:
+  test-cd0setg2/0 [executing] maintenance: Update image for runners
+06:50:21 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+06:50:36 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+06:51:06 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+06:51:19 INFO Current reconcile ID: 5b09bb37-620a-4cc2-b892-bdb1baf64872
+06:52:20 INFO Current reconcile ID: 5b09bb37-620a-4cc2-b892-bdb1baf64872
+06:53:21 INFO Current reconcile ID: 412a8513-8524-4aa3-a0d9-c82ae4afaf4f
+06:53:21 INFO cli: juju integrate --model github-pr-54d54-lxd:test-jobmanager-reactive-vq6g test-cd0setg2:mongodb mongodb:database
+06:53:21 INFO wait: status changed:
++ .model.name = 'test-jobmanager-reactive-vq6g'
++ .model.type = 'iaas'
++ .model.controller = 'github-pr-54d54-lxd'
++ .model.cloud = 'localhost'
++ .model.version = '3.6.8'
++ .model.region = 'localhost'
++ .model.model_status.current = 'available'
++ .machines['0'].juju_status.current = 'started'
++ .machines['0'].juju_status.version = '3.6.8'
++ .machines['0'].hostname = 'juju-d51160-0'
++ .machines['0'].dns_name = '10.220.223.50'
++ .machines['0'].ip_addresses[0] = '10.220.223.50'
++ .machines['0'].instance_id = 'juju-d51160-0'
++ .machines['0'].machine_status.current = 'running'
++ .machines['0'].machine_status.message = 'Running'
++ .machines['0'].modification_status.current = 'applied'
++ .machines['0'].base.name = 'ubuntu'
++ .machines['0'].base.channel = '22.04'
++ .machines['0'].network_interfaces['eth0'].ip_addresses[0] = '10.220.223.50'
++ .machines['0'].network_interfaces['eth0'].mac_address = '00:16:3e:ae:30:e4'
++ .machines['0'].network_interfaces['eth0'].is_up = True
++ .machines['0'].network_interfaces['eth0'].gateway = '10.220.223.1'
++ .machines['0'].network_interfaces['eth0'].space = 'alpha'
++ .machines['0'].constraints = 'arch=amd64'
++ .machines['0'].hardware = 'arch=amd64 cores=0 mem=0M virt-type=container'
++ .machines['1'].juju_status.current = 'started'
++ .machines['1'].juju_status.version = '3.6.8'
++ .machines['1'].hostname = 'juju-d51160-1'
++ .machines['1'].dns_name = '10.220.223.172'
++ .machines['1'].ip_addresses[0] = '10.220.223.172'
++ .machines['1'].instance_id = 'juju-d51160-1'
++ .machines['1'].machine_status.current = 'running'
++ .machines['1'].machine_status.message = 'Running'
++ .machines['1'].modification_status.current = 'applied'
++ .machines['1'].base.name = 'ubuntu'
++ .machines['1'].base.channel = '22.04'
++ .machines['1'].network_interfaces['eth0'].ip_addresses[0] = '10.220.223.172'
++ .machines['1'].network_interfaces['eth0'].mac_address = '00:16:3e:6f:82:bf'
++ .machines['1'].network_interfaces['eth0'].is_up = True
++ .machines['1'].network_interfaces['eth0'].gateway = '10.220.223.1'
++ .machines['1'].network_interfaces['eth0'].space = 'alpha'
++ .machines['1'].constraints = 'arch=amd64'
++ .machines['1'].hardware = 'arch=amd64 cores=0 mem=0M virt-type=container'
++ .machines['2'].juju_status.current = 'started'
++ .machines['2'].juju_status.version = '3.6.8'
++ .machines['2'].hostname = 'juju-d51160-2'
++ .machines['2'].dns_name = '10.220.223.245'
++ .machines['2'].ip_addresses[0] = '10.220.223.245'
++ .machines['2'].instance_id = 'juju-d51160-2'
++ .machines['2'].machine_status.current = 'running'
++ .machines['2'].machine_status.message = 'Running'
++ .machines['2'].modification_status.current = 'applied'
++ .machines['2'].base.name = 'ubuntu'
++ .machines['2'].base.channel = '22.04'
++ .machines['2'].network_interfaces['eth0'].ip_addresses[0] = '10.220.223.245'
++ .machines['2'].network_interfaces['eth0'].mac_address = '00:16:3e:99:c6:8c'
++ .machines['2'].network_interfaces['eth0'].is_up = True
++ .machines['2'].network_interfaces['eth0'].gateway = '10.220.223.1'
++ .machines['2'].network_interfaces['eth0'].space = 'alpha'
++ .machines['2'].constraints = 'arch=amd64 mem=2048M root-disk=51200M'
++ .machines['2'].hardware = 'arch=amd64 cores=0 mem=2048M virt-type=container'
++ .apps['github-runner-image-builder-cd0setg2'].charm = 'github-runner-image-builder'
++ .apps['github-runner-image-builder-cd0setg2'].charm_origin = 'charmhub'
++ .apps['github-runner-image-builder-cd0setg2'].charm_name = 'github-runner-image-builder'
++ .apps['github-runner-image-builder-cd0setg2'].charm_rev = 100
++ .apps['github-runner-image-builder-cd0setg2'].exposed = False
++ .apps['github-runner-image-builder-cd0setg2'].base.name = 'ubuntu'
++ .apps['github-runner-image-builder-cd0setg2'].base.channel = '22.04'
++ .apps['github-runner-image-builder-cd0setg2'].charm_channel = 'latest/edge'
++ .apps['github-runner-image-builder-cd0setg2'].app_status.current = 'active'
++ .apps['github-runner-image-builder-cd0setg2'].relations['image'][0].related_app = 'test-cd0setg2'
++ .apps['github-runner-image-builder-cd0setg2'].relations['image'][0].interface = 'github_runner_image_v0'
++ .apps['github-runner-image-builder-cd0setg2'].relations['image'][0].scope = 'global'
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].workload_status.current = 'active'
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].juju_status.current = 'idle'
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].juju_status.version = '3.6.8'
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].leader = True
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].machine = '1'
++ .apps['github-runner-image-builder-cd0setg2'].units['github-runner-image-builder-cd0setg2/0'].public_address = '10.220.223.172'
++ .apps['github-runner-image-builder-cd0setg2'].endpoint_bindings[''] = 'alpha'
++ .apps['github-runner-image-builder-cd0setg2'].endpoint_bindings['cos-agent'] = 'alpha'
++ .apps['github-runner-image-builder-cd0setg2'].endpoint_bindings['image'] = 'alpha'
++ .apps['mongodb'].charm = 'mongodb'
++ .apps['mongodb'].charm_origin = 'charmhub'
++ .apps['mongodb'].charm_name = 'mongodb'
++ .apps['mongodb'].charm_rev = 222
++ .apps['mongodb'].exposed = False
++ .apps['mongodb'].base.name = 'ubuntu'
++ .apps['mongodb'].base.channel = '22.04'
++ .apps['mongodb'].charm_channel = '6/edge'
++ .apps['mongodb'].app_status.current = 'active'
++ .apps['mongodb'].relations['database'][0].related_app = 'test-cd0setg2'
++ .apps['mongodb'].relations['database'][0].interface = 'mongodb_client'
++ .apps['mongodb'].relations['database'][0].scope = 'global'
++ .apps['mongodb'].relations['database-peers'][0].related_app = 'mongodb'
++ .apps['mongodb'].relations['database-peers'][0].interface = 'mongodb-peers'
++ .apps['mongodb'].relations['database-peers'][0].scope = 'global'
++ .apps['mongodb'].relations['ldap-peers'][0].related_app = 'mongodb'
++ .apps['mongodb'].relations['ldap-peers'][0].interface = 'ldap-peers'
++ .apps['mongodb'].relations['ldap-peers'][0].scope = 'global'
++ .apps['mongodb'].relations['status-peers'][0].related_app = 'mongodb'
++ .apps['mongodb'].relations['status-peers'][0].interface = 'status-peers'
++ .apps['mongodb'].relations['status-peers'][0].scope = 'global'
++ .apps['mongodb'].relations['upgrade-version-a'][0].related_app = 'mongodb'
++ .apps['mongodb'].relations['upgrade-version-a'][0].interface = 'upgrade'
++ .apps['mongodb'].relations['upgrade-version-a'][0].scope = 'global'
++ .apps['mongodb'].units['mongodb/0'].workload_status.current = 'active'
++ .apps['mongodb'].units['mongodb/0'].workload_status.message = 'Primary.'
++ .apps['mongodb'].units['mongodb/0'].juju_status.current = 'executing'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-created hook'
++ .apps['mongodb'].units['mongodb/0'].juju_status.version = '3.6.8'
++ .apps['mongodb'].units['mongodb/0'].leader = True
++ .apps['mongodb'].units['mongodb/0'].machine = '0'
++ .apps['mongodb'].units['mongodb/0'].open_ports[0] = '27017/tcp'
++ .apps['mongodb'].units['mongodb/0'].public_address = '10.220.223.50'
++ .apps['mongodb'].version = '6.0.24'
++ .apps['mongodb'].endpoint_bindings[''] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['certificates'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['cluster'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['config-server'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['cos-agent'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['database'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['database-peers'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['ldap'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['ldap-certificate-transfer'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['ldap-peers'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['s3-credentials'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['sharding'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['status-peers'] = 'alpha'
++ .apps['mongodb'].endpoint_bindings['upgrade-version-a'] = 'alpha'
++ .apps['test-cd0setg2'].charm = 'local:jammy/github-runner-0'
++ .apps['test-cd0setg2'].charm_origin = 'local'
++ .apps['test-cd0setg2'].charm_name = 'github-runner'
++ .apps['test-cd0setg2'].charm_rev = 0
++ .apps['test-cd0setg2'].exposed = False
++ .apps['test-cd0setg2'].base.name = 'ubuntu'
++ .apps['test-cd0setg2'].base.channel = '22.04'
++ .apps['test-cd0setg2'].app_status.current = 'active'
++ .apps['test-cd0setg2'].relations['image'][0].related_app = 'github-runner-image-builder-cd0setg2'
++ .apps['test-cd0setg2'].relations['image'][0].interface = 'github_runner_image_v0'
++ .apps['test-cd0setg2'].relations['image'][0].scope = 'global'
++ .apps['test-cd0setg2'].relations['mongodb'][0].related_app = 'mongodb'
++ .apps['test-cd0setg2'].relations['mongodb'][0].interface = 'mongodb_client'
++ .apps['test-cd0setg2'].relations['mongodb'][0].scope = 'global'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].workload_status.current = 'active'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-created hook'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.version = '3.6.8'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].leader = True
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].machine = '2'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].public_address = '10.220.223.245'
++ .apps['test-cd0setg2'].endpoint_bindings[''] = 'alpha'
++ .apps['test-cd0setg2'].endpoint_bindings['cos-agent'] = 'alpha'
++ .apps['test-cd0setg2'].endpoint_bindings['debug-ssh'] = 'alpha'
++ .apps['test-cd0setg2'].endpoint_bindings['image'] = 'alpha'
++ .apps['test-cd0setg2'].endpoint_bindings['mongodb'] = 'alpha'
++ .storage.storage['mongodb/0'].kind = 'filesystem'
++ .storage.storage['mongodb/0'].status.current = 'attached'
++ .storage.storage['mongodb/0'].persistent = False
++ .storage.storage['mongodb/0'].life = 'alive'
++ .storage.storage['mongodb/0'].attachments.units['mongodb/0'].machine = '0'
++ .storage.storage['mongodb/0'].attachments.units['mongodb/0'].location = '/var/snap/charmed-mongodb/common'
++ .storage.storage['mongodb/0'].attachments.units['mongodb/0'].life = 'alive'
++ .storage.storage['runner/1'].kind = 'filesystem'
++ .storage.storage['runner/1'].status.current = 'attached'
++ .storage.storage['runner/1'].persistent = False
++ .storage.storage['runner/1'].life = 'alive'
++ .storage.storage['runner/1'].attachments.units['test-cd0setg2/0'].machine = '2'
++ .storage.storage['runner/1'].attachments.units['test-cd0setg2/0'].location = '/storage/juju'
++ .storage.storage['runner/1'].attachments.units['test-cd0setg2/0'].life = 'alive'
++ .storage.filesystems['0/0'].size = 49433
++ .storage.filesystems['0/0'].provider_id = '0/0'
++ .storage.filesystems['0/0'].storage = 'mongodb/0'
++ .storage.filesystems['0/0'].attachments.machines['0'].mount_point = '/var/snap/charmed-mongodb/common'
++ .storage.filesystems['0/0'].attachments.machines['0'].read_only = False
++ .storage.filesystems['0/0'].attachments.machines['0'].life = 'alive'
++ .storage.filesystems['0/0'].attachments.units['mongodb/0'].machine = '0'
++ .storage.filesystems['0/0'].attachments.units['mongodb/0'].location = '/var/snap/charmed-mongodb/common'
++ .storage.filesystems['0/0'].attachments.units['mongodb/0'].life = 'alive'
++ .storage.filesystems['0/0'].pool = 'rootfs'
++ .storage.filesystems['0/0'].life = 'alive'
++ .storage.filesystems['0/0'].status.current = 'attached'
++ .storage.filesystems['2/1'].size = 49433
++ .storage.filesystems['2/1'].provider_id = '2/1'
++ .storage.filesystems['2/1'].storage = 'runner/1'
++ .storage.filesystems['2/1'].attachments.machines['2'].mount_point = '/storage/juju'
++ .storage.filesystems['2/1'].attachments.machines['2'].read_only = False
++ .storage.filesystems['2/1'].attachments.machines['2'].life = 'alive'
++ .storage.filesystems['2/1'].attachments.units['test-cd0setg2/0'].machine = '2'
++ .storage.filesystems['2/1'].attachments.units['test-cd0setg2/0'].location = '/storage/juju'
++ .storage.filesystems['2/1'].attachments.units['test-cd0setg2/0'].life = 'alive'
++ .storage.filesystems['2/1'].pool = 'rootfs'
++ .storage.filesystems['2/1'].life = 'alive'
++ .storage.filesystems['2/1'].status.current = 'attached'
+06:53:24 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-created hook'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-created hook'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-joined hook for mongodb/0'
+06:53:27 INFO wait: status changed:
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-joined hook for mongodb/0'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook for mongodb/0'
+06:53:28 INFO wait: status changed:
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook for mongodb/0'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'idle'
+06:53:29 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-joined hook for test-cd0setg2/0'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'idle'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook'
+06:53:32 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-joined hook for test-cd0setg2/0'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook for test-cd0setg2/0'
+06:53:36 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook for test-cd0setg2/0'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-peers-relation-changed hook'
+06:53:40 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.current = 'executing'
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-peers-relation-changed hook'
++ .apps['mongodb'].units['mongodb/0'].juju_status.current = 'idle'
+06:53:48 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.current = 'idle'
++ .apps['mongodb'].units['mongodb/0'].juju_status.current = 'executing'
++ .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook for test-cd0setg2/0'
+06:53:50 INFO wait: status changed:
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'idle'
+06:53:51 INFO wait: status changed:
+- .apps['mongodb'].units['mongodb/0'].juju_status.current = 'executing'
+- .apps['mongodb'].units['mongodb/0'].juju_status.message = 'running database-relation-changed hook for test-cd0setg2/0'
++ .apps['mongodb'].units['mongodb/0'].juju_status.current = 'idle'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'idle'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook'
+06:53:54 INFO wait: status changed:
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'executing'
+- .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.message = 'running mongodb-relation-changed hook'
++ .apps['test-cd0setg2'].units['test-cd0setg2/0'].juju_status.current = 'idle'
+06:53:58 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+06:54:28 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+06:54:32 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+06:55:33 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+06:56:34 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+06:57:35 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+06:58:36 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+06:59:37 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:00:38 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:01:39 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:02:40 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:03:41 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:04:42 INFO Current reconcile ID: 85deef0b-c202-4fa2-8ea6-10244b80ddc8
+07:04:43 INFO Waiting for first check job status.
+07:04:43 INFO server log: [(<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 126 bytes [200 OK]>)] 
+07:04:43 INFO Waiting for runner to be registered.
+07:04:43 INFO 10.220.223.245 - - [04/Aug/2025 07:04:43] "GET /v1/jobs/99 HTTP/1.1" 200 -
+07:04:43 INFO 10.220.223.245 - - [04/Aug/2025 07:04:43] "POST /v1/runners/register HTTP/1.1" 200 -
+07:04:43 INFO server log: [(<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 126 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+07:04:43 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer dcb0314901523922'} data=None json=<UNDEFINED>>
+07:04:43 INFO trying to prepare tunnel for builder agent
+07:04:45 INFO no runner or two or more runners in unit, return False
+07:04:45 INFO Wait for condition not met, sleeping 10
+07:04:55 INFO trying to prepare tunnel for builder agent
+07:04:56 INFO no addresses yet, return False
+07:04:56 INFO Wait for condition not met, sleeping 10
+07:05:06 INFO trying to prepare tunnel for builder agent
+07:05:06 INFO no addresses yet, return False
+07:05:06 INFO Wait for condition not met, sleeping 10
+07:05:16 INFO trying to prepare tunnel for builder agent
+07:05:17 INFO no addresses yet, return False
+07:05:17 INFO Wait for condition not met, sleeping 10
+07:05:27 INFO trying to prepare tunnel for builder agent
+07:05:28 INFO no addresses yet, return False
+07:05:28 INFO Wait for condition not met, sleeping 10
+07:05:38 INFO trying to prepare tunnel for builder agent
+07:05:39 INFO no addresses yet, return False
+07:05:39 INFO Wait for condition not met, sleeping 10
+07:05:47 INFO 10.220.223.245 - - [04/Aug/2025 07:05:47] "GET /v1/jobs/99 HTTP/1.1" 200 -
+07:05:49 INFO trying to prepare tunnel for builder agent
+07:05:51 INFO [TEST SETUP] Run command 'echo hello' on test-cd0setg2-0-r-e2f846ef3dca
+07:05:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.174', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d8:94:5d'}]])
+07:05:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cd0setg2-0-r-e2f846ef3dca.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.174 'echo hello''
+07:05:58 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.174 port 22: Connection refused
+'
+07:05:58 INFO cannot ssh yet, return False
+07:05:58 INFO Wait for condition not met, sleeping 10
+07:06:08 INFO trying to prepare tunnel for builder agent
+07:06:10 INFO [TEST SETUP] Run command 'echo hello' on test-cd0setg2-0-r-e2f846ef3dca
+07:06:10 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.174', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d8:94:5d'}]])
+07:06:11 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cd0setg2-0-r-e2f846ef3dca.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.174 'echo hello''
+07:06:13 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.174' (ED25519) to the list of known hosts.
+'
+07:06:47 INFO 10.220.223.245 - - [04/Aug/2025 07:06:47] "GET /v1/jobs/99 HTTP/1.1" 200 -
+07:07:14 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.108 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-cd0setg2-0-r-e2f846ef3dca
+07:07:14 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.174', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d8:94:5d'}]])
+07:07:15 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cd0setg2-0-r-e2f846ef3dca.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.174 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.108 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+07:07:16 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.108 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+07:07:17 INFO [TEST SETUP] Exposing port 8000 on test-cd0setg2-0-r-e2f846ef3dca
+07:07:17 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.174', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d8:94:5d'}]])
+07:07:18 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.108:8000 -i /home/runner-manager/.ssh/test-cd0setg2-0-r-e2f846ef3dca.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.174 &
+07:07:19 INFO ssh tunnel result 0 None None
+07:07:21 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-cd0setg2-0-r-e2f846ef3dca
+07:07:21 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.174', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d8:94:5d'}]])
+07:07:22 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cd0setg2-0-r-e2f846ef3dca.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.174 nc -z localhost 8000'
+07:07:22 INFO 10.220.223.245 - - [04/Aug/2025 07:07:22] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:23 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+07:07:23 INFO prepared tunnel for builder agent
+07:07:23 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer dcb0314901523922'} data=None json=<UNDEFINED>>
+07:07:23 INFO Waiting for job status to be queried.
+07:07:27 INFO 10.220.223.245 - - [04/Aug/2025 07:07:27] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:32 INFO 10.220.223.245 - - [04/Aug/2025 07:07:32] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:37 INFO 10.220.223.245 - - [04/Aug/2025 07:07:37] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:42 INFO 10.220.223.245 - - [04/Aug/2025 07:07:42] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:47 INFO 10.220.223.245 - - [04/Aug/2025 07:07:47] "GET /v1/jobs/99 HTTP/1.1" 200 -
+07:07:47 INFO server log: [(<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 126 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 126 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 126 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.108:8000/v1/jobs/99' [GET]>, <Response 130 bytes [200 OK]>)] 
+07:07:47 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer dcb0314901523922'} data=None json=<UNDEFINED>>
+07:07:47 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+07:07:47 INFO 10.220.223.245 - - [04/Aug/2025 07:07:47] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:52 INFO 10.220.223.245 - - [04/Aug/2025 07:07:52] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:52 INFO 10.220.223.245 - - [04/Aug/2025 07:07:52] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:57 INFO 10.220.223.245 - - [04/Aug/2025 07:07:57] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:05 INFO 10.220.223.245 - - [04/Aug/2025 07:08:05] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:07 INFO 10.220.223.245 - - [04/Aug/2025 07:08:07] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:17 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+07:08:21 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:09:22 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:10:23 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:11:24 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:12:25 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:13:26 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:14:27 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:15:28 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:16:29 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:17:30 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:18:31 INFO Current reconcile ID: b43ea687-d455-46fd-934c-0d49b8fa57dc
+07:18:31 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+07:19:02 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+07:19:05 INFO Current reconcile ID: cc6dccba-e833-496c-af5c-bd6eb177191c
+07:20:06 INFO Current reconcile ID: cc6dccba-e833-496c-af5c-bd6eb177191c
+07:21:07 INFO Current reconcile ID: 1550b2f8-99b6-41a0-8cdd-c04fb49f862f
+07:21:07 INFO Waiting for model:
+  test-cd0setg2/0 [idle] active: 
+07:21:24 INFO Current reconcile ID: 1550b2f8-99b6-41a0-8cdd-c04fb49f862f
+07:22:25 INFO Current reconcile ID: 1550b2f8-99b6-41a0-8cdd-c04fb49f862f
+07:23:26 INFO Current reconcile ID: 6c0c0663-7a0d-479d-8d50-7b4035ad92c6
+07:23:27 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-vq6g  github-pr-54d54-lxd  localhost/localhost  3.6.8    unsupported  07:23:27Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cd0setg2           active      1  github-runner-image-builder  latest/edge  100  no       
+mongodb                               6.0.24   active      1  mongodb                      6/edge       222  no       
+test-cd0setg2                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-cd0setg2/0*  active    idle   1        10.220.223.172             
+mongodb/0*                               active    idle   0        10.220.223.50   27017/tcp  Primary.
+test-cd0setg2/0*                         active    idle   2        10.220.223.245             
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.220.223.50   juju-d51160-0  ubuntu@22.04      Running
+1        started  10.220.223.172  juju-d51160-1  ubuntu@22.04      Running
+2        started  10.220.223.245  juju-d51160-2  ubuntu@22.04      Running
+
+07:23:27 INFO Juju error logs:
+
+machine-0: 06:30:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:30:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:30:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:30:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:30:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cd0setg2-0: 06:30:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:30:51 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:30:51 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:31:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:31:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-cd0setg2-0: 06:31:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-cd0setg2-0: 06:31:49 ERROR unit.test-cd0setg2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cd0setg2-0: 06:31:52 ERROR unit.test-cd0setg2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-cd0setg2-0: 06:32:01 ERROR unit.github-runner-image-builder-cd0setg2/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-cd0setg2-0: 06:34:06 ERROR unit.test-cd0setg2/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cd0setg2-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:23:27 INFO Forgetting model main...
