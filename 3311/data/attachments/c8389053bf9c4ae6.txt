@@ -1,0 +1,244 @@
+18:26:28 INFO IP Address to use as the fake jobmanager: 10.145.216.183
+18:26:28 WARNING unexpected facade SSHServer received from the controller
+18:26:28 INFO Adding model github-pr-54d54-lxd:test-jobmanager-prespawned-0gj8 on cloud localhost
+18:26:29 WARNING unexpected facade SSHServer received from the controller
+18:26:29 WARNING unexpected facade SSHSession received from the controller
+18:26:29 WARNING unexpected facade SSHTunneler received from the controller
+18:26:31 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:27:09 INFO Deploying local:jammy/github-runner-0
+18:27:09 INFO Waiting for model:
+  test-wldszgco/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wldszgco/0 [allocating] waiting: waiting for machine
+18:27:40 INFO Waiting for model:
+  test-wldszgco/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wldszgco/0 [allocating] waiting: waiting for machine
+18:28:10 INFO Waiting for model:
+  test-wldszgco/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wldszgco/0 [allocating] waiting: agent initialising
+18:28:40 INFO Waiting for model:
+  test-wldszgco/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:29:10 INFO Waiting for model:
+  test-wldszgco/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:29:40 INFO Waiting for model:
+  test-wldszgco/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:30:11 INFO Waiting for model:
+  test-wldszgco/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:30:41 INFO Waiting for model:
+  test-wldszgco/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:31:11 INFO Waiting for model:
+  test-wldszgco/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wldszgco/0 [executing] maintenance: Setting up Builder.
+18:31:41 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] blocked: image integration required.
+18:32:12 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:32:42 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:33:12 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:33:42 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:34:13 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:34:43 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:35:13 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:35:43 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:36:14 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:36:44 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:37:14 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:37:44 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:38:14 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:38:45 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:39:15 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:39:45 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:40:15 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:40:45 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:41:15 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:41:46 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:42:16 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:42:46 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:43:16 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:43:47 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:44:17 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:44:47 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:45:17 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:45:47 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:46:18 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:46:48 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:47:18 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:47:48 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:48:18 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:48:49 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:49:19 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:49:50 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:50:20 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:50:51 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:51:21 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:51:51 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:52:22 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:52:52 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:53:22 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:53:53 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:54:23 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:54:53 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:55:23 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:55:54 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:56:24 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:56:55 INFO Waiting for model:
+  test-wldszgco/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wldszgco/0 [executing] active: Building image.
+18:57:10 INFO OpenStack servers: []
+18:57:10 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-0gj8  github-pr-54d54-lxd  localhost/localhost  3.6.8    unsupported  18:57:10Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-wldszgco           active       1  github-runner-image-builder  latest/edge  100  no       Building image.
+test-wldszgco                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-wldszgco/0*  active    executing  0        10.14.94.43            Building image.
+test-wldszgco/0*                         waiting   idle       1        10.14.94.234           Waiting for image over integration.
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.14.94.43   juju-e882c2-0  ubuntu@22.04      Running
+1        started  10.14.94.234  juju-e882c2-1  ubuntu@22.04      Running
+
+18:57:10 INFO Juju error logs:
+
+machine-0: 18:28:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-wldszgco-0: 18:28:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-wldszgco-0: 18:28:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-wldszgco-0: 18:29:19 ERROR unit.github-runner-image-builder-wldszgco/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-wldszgco-0: 18:30:16 ERROR unit.test-wldszgco/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wldszgco-0: 18:30:19 ERROR unit.test-wldszgco/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wldszgco-0: 18:31:33 ERROR unit.test-wldszgco/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wldszgco-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:57:10 INFO Forgetting model main...
