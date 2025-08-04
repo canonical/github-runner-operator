@@ -16,14 +16,14 @@ from github_runner_manager.errors import (
     OpenStackError,
     RunnerCreateError,
 )
-from github_runner_manager.manager.cloud_runner_manager import (
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
+from github_runner_manager.manager.runner_manager import HealthState
+from github_runner_manager.manager.vm_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
     RunnerMetrics,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
-from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,

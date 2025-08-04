@@ -7,12 +7,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-)
 from github_runner_manager.manager.models import RunnerMetadata
 from github_runner_manager.manager.runner_manager import FlushMode, RunnerInstance, RunnerManager
+from github_runner_manager.manager.vm_manager import CloudRunnerInstance, CloudRunnerManager
 from github_runner_manager.platform.platform_provider import PlatformProvider
 from github_runner_manager.types_.github import SelfHostedRunner
 from tests.unit.factories.runner_instance_factory import (

@@ -13,13 +13,13 @@ from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
-from github_runner_manager.manager.cloud_runner_manager import (
+from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.vm_manager import (
     CloudRunnerInstance,
     CloudRunnerManager,
     CloudRunnerState,
     HealthState,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics

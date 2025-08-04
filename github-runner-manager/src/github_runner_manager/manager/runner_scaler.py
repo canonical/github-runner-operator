@@ -16,7 +16,6 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import HealthState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -24,6 +23,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
     RunnerMetadata,
 )
+from github_runner_manager.manager.vm_manager import HealthState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.reconcile import (
     BUSY_RUNNERS_COUNT,

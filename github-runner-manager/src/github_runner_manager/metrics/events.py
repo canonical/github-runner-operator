@@ -9,7 +9,7 @@ from typing import Any, Optional
 from pydantic import BaseModel, NonNegativeFloat
 
 from github_runner_manager.errors import IssueMetricEventError
-from github_runner_manager.manager.cloud_runner_manager import CodeInformation
+from github_runner_manager.manager.vm_manager import CodeInformation
 
 METRICS_LOG_PATH = Path("/var/log/github-runner-metrics.log")
 
