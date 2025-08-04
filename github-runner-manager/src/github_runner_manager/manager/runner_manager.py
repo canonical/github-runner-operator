@@ -71,9 +71,20 @@ class RunnerInstance:
     name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
     platform_state: PlatformRunnerState | None
     cloud_state: VMState
+
+    @property
+    def health(self) -> HealthState:
+        """Overall health state of the runner instance."""
+        if not self.platform_state:
+            return HealthState.UNHEALTHY
+        if self.platform_state == (
+            PlatformRunnerState.BUSY,
+            PlatformRunnerState.IDLE,
+        ):
+            return HealthState.HEALTHY
+        return HealthState.UNKNOWN
 
     @classmethod
     def from_cloud_and_platform_health(
@@ -94,7 +105,6 @@ class RunnerInstance:
             name=cloud_instance.instance_id.name,
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
-            health=cloud_instance.health,
             platform_state=(
                 PlatformRunnerState.from_platform_health(platform_health_state)
                 if platform_health_state is not None
@@ -183,16 +193,9 @@ class RunnerManager:
         for cloud_runner in cloud_runners:
             if cloud_runner.instance_id not in health_runners_map:
                 runner_instance = RunnerInstance.from_cloud_and_platform_health(cloud_runner, None)
-                runner_instance.health = HealthState.UNKNOWN
                 runner_instances.append(runner_instance)
                 continue
             health_runner = health_runners_map[cloud_runner.instance_id]
-            if health_runner.deletable:
-                cloud_runner.health = HealthState.UNHEALTHY
-            elif health_runner.online:
-                cloud_runner.health = HealthState.HEALTHY
-            else:
-                cloud_runner.health = HealthState.UNHEALTHY
             runner_instance = RunnerInstance.from_cloud_and_platform_health(
                 cloud_runner, health_runner
             )
