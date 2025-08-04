@@ -189,14 +189,11 @@ class RunnerManager:
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
-        return cast(
-            tuple[RunnerInstance],
-            tuple(
-                RunnerInstance.from_cloud_and_platform_health(
-                    cloud_runner, health_runners_map.get(cloud_runner.instance_id, None)
-                )
-                for cloud_runner in cloud_runners
-            ),
+        return tuple(
+            RunnerInstance.from_cloud_and_platform_health(
+                cloud_runner, health_runners_map.get(cloud_runner.instance_id, None)
+            )
+            for cloud_runner in cloud_runners
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
