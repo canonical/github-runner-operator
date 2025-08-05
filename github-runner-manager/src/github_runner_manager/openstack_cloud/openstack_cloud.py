@@ -99,7 +99,7 @@ class DeleteVMError(openstack.exceptions.SDKException):
         super().__init__(message, extra_data)
 
 
-@dataclass
+@dataclass(frozen=True)
 class OpenstackInstance:
     """Represents an OpenStack instance.
 
@@ -120,26 +120,32 @@ class OpenstackInstance:
     status: str
     metadata: RunnerMetadata
 
-    def __init__(self, server: OpenstackServer, prefix: str):
+    @classmethod
+    def from_openstack_server(cls, server: OpenstackServer, prefix: str) -> "OpenstackInstance":
         """Construct the object.
 
         Args:
             server: The OpenStack server.
             prefix: The name prefix for the servers.
+
+        Returns:
+            The OpenstackInstance.
         """
-        self.addresses = [
-            address["addr"]
-            for network_addresses in server.addresses.values()
-            for address in network_addresses
-        ]
-        self.created_at = datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ").replace(
-            tzinfo=timezone.utc
+        return cls(
+            addresses=[
+                address["addr"]
+                for network_addresses in server.addresses.values()
+                for address in network_addresses
+            ],
+            created_at=datetime.strptime(server.created_at, "%Y-%m-%dT%H:%M:%SZ").replace(
+                tzinfo=timezone.utc
+            ),
+            instance_id=InstanceID.build_from_name(prefix, server.name),
+            server_id=server.id,
+            status=server.status,
+            # To be backwards compatible, we need a default RunnerMetadata.
+            metadata=RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata(),
         )
-        self.instance_id = InstanceID.build_from_name(prefix, server.name)
-        self.server_id = server.id
-        self.status = server.status
-        # To be backwards compatible, we need a default RunnerMetadata.
-        self.metadata = RunnerMetadata(**server.metadata) if server.metadata else RunnerMetadata()
 
 
 P = ParamSpec("P")
@@ -320,7 +326,7 @@ class OpenstackCloud:
                 )
                 raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
 
-            return OpenstackInstance(server, self.prefix)
+            return OpenstackInstance.from_openstack_server(server=server, prefix=self.prefix)
 
     @_catch_openstack_errors
     def get_instance(self, instance_id: InstanceID) -> OpenstackInstance | None:
@@ -337,7 +343,7 @@ class OpenstackCloud:
         with self._get_openstack_connection() as conn:
             server: OpenstackServer = conn.get_server(name_or_id=instance_id.name)
             if server is not None:
-                return OpenstackInstance(server, self.prefix)
+                return OpenstackInstance.from_openstack_server(server, self.prefix)
         return None
 
     @staticmethod
@@ -526,7 +532,7 @@ class OpenstackCloud:
                 for name in server_names
             ]
             return tuple(
-                OpenstackInstance(server, self.prefix)
+                OpenstackInstance.from_openstack_server(server, self.prefix)
                 for server in server_list
                 if server is not None
             )
