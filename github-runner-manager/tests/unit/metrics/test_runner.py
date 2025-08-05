@@ -136,13 +136,13 @@ def test_pull_runner_metrics():
         [
             PulledMetrics(
                 instance=mock_instance_one,
-                runner_installed=test_remote_file_contents,
+                runner_installed_timestamp=test_remote_file_contents,
                 pre_job_metrics=test_remote_file_contents,
                 post_job_metrics=test_remote_file_contents,
             ),
             PulledMetrics(
                 instance=mock_instance_two,
-                runner_installed=test_remote_file_contents,
+                runner_installed_timestamp=test_remote_file_contents,
                 pre_job_metrics=test_remote_file_contents,
                 post_job_metrics=test_remote_file_contents,
             ),

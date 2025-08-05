@@ -8,13 +8,13 @@ import io
 import json
 import logging
 from dataclasses import dataclass
-from json import JSONDecodeError
+from pathlib import Path
 from typing import Optional, Sequence, Type
 
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
-from pydantic import ValidationError
+from pydantic import NonNegativeFloat, ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
 from github_runner_manager.manager.models import InstanceID
@@ -22,9 +22,9 @@ from github_runner_manager.manager.vm_manager import PostJobMetrics, PreJobMetri
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.openstack_cloud.constants import (
-    POST_JOB_METRICS_FILE_NAME,
-    PRE_JOB_METRICS_FILE_NAME,
-    RUNNER_INSTALLED_TS_FILE_NAME,
+    POST_JOB_METRICS_FILE_PATH,
+    PRE_JOB_METRICS_FILE_PATH,
+    RUNNER_INSTALLED_TS_FILE_PATH,
 )
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 
@@ -103,60 +103,110 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         )
         return None
 
-    runner_installed, pre_job_metrics, post_job_metrics = "", "", ""
-    try:
-        with pull_config.cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
-            try:
-                runner_installed = _ssh_pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-            except PullFileError as exc:
-                logger.warning(
-                    "Failed to pull runner_installed metrics for %s: %s.",
-                    pull_config.instance_id,
-                    exc,
-                )
-            try:
-                pre_job_metrics = _ssh_pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(PRE_JOB_METRICS_FILE_NAME),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-            except PullFileError as exc:
-                logger.warning(
-                    "Failed to pull pre_job metrics for %s: %s.",
-                    pull_config.instance_id,
-                    exc,
-                )
-            try:
-                post_job_metrics = _ssh_pull_file(
-                    ssh_conn=ssh_conn,
-                    remote_path=str(POST_JOB_METRICS_FILE_NAME),
-                    max_size=MAX_METRICS_FILE_SIZE,
-                )
-            except PullFileError as exc:
-                logger.warning(
-                    "Failed to pull post_job metrics for %s: %s.",
-                    pull_config.instance_id,
-                    exc,
-                )
-    except SSHError:
-        logger.warning(
-            "Failed to create SSH connection for pulling metrics: %s", instance.instance_id
-        )
-        return None
+    pulled_file_contents = _pull_metrics_files(
+        cloud_service=pull_config.cloud_service,
+        instance=instance,
+        metrics_paths=(
+            RUNNER_INSTALLED_TS_FILE_PATH,
+            PRE_JOB_METRICS_FILE_PATH,
+            POST_JOB_METRICS_FILE_PATH,
+        ),
+    )
+    parsed_metrics = _parse_metrics_contents(metrics_contents_map=pulled_file_contents)
 
     return (
         PulledMetrics(
             instance=instance,
-            runner_installed=runner_installed,
-            pre_job_metrics=pre_job_metrics,
-            post_job_metrics=post_job_metrics,
+            runner_installed_timestamp=parsed_metrics.runner_installed_timestamp,
+            pre_job_metrics=parsed_metrics.pre_job_metrics,
+            post_job_metrics=parsed_metrics.post_job_metrics,
         )
-        if (runner_installed or pre_job_metrics or post_job_metrics)
+        if (
+            parsed_metrics.runner_installed_timestamp
+            or parsed_metrics.pre_job_metrics
+            or parsed_metrics.post_job_metrics
+        )
         else None
+    )
+
+
+def _pull_metrics_files(
+    cloud_service: OpenstackCloud, instance: OpenstackInstance, metrics_paths: Sequence[Path]
+) -> dict[Path, str | None]:
+    """Pull the metric files from the runner."""
+    metric_files_contents: dict[Path, str | None] = {}
+    try:
+        with cloud_service.get_ssh_connection(instance=instance) as ssh_conn:
+            for remote_path in metrics_paths:
+                try:
+                    metric_files_contents[remote_path] = _ssh_pull_file(
+                        ssh_conn=ssh_conn,
+                        remote_path=str(remote_path),
+                        max_size=MAX_METRICS_FILE_SIZE,
+                    )
+                except PullFileError as exc:
+                    logger.warning(
+                        "Failed to pull file %s metrics for %s: %s.",
+                        remote_path.name,
+                        instance.instance_id,
+                        exc,
+                    )
+    except SSHError:
+        logger.warning(
+            "Failed to create SSH connection for pulling metrics: %s", instance.instance_id
+        )
+    return metric_files_contents
+
+
+@dataclass
+class _ParsedMetricContents:
+    """Parsed metric contents mapping.
+
+    Attributes:
+        runner_installed_timestamp: The timestamp when the runner was installed.
+        pre_job_metrics: Parsed pre-job metrics for the runner.
+        post_job_metrics: Parsed post-job metrics for the runner.
+    """
+
+    runner_installed_timestamp: float | None
+    pre_job_metrics: PreJobMetrics | None
+    post_job_metrics: PostJobMetrics | None
+
+
+def _parse_metrics_contents(metrics_contents_map: dict[Path, str | None]) -> _ParsedMetricContents:
+    """Parse metrics contents to concrete data structures.
+
+    Args:
+        metrics_contents_map: The map of metric paths to contents.
+
+    Returns:
+        The parsed metric contents.
+    """
+    runner_installed_timestamp: float | None = None
+    if timestamp := metrics_contents_map.get(RUNNER_INSTALLED_TS_FILE_PATH, None):
+        try:
+            runner_installed_timestamp = float(timestamp)
+        except ValueError:
+            logger.warning("Corrupt runner installed timestamp: %s", timestamp)
+
+    pre_job_metrics: PreJobMetrics | None = None
+    if pre_job := metrics_contents_map.get(PRE_JOB_METRICS_FILE_PATH, None):
+        try:
+            pre_job_metrics = PreJobMetrics.parse_obj(json.loads(pre_job))
+        except (json.JSONDecodeError, ValidationError):
+            logger.warning("Corrupt pre-job metrics: %s")
+
+    post_job_metrics: PostJobMetrics | None = None
+    if post_job := metrics_contents_map.get(POST_JOB_METRICS_FILE_PATH, None):
+        try:
+            post_job_metrics = PostJobMetrics.parse_obj(json.loads(post_job))
+        except (json.JSONDecodeError, ValidationError):
+            logger.warning("Corrupt post-job metrics %s")
+
+    return _ParsedMetricContents(
+        runner_installed_timestamp=runner_installed_timestamp,
+        pre_job_metrics=pre_job_metrics,
+        post_job_metrics=post_job_metrics,
     )
 
 
@@ -233,72 +283,9 @@ class PulledMetrics:
     """
 
     instance: OpenstackInstance
-    runner_installed: str | None = None
-    pre_job_metrics: str | None = None
-    post_job_metrics: str | None = None
-
-    def to_runner_metrics(self) -> RunnerMetrics | None:
-        """Convert PulledMetrics to RunnerMetrics instance.
-
-        Returns:
-           The RunnerMetrics object for the runner or None if it can not be built.
-        """
-        instance_id = self.instance.instance_id
-        if self.runner_installed is None:
-            logger.error(
-                "Invalid pulled metrics. No runner_installed information for %s.", instance_id
-            )
-            return None
-
-        pre_job_metrics: dict | None = None
-        post_job_metrics: dict | None = None
-        try:
-            pre_job_metrics = json.loads(self.pre_job_metrics) if self.pre_job_metrics else None
-            post_job_metrics = json.loads(self.post_job_metrics) if self.post_job_metrics else None
-        except (JSONDecodeError, TypeError):
-            logger.exception(
-                "Json Decode error. Corrupt metric data found for runner %s", instance_id
-            )
-
-        if not (pre_job_metrics is None or isinstance(pre_job_metrics, dict)):
-            logger.error(
-                "Pre job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                pre_job_metrics,
-            )
-            pre_job_metrics = None
-
-        if not (post_job_metrics is None or isinstance(post_job_metrics, dict)):
-            logger.error(
-                "Post job metrics for runner %s %s are not correct. Value: %s",
-                instance_id,
-                self,
-                post_job_metrics,
-            )
-            post_job_metrics = None
-
-        try:
-            return RunnerMetrics(
-                installation_start_timestamp=self.instance.created_at.timestamp(),
-                installed_timestamp=float(self.runner_installed),
-                pre_job=(  # pylint: disable=not-a-mapping
-                    PreJobMetrics(**pre_job_metrics) if pre_job_metrics else None
-                ),
-                post_job=(  # pylint: disable=not-a-mapping
-                    PostJobMetrics(**post_job_metrics) if post_job_metrics else None
-                ),
-                instance_id=instance_id,
-                metadata=self.instance.metadata,
-            )
-        except ValueError:
-            logger.exception(
-                "Error creating RunnerMetrics %s, %s, %s",
-                instance_id,
-                self.instance.created_at,
-                self,
-            )
-            return None
+    runner_installed_timestamp: NonNegativeFloat | None = None
+    pre_job_metrics: PreJobMetrics | None = None
+    post_job_metrics: PostJobMetrics | None = None
 
 
 def issue_events(
