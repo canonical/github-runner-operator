@@ -248,7 +248,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             instance_ids=instance_ids, wait=wait, timeout=timeout
         )
 
-    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> Sequence[RunnerMetrics]:
         """Extract metrics from cloud VMs.
 
         Args:
@@ -257,10 +257,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         Returns:
             Metrics from VMs.
         """
-        return [
-            converted_metrics
-            for pulled_metrics in runner_metrics.pull_runner_metrics(
-                cloud_service=self._openstack_cloud, instance_ids=instance_ids
-            )
-            if (converted_metrics := pulled_metrics.to_runner_metrics())
-        ]
+        return runner_metrics.pull_runner_metrics(
+            cloud_service=self._openstack_cloud, instance_ids=instance_ids
+        )

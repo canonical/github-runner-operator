@@ -18,7 +18,12 @@ from pydantic import NonNegativeFloat, ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
 from github_runner_manager.manager.models import InstanceID
-from github_runner_manager.manager.vm_manager import PostJobMetrics, PreJobMetrics, RunnerMetrics
+from github_runner_manager.manager.vm_manager import (
+    PostJobMetrics,
+    PreJobMetrics,
+    RunnerMetadata,
+    RunnerMetrics,
+)
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.openstack_cloud.constants import (
@@ -103,7 +108,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         )
         return None
 
-    pulled_file_contents = _pull_metrics_files(
+    pulled_file_contents = _pull_file_contents(
         cloud_service=pull_config.cloud_service,
         instance=instance,
         metrics_paths=(
@@ -118,8 +123,8 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
         PulledMetrics(
             instance=instance,
             runner_installed_timestamp=parsed_metrics.runner_installed_timestamp,
-            pre_job_metrics=parsed_metrics.pre_job_metrics,
-            post_job_metrics=parsed_metrics.post_job_metrics,
+            pre_job=parsed_metrics.pre_job_metrics,
+            post_job=parsed_metrics.post_job_metrics,
         )
         if (
             parsed_metrics.runner_installed_timestamp
@@ -130,7 +135,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
     )
 
 
-def _pull_metrics_files(
+def _pull_file_contents(
     cloud_service: OpenstackCloud, instance: OpenstackInstance, metrics_paths: Sequence[Path]
 ) -> dict[Path, str | None]:
     """Pull the metric files from the runner."""
@@ -277,15 +282,39 @@ class PulledMetrics:
 
     Attributes:
         instance: The instance in which the metrics were pulled from.
-        runner_installed: String with the runner-installed file.
-        pre_job_metrics: String with the pre-job-metrics file.
-        post_job_metrics: String with the post-job-metrics file.
+        runner_installed_timestamp: The timestamp in which the runner was installed.
+        pre_job: String with the pre-job-metrics file.
+        post_job: String with the post-job-metrics file.
+        metadata: The metadata of the VM in which the metrics are fetched from.
+        instance_id: The instance ID of the VM in which the metrics are fetched from.
+        installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
+        installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
     """
 
     instance: OpenstackInstance
     runner_installed_timestamp: NonNegativeFloat | None = None
-    pre_job_metrics: PreJobMetrics | None = None
-    post_job_metrics: PostJobMetrics | None = None
+    pre_job: PreJobMetrics | None = None
+    post_job: PostJobMetrics | None = None
+
+    @property
+    def instance_id(self) -> InstanceID:
+        """The instance ID of the VM."""
+        return self.instance.instance_id
+
+    @property
+    def metadata(self) -> RunnerMetadata:
+        """The metadata of the VM."""
+        return self.instance.metadata
+
+    @property
+    def installation_start_timestamp(self) -> NonNegativeFloat:
+        """The UNIX timestamp of in which the VM setup started."""
+        return self.instance.created_at.timestamp()
+
+    @property
+    def installation_end_timestamp(self) -> NonNegativeFloat | None:
+        """The UNIX timestamp of in which the VM setup ended."""
+        return self.runner_installed_timestamp
 
 
 def issue_events(
@@ -372,12 +401,12 @@ def _issue_runner_installed(
     Returns:
         The type of the issued event.
     """
+    installation_end_timestamp = runner_metrics.installation_end_timestamp or 0
     runner_installed = metric_events.RunnerInstalled(
-        timestamp=runner_metrics.installed_timestamp,
+        timestamp=installation_end_timestamp,
         flavor=flavor,
         # the installation_start_timestamp should be present
-        duration=runner_metrics.installed_timestamp  # type: ignore
-        - runner_metrics.installation_start_timestamp,  # type: ignore
+        duration=max(installation_end_timestamp - runner_metrics.installation_start_timestamp, 0),
     )
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
@@ -453,15 +482,17 @@ def _create_runner_start(
     # might be higher than the pre-job timestamp. This is due to the fact that we issue the runner
     # installed timestamp for Openstack after waiting with delays for the runner to be ready.
     # We set the idle_duration to 0 in this case.
-    if pre_job_metrics.timestamp < runner_metrics.installed_timestamp:
+    if pre_job_metrics.timestamp < (runner_metrics.installation_end_timestamp or 0):
         logger.warning(
             "Pre-job timestamp %d is before installed timestamp %d for runner %s."
             " Setting idle_duration to zero",
             pre_job_metrics.timestamp,
-            runner_metrics.installed_timestamp,
+            runner_metrics.installation_end_timestamp,
             runner_metrics.instance_id,
         )
-    idle_duration = max(pre_job_metrics.timestamp - runner_metrics.installed_timestamp, 0)
+    idle_duration = max(
+        pre_job_metrics.timestamp - (runner_metrics.installation_end_timestamp or 0), 0
+    )
 
     # GitHub API returns started_at < created_at in some rare cases.
     if job_metrics and job_metrics.queue_duration < 0:
