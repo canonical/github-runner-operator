@@ -22,9 +22,9 @@ from github_runner_manager.manager.vm_manager import PostJobMetrics, PreJobMetri
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.openstack_cloud.constants import (
-    POST_JOB_METRICS_FILE_NAME,
-    PRE_JOB_METRICS_FILE_NAME,
-    RUNNER_INSTALLED_TS_FILE_NAME,
+    POST_JOB_METRICS_FILE_PATH,
+    PRE_JOB_METRICS_FILE_PATH,
+    RUNNER_INSTALLED_TS_FILE_PATH,
 )
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
 
@@ -109,7 +109,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
             try:
                 runner_installed = _ssh_pull_file(
                     ssh_conn=ssh_conn,
-                    remote_path=str(RUNNER_INSTALLED_TS_FILE_NAME),
+                    remote_path=str(RUNNER_INSTALLED_TS_FILE_PATH),
                     max_size=MAX_METRICS_FILE_SIZE,
                 )
             except PullFileError as exc:
@@ -121,7 +121,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
             try:
                 pre_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
-                    remote_path=str(PRE_JOB_METRICS_FILE_NAME),
+                    remote_path=str(PRE_JOB_METRICS_FILE_PATH),
                     max_size=MAX_METRICS_FILE_SIZE,
                 )
             except PullFileError as exc:
@@ -133,7 +133,7 @@ def _pull_runner_metrics(pull_config: _PullRunnerMetricsConfig) -> "PulledMetric
             try:
                 post_job_metrics = _ssh_pull_file(
                     ssh_conn=ssh_conn,
-                    remote_path=str(POST_JOB_METRICS_FILE_NAME),
+                    remote_path=str(POST_JOB_METRICS_FILE_PATH),
                     max_size=MAX_METRICS_FILE_SIZE,
                 )
             except PullFileError as exc:
