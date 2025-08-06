@@ -65,6 +65,7 @@ class RunnerInstance:
         metadata: Metadata for the runner.
         health: The health state of the runner.
         platform_state: State on the platform.
+        platform_health: Health information queried from the platform provider.
         cloud_state: State on cloud.
     """
 
@@ -72,19 +73,19 @@ class RunnerInstance:
     instance_id: InstanceID
     metadata: RunnerMetadata
     platform_state: PlatformRunnerState | None
+    platform_health: PlatformRunnerHealth | None
     cloud_state: VMState
 
     @property
     def health(self) -> HealthState:
         """Overall health state of the runner instance."""
-        if not self.platform_state:
+        if not self.platform_health:
+            return HealthState.UNKNOWN
+        if self.platform_health.deletable:
             return HealthState.UNHEALTHY
-        if self.platform_state == (
-            PlatformRunnerState.BUSY,
-            PlatformRunnerState.IDLE,
-        ):
+        if self.platform_health.online:
             return HealthState.HEALTHY
-        return HealthState.UNKNOWN
+        return HealthState.UNHEALTHY
 
     @classmethod
     def from_cloud_and_platform_health(
@@ -110,6 +111,7 @@ class RunnerInstance:
                 if platform_health_state is not None
                 else None
             ),
+            platform_health=platform_health_state,
             cloud_state=cloud_instance.state,
         )
 
