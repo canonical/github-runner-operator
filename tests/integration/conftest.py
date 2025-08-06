@@ -611,7 +611,7 @@ def github_client(token: str) -> Github:
     """Returns the github client."""
     gh = Github(token)
     rate_limit = gh.get_rate_limit()
-    logging.info("GitHub token rate limit: %s", rate_limit.core)
+    logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
 
 
