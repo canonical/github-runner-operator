@@ -55,7 +55,7 @@ class FlushMode(Enum):
     FLUSH_BUSY = auto()
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunnerInstance:
     """Represents an instance of runner.
 
