@@ -5,6 +5,7 @@
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from functools import partial
@@ -17,6 +18,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerIdentity, Run
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
+from github_runner_manager.metrics import reconcile as reconcile_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
@@ -335,9 +337,18 @@ class RunnerManager:
             if runner.instance_id in runner_identity_map
             and runner_identity_map[runner.instance_id].metadata.runner_id
         ]
+
         logger.info("Deleting runners from platform: %s", platform_runner_ids_to_delete)
+        delete_runner_start = time.time()
         deleted_runner_ids = self._platform.delete_runners(
             runner_ids=platform_runner_ids_to_delete
+        )
+        delete_runner_end = time.time()
+        reconcile_metrics.DELETE_RUNNER_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_runner_end - delete_runner_start
+        )
+        reconcile_metrics.DELETED_RUNNERS_TOTAL.labels(self.manager_name).inc(
+            amount=len(deleted_runner_ids)
         )
         logger.info(
             "Deleted runners from platform: %s (diff: %s)",
@@ -357,15 +368,28 @@ class RunnerManager:
             or runner.metadata.runner_id in deleted_runner_ids
         ]
         logger.info("Extracting metrics from cloud VMs: %s", cloud_vm_ids_to_delete)
+        extract_metrics_start = time.time()
         extracted_metrics = self._cloud.extract_metrics(instance_ids=cloud_vm_ids_to_delete)
+        extract_metrics_end = time.time()
+        runner_metrics.EXTRACT_METRICS_DURATION_SECONDS.labels(self.manager_name).observe(
+            extract_metrics_end - extract_metrics_start
+        )
         logger.info("Extracted metrics from cloud VMs: %s", extracted_metrics)
+
         logger.info("Deleting VMs %s", cloud_vm_ids_to_delete)
+        delete_vms_start = time.time()
         deleted_vm_ids = self._cloud.delete_vms(instance_ids=cloud_vm_ids_to_delete)
+        delete_vms_end = time.time()
+        reconcile_metrics.DELETE_VM_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_vms_end - delete_vms_start
+        )
+        reconcile_metrics.DELETED_VMS_TOTAL.labels(self.manager_name).inc(len(deleted_vm_ids))
         logger.info(
             "Deleted VMs: %s, (diff: %s)",
             deleted_vm_ids,
             set(cloud_vm_ids_to_delete) - set(deleted_vm_ids),
         )
+
         return tuple(extracted_metrics)
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
