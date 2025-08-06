@@ -3,7 +3,7 @@
 
 """Module for collecting metrics related to the reconciliation process."""
 
-from prometheus_client import Gauge, Histogram
+from prometheus_client import Counter, Gauge, Histogram
 
 from github_runner_manager.metrics import labels
 
@@ -31,5 +31,25 @@ IDLE_RUNNERS_COUNT = Gauge(
 CLEANED_RUNNERS_TOTAL = Gauge(
     name="cleaned_runners_total",
     documentation="Total number of runners cleaned up",
+    labelnames=[labels.FLAVOR],
+)
+DELETED_RUNNERS_TOTAL = Counter(
+    name="deleted_runners_total",
+    documentation="The number of runners deleted during reconciliation.",
+    labelnames=[labels.FLAVOR],
+)
+DELETE_RUNNER_DURATION_SECONDS = Histogram(
+    name="delete_runner_duration_seconds",
+    documentation="Time taken in seconds for runners to be deleted.",
+    labelnames=[labels.FLAVOR],
+)
+DELETED_VMS_TOTAL = Counter(
+    name="deleted_vms_total",
+    documentation="The number of VMs deleted during reconciliation.",
+    labelnames=[labels.FLAVOR],
+)
+DELETE_VM_DURATION_SECONDS = Histogram(
+    name="delete_vm_duration_seconds",
+    documentation="Time taken in seconds for vms to be deleted.",
     labelnames=[labels.FLAVOR],
 )
