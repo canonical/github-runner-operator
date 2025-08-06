@@ -11,6 +11,7 @@ import factory
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerInstance
 from github_runner_manager.manager.vm_manager import VM, VMState
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackInstance
 from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     PlatformRunnerState,
@@ -83,6 +84,26 @@ class CloudRunnerInstanceFactory(factory.Factory):
             instance_id=self_hosted_runner.identity.instance_id,
             metadata=RunnerMetadataFactory(runner_id=str(self_hosted_runner.id)),
         )
+
+
+class OpenstackInstanceFactory(factory.Factory):
+    """Factory for creating OpenstackInstance instances."""
+
+    class Meta:
+        """Meta class for RunnerIdentity.
+
+        Attributes:
+            model: The metadata reference model.
+        """
+
+        model = OpenstackInstance
+
+    addresses = factory.List(factory.Faker("ipv4") for _ in range(3))
+    created_at = factory.LazyFunction(datetime.now)
+    instance_id = InstanceIDFactory()
+    server_id = factory.Faker("uuid4")
+    status = factory.Faker("word")
+    metadata = RunnerMetadataFactory()
 
 
 class RunnerIdentityFactory(factory.Factory):
