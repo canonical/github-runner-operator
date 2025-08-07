@@ -25,7 +25,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Run Trivy scan for logs
         uses: aquasecurity/trivy-action@0.32.0
@@ -45,13 +45,13 @@ jobs:
 
       - name: Upload SARIF to GitHub Security tab
         if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v3.29.6
         with:
           sarif_file: "trivy-results.sarif"
 
       - name: Upload diagnostic SARIF artifact
         if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: sarif-report
           path: "trivy-results.sarif"
@@ -62,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Run Trivy to generate SBOM
         uses: aquasecurity/trivy-action@0.32.0
@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload SBOM as an artifact
         if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: sbom
           path: "dependency-results.sbom.json"
