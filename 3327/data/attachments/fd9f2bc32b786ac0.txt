@@ -1,0 +1,116 @@
+11:51:48 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+11:52:18 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+11:52:21 INFO Current reconcile ID: 5976a8d4-1946-4887-9bb8-c6b96158c8db
+11:53:23 INFO Current reconcile ID: 5976a8d4-1946-4887-9bb8-c6b96158c8db
+11:54:24 INFO Current reconcile ID: 5976a8d4-1946-4887-9bb8-c6b96158c8db
+11:55:25 INFO Current reconcile ID: 0ea53a6d-4f68-426a-8f1d-68ad819354c1
+11:55:26 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+11:55:57 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+11:56:01 INFO Current reconcile ID: 753084d8-d507-4c72-a48b-2fdc7ff23071
+11:57:02 INFO Current reconcile ID: 753084d8-d507-4c72-a48b-2fdc7ff23071
+11:58:03 INFO Current reconcile ID: 753084d8-d507-4c72-a48b-2fdc7ff23071
+11:59:04 INFO Current reconcile ID: 0271c2aa-cd59-4abe-a555-532192ed91f4
+11:59:06 INFO Wait for condition not met, sleeping 10
+11:59:18 INFO Wait for condition not met, sleeping 10
+11:59:28 INFO Wait for condition not met, sleeping 10
+11:59:39 INFO Wait for condition not met, sleeping 10
+11:59:49 INFO Wait for condition not met, sleeping 10
+12:00:00 INFO Wait for condition not met, sleeping 10
+12:00:10 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+12:00:41 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+12:00:44 INFO Current reconcile ID: a850b412-0e5f-4361-a2f1-b21160188731
+12:01:45 INFO Current reconcile ID: a850b412-0e5f-4361-a2f1-b21160188731
+12:02:46 INFO Current reconcile ID: a850b412-0e5f-4361-a2f1-b21160188731
+12:03:47 INFO Current reconcile ID: 5d0eb9cb-fb8d-4e42-a625-4fc826a65a9c
+12:03:48 INFO Wait for condition not met, sleeping 60
+12:04:48 INFO Wait for condition not met, sleeping 60
+12:05:49 INFO Wait for condition not met, sleeping 60
+12:06:49 INFO Wait for condition not met, sleeping 60
+12:07:50 INFO Wait for condition not met, sleeping 60
+12:08:50 INFO Wait for condition not met, sleeping 60
+12:09:51 INFO Wait for condition not met, sleeping 60
+12:10:51 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+12:11:08 INFO Current reconcile ID: 2b120b98-f467-42fe-b39b-3b2603e0a601
+12:12:09 INFO Current reconcile ID: 2b120b98-f467-42fe-b39b-3b2603e0a601
+12:13:24 INFO Current reconcile ID: 9e70a4e6-d99c-4239-9aab-342b01a544d6
+12:13:26 INFO Wait for condition not met, sleeping 10
+12:13:38 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+12:13:54 INFO Current reconcile ID: 9e70a4e6-d99c-4239-9aab-342b01a544d6
+12:14:55 INFO Current reconcile ID: 9e70a4e6-d99c-4239-9aab-342b01a544d6
+12:15:56 INFO Current reconcile ID: eecb1e43-ebb9-4b61-a32c-c4cda3c6c31a
+12:15:57 INFO Waiting for model:
+  test-fmstrkk9/0 [idle] active: 
+12:16:14 INFO Current reconcile ID: eecb1e43-ebb9-4b61-a32c-c4cda3c6c31a
+12:17:15 INFO Current reconcile ID: eecb1e43-ebb9-4b61-a32c-c4cda3c6c31a
+12:18:16 INFO Current reconcile ID: 3b123fe1-d556-4f65-8bb1-dcb744288593
+12:18:17 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-vn8m  github-pr-a29fc-lxd  localhost/localhost  3.6.8    unsupported  12:18:17Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fmstrkk9           active      1  github-runner-image-builder  latest/edge  100  no       
+mongodb                               6.0.24   active      1  mongodb                      6/edge       224  no       
+test-fmstrkk9                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-fmstrkk9/0*  active    idle   1        10.248.31.34               
+mongodb/0*                               active    idle   0        10.248.31.122   27017/tcp  Primary.
+test-fmstrkk9/0*                         active    idle   2        10.248.31.137              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.248.31.122  juju-514fc2-0  ubuntu@22.04      Running
+1        started  10.248.31.34   juju-514fc2-1  ubuntu@22.04      Running
+2        started  10.248.31.137  juju-514fc2-2  ubuntu@22.04      Running
+
+12:18:17 INFO Juju error logs:
+
+machine-0: 11:06:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 11:06:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 11:06:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 11:06:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 11:06:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fmstrkk9-0: 11:06:30 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 11:07:04 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 11:07:04 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 11:07:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 11:07:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fmstrkk9-0: 11:07:22 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-fmstrkk9-0: 11:07:56 ERROR unit.test-fmstrkk9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fmstrkk9-0: 11:07:58 ERROR unit.test-fmstrkk9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-fmstrkk9-0: 11:08:13 ERROR unit.github-runner-image-builder-fmstrkk9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-fmstrkk9-0: 11:10:09 ERROR unit.test-fmstrkk9/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fmstrkk9-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+12:18:17 INFO Forgetting model main...
