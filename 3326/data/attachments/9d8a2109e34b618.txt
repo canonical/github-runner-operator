@@ -1,0 +1,152 @@
+22:51:09 INFO GitHub token rate limit: Rate(reset=2025-08-06 23:32:23+00:00, remaining=4989, limit=5000)
+22:53:27 WARNING Failed to discover available identity versions when contacting https://keystone.ps6.canonical.com:5000/v3. Attempting to parse version from URL.
+22:57:58 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-ivoi  github-pr-a29fc-lxd  localhost/localhost  3.6.8    unsupported  22:57:58Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cq8cz960           error       1  github-runner-image-builder  latest/edge  100  no       hook failed: "install"
+test-cq8cz960                                  error       1  github-runner                               0  no       hook failed: "install"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-cq8cz960/0*  error     idle   0        10.38.4.240            hook failed: "install"
+test-cq8cz960/0*                         error     idle   1        10.38.4.32             hook failed: "install"
+
+Machine  State    Address      Inst id        Base          AZ  Message
+0        started  10.38.4.240  juju-9215ee-0  ubuntu@22.04      Running
+1        started  10.38.4.32   juju-9215ee-1  ubuntu@22.04      Running
+
+22:57:58 INFO Juju error logs:
+
+machine-0: 22:50:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 22:50:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-cq8cz960-0: 22:50:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 22:50:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 22:50:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cq8cz960-0: 22:50:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-cq8cz960-0: 22:51:08 ERROR unit.test-cq8cz960/0.juju-log Command /usr/bin/apt-get install -qy run-one python3-pip python3-venv failed with code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-cq8cz960-0: 22:51:08 ERROR unit.test-cq8cz960/0.juju-log Failed to install charm dependencies
+unit-test-cq8cz960-0: 22:51:08 ERROR unit.test-cq8cz960/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/apt-get', 'install', '-qy', 'run-one', 'python3-pip', 'python3-venv']' returned non-zero exit status 100.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 604, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/__init__.py", line 356, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/venv/ops/framework.py", line 1030, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 308, in _on_install
+    self._common_install_code()
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 279, in _common_install_code
+    self._install_deps()
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 432, in _install_deps
+    self._apt_install(["run-one", "python3-pip", "python3-venv"])
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/./src/charm.py", line 448, in _apt_install
+    execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+  File "/var/lib/juju/agents/unit-test-cq8cz960-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/apt-get install -qy run-one python3-pip python3-venv] failed with return code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-cq8cz960-0: 22:51:08 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+unit-github-runner-image-builder-cq8cz960-0: 22:52:17 ERROR unit.github-runner-image-builder-cq8cz960/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/__init__.py", line 359, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/_main.py", line 496, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/_main.py", line 480, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/_main.py", line 415, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/_main.py", line 459, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/venv/ops/framework.py", line 1030, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/./src/charm.py", line 85, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/./src/charm.py", line 183, in _setup_builder
+    builder.initialize(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/src/builder.py", line 91, in initialize
+    _install_dependencies()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/src/builder.py", line 106, in _install_dependencies
+    _install_apt_packages()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/src/builder.py", line 117, in _install_apt_packages
+    apt.add_package(APT_DEPENDENCIES, update_cache=True)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 761, in add_package
+    pkg, success = _add(p, version, arch)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 802, in _add
+    pkg.ensure(state=PackageState.Present)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 289, in ensure
+    self._add()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 261, in _add
+    self._apt(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-cq8cz960-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 255, in _apt
+    raise PackageError(
+charms.operator_libs_linux.v0.apt.PackageError: Could not install package(s) [['python3-dev=3.10.6-1~22.04.1']]: E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/f/fonts-dejavu/fonts-dejavu-core_2.37-2build1_all.deb  Could not connect to squid.ps6.internal:3128 (162.213.35.34), connection timed out Could not connect to squid.ps6.internal:3128 (162.213.35.49), connection timed out
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/fontconfig-config_2.13.1-4.2ubuntu5_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/j/javascript-common/javascript-common_11%2bnmu1_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc-dev-bin_2.35-0ubuntu3.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/f/freetype/libfreetype6_2.11.1%2bdfsg-1ubuntu0.3_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/f/fontconfig/libfontconfig1_2.13.1-4.2ubuntu5_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg-turbo/libjpeg-turbo8_2.1.2-0ubuntu1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libj/libjpeg8-empty/libjpeg8_8c-2ubuntu10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libd/libdeflate/libdeflate0_1.10-2_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/j/jbigkit/libjbig0_2.1-3.1ubuntu0.22.04.1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libw/libwebp/libwebp7_1.2.2-2ubuntu0.22.04.2_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/t/tiff/libtiff5_4.3.0-6ubuntu0.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libx/libxpm/libxpm4_3.5.12-1ubuntu0.22.04.2_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libg/libgd2/libgd3_2.3.0-2ubuntu2.3_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc-devtools_2.35-0ubuntu3.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/l/linux/linux-libc-dev_5.15.0-144.157_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libx/libxcrypt/libcrypt-dev_4.4.27-1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/r/rpcsvc-proto/rpcsvc-proto_1.4.2-0ubuntu6_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libt/libtirpc/libtirpc-dev_1.3.2-2ubuntu0.1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/libn/libnsl/libnsl-dev_1.3.0-2build2_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc6-dev_2.35-0ubuntu3.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/e/expat/libexpat1-dev_2.4.7-1ubuntu0.6_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/n/node-jquery/libjs-jquery_3.6.0%2bdfsg%2b%7e3.5.13-1_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/u/underscore/libjs-underscore_1.13.2%7edfsg-2_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/s/sphinx/libjs-sphinxdoc_4.3.2-1_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/z/zlib/zlib1g-dev_1.2.11.dfsg-2ubuntu9.2_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/libpython3.10-dev_3.10.12-1%7e22.04.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/p/python3-defaults/libpython3-dev_3.10.6-1%7e22.04.1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/m/manpages/manpages-dev_5.10-1ubuntu1_all.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/p/python3.10/python3.10-dev_3.10.12-1%7e22.04.10_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/pool/main/p/python3-defaults/python3-dev_3.10.6-1%7e22.04.1_amd64.deb  Unable to connect to squid.ps6.internal:3128:
+E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?
+
+unit-github-runner-image-builder-cq8cz960-0: 22:52:17 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+22:57:58 INFO Forgetting model main...

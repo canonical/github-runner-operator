@@ -1,0 +1,22 @@
+21:04:25 WARNING unexpected facade SSHServer received from the controller
+21:04:25 INFO Adding model github-pr-a29fc-lxd:test-charm-no-runner-a4s1 on cloud localhost
+21:04:25 WARNING unexpected facade SSHServer received from the controller
+21:04:25 WARNING unexpected facade SSHSession received from the controller
+21:04:25 WARNING unexpected facade SSHTunneler received from the controller
+21:04:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+21:04:37 INFO Deploying local:jammy/github-runner-0
+21:04:38 INFO Waiting for model:
+  test-jg0k2kim/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg0k2kim/0 [allocating] waiting: waiting for machine
+21:05:08 INFO Waiting for model:
+  test-jg0k2kim/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg0k2kim/0 [allocating] waiting: waiting for machine
+21:05:38 INFO Waiting for model:
+  test-jg0k2kim/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jg0k2kim/0 [allocating] waiting: waiting for machine
+21:06:09 INFO Waiting for model:
+  test-jg0k2kim/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-jg0k2kim/0 [executing] maintenance: installing charm software
+21:06:39 INFO Waiting for model:
+  test-jg0k2kim/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jg0k2kim/0 [executing] maintenance: Setting up Builder.

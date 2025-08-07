@@ -1,0 +1,24 @@
+23:51:48 WARNING unexpected facade SSHServer received from the controller
+23:51:48 INFO Adding model github-pr-a29fc-lxd:test-reactive-6rbg on cloud localhost
+23:51:48 WARNING unexpected facade SSHServer received from the controller
+23:51:48 WARNING unexpected facade SSHSession received from the controller
+23:51:48 WARNING unexpected facade SSHTunneler received from the controller
+23:51:49 INFO GitHub token rate limit: Rate(reset=2025-08-07 00:51:49+00:00, remaining=5000, limit=5000)
+23:51:52 INFO Deploying ch:amd64/jammy/mongodb-224
+23:51:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+23:52:05 INFO Deploying local:jammy/github-runner-0
+23:52:05 INFO Waiting for model:
+  test-hxbtrkqz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hxbtrkqz/0 [allocating] waiting: waiting for machine
+23:52:36 INFO Waiting for model:
+  test-hxbtrkqz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hxbtrkqz/0 [allocating] waiting: waiting for machine
+23:53:06 INFO Waiting for model:
+  test-hxbtrkqz/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hxbtrkqz/0 [allocating] waiting: waiting for machine
+23:53:36 INFO Waiting for model:
+  test-hxbtrkqz/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-hxbtrkqz/0 [allocating] waiting: waiting for machine
+23:54:07 INFO Waiting for model:
+  test-hxbtrkqz/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hxbtrkqz/0 [allocating] waiting: waiting for machine
