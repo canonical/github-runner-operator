@@ -5,7 +5,6 @@
 
 import logging
 import secrets
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
@@ -45,25 +44,6 @@ PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
 OUTDATED_METRICS_STORAGE_IN_SECONDS = CREATE_SERVER_TIMEOUT + 30  # add a bit on top of the timeout
-
-
-class _GithubRunnerRemoveError(Exception):
-    """Represents an error while SSH into a runner and running the remove script."""
-
-
-@dataclass
-class _RunnerHealth:
-    """Runners with health state.
-
-    Attributes:
-        healthy: The list of healthy runners.
-        unhealthy:  The list of unhealthy runners.
-        unknown: The list of runners whose health state could not be determined.
-    """
-
-    healthy: tuple[OpenstackInstance, ...]
-    unhealthy: tuple[OpenstackInstance, ...]
-    unknown: tuple[OpenstackInstance, ...]
 
 
 class OpenStackRunnerManager(CloudRunnerManager):
@@ -158,7 +138,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def cleanup(self) -> None:
         """Cleanup runner and resource on the cloud."""
-        self._openstack_cloud.cleanup()
+        self._openstack_cloud.delete_expired_keys()
 
     def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> CloudRunnerInstance:
         """Build a new cloud runner instance from an openstack instance."""
