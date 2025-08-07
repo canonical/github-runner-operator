@@ -1,0 +1,202 @@
+18:25:43 WARNING unexpected facade SSHServer received from the controller
+18:25:43 INFO Adding model github-pr-a29fc-lxd:test-reactive-k0tp on cloud localhost
+18:25:43 WARNING unexpected facade SSHServer received from the controller
+18:25:43 WARNING unexpected facade SSHSession received from the controller
+18:25:43 WARNING unexpected facade SSHTunneler received from the controller
+18:25:44 INFO GitHub token rate limit: Rate(reset=2025-08-07 19:03:13+00:00, remaining=4998, limit=5000)
+18:25:48 INFO Deploying ch:amd64/jammy/mongodb-224
+18:25:50 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:26:12 INFO Deploying local:jammy/github-runner-0
+18:26:13 INFO Waiting for model:
+  test-rq4th2lt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rq4th2lt/0 [allocating] waiting: waiting for machine
+18:26:43 INFO Waiting for model:
+  test-rq4th2lt/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rq4th2lt/0 [allocating] waiting: waiting for machine
+18:27:13 INFO Waiting for model:
+  test-rq4th2lt/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rq4th2lt/0 [allocating] waiting: waiting for machine
+18:27:43 INFO Waiting for model:
+  test-rq4th2lt/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rq4th2lt/0 [allocating] waiting: waiting for machine
+18:28:14 INFO Waiting for model:
+  test-rq4th2lt/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rq4th2lt/0 [executing] maintenance: Setting up Builder.
+18:28:44 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] maintenance: Setting up Builder.
+18:29:14 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] maintenance: Setting up Builder.
+18:29:44 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] maintenance: Setting up Builder.
+18:30:15 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] maintenance: Setting up Builder.
+18:30:45 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] blocked: image integration required.
+18:31:15 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:31:45 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:32:15 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:32:46 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:33:16 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:33:47 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:35:18 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:36:19 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:36:49 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:37:20 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:37:50 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:38:20 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:38:51 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:39:21 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:39:51 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:40:22 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:40:52 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:41:22 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:41:52 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:42:22 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:42:53 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:43:23 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:43:53 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:44:23 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:44:53 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:45:23 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:45:53 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:46:24 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:46:54 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:47:24 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:47:55 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:48:25 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:48:55 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rq4th2lt/0 [executing] active: Building image.
+18:49:25 INFO Waiting for model:
+  test-rq4th2lt/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-rq4th2lt/0 [idle] active: 
+18:49:55 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:50:01 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:50:01 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:50:31 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:50:45 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:51:15 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:51:19 INFO Current reconcile ID: 8e5d9fac-96c9-4f58-926b-b03ffaca1924
+18:52:20 INFO Current reconcile ID: 8e5d9fac-96c9-4f58-926b-b03ffaca1924
+18:53:21 INFO Current reconcile ID: 6370ed3b-00fa-4b58-8f57-feaaf9672bd5
+18:53:25 INFO Wait for condition not met, sleeping 10
+18:53:46 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:54:02 INFO Current reconcile ID: 6370ed3b-00fa-4b58-8f57-feaaf9672bd5
+18:55:04 INFO Current reconcile ID: 6370ed3b-00fa-4b58-8f57-feaaf9672bd5
+18:56:05 INFO Current reconcile ID: b70169ef-56cc-4a01-90b8-80ff9d21661b
+18:56:05 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:56:21 INFO Current reconcile ID: b70169ef-56cc-4a01-90b8-80ff9d21661b
+18:57:22 INFO Current reconcile ID: b70169ef-56cc-4a01-90b8-80ff9d21661b
+18:58:23 INFO Current reconcile ID: da03a467-abbd-440c-a1e9-a056340fe0ab
+18:58:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754592892.0, "event": "runner_installed", "flavor": "test-rq4th2lt", "duration": 72.0}
+{"timestamp": 1754592896.0, "event": "runner_start", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 90.0}
+{"timestamp": 1754592898.0, "event": "runner_stop", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754592941.9215283, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.103182077407837}
+{"timestamp": 1754593078.123382, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.06150984764099}
+
+18:58:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754592892.0, "event": "runner_installed", "flavor": "test-rq4th2lt", "duration": 72.0}
+{"timestamp": 1754592896.0, "event": "runner_start", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 90.0}
+{"timestamp": 1754592898.0, "event": "runner_stop", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754592941.9215283, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.103182077407837}
+{"timestamp": 1754593078.123382, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.06150984764099}
+
+18:58:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754592892.0, "event": "runner_installed", "flavor": "test-rq4th2lt", "duration": 72.0}
+{"timestamp": 1754592896.0, "event": "runner_start", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 90.0}
+{"timestamp": 1754592898.0, "event": "runner_stop", "flavor": "test-rq4th2lt", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754592941.9215283, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.103182077407837}
+{"timestamp": 1754593078.123382, "event": "reconciliation", "flavor": "test-rq4th2lt", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.06150984764099}
+18:58:27 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:58:57 INFO Waiting for model:
+  test-rq4th2lt/0 [idle] active: 
+18:59:00 INFO Current reconcile ID: bc91ce98-4258-4062-a2b8-4ee889683f78
+19:00:01 INFO Current reconcile ID: bc91ce98-4258-4062-a2b8-4ee889683f78
+19:01:02 INFO Current reconcile ID: bc91ce98-4258-4062-a2b8-4ee889683f78
+19:02:03 INFO Current reconcile ID: 40a5c910-652b-4629-b0af-bf89a85a65e4

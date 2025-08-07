@@ -1,0 +1,77 @@
+18:47:31 INFO GitHub token rate limit: Rate(reset=2025-08-07 19:03:13+00:00, remaining=4779, limit=5000)
+18:47:35 INFO Waiting for model:
+  test-hhyis0pv/0 [idle] active: 
+18:48:05 INFO Waiting for model:
+  test-hhyis0pv/0 [idle] active: 
+18:48:09 INFO Current reconcile ID: 249de8af-6559-41f3-8a40-baab34c68974
+18:49:10 INFO Current reconcile ID: 249de8af-6559-41f3-8a40-baab34c68974
+18:50:11 INFO Current reconcile ID: 1cb0138a-4e1d-4f70-a000-73aa48b46f35
+18:50:19 INFO Wait for condition not met, sleeping 10
+18:50:30 INFO Waiting for model:
+  test-hhyis0pv/0 [idle] active: 
+18:51:00 INFO Waiting for model:
+  test-hhyis0pv/0 [idle] active: 
+18:51:04 INFO Current reconcile ID: 1bb91e82-059e-4c6f-84c4-10837d522e55
+18:52:05 INFO Current reconcile ID: 1bb91e82-059e-4c6f-84c4-10837d522e55
+18:53:06 INFO Current reconcile ID: 1bb91e82-059e-4c6f-84c4-10837d522e55
+18:54:07 INFO Current reconcile ID: 6b685a0d-c77d-44bb-b683-2d40cf00b82e
+18:54:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754592558.0, "event": "runner_installed", "flavor": "test-hhyis0pv", "duration": 89.0}
+{"timestamp": 1754592622.0, "event": "runner_start", "flavor": "test-hhyis0pv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 64.0, "queue_duration": 1.0}
+{"timestamp": 1754592624.0, "event": "runner_stop", "flavor": "test-hhyis0pv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754592657.1425383, "event": "reconciliation", "flavor": "test-hhyis0pv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.240551233291626}
+{"timestamp": 1754592787.6226785, "event": "reconciliation", "flavor": "test-hhyis0pv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.332515001296997}
+18:54:09 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-x7ti  github-pr-a29fc-lxd  localhost/localhost  3.6.8    unsupported  18:54:09Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-hhyis0pv           active      1  github-runner-image-builder  latest/edge  100  no       
+test-hhyis0pv                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hhyis0pv/0*  active    idle   0        10.41.140.195          
+test-hhyis0pv/0*                         active    idle   1        10.41.140.231          
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.41.140.195  juju-06c5e9-0  ubuntu@22.04      Running
+1        started  10.41.140.231  juju-06c5e9-1  ubuntu@22.04      Running
+
+18:54:10 INFO Juju error logs:
+
+machine-0: 18:26:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-hhyis0pv-0: 18:26:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:58 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:58 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hhyis0pv-0: 18:26:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-hhyis0pv-0: 18:27:37 ERROR unit.github-runner-image-builder-hhyis0pv/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-hhyis0pv-0: 18:28:15 ERROR unit.test-hhyis0pv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hhyis0pv-0: 18:28:18 ERROR unit.test-hhyis0pv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hhyis0pv-0: 18:29:34 ERROR unit.test-hhyis0pv/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hhyis0pv-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:54:10 INFO Forgetting model main...
