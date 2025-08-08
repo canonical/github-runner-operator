@@ -1,0 +1,94 @@
+06:54:16 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+06:54:47 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+06:54:50 INFO Current reconcile ID: 7f845e2a-f88c-4b68-bddf-88c5efcd8498
+06:55:51 INFO Current reconcile ID: 7f845e2a-f88c-4b68-bddf-88c5efcd8498
+06:56:52 INFO Current reconcile ID: f04b1868-f3c8-4f1d-8ce9-cffea723367a
+06:56:52 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+06:57:22 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+06:57:38 INFO Current reconcile ID: b31618f4-2933-4169-857e-e735597a42bf
+06:58:39 INFO Current reconcile ID: b31618f4-2933-4169-857e-e735597a42bf
+06:59:40 INFO Current reconcile ID: ba8eb94c-a06a-4e2a-a69b-4c208a3236c7
+06:59:50 INFO Wait for condition not met, sleeping 30
+07:00:34 INFO [TEST SETUP] Run command pkill -9 run.sh on test-m3hfjv7p-0-n-6846dd9035c2
+07:00:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.6', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:67:87:fd'}]])
+07:00:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-m3hfjv7p-0-n-6846dd9035c2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.6 pkill -9 run.sh'
+07:00:36 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.6' (ED25519) to the list of known hosts.
+'
+07:00:40 INFO Runner test-m3hfjv7p-0-n-6846dd9035c2 status: online
+07:00:40 INFO Runner still marked as online, waiting for it to be marked offline
+07:01:42 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+07:02:12 INFO Waiting for model:
+  test-m3hfjv7p/0 [idle] active: 
+07:02:15 INFO Current reconcile ID: 45955cc3-a75c-400d-b7e2-f4dc18a814d3
+07:03:16 INFO Current reconcile ID: 45955cc3-a75c-400d-b7e2-f4dc18a814d3
+07:04:17 INFO Current reconcile ID: 01cef301-627f-4962-9193-571235c4b152
+07:04:19 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754636071.6673362, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.035059928894043}
+{"timestamp": 1754636203.5400326, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.730288982391357}
+{"timestamp": 1754636230.9990761, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 15.902235984802246}
+{"timestamp": 1754636363.243997, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.15149712562561}
+{"timestamp": 1754636299.0, "event": "runner_installed", "flavor": "test-m3hfjv7p", "duration": 72.0}
+{"timestamp": 1754636391.0, "event": "runner_start", "flavor": "test-m3hfjv7p", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 92.0, "queue_duration": 1.0}
+{"timestamp": 1754636436.0, "event": "runner_stop", "flavor": "test-m3hfjv7p", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 45.0, "job_conclusion": "cancelled"}
+{"timestamp": 1754636503.2719839, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 19.89348840713501}
+{"timestamp": 1754636516.6622891, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.87202525138855}
+{"timestamp": 1754636647.9078007, "event": "reconciliation", "flavor": "test-m3hfjv7p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.15700912475586}
+07:04:20 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-tgrj  github-pr-b2250-lxd  localhost/localhost  3.6.8    unsupported  07:04:20Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-m3hfjv7p           active      1  github-runner-image-builder  latest/edge  100  no       
+test-m3hfjv7p                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-m3hfjv7p/0*  active    idle   0        10.66.248.19              
+test-m3hfjv7p/0*                         active    idle   1        10.66.248.102   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.66.248.19   juju-8b9d1d-0  ubuntu@22.04      Running
+1        started  10.66.248.102  juju-8b9d1d-1  ubuntu@22.04      Running
+
+07:04:20 INFO Juju error logs:
+
+machine-0: 06:28:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-m3hfjv7p-0: 06:28:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-m3hfjv7p-0: 06:28:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-m3hfjv7p-0: 06:29:01 ERROR unit.github-runner-image-builder-m3hfjv7p/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-m3hfjv7p-0: 06:29:38 ERROR unit.test-m3hfjv7p/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-m3hfjv7p-0: 06:29:41 ERROR unit.test-m3hfjv7p/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-m3hfjv7p-0: 06:31:05 ERROR unit.test-m3hfjv7p/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-m3hfjv7p-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:04:20 INFO Forgetting model main...

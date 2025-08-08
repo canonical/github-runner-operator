@@ -1,0 +1,93 @@
+07:04:53 INFO Waiting for model:
+  test-lbymyr73/0 [idle] active: 
+07:05:23 INFO Waiting for model:
+  test-lbymyr73/0 [idle] active: 
+07:05:26 INFO Current reconcile ID: f4884445-fb8e-46da-b27f-7951fe1f75c8
+07:06:27 INFO Current reconcile ID: f4884445-fb8e-46da-b27f-7951fe1f75c8
+07:07:28 INFO Current reconcile ID: 158be4e8-bbcb-4e9e-ad72-4ad011067eb9
+07:07:36 INFO [TEST SETUP] Exposing port 8080 on test-lbymyr73-0-n-445bdc348a18
+07:07:36 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.100', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4b:e0:7e'}]])
+07:07:37 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-lbymyr73-0-n-445bdc348a18.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.100 &
+07:07:38 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.100' (ED25519) to the list of known hosts.
+
+07:07:40 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-lbymyr73-0-n-445bdc348a18
+07:07:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.100', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4b:e0:7e'}]])
+07:07:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-lbymyr73-0-n-445bdc348a18.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.100 nc -z localhost 8080'
+07:07:43 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:07:44 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-lbymyr73-0-n-445bdc348a18
+07:07:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.100', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:4b:e0:7e'}]])
+07:07:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-lbymyr73-0-n-445bdc348a18.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.100 curl http://localhost:8080'
+07:07:46 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  55735      0 --:--:-- --:--:-- --:--:-- 69000
+'
+07:07:48 INFO Wait for condition not met, sleeping 10
+07:07:59 INFO Waiting for model:
+  test-lbymyr73/0 [idle] active: 
+07:08:29 INFO Waiting for model:
+  test-lbymyr73/0 [idle] active: 
+07:08:32 INFO Current reconcile ID: 35cef1ff-47e8-4fa8-aec8-67ba24183020
+07:09:33 INFO Current reconcile ID: 35cef1ff-47e8-4fa8-aec8-67ba24183020
+07:10:34 INFO Current reconcile ID: 35cef1ff-47e8-4fa8-aec8-67ba24183020
+07:11:36 INFO Current reconcile ID: 8efe0dd0-0e56-4bc0-a70d-58421ce23217
+07:11:37 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-tl8w  github-pr-b2250-lxd  localhost/localhost  3.6.8    unsupported  07:11:37Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-lbymyr73           active      1  github-runner-image-builder  latest/edge  100  no       
+test-lbymyr73                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-lbymyr73/0*  active    idle   0        10.15.3.58                
+test-lbymyr73/0*                         active    idle   1        10.15.3.77      8080/tcp  
+
+Machine  State    Address     Inst id        Base          AZ  Message
+0        started  10.15.3.58  juju-a01889-0  ubuntu@22.04      Running
+1        started  10.15.3.77  juju-a01889-1  ubuntu@22.04      Running
+
+07:11:37 INFO Juju error logs:
+
+machine-0: 06:27:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-lbymyr73-0: 06:27:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-lbymyr73-0: 06:27:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-lbymyr73-0: 06:28:11 ERROR unit.github-runner-image-builder-lbymyr73/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-lbymyr73-0: 06:28:50 ERROR unit.test-lbymyr73/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-lbymyr73-0: 06:28:53 ERROR unit.test-lbymyr73/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-lbymyr73-0: 06:30:14 ERROR unit.test-lbymyr73/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-lbymyr73-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:11:37 INFO Forgetting model main...
