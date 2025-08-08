@@ -107,7 +107,7 @@ class RunnerInstance:
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
             platform_state=(
-                PlatformRunnerState.from_platform_health(platform_health_state)
+                PlatformRunnerState.from_platform_health(health=platform_health_state)
                 if platform_health_state is not None
                 else None
             ),
@@ -193,7 +193,8 @@ class RunnerManager:
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         return tuple(
             RunnerInstance.from_cloud_and_platform_health(
-                cloud_runner, health_runners_map.get(cloud_runner.instance_id, None)
+                cloud_instance=cloud_runner,
+                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
             )
             for cloud_runner in cloud_runners
         )
