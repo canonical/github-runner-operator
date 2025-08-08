@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  stg-private-endpoint:
+  stg-private-endpoint-ps7:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, stg-private-endpoint]
+    runs-on: [self-hosted, stg-private-endpoint-ps7]
     steps:
       - run: lscpu
       - run: df -h
