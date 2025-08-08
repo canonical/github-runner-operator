@@ -4,11 +4,11 @@ This guide demonstrates the process of integrating with the [Canonical Observabi
 
 The `cos-agent` integration can be consumed by the [grafana-agent](https://charmhub.io/grafana-agent) charm, which is responsible for transmitting logs, Prometheus metrics, and Grafana dashboards to the COS stack.
 
-> NOTE: The Github Runner charm and `grafana-agent` charm function as machine charms, while the COS stack contains Kubernetes charms. Therefore, establishing [cross-model integrations](https://juju.is/docs/juju/manage-cross-model-integrations) is necessary, along with potential firewall rule configurations to allow inter-model traffic.
+> NOTE: The GitHub Runner charm and `grafana-agent` charm function as machine charms, while the COS stack contains Kubernetes charms. Therefore, establishing [cross-model integrations](https://juju.is/docs/juju/manage-cross-model-integrations) is necessary, along with potential firewall rule configurations to allow inter-model traffic.
 
 
 ## Requirements 
-1. Deploy the Github Runner Charm with the application name `github-runner` in the `machine-model`.
+1. Deploy the GitHub Runner Charm with the application name `github-runner` in the `machine-model`.
 2. Deploy the COS stack on a Kubernetes cloud (refer to [this tutorial](https://charmhub.io/topics/canonical-observability-stack/tutorials/install-microk8s)).
    - Ensure `loki`, `prometheus`, `grafana`, and `traefik` charms are deployed within a model named `k8s-model`.
    - Integration between `loki` and `traefik` is required to enable `grafana-agent` to transmit logs by setting a public IP for the Loki service accessible from the machine cloud.
@@ -21,7 +21,7 @@ The `cos-agent` integration can be consumed by the [grafana-agent](https://charm
    juju switch machine-model
    juju deploy grafana-agent --channel latest/edge
    ```
-2. Integrate the `grafana-agent` charm with the Github Runner charm.
+2. Integrate the `grafana-agent` charm with the GitHub Runner charm.
    ```shell
    juju integrate github-runner grafana-agent
    ```

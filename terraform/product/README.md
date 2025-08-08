@@ -1,4 +1,6 @@
-# Github Runner Terraform Modules
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
+# Github runner Terraform modules
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 This project contains the [Terraform][Terraform] modules to deploy a list of [Github runner][Github runner charm] charms
 integrated with one [Github runner image builder][Github runner image builder charm] charm.

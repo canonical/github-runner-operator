@@ -1,4 +1,4 @@
-# SSH Debug
+# SSH debug
 
 SSH debugging allows a user to identify and resolve issues or errors that occur through the secure
 shell (SSH) connection between a client and a server.

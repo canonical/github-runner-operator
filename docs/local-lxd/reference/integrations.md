@@ -2,7 +2,7 @@
 
 This is a list of relations supported by the GitHub Runner charm.
 
-## debug-ssh
+## `debug-ssh`
 
 _Interface_: debug-ssh    
 _Supported charms_: [tmate-ssh-server](https://charmhub.io/tmate-ssh-server)
