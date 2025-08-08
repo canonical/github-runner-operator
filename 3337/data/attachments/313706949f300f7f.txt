@@ -1,0 +1,180 @@
+18:26:35 WARNING unexpected facade SSHServer received from the controller
+18:26:35 INFO Adding model github-pr-b2250-lxd:test-reactive-w0w4 on cloud localhost
+18:26:35 WARNING unexpected facade SSHServer received from the controller
+18:26:35 WARNING unexpected facade SSHSession received from the controller
+18:26:35 WARNING unexpected facade SSHTunneler received from the controller
+18:26:36 INFO GitHub token rate limit: Rate(reset=2025-08-08 18:52:06+00:00, remaining=4994, limit=5000)
+18:26:41 INFO Deploying ch:amd64/jammy/mongodb-224
+18:26:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:27:09 INFO Deploying local:jammy/github-runner-0
+18:27:10 INFO Waiting for model:
+  test-vi5039w0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vi5039w0/0 [allocating] waiting: waiting for machine
+18:27:40 INFO Waiting for model:
+  test-vi5039w0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vi5039w0/0 [allocating] waiting: waiting for machine
+18:28:10 INFO Waiting for model:
+  test-vi5039w0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vi5039w0/0 [allocating] waiting: waiting for machine
+18:28:40 INFO Waiting for model:
+  test-vi5039w0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vi5039w0/0 [allocating] waiting: waiting for machine
+18:29:11 INFO Waiting for model:
+  test-vi5039w0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vi5039w0/0 [allocating] waiting: installing agent
+18:29:41 INFO Waiting for model:
+  test-vi5039w0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:30:11 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:30:42 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:31:12 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:31:42 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:32:12 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] maintenance: Setting up Builder.
+18:32:43 INFO Waiting for model:
+  test-vi5039w0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Waiting for first image.
+18:33:13 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:33:43 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:34:14 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:34:44 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:35:15 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:35:45 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:36:15 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:36:46 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:37:16 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:37:46 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:38:17 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:38:47 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:39:18 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:39:48 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:40:18 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:40:49 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:41:19 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:41:49 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:42:20 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:42:50 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:43:20 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:43:51 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:44:21 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:44:52 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:45:22 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:45:52 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:46:23 INFO Waiting for model:
+  test-vi5039w0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: Building image.
+18:46:53 INFO Waiting for model:
+  test-vi5039w0/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-vi5039w0/0 [executing] active: 
+18:47:24 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:47:37 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:47:37 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:48:08 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+  mongodb/0 [executing] active: Primary.
+18:48:30 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:49:00 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:49:04 INFO Current reconcile ID: 0d4a671c-3b33-4164-8179-ef755b489325
+18:50:05 INFO Current reconcile ID: 0d4a671c-3b33-4164-8179-ef755b489325
+18:51:06 INFO Current reconcile ID: 51a119cd-2705-40ec-8d8d-6ba27043e922
+18:51:10 INFO Wait for condition not met, sleeping 10
+18:51:31 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:51:48 INFO Current reconcile ID: 51a119cd-2705-40ec-8d8d-6ba27043e922
+18:52:49 INFO Current reconcile ID: 51a119cd-2705-40ec-8d8d-6ba27043e922
+18:53:50 INFO Current reconcile ID: 6733043d-19a7-4719-b806-37fd7046417e
+18:53:50 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:54:07 INFO Current reconcile ID: 6733043d-19a7-4719-b806-37fd7046417e
+18:55:08 INFO Current reconcile ID: 6733043d-19a7-4719-b806-37fd7046417e
+18:56:09 INFO Current reconcile ID: d917d413-0ffa-47fb-b3fc-bdb40ecead6f
+18:56:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754679200.7810874, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.925347805023193}
+{"timestamp": 1754679183.0, "event": "runner_installed", "flavor": "test-vi5039w0", "duration": 98.0}
+{"timestamp": 1754679191.0, "event": "runner_start", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 8.0, "queue_duration": 118.0}
+{"timestamp": 1754679194.0, "event": "runner_stop", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1754679348.1376526, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.185264110565186}
+
+18:56:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754679200.7810874, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.925347805023193}
+{"timestamp": 1754679183.0, "event": "runner_installed", "flavor": "test-vi5039w0", "duration": 98.0}
+{"timestamp": 1754679191.0, "event": "runner_start", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 8.0, "queue_duration": 118.0}
+{"timestamp": 1754679194.0, "event": "runner_stop", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1754679348.1376526, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.185264110565186}
+
+18:56:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754679200.7810874, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.925347805023193}
+{"timestamp": 1754679183.0, "event": "runner_installed", "flavor": "test-vi5039w0", "duration": 98.0}
+{"timestamp": 1754679191.0, "event": "runner_start", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 8.0, "queue_duration": 118.0}
+{"timestamp": 1754679194.0, "event": "runner_stop", "flavor": "test-vi5039w0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1754679348.1376526, "event": "reconciliation", "flavor": "test-vi5039w0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.185264110565186}
+18:56:12 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:56:42 INFO Waiting for model:
+  test-vi5039w0/0 [idle] active: 
+18:56:47 INFO Current reconcile ID: 46710b5f-0098-4762-8d26-c6b0f7ebdec8
+18:57:48 INFO Current reconcile ID: 46710b5f-0098-4762-8d26-c6b0f7ebdec8
+18:58:50 INFO Current reconcile ID: ca500eb9-a425-469c-b3c2-a5e080650374
