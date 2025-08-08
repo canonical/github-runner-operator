@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  medium-amd64:
+  stg-private-endpoint:
     strategy:
       fail-fast: false
       matrix:
