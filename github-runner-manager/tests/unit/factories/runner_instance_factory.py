@@ -8,13 +8,10 @@ from datetime import datetime, timezone
 
 import factory
 
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerState,
-)
-from github_runner_manager.manager.cloud_runner_manager import HealthState as CloudHelathState
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerInstance
+from github_runner_manager.manager.vm_manager import CloudRunnerInstance, CloudRunnerState
+from github_runner_manager.manager.vm_manager import HealthState as CloudHelathState
 from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     PlatformRunnerState,

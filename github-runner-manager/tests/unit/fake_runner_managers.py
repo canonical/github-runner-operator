@@ -6,16 +6,13 @@ from unittest.mock import MagicMock
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-)
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
     RunnerMetadata,
 )
+from github_runner_manager.manager.vm_manager import CloudRunnerInstance, CloudRunnerManager
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.openstack_cloud import _MAX_NOVA_COMPUTE_API_VERSION
 from github_runner_manager.platform.platform_provider import (

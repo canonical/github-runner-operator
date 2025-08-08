@@ -5,7 +5,7 @@
 
 import factory
 
-from github_runner_manager.manager.cloud_runner_manager import CodeInformation
+from github_runner_manager.manager.vm_manager import CodeInformation
 from github_runner_manager.metrics.events import Event, RunnerInstalled, RunnerStop
 
 

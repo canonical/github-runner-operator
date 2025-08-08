@@ -17,12 +17,8 @@ from fabric import Connection as SSHConnection
 from pydantic import ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
-from github_runner_manager.manager.cloud_runner_manager import (
-    PostJobMetrics,
-    PreJobMetrics,
-    RunnerMetrics,
-)
 from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.vm_manager import PostJobMetrics, PreJobMetrics, RunnerMetrics
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.openstack_cloud.constants import (
