@@ -14,12 +14,7 @@ from typing import Iterable, Iterator, Sequence, Type, cast
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
-from github_runner_manager.manager.vm_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-    CloudRunnerState,
-    HealthState,
-)
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
@@ -78,12 +73,12 @@ class RunnerInstance:
     metadata: RunnerMetadata
     health: HealthState
     platform_state: PlatformRunnerState | None
-    cloud_state: CloudRunnerState
+    cloud_state: VMState
 
     @classmethod
     def from_cloud_and_platform_health(
         cls,
-        cloud_instance: CloudRunnerInstance,
+        cloud_instance: VM,
         platform_health_state: PlatformRunnerHealth | None,
     ) -> "RunnerInstance":
         """Construct an instance.
@@ -96,7 +91,7 @@ class RunnerInstance:
             The RunnerInstance instantiated from cloud instance and platform state.
         """
         return cls(
-            name=cloud_instance.name,
+            name=cloud_instance.instance_id.name,
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
             health=cloud_instance.health,
@@ -317,7 +312,7 @@ class RunnerManager:
 
     def _delete_cloud_runners(
         self,
-        cloud_runners: Sequence[CloudRunnerInstance],
+        cloud_runners: Sequence[VM],
         runners_health: Sequence[PlatformRunnerHealth],
         delete_busy_runners: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
@@ -551,7 +546,7 @@ class RunnerManager:
 
 
 def _filter_runner_to_delete(
-    cloud_runner: CloudRunnerInstance,
+    cloud_runner: VM,
     health: PlatformRunnerHealth | None,
     *,
     clean_idle: bool = False,
@@ -598,7 +593,7 @@ def _filter_runner_to_delete(
 
 
 def _runner_deletion_sort_key(
-    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: CloudRunnerInstance
+    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: VM
 ) -> int:
     """Order the runners in accordance to how inconvenient it is to delete them.
 

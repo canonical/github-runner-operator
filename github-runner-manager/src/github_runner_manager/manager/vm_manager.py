@@ -36,7 +36,7 @@ class HealthState(Enum):
     UNKNOWN = auto()
 
 
-class CloudRunnerState(str, Enum):
+class VMState(str, Enum):
     """Represent state of the instance hosting the runner.
 
     Attributes:
@@ -61,7 +61,7 @@ class CloudRunnerState(str, Enum):
     @staticmethod
     def from_openstack_server_status(  # pragma: no cover
         openstack_server_status: str,
-    ) -> "CloudRunnerState":
+    ) -> "VMState":
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -73,33 +73,32 @@ class CloudRunnerState(str, Enum):
         Returns:
             The state of the runner.
         """
-        state = CloudRunnerState.UNEXPECTED
+        state = VMState.UNEXPECTED
         match openstack_server_status:
             case "BUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "REBUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "ACTIVE":
-                state = CloudRunnerState.ACTIVE
+                state = VMState.ACTIVE
             case "ERROR":
-                state = CloudRunnerState.ERROR
+                state = VMState.ERROR
             case "STOPPED":
-                state = CloudRunnerState.STOPPED
+                state = VMState.STOPPED
             case "DELETED":
-                state = CloudRunnerState.DELETED
+                state = VMState.DELETED
             case "UNKNOWN":
-                state = CloudRunnerState.UNKNOWN
+                state = VMState.UNKNOWN
             case _:
-                state = CloudRunnerState.UNEXPECTED
+                state = VMState.UNEXPECTED
         return state
 
 
 @dataclass
-class CloudRunnerInstance:
+class VM:
     """Information on the runner on the cloud.
 
     Attributes:
-        name: Name of the instance hosting the runner.
         instance_id: ID of the instance.
         metadata: Metadata of the runner.
         health: Health state of the runner.
@@ -107,11 +106,10 @@ class CloudRunnerInstance:
         created_at: Creation time of the runner in the cloud provider.
     """
 
-    name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
     health: HealthState
-    state: CloudRunnerState
+    state: VMState
     created_at: datetime
 
     def is_older_than(self, seconds: float) -> bool:
@@ -221,7 +219,7 @@ class CloudRunnerManager(abc.ABC):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -230,7 +228,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[VM]:
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod

@@ -10,8 +10,9 @@ import factory
 
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerInstance
-from github_runner_manager.manager.vm_manager import CloudRunnerInstance, CloudRunnerState
+from github_runner_manager.manager.vm_manager import VM
 from github_runner_manager.manager.vm_manager import HealthState as CloudHelathState
+from github_runner_manager.manager.vm_manager import VMState
 from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     PlatformRunnerState,
@@ -63,17 +64,16 @@ class CloudRunnerInstanceFactory(factory.Factory):
             model: The metadata reference model.
         """
 
-        model = CloudRunnerInstance
+        model = VM
 
-    name = factory.Faker("word")
     instance_id = factory.SubFactory(InstanceIDFactory)
     metadata = factory.SubFactory(RunnerMetadataFactory)
     health = CloudHelathState.HEALTHY
-    state = CloudRunnerState.ACTIVE
+    state = VMState.ACTIVE
     created_at = factory.LazyFunction(lambda: datetime.now(tz=timezone.utc))
 
     @classmethod
-    def from_self_hosted_runner(cls, self_hosted_runner: SelfHostedRunner) -> CloudRunnerInstance:
+    def from_self_hosted_runner(cls, self_hosted_runner: SelfHostedRunner) -> VM:
         """Construct CloudRunnerInstance associated to self hosted runner.
 
         Args:
@@ -142,11 +142,11 @@ class RunnerInstanceFactory(factory.Factory):
     platform_state = platform_state = factory.LazyFunction(
         lambda: secrets.choice(list(PlatformRunnerState))
     )
-    cloud_state = CloudRunnerState.ACTIVE
+    cloud_state = VMState.ACTIVE
 
     @classmethod
     def from_state(
-        cls, cloud_runner: CloudRunnerInstance, platform_health: PlatformRunnerHealth | None = None
+        cls, cloud_runner: VM, platform_health: PlatformRunnerHealth | None = None
     ) -> RunnerInstance:
         """Generate RunnerInstance from cloud runner and platform runner states.
 
@@ -158,7 +158,7 @@ class RunnerInstanceFactory(factory.Factory):
             The generated RunnerInstance.
         """
         return RunnerInstance(
-            name=cloud_runner.name,
+            name=cloud_runner.instance_id.name,
             instance_id=cloud_runner.instance_id,
             metadata=cloud_runner.metadata,
             health=cloud_runner.health,
