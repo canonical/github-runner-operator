@@ -1,0 +1,130 @@
+18:24:20 WARNING unexpected facade SSHServer received from the controller
+18:24:20 INFO Adding model github-pr-196a7-lxd:test-charm-metrics-success-wto3 on cloud localhost
+18:24:20 WARNING unexpected facade SSHServer received from the controller
+18:24:20 WARNING unexpected facade SSHSession received from the controller
+18:24:20 WARNING unexpected facade SSHTunneler received from the controller
+18:24:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:24:43 INFO Deploying local:jammy/github-runner-0
+18:24:43 INFO Waiting for model:
+  test-b2kgmgmq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b2kgmgmq/0 [allocating] waiting: waiting for machine
+18:25:13 INFO Waiting for model:
+  test-b2kgmgmq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b2kgmgmq/0 [allocating] waiting: waiting for machine
+18:25:43 INFO Waiting for model:
+  test-b2kgmgmq/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-b2kgmgmq/0 [executing] maintenance: Setting up Builder.
+18:26:13 INFO Waiting for model:
+  test-b2kgmgmq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b2kgmgmq/0 [executing] maintenance: Setting up Builder.
+18:26:44 INFO Waiting for model:
+  test-b2kgmgmq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b2kgmgmq/0 [executing] maintenance: Setting up Builder.
+18:27:14 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] maintenance: Setting up Builder.
+18:27:44 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] maintenance: Setting up Builder.
+18:28:15 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] blocked: image integration required.
+18:28:45 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:29:15 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:29:45 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:30:15 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:30:46 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:31:16 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:31:46 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:32:16 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:32:46 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:33:16 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:33:46 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:35:17 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:35:47 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:36:48 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:37:18 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:37:48 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:38:18 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:38:48 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:39:19 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:39:49 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:40:19 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:40:49 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b2kgmgmq/0 [executing] active: Building image.
+18:41:20 INFO Waiting for model:
+  test-b2kgmgmq/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-b2kgmgmq/0 [idle] active: 
+18:41:50 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active:
+18:42:01 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:42:31 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:42:35 INFO Current reconcile ID: 7ee66624-5403-4a19-b9d5-4f4f3c3a8756
+18:43:37 INFO Current reconcile ID: 7ee66624-5403-4a19-b9d5-4f4f3c3a8756
+18:44:38 INFO Current reconcile ID: 08ddcdbe-9dcb-45d7-97aa-ad1474e1fe43
+18:44:43 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:45:13 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:45:16 INFO Current reconcile ID: 2411f23c-3c4d-485f-86ac-ebdc363f3d7e
+18:46:17 INFO Current reconcile ID: 2411f23c-3c4d-485f-86ac-ebdc363f3d7e
+18:47:18 INFO Current reconcile ID: 497841e2-d794-48db-8401-e462cb2acd10
+18:47:19 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754764939.1660042, "event": "reconciliation", "flavor": "test-b2kgmgmq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 15.216280460357666}
+{"timestamp": 1754765069.1517115, "event": "reconciliation", "flavor": "test-b2kgmgmq", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 9.92224669456482}
+{"timestamp": 1754765031.0, "event": "runner_installed", "flavor": "test-b2kgmgmq", "duration": 96.0}
+{"timestamp": 1754765106.2084796, "event": "reconciliation", "flavor": "test-b2kgmgmq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.63283610343933}
+{"timestamp": 1754765236.1660612, "event": "reconciliation", "flavor": "test-b2kgmgmq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.864684104919434}

@@ -1,0 +1,74 @@
+18:47:19 INFO GitHub token rate limit: Rate(reset=2025-08-09 19:24:20+00:00, remaining=4574, limit=5000)
+18:47:24 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:47:54 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:47:59 INFO Current reconcile ID: 3d3ec924-3bb3-4389-a7e2-4d34aa9d2b9d
+18:49:00 INFO Current reconcile ID: 3d3ec924-3bb3-4389-a7e2-4d34aa9d2b9d
+18:50:01 INFO Current reconcile ID: 76aff6d7-78a7-4896-a155-791f9cf8c88f
+18:50:10 INFO Wait for condition not met, sleeping 10
+18:50:21 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:50:51 INFO Waiting for model:
+  test-b2kgmgmq/0 [idle] active: 
+18:50:54 INFO Current reconcile ID: 3f172b5a-f8b3-4791-a462-b865a36b2eee
+18:51:55 INFO Current reconcile ID: 4acf8078-8f91-4a76-bbf2-8a2c98791e1b
+18:51:57 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754765326.0, "event": "runner_installed", "flavor": "test-b2kgmgmq", "duration": 68.0}
+{"timestamp": 1754765413.0, "event": "runner_start", "flavor": "test-b2kgmgmq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 87.0, "queue_duration": 1.0}
+{"timestamp": 1754765415.0, "event": "runner_stop", "flavor": "test-b2kgmgmq", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754765456.3607585, "event": "reconciliation", "flavor": "test-b2kgmgmq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 32.40955114364624}
+18:51:58 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-wto3  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  18:51:58Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-b2kgmgmq           active      1  github-runner-image-builder  latest/edge  100  no       
+test-b2kgmgmq                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-b2kgmgmq/0*  active    idle   0        10.188.79.3            
+test-b2kgmgmq/0*                         active    idle   1        10.188.79.11           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.188.79.3   juju-1aca8b-0  ubuntu@22.04      Running
+1        started  10.188.79.11  juju-1aca8b-1  ubuntu@22.04      Running
+
+18:51:58 INFO Juju error logs:
+
+machine-0: 18:25:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-b2kgmgmq-0: 18:25:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-b2kgmgmq-0: 18:25:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-b2kgmgmq-0: 18:26:17 ERROR unit.github-runner-image-builder-b2kgmgmq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-b2kgmgmq-0: 18:26:55 ERROR unit.test-b2kgmgmq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-b2kgmgmq-0: 18:26:58 ERROR unit.test-b2kgmgmq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-b2kgmgmq-0: 18:28:10 ERROR unit.test-b2kgmgmq/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-b2kgmgmq-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:51:58 INFO Forgetting model main...

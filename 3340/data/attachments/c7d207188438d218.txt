@@ -1,0 +1,146 @@
+18:24:39 INFO GitHub token rate limit: Rate(reset=2025-08-09 19:24:20+00:00, remaining=4996, limit=5000)
+18:24:53 WARNING unexpected facade SSHServer received from the controller
+18:24:53 INFO Adding model github-pr-196a7-lxd:test-charm-metrics-failure-mdo2 on cloud localhost
+18:24:53 WARNING unexpected facade SSHServer received from the controller
+18:24:53 WARNING unexpected facade SSHSession received from the controller
+18:24:53 WARNING unexpected facade SSHTunneler received from the controller
+18:24:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:25:17 INFO Deploying local:jammy/github-runner-0
+18:25:17 INFO Waiting for model:
+  test-w8i76mve/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w8i76mve/0 [allocating] waiting: waiting for machine
+18:25:47 INFO Waiting for model:
+  test-w8i76mve/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w8i76mve/0 [allocating] waiting: waiting for machine
+18:26:17 INFO Waiting for model:
+  test-w8i76mve/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-w8i76mve/0 [allocating] waiting: agent initialising
+18:26:48 INFO Waiting for model:
+  test-w8i76mve/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w8i76mve/0 [executing] maintenance: Setting up Builder.
+18:27:18 INFO Waiting for model:
+  test-w8i76mve/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w8i76mve/0 [executing] maintenance: Setting up Builder.
+18:27:48 INFO Waiting for model:
+  test-w8i76mve/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w8i76mve/0 [executing] maintenance: Setting up Builder.
+18:28:18 INFO Waiting for model:
+  test-w8i76mve/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w8i76mve/0 [executing] maintenance: Setting up Builder.
+18:28:48 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] blocked: image integration required.
+18:29:19 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:29:49 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:30:19 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:30:49 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:31:19 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:32:20 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:32:50 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:33:20 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:33:51 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:34:21 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:34:51 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:35:21 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:35:51 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:36:21 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:36:51 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:37:22 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:37:52 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:38:22 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:38:53 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:39:23 INFO Waiting for model:
+  test-w8i76mve/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w8i76mve/0 [executing] active: Building image.
+18:39:53 INFO Waiting for model:
+  test-w8i76mve/0 [executing] maintenance: Update image for runners
+18:40:18 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:40:48 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:40:52 INFO Current reconcile ID: 502efd8f-97bb-437d-8402-43f0ff955c93
+18:41:53 INFO Current reconcile ID: 502efd8f-97bb-437d-8402-43f0ff955c93
+18:42:54 INFO Current reconcile ID: 404fe662-b5e6-43bd-8966-5e552208b2a0
+18:43:51 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:44:21 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:44:24 INFO Current reconcile ID: 9d5c03c5-26fe-4422-8112-5b3cde121e4a
+18:45:25 INFO Current reconcile ID: 9d5c03c5-26fe-4422-8112-5b3cde121e4a
+18:46:26 INFO Current reconcile ID: c89651c8-a18b-46fd-9e72-9a1894d28e4a
+18:46:33 INFO [TEST SETUP] Exposing port 8080 on test-w8i76mve-0-n-e6fb0276e5b6
+18:46:33 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1b:a7:82'}]])
+18:46:34 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-w8i76mve-0-n-e6fb0276e5b6.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.108 &
+18:46:35 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.108' (ED25519) to the list of known hosts.
+
+18:46:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-w8i76mve-0-n-e6fb0276e5b6
+18:46:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1b:a7:82'}]])
+18:46:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-w8i76mve-0-n-e6fb0276e5b6.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.108 nc -z localhost 8080'
+18:46:40 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:46:41 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-w8i76mve-0-n-e6fb0276e5b6
+18:46:41 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.108', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1b:a7:82'}]])
+18:46:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-w8i76mve-0-n-e6fb0276e5b6.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.108 curl http://localhost:8080'
+18:46:43 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  75327      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:46:46 INFO Wait for condition not met, sleeping 10
+18:46:57 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:47:27 INFO Waiting for model:
+  test-w8i76mve/0 [idle] active: 
+18:47:31 INFO Current reconcile ID: 6d46a584-c293-4fc5-a100-40016c85a325
+18:48:32 INFO Current reconcile ID: 6d46a584-c293-4fc5-a100-40016c85a325
+18:49:33 INFO Current reconcile ID: d4c7fbcd-4d1e-43bb-9510-577a0a1c7ec1
+18:49:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754765117.0, "event": "runner_installed", "flavor": "test-w8i76mve", "duration": 73.0}
+{"timestamp": 1754765209.0, "event": "runner_start", "flavor": "test-w8i76mve", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 92.0, "queue_duration": 1.0}
+{"timestamp": 1754765209.0, "event": "runner_stop", "flavor": "test-w8i76mve", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1754765238.9541168, "event": "reconciliation", "flavor": "test-w8i76mve", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.815269947052002}
+{"timestamp": 1754765370.4122794, "event": "reconciliation", "flavor": "test-w8i76mve", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.392267227172852}
