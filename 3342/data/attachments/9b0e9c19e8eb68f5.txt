@@ -1,0 +1,115 @@
+19:10:18 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:10:49 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:10:51 INFO Current reconcile ID: 26df1c33-3efb-4a4d-9afc-c5f0ca7540af
+19:11:52 INFO Current reconcile ID: 26df1c33-3efb-4a4d-9afc-c5f0ca7540af
+19:12:53 INFO Current reconcile ID: 26df1c33-3efb-4a4d-9afc-c5f0ca7540af
+19:13:54 INFO Current reconcile ID: eeca0e43-7ce7-4bb6-a94b-564395c70880
+19:13:56 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:14:26 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:14:29 INFO Current reconcile ID: a327b8de-85fa-46b8-b646-0f02c22d0f02
+19:15:30 INFO Current reconcile ID: a327b8de-85fa-46b8-b646-0f02c22d0f02
+19:16:31 INFO Current reconcile ID: a327b8de-85fa-46b8-b646-0f02c22d0f02
+19:17:32 INFO Current reconcile ID: 0480aa04-392b-4ed2-820c-1b5efbd876b4
+19:17:34 INFO Wait for condition not met, sleeping 10
+19:17:47 INFO Wait for condition not met, sleeping 10
+19:17:57 INFO Wait for condition not met, sleeping 10
+19:18:08 INFO Wait for condition not met, sleeping 10
+19:18:18 INFO Wait for condition not met, sleeping 10
+19:18:29 INFO Wait for condition not met, sleeping 10
+19:18:39 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:19:09 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:19:12 INFO Current reconcile ID: 1079ccc6-13fb-44d1-b43f-79a914315f75
+19:20:13 INFO Current reconcile ID: 1079ccc6-13fb-44d1-b43f-79a914315f75
+19:21:14 INFO Current reconcile ID: 1079ccc6-13fb-44d1-b43f-79a914315f75
+19:22:15 INFO Current reconcile ID: 681c4e96-3c7d-4564-be06-2a903906bb5a
+19:22:16 INFO Wait for condition not met, sleeping 60
+19:23:16 INFO Wait for condition not met, sleeping 60
+19:24:17 INFO Wait for condition not met, sleeping 60
+19:25:17 INFO Wait for condition not met, sleeping 60
+19:26:18 INFO Wait for condition not met, sleeping 60
+19:27:18 INFO Wait for condition not met, sleeping 60
+19:28:18 INFO Wait for condition not met, sleeping 60
+19:29:19 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:29:35 INFO Current reconcile ID: 74c92ce5-21fc-4a70-b65d-89548c8affaa
+19:30:36 INFO Current reconcile ID: 1e2d7249-cc81-425a-93e6-64402c9b3005
+19:30:38 INFO Wait for condition not met, sleeping 10
+19:30:49 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:31:06 INFO Current reconcile ID: 1e2d7249-cc81-425a-93e6-64402c9b3005
+19:32:07 INFO Current reconcile ID: 1e2d7249-cc81-425a-93e6-64402c9b3005
+19:33:08 INFO Current reconcile ID: 3e1ff543-ef00-4d27-99f3-2208f4c8842c
+19:33:09 INFO Waiting for model:
+  test-t3bj4nkg/0 [idle] active: 
+19:33:25 INFO Current reconcile ID: 3e1ff543-ef00-4d27-99f3-2208f4c8842c
+19:34:26 INFO Current reconcile ID: 3e1ff543-ef00-4d27-99f3-2208f4c8842c
+19:35:28 INFO Current reconcile ID: f8a903df-b010-4043-924b-713f6d6d76f1
+19:35:29 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-mkl4  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  19:35:29Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-t3bj4nkg           active      1  github-runner-image-builder  latest/edge  100  no       
+mongodb                               6.0.24   active      1  mongodb                      6/edge       224  no       
+test-t3bj4nkg                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-t3bj4nkg/0*  active    idle   1        10.202.160.58              
+mongodb/0*                               active    idle   0        10.202.160.146  27017/tcp  Primary.
+test-t3bj4nkg/0*                         active    idle   2        10.202.160.69              
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.202.160.146  juju-d741ea-0  ubuntu@22.04      Running
+1        started  10.202.160.58   juju-d741ea-1  ubuntu@22.04      Running
+2        started  10.202.160.69   juju-d741ea-2  ubuntu@22.04      Running
+
+19:35:29 INFO Juju error logs:
+
+machine-0: 18:25:10 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:10 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:25:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:25:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:25:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t3bj4nkg-0: 18:25:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:26:04 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:26:04 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 18:26:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-t3bj4nkg-0: 18:26:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-t3bj4nkg-0: 18:27:05 ERROR unit.test-t3bj4nkg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-t3bj4nkg-0: 18:27:08 ERROR unit.test-t3bj4nkg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-t3bj4nkg-0: 18:27:11 ERROR unit.github-runner-image-builder-t3bj4nkg/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-t3bj4nkg-0: 18:28:58 ERROR unit.test-t3bj4nkg/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t3bj4nkg-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:35:29 INFO Forgetting model main...

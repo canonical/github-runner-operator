@@ -1,0 +1,94 @@
+18:49:48 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:50:19 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:50:22 INFO Current reconcile ID: 23f195f4-a3e0-41c1-960b-f66afe54d58f
+18:51:23 INFO Current reconcile ID: 23f195f4-a3e0-41c1-960b-f66afe54d58f
+18:52:24 INFO Current reconcile ID: 101ef1ac-6fde-484b-9d50-8c47888d44d3
+18:52:24 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:52:54 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:53:07 INFO Current reconcile ID: 3090e7e8-7998-44db-ae59-ccba37c3981a
+18:54:08 INFO Current reconcile ID: 3090e7e8-7998-44db-ae59-ccba37c3981a
+18:55:09 INFO Current reconcile ID: a939bc37-7781-478d-9c41-6c7946d7cad7
+18:55:17 INFO Wait for condition not met, sleeping 30
+18:56:00 INFO [TEST SETUP] Run command pkill -9 run.sh on test-prgke29i-0-n-0d4d0ea90304
+18:56:00 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.133', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e6:74:66'}]])
+18:56:01 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-prgke29i-0-n-0d4d0ea90304.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.133 pkill -9 run.sh'
+18:56:02 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.133' (ED25519) to the list of known hosts.
+'
+18:56:05 INFO Runner test-prgke29i-0-n-0d4d0ea90304 status: online
+18:56:05 INFO Runner still marked as online, waiting for it to be marked offline
+18:57:06 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:57:36 INFO Waiting for model:
+  test-prgke29i/0 [idle] active: 
+18:57:39 INFO Current reconcile ID: 196310ef-3617-4877-8787-6757a0fb9ede
+18:58:40 INFO Current reconcile ID: 196310ef-3617-4877-8787-6757a0fb9ede
+18:59:41 INFO Current reconcile ID: 2fcd5469-1f31-48e1-beb0-6fe82f97db68
+18:59:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754851802.689187, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.259541749954224}
+{"timestamp": 1754851934.1293972, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.364177465438843}
+{"timestamp": 1754851959.4265058, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.614581108093262}
+{"timestamp": 1754852089.8516889, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 10.301125049591064}
+{"timestamp": 1754852013.0, "event": "runner_installed", "flavor": "test-prgke29i", "duration": 57.0}
+{"timestamp": 1754852119.0, "event": "runner_start", "flavor": "test-prgke29i", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 106.0, "queue_duration": 1.0}
+{"timestamp": 1754852161.0, "event": "runner_stop", "flavor": "test-prgke29i", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1754852226.9346788, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 16.98859477043152}
+{"timestamp": 1754852241.8380744, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.14466643333435}
+{"timestamp": 1754852372.5553203, "event": "reconciliation", "flavor": "test-prgke29i", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.541129112243652}
+18:59:43 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-a3m9  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  18:59:43Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-prgke29i           active      1  github-runner-image-builder  latest/edge  100  no       
+test-prgke29i                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-prgke29i/0*  active    idle   0        10.242.156.43             
+test-prgke29i/0*                         active    idle   1        10.242.156.126  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.242.156.43   juju-5dd8a2-0  ubuntu@22.04      Running
+1        started  10.242.156.126  juju-5dd8a2-1  ubuntu@22.04      Running
+
+18:59:44 INFO Juju error logs:
+
+machine-0: 18:25:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-prgke29i-0: 18:25:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-prgke29i-0: 18:25:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-prgke29i-0: 18:26:12 ERROR unit.github-runner-image-builder-prgke29i/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-prgke29i-0: 18:26:58 ERROR unit.test-prgke29i/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-prgke29i-0: 18:27:01 ERROR unit.test-prgke29i/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-prgke29i-0: 18:28:08 ERROR unit.test-prgke29i/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-prgke29i-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:59:44 INFO Forgetting model main...
