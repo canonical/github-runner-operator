@@ -1,0 +1,162 @@
+22:39:30 WARNING unexpected facade SSHServer received from the controller
+22:39:30 INFO Adding model github-pr-196a7-lxd:test-charm-upgrade-ptkp on cloud localhost
+22:39:31 WARNING unexpected facade SSHServer received from the controller
+22:39:31 WARNING unexpected facade SSHSession received from the controller
+22:39:31 WARNING unexpected facade SSHTunneler received from the controller
+22:39:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+22:39:55 INFO Deploying local:jammy/github-runner-0
+22:39:55 INFO Waiting for model:
+  test-zvy1d9ca/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zvy1d9ca/0 [allocating] waiting: waiting for machine
+22:40:25 INFO Waiting for model:
+  test-zvy1d9ca/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zvy1d9ca/0 [allocating] waiting: waiting for machine
+22:40:55 INFO Waiting for model:
+  test-zvy1d9ca/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zvy1d9ca/0 [executing] maintenance: Setting up Builder.
+22:41:25 INFO Waiting for model:
+  test-zvy1d9ca/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zvy1d9ca/0 [executing] maintenance: Setting up Builder.
+22:41:55 INFO Waiting for model:
+  test-zvy1d9ca/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zvy1d9ca/0 [executing] maintenance: Setting up Builder.
+22:42:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] maintenance: Setting up Builder.
+22:42:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] maintenance: Setting up Builder.
+22:43:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] blocked: image integration required.
+22:43:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:44:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:44:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:45:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:45:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:46:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:46:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:47:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:47:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:48:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:48:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:49:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:49:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:50:26 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:50:56 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:51:27 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:51:57 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:52:27 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:52:57 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:53:27 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:53:57 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:54:27 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:54:57 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zvy1d9ca/0 [executing] active: Building image.
+22:55:27 INFO Waiting for model:
+  test-zvy1d9ca/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zvy1d9ca/0 [idle] active: 
+22:55:57 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] active: 
+22:58:36 INFO Waiting for model:
+  test-zvy1d9ca/0 [idle] active:
+22:59:08 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-ptkp  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  22:59:08Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-zvy1d9ca           active      1  github-runner-image-builder  latest/edge  100  no       
+test-zvy1d9ca                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-zvy1d9ca/0*  active    idle   0        10.236.177.113         
+test-zvy1d9ca/0*                         active    idle   1        10.236.177.40          
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.236.177.113  juju-a34bb9-0  ubuntu@22.04      Running
+1        started  10.236.177.40   juju-a34bb9-1  ubuntu@22.04      Running
+
+22:59:08 INFO Juju error logs:
+
+machine-0: 22:40:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 22:40:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-zvy1d9ca-0: 22:40:43 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 22:40:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 22:40:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-zvy1d9ca-0: 22:40:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-zvy1d9ca-0: 22:41:29 ERROR unit.github-runner-image-builder-zvy1d9ca/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-zvy1d9ca-0: 22:42:08 ERROR unit.test-zvy1d9ca/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zvy1d9ca-0: 22:42:11 ERROR unit.test-zvy1d9ca/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zvy1d9ca-0: 22:43:21 ERROR unit.test-zvy1d9ca/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zvy1d9ca-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+22:59:08 INFO Forgetting model main...

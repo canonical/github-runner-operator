@@ -1,0 +1,45 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: given a prometheus charm application.
+    act: when GitHub runner is integrated.
+    assert: the datasource is registered and basic metrics are available.
+    ","82217","test_prometheus_metrics","tests.integration","Mon Aug 11 22:59:28 UTC 2025","passed","Mon Aug 11 23:00:50 UTC 2025","","test_prometheus_metrics","",""
+"
+    arrange: A working application with one runner.
+    act: Run check_runner action.
+    assert: Action returns result with one runner.
+    ","168829","test_check_runner","tests.integration","Mon Aug 11 22:55:25 UTC 2025","passed","Mon Aug 11 22:58:14 UTC 2025","","test_charm_runner","",""
+"
+    arrange: given latest stable version of the charm.
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","1173574","test_charm_upgrade","tests.integration","Mon Aug 11 22:39:33 UTC 2025","passed","Mon Aug 11 22:59:06 UTC 2025","","test_charm_upgrade","",""
+"
+    arrange: A working application with one runner with repo policy enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed.
+    ","275546","test_repo_policy_enabled","tests.integration","Mon Aug 11 23:17:43 UTC 2025","passed","Mon Aug 11 23:22:19 UTC 2025","","test_charm_runner","",""
+"
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm.
+    act: when canonical/action-tmate is triggered.
+    assert: the ssh connection info from action-log and tmate-ssh-server matches.
+    ","532168","test_ssh_debug","tests.integration","Mon Aug 11 22:56:09 UTC 2025","passed","Mon Aug 11 23:05:01 UTC 2025","","test_debug_ssh","",""
+"
+    arrange: A working application with two runners.
+    act:
+        1. Run Check_runner action. Record the runner names for later.
+        2. Flush runners.
+        3. Dispatch a workflow to make runner busy and call flush_runner action.
+
+    assert:
+        1. Two runner exists.
+        2. Runners are recreated.
+        3. The runner is not flushed since by default it flushes idle.
+
+    Test are combined to reduce number of runner spawned.
+    ","400223","test_flush_runner_and_resource_config","tests.integration","Mon Aug 11 22:59:52 UTC 2025","passed","Mon Aug 11 23:06:32 UTC 2025","","test_charm_runner","",""
+"
+    arrange: A working application with one runner with a custom pre-job script enabled.
+    act: Dispatch a workflow.
+    assert: Workflow run successfully passed and pre-job script has been executed.
+    ","237257","test_custom_pre_job_script","tests.integration","Mon Aug 11 23:10:09 UTC 2025","passed","Mon Aug 11 23:14:06 UTC 2025","","test_charm_runner","",""
