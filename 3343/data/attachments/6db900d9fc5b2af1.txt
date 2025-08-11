@@ -1,0 +1,171 @@
+06:26:50 WARNING unexpected facade SSHServer received from the controller
+06:26:50 INFO Adding model github-pr-196a7-lxd:test-reactive-balv on cloud localhost
+06:26:50 WARNING unexpected facade SSHServer received from the controller
+06:26:50 WARNING unexpected facade SSHSession received from the controller
+06:26:50 WARNING unexpected facade SSHTunneler received from the controller
+06:26:51 INFO GitHub token rate limit: Rate(reset=2025-08-11 06:51:21+00:00, remaining=4980, limit=5000)
+06:26:55 INFO Deploying ch:amd64/jammy/mongodb-224
+06:26:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:27:23 INFO Deploying local:jammy/github-runner-0
+06:27:24 INFO Waiting for model:
+  test-ahupsubg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ahupsubg/0 [allocating] waiting: waiting for machine
+06:27:54 INFO Waiting for model:
+  test-ahupsubg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ahupsubg/0 [allocating] waiting: waiting for machine
+06:28:24 INFO Waiting for model:
+  test-ahupsubg/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ahupsubg/0 [allocating] waiting: waiting for machine
+06:28:55 INFO Waiting for model:
+  test-ahupsubg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ahupsubg/0 [allocating] waiting: waiting for machine
+06:29:25 INFO Waiting for model:
+  test-ahupsubg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ahupsubg/0 [allocating] waiting: agent initialising
+06:29:55 INFO Waiting for model:
+  test-ahupsubg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ahupsubg/0 [executing] maintenance: Setting up Builder.
+06:30:26 INFO Waiting for model:
+  test-ahupsubg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahupsubg/0 [executing] maintenance: Setting up Builder.
+06:30:56 INFO Waiting for model:
+  test-ahupsubg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahupsubg/0 [executing] maintenance: Setting up Builder.
+06:31:26 INFO Waiting for model:
+  test-ahupsubg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahupsubg/0 [executing] maintenance: Setting up Builder.
+06:31:56 INFO Waiting for model:
+  test-ahupsubg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahupsubg/0 [executing] maintenance: Setting up Builder.
+06:32:27 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:32:57 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:33:27 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:33:58 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:34:28 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:34:58 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:35:28 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:35:59 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:36:29 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:36:59 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:37:29 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:37:59 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:38:30 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:39:00 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:39:30 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:40:00 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:40:30 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:41:00 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:41:30 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:42:00 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:42:31 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:43:01 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:43:31 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:44:01 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:44:32 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:45:02 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:45:32 INFO Waiting for model:
+  test-ahupsubg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahupsubg/0 [executing] active: Building image.
+06:46:03 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:46:15 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:46:15 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:46:45 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:47:00 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:47:30 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:47:34 INFO Current reconcile ID: 0a2d8dda-b5d5-4d95-96a1-75110cc8bb6a
+06:48:35 INFO Current reconcile ID: 0a2d8dda-b5d5-4d95-96a1-75110cc8bb6a
+06:49:36 INFO Current reconcile ID: 36331bf8-7c98-404c-8521-f13c952cb1dc
+06:49:39 INFO Wait for condition not met, sleeping 10
+06:50:01 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:50:17 INFO Current reconcile ID: 36331bf8-7c98-404c-8521-f13c952cb1dc
+06:51:18 INFO Current reconcile ID: 36331bf8-7c98-404c-8521-f13c952cb1dc
+06:52:19 INFO Current reconcile ID: cf12eade-4cfa-42f9-997e-99e991f214e3
+06:52:20 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:52:36 INFO Current reconcile ID: cf12eade-4cfa-42f9-997e-99e991f214e3
+06:53:37 INFO Current reconcile ID: cf12eade-4cfa-42f9-997e-99e991f214e3
+06:54:38 INFO Current reconcile ID: b6907420-b220-46ab-b051-e1ed07838948
+06:54:39 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754895052.0, "event": "runner_installed", "flavor": "test-ahupsubg", "duration": 57.0}
+{"timestamp": 1754895055.0, "event": "runner_start", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1754895057.0, "event": "runner_stop", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754895114.7529383, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.62117648124695}
+{"timestamp": 1754895252.886446, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.991716623306274}
+
+06:54:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754895052.0, "event": "runner_installed", "flavor": "test-ahupsubg", "duration": 57.0}
+{"timestamp": 1754895055.0, "event": "runner_start", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1754895057.0, "event": "runner_stop", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754895114.7529383, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.62117648124695}
+{"timestamp": 1754895252.886446, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.991716623306274}
+
+06:54:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754895052.0, "event": "runner_installed", "flavor": "test-ahupsubg", "duration": 57.0}
+{"timestamp": 1754895055.0, "event": "runner_start", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1754895057.0, "event": "runner_stop", "flavor": "test-ahupsubg", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754895114.7529383, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.62117648124695}
+{"timestamp": 1754895252.886446, "event": "reconciliation", "flavor": "test-ahupsubg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.991716623306274}
+06:54:41 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:55:11 INFO Waiting for model:
+  test-ahupsubg/0 [idle] active: 
+06:55:15 INFO Current reconcile ID: d0ce4b71-764a-4681-af4a-cb2c3f1171ec
+06:56:16 INFO Current reconcile ID: d0ce4b71-764a-4681-af4a-cb2c3f1171ec
+06:57:17 INFO Current reconcile ID: b18a97cf-f15b-461a-bc0b-4e06a8b935ab

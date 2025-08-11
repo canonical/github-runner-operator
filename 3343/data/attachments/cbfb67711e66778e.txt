@@ -1,0 +1,104 @@
+06:26:50 WARNING unexpected facade SSHServer received from the controller
+06:26:50 INFO Adding model github-pr-196a7-lxd:test-charm-runner-gbg0 on cloud localhost
+06:26:50 WARNING unexpected facade SSHServer received from the controller
+06:26:50 WARNING unexpected facade SSHSession received from the controller
+06:26:50 WARNING unexpected facade SSHTunneler received from the controller
+06:26:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:27:12 INFO Deploying local:jammy/github-runner-0
+06:27:13 INFO Waiting for model:
+  test-auonrdl9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-auonrdl9/0 [allocating] waiting: waiting for machine
+06:27:43 INFO Waiting for model:
+  test-auonrdl9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-auonrdl9/0 [allocating] waiting: waiting for machine
+06:28:14 INFO Waiting for model:
+  test-auonrdl9/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-auonrdl9/0 [allocating] waiting: agent initialising
+06:28:44 INFO Waiting for model:
+  test-auonrdl9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-auonrdl9/0 [executing] maintenance: Setting up Builder.
+06:29:14 INFO Waiting for model:
+  test-auonrdl9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-auonrdl9/0 [executing] maintenance: Setting up Builder.
+06:29:45 INFO Waiting for model:
+  test-auonrdl9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-auonrdl9/0 [executing] maintenance: Setting up Builder.
+06:30:15 INFO Waiting for model:
+  test-auonrdl9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-auonrdl9/0 [executing] maintenance: Setting up Builder.
+06:30:45 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] blocked: image integration required.
+06:31:15 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:31:46 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:32:16 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:32:46 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:33:16 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:33:47 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:34:17 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:34:47 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:35:18 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:35:48 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:36:18 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:36:48 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:37:19 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:37:49 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:38:20 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:38:50 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:39:20 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:39:50 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:40:21 INFO Waiting for model:
+  test-auonrdl9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-auonrdl9/0 [executing] active: Building image.
+06:40:51 INFO Waiting for model:
+  test-auonrdl9/0 [executing] maintenance: Update image for runners
+06:41:12 INFO Waiting for model:
+  test-auonrdl9/0 [idle] active: 
+06:41:42 INFO Waiting for model:
+  test-auonrdl9/0 [idle] active: 
+06:41:45 INFO Current reconcile ID: 0088bfee-155f-4b8f-8c80-e740f20016c3
+06:42:46 INFO Current reconcile ID: 0088bfee-155f-4b8f-8c80-e740f20016c3
+06:43:47 INFO Current reconcile ID: 8809d1f9-d2a8-4012-8a3e-4d9f193fdc25
+06:44:00 INFO Waiting for model:
+  test-auonrdl9/0 [idle] active: 
+06:44:31 INFO Waiting for model:
+  test-auonrdl9/0 [idle] active: 
+06:44:34 INFO Current reconcile ID: 7809aed6-e8e4-429a-979a-a97bb339d817
+06:45:35 INFO Current reconcile ID: 7809aed6-e8e4-429a-979a-a97bb339d817
+06:46:36 INFO Current reconcile ID: 0ed3e221-bef4-40fe-998d-88514db2ae10

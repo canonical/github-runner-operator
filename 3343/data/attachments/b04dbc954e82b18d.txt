@@ -1,0 +1,76 @@
+06:52:25 INFO GitHub token rate limit: Rate(reset=2025-08-11 07:51:24+00:00, remaining=4954, limit=5000)
+06:52:30 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:53:00 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:53:04 INFO Current reconcile ID: 3327bfa8-80b5-4eac-8d09-283b1073777c
+06:54:05 INFO Current reconcile ID: 3327bfa8-80b5-4eac-8d09-283b1073777c
+06:55:06 INFO Current reconcile ID: 32d48181-7055-4312-aeac-1dd11c212048
+06:55:14 INFO Wait for condition not met, sleeping 10
+06:55:25 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:55:55 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:55:59 INFO Current reconcile ID: dd5ac697-4bdc-40bb-a89a-04941c6e068c
+06:57:00 INFO Current reconcile ID: dd5ac697-4bdc-40bb-a89a-04941c6e068c
+06:58:01 INFO Current reconcile ID: 806fb928-4154-454a-a418-f701c4d0ee9d
+06:58:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754895227.0, "event": "runner_installed", "flavor": "test-yod63dvh", "duration": 64.0}
+{"timestamp": 1754895317.0, "event": "runner_start", "flavor": "test-yod63dvh", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 90.0, "queue_duration": 0.0}
+{"timestamp": 1754895319.0, "event": "runner_stop", "flavor": "test-yod63dvh", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1754895348.5412111, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.690877437591553}
+{"timestamp": 1754895479.2731826, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.669846057891846}
+06:58:04 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-n5qx  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  06:58:04Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yod63dvh           active      1  github-runner-image-builder  latest/edge  100  no       
+test-yod63dvh                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-yod63dvh/0*  active    idle   0        10.212.1.166           
+test-yod63dvh/0*                         active    idle   1        10.212.1.135           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.212.1.166  juju-206e68-0  ubuntu@22.04      Running
+1        started  10.212.1.135  juju-206e68-1  ubuntu@22.04      Running
+
+06:58:04 INFO Juju error logs:
+
+machine-0: 06:28:52 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:52 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yod63dvh-0: 06:28:52 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:29:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yod63dvh-0: 06:29:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yod63dvh-0: 06:29:39 ERROR unit.github-runner-image-builder-yod63dvh/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-yod63dvh-0: 06:30:18 ERROR unit.test-yod63dvh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yod63dvh-0: 06:30:21 ERROR unit.test-yod63dvh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yod63dvh-0: 06:31:33 ERROR unit.test-yod63dvh/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yod63dvh-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:58:04 INFO Forgetting model main...

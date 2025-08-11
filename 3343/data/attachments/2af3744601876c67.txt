@@ -1,0 +1,134 @@
+06:27:35 WARNING unexpected facade SSHServer received from the controller
+06:27:35 INFO Adding model github-pr-196a7-lxd:test-charm-metrics-success-n5qx on cloud localhost
+06:27:36 WARNING unexpected facade SSHServer received from the controller
+06:27:36 WARNING unexpected facade SSHSession received from the controller
+06:27:36 WARNING unexpected facade SSHTunneler received from the controller
+06:27:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:28:01 INFO Deploying local:jammy/github-runner-0
+06:28:02 INFO Waiting for model:
+  test-yod63dvh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yod63dvh/0 [allocating] waiting: waiting for machine
+06:28:32 INFO Waiting for model:
+  test-yod63dvh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yod63dvh/0 [allocating] waiting: waiting for machine
+06:29:02 INFO Waiting for model:
+  test-yod63dvh/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-yod63dvh/0 [allocating] waiting: agent initialising
+06:29:32 INFO Waiting for model:
+  test-yod63dvh/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yod63dvh/0 [executing] maintenance: Setting up Builder.
+06:30:02 INFO Waiting for model:
+  test-yod63dvh/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yod63dvh/0 [executing] maintenance: Setting up Builder.
+06:30:33 INFO Waiting for model:
+  test-yod63dvh/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yod63dvh/0 [executing] maintenance: Setting up Builder.
+06:31:03 INFO Waiting for model:
+  test-yod63dvh/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yod63dvh/0 [executing] maintenance: Setting up Builder.
+06:31:33 INFO Waiting for model:
+  test-yod63dvh/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] blocked: image integration required.
+06:32:04 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:32:34 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:33:04 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:33:34 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:34:05 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:34:35 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:35:05 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:35:35 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:36:05 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:36:36 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:37:06 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:37:36 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:38:06 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:38:37 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:39:07 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:39:37 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:40:08 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:40:38 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:41:08 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:41:39 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:42:09 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:42:39 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:43:09 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:43:39 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:44:10 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:44:40 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:45:10 INFO Waiting for model:
+  test-yod63dvh/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yod63dvh/0 [executing] active: Building image.
+06:45:41 INFO Waiting for model:
+  test-yod63dvh/0 [executing] maintenance: Update image for runners
+06:46:03 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:46:34 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:46:38 INFO Current reconcile ID: 70860a38-6566-4264-8430-c30cf6f79e55
+06:47:39 INFO Current reconcile ID: 70860a38-6566-4264-8430-c30cf6f79e55
+06:48:41 INFO Current reconcile ID: bc5565f8-4239-4ec5-85db-d6dd38a2ecf2
+06:48:47 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:49:17 INFO Waiting for model:
+  test-yod63dvh/0 [idle] active: 
+06:49:20 INFO Current reconcile ID: 75161fa0-71a8-4c95-b41c-f6f797cec43f
+06:50:21 INFO Current reconcile ID: 75161fa0-71a8-4c95-b41c-f6f797cec43f
+06:51:23 INFO Current reconcile ID: 75161fa0-71a8-4c95-b41c-f6f797cec43f
+06:52:24 INFO Current reconcile ID: fae14aa7-4601-4dd3-a617-e24b645f22e7
+06:52:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1754894778.9530354, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.721144199371338}
+{"timestamp": 1754894910.5283043, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.427881717681885}
+{"timestamp": 1754894920.0, "event": "runner_installed", "flavor": "test-yod63dvh", "duration": 145.0}
+{"timestamp": 1754894951.837355, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.699753999710083}
+{"timestamp": 1754895084.7590933, "event": "reconciliation", "flavor": "test-yod63dvh", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.811900615692139}
