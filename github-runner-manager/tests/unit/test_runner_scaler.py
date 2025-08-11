@@ -31,7 +31,6 @@ from github_runner_manager.configuration.github import (
     GitHubRepo,
 )
 from github_runner_manager.manager import runner_manager as runner_manager_module
-from github_runner_manager.manager.cloud_runner_manager import CloudRunnerState
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.manager.runner_manager import (
     IssuedMetricEventsStats,
@@ -39,6 +38,7 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
 )
 from github_runner_manager.manager.runner_scaler import FlushMode, RunnerInfo, RunnerScaler
+from github_runner_manager.manager.vm_manager import VMState
 from github_runner_manager.metrics.events import RunnerStart, RunnerStop
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
@@ -225,7 +225,7 @@ def runner_scaler_one_runner_fixture(
 def set_one_runner_state(
     runner_scaler: RunnerScaler,
     platform_state: PlatformRunnerState | None = None,
-    cloud_state: CloudRunnerState | None = None,
+    cloud_state: VMState | None = None,
     health: bool | None = None,
     old_runner: bool = False,
 ):
