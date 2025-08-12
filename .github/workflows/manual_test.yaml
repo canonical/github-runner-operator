@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  edge:
-    runs-on: [self-hosted, edge]
+  amd64:
+    runs-on: [self-hosted, medium, amd64]
     steps:
       - run: lscpu
       - run: df -h
@@ -15,5 +15,12 @@ jobs:
       - run: uname -a
       - run: lsb_release -a
       - uses: actions/checkout@v5
-      - name: Setup tmate session
-        uses: canonical/action-tmate@main 
+  s390x:
+    runs-on: [self-hosted, s390x]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+      - uses: actions/checkout@v5
