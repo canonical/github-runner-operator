@@ -16,7 +16,7 @@ jobs:
       - run: lsb_release -a
       - uses: actions/checkout@v5
   s390x:
-    runs-on: [self-hosted, s390x]
+    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
     steps:
       - run: lscpu
       - run: df -h
@@ -24,3 +24,5 @@ jobs:
       - run: uname -a
       - run: lsb_release -a
       - uses: actions/checkout@v5
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
