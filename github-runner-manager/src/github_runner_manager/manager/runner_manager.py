@@ -55,7 +55,7 @@ class FlushMode(Enum):
     FLUSH_BUSY = auto()
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunnerInstance:
     """Represents an instance of runner.
 
@@ -65,6 +65,7 @@ class RunnerInstance:
         metadata: Metadata for the runner.
         health: The health state of the runner.
         platform_state: State on the platform.
+        platform_health: Health information queried from the platform provider.
         cloud_state: State on cloud.
     """
 
@@ -72,17 +73,17 @@ class RunnerInstance:
     instance_id: InstanceID
     metadata: RunnerMetadata
     platform_state: PlatformRunnerState | None
+    platform_health: PlatformRunnerHealth | None
     cloud_state: VMState
 
     @property
     def health(self) -> HealthState:
         """Overall health state of the runner instance."""
-        if not self.platform_state:
+        if not self.platform_health:
+            return HealthState.UNKNOWN
+        if self.platform_health.deletable:
             return HealthState.UNHEALTHY
-        if self.platform_state == (
-            PlatformRunnerState.BUSY,
-            PlatformRunnerState.IDLE,
-        ):
+        if self.platform_health.online:
             return HealthState.HEALTHY
         return HealthState.UNKNOWN
 
@@ -106,10 +107,11 @@ class RunnerInstance:
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
             platform_state=(
-                PlatformRunnerState.from_platform_health(platform_health_state)
+                PlatformRunnerState.from_platform_health(health=platform_health_state)
                 if platform_health_state is not None
                 else None
             ),
+            platform_health=platform_health_state,
             cloud_state=cloud_instance.state,
         )
 
@@ -191,7 +193,8 @@ class RunnerManager:
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         return tuple(
             RunnerInstance.from_cloud_and_platform_health(
-                cloud_runner, health_runners_map.get(cloud_runner.instance_id, None)
+                cloud_instance=cloud_runner,
+                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
             )
             for cloud_runner in cloud_runners
         )
