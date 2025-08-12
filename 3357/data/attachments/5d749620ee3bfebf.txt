@@ -1,0 +1,195 @@
+18:24:51 WARNING unexpected facade SSHServer received from the controller
+18:24:51 INFO Adding model github-pr-15abe-lxd:test-charm-fork-repo-06c5 on cloud localhost
+18:24:52 WARNING unexpected facade SSHServer received from the controller
+18:24:52 WARNING unexpected facade SSHSession received from the controller
+18:24:52 WARNING unexpected facade SSHTunneler received from the controller
+18:24:53 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:25:16 INFO Deploying local:jammy/github-runner-0
+18:25:17 INFO Waiting for model:
+  test-zje3bsnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zje3bsnb/0 [allocating] waiting: waiting for machine
+18:25:47 INFO Waiting for model:
+  test-zje3bsnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zje3bsnb/0 [allocating] waiting: waiting for machine
+18:26:17 INFO Waiting for model:
+  test-zje3bsnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zje3bsnb/0 [allocating] waiting: agent initialising
+18:26:48 INFO Waiting for model:
+  test-zje3bsnb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zje3bsnb/0 [executing] maintenance: Setting up Builder.
+18:27:18 INFO Waiting for model:
+  test-zje3bsnb/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zje3bsnb/0 [executing] maintenance: Setting up Builder.
+18:27:48 INFO Waiting for model:
+  test-zje3bsnb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zje3bsnb/0 [executing] maintenance: Setting up Builder.
+18:28:18 INFO Waiting for model:
+  test-zje3bsnb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zje3bsnb/0 [executing] maintenance: Setting up Builder.
+18:28:48 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] maintenance: Setting up Builder.
+18:29:19 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] blocked: image integration required.
+18:29:49 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:30:19 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:30:50 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:31:20 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:31:51 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:32:21 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:32:52 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:33:22 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:33:52 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:34:23 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:34:53 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:35:23 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:35:53 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:36:24 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:36:54 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:37:25 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:37:55 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:38:25 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:38:55 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:39:26 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:39:56 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:40:27 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:40:57 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:41:27 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zje3bsnb/0 [executing] active: Building image.
+18:41:57 INFO Waiting for model:
+  test-zje3bsnb/0 [executing] maintenance: Update image for runners
+18:42:24 INFO GitHub token rate limit: Rate(reset=2025-08-12 19:25:13+00:00, remaining=4940, limit=5000)
+18:43:31 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] active: 
+18:44:02 INFO Waiting for model:
+  test-zje3bsnb/0 [idle] active: 
+18:44:05 INFO Current reconcile ID: 6b2b3f01-6929-4e2e-911e-b988fc9fb02e
+18:45:06 INFO Current reconcile ID: 6b2b3f01-6929-4e2e-911e-b988fc9fb02e
+18:46:07 INFO Current reconcile ID: 47354bf5-4a95-4890-bd6d-d524730f91ae
+18:46:50 INFO [TEST SETUP] Exposing port 8080 on test-zje3bsnb-0-n-154d04606100
+18:46:50 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:94:2c'}]])
+18:46:51 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-zje3bsnb-0-n-154d04606100.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.184 &
+18:46:52 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.184' (ED25519) to the list of known hosts.
+
+18:46:54 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-zje3bsnb-0-n-154d04606100
+18:46:54 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:94:2c'}]])
+18:46:55 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zje3bsnb-0-n-154d04606100.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.184 nc -z localhost 8080'
+18:46:56 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:46:57 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-zje3bsnb-0-n-154d04606100
+18:46:57 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.184', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:94:2c'}]])
+18:46:58 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-zje3bsnb-0-n-154d04606100.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.184 curl http://localhost:8080'
+18:46:59 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  51879      0 --:--:-- --:--:-- --:--:-- 69000
+'
+18:47:02 INFO Wait for condition not met, sleeping 10
+18:47:13 INFO Wait for condition not met, sleeping 60
+18:48:18 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-06c5  github-pr-15abe-lxd  localhost/localhost  3.6.8    unsupported  18:48:17Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-zje3bsnb           active      1  github-runner-image-builder  latest/edge  100  no       
+test-zje3bsnb                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-zje3bsnb/0*  active    idle   0        10.146.113.11             
+test-zje3bsnb/0*                         active    idle   1        10.146.113.185  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.146.113.11   juju-f9375f-0  ubuntu@22.04      Running
+1        started  10.146.113.185  juju-f9375f-1  ubuntu@22.04      Running
+
+18:48:18 INFO Juju error logs:
+
+machine-0: 18:26:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-zje3bsnb-0: 18:26:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-zje3bsnb-0: 18:26:59 ERROR unit.github-runner-image-builder-zje3bsnb/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:27:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-zje3bsnb-0: 18:27:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-zje3bsnb-0: 18:28:34 ERROR unit.test-zje3bsnb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zje3bsnb-0: 18:28:38 ERROR unit.test-zje3bsnb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zje3bsnb-0: 18:29:12 ERROR unit.test-zje3bsnb/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zje3bsnb-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:48:18 INFO Forgetting model main...
