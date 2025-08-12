@@ -10,9 +10,7 @@ import factory
 
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.manager.runner_manager import RunnerInstance
-from github_runner_manager.manager.vm_manager import VM
-from github_runner_manager.manager.vm_manager import HealthState as CloudHelathState
-from github_runner_manager.manager.vm_manager import VMState
+from github_runner_manager.manager.vm_manager import VM, VMState
 from github_runner_manager.platform.platform_provider import (
     PlatformRunnerHealth,
     PlatformRunnerState,
@@ -68,7 +66,6 @@ class CloudRunnerInstanceFactory(factory.Factory):
 
     instance_id = factory.SubFactory(InstanceIDFactory)
     metadata = factory.SubFactory(RunnerMetadataFactory)
-    health = CloudHelathState.HEALTHY
     state = VMState.ACTIVE
     created_at = factory.LazyFunction(lambda: datetime.now(tz=timezone.utc))
 
@@ -138,9 +135,11 @@ class RunnerInstanceFactory(factory.Factory):
     name = factory.Faker("name")
     instance_id = factory.SubFactory(InstanceIDFactory)
     metadata = factory.LazyAttribute(lambda _: {"key": "value"})
-    health = CloudHelathState.HEALTHY
-    platform_state = platform_state = factory.LazyFunction(
-        lambda: secrets.choice(list(PlatformRunnerState))
+    platform_state = factory.LazyFunction(lambda: secrets.choice(list(PlatformRunnerState)))
+    platform_health = factory.LazyAttribute(
+        lambda obj: PlatformRunnerHealthFactory(
+            identity=RunnerIdentityFactory(instance_id=obj.instance_id)
+        )
     )
     cloud_state = VMState.ACTIVE
 
@@ -161,12 +160,12 @@ class RunnerInstanceFactory(factory.Factory):
             name=cloud_runner.instance_id.name,
             instance_id=cloud_runner.instance_id,
             metadata=cloud_runner.metadata,
-            health=cloud_runner.health,
             platform_state=(
                 PlatformRunnerState.from_platform_health(platform_health)
                 if platform_health is not None
                 else None
             ),
+            platform_health=platform_health,
             cloud_state=cloud_runner.state,
         )
 
