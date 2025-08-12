@@ -6,22 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  stg-ps7:
-    runs-on: [staging,amd64,self-hosted-linux-amd64-jammy-staging,ps7]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - name: Setup tmate session
-        uses: canonical/action-tmate@main 
-  stg-private-endpoint-ps7:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    runs-on: [self-hosted, stg-private-endpoint-ps7]
+  edge:
+    runs-on: [self-hosted, edge]
     steps:
       - run: lscpu
       - run: df -h
