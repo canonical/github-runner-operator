@@ -99,16 +99,14 @@ class VM:
     """Information on the runner on the cloud.
 
     Attributes:
-        instance_id: ID of the instance.
-        metadata: Metadata of the runner.
-        health: Health state of the runner.
-        state: State of the instance hosting the runner.
+        instance_id: VM instance identifier (NOT VM UUID).
+        metadata: Metadata associated with the VM.
+        state: The VM state.
         created_at: Creation time of the runner in the cloud provider.
     """
 
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
     state: VMState
     created_at: datetime
 

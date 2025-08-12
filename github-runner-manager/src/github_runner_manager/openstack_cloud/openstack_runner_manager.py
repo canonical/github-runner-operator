@@ -17,7 +17,6 @@ from github_runner_manager.errors import (
     RunnerCreateError,
 )
 from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
-from github_runner_manager.manager.runner_manager import HealthState
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, RunnerMetrics, VMState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
@@ -141,7 +140,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
         return VM(
             metadata=metadata,
             instance_id=instance.instance_id,
-            health=HealthState.UNKNOWN,
             state=VMState.from_openstack_server_status(instance.status),
             created_at=instance.created_at,
         )
