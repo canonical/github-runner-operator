@@ -1,0 +1,295 @@
+08:26:02 WARNING unexpected facade SSHServer received from the controller
+08:26:02 INFO Adding model github-pr-196a7-lxd:test-charm-upgrade-twbc on cloud localhost
+08:26:03 WARNING unexpected facade SSHServer received from the controller
+08:26:03 WARNING unexpected facade SSHSession received from the controller
+08:26:03 WARNING unexpected facade SSHTunneler received from the controller
+08:26:05 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+08:27:03 INFO Deploying local:jammy/github-runner-0
+08:27:03 INFO Waiting for model:
+  test-unxcftq1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-unxcftq1/0 [allocating] waiting: waiting for machine
+08:27:33 INFO Waiting for model:
+  test-unxcftq1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-unxcftq1/0 [allocating] waiting: waiting for machine
+08:28:03 INFO Waiting for model:
+  test-unxcftq1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:28:33 INFO Waiting for model:
+  test-unxcftq1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:29:03 INFO Waiting for model:
+  test-unxcftq1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:29:33 INFO Waiting for model:
+  test-unxcftq1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:30:04 INFO Waiting for model:
+  test-unxcftq1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:30:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:31:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:31:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-unxcftq1/0 [executing] maintenance: Setting up Builder.
+08:32:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [executing] active: Building image.
+08:32:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [executing] active: Building image.
+08:33:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [executing] active: Building image.
+08:33:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:34:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:34:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:35:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:35:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:36:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:36:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:37:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:37:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:38:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:38:34 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:39:04 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:39:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:40:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:40:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:41:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:41:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:42:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:42:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:43:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:43:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:44:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:44:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:45:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:45:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:46:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:46:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:47:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:47:35 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:48:05 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:48:36 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:49:06 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:49:36 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:50:06 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:50:36 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:51:06 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:51:36 INFO Waiting for model:
+  test-unxcftq1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-unxcftq1/0 [idle] error: hook failed: "image-relation-changed"
+08:52:07 INFO OpenStack servers: []
+08:52:07 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-twbc  github-pr-196a7-lxd  localhost/localhost  3.6.8    unsupported  08:52:07Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-unxcftq1           error        1  github-runner-image-builder  latest/edge  100  no       hook failed: "image-relation-changed"
+test-unxcftq1                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-unxcftq1/0*  error     idle   0        10.142.46.201          hook failed: "image-relation-changed"
+test-unxcftq1/0*                         waiting   idle   1        10.142.46.152          Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.142.46.201  juju-d94deb-0  ubuntu@22.04      Running
+1        started  10.142.46.152  juju-d94deb-1  ubuntu@22.04      Running
+
+08:52:07 INFO Juju error logs:
+
+machine-0: 08:27:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 08:27:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-unxcftq1-0: 08:27:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 08:28:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 08:28:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-unxcftq1-0: 08:28:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-unxcftq1-0: 08:28:55 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-unxcftq1-0: 08:30:23 ERROR unit.test-unxcftq1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-unxcftq1-0: 08:30:27 ERROR unit.test-unxcftq1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-unxcftq1-0: 08:31:49 ERROR unit.test-unxcftq1/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-unxcftq1-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-unxcftq1-0: 08:32:07 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-unxcftq1-0: 08:32:18 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-unxcftq1-0: 08:32:29 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-unxcftq1-0: 08:32:42 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-unxcftq1-0: 08:33:04 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-unxcftq1-0: 08:33:04 ERROR unit.github-runner-image-builder-unxcftq1/0.juju-log image:0: Uncaught exception while in charm code:
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/src/builder.py", line 523, in _run
+    stdout = subprocess.check_output(  # pylint: disable=unexpected-keyword-arg # nosec:B603
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/run-one', '/usr/bin/sudo', '--preserve-env', '/home/ubuntu/.local/bin/github-runner-image-builder', '--os-cloud', 'builder', 'run', 'github-runner-image-builder-unxcftq1-noble-x64', '--flavor', 'builder-cpu2-ram4-disk50', '--keep-revisions', '2', '--network', 'net_stg-github-runner-test', '--prefix', 'github-runner-image-builder-unxcftq1', '--upload-clouds', 'stg-github-runner-test_project_stg-github-runner-test', '--arch', 'x64', '--base-image', 'noble', '--proxy', 'squid.ps6.internal:3128']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 338, in wrapped_f
+    return copy(f, *args, **kw)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/src/builder.py", line 553, in _run
+    raise BuilderRunError from exc
+exceptions.BuilderRunError
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/__init__.py", line 359, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/_main.py", line 496, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/_main.py", line 480, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/_main.py", line 415, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/_main.py", line 459, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/venv/ops/framework.py", line 1030, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/./src/charm.py", line 153, in _on_image_relation_changed
+    self._run(cloud_id=cloud_id)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/./src/charm.py", line 253, in _run
+    cloud_images = builder.run(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-unxcftq1-0/charm/src/builder.py", line 435, in run
+    build_results = pool.map(_run, build_configs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 774, in get
+    raise self._value
+exceptions.BuilderRunError
+unit-github-runner-image-builder-unxcftq1-0: 08:33:04 ERROR juju.worker.uniter.operation hook "image-relation-changed" (via hook dispatching script: dispatch) failed: exit status 1
+
+08:52:07 INFO Forgetting model main...

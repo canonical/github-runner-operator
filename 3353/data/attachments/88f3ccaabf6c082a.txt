@@ -1,0 +1,37 @@
+08:27:12 WARNING unexpected facade SSHServer received from the controller
+08:27:12 INFO Adding model github-pr-196a7-lxd:test-charm-metrics-success-y38s on cloud localhost
+08:27:12 WARNING unexpected facade SSHServer received from the controller
+08:27:12 WARNING unexpected facade SSHSession received from the controller
+08:27:12 WARNING unexpected facade SSHTunneler received from the controller
+08:27:14 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+08:27:30 INFO Deploying local:jammy/github-runner-0
+08:27:30 INFO Waiting for model:
+  test-kpouavy3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpouavy3/0 [allocating] waiting: waiting for machine
+08:28:01 INFO Waiting for model:
+  test-kpouavy3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpouavy3/0 [allocating] waiting: waiting for machine
+08:28:31 INFO Waiting for model:
+  test-kpouavy3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpouavy3/0 [executing] maintenance: Setting up Builder.
+08:29:01 INFO Waiting for model:
+  test-kpouavy3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kpouavy3/0 [executing] maintenance: Setting up Builder.
+08:29:31 INFO Waiting for model:
+  test-kpouavy3/0 [executing] waiting: agent initialising
+  github-runner-image-builder-kpouavy3/0 [executing] maintenance: Setting up Builder.
+08:30:01 INFO Waiting for model:
+  test-kpouavy3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kpouavy3/0 [executing] maintenance: Setting up Builder.
+08:30:32 INFO Waiting for model:
+  test-kpouavy3/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-kpouavy3/0 [executing] maintenance: Setting up Builder.
+08:31:02 INFO Waiting for model:
+  test-kpouavy3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpouavy3/0 [executing] blocked: image integration required.
+08:31:32 INFO Waiting for model:
+  test-kpouavy3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpouavy3/0 [executing] active: Building image.
+08:32:03 INFO Waiting for model:
+  test-kpouavy3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kpouavy3/0 [executing] active: Building image.
