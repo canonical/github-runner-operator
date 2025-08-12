@@ -1,5 +1,6 @@
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 # ARM64
-
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 For ARM64, the charm needs to be deployed on a bare metal instance. This is due to the fact that the
 
@@ -21,7 +22,7 @@ The current progress of ARM64 nested virtualization support requires a few under
 to be further developed.
 - [Hardware: supported](https://developer.arm.com/documentation/102142/0100/Nested-virtualization)
 - Kernel (KVM): upstream not yet ready
-- Userspace programs (e.g. qemu): unsupported.
+- User space programs (e.g. qemu): unsupported.
 
 Therefore, it is currently necessary that the charm is deployed on a bare metal instance.
 For instance, you can use any of the [ARM64 metal instances](https://aws.amazon.com/ec2/instance-types/) to provide Juju
