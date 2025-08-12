@@ -8,6 +8,7 @@ import io
 import json
 import logging
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Optional, Sequence, Type
 
@@ -392,7 +393,8 @@ def _issue_runner_installed(
 ) -> Type[metric_events.Event]:
     """Issue the RunnerInstalled metric for a runner.
 
-    Assumes that the runner installed timestamp is present.
+    If installation_end_timestamp is missing for any reasons (SSHError, installation failure, ...),
+    the timestamp will be set to the time of metrics issue and duration will be set as infinite.
 
     Args:
         runner_metrics: The metrics for the runner.
@@ -401,12 +403,18 @@ def _issue_runner_installed(
     Returns:
         The type of the issued event.
     """
-    installation_end_timestamp = runner_metrics.installation_end_timestamp or 0
+    installation_end_timestamp = (
+        runner_metrics.installation_end_timestamp or datetime.now().timestamp()
+    )
+    duration = (
+        installation_end_timestamp - runner_metrics.installation_start_timestamp
+        if runner_metrics.installation_start_timestamp
+        else float("inf")
+    )
     runner_installed = metric_events.RunnerInstalled(
         timestamp=installation_end_timestamp,
         flavor=flavor,
-        # the installation_start_timestamp should be present
-        duration=max(installation_end_timestamp - runner_metrics.installation_start_timestamp, 0),
+        duration=duration,
     )
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
