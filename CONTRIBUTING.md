@@ -50,6 +50,6 @@ Build the charm in this git repository using:
 charmcraft pack
 ```
 
-## Canonical Contributor Agreement
+## Canonical contributor agreement
 
 Canonical welcomes contributions to the GitHub Runner Operator. Please check out our [contributor agreement](https://ubuntu.com/legal/contributors) if you’re interested in contributing to the solution.
