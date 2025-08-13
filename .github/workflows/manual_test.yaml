@@ -6,17 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  amd64:
-    runs-on: [self-hosted, medium, amd64]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - uses: actions/checkout@v5
-  s390x:
-    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
+  pfe-ci:
+    runs-on: [self-hosted, self-hosted-linux-amd64-noble-pfe-ci]
     steps:
       - run: lscpu
       - run: df -h
