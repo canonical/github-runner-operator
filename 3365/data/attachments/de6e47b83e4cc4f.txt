@@ -1,0 +1,115 @@
+08:46:56 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:47:26 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:47:30 INFO Current reconcile ID: 85b4d4a3-f6fd-402d-a655-5e16520c1a43
+08:48:31 INFO Current reconcile ID: 85b4d4a3-f6fd-402d-a655-5e16520c1a43
+08:49:32 INFO Current reconcile ID: 85b4d4a3-f6fd-402d-a655-5e16520c1a43
+08:50:33 INFO Current reconcile ID: 04d34f02-db35-4724-bb3f-79019415deea
+08:50:35 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:51:05 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:51:08 INFO Current reconcile ID: 723c4b5a-8ca9-4543-9a66-9c01dd3cd4ca
+08:52:09 INFO Current reconcile ID: 723c4b5a-8ca9-4543-9a66-9c01dd3cd4ca
+08:53:11 INFO Current reconcile ID: 723c4b5a-8ca9-4543-9a66-9c01dd3cd4ca
+08:54:12 INFO Current reconcile ID: cb707fca-0298-406e-b229-18885efe1b0a
+08:54:14 INFO Wait for condition not met, sleeping 10
+08:54:26 INFO Wait for condition not met, sleeping 10
+08:54:36 INFO Wait for condition not met, sleeping 10
+08:54:47 INFO Wait for condition not met, sleeping 10
+08:54:57 INFO Wait for condition not met, sleeping 10
+08:55:08 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:55:38 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:55:42 INFO Current reconcile ID: f6d4ff34-ce50-47e6-8d9b-cd2e721fad7f
+08:56:43 INFO Current reconcile ID: 4083ed94-b760-4efd-a09a-d5c3399b3d16
+08:56:43 INFO Wait for condition not met, sleeping 60
+08:57:44 INFO Wait for condition not met, sleeping 60
+08:58:44 INFO Wait for condition not met, sleeping 60
+08:59:45 INFO Wait for condition not met, sleeping 60
+09:00:45 INFO Wait for condition not met, sleeping 60
+09:01:46 INFO Wait for condition not met, sleeping 60
+09:02:46 INFO Wait for condition not met, sleeping 60
+09:03:47 INFO Wait for condition not met, sleeping 60
+09:04:48 INFO Wait for condition not met, sleeping 60
+09:05:48 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+09:06:05 INFO Current reconcile ID: ce729947-ed2f-4523-95b4-cca5db149c06
+09:07:06 INFO Current reconcile ID: ce729947-ed2f-4523-95b4-cca5db149c06
+09:08:07 INFO Current reconcile ID: 7536d3e9-97b1-4b62-833c-4e2760ca40fa
+09:08:09 INFO Wait for condition not met, sleeping 10
+09:08:20 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+09:08:37 INFO Current reconcile ID: 7536d3e9-97b1-4b62-833c-4e2760ca40fa
+09:09:38 INFO Current reconcile ID: 7536d3e9-97b1-4b62-833c-4e2760ca40fa
+09:10:39 INFO Current reconcile ID: d359a785-3755-4325-a184-9ae4e5056cdd
+09:10:40 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+09:10:57 INFO Current reconcile ID: d359a785-3755-4325-a184-9ae4e5056cdd
+09:11:58 INFO Current reconcile ID: d359a785-3755-4325-a184-9ae4e5056cdd
+09:12:59 INFO Current reconcile ID: a99ab4e5-0dac-4c39-b403-d26db85d93bd
+09:13:00 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-demd  github-pr-75840-lxd  localhost/localhost  3.6.8    unsupported  09:13:00Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-alxq7js6           active      1  github-runner-image-builder  latest/edge  100  no       
+mongodb                               6.0.24   active      1  mongodb                      6/edge       224  no       
+test-alxq7js6                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-alxq7js6/0*  active    idle   1        10.252.66.227              
+mongodb/0*                               active    idle   0        10.252.66.52    27017/tcp  Primary.
+test-alxq7js6/0*                         active    idle   2        10.252.66.234              
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.252.66.52   juju-df8129-0  ubuntu@22.04      Running
+1        started  10.252.66.227  juju-df8129-1  ubuntu@22.04      Running
+2        started  10.252.66.234  juju-df8129-2  ubuntu@22.04      Running
+
+09:13:01 INFO Juju error logs:
+
+machine-1: 08:00:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 08:00:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-alxq7js6-0: 08:00:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 08:01:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 08:01:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-alxq7js6-0: 08:01:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 08:01:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 08:01:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 08:01:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-alxq7js6-0: 08:01:52 ERROR unit.github-runner-image-builder-alxq7js6/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-mongodb-0: 08:02:26 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 08:02:26 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-alxq7js6-0: 08:03:07 ERROR unit.test-alxq7js6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-alxq7js6-0: 08:03:10 ERROR unit.test-alxq7js6/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-alxq7js6-0: 08:04:09 ERROR unit.test-alxq7js6/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-alxq7js6-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+09:13:01 INFO Forgetting model main...

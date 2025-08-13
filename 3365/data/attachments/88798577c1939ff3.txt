@@ -1,0 +1,201 @@
+07:45:57 WARNING unexpected facade SSHServer received from the controller
+07:45:57 INFO Adding model github-pr-75840-lxd:test-charm-fork-repo-wmhx on cloud localhost
+07:45:58 WARNING unexpected facade SSHServer received from the controller
+07:45:58 WARNING unexpected facade SSHSession received from the controller
+07:45:58 WARNING unexpected facade SSHTunneler received from the controller
+07:46:01 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+07:46:24 INFO Deploying local:jammy/github-runner-0
+07:46:24 INFO Waiting for model:
+  test-otl1x2au/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-otl1x2au/0 [allocating] waiting: waiting for machine
+07:46:55 INFO Waiting for model:
+  test-otl1x2au/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-otl1x2au/0 [allocating] waiting: waiting for machine
+07:47:25 INFO Waiting for model:
+  test-otl1x2au/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-otl1x2au/0 [allocating] waiting: agent initialising
+07:47:55 INFO Waiting for model:
+  test-otl1x2au/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:48:25 INFO Waiting for model:
+  test-otl1x2au/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:48:56 INFO Waiting for model:
+  test-otl1x2au/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:49:26 INFO Waiting for model:
+  test-otl1x2au/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:49:56 INFO Waiting for model:
+  test-otl1x2au/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:50:27 INFO Waiting for model:
+  test-otl1x2au/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-otl1x2au/0 [executing] maintenance: Setting up Builder.
+07:50:57 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] blocked: image integration required.
+07:51:27 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:51:58 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:52:28 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:52:59 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:53:29 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:53:59 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:54:30 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:55:00 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:55:30 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:56:01 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:56:31 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:57:01 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:57:32 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:58:02 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:58:33 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:59:03 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+07:59:34 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:00:04 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:00:34 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:01:05 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:01:35 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:02:06 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:02:36 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:03:07 INFO Waiting for model:
+  test-otl1x2au/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-otl1x2au/0 [executing] active: Building image.
+08:03:37 INFO Waiting for model:
+  test-otl1x2au/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-otl1x2au/0 [idle] active: 
+08:04:08 INFO Waiting for model:
+  test-otl1x2au/0 [idle] active: 
+08:04:10 INFO GitHub token rate limit: Rate(reset=2025-08-13 08:33:31+00:00, remaining=4150, limit=5000)
+08:05:22 INFO Waiting for model:
+  test-otl1x2au/0 [idle] active: 
+08:05:52 INFO Waiting for model:
+  test-otl1x2au/0 [idle] active: 
+08:05:56 INFO Current reconcile ID: 0bf8d8d5-6232-480d-84c7-ef5192688859
+08:06:57 INFO Current reconcile ID: 0bf8d8d5-6232-480d-84c7-ef5192688859
+08:07:58 INFO Current reconcile ID: 0bf8d8d5-6232-480d-84c7-ef5192688859
+08:08:59 INFO Current reconcile ID: 860ac696-ff4b-486b-8e2d-91f0a67e7620
+08:09:10 INFO [TEST SETUP] Exposing port 8080 on test-otl1x2au-0-n-bb60d0bc8050
+08:09:10 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.208', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e2:c3:3d'}]])
+08:09:11 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-otl1x2au-0-n-bb60d0bc8050.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.208 &
+08:09:12 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.208' (ED25519) to the list of known hosts.
+
+08:09:15 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-otl1x2au-0-n-bb60d0bc8050
+08:09:15 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.208', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e2:c3:3d'}]])
+08:09:16 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-otl1x2au-0-n-bb60d0bc8050.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.208 nc -z localhost 8080'
+08:09:17 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+08:09:19 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-otl1x2au-0-n-bb60d0bc8050
+08:09:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.208', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e2:c3:3d'}]])
+08:09:20 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-otl1x2au-0-n-bb60d0bc8050.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.208 curl http://localhost:8080'
+08:09:21 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  58244      0 --:--:-- --:--:-- --:--:-- 69000
+'
+08:09:24 INFO Wait for condition not met, sleeping 10
+08:09:40 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-wmhx  github-pr-75840-lxd  localhost/localhost  3.6.8    unsupported  08:09:40Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-otl1x2au           active      1  github-runner-image-builder  latest/edge  100  no       
+test-otl1x2au                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-otl1x2au/0*  active    idle   0        10.116.148.89             
+test-otl1x2au/0*                         active    idle   1        10.116.148.34   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.116.148.89  juju-c3b54f-0  ubuntu@22.04      Running
+1        started  10.116.148.34  juju-c3b54f-1  ubuntu@22.04      Running
+
+08:09:40 INFO Juju error logs:
+
+machine-0: 07:47:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:47:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-otl1x2au-0: 07:47:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 07:47:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:47:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-otl1x2au-0: 07:47:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-otl1x2au-0: 07:48:37 ERROR unit.github-runner-image-builder-otl1x2au/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-otl1x2au-0: 07:49:22 ERROR unit.test-otl1x2au/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-otl1x2au-0: 07:49:25 ERROR unit.test-otl1x2au/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-otl1x2au-0: 07:50:50 ERROR unit.test-otl1x2au/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-otl1x2au-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+08:09:40 INFO Forgetting model main...

@@ -1,0 +1,155 @@
+07:13:58 INFO GitHub token rate limit: Rate(reset=2025-08-13 07:33:30+00:00, remaining=4305, limit=5000)
+07:14:11 WARNING unexpected facade SSHServer received from the controller
+07:14:11 INFO Adding model github-pr-75840-lxd:test-charm-metrics-failure-pmfo on cloud localhost
+07:14:12 WARNING unexpected facade SSHServer received from the controller
+07:14:12 WARNING unexpected facade SSHSession received from the controller
+07:14:12 WARNING unexpected facade SSHTunneler received from the controller
+07:14:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+07:14:32 INFO Deploying local:jammy/github-runner-0
+07:14:32 INFO Waiting for model:
+  test-hqv5c25h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hqv5c25h/0 [allocating] waiting: waiting for machine
+07:15:02 INFO Waiting for model:
+  test-hqv5c25h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hqv5c25h/0 [allocating] waiting: waiting for machine
+07:15:32 INFO Waiting for model:
+  test-hqv5c25h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:16:03 INFO Waiting for model:
+  test-hqv5c25h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:16:33 INFO Waiting for model:
+  test-hqv5c25h/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:17:04 INFO Waiting for model:
+  test-hqv5c25h/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:17:34 INFO Waiting for model:
+  test-hqv5c25h/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:18:04 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] maintenance: Setting up Builder.
+07:18:34 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:19:05 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:19:35 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:20:05 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:20:35 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:21:06 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:21:36 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:22:06 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:22:36 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:23:07 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:23:37 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:24:07 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:24:37 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:25:07 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:25:37 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:26:07 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:26:38 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:27:08 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:27:38 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:28:08 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:28:38 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:29:08 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:29:39 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hqv5c25h/0 [executing] active: Building image.
+07:30:09 INFO Waiting for model:
+  test-hqv5c25h/0 [executing] maintenance: Update image for runners
+07:30:35 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:31:05 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:31:08 INFO Current reconcile ID: 7e1064ff-48c9-4dd1-9f2e-b84ccc8fa1de
+07:32:09 INFO Current reconcile ID: 7e1064ff-48c9-4dd1-9f2e-b84ccc8fa1de
+07:33:10 INFO Current reconcile ID: 9feb312f-f632-4f87-8b41-cd5e324af8f3
+07:34:09 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:34:39 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:34:42 INFO Current reconcile ID: 347f5fb6-eee0-4684-b2a3-318139bd84b9
+07:35:43 INFO Current reconcile ID: 347f5fb6-eee0-4684-b2a3-318139bd84b9
+07:36:44 INFO Current reconcile ID: 347f5fb6-eee0-4684-b2a3-318139bd84b9
+07:37:45 INFO Current reconcile ID: b4b7684a-27a1-43c4-9bce-c5088e413f74
+07:40:55 INFO [TEST SETUP] Exposing port 8080 on test-hqv5c25h-0-n-b1590e1dee45
+07:40:55 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:ee:17'}]])
+07:40:56 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-hqv5c25h-0-n-b1590e1dee45.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.38 &
+07:40:57 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.38' (ED25519) to the list of known hosts.
+
+07:41:01 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-hqv5c25h-0-n-b1590e1dee45
+07:41:01 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:ee:17'}]])
+07:41:02 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hqv5c25h-0-n-b1590e1dee45.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.38 nc -z localhost 8080'
+07:41:03 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:41:05 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-hqv5c25h-0-n-b1590e1dee45
+07:41:05 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.38', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:97:ee:17'}]])
+07:41:06 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-hqv5c25h-0-n-b1590e1dee45.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.38 curl http://localhost:8080'
+07:41:07 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  48545      0 --:--:-- --:--:-- --:--:-- 51750
+'
+07:41:10 INFO Wait for condition not met, sleeping 10
+07:41:21 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:41:52 INFO Waiting for model:
+  test-hqv5c25h/0 [idle] active: 
+07:41:55 INFO Current reconcile ID: 9d28519a-efd0-48f3-904c-aa237fadf9c6
+07:42:56 INFO Current reconcile ID: 9d28519a-efd0-48f3-904c-aa237fadf9c6
+07:43:57 INFO Current reconcile ID: 9d28519a-efd0-48f3-904c-aa237fadf9c6
+07:44:58 INFO Current reconcile ID: 663acddb-3f74-4a3e-9e9c-98c27355d229
+07:44:59 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755070881.34613, "event": "reconciliation", "flavor": "test-hqv5c25h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 14.212157964706421}
+{"timestamp": 1755070813.0, "event": "runner_installed", "flavor": "test-hqv5c25h", "duration": 71.0}
+{"timestamp": 1755070873.0, "event": "runner_start", "flavor": "test-hqv5c25h", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 60.0, "queue_duration": 1.0}
+{"timestamp": 1755070873.0, "event": "runner_stop", "flavor": "test-hqv5c25h", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1755070912.760721, "event": "reconciliation", "flavor": "test-hqv5c25h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 28.59045720100403}
+{"timestamp": 1755071049.0732267, "event": "reconciliation", "flavor": "test-hqv5c25h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.270413875579834}

@@ -1,0 +1,158 @@
+07:58:52 WARNING unexpected facade SSHServer received from the controller
+07:58:52 INFO Adding model github-pr-75840-lxd:test-reactive-demd on cloud localhost
+07:58:52 WARNING unexpected facade SSHServer received from the controller
+07:58:52 WARNING unexpected facade SSHSession received from the controller
+07:58:52 WARNING unexpected facade SSHTunneler received from the controller
+07:58:53 INFO GitHub token rate limit: Rate(reset=2025-08-13 08:33:31+00:00, remaining=4277, limit=5000)
+07:58:58 INFO Deploying ch:amd64/jammy/mongodb-224
+07:59:00 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+07:59:39 INFO Deploying local:jammy/github-runner-0
+07:59:39 INFO Waiting for model:
+  test-alxq7js6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-alxq7js6/0 [allocating] waiting: waiting for machine
+08:00:10 INFO Waiting for model:
+  test-alxq7js6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-alxq7js6/0 [allocating] waiting: waiting for machine
+08:00:40 INFO Waiting for model:
+  test-alxq7js6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-alxq7js6/0 [allocating] waiting: agent initialising
+08:01:11 INFO Waiting for model:
+  test-alxq7js6/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:01:41 INFO Waiting for model:
+  test-alxq7js6/0 [executing] waiting: agent initialising
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:02:11 INFO Waiting for model:
+  test-alxq7js6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:02:42 INFO Waiting for model:
+  test-alxq7js6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:03:12 INFO Waiting for model:
+  test-alxq7js6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:03:42 INFO Waiting for model:
+  test-alxq7js6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-alxq7js6/0 [executing] maintenance: Setting up Builder.
+08:04:13 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] blocked: image integration required.
+08:04:43 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:05:13 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:05:44 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:06:14 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:06:44 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:07:15 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:07:45 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:08:15 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:08:46 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:09:16 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:09:46 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:10:17 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:10:47 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:11:18 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:11:48 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:12:18 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:12:48 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:13:19 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:13:49 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:14:20 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:14:50 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:15:20 INFO Waiting for model:
+  test-alxq7js6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-alxq7js6/0 [executing] active: Building image.
+08:15:50 INFO Waiting for model:
+  test-alxq7js6/0 [executing] maintenance: Update image for runners
+08:16:14 WARNING relate is deprecated and will be removed. Use integrate instead.
+08:16:15 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+08:16:45 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+  mongodb/0 [executing] active: Primary.
+08:17:04 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:17:34 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:17:39 INFO Current reconcile ID: a11b584a-189c-432f-b5fa-4e4bf55e03c9
+08:18:40 INFO Current reconcile ID: a11b584a-189c-432f-b5fa-4e4bf55e03c9
+08:19:41 INFO Current reconcile ID: a11b584a-189c-432f-b5fa-4e4bf55e03c9
+08:20:42 INFO Current reconcile ID: bc54b647-5e36-4505-b651-6419b2c17354
+08:20:46 INFO Wait for condition not met, sleeping 10
+08:21:08 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:21:24 INFO Current reconcile ID: bc54b647-5e36-4505-b651-6419b2c17354
+08:22:25 INFO Current reconcile ID: dcb85ad7-7fa6-4c2c-945d-7dbbaf4d4d16
+08:22:26 INFO Wait for condition not met, sleeping 60
+08:23:26 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:23:42 INFO Current reconcile ID: dcb85ad7-7fa6-4c2c-945d-7dbbaf4d4d16
+08:24:43 INFO Current reconcile ID: dcb85ad7-7fa6-4c2c-945d-7dbbaf4d4d16
+08:25:45 INFO Current reconcile ID: fd6a9b70-8f60-400c-90dd-f97a860003cd
+08:25:46 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755073339.019666, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.43726897239685}
+{"timestamp": 1755073340.0, "event": "runner_installed", "flavor": "test-alxq7js6", "duration": 79.0}
+{"timestamp": 1755073344.0, "event": "runner_start", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 95.0}
+{"timestamp": 1755073347.0, "event": "runner_stop", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755073490.942164, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.831839323043823}
+
+08:25:47 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755073339.019666, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.43726897239685}
+{"timestamp": 1755073340.0, "event": "runner_installed", "flavor": "test-alxq7js6", "duration": 79.0}
+{"timestamp": 1755073344.0, "event": "runner_start", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 95.0}
+{"timestamp": 1755073347.0, "event": "runner_stop", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755073490.942164, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.831839323043823}
+
+08:25:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755073339.019666, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.43726897239685}
+{"timestamp": 1755073340.0, "event": "runner_installed", "flavor": "test-alxq7js6", "duration": 79.0}
+{"timestamp": 1755073344.0, "event": "runner_start", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 95.0}
+{"timestamp": 1755073347.0, "event": "runner_stop", "flavor": "test-alxq7js6", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755073490.942164, "event": "reconciliation", "flavor": "test-alxq7js6", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 31.831839323043823}
+08:25:48 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:26:18 INFO Waiting for model:
+  test-alxq7js6/0 [idle] active: 
+08:26:22 INFO Current reconcile ID: e7d33a97-e2ae-4b26-a633-fbcbc8469afc
+08:27:23 INFO Current reconcile ID: e7d33a97-e2ae-4b26-a633-fbcbc8469afc
+08:28:24 INFO Current reconcile ID: e7d33a97-e2ae-4b26-a633-fbcbc8469afc
+08:29:25 INFO Current reconcile ID: 74c6efb4-2dd1-4014-818a-bee8dda78aa0
