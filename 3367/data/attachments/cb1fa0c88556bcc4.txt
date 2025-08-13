@@ -1,0 +1,178 @@
+18:24:31 WARNING unexpected facade SSHServer received from the controller
+18:24:31 INFO Adding model github-pr-75840-lxd:test-reactive-6lg1 on cloud localhost
+18:24:32 WARNING unexpected facade SSHServer received from the controller
+18:24:32 WARNING unexpected facade SSHSession received from the controller
+18:24:32 WARNING unexpected facade SSHTunneler received from the controller
+18:24:32 INFO GitHub token rate limit: Rate(reset=2025-08-13 19:06:24+00:00, remaining=4999, limit=5000)
+18:24:37 INFO Deploying ch:amd64/jammy/mongodb-224
+18:24:38 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:24:55 INFO Deploying local:jammy/github-runner-0
+18:24:56 INFO Waiting for model:
+  test-opizs7qw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-opizs7qw/0 [allocating] waiting: waiting for machine
+18:25:26 INFO Waiting for model:
+  test-opizs7qw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-opizs7qw/0 [allocating] waiting: waiting for machine
+18:25:56 INFO Waiting for model:
+  test-opizs7qw/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-opizs7qw/0 [allocating] waiting: waiting for machine
+18:26:27 INFO Waiting for model:
+  test-opizs7qw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-opizs7qw/0 [allocating] waiting: waiting for machine
+18:26:57 INFO Waiting for model:
+  test-opizs7qw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-opizs7qw/0 [executing] maintenance: Setting up Builder.
+18:27:28 INFO Waiting for model:
+  test-opizs7qw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-opizs7qw/0 [executing] maintenance: Setting up Builder.
+18:27:58 INFO Waiting for model:
+  test-opizs7qw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-opizs7qw/0 [executing] maintenance: Setting up Builder.
+18:28:28 INFO Waiting for model:
+  test-opizs7qw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-opizs7qw/0 [executing] maintenance: Setting up Builder.
+18:28:59 INFO Waiting for model:
+  test-opizs7qw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-opizs7qw/0 [executing] maintenance: Setting up Builder.
+18:29:29 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:29:59 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:30:30 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:31:00 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:31:30 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:32:01 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:32:31 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:33:01 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:33:31 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:34:02 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:34:32 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:35:02 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:35:33 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:36:03 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:36:33 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:37:03 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:37:34 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:38:04 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:38:34 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:39:05 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:39:35 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:40:05 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:40:36 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:41:06 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:41:36 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:42:06 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:42:36 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:43:06 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:43:37 INFO Waiting for model:
+  test-opizs7qw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-opizs7qw/0 [executing] active: Building image.
+18:44:07 INFO Waiting for model:
+  test-opizs7qw/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-opizs7qw/0 [idle] active: 
+18:44:38 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:44:40 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:44:40 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:45:10 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:45:23 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:45:53 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:45:56 INFO Current reconcile ID: 6e48a3d7-e326-425d-9ab9-b6209bf2c179
+18:46:57 INFO Current reconcile ID: 6e48a3d7-e326-425d-9ab9-b6209bf2c179
+18:47:58 INFO Current reconcile ID: 6e48a3d7-e326-425d-9ab9-b6209bf2c179
+18:48:59 INFO Current reconcile ID: fe4da50d-8d1e-4b1d-96ed-616f130b3278
+18:49:03 INFO Wait for condition not met, sleeping 10
+18:49:24 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:49:40 INFO Current reconcile ID: fe4da50d-8d1e-4b1d-96ed-616f130b3278
+18:50:41 INFO Current reconcile ID: edccf6db-3ed3-48a6-8318-c3d9805de099
+18:50:42 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:50:58 INFO Current reconcile ID: edccf6db-3ed3-48a6-8318-c3d9805de099
+18:51:59 INFO Current reconcile ID: edccf6db-3ed3-48a6-8318-c3d9805de099
+18:53:00 INFO Current reconcile ID: 37b27bd9-7b48-4064-849e-477e7f463ef2
+18:53:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755111023.0697591, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.487226724624634}
+{"timestamp": 1755111031.0, "event": "runner_installed", "flavor": "test-opizs7qw", "duration": 73.0}
+{"timestamp": 1755111035.0, "event": "runner_start", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1755111038.0, "event": "runner_stop", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755111168.5678961, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 25.366921186447144}
+
+18:53:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755111023.0697591, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.487226724624634}
+{"timestamp": 1755111031.0, "event": "runner_installed", "flavor": "test-opizs7qw", "duration": 73.0}
+{"timestamp": 1755111035.0, "event": "runner_start", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1755111038.0, "event": "runner_stop", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755111168.5678961, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 25.366921186447144}
+
+18:53:04 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755111023.0697591, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.487226724624634}
+{"timestamp": 1755111031.0, "event": "runner_installed", "flavor": "test-opizs7qw", "duration": 73.0}
+{"timestamp": 1755111035.0, "event": "runner_start", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 91.0}
+{"timestamp": 1755111038.0, "event": "runner_stop", "flavor": "test-opizs7qw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755111168.5678961, "event": "reconciliation", "flavor": "test-opizs7qw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 25.366921186447144}
+18:53:04 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:53:34 INFO Waiting for model:
+  test-opizs7qw/0 [idle] active: 
+18:53:37 INFO Current reconcile ID: 832cd078-e266-4bba-b486-b80163cc22c8
+18:54:38 INFO Current reconcile ID: 832cd078-e266-4bba-b486-b80163cc22c8
+18:55:39 INFO Current reconcile ID: 832cd078-e266-4bba-b486-b80163cc22c8
+18:56:40 INFO Current reconcile ID: 38bde89c-6e95-4f8d-abf2-1c669afda2b1
