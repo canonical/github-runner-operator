@@ -1,4 +1,6 @@
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 # GitHub runner Terraform module
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 This folder contains a base [Terraform][Terraform] module for the GitHub runner charm.
 
