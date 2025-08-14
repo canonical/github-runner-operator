@@ -11,7 +11,7 @@ For third-party contributions, the charm can integrate with the [Repo Policy Com
 ### Good practices
 
 - Only register the GitHub self-hosted runners to a trusted organization or repository so that only workflows from trusted users are able to run on the runners.
-- For outside collaborators: Use the [Repo Policy Compliance charm](https://charmhub.io/repo-policy-compliance) with [policy for outside collaborators](https://charmhub.io/github-runner/docs/how-to-comply-security#working-with-outside-collaborators) to ensure the code executed in runners are reviewed by a trusted user.
+- For outside collaborators: Use the [`repo-policy-compliance` charm](https://charmhub.io/repo-policy-compliance) with [policy for outside collaborators](https://charmhub.io/github-runner/docs/how-to-comply-security#working-with-outside-collaborators) to ensure the code executed in runners are reviewed by a trusted user.
 
 ## Permission for GitHub app or personal access token
 

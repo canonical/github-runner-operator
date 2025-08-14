@@ -20,7 +20,9 @@ The charm will deploy a self-hosted runner that can be used to run GitHub Action
 For more information about how to install Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
 ## Steps
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### Add more RAM to the Multipass VM
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 > NOTE: If you're working locally, you don't need to do this step.
 The blueprint used for deploying Multipass VM is configured with 8 GB of RAM. To add more RAM to the VM, follow these steps:
 Stop the VM:
@@ -40,7 +42,9 @@ To be able to work inside the Multipass VM first you need to log in with the fol
 multipass shell my-juju-vm
 ```
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### Create GitHub repository
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The GitHub self-hosted runner spawned by the charm needs to connect to a GitHub repository or organization. GitHub repositories are used as it is simpler to manage.
 
