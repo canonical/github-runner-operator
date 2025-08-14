@@ -85,7 +85,7 @@ class RunnerInstance:
             return HealthState.UNHEALTHY
         if self.platform_health.online:
             return HealthState.HEALTHY
-        return HealthState.UNKNOWN
+        return HealthState.UNHEALTHY
 
     @classmethod
     def from_cloud_and_platform_health(
