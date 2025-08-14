@@ -1,0 +1,78 @@
+13:02:09 INFO GitHub token rate limit: Rate(reset=2025-08-14 13:38:07+00:00, remaining=4573, limit=5000)
+13:02:13 INFO Waiting for model:
+  test-jhrkhn6l/0 [idle] active: 
+13:02:44 INFO Waiting for model:
+  test-jhrkhn6l/0 [idle] active: 
+13:02:48 INFO Current reconcile ID: a017c969-e586-47b0-87b9-a505c50cc6eb
+13:03:49 INFO Current reconcile ID: a017c969-e586-47b0-87b9-a505c50cc6eb
+13:04:50 INFO Current reconcile ID: 79f0f790-8216-4382-ba5b-46b377951666
+13:04:59 INFO Wait for condition not met, sleeping 10
+13:05:10 INFO Wait for condition not met, sleeping 60
+13:06:11 INFO Waiting for model:
+  test-jhrkhn6l/0 [idle] active: 
+13:06:41 INFO Waiting for model:
+  test-jhrkhn6l/0 [idle] active: 
+13:06:44 INFO Current reconcile ID: 72abaafa-c684-4c2b-b7ab-bcd62a57ab25
+13:07:45 INFO Current reconcile ID: 72abaafa-c684-4c2b-b7ab-bcd62a57ab25
+13:08:46 INFO Current reconcile ID: 72abaafa-c684-4c2b-b7ab-bcd62a57ab25
+13:09:47 INFO Current reconcile ID: d8e3bf3d-b52f-4c9a-96de-7b8482451da1
+13:09:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755176590.0, "event": "runner_installed", "flavor": "test-jhrkhn6l", "duration": 42.0}
+{"timestamp": 1755176711.0, "event": "runner_start", "flavor": "test-jhrkhn6l", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 121.0, "queue_duration": 10.0}
+{"timestamp": 1755176714.0, "event": "runner_stop", "flavor": "test-jhrkhn6l", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1755176797.8682063, "event": "reconciliation", "flavor": "test-jhrkhn6l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 24.047566890716553}
+{"timestamp": 1755176930.7651265, "event": "reconciliation", "flavor": "test-jhrkhn6l", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.757163524627686}
+13:09:50 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-tbgf  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  13:09:50Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-jhrkhn6l           active      1  github-runner-image-builder  latest/edge  100  no       
+test-jhrkhn6l                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-jhrkhn6l/0*  active    idle   0        10.121.174.191         
+test-jhrkhn6l/0*                         active    idle   1        10.121.174.192         
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.121.174.191  juju-dba70c-0  ubuntu@22.04      Running
+1        started  10.121.174.192  juju-dba70c-1  ubuntu@22.04      Running
+
+13:09:50 INFO Juju error logs:
+
+machine-0: 12:37:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 12:37:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-jhrkhn6l-0: 12:37:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-jhrkhn6l-0: 12:38:30 ERROR unit.github-runner-image-builder-jhrkhn6l/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 12:38:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 12:38:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jhrkhn6l-0: 12:38:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-jhrkhn6l-0: 12:39:56 ERROR unit.test-jhrkhn6l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-jhrkhn6l-0: 12:39:59 ERROR unit.test-jhrkhn6l/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-jhrkhn6l-0: 12:40:45 ERROR unit.test-jhrkhn6l/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jhrkhn6l-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+13:09:50 INFO Forgetting model main...

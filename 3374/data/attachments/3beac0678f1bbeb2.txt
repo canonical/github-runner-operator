@@ -1,0 +1,94 @@
+13:16:55 INFO Waiting for model:
+  test-bmaaqk10/0 [idle] active: 
+13:17:26 INFO Waiting for model:
+  test-bmaaqk10/0 [idle] active: 
+13:17:29 INFO Current reconcile ID: 9492f283-7e1b-4246-9db6-da96a0ee070e
+13:18:30 INFO Current reconcile ID: 9492f283-7e1b-4246-9db6-da96a0ee070e
+13:19:31 INFO Current reconcile ID: 9492f283-7e1b-4246-9db6-da96a0ee070e
+13:20:32 INFO Current reconcile ID: bed9790d-f8ce-4777-b174-ecea8dfc1a5b
+13:20:40 INFO [TEST SETUP] Exposing port 8080 on test-bmaaqk10-0-n-78eb3e75b428
+13:20:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:90:9e:ac'}]])
+13:20:41 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-bmaaqk10-0-n-78eb3e75b428.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.62 &
+13:20:42 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.62' (ED25519) to the list of known hosts.
+
+13:20:44 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-bmaaqk10-0-n-78eb3e75b428
+13:20:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:90:9e:ac'}]])
+13:20:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bmaaqk10-0-n-78eb3e75b428.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.62 nc -z localhost 8080'
+13:20:46 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+13:20:48 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-bmaaqk10-0-n-78eb3e75b428
+13:20:48 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.62', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:90:9e:ac'}]])
+13:20:49 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-bmaaqk10-0-n-78eb3e75b428.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.62 curl http://localhost:8080'
+13:20:50 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  64849      0 --:--:-- --:--:-- --:--:-- 69000
+'
+13:20:52 INFO Wait for condition not met, sleeping 10
+13:21:03 INFO Waiting for model:
+  test-bmaaqk10/0 [idle] active: 
+13:21:34 INFO Waiting for model:
+  test-bmaaqk10/0 [idle] active: 
+13:21:37 INFO Current reconcile ID: e0296d9f-acd0-4273-a415-60471b2d7b48
+13:22:38 INFO Current reconcile ID: e0296d9f-acd0-4273-a415-60471b2d7b48
+13:23:39 INFO Current reconcile ID: e0296d9f-acd0-4273-a415-60471b2d7b48
+13:24:40 INFO Current reconcile ID: ce951415-ccd2-45b6-83f1-81db35f24092
+13:24:41 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-sbch  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  13:24:41Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-bmaaqk10           active      1  github-runner-image-builder  latest/edge  100  no       
+test-bmaaqk10                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-bmaaqk10/0*  active    idle   0        10.57.67.102              
+test-bmaaqk10/0*                         active    idle   1        10.57.67.216    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.57.67.102  juju-f99749-0  ubuntu@22.04      Running
+1        started  10.57.67.216  juju-f99749-1  ubuntu@22.04      Running
+
+13:24:41 INFO Juju error logs:
+
+machine-0: 12:37:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 12:37:18 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-bmaaqk10-0: 12:37:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-bmaaqk10-0: 12:38:04 ERROR unit.github-runner-image-builder-bmaaqk10/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 12:38:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 12:38:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-bmaaqk10-0: 12:38:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-bmaaqk10-0: 12:39:30 ERROR unit.test-bmaaqk10/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-bmaaqk10-0: 12:39:32 ERROR unit.test-bmaaqk10/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-bmaaqk10-0: 12:40:18 ERROR unit.test-bmaaqk10/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-bmaaqk10-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+13:24:41 INFO Forgetting model main...
