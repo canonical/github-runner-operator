@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-08-12
+
+- Metrics are now issued even without runner installed timestamp.
+
 ## 2025-07-28
 
 - Fix an issue where the charm can error out due to timeout during flush runners.
