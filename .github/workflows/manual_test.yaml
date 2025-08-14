@@ -6,8 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  edge:
-    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-edge]
+  private:
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-private-endpoint-medium]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+      - uses: actions/checkout@v5
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
+  pfe-ci:
+    runs-on: [self-hosted, self-hosted-linux-amd64-noble-pfe-ci]
     steps:
       - run: lscpu
       - run: df -h
