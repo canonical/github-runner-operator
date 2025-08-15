@@ -30,12 +30,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
 
+      - name: Ensure .trivyignore exists
+        run: |
+          if [ ! -f .trivyignore ]; then
+            echo "Creating empty .trivyignore"
+            touch .trivyignore
+          else
+            echo ".trivyignore already exists"
+          fi
+
       - name: Run Trivy scan for logs
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
           trivy-config: "trivy.yaml"
+          trivyignores: ".trivyignore"
 
       - name: Run Trivy scan for SARIF report
         uses: aquasecurity/trivy-action@0.32.0
@@ -43,9 +53,9 @@ jobs:
           scan-type: "fs"
           scan-ref: "."
           trivy-config: "trivy.yaml"
+          trivyignores: ".trivyignore"
           format: "sarif"
           output: "trivy-results.sarif"
-          trivyignores: ".trivyignore"
 
       - name: Upload SARIF to GitHub Security tab
         if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
@@ -68,16 +78,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
 
+      - name: Ensure .trivyignore exists
+        run: |
+          if [ ! -f .trivyignore ]; then
+            echo "Creating empty .trivyignore"
+            touch .trivyignore
+          else
+            echo ".trivyignore already exists"
+          fi
+
       - name: Run Trivy to generate SBOM
         uses: aquasecurity/trivy-action@0.32.0
         with:
           scan-type: "fs"
           scan-ref: "."
           trivy-config: "trivy.yaml"
+          trivyignores: ".trivyignore"
           format: "spdx-json"
           output: "dependency-results.sbom.json"
           github-pat: ${{ secrets.GITHUB_TOKEN }}
-          trivyignores: ".trivyignore"
 
       - name: Upload SBOM as an artifact
         if: (github.event_name == 'workflow_dispatch' && inputs.upload_results == true) || (github.event_name != 'workflow_dispatch' && env.UPLOAD_RESULTS == 'true')
