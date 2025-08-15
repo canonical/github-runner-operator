@@ -1,0 +1,93 @@
+19:17:45 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+19:18:15 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+19:18:19 INFO Current reconcile ID: 5ca464d8-17e4-4480-963e-cea5db56112a
+19:19:20 INFO Current reconcile ID: 5ca464d8-17e4-4480-963e-cea5db56112a
+19:20:21 INFO Current reconcile ID: b6daacf9-1caf-4d80-a0df-dad987a0c8ea
+19:20:30 INFO [TEST SETUP] Exposing port 8080 on test-yv4c545y-0-n-6bf0f5468224
+19:20:30 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.166', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:f8:cc'}]])
+19:20:31 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-yv4c545y-0-n-6bf0f5468224.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.166 &
+19:20:32 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.166' (ED25519) to the list of known hosts.
+
+19:20:34 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-yv4c545y-0-n-6bf0f5468224
+19:20:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.166', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:f8:cc'}]])
+19:20:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yv4c545y-0-n-6bf0f5468224.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.166 nc -z localhost 8080'
+19:20:36 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:20:38 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-yv4c545y-0-n-6bf0f5468224
+19:20:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.166', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3c:f8:cc'}]])
+19:20:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-yv4c545y-0-n-6bf0f5468224.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.166 curl http://localhost:8080'
+19:20:40 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  43350      0 --:--:-- --:--:-- --:--:-- 51750
+'
+19:20:42 INFO Wait for condition not met, sleeping 10
+19:20:54 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+19:21:24 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+19:21:28 INFO Current reconcile ID: dd90ebcf-08bd-406d-ae5d-519aaf44c982
+19:22:29 INFO Current reconcile ID: dd90ebcf-08bd-406d-ae5d-519aaf44c982
+19:23:30 INFO Current reconcile ID: dd90ebcf-08bd-406d-ae5d-519aaf44c982
+19:24:31 INFO Current reconcile ID: 69d45f9b-021f-4137-a804-726dd121b2e4
+19:24:32 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-1f3d  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  19:24:32Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yv4c545y           active      1  github-runner-image-builder  latest/edge  100  no       
+test-yv4c545y                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-yv4c545y/0*  active    idle   0        10.251.135.142            
+test-yv4c545y/0*                         active    idle   1        10.251.135.183  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.251.135.142  juju-1e2f6d-0  ubuntu@22.04      Running
+1        started  10.251.135.183  juju-1e2f6d-1  ubuntu@22.04      Running
+
+19:24:32 INFO Juju error logs:
+
+machine-0: 18:28:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yv4c545y-0: 18:28:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yv4c545y-0: 18:28:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yv4c545y-0: 18:29:26 ERROR unit.github-runner-image-builder-yv4c545y/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-yv4c545y-0: 18:30:26 ERROR unit.test-yv4c545y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yv4c545y-0: 18:30:30 ERROR unit.test-yv4c545y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yv4c545y-0: 18:31:41 ERROR unit.test-yv4c545y/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yv4c545y-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:24:32 INFO Forgetting model main...

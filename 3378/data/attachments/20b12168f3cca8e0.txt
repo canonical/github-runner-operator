@@ -1,0 +1,174 @@
+18:26:56 WARNING unexpected facade SSHServer received from the controller
+18:26:56 INFO Adding model github-pr-c6dfb-lxd:test-charm-runner-1f3d on cloud localhost
+18:26:57 WARNING unexpected facade SSHServer received from the controller
+18:26:57 WARNING unexpected facade SSHSession received from the controller
+18:26:57 WARNING unexpected facade SSHTunneler received from the controller
+18:26:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:27:40 INFO Deploying local:jammy/github-runner-0
+18:27:41 INFO Waiting for model:
+  test-yv4c545y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yv4c545y/0 [allocating] waiting: waiting for machine
+18:28:11 INFO Waiting for model:
+  test-yv4c545y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yv4c545y/0 [allocating] waiting: waiting for machine
+18:28:42 INFO Waiting for model:
+  test-yv4c545y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yv4c545y/0 [allocating] waiting: agent initialising
+18:29:12 INFO Waiting for model:
+  test-yv4c545y/0 [executing] waiting: agent initialising
+  github-runner-image-builder-yv4c545y/0 [executing] maintenance: Setting up Builder.
+18:29:42 INFO Waiting for model:
+  test-yv4c545y/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yv4c545y/0 [executing] maintenance: Setting up Builder.
+18:30:12 INFO Waiting for model:
+  test-yv4c545y/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yv4c545y/0 [executing] maintenance: Setting up Builder.
+18:30:43 INFO Waiting for model:
+  test-yv4c545y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yv4c545y/0 [executing] maintenance: Setting up Builder.
+18:31:13 INFO Waiting for model:
+  test-yv4c545y/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yv4c545y/0 [executing] maintenance: Setting up Builder.
+18:31:43 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] blocked: image integration required.
+18:32:13 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:32:43 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:33:14 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:33:44 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:34:15 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:34:45 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:35:15 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:35:46 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:36:16 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:36:46 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:37:16 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:37:46 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:38:16 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:38:47 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:39:17 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:39:47 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:40:17 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:40:47 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:41:17 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:41:48 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:42:18 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:42:48 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:43:18 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:43:48 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:44:18 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:44:49 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:45:19 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:45:49 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:46:20 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:46:50 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:47:20 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:47:50 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:48:21 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:48:51 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:49:21 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:49:51 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:50:22 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:50:52 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:51:22 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:51:53 INFO Waiting for model:
+  test-yv4c545y/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yv4c545y/0 [executing] active: Building image.
+18:52:23 INFO Waiting for model:
+  test-yv4c545y/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-yv4c545y/0 [idle] active: 
+18:52:53 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active:
+18:53:03 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+18:53:33 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+18:53:38 INFO Current reconcile ID: 0e70fc52-876f-4c93-8387-f929dc05c827
+18:54:39 INFO Current reconcile ID: 0e70fc52-876f-4c93-8387-f929dc05c827
+18:55:40 INFO Current reconcile ID: 95961eca-a7e2-4d77-8c5c-c45cd0f2dc3f
+18:56:31 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+18:57:01 INFO Waiting for model:
+  test-yv4c545y/0 [idle] active: 
+18:57:06 INFO Current reconcile ID: 781012ee-1f2f-4428-b4f3-631ed5f8313e
+18:58:07 INFO Current reconcile ID: 781012ee-1f2f-4428-b4f3-631ed5f8313e
+18:59:08 INFO Current reconcile ID: 781012ee-1f2f-4428-b4f3-631ed5f8313e
+19:00:09 INFO Current reconcile ID: 00cae649-b218-4c2b-b457-ab6d68932d0b

@@ -1,0 +1,207 @@
+18:26:27 WARNING unexpected facade SSHServer received from the controller
+18:26:27 INFO Adding model github-pr-c6dfb-lxd:test-charm-fork-repo-xorq on cloud localhost
+18:26:27 WARNING unexpected facade SSHServer received from the controller
+18:26:27 WARNING unexpected facade SSHSession received from the controller
+18:26:27 WARNING unexpected facade SSHTunneler received from the controller
+18:26:29 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+18:26:58 INFO Deploying local:jammy/github-runner-0
+18:26:58 INFO Waiting for model:
+  test-p1hphewx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-p1hphewx/0 [allocating] waiting: waiting for machine
+18:27:28 INFO Waiting for model:
+  test-p1hphewx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-p1hphewx/0 [allocating] waiting: waiting for machine
+18:27:59 INFO Waiting for model:
+  test-p1hphewx/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-p1hphewx/0 [allocating] waiting: waiting for machine
+18:28:29 INFO Waiting for model:
+  test-p1hphewx/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:28:59 INFO Waiting for model:
+  test-p1hphewx/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:29:29 INFO Waiting for model:
+  test-p1hphewx/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:30:00 INFO Waiting for model:
+  test-p1hphewx/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:30:30 INFO Waiting for model:
+  test-p1hphewx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:31:00 INFO Waiting for model:
+  test-p1hphewx/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-p1hphewx/0 [executing] maintenance: Setting up Builder.
+18:31:30 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:32:00 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:32:31 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:33:01 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:33:32 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:34:02 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:34:33 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:35:03 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:35:33 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:36:04 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:36:34 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:37:04 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:37:34 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:38:05 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:39:05 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:39:35 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:40:05 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:40:35 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:41:05 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:41:36 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:42:06 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:42:36 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:43:06 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:43:36 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:44:07 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:44:37 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: Building image.
+18:45:07 INFO Waiting for model:
+  test-p1hphewx/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-p1hphewx/0 [executing] active: 
+18:45:37 INFO Waiting for model:
+  test-p1hphewx/0 [idle] active: 
+18:45:53 INFO GitHub token rate limit: Rate(reset=2025-08-15 19:12:08+00:00, remaining=4874, limit=5000)
+18:47:17 INFO Waiting for model:
+  test-p1hphewx/0 [idle] active: 
+18:47:48 INFO Waiting for model:
+  test-p1hphewx/0 [idle] active: 
+18:47:52 INFO Current reconcile ID: bb12a18b-c54b-4e1f-9854-d1abf1cc4a28
+18:48:53 INFO Current reconcile ID: bb12a18b-c54b-4e1f-9854-d1abf1cc4a28
+18:49:54 INFO Current reconcile ID: 83147b50-8e12-4442-a946-0d1e8dc5a608
+18:50:38 INFO [TEST SETUP] Exposing port 8080 on test-p1hphewx-0-n-c56f0b7dbcbc
+18:50:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.117', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:67:f7'}]])
+18:50:39 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-p1hphewx-0-n-c56f0b7dbcbc.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.117 &
+18:50:40 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.117' (ED25519) to the list of known hosts.
+
+18:50:43 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-p1hphewx-0-n-c56f0b7dbcbc
+18:50:43 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.117', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:67:f7'}]])
+18:50:44 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-p1hphewx-0-n-c56f0b7dbcbc.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.117 nc -z localhost 8080'
+18:50:45 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:50:46 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-p1hphewx-0-n-c56f0b7dbcbc
+18:50:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.117', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5f:67:f7'}]])
+18:50:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-p1hphewx-0-n-c56f0b7dbcbc.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.117 curl http://localhost:8080'
+18:50:49 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  22804      0 --:--:-- --:--:-- --:--:-- 23000
+'
+18:50:51 INFO Wait for condition not met, sleeping 10
+18:51:03 INFO Wait for condition not met, sleeping 60
+18:52:07 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-xorq  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  18:52:07Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-p1hphewx           active      1  github-runner-image-builder  latest/edge  100  no       
+test-p1hphewx                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-p1hphewx/0*  active    idle   0        10.185.168.46             
+test-p1hphewx/0*                         active    idle   1        10.185.168.44   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ  Message
+0        started  10.185.168.46  juju-c23827-0  ubuntu@22.04      Running
+1        started  10.185.168.44  juju-c23827-1  ubuntu@22.04      Running
+
+18:52:07 INFO Juju error logs:
+
+machine-0: 18:28:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-p1hphewx-0: 18:28:06 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-p1hphewx-0: 18:28:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-p1hphewx-0: 18:29:00 ERROR unit.github-runner-image-builder-p1hphewx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-p1hphewx-0: 18:29:58 ERROR unit.test-p1hphewx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-p1hphewx-0: 18:30:02 ERROR unit.test-p1hphewx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-p1hphewx-0: 18:31:22 ERROR unit.test-p1hphewx/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-p1hphewx-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:52:07 INFO Forgetting model main...
