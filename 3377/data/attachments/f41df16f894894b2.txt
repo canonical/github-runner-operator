@@ -1,0 +1,206 @@
+06:26:25 WARNING unexpected facade SSHServer received from the controller
+06:26:25 INFO Adding model github-pr-c6dfb-lxd:test-charm-fork-repo-w36y on cloud localhost
+06:26:25 WARNING unexpected facade SSHServer received from the controller
+06:26:25 WARNING unexpected facade SSHSession received from the controller
+06:26:25 WARNING unexpected facade SSHTunneler received from the controller
+06:26:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:26:56 INFO Deploying local:jammy/github-runner-0
+06:26:56 INFO Waiting for model:
+  test-cedzcvoy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cedzcvoy/0 [allocating] waiting: waiting for machine
+06:27:26 INFO Waiting for model:
+  test-cedzcvoy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cedzcvoy/0 [allocating] waiting: waiting for machine
+06:27:57 INFO Waiting for model:
+  test-cedzcvoy/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cedzcvoy/0 [allocating] waiting: agent initialising
+06:28:27 INFO Waiting for model:
+  test-cedzcvoy/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cedzcvoy/0 [executing] maintenance: Setting up Builder.
+06:28:58 INFO Waiting for model:
+  test-cedzcvoy/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cedzcvoy/0 [executing] maintenance: Setting up Builder.
+06:29:28 INFO Waiting for model:
+  test-cedzcvoy/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cedzcvoy/0 [executing] maintenance: Setting up Builder.
+06:29:58 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] maintenance: Setting up Builder.
+06:30:29 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] maintenance: Setting up Builder.
+06:30:59 INFO Waiting for model:
+  test-cedzcvoy/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] blocked: image integration required.
+06:31:29 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:32:00 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:32:30 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:33:01 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:33:31 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:34:02 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:34:32 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:35:02 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:35:33 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:36:03 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:36:34 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:37:04 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:37:34 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:38:05 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:38:35 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:39:05 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:39:36 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:40:06 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:40:36 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:41:06 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:41:36 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:42:06 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:42:37 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:43:07 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:43:37 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:44:07 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:44:38 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cedzcvoy/0 [executing] active: Building image.
+06:45:08 INFO Waiting for model:
+  test-cedzcvoy/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cedzcvoy/0 [idle] active: 
+06:45:38 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] active: 
+06:45:39 INFO GitHub token rate limit: Rate(reset=2025-08-15 06:53:06+00:00, remaining=4782, limit=5000)
+06:46:49 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] active: 
+06:47:19 INFO Waiting for model:
+  test-cedzcvoy/0 [idle] active: 
+06:47:22 INFO Current reconcile ID: 956697cf-62cb-4f08-b77a-b35c5c5456b9
+06:48:23 INFO Current reconcile ID: 956697cf-62cb-4f08-b77a-b35c5c5456b9
+06:49:24 INFO Current reconcile ID: ab386974-5282-47c9-a30e-fefca0eb9ad5
+06:49:31 INFO [TEST SETUP] Exposing port 8080 on test-cedzcvoy-0-n-f92603d0375b
+06:49:31 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fe:15:2d'}]])
+06:49:32 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-cedzcvoy-0-n-f92603d0375b.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.107 &
+06:49:33 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.107' (ED25519) to the list of known hosts.
+
+06:49:35 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-cedzcvoy-0-n-f92603d0375b
+06:49:35 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fe:15:2d'}]])
+06:49:36 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cedzcvoy-0-n-f92603d0375b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 nc -z localhost 8080'
+06:49:37 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:49:39 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-cedzcvoy-0-n-f92603d0375b
+06:49:39 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.107', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fe:15:2d'}]])
+06:49:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cedzcvoy-0-n-f92603d0375b.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.107 curl http://localhost:8080'
+06:49:41 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  53049      0 --:--:-- --:--:-- --:--:-- 69000
+'
+06:49:43 INFO Wait for condition not met, sleeping 10
+06:49:59 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-w36y  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  06:49:59Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cedzcvoy           active      1  github-runner-image-builder  latest/edge  100  no       
+test-cedzcvoy                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-cedzcvoy/0*  active    idle   0        10.207.153.241            
+test-cedzcvoy/0*                         active    idle   1        10.207.153.115  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ  Message
+0        started  10.207.153.241  juju-5b05ce-0  ubuntu@22.04      Running
+1        started  10.207.153.115  juju-5b05ce-1  ubuntu@22.04      Running
+
+06:49:59 INFO Juju error logs:
+
+machine-0: 06:27:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-cedzcvoy-0: 06:27:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:28:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:28:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cedzcvoy-0: 06:28:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-cedzcvoy-0: 06:28:38 ERROR unit.github-runner-image-builder-cedzcvoy/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-cedzcvoy-0: 06:29:39 ERROR unit.test-cedzcvoy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cedzcvoy-0: 06:29:42 ERROR unit.test-cedzcvoy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cedzcvoy-0: 06:31:00 ERROR unit.test-cedzcvoy/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cedzcvoy-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:49:59 INFO Forgetting model main...
