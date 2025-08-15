@@ -5,7 +5,7 @@ name: Security Scan
 
 on:
   push:
-    branches: [main, add-vulnurability-scan]
+    branches: [main]
   pull_request:
   workflow_dispatch:
     inputs:
