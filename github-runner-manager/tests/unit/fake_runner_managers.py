@@ -6,16 +6,13 @@ from unittest.mock import MagicMock
 
 from pydantic import HttpUrl
 
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-)
 from github_runner_manager.manager.models import (
     InstanceID,
     RunnerContext,
     RunnerIdentity,
     RunnerMetadata,
 )
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.openstack_cloud import _MAX_NOVA_COMPUTE_API_VERSION
 from github_runner_manager.platform.platform_provider import (
@@ -111,7 +108,7 @@ class FakeCloudRunnerManager(CloudRunnerManager):
         """The naming prefix for runners managed."""
         return "fake_cloud_runner_manager"
 
-    def __init__(self, initial_cloud_runners: list[CloudRunnerInstance]) -> None:
+    def __init__(self, initial_cloud_runners: list[VM]) -> None:
         """Initialize the Cloud Runner Manager.
 
         Args:
@@ -119,9 +116,7 @@ class FakeCloudRunnerManager(CloudRunnerManager):
         """
         self._cloud_runners = {runner.instance_id: runner for runner in initial_cloud_runners}
 
-    def create_runner(
-        self, runner_identity: RunnerIdentity, runner_context: RunnerContext
-    ) -> CloudRunnerInstance:
+    def create_runner(self, runner_identity: RunnerIdentity, runner_context: RunnerContext) -> VM:
         """Create a runner instance for the given runner identity and context.
 
         Args:
@@ -135,7 +130,7 @@ class FakeCloudRunnerManager(CloudRunnerManager):
         self._cloud_runners[runner_identity.instance_id] = created_runner
         return created_runner
 
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[VM]:
         """Get all the cloud runner instances managed by the manager.
 
         Returns:

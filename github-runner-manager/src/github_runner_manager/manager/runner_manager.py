@@ -13,13 +13,8 @@ from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-    CloudRunnerState,
-    HealthState,
-)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
@@ -60,7 +55,7 @@ class FlushMode(Enum):
     FLUSH_BUSY = auto()
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunnerInstance:
     """Represents an instance of runner.
 
@@ -70,20 +65,32 @@ class RunnerInstance:
         metadata: Metadata for the runner.
         health: The health state of the runner.
         platform_state: State on the platform.
+        platform_health: Health information queried from the platform provider.
         cloud_state: State on cloud.
     """
 
     name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
     platform_state: PlatformRunnerState | None
-    cloud_state: CloudRunnerState
+    platform_health: PlatformRunnerHealth | None
+    cloud_state: VMState
+
+    @property
+    def health(self) -> HealthState:
+        """Overall health state of the runner instance."""
+        if not self.platform_health:
+            return HealthState.UNKNOWN
+        if self.platform_health.deletable:
+            return HealthState.UNHEALTHY
+        if self.platform_health.online:
+            return HealthState.HEALTHY
+        return HealthState.UNKNOWN
 
     @classmethod
     def from_cloud_and_platform_health(
         cls,
-        cloud_instance: CloudRunnerInstance,
+        cloud_instance: VM,
         platform_health_state: PlatformRunnerHealth | None,
     ) -> "RunnerInstance":
         """Construct an instance.
@@ -96,15 +103,15 @@ class RunnerInstance:
             The RunnerInstance instantiated from cloud instance and platform state.
         """
         return cls(
-            name=cloud_instance.name,
+            name=cloud_instance.instance_id.name,
             instance_id=cloud_instance.instance_id,
             metadata=cloud_instance.metadata,
-            health=cloud_instance.health,
             platform_state=(
-                PlatformRunnerState.from_platform_health(platform_health_state)
+                PlatformRunnerState.from_platform_health(health=platform_health_state)
                 if platform_health_state is not None
                 else None
             ),
+            platform_health=platform_health_state,
             cloud_state=cloud_instance.state,
         )
 
@@ -178,31 +185,19 @@ class RunnerManager:
             Information on the runners.
         """
         logger.debug("runner_manager::get_runners")
-        runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
         logger.info("clouds runners response %s", cloud_runners)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
-        for cloud_runner in cloud_runners:
-            if cloud_runner.instance_id not in health_runners_map:
-                runner_instance = RunnerInstance.from_cloud_and_platform_health(cloud_runner, None)
-                runner_instance.health = HealthState.UNKNOWN
-                runner_instances.append(runner_instance)
-                continue
-            health_runner = health_runners_map[cloud_runner.instance_id]
-            if health_runner.deletable:
-                cloud_runner.health = HealthState.UNHEALTHY
-            elif health_runner.online:
-                cloud_runner.health = HealthState.HEALTHY
-            else:
-                cloud_runner.health = HealthState.UNHEALTHY
-            runner_instance = RunnerInstance.from_cloud_and_platform_health(
-                cloud_runner, health_runner
+        return tuple(
+            RunnerInstance.from_cloud_and_platform_health(
+                cloud_instance=cloud_runner,
+                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
             )
-            runner_instances.append(runner_instance)
-        return cast(tuple[RunnerInstance], tuple(runner_instances))
+            for cloud_runner in cloud_runners
+        )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
         """Delete runners.
@@ -317,7 +312,7 @@ class RunnerManager:
 
     def _delete_cloud_runners(
         self,
-        cloud_runners: Sequence[CloudRunnerInstance],
+        cloud_runners: Sequence[VM],
         runners_health: Sequence[PlatformRunnerHealth],
         delete_busy_runners: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
@@ -551,7 +546,7 @@ class RunnerManager:
 
 
 def _filter_runner_to_delete(
-    cloud_runner: CloudRunnerInstance,
+    cloud_runner: VM,
     health: PlatformRunnerHealth | None,
     *,
     clean_idle: bool = False,
@@ -598,7 +593,7 @@ def _filter_runner_to_delete(
 
 
 def _runner_deletion_sort_key(
-    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: CloudRunnerInstance
+    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: VM
 ) -> int:
     """Order the runners in accordance to how inconvenient it is to delete them.
 

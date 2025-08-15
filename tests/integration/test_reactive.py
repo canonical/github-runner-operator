@@ -9,7 +9,7 @@ from typing import AsyncIterator
 import pytest
 import pytest_asyncio
 from github import Branch, Repository
-from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.manager.vm_manager import PostJobStatus
 from github_runner_manager.reactive.consumer import JobDetails
 from juju.application import Application
 from pytest_operator.plugin import OpsTest
