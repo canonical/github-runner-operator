@@ -1,0 +1,190 @@
+06:25:26 WARNING unexpected facade SSHServer received from the controller
+06:25:26 INFO Adding model github-pr-c6dfb-lxd:test-reactive-vehs on cloud localhost
+06:25:26 WARNING unexpected facade SSHServer received from the controller
+06:25:26 WARNING unexpected facade SSHSession received from the controller
+06:25:26 WARNING unexpected facade SSHTunneler received from the controller
+06:25:27 INFO GitHub token rate limit: Rate(reset=2025-08-16 06:33:22+00:00, remaining=4945, limit=5000)
+06:25:31 INFO Deploying ch:amd64/jammy/mongodb-224
+06:25:33 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:25:59 INFO Deploying local:jammy/github-runner-0
+06:25:59 INFO Waiting for model:
+  test-t9l40wv1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: waiting for machine
+06:26:29 INFO Waiting for model:
+  test-t9l40wv1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: waiting for machine
+06:27:00 INFO Waiting for model:
+  test-t9l40wv1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: waiting for machine
+06:27:30 INFO Waiting for model:
+  test-t9l40wv1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: waiting for machine
+06:28:00 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: waiting for machine
+06:28:31 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t9l40wv1/0 [allocating] waiting: agent initialising
+06:29:01 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] maintenance: Setting up Builder.
+06:29:31 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] maintenance: Setting up Builder.
+06:30:02 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] maintenance: Setting up Builder.
+06:30:32 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] maintenance: Setting up Builder.
+06:31:02 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] maintenance: Setting up Builder.
+06:31:33 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] blocked: image integration required.
+06:32:03 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:32:33 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:33:04 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:33:34 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:34:04 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:34:35 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:35:05 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:35:35 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:36:06 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:36:36 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:37:07 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:37:37 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:38:08 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:38:38 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:39:09 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:40:10 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:40:40 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:41:10 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:41:41 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:42:11 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:42:42 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:43:12 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:43:42 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:44:12 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:44:42 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:45:13 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:45:43 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:46:13 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:46:43 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:47:14 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t9l40wv1/0 [executing] active: Building image.
+06:47:44 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] maintenance: Update image for runners
+06:48:12 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:48:12 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] active: 
+  mongodb/0 [executing] active: Primary.
+06:48:42 INFO Waiting for model:
+  test-t9l40wv1/0 [executing] active: 
+  mongodb/0 [idle] active: Primary.
+06:49:01 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:49:32 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:49:36 INFO Current reconcile ID: 8f6ca119-f7be-45ee-9a7e-165cdfbcec68
+06:50:37 INFO Current reconcile ID: 8f6ca119-f7be-45ee-9a7e-165cdfbcec68
+06:51:38 INFO Current reconcile ID: 8f6ca119-f7be-45ee-9a7e-165cdfbcec68
+06:52:39 INFO Current reconcile ID: 372b7210-7694-4782-b831-0257d0109135
+06:52:43 INFO Wait for condition not met, sleeping 10
+06:53:04 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:53:21 INFO Current reconcile ID: 372b7210-7694-4782-b831-0257d0109135
+06:54:22 INFO Current reconcile ID: dbaf99bf-f3f1-4f75-bc7b-f88fe7f3e612
+06:54:22 INFO Wait for condition not met, sleeping 60
+06:55:23 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:55:39 INFO Current reconcile ID: dbaf99bf-f3f1-4f75-bc7b-f88fe7f3e612
+06:56:40 INFO Current reconcile ID: 5989fa60-36f6-4553-b9ba-c007da052f0a
+06:56:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755327236.5286698, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.352386951446533}
+{"timestamp": 1755327258.0, "event": "runner_installed", "flavor": "test-t9l40wv1", "duration": 80.0}
+{"timestamp": 1755327262.0, "event": "runner_start", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1755327264.0, "event": "runner_stop", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755327379.996189, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.32932758331299}
+
+06:56:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755327236.5286698, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.352386951446533}
+{"timestamp": 1755327258.0, "event": "runner_installed", "flavor": "test-t9l40wv1", "duration": 80.0}
+{"timestamp": 1755327262.0, "event": "runner_start", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1755327264.0, "event": "runner_stop", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755327379.996189, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.32932758331299}
+
+06:56:43 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755327236.5286698, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.352386951446533}
+{"timestamp": 1755327258.0, "event": "runner_installed", "flavor": "test-t9l40wv1", "duration": 80.0}
+{"timestamp": 1755327262.0, "event": "runner_start", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1755327264.0, "event": "runner_stop", "flavor": "test-t9l40wv1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755327379.996189, "event": "reconciliation", "flavor": "test-t9l40wv1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.32932758331299}
+06:56:43 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:57:13 INFO Waiting for model:
+  test-t9l40wv1/0 [idle] active: 
+06:57:17 INFO Current reconcile ID: ae38669f-e83a-4adf-a0db-f51b328a99a6
+06:58:18 INFO Current reconcile ID: ae38669f-e83a-4adf-a0db-f51b328a99a6
+06:59:19 INFO Current reconcile ID: ae38669f-e83a-4adf-a0db-f51b328a99a6
+07:00:20 INFO Current reconcile ID: e496d06e-24e1-4dac-bde4-ddaec5c10b56
