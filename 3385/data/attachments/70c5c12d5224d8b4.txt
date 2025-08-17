@@ -1,0 +1,93 @@
+07:10:25 INFO Waiting for model:
+  test-i2ishfvb/0 [idle] active: 
+07:10:55 INFO Waiting for model:
+  test-i2ishfvb/0 [idle] active: 
+07:10:58 INFO Current reconcile ID: 3427445e-99ce-485a-8b7c-c6829331d1c0
+07:11:59 INFO Current reconcile ID: 3427445e-99ce-485a-8b7c-c6829331d1c0
+07:13:00 INFO Current reconcile ID: 9ac9224c-b635-44d0-b92c-da53cfed4c71
+07:13:08 INFO [TEST SETUP] Exposing port 8080 on test-i2ishfvb-0-n-c96599a7e18c
+07:13:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.216', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1c:c3:26'}]])
+07:13:09 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-i2ishfvb-0-n-c96599a7e18c.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.216 &
+07:13:10 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.216' (ED25519) to the list of known hosts.
+
+07:13:13 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-i2ishfvb-0-n-c96599a7e18c
+07:13:13 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.216', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1c:c3:26'}]])
+07:13:14 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-i2ishfvb-0-n-c96599a7e18c.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.216 nc -z localhost 8080'
+07:13:15 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:13:16 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-i2ishfvb-0-n-c96599a7e18c
+07:13:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.216', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1c:c3:26'}]])
+07:13:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-i2ishfvb-0-n-c96599a7e18c.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.216 curl http://localhost:8080'
+07:13:18 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  73691      0 --:--:-- --:--:-- --:--:--  101k
+'
+07:13:21 INFO Wait for condition not met, sleeping 10
+07:13:32 INFO Waiting for model:
+  test-i2ishfvb/0 [idle] active: 
+07:14:02 INFO Waiting for model:
+  test-i2ishfvb/0 [idle] active: 
+07:14:05 INFO Current reconcile ID: 50c011bb-02b6-4128-bc0a-ee0d5a51f392
+07:15:07 INFO Current reconcile ID: 50c011bb-02b6-4128-bc0a-ee0d5a51f392
+07:16:08 INFO Current reconcile ID: 50c011bb-02b6-4128-bc0a-ee0d5a51f392
+07:17:09 INFO Current reconcile ID: 5e60d239-7c36-4558-b762-1eafee956548
+07:17:10 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-nj8j  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  07:17:10Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-i2ishfvb           active      1  github-runner-image-builder  latest/edge  100  no       
+test-i2ishfvb                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-i2ishfvb/0*  active    idle   0        10.64.94.248              
+test-i2ishfvb/0*                         active    idle   1        10.64.94.221    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.64.94.248  juju-602571-0  ubuntu@22.04      Running
+1        started  10.64.94.221  juju-602571-1  ubuntu@22.04      Running
+
+07:17:10 INFO Juju error logs:
+
+machine-0: 06:30:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:30:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-i2ishfvb-0: 06:30:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-i2ishfvb-0: 06:31:41 ERROR unit.github-runner-image-builder-i2ishfvb/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:31:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:31:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-i2ishfvb-0: 06:31:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-i2ishfvb-0: 06:32:59 ERROR unit.test-i2ishfvb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-i2ishfvb-0: 06:33:01 ERROR unit.test-i2ishfvb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-i2ishfvb-0: 06:33:40 ERROR unit.test-i2ishfvb/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-i2ishfvb-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:17:10 INFO Forgetting model main...

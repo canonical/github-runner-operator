@@ -1,0 +1,134 @@
+06:34:27 WARNING unexpected facade SSHServer received from the controller
+06:34:28 INFO Adding model github-pr-c6dfb-lxd:test-reactive-iv76 on cloud localhost
+06:34:28 WARNING unexpected facade SSHServer received from the controller
+06:34:28 WARNING unexpected facade SSHSession received from the controller
+06:34:28 WARNING unexpected facade SSHTunneler received from the controller
+06:34:28 INFO GitHub token rate limit: Rate(reset=2025-08-17 07:21:00+00:00, remaining=4975, limit=5000)
+06:34:33 INFO Deploying ch:amd64/jammy/mongodb-224
+06:34:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-100
+06:34:53 INFO Deploying local:jammy/github-runner-0
+06:34:53 INFO Waiting for model:
+  test-c7jg3hfq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c7jg3hfq/0 [allocating] waiting: waiting for machine
+06:35:23 INFO Waiting for model:
+  test-c7jg3hfq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c7jg3hfq/0 [allocating] waiting: waiting for machine
+06:35:53 INFO Waiting for model:
+  test-c7jg3hfq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c7jg3hfq/0 [allocating] waiting: waiting for machine
+06:36:23 INFO Waiting for model:
+  test-c7jg3hfq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c7jg3hfq/0 [allocating] waiting: waiting for machine
+06:36:54 INFO Waiting for model:
+  test-c7jg3hfq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c7jg3hfq/0 [allocating] waiting: agent initialising
+06:37:24 INFO Waiting for model:
+  test-c7jg3hfq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-c7jg3hfq/0 [executing] maintenance: Setting up Builder.
+06:37:54 INFO Waiting for model:
+  test-c7jg3hfq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-c7jg3hfq/0 [executing] maintenance: Setting up Builder.
+06:38:24 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] maintenance: Setting up Builder.
+06:38:55 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] maintenance: Setting up Builder.
+06:39:25 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] maintenance: Setting up Builder.
+06:39:55 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:40:25 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:40:55 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:41:25 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:41:55 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:42:26 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:42:56 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:43:26 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:43:56 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:44:27 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:44:57 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:45:28 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:45:58 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:46:29 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:46:59 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:47:29 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:47:59 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:48:30 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:49:00 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:49:30 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:50:00 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c7jg3hfq/0 [executing] active: Building image.
+06:50:31 INFO Waiting for model:
+  test-c7jg3hfq/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-c7jg3hfq/0 [idle] active: 
+06:51:01 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:51:02 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:51:02 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:51:32 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:51:43 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:52:14 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:52:16 INFO Current reconcile ID: febe8604-3744-44cb-b5f7-cac0706de5e7
+06:53:17 INFO Current reconcile ID: febe8604-3744-44cb-b5f7-cac0706de5e7
+06:54:18 INFO Current reconcile ID: febe8604-3744-44cb-b5f7-cac0706de5e7
+06:55:19 INFO Current reconcile ID: c7a77b7a-1f61-473e-9e9c-d069486dc000
+06:55:23 INFO Wait for condition not met, sleeping 10
+06:55:44 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:56:00 INFO Current reconcile ID: c7a77b7a-1f61-473e-9e9c-d069486dc000
+06:57:01 INFO Current reconcile ID: f038aeaf-969f-4e98-8e58-bfd2ba0e16ec
+06:57:02 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:57:32 INFO Waiting for model:
+  test-c7jg3hfq/0 [idle] active: 
+06:57:35 INFO Current reconcile ID: 65c3bad7-780c-4196-93ea-a24aad81d510
+06:58:36 INFO Current reconcile ID: 65c3bad7-780c-4196-93ea-a24aad81d510
+06:59:37 INFO Current reconcile ID: f394f7d7-50c8-46ae-91a7-1090b407c7d7
