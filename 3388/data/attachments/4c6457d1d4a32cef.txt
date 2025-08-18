@@ -1,0 +1,160 @@
+18:25:17 INFO GitHub token rate limit: Rate(reset=2025-08-18 18:29:07+00:00, remaining=4939, limit=5000)
+18:25:32 WARNING unexpected facade SSHServer received from the controller
+18:25:32 INFO Adding model github-pr-c6dfb-lxd:test-charm-metrics-failure-om6u on cloud localhost
+18:25:32 WARNING unexpected facade SSHServer received from the controller
+18:25:32 WARNING unexpected facade SSHSession received from the controller
+18:25:32 WARNING unexpected facade SSHTunneler received from the controller
+18:25:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-105
+18:25:54 INFO Deploying local:jammy/github-runner-0
+18:25:54 INFO Waiting for model:
+  test-kk731wrn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kk731wrn/0 [allocating] waiting: waiting for machine
+18:26:24 INFO Waiting for model:
+  test-kk731wrn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kk731wrn/0 [allocating] waiting: waiting for machine
+18:26:54 INFO Waiting for model:
+  test-kk731wrn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kk731wrn/0 [allocating] waiting: agent initialising
+18:27:25 INFO Waiting for model:
+  test-kk731wrn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kk731wrn/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Waiting for model:
+  test-kk731wrn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kk731wrn/0 [executing] maintenance: Setting up Builder.
+18:28:25 INFO Waiting for model:
+  test-kk731wrn/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-kk731wrn/0 [executing] maintenance: Setting up Builder.
+18:28:55 INFO Waiting for model:
+  test-kk731wrn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kk731wrn/0 [executing] maintenance: Setting up Builder.
+18:29:26 INFO Waiting for model:
+  test-kk731wrn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kk731wrn/0 [executing] maintenance: Setting up Builder.
+18:29:56 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] blocked: image integration required.
+18:30:26 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:30:56 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:31:27 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:31:57 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:32:28 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:32:58 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:33:28 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:33:58 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:34:29 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:34:59 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:35:30 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:36:00 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:36:31 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:37:01 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:37:31 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:38:01 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:38:32 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:39:02 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:39:32 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:40:02 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:40:33 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:41:03 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:41:33 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:42:04 INFO Waiting for model:
+  test-kk731wrn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kk731wrn/0 [executing] active: Building image.
+18:42:34 INFO Waiting for model:
+  test-kk731wrn/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kk731wrn/0 [idle] active: 
+18:43:06 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:43:36 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:43:39 INFO Current reconcile ID: b57ee7e7-3139-4782-9bca-947532592ac9
+18:44:40 INFO Current reconcile ID: b57ee7e7-3139-4782-9bca-947532592ac9
+18:45:41 INFO Current reconcile ID: c91d4afd-196a-4831-8aa6-765c95e41d98
+18:46:36 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:47:07 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:47:10 INFO Current reconcile ID: 33440e06-cfa9-4b08-829d-5d549ade5c8b
+18:48:11 INFO Current reconcile ID: 33440e06-cfa9-4b08-829d-5d549ade5c8b
+18:49:12 INFO Current reconcile ID: f94828f9-d6c2-4212-b527-cef5344a9b33
+18:49:19 INFO [TEST SETUP] Exposing port 8080 on test-kk731wrn-0-n-c720214fdbbf
+18:49:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:81:8b:ea'}]])
+18:49:20 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-kk731wrn-0-n-c720214fdbbf.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.213 &
+18:49:21 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.213' (ED25519) to the list of known hosts.
+
+18:49:23 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-kk731wrn-0-n-c720214fdbbf
+18:49:23 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:81:8b:ea'}]])
+18:49:24 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kk731wrn-0-n-c720214fdbbf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 nc -z localhost 8080'
+18:49:25 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:49:27 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-kk731wrn-0-n-c720214fdbbf
+18:49:27 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.213', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:81:8b:ea'}]])
+18:49:28 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kk731wrn-0-n-c720214fdbbf.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.213 curl http://localhost:8080'
+18:49:29 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  63302      0 --:--:-- --:--:-- --:--:-- 69000
+'
+18:49:32 INFO Wait for condition not met, sleeping 10
+18:49:44 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:50:14 INFO Waiting for model:
+  test-kk731wrn/0 [idle] active: 
+18:50:17 INFO Current reconcile ID: 7a7692f8-ff53-46b2-b84f-291d9c9c6080
+18:51:18 INFO Current reconcile ID: 7a7692f8-ff53-46b2-b84f-291d9c9c6080
+18:52:19 INFO Current reconcile ID: 7a7692f8-ff53-46b2-b84f-291d9c9c6080
+18:53:20 INFO Current reconcile ID: ec50005d-4021-44f4-9d10-6bb329a38df3
+18:53:22 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755542873.0, "event": "runner_installed", "flavor": "test-kk731wrn", "duration": 63.0}
+{"timestamp": 1755542976.0, "event": "runner_start", "flavor": "test-kk731wrn", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 103.0, "queue_duration": 1.0}
+{"timestamp": 1755542976.0, "event": "runner_stop", "flavor": "test-kk731wrn", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1755543013.1966324, "event": "reconciliation", "flavor": "test-kk731wrn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.18039870262146}
+{"timestamp": 1755543144.3060606, "event": "reconciliation", "flavor": "test-kk731wrn", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.947388887405396}
