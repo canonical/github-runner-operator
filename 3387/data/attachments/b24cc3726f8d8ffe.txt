@@ -1,0 +1,48 @@
+06:25:40 WARNING unexpected facade SSHServer received from the controller
+06:25:40 INFO Adding model github-pr-c6dfb-lxd:test-reactive-ji7y on cloud localhost
+06:25:41 WARNING unexpected facade SSHServer received from the controller
+06:25:41 WARNING unexpected facade SSHSession received from the controller
+06:25:41 WARNING unexpected facade SSHTunneler received from the controller
+06:25:41 INFO GitHub token rate limit: Rate(reset=2025-08-18 07:07:09+00:00, remaining=4961, limit=5000)
+06:25:46 INFO Deploying ch:amd64/jammy/mongodb-224
+06:25:48 INFO Deploying ch:amd64/jammy/github-runner-image-builder-101
+06:26:10 INFO Deploying local:jammy/github-runner-0
+06:26:10 INFO Waiting for model:
+  test-ll6bsqby/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ll6bsqby/0 [allocating] waiting: waiting for machine
+06:26:40 INFO Waiting for model:
+  test-ll6bsqby/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ll6bsqby/0 [allocating] waiting: waiting for machine
+06:27:11 INFO Waiting for model:
+  test-ll6bsqby/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ll6bsqby/0 [allocating] waiting: waiting for machine
+06:27:41 INFO Waiting for model:
+  test-ll6bsqby/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ll6bsqby/0 [allocating] waiting: waiting for machine
+06:28:11 INFO Waiting for model:
+  test-ll6bsqby/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ll6bsqby/0 [allocating] waiting: waiting for machine
+06:28:42 INFO Waiting for model:
+  test-ll6bsqby/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ll6bsqby/0 [executing] maintenance: Setting up Builder.
+06:29:12 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] maintenance: Setting up Builder.
+06:29:42 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] maintenance: Setting up Builder.
+06:30:13 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] maintenance: Setting up Builder.
+06:30:43 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] maintenance: Setting up Builder.
+06:31:13 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] blocked: image integration required.
+06:31:43 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] active: Building image.
+06:32:13 INFO Waiting for model:
+  test-ll6bsqby/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ll6bsqby/0 [executing] active: Building image.
