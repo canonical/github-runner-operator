@@ -24,7 +24,7 @@ To prevent disk IO exhaustion on the Juju machine on disk-intensive GitHub workf
 
 ## Virtual machine image
 
-The virtual machine images are built on installation and on a schedule every 6 hours. These images are constructed by launching a virtual machine instance, modifying the instance with configurations and software installs, and then exporting the instance as an image. This process reduces the time needed to launch a virtual machine instance for hosting the self-hosted runner application.
+The virtual machine images are built on installation and on a schedule every six hours. These images are constructed by launching a virtual machine instance, modifying the instance with configurations and software installs, and then exporting the instance as an image. This process reduces the time needed to launch a virtual machine instance for hosting the self-hosted runner application.
 
 The software installed in the image includes:
 
@@ -35,7 +35,7 @@ The software installed in the image includes:
   - `shellcheck`
   - `jq`
   - `wget`
-- npm packages:
+- NPM packages:
   - `yarn`
 - Binary downloaded:
   - `yq`
@@ -43,7 +43,7 @@ The software installed in the image includes:
 The configurations applied in the image include:
 <!-- vale Canonical.005-Industry-product-names = NO -->
 - Creating a group named `microk8s`.
-- Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this preconfigures the group for users who install the package.
+- Adding the `ubuntu` user to the `microk8s` group. Note that the `microk8s` package is not installed in the image; this pre-configures the group for users who install the package.
 - Adding the `ubuntu` user to the `docker` group.
 - Adding iptables rules to accept traffic for the DOCKER-USER chain. This resolves a networking conflict with LXD.
 <!-- vale Canonical.005-Industry-product-names = YES -->
@@ -61,7 +61,10 @@ Not all applications within a workflow may adhere to these variables as they
 [lack standardization](https://about.gitlab.com/blog/2021/01/27/we-need-to-talk-no-proxy/). 
 This inconsistency can result in failed workflows, prompting the introduction of aproxy, as detailed in the subsection below.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### aproxy
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
+
 If the proxy configuration is utilized and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
 all HTTP(S) requests to standard ports (80, 443, 11371) within the GitHub workflow will be automatically directed 
 to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
@@ -72,11 +75,15 @@ It's worth noting that this setup deviates from the behavior when not using apro
 where these variables are set in the runner environment. In that scenario, traffic to non-standard ports 
 would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### denylist
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The nftables on the Juju machine are configured to deny traffic from the runner virtual machine to IPs on the [`denylist` configuration](https://charmhub.io/github-runner/configure#denylist). The runner will always have access to essential services such as DHCP and DNS, regardless of the denylist configuration.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## GitHub API usage
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
 
@@ -90,9 +97,11 @@ The token is also passed to [repo-policy-compliance](https://github.com/canonica
 Note that the GitHub API uses a [rate-limiting mechanism](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28). When this limit is reached, the charm may not be able to perform the necessary operations and may go into
 BlockedStatus. The charm will automatically recover from this state once the rate limit is reset, but using a different token with a higher rate limit may be a better solution depending on your deployment requirements.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## GitHub repository setting check
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-The [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) is a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
+The [`repo-policy-compliance`](https://github.com/canonical/repo-policy-compliance) charm contains a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
 
 Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#about-pre--and-post-job-scripts), the self-hosted runners call the Python web service to check if the GitHub repository settings for the job are compliant. If not compliant, it will output an error message and force stop the runner to prevent code from being executed.
 
@@ -102,8 +111,8 @@ Upon installing or upgrading the charm, the kernel will be upgraded, and the Juj
 
 The charm installs the following dependencies:
 
-- For running repo-policy-compliance
-  - gunicorn
+- For running `repo-policy-compliance`:
+  - Gunicorn
 - For firewall to prevent runners from accessing web service on the denylist
   - nftables
 - For virtualization and virtual machine management
@@ -122,7 +131,7 @@ The charm installs the following dependencies and regularly updates them:
 
 The charm checks if the installed versions are the latest and performs upgrades if needed before creating new virtual machines for runners.
 
-## COS Integration
+## COS integration
 Upon integration through the `cos-agent`, the charm initiates the logging of specific metric events
 into the file `/var/log/github-runner-metrics.log`. For comprehensive details, please refer to the
 pertinent [specification](https://discourse.charmhub.io/t/specification-isd075-github-runner-cos-integration/12084).

@@ -1,4 +1,7 @@
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 # GitHub runner
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
+
 [![CharmHub Badge](https://charmhub.io/github-runner/badge.svg)](https://charmhub.io/github-runner)
 [![Promote charm](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml/badge.svg)](https://github.com/canonical/github-runner-operator/actions/workflows/promote_charm.yaml)
 [![Discourse Status](https://img.shields.io/discourse/status?server=https%3A%2F%2Fdiscourse.charmhub.io&style=flat&label=CharmHub%20Discourse)](https://discourse.charmhub.io)
@@ -44,7 +47,7 @@ clouds:
     region_name: <region>
   ```
 
-Assuming you have already deployed the [Github Runner Image Builder](https://charmhub.io/github-runner-image-builder) charm
+Assuming you have already deployed the [GitHub Runner Image Builder](https://charmhub.io/github-runner-image-builder) charm
 with the name `github-runner-image-builder`, you can use the following command to integrate it with the GitHub Runner charm:
 
 ```bash
@@ -57,7 +60,7 @@ You can scale the amount of virtual machines using
 juju config github-runner base-virtual-machines=5
 ```
 
-You can change the reconciliation interval, to e.g. 5 minutes, using
+You can change the reconciliation interval, to e.g. five minutes, using
 
 ```bash
 juju config github-runner reconciliation-interval=5
@@ -84,9 +87,9 @@ charms and their interactions:
 
 * [GitHub Runner](https://charmhub.io/github-runner-image): The central component that manages self-hosted GitHub runners. It interacts with OpenStack to spawn runner VMs and communicates with GitHub to register and manage runners.
 * [Image Builder](https://charmhub.io/github-runner-image-builder): Responsible for generating images. It builds images on the builder OpenStack project and uploads them to the GitHub Runner OpenStack project.
-* [MongoDB](https://charmhub.io/mongodb): Acts as a message queue to handle reactive runner requests. The [github-runner-webhook-router](https://charmhub.io/github-runner-webhook-router) charm will put events in MongoDB that will be consumed by the github-runner charm. Only for reactive runners.
+* [MongoDB](https://charmhub.io/mongodb): Acts as a message queue to handle reactive runner requests. The [github-runner-webhook-router](https://charmhub.io/github-runner-webhook-router) charm will put events in MongoDB that will be consumed by the `github-runner` charm. Only for reactive runners.
 * [tmate-ssh-server](https://charmhub.io/tmate-ssh-server): Provides terminal-sharing capabilities to enable debugging of GitHub runners. Optional.
-* [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite): Provides observability to the Github runners ecosystem. Optional.
+* [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite): Provides observability to the GitHub runners ecosystem. Optional.
 
 Below is a diagram representing these components and their relationships, excluding the [COS lite stack](https://charmhub.io/topics/canonical-observability-stack/editions/lite):
 

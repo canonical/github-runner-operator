@@ -36,7 +36,7 @@ class HealthState(Enum):
     UNKNOWN = auto()
 
 
-class CloudRunnerState(str, Enum):
+class VMState(str, Enum):
     """Represent state of the instance hosting the runner.
 
     Attributes:
@@ -61,7 +61,7 @@ class CloudRunnerState(str, Enum):
     @staticmethod
     def from_openstack_server_status(  # pragma: no cover
         openstack_server_status: str,
-    ) -> "CloudRunnerState":
+    ) -> "VMState":
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -73,72 +73,41 @@ class CloudRunnerState(str, Enum):
         Returns:
             The state of the runner.
         """
-        state = CloudRunnerState.UNEXPECTED
+        state = VMState.UNEXPECTED
         match openstack_server_status:
             case "BUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "REBUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "ACTIVE":
-                state = CloudRunnerState.ACTIVE
+                state = VMState.ACTIVE
             case "ERROR":
-                state = CloudRunnerState.ERROR
+                state = VMState.ERROR
             case "STOPPED":
-                state = CloudRunnerState.STOPPED
+                state = VMState.STOPPED
             case "DELETED":
-                state = CloudRunnerState.DELETED
+                state = VMState.DELETED
             case "UNKNOWN":
-                state = CloudRunnerState.UNKNOWN
+                state = VMState.UNKNOWN
             case _:
-                state = CloudRunnerState.UNEXPECTED
+                state = VMState.UNEXPECTED
         return state
 
 
-class CloudInitStatus(str, Enum):
-    """Represents the state of cloud-init script.
-
-    The cloud init script is used to launch ephemeral GitHub runners. If the script is being
-    initialized, GitHub runner is listening for jobs or GitHub runner is running the job, the
-    cloud-init script should report "running" status.
-
-    Refer to the official documentation on cloud-init status:
-    https://cloudinit.readthedocs.io/en/latest/howto/status.html.
-
-    Attributes:
-        NOT_STARTED: The cloud-init script has not yet been started.
-        RUNNING: The cloud-init script is running.
-        DONE: The cloud-init script has completed successfully.
-        ERROR: There was an error while running the cloud-init script.
-        DEGRADED: There was a non-critical issue while running the cloud-inits script.
-        DISABLED: Cloud init was disabled by other system configurations.
-    """
-
-    NOT_STARTED = "not started"
-    RUNNING = "running"
-    DONE = "done"
-    ERROR = "error"
-    DEGRADED = "degraded"
-    DISABLED = "disabled"
-
-
 @dataclass
-class CloudRunnerInstance:
+class VM:
     """Information on the runner on the cloud.
 
     Attributes:
-        name: Name of the instance hosting the runner.
-        instance_id: ID of the instance.
-        metadata: Metadata of the runner.
-        health: Health state of the runner.
-        state: State of the instance hosting the runner.
+        instance_id: VM instance identifier (NOT VM UUID).
+        metadata: Metadata associated with the VM.
+        state: The VM state.
         created_at: Creation time of the runner in the cloud provider.
     """
 
-    name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
-    state: CloudRunnerState
+    state: VMState
     created_at: datetime
 
     def is_older_than(self, seconds: float) -> bool:
@@ -248,7 +217,7 @@ class CloudRunnerManager(abc.ABC):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -257,10 +226,11 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_runners(self) -> Sequence[VM]:
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
+    # Abstract methods do not have a return value, ignore the docstring error DCO031
     def delete_vms(self, instance_ids: Sequence[InstanceID]) -> list[InstanceID]:
         """Delete cloud VM instances.
 
@@ -269,9 +239,10 @@ class CloudRunnerManager(abc.ABC):
 
         Returns:
             The deleted instance IDs.
-        """
+        """  # noqa: DCO031
 
     @abc.abstractmethod
+    # Abstract methods do not have a return value, ignore the docstring error DCO031
     def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
         """Extract metrics from cloud VMs.
 
@@ -280,7 +251,7 @@ class CloudRunnerManager(abc.ABC):
 
         Returns:
             The fetched runner metrics.
-        """
+        """  # noqa: DCO031
 
     @abc.abstractmethod
     def cleanup(self) -> None:

@@ -10,7 +10,7 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.manager.vm_manager import PostJobStatus
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME

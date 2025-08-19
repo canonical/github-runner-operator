@@ -10,13 +10,13 @@ from fabric import Connection as SSHConnection
 from invoke.runners import Result
 
 from github_runner_manager.errors import IssueMetricEventError
-from github_runner_manager.manager.cloud_runner_manager import (
+from github_runner_manager.manager.models import InstanceID, RunnerMetadata
+from github_runner_manager.manager.vm_manager import (
     PostJobMetrics,
     PostJobStatus,
     PreJobMetrics,
     RunnerMetrics,
 )
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
