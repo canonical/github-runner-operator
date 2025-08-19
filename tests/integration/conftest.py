@@ -42,6 +42,7 @@ from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
     get_github_runner_manager_service_log,
+    get_github_runner_reactive_log,
     wait_for,
     wait_for_runner_ready,
 )
@@ -491,6 +492,8 @@ async def app_openstack_runner_fixture(
         try:
             app_log = await get_github_runner_manager_service_log(unit=application.units[0])
             logging.info("Application log: \n%s", app_log)
+            reactive_log = await get_github_runner_reactive_log(unit=application.units[0])
+            logging.info("Reactive log: \n%s", app_log)
         except AssertionError:
             logging.warning("Failed to get application log.")
 
