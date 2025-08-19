@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-08-19
+
+- Updated the documentation workflow to be fully integrated with the Vale GitHub Action.
+
 ## 2025-08-12
 
 - Metrics are now issued even without runner installed timestamp.
