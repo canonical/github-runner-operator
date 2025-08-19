@@ -1,0 +1,93 @@
+06:58:12 INFO Waiting for model:
+  test-x0b0phbp/0 [idle] active: 
+06:58:42 INFO Waiting for model:
+  test-x0b0phbp/0 [idle] active: 
+06:58:45 INFO Current reconcile ID: 4b140fc8-856f-4ac5-afcd-338c0598c205
+06:59:46 INFO Current reconcile ID: 4b140fc8-856f-4ac5-afcd-338c0598c205
+07:00:47 INFO Current reconcile ID: 3991eb50-c016-43f5-abaa-7e096023f6d3
+07:00:47 INFO Waiting for model:
+  test-x0b0phbp/0 [idle] active: 
+07:01:17 INFO Waiting for model:
+  test-x0b0phbp/0 [executing] active: 
+07:01:35 INFO Current reconcile ID: d6bf120a-119d-4696-a92f-60fca7942d73
+07:02:36 INFO Current reconcile ID: d6bf120a-119d-4696-a92f-60fca7942d73
+07:03:37 INFO Current reconcile ID: 2ee6c6a8-9288-44f4-a256-5b8f824eeba7
+07:03:47 INFO Wait for condition not met, sleeping 30
+07:04:32 INFO [TEST SETUP] Run command pkill -9 run.sh on test-x0b0phbp-0-n-d32ca1827ac0
+07:04:32 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.176', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:85:3c:d0'}]])
+07:04:33 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-x0b0phbp-0-n-d32ca1827ac0.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.176 pkill -9 run.sh'
+07:04:34 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.176' (ED25519) to the list of known hosts.
+'
+07:04:39 INFO Runner test-x0b0phbp-0-n-d32ca1827ac0 status: online
+07:04:39 INFO Runner still marked as online, waiting for it to be marked offline
+07:05:41 INFO Waiting for model:
+  test-x0b0phbp/0 [idle] active: 
+07:06:11 INFO Waiting for model:
+  test-x0b0phbp/0 [idle] active: 
+07:06:15 INFO Current reconcile ID: 4f405645-6262-4ac1-bdf9-564373c4cd2a
+07:07:16 INFO Current reconcile ID: 4f405645-6262-4ac1-bdf9-564373c4cd2a
+07:08:17 INFO Current reconcile ID: 152cec8f-1e59-48aa-98d6-50ddfa671b71
+07:08:18 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755586706.8209093, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.237788438796997}
+{"timestamp": 1755586837.5044484, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.58510947227478}
+{"timestamp": 1755586867.2953029, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 16.27906823158264}
+{"timestamp": 1755587001.6877832, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 14.248692274093628}
+{"timestamp": 1755586940.0, "event": "runner_installed", "flavor": "test-x0b0phbp", "duration": 77.0}
+{"timestamp": 1755587029.0, "event": "runner_start", "flavor": "test-x0b0phbp", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 89.0, "queue_duration": 1.0}
+{"timestamp": 1755587074.0, "event": "runner_stop", "flavor": "test-x0b0phbp", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 45.0, "job_conclusion": "cancelled"}
+{"timestamp": 1755587157.5601993, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.077755451202393}
+{"timestamp": 1755587290.2682447, "event": "reconciliation", "flavor": "test-x0b0phbp", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.570314168930054}
+07:08:20 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-87a8  github-pr-c6dfb-lxd  localhost/localhost  3.6.8    unsupported  07:08:20Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-x0b0phbp           active      1  github-runner-image-builder  latest/edge  105  no       
+test-x0b0phbp                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-x0b0phbp/0*  active    idle   0        10.81.16.206              
+test-x0b0phbp/0*                         active    idle   1        10.81.16.49     8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.81.16.206  juju-edc82c-0  ubuntu@22.04      Running
+1        started  10.81.16.49   juju-edc82c-1  ubuntu@22.04      Running
+
+07:08:20 INFO Juju error logs:
+
+machine-0: 06:27:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-x0b0phbp-0: 06:27:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-x0b0phbp-0: 06:27:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-x0b0phbp-0: 06:28:07 ERROR unit.github-runner-image-builder-x0b0phbp/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-x0b0phbp-0: 06:29:33 ERROR unit.test-x0b0phbp/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-x0b0phbp-0: 06:29:35 ERROR unit.test-x0b0phbp/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-x0b0phbp-0: 06:30:13 ERROR unit.test-x0b0phbp/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-x0b0phbp-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:08:20 INFO Forgetting model main...
