@@ -53,7 +53,7 @@ The `grafana-agent` autonomously transmits machine host metrics, which are visua
 
 ## Logs
 
-The `grafana-agent` effectively transmits all logs located at `/var/log/**/*log`, from the charm unit to Loki. Additionally, it collects logs concerning crashed runners with accessible but unshut LXD virtual machines.
+The `grafana-agent` effectively transmits all logs located at `/var/log/**/*log`, from the charm unit to Loki.
 
 Relevant log files are (replace <app-name> with the name of the application and <unit-no> with the number of the unit)
 
