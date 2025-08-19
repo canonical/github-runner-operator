@@ -434,7 +434,7 @@ def _issue_runner_installed(
         flavor=flavor,
         duration=duration,
     )
-    RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(installation_duration)
+    RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(duration)
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
 
