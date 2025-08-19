@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-08-19
+
+- Document relevant log files.
+
 ## 2025-07-28
 
 - Fix an issue where the charm can error out due to timeout during flush runners.
