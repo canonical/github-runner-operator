@@ -7,7 +7,7 @@
 # Vale settings
 VALE_DIR ?= .vale
 PRAECEPTA_CONFIG 	?= .vale.ini
-DOCS_FILES 	?= charm/docs/ README.md CONTRIBUTING.md
+DOCS_FILES 	?= docs/ README.md CONTRIBUTING.md
 
 HAS_VALE			:= $(shell command -v vale;)
 HAS_LYCHEE			:= $(shell command -v lychee;)

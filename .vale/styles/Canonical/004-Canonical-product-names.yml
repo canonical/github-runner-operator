@@ -1,0 +1,34 @@
+extends: substitution
+message: "Use '%s' instead of '%s'"
+link: https://docs.ubuntu.com/styleguide/en/#other-canonical-products
+ignorecase: true
+level: error
+scope:
+  - summary & ~blockquote
+  - list
+  - heading
+  - table.header
+  - table.cell
+action:
+  name: replace
+swap:
+  Anbox Cloud: Anbox Cloud
+  Anbox: Anbox
+  Charmed Kubeflow: Charmed Kubeflow
+  Canononical Observability Stack: Canonical Observability Stack
+  Juju: Juju
+  Landscape(?! environment| layout): Landscape
+  Launchpad: Launchpad
+  LXD: LXD
+  MAAS: MAAS
+  MicroCeph: MicroCeph
+  MicroCloud: MicroCloud
+  MicroK8s: MicroK8s
+  MicroOVN: MicroOVN
+  MicroStack: MicroStack
+  Multipass: Multipass
+  Snapcraft: Snapcraft
+  snapd: snapd
+  Ubuntu Core: Ubuntu Core
+  Ubuntu Pro: Ubuntu Pro
+  Ubuntu Server: Ubuntu Server

@@ -1,0 +1,13 @@
+extends: repetition
+message: "'%s' is repeated!"
+level: warning
+scope:
+  - sentence
+  - list
+  - heading
+  - table.header
+  - table.cell
+alpha: true
+ignorecase: true
+tokens:
+  - '[^\s]+'
