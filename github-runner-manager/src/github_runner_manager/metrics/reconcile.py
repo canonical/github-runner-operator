@@ -35,12 +35,12 @@ CLEANED_RUNNERS_TOTAL = Gauge(
 )
 DELETED_RUNNERS_TOTAL = Counter(
     name="deleted_runners_total",
-    documentation="The number of runners deleted during reconciliation.",
+    documentation="The number of removed runners from GitHub during reconciliation.",
     labelnames=[labels.FLAVOR],
 )
 DELETE_RUNNER_DURATION_SECONDS = Histogram(
     name="delete_runner_duration_seconds",
-    documentation="Time taken in seconds for runners to be deleted.",
+    documentation="Time taken in seconds to remove runners from GitHub.",
     labelnames=[labels.FLAVOR],
 )
 DELETED_VMS_TOTAL = Counter(
