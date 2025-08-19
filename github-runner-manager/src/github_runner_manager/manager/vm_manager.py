@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum, auto
-from typing import Optional, Sequence
+from typing import Optional, Protocol, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
@@ -179,25 +179,44 @@ class PostJobMetrics(BaseModel):
     status_info: Optional[CodeInformation]
 
 
-class RunnerMetrics(BaseModel):
+class RunnerMetrics(Protocol):
     """Metrics for a runner.
 
     Attributes:
-        instance_id: The name of the runner.
-        metadata: Runner metadata.
-        installation_start_timestamp: The UNIX time stamp of the time at which the runner
-            installation started.
-        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
+        metadata: The metadata of the VM in which the metrics are fetched from.
+        instance_id: The instance ID of the VM in which the metrics are fetched from.
+        installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
+        installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
     """
 
-    instance_id: InstanceID
-    metadata: RunnerMetadata
-    installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
-    pre_job: PreJobMetrics | None
-    post_job: PostJobMetrics | None
+    @property
+    def pre_job(self) -> PreJobMetrics | None:
+        """Metrics from the pre-job phase."""
+
+    @property
+    def post_job(self) -> PostJobMetrics | None:
+        """Metrics from the post-job phase."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def metadata(self) -> RunnerMetadata:  # type: ignore
+        """Metadata of the VM in which the metrics are fetche from."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def instance_id(self) -> InstanceID:  # type: ignore
+        """Instance ID of the VM in which the metrics are fetched from."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def installation_start_timestamp(self) -> NonNegativeFloat:  # type: ignore
+        """UNIX timestamp of in which the VM setup started."""
+
+    @property
+    def installation_end_timestamp(self) -> NonNegativeFloat | None:
+        """UNIX timestamp of in which the VM setup ended."""
 
 
 class CloudRunnerManager(abc.ABC):
