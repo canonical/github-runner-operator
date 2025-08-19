@@ -1,0 +1,335 @@
+19:28:28 INFO IP Address to use as the fake jobmanager: 10.145.216.14
+19:28:28 WARNING unexpected facade SSHServer received from the controller
+19:28:28 INFO Adding model github-pr-539f0-lxd:test-jobmanager-prespawned-mh55 on cloud localhost
+19:28:29 WARNING unexpected facade SSHServer received from the controller
+19:28:29 WARNING unexpected facade SSHSession received from the controller
+19:28:29 WARNING unexpected facade SSHTunneler received from the controller
+19:28:30 INFO Deploying ch:amd64/jammy/github-runner-image-builder-105
+19:28:50 INFO Deploying local:jammy/github-runner-0
+19:28:50 INFO Waiting for model:
+  test-dr483uct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dr483uct/0 [allocating] waiting: waiting for machine
+19:29:21 INFO Waiting for model:
+  test-dr483uct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dr483uct/0 [allocating] waiting: waiting for machine
+19:29:51 INFO Waiting for model:
+  test-dr483uct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dr483uct/0 [allocating] waiting: agent initialising
+19:30:21 INFO Waiting for model:
+  test-dr483uct/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-dr483uct/0 [executing] maintenance: Setting up Builder.
+19:30:52 INFO Waiting for model:
+  test-dr483uct/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-dr483uct/0 [executing] maintenance: Setting up Builder.
+19:31:22 INFO Waiting for model:
+  test-dr483uct/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dr483uct/0 [executing] maintenance: Setting up Builder.
+19:31:52 INFO Waiting for model:
+  test-dr483uct/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dr483uct/0 [executing] maintenance: Setting up Builder.
+19:32:22 INFO Waiting for model:
+  test-dr483uct/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dr483uct/0 [executing] maintenance: Setting up Builder.
+19:32:53 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:33:23 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:33:53 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:34:23 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:34:53 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:35:23 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:35:53 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:36:23 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:36:53 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:37:24 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:37:54 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:38:24 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:38:54 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:39:24 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:39:54 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:40:24 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:40:54 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:41:24 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:41:54 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:42:25 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:42:55 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:43:25 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:43:55 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:44:25 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:44:55 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:45:26 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: Building image.
+19:45:56 INFO Waiting for model:
+  test-dr483uct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dr483uct/0 [executing] active: 
+19:46:26 INFO Waiting for model:
+  test-dr483uct/0 [executing] maintenance: Update image for runners
+19:46:43 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:46:58 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:47:28 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:47:41 INFO Current reconcile ID: 33636a9d-5945-409e-b5ed-6e46e7c23894
+19:48:42 INFO Current reconcile ID: 33636a9d-5945-409e-b5ed-6e46e7c23894
+19:49:44 INFO Current reconcile ID: 4cc99283-490c-4af8-b877-297f100075c4
+19:49:44 INFO Waiting for runner to be registered.
+19:49:55 INFO 10.145.84.81 - - [19/Aug/2025 19:49:55] "POST /v1/runners/register HTTP/1.1" 200 -
+19:49:55 INFO server log: [(<Request 'http://10.145.216.14:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+19:49:55 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 17497898b36f8684'} data=None json=<UNDEFINED>>
+19:49:55 INFO trying to prepare tunnel for builder agent
+19:49:58 INFO no runner or two or more runners in unit, return False
+19:49:58 INFO Wait for condition not met, sleeping 10
+19:50:00 INFO 10.145.84.81 - - [19/Aug/2025 19:50:00] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:50:08 INFO trying to prepare tunnel for builder agent
+19:50:09 INFO no addresses yet, return False
+19:50:09 INFO Wait for condition not met, sleeping 10
+19:50:19 INFO trying to prepare tunnel for builder agent
+19:50:21 INFO no addresses yet, return False
+19:50:21 INFO Wait for condition not met, sleeping 10
+19:50:31 INFO trying to prepare tunnel for builder agent
+19:50:33 INFO no addresses yet, return False
+19:50:33 INFO Wait for condition not met, sleeping 10
+19:50:43 INFO trying to prepare tunnel for builder agent
+19:50:46 INFO [TEST SETUP] Run command 'echo hello' on test-dr483uct-0-n-c2ac0f96e0f2
+19:50:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:50:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 'echo hello''
+19:50:55 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.192 port 22: Connection refused
+'
+19:50:55 INFO cannot ssh yet, return False
+19:50:55 INFO Wait for condition not met, sleeping 10
+19:51:05 INFO trying to prepare tunnel for builder agent
+19:51:08 INFO [TEST SETUP] Run command 'echo hello' on test-dr483uct-0-n-c2ac0f96e0f2
+19:51:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:51:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 'echo hello''
+19:51:10 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.192' (ED25519) to the list of known hosts.
+'
+19:52:03 INFO 10.145.84.81 - - [19/Aug/2025 19:52:03] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:07 INFO 10.145.84.81 - - [19/Aug/2025 19:52:07] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:09 INFO 10.145.84.81 - - [19/Aug/2025 19:52:09] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:12 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.14 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-dr483uct-0-n-c2ac0f96e0f2
+19:52:12 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:52:13 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.14 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+19:52:14 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.14 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+19:52:17 INFO [TEST SETUP] Exposing port 8000 on test-dr483uct-0-n-c2ac0f96e0f2
+19:52:17 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:52:18 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.14:8000 -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.192 &
+19:52:19 INFO ssh tunnel result 0 None None
+19:52:21 INFO 10.145.84.81 - - [19/Aug/2025 19:52:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:22 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-dr483uct-0-n-c2ac0f96e0f2
+19:52:22 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:52:23 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 nc -z localhost 8000'
+19:52:24 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+19:52:24 INFO prepared tunnel for builder agent
+19:52:24 INFO Waiting for builder-agent to contact us.
+19:52:26 INFO 10.145.84.81 - - [19/Aug/2025 19:52:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:26 INFO server log after executing: [(<Request 'http://10.145.216.14:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+19:52:26 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 17497898b36f8684'} data=None json=<UNDEFINED>>
+19:52:28 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-dr483uct-0-n-c2ac0f96e0f2
+19:52:28 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:66:32:81'}]])
+19:52:29 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-dr483uct-0-n-c2ac0f96e0f2.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+19:52:30 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  20782  30562 --:--:-- --:--:-- --:--:-- 42000
+'
+19:52:30 INFO Waiting for builder-agent to contact us.
+19:52:31 INFO 10.145.84.81 - - [19/Aug/2025 19:52:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:36 INFO 10.145.84.81 - - [19/Aug/2025 19:52:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:41 INFO 10.145.84.81 - - [19/Aug/2025 19:52:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:46 INFO 10.145.84.81 - - [19/Aug/2025 19:52:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:51 INFO 10.145.84.81 - - [19/Aug/2025 19:52:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:52:56 INFO 10.145.84.81 - - [19/Aug/2025 19:52:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:01 INFO 10.145.84.81 - - [19/Aug/2025 19:53:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:01 INFO server log after executing: [(<Request 'http://10.145.216.14:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.14:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+19:53:01 INFO First reconcile that should not delete the runner, as it is still healthy.
+19:53:01 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:53:06 INFO 10.145.84.81 - - [19/Aug/2025 19:53:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:07 INFO 10.145.84.81 - - [19/Aug/2025 19:53:07] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:11 INFO 10.145.84.81 - - [19/Aug/2025 19:53:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:12 INFO 10.145.84.81 - - [19/Aug/2025 19:53:12] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:15 INFO 10.145.84.81 - - [19/Aug/2025 19:53:15] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:16 INFO 10.145.84.81 - - [19/Aug/2025 19:53:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:21 INFO 10.145.84.81 - - [19/Aug/2025 19:53:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:26 INFO 10.145.84.81 - - [19/Aug/2025 19:53:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:31 INFO 10.145.84.81 - - [19/Aug/2025 19:53:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:31 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:53:35 INFO Current reconcile ID: 7bd5a134-f065-444b-8cbc-3c6391a649bd
+19:53:36 INFO 10.145.84.81 - - [19/Aug/2025 19:53:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:41 INFO 10.145.84.81 - - [19/Aug/2025 19:53:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:46 INFO 10.145.84.81 - - [19/Aug/2025 19:53:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:51 INFO 10.145.84.81 - - [19/Aug/2025 19:53:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:53:56 INFO 10.145.84.81 - - [19/Aug/2025 19:53:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:01 INFO 10.145.84.81 - - [19/Aug/2025 19:54:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:06 INFO 10.145.84.81 - - [19/Aug/2025 19:54:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:11 INFO 10.145.84.81 - - [19/Aug/2025 19:54:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:16 INFO 10.145.84.81 - - [19/Aug/2025 19:54:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:21 INFO 10.145.84.81 - - [19/Aug/2025 19:54:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:26 INFO 10.145.84.81 - - [19/Aug/2025 19:54:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:31 INFO 10.145.84.81 - - [19/Aug/2025 19:54:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:36 INFO Current reconcile ID: 7bd5a134-f065-444b-8cbc-3c6391a649bd
+19:54:36 INFO 10.145.84.81 - - [19/Aug/2025 19:54:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:41 INFO 10.145.84.81 - - [19/Aug/2025 19:54:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:46 INFO 10.145.84.81 - - [19/Aug/2025 19:54:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:51 INFO 10.145.84.81 - - [19/Aug/2025 19:54:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:54:56 INFO 10.145.84.81 - - [19/Aug/2025 19:54:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:01 INFO 10.145.84.81 - - [19/Aug/2025 19:55:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:06 INFO 10.145.84.81 - - [19/Aug/2025 19:55:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:11 INFO 10.145.84.81 - - [19/Aug/2025 19:55:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:16 INFO 10.145.84.81 - - [19/Aug/2025 19:55:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:21 INFO 10.145.84.81 - - [19/Aug/2025 19:55:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:26 INFO 10.145.84.81 - - [19/Aug/2025 19:55:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:31 INFO 10.145.84.81 - - [19/Aug/2025 19:55:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:36 INFO 10.145.84.81 - - [19/Aug/2025 19:55:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:37 INFO Current reconcile ID: 7bd5a134-f065-444b-8cbc-3c6391a649bd
+19:55:41 INFO 10.145.84.81 - - [19/Aug/2025 19:55:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:46 INFO 10.145.84.81 - - [19/Aug/2025 19:55:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:51 INFO 10.145.84.81 - - [19/Aug/2025 19:55:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:55:56 INFO 10.145.84.81 - - [19/Aug/2025 19:55:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:01 INFO 10.145.84.81 - - [19/Aug/2025 19:56:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:06 INFO 10.145.84.81 - - [19/Aug/2025 19:56:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:11 INFO 10.145.84.81 - - [19/Aug/2025 19:56:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:16 INFO 10.145.84.81 - - [19/Aug/2025 19:56:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:20 INFO 10.145.84.81 - - [19/Aug/2025 19:56:20] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:21 INFO 10.145.84.81 - - [19/Aug/2025 19:56:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:26 INFO 10.145.84.81 - - [19/Aug/2025 19:56:26] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:26 INFO 10.145.84.81 - - [19/Aug/2025 19:56:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:31 INFO 10.145.84.81 - - [19/Aug/2025 19:56:31] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:32 INFO 10.145.84.81 - - [19/Aug/2025 19:56:32] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:37 INFO 10.145.84.81 - - [19/Aug/2025 19:56:37] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:38 INFO Current reconcile ID: 30b44093-f7ee-47c8-be69-2c16ea5537f5
+19:56:41 INFO 10.145.84.81 - - [19/Aug/2025 19:56:41] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:42 INFO 10.145.84.81 - - [19/Aug/2025 19:56:42] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:46 INFO 10.145.84.81 - - [19/Aug/2025 19:56:46] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:47 INFO 10.145.84.81 - - [19/Aug/2025 19:56:47] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:47 INFO check-runners: {'busy': '1', 'busy-runners': "('test-dr483uct-0-n-c2ac0f96e0f2',)", 'offline': '0', 'online': '1', 'return-code': 0, 'runners': "('test-dr483uct-0-n-c2ac0f96e0f2',)", 'unknown': '0'}
+19:56:47 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 17497898b36f8684'} data=None json=<UNDEFINED>>
+19:56:47 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:56:52 INFO 10.145.84.81 - - [19/Aug/2025 19:56:52] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:53 INFO 10.145.84.81 - - [19/Aug/2025 19:56:53] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:56:57 INFO 10.145.84.81 - - [19/Aug/2025 19:56:57] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:57:02 INFO 10.145.84.81 - - [19/Aug/2025 19:57:02] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:57:17 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+19:57:20 INFO Current reconcile ID: a851e30f-a9e4-4db7-afce-c83ed43275ca
+19:58:21 INFO Current reconcile ID: a851e30f-a9e4-4db7-afce-c83ed43275ca
+19:59:22 INFO Current reconcile ID: a851e30f-a9e4-4db7-afce-c83ed43275ca
+20:00:24 INFO Current reconcile ID: a851e30f-a9e4-4db7-afce-c83ed43275ca
+20:01:13 INFO 10.145.84.81 - - [19/Aug/2025 20:01:13] "[35m[1mPOST /v1/runners/register HTTP/1.1[0m" 500 -
+20:01:25 INFO Current reconcile ID: c1070f23-ee34-4f16-be39-d35857c639e9
+20:01:29 INFO check-runners: {'busy': '0', 'busy-runners': '()', 'offline': '0', 'online': '0', 'return-code': 0, 'runners': '()', 'unknown': '0'}
+20:01:29 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+20:02:00 INFO Waiting for model:
+  test-dr483uct/0 [idle] active: 
+20:02:03 INFO Current reconcile ID: 8acf60ef-406f-4e92-a987-7db69f0ef0d8
+20:03:04 INFO Current reconcile ID: 8acf60ef-406f-4e92-a987-7db69f0ef0d8
+20:04:05 INFO Current reconcile ID: dbe35d32-e2dd-4a72-9bf8-1fa38ff4e027
+20:04:05 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-mh55  github-pr-539f0-lxd  localhost/localhost  3.6.8    unsupported  20:04:05Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-dr483uct           active      1  github-runner-image-builder  latest/edge  105  no       
+test-dr483uct                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dr483uct/0*  active    idle   0        10.145.84.34           
+test-dr483uct/0*                         active    idle   1        10.145.84.81           
+
+Machine  State    Address       Inst id        Base          AZ  Message
+0        started  10.145.84.34  juju-79b302-0  ubuntu@22.04      Running
+1        started  10.145.84.81  juju-79b302-1  ubuntu@22.04      Running
+
+20:04:06 INFO Juju error logs:
+
+machine-0: 19:29:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:29:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-dr483uct-0: 19:29:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 19:29:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:29:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dr483uct-0: 19:29:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-dr483uct-0: 19:30:32 ERROR unit.github-runner-image-builder-dr483uct/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-dr483uct-0: 19:31:07 ERROR unit.test-dr483uct/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dr483uct-0: 19:31:10 ERROR unit.test-dr483uct/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dr483uct-0: 19:32:38 ERROR unit.test-dr483uct/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dr483uct-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+20:04:06 INFO Forgetting model main...
