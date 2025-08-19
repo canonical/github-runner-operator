@@ -1,0 +1,13 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+timeout: 20m
+severity:
+  - UNKNOWN
+  - LOW
+  - MEDIUM
+  - HIGH
+  - CRITICAL
+vulnerability:
+  ignore-unfixed: false
+exit-code: 0
