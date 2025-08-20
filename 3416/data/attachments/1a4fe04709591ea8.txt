@@ -1,0 +1,27 @@
+06:55:29 INFO GitHub token rate limit: Rate(reset=2025-08-20 06:59:47+00:00, remaining=4618, limit=5000)
+06:55:36 INFO OpenStack servers: []
+06:55:36 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-n6u0  github-pr-539f0-lxd  localhost/localhost  3.6.9    unsupported  06:55:36Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yimddwzy           blocked      1  github-runner-image-builder  latest/edge  106  no       image integration required.
+test-yimddwzy                                  waiting    0/1  github-runner                               0  no       waiting for machine
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-yimddwzy/0*  blocked   idle        0        10.143.227.190         image integration required.
+test-yimddwzy/0                          waiting   allocating  1        10.143.227.109         waiting for machine
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.143.227.190  juju-19755c-0  ubuntu@22.04  github-runner  Running
+1        down     10.143.227.109  juju-19755c-1  ubuntu@22.04  github-runner  Running
+
+06:55:36 INFO Juju error logs:
+
+machine-0: 06:28:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yimddwzy-0: 06:28:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yimddwzy-0: 06:30:44 ERROR unit.github-runner-image-builder-yimddwzy/0.juju-log Pipx command failed, code: 1, out: None, err: None
+
+06:55:36 INFO Forgetting model main...

@@ -1,0 +1,109 @@
+06:57:10 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+06:57:40 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+06:57:44 INFO Current reconcile ID: fc5e79b6-8a37-4418-b413-f247347c5455
+06:58:45 INFO Current reconcile ID: fc5e79b6-8a37-4418-b413-f247347c5455
+06:59:46 INFO Current reconcile ID: 0312db3c-8a25-47c4-b302-6539d122234a
+06:59:46 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+07:00:16 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+07:00:29 INFO Current reconcile ID: ec330578-1868-4691-a285-5874a9233441
+07:01:30 INFO Current reconcile ID: ec330578-1868-4691-a285-5874a9233441
+07:02:32 INFO Current reconcile ID: ed33fc8f-d1a4-46aa-960a-f897f1132fa9
+07:02:40 INFO Wait for condition not met, sleeping 30
+07:03:26 INFO [TEST SETUP] Run command pkill -9 run.sh on test-eee9ml6k-0-n-fddd87924efb
+07:03:26 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.79', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:68:e9:87'}]])
+07:03:27 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-eee9ml6k-0-n-fddd87924efb.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.79 pkill -9 run.sh'
+07:03:28 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ED25519 key sent by the remote host is
+SHA256:4WJZhA2NjiUiIq/qwJuwKm7IEWhMvH/5IM/XclnlbtM.
+Please contact your system administrator.
+Add correct host key in /root/.ssh/known_hosts to get rid of this message.
+Offending ECDSA key in /root/.ssh/known_hosts:3
+  remove with:
+  ssh-keygen -f "/root/.ssh/known_hosts" -R "10.145.193.79"
+Password authentication is disabled to avoid man-in-the-middle attacks.
+Keyboard-interactive authentication is disabled to avoid man-in-the-middle attacks.
+UpdateHostkeys is disabled because the host key is not trusted.
+'
+07:03:32 INFO Runner test-eee9ml6k-0-n-fddd87924efb status: online
+07:03:32 INFO Runner still marked as online, waiting for it to be marked offline
+07:04:35 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+07:05:05 INFO Waiting for model:
+  test-eee9ml6k/0 [idle] active: 
+07:05:08 INFO Current reconcile ID: 6810fec4-0f0b-4371-a78e-6999ab5219f3
+07:06:09 INFO Current reconcile ID: 6810fec4-0f0b-4371-a78e-6999ab5219f3
+07:07:10 INFO Current reconcile ID: c6c9762d-3a15-48c1-9704-0f66cb94536d
+07:07:11 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755673043.1739326, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.706515073776245}
+{"timestamp": 1755673173.5712912, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.240245819091797}
+{"timestamp": 1755673203.628247, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 14.5999276638031}
+{"timestamp": 1755673335.9247234, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.225460529327393}
+{"timestamp": 1755673254.0, "event": "runner_installed", "flavor": "test-eee9ml6k", "duration": 54.0}
+{"timestamp": 1755673363.0, "event": "runner_start", "flavor": "test-eee9ml6k", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 109.0, "queue_duration": 1.0}
+{"timestamp": 1755673408.0, "event": "runner_stop", "flavor": "test-eee9ml6k", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 45.0, "job_conclusion": "cancelled"}
+{"timestamp": 1755673474.3237343, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 18.306264877319336}
+{"timestamp": 1755673488.9643195, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.664539337158203}
+{"timestamp": 1755673620.8449972, "event": "reconciliation", "flavor": "test-eee9ml6k", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.747739791870117}
+07:07:12 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-oh7f  github-pr-539f0-lxd  localhost/localhost  3.6.9    unsupported  07:07:12Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-eee9ml6k           active      1  github-runner-image-builder  latest/edge  106  no       
+test-eee9ml6k                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-eee9ml6k/0*  active    idle   0        10.14.0.35                
+test-eee9ml6k/0*                         active    idle   1        10.14.0.221     8080/tcp  
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.14.0.35   juju-e0ac1f-0  ubuntu@22.04  github-runner  Running
+1        started  10.14.0.221  juju-e0ac1f-1  ubuntu@22.04  github-runner  Running
+
+07:07:13 INFO Juju error logs:
+
+machine-0: 06:27:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-eee9ml6k-0: 06:27:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-eee9ml6k-0: 06:28:39 ERROR unit.github-runner-image-builder-eee9ml6k/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:30:01 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:30:01 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-eee9ml6k-0: 06:30:01 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-eee9ml6k-0: 06:33:10 ERROR unit.test-eee9ml6k/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-eee9ml6k-0: 06:33:12 ERROR unit.test-eee9ml6k/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-eee9ml6k-0: 06:33:15 ERROR unit.test-eee9ml6k/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-eee9ml6k-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:07:13 INFO Forgetting model main...
