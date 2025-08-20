@@ -9,5 +9,5 @@ jobs:
   docs-checks:
     uses: canonical/operator-workflows/.github/workflows/docs.yaml@main
     secrets: inherit
-  with:
-    linkcheck-files: "'*.md' 'docs/**/*.md' 'terraform/**/*.md' './**/*.rst'"
+    with:
+      linkcheck-files: "'*.md' 'docs/**/*.md' 'terraform/**/*.md' './**/*.rst'"
