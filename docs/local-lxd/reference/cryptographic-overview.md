@@ -46,7 +46,7 @@ The communication between these virtual machines and the runner is done via SSH 
 The following sections describe the cryptographic technologies exposed to the user:
 
 ### Tmate
-- [Tmate](https://tmate.io/) uses RSA (384 byte) and ED25519 (32 byte) fingerprints for connections from users to [Tmate](https://tmate.io/) and from the managers to [Tmate](https://tmate.io/). [OpenSSL](https://www.openssl.org/) is being used by [Tmate](https://tmate.io/) to secure the connection between the user/manager to the runner.
+- [Tmate](https://github.com/tmate-io/tmate) uses RSA (384 byte) and ED25519 (32 byte) fingerprints for connections from users to Tmate and from the managers to Tmate. [OpenSSL](https://www.openssl.org/) is being used by Tmate to secure the connection between the user/manager to the runner.
 
 ### Docker hub cache
 [Docker Hub cache](https://github.com/canonical/docker-registry-charm) connection is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).
