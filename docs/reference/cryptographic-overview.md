@@ -21,7 +21,7 @@ The GitHub runner charm supports being deployed behind an HTTP proxy. [Aproxy](h
 Images that run in the OpenStack VM (Cloud images) are verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
 
 ### User SSH access
-Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://tmate.io/) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with RSA keypair and ed25519 fingerprints.
+Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://github.com/tmate-io/tmate) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with RSA keypair and ed25519 fingerprints.
 
 ## Cryptographic technology used by the product
 The following cryptographic technologies are used internally by our product:
