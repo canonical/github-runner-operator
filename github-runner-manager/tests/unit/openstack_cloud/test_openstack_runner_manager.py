@@ -230,4 +230,4 @@ def test_extract_metrics(runner_manager: OpenStackRunnerManager, monkeypatch: py
     monkeypatch.setattr(runner_metrics, "pull_runner_metrics", pull_metrics_mock)
 
     metrics = runner_manager.extract_metrics(instance_ids=MagicMock())
-    assert metrics == [test_metric_one.to_runner_metrics(), test_metric_two.to_runner_metrics()]
+    assert metrics == [test_metric_one, test_metric_two]

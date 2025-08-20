@@ -1,6 +1,7 @@
 # Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import secrets
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 from unittest.mock import MagicMock, call
@@ -10,17 +11,11 @@ from fabric import Connection as SSHConnection
 from invoke.runners import Result
 
 from github_runner_manager.errors import IssueMetricEventError
-from github_runner_manager.manager.models import InstanceID, RunnerMetadata
-from github_runner_manager.manager.vm_manager import (
-    PostJobMetrics,
-    PostJobStatus,
-    PreJobMetrics,
-    RunnerMetrics,
-)
-from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.manager.vm_manager import RunnerMetrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics import type as metrics_type
-from github_runner_manager.metrics.events import RunnerInstalled, RunnerStart, RunnerStop
+from github_runner_manager.metrics.events import Event
 from github_runner_manager.metrics.runner import (
     PulledMetrics,
     PullFileError,
@@ -28,7 +23,26 @@ from github_runner_manager.metrics.runner import (
     _ssh_pull_file,
     pull_runner_metrics,
 )
+from github_runner_manager.openstack_cloud.constants import (
+    POST_JOB_METRICS_FILE_PATH,
+    PRE_JOB_METRICS_FILE_PATH,
+    RUNNER_INSTALLED_TS_FILE_PATH,
+)
+from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 from github_runner_manager.types_.github import JobConclusion
+from tests.unit.factories.metrics_factory import (
+    PostJobMetricsFactory,
+    PreJobMetricsFactory,
+    PulledMetricsFactory,
+    RunnerInstalledFactory,
+    RunnerMetricsFactory,
+    RunnerStartFactory,
+    RunnerStopFactory,
+)
+from tests.unit.factories.runner_instance_factory import (
+    OpenstackInstance,
+    OpenstackInstanceFactory,
+)
 
 
 @pytest.fixture(autouse=True, name="issue_event_mock")
@@ -108,106 +122,300 @@ def test_pull_runner_metrics_errors(caplog: pytest.LogCaptureFixture):
     )
 
 
-def test_pull_runner_metrics():
+class FakeOpenStackCloud(OpenstackCloud):
+    """Fake OpenStack cloud for testing metrics file pulling."""
+
+    def __init__(
+        self,
+        initial_instances: list[OpenstackInstance],
+        instance_file_contents: list[dict[str, str]],
+    ):
+        """Initialize the fake OpenStack cloud service.
+
+        Args:
+            initial_instances: The instances to initialize the fake with.
+            instance_file_contents: Map of instance ID to contents of the metrics file.
+        """
+        instance_map: dict[InstanceID, OpenstackInstance] = {}
+        instance_file_contents_map: dict[InstanceID, dict[str, str]] = {}
+        for instance, file_contents_map in zip(initial_instances, instance_file_contents):
+            instance_map[instance.instance_id] = instance
+            instance_file_contents_map[instance.instance_id] = file_contents_map
+
+        self.instances = {instance.instance_id: instance for instance in initial_instances}
+        self.file_contents = instance_file_contents_map
+
+    def get_instance(self, instance_id: InstanceID) -> OpenstackInstance | None:
+        """Get an OpenStack instance.
+
+        Args:
+            instance_id: The instance ID to fetch.
+
+        Returns:
+            The OpenStack instance if exists.
+        """
+        return self.instances.get(instance_id, None)
+
+    def get_ssh_connection(self, instance: OpenstackInstance) -> MagicMock:
+        """Return a fake SSH connection.
+
+        Args:
+            instance: The instance to get a fake connection for.
+
+        Returns:
+            A mocked connection instance.
+        """
+        fake_ssh_connection = MagicMock()
+        fake_ssh_connection.__enter__.return_value = fake_ssh_connection
+        fake_ssh_connection.get = lambda remote, local: local.write(
+            bytes(
+                self.file_contents.get(instance.instance_id, {}).get(remote, ""), encoding="utf-8"
+            )
+        )
+        return fake_ssh_connection
+
+
+@pytest.mark.parametrize(
+    "instances, instance_metrics_map, expected_metrics",
+    [
+        pytest.param([], [], [], id="no instances"),
+        pytest.param([OpenstackInstanceFactory()], [{}], [], id="single instance, no metrics"),
+        pytest.param(
+            [instance := OpenstackInstanceFactory()],
+            [{str(POST_JOB_METRICS_FILE_PATH): (post_job := PostJobMetricsFactory()).json()}],
+            [
+                PulledMetricsFactory(
+                    instance=instance,
+                    runner_installed_timestamp=None,
+                    pre_job=None,
+                    post_job=post_job,
+                )
+            ],
+            id="single instance, partial metrics(POST_JOB_METRICS_FILE_PATH)",
+        ),
+        pytest.param(
+            [instance := OpenstackInstanceFactory()],
+            [{str(PRE_JOB_METRICS_FILE_PATH): (pre_job := PreJobMetricsFactory()).json()}],
+            [
+                PulledMetricsFactory(
+                    instance=instance,
+                    runner_installed_timestamp=None,
+                    pre_job=pre_job,
+                    post_job=None,
+                )
+            ],
+            id="single instance, partial metrics(PRE_JOB_METRICS_FILE_PATH)",
+        ),
+        pytest.param(
+            [instance := OpenstackInstanceFactory()],
+            [{str(RUNNER_INSTALLED_TS_FILE_PATH): "1"}],
+            [
+                PulledMetricsFactory(
+                    instance=instance,
+                    runner_installed_timestamp=1,
+                    pre_job=None,
+                    post_job=None,
+                )
+            ],
+            id="single instance, partial metrics(RUNNER_INSTALLED_TS_FILE_PATH)",
+        ),
+        pytest.param(
+            [instance := OpenstackInstanceFactory()],
+            [
+                {
+                    str(POST_JOB_METRICS_FILE_PATH): (post_job := PostJobMetricsFactory()).json(),
+                    str(PRE_JOB_METRICS_FILE_PATH): (pre_job := PreJobMetricsFactory()).json(),
+                    str(RUNNER_INSTALLED_TS_FILE_PATH): "1",
+                }
+            ],
+            [
+                PulledMetricsFactory(
+                    instance=instance,
+                    runner_installed_timestamp=1,
+                    pre_job=pre_job,
+                    post_job=post_job,
+                )
+            ],
+            id="single instance, all metrics",
+        ),
+        pytest.param(
+            [instance_1 := OpenstackInstanceFactory(), instance_2 := OpenstackInstanceFactory()],
+            [
+                {
+                    str(POST_JOB_METRICS_FILE_PATH): (
+                        post_job_1 := PostJobMetricsFactory()
+                    ).json(),
+                    str(PRE_JOB_METRICS_FILE_PATH): (pre_job_1 := PreJobMetricsFactory()).json(),
+                    str(RUNNER_INSTALLED_TS_FILE_PATH): "1",
+                },
+                {
+                    str(POST_JOB_METRICS_FILE_PATH): (
+                        post_job_2 := PostJobMetricsFactory()
+                    ).json(),
+                    str(PRE_JOB_METRICS_FILE_PATH): (pre_job_2 := PreJobMetricsFactory()).json(),
+                    str(RUNNER_INSTALLED_TS_FILE_PATH): "2",
+                },
+            ],
+            [
+                PulledMetricsFactory(
+                    instance=instance_1,
+                    runner_installed_timestamp=1,
+                    pre_job=pre_job_1,
+                    post_job=post_job_1,
+                ),
+                PulledMetricsFactory(
+                    instance=instance_2,
+                    runner_installed_timestamp=2,
+                    pre_job=pre_job_2,
+                    post_job=post_job_2,
+                ),
+            ],
+            id="multi instance, all metrics",
+        ),
+    ],
+)
+def test_pull_runner_metrics(
+    instances: list[OpenstackInstance],
+    instance_metrics_map: list[dict],
+    expected_metrics: list[PulledMetrics],
+):
     """
     arrange: given a mock cloud service get_instance method and get_ssh_connection method.
     act: when pull_runner_metrics function is called.
     assert: metrics are pulled from corresponding instances correctly.
     """
-    mock_cloud_service = MagicMock()
-    mock_ssh_conn = MagicMock()
-    mock_ssh_conn.return_value = mock_ssh_conn
-    mock_ssh_conn.__enter__ = mock_ssh_conn
-    test_remote_file_contents = "test-contents"
-    mock_ssh_conn.get = lambda remote, local: local.write(
-        bytes(test_remote_file_contents, encoding="utf-8")
+    fake_cloud = FakeOpenStackCloud(
+        initial_instances=instances, instance_file_contents=instance_metrics_map
     )
-    mock_cloud_service.get_ssh_connection = mock_ssh_conn
-    mock_instance_one, mock_instance_two = (MagicMock(), MagicMock())
-    mock_cloud_service.get_instance.side_effect = [mock_instance_one, mock_instance_two]
 
     # Compare the set as the order is not guaranteed but it does not matter.
-    assert set(
-        pull_runner_metrics(
-            cloud_service=mock_cloud_service,
-            instance_ids=[mock_instance_one.instance_id, mock_instance_two.instance_id],
-        )
-    ) == set(
-        [
-            PulledMetrics(
-                instance=mock_instance_one,
-                runner_installed=test_remote_file_contents,
-                pre_job_metrics=test_remote_file_contents,
-                post_job_metrics=test_remote_file_contents,
-            ),
-            PulledMetrics(
-                instance=mock_instance_two,
-                runner_installed=test_remote_file_contents,
-                pre_job_metrics=test_remote_file_contents,
-                post_job_metrics=test_remote_file_contents,
-            ),
-        ]
+    pulled_metrics = pull_runner_metrics(
+        cloud_service=fake_cloud,
+        instance_ids=[instance.instance_id for instance in instances],
     )
+    assert len(pulled_metrics) == len(
+        expected_metrics
+    ), f"metrics length mismatch, expected: {expected_metrics}, got: {pulled_metrics}"
+    for pulled_metric in pulled_metrics:
+        assert pulled_metric in expected_metrics
 
 
-def test_issue_events(issue_event_mock: MagicMock):
+@pytest.mark.parametrize(
+    "metric, flavor, job_metrics, expected_events",
+    [
+        pytest.param(
+            RunnerMetricsFactory(
+                pre_job=(test_pre_job := PreJobMetricsFactory(timestamp=1)),
+                post_job=None,
+                installation_start_timestamp=None,
+                installation_end_timestamp=None,
+            ),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            [
+                RunnerStartFactory(
+                    timestamp=test_pre_job.timestamp,
+                    flavor=test_flavor,
+                    workflow=test_pre_job.workflow,
+                    repo=test_pre_job.repository,
+                    github_event=test_pre_job.event,
+                    queue_duration=test_job_metrics.queue_duration,
+                    idle=1,
+                )
+            ],
+            id="runner start (pre-job)",
+        ),
+        pytest.param(
+            test_runner_metrics := RunnerMetricsFactory(
+                pre_job=None,
+                post_job=None,
+                installation_start_timestamp=1,
+                installation_end_timestamp=10,
+            ),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            [
+                RunnerInstalledFactory(
+                    timestamp=test_runner_metrics.installation_end_timestamp,
+                    flavor=test_flavor,
+                    duration=9,
+                )
+            ],
+            id="runner installed (installation timestamps)",
+        ),
+        pytest.param(
+            RunnerMetricsFactory(
+                pre_job=None,
+                post_job=(test_post_job := PostJobMetricsFactory(timestamp=2)),
+                installation_start_timestamp=None,
+                installation_end_timestamp=None,
+            ),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            [],
+            id="runner stop (post job only)",
+        ),
+        pytest.param(
+            RunnerMetricsFactory(
+                pre_job=(test_pre_job := PreJobMetricsFactory(timestamp=1)),
+                post_job=(test_post_job := PostJobMetricsFactory(timestamp=2)),
+                installation_start_timestamp=None,
+                installation_end_timestamp=None,
+            ),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            [
+                RunnerStartFactory(
+                    timestamp=test_pre_job.timestamp,
+                    flavor=test_flavor,
+                    workflow=test_pre_job.workflow,
+                    repo=test_pre_job.repository,
+                    github_event=test_pre_job.event,
+                    queue_duration=test_job_metrics.queue_duration,
+                    idle=1,
+                ),
+                RunnerStopFactory(
+                    timestamp=test_post_job.timestamp,
+                    flavor=test_flavor,
+                    workflow=test_pre_job.workflow,
+                    repo=test_pre_job.repository,
+                    github_event=test_pre_job.event,
+                    status=test_post_job.status,
+                    status_info=test_post_job.status_info,
+                    job_duration=1,
+                    job_conclusion=test_job_metrics.conclusion,
+                ),
+            ],
+            id="runner stop (pre, post job)",
+        ),
+    ],
+)
+def test_issue_events(
+    metric: RunnerMetrics,
+    flavor: str,
+    job_metrics: metrics_type.GithubJobMetrics | None,
+    expected_events: list[Event],
+    issue_event_mock: MagicMock,
+):
     """
-    arrange: A runner with all metrics.
+    arrange: runner metric with abnormal timestamp.
     act: Call issue_events.
-    assert: RunnerInstalled, RunnerStart and RunnerStop metrics are issued.
+    assert: expected events are returned.
     """
-    runner_name = InstanceID.build("prefix")
-    runner_metrics_data = _create_metrics_data(runner_name)
-
-    flavor = secrets.token_hex(16)
-    job_metrics = metrics_type.GithubJobMetrics(
-        queue_duration=3600, conclusion=JobConclusion.SUCCESS
-    )
     issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+        runner_metrics=metric, flavor=flavor, job_metrics=job_metrics
     )
-    assert issued_metrics == {
-        metric_events.RunnerInstalled,
-        metric_events.RunnerStart,
-        metric_events.RunnerStop,
-    }
-    issue_event_mock.assert_has_calls(
-        [
-            call(
-                RunnerInstalled(
-                    timestamp=runner_metrics_data.installed_timestamp,
-                    flavor=flavor,
-                    duration=runner_metrics_data.installed_timestamp
-                    - runner_metrics_data.installation_start_timestamp,
-                )
-            ),
-            call(
-                RunnerStart(
-                    timestamp=runner_metrics_data.pre_job.timestamp,
-                    flavor=flavor,
-                    workflow=runner_metrics_data.pre_job.workflow,
-                    repo=runner_metrics_data.pre_job.repository,
-                    github_event=runner_metrics_data.pre_job.event,
-                    idle=runner_metrics_data.pre_job.timestamp
-                    - runner_metrics_data.installed_timestamp,
-                    queue_duration=job_metrics.queue_duration,
-                )
-            ),
-            call(
-                RunnerStop(
-                    timestamp=runner_metrics_data.post_job.timestamp,
-                    flavor=flavor,
-                    workflow=runner_metrics_data.pre_job.workflow,
-                    repo=runner_metrics_data.pre_job.repository,
-                    github_event=runner_metrics_data.pre_job.event,
-                    status=runner_metrics_data.post_job.status,
-                    job_duration=runner_metrics_data.post_job.timestamp
-                    - runner_metrics_data.pre_job.timestamp,
-                    job_conclusion=job_metrics.conclusion,
-                )
-            ),
-        ]
-    )
+
+    assert issued_metrics == set(type(event) for event in expected_events)
+    issue_event_mock.assert_has_calls([call(event) for event in expected_events], any_order=True)
 
 
 def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
@@ -219,177 +427,81 @@ def _create_metrics_data(instance_id: InstanceID) -> RunnerMetrics:
     Returns:
         Test metrics data.
     """
-    return RunnerMetrics(
-        installation_start_timestamp=1,
-        installed_timestamp=2,
-        pre_job=PreJobMetrics(
-            timestamp=3,
-            workflow="workflow1",
-            workflow_run_id="workflow_run_id1",
-            repository="org1/repository1",
-            event="push",
-        ),
-        post_job=PostJobMetrics(timestamp=3, status=PostJobStatus.NORMAL),
-        instance_id=instance_id,
-        metadata=RunnerMetadata(),
+    reference_time = datetime.now()
+    return PulledMetricsFactory(
+        instance=OpenstackInstanceFactory(created_at=reference_time, instance_id=instance_id),
+        runner_installed_timestamp=reference_time.timestamp() + 1,
+        pre_job=PreJobMetricsFactory(timestamp=reference_time.timestamp() + 2),
+        post_job=PostJobMetricsFactory(timestamp=reference_time.timestamp() + 3),
     )
 
 
-def test_issue_events_pre_job_before_runner_installed(issue_event_mock: MagicMock):
-    """
-    arrange: A runner with pre-job timestamp smaller than installed timestamp.
-    act: Call issue_events.
-    assert: RunnerStart metric is issued with idle set to 0.
-    """
-    runner_name = InstanceID.build("prefix")
-    runner_metrics_data = _create_metrics_data(runner_name)
-    runner_metrics_data.pre_job.timestamp = 0
-
-    flavor = secrets.token_hex(16)
-    job_metrics = metrics_type.GithubJobMetrics(
-        queue_duration=3600, conclusion=JobConclusion.SUCCESS
-    )
-    issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
-    )
-    assert metric_events.RunnerStart in issued_metrics
-    issue_event_mock.assert_has_calls(
-        [
-            call(
-                RunnerStart(
-                    timestamp=runner_metrics_data.pre_job.timestamp,
-                    flavor=flavor,
-                    workflow=runner_metrics_data.pre_job.workflow,
-                    repo=runner_metrics_data.pre_job.repository,
-                    github_event=runner_metrics_data.pre_job.event,
-                    idle=0,
-                    queue_duration=job_metrics.queue_duration,
-                )
-            )
-        ]
-    )
-
-
-def test_issue_events_post_job_before_pre_job(issue_event_mock: MagicMock):
-    """
-    arrange: A runner with post-job timestamp smaller than pre-job timestamps.
-    act: Call issue_events.
-    assert: job_duration is set to zero.
-    """
-    runner_name = InstanceID.build("prefix")
-    runner_metrics_data = _create_metrics_data(runner_name)
-    runner_metrics_data.post_job = PostJobMetrics(timestamp=0, status=PostJobStatus.NORMAL)
-    flavor = secrets.token_hex(16)
-    job_metrics = metrics_type.GithubJobMetrics(
-        queue_duration=3600, conclusion=JobConclusion.SUCCESS
-    )
-    issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
-    )
-
-    assert metric_events.RunnerStop in issued_metrics
-    issue_event_mock.assert_has_calls(
-        [
-            call(
-                RunnerStop(
-                    timestamp=runner_metrics_data.post_job.timestamp,
-                    flavor=flavor,
-                    workflow=runner_metrics_data.pre_job.workflow,
-                    repo=runner_metrics_data.pre_job.repository,
-                    github_event=runner_metrics_data.pre_job.event,
-                    status=runner_metrics_data.post_job.status,
-                    job_duration=0,
-                    job_conclusion=job_metrics.conclusion,
-                )
+@pytest.mark.parametrize(
+    "metric, flavor, job_metrics, expected_event",
+    [
+        pytest.param(
+            test_runner_metrics := RunnerMetricsFactory(
+                installation_start_timestamp=1,
+                installation_end_timestamp=5,
+                pre_job=(test_pre_job := PreJobMetricsFactory(timestamp=1)),
             ),
-        ]
-    )
-
-
-@pytest.mark.parametrize(
-    "with_installation_start",
-    [
-        pytest.param(True, id="with installation start ts"),
-        pytest.param(False, id="without installation start ts"),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            RunnerStartFactory(
+                timestamp=test_pre_job.timestamp,
+                flavor=test_flavor,
+                workflow=test_pre_job.workflow,
+                repo=test_pre_job.repository,
+                github_event=test_pre_job.event,
+                queue_duration=test_job_metrics.queue_duration,
+                idle=0,
+            ),
+            id="pre-job timestamp before runner installed timestamp (idle reset)",
+        ),
+        pytest.param(
+            test_runner_metrics := RunnerMetricsFactory(
+                pre_job=(test_pre_job := PreJobMetricsFactory(timestamp=5)),
+                post_job=(test_post_job := PostJobMetricsFactory(timestamp=1)),
+            ),
+            test_flavor := "flavor-1",
+            test_job_metrics := metrics_type.GithubJobMetrics(
+                queue_duration=5, conclusion=metrics_type.JobConclusion.SUCCESS
+            ),
+            RunnerStopFactory(
+                timestamp=test_post_job.timestamp,
+                flavor=test_flavor,
+                workflow=test_pre_job.workflow,
+                repo=test_pre_job.repository,
+                github_event=test_pre_job.event,
+                status=test_post_job.status,
+                status_info=test_post_job.status_info,
+                job_duration=0,
+                job_conclusion=test_job_metrics.conclusion,
+            ),
+            id="post-job timestamp before pre-job timestamp (job duration reset)",
+        ),
     ],
 )
-@pytest.mark.parametrize(
-    "with_pre_job, with_post_job",
-    [
-        pytest.param(True, True, id="with pre_job, with_post_job"),
-        pytest.param(True, False, id="with pre_job, without_post_job"),
-        pytest.param(False, False, id="without pre_job and post_job"),
-    ],
-)
-def test_issue_events_partial_metrics(
-    with_installation_start: bool,
-    with_pre_job: bool,
-    with_post_job: bool,
+def test_issue_events_correction(
+    metric: RunnerMetrics,
+    flavor: str,
+    job_metrics: metrics_type.GithubJobMetrics | None,
+    expected_event: Event,
     issue_event_mock: MagicMock,
 ):
     """
-    arrange: A runner with partial metrics.
+    arrange: runner metric with abnormal timestamp.
     act: Call issue_events.
-    assert: Only the expected metrics are issued.
+    assert: expected events are returned.
     """
-    runner_name = InstanceID.build("prefix")
-    runner_metrics_data = _create_metrics_data(runner_name)
-    if not with_installation_start:
-        runner_metrics_data.installation_start_timestamp = None
-    if not with_pre_job:
-        runner_metrics_data.pre_job = None
-    if not with_post_job:
-        runner_metrics_data.post_job = None
-    flavor = secrets.token_hex(16)
-    job_metrics = metrics_type.GithubJobMetrics(
-        queue_duration=3600, conclusion=JobConclusion.SUCCESS
-    )
     issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
+        runner_metrics=metric, flavor=flavor, job_metrics=job_metrics
     )
 
-    expected_metrics = {metric_events.RunnerInstalled} if with_installation_start else set()
-    expected_metrics |= {metric_events.RunnerStart} if with_pre_job else set()
-    expected_metrics |= {metric_events.RunnerStop} if with_post_job else set()
-    assert issued_metrics == expected_metrics
-
-    if with_installation_start:
-        issue_event_mock.assert_any_call(
-            RunnerInstalled(
-                timestamp=runner_metrics_data.installed_timestamp,
-                flavor=flavor,
-                duration=runner_metrics_data.installed_timestamp
-                - runner_metrics_data.installation_start_timestamp,
-            )
-        )
-
-    if with_pre_job:
-        issue_event_mock.assert_any_call(
-            RunnerStart(
-                timestamp=runner_metrics_data.pre_job.timestamp,
-                flavor=flavor,
-                workflow=runner_metrics_data.pre_job.workflow,
-                repo=runner_metrics_data.pre_job.repository,
-                github_event=runner_metrics_data.pre_job.event,
-                idle=runner_metrics_data.pre_job.timestamp
-                - runner_metrics_data.installed_timestamp,
-                queue_duration=job_metrics.queue_duration,
-            )
-        )
-
-    if with_post_job:
-        issue_event_mock.assert_any_call(
-            RunnerStart(
-                timestamp=runner_metrics_data.pre_job.timestamp,
-                flavor=flavor,
-                workflow=runner_metrics_data.pre_job.workflow,
-                repo=runner_metrics_data.pre_job.repository,
-                github_event=runner_metrics_data.pre_job.event,
-                idle=runner_metrics_data.pre_job.timestamp
-                - runner_metrics_data.installed_timestamp,
-                queue_duration=job_metrics.queue_duration,
-            )
-        )
+    assert type(expected_event) in issued_metrics
+    issue_event_mock.assert_any_call(expected_event)
 
 
 def test_issue_events_returns_empty_set_on_issue_event_failure(
@@ -416,29 +528,6 @@ def test_issue_events_returns_empty_set_on_issue_event_failure(
     )
     assert not issued_metrics
     assert "Failed to issue metric" in caplog.text
-
-
-def test_issue_events_post_job_but_no_pre_job(
-    issue_event_mock: MagicMock,
-):
-    """
-    arrange: A runner with post-job metrics but no pre-job metrics.
-    act: Call issue_events.
-    assert: Only RunnerInstalled is issued.
-    """
-    runner_name = InstanceID.build("prefix")
-    runner_metrics_data = _create_metrics_data(runner_name)
-    runner_metrics_data.pre_job = None
-
-    flavor = secrets.token_hex(16)
-    job_metrics = metrics_type.GithubJobMetrics(
-        queue_duration=3600, conclusion=JobConclusion.SUCCESS
-    )
-
-    issued_metrics = runner_metrics.issue_events(
-        runner_metrics=runner_metrics_data, flavor=flavor, job_metrics=job_metrics
-    )
-    assert issued_metrics == {metric_events.RunnerInstalled}
 
 
 def test_ssh_pull_file():
