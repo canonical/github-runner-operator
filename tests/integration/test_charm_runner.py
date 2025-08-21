@@ -10,7 +10,6 @@ from github.Branch import Branch
 from github.Repository import Repository
 from juju.action import Action
 from juju.application import Application
-from juju.model import Model
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
 from tests.integration.helpers.common import (
@@ -20,13 +19,13 @@ from tests.integration.helpers.common import (
     get_job_logs,
     wait_for,
     wait_for_reconcile,
+    wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
 async def app_fixture(
-    model: Model,
     basic_app: Application,
 ) -> AsyncIterator[Application]:
     """Setup and teardown the charm after each test.
@@ -36,7 +35,7 @@ async def app_fixture(
     yield basic_app
 
     await basic_app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(basic_app, basic_app.model)
+    await wait_for_reconcile(basic_app)
 
 
 @pytest.mark.openstack
@@ -48,13 +47,13 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
     act: Run check_runner action.
     assert: Action returns result with one runner.
     """
-    await instance_helper.ensure_charm_has_runner(app)
+    await instance_helper.set_app_runner_amount(app, 2)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["online"] == "1"
+    assert action.results["online"] == "2"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
 
@@ -69,17 +68,15 @@ async def test_flush_runner_and_resource_config(
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
-    arrange: A working application with one runner.
+    arrange: A working application with two runners.
     act:
-        1. Run Check_runner action. Record the runner name for later.
-        2. Nothing.
-        3. Change the virtual machine resource configuration.
-        4. Run flush_runner action.
-        5. Dispatch a workflow to make runner busy and call flush_runner action.
+        1. Run Check_runner action. Record the runner names for later.
+        2. Flush runners.
+        3. Dispatch a workflow to make runner busy and call flush_runner action.
 
     assert:
-        1. One runner exists.
-        2. Check the resource matches the configuration.
+        1. Two runner exists.
+        2. Runners are recreated.
         3. The runner is not flushed since by default it flushes idle.
 
     Test are combined to reduce number of runner spawned.
@@ -102,7 +99,7 @@ async def test_flush_runner_and_resource_config(
     action = await app.units[0].run_action("flush-runners")
     await action.wait()
 
-    await wait_for_reconcile(app, app.model)
+    await wait_for_runner_ready(app)
 
     action = await app.units[0].run_action("check-runners")
     await action.wait()
@@ -164,7 +161,7 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     """,
         }
     )
-    await wait_for_reconcile(app, app.model)
+    await wait_for_runner_ready(app)
 
     workflow_run = await dispatch_workflow(
         app=app,

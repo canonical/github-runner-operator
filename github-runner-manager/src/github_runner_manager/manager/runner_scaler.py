@@ -8,10 +8,7 @@ import time
 from dataclasses import dataclass
 
 import github_runner_manager.reactive.runner_manager as reactive_runner_manager
-from github_runner_manager.configuration import (
-    ApplicationConfiguration,
-    UserInfo,
-)
+from github_runner_manager.configuration import ApplicationConfiguration, UserInfo
 from github_runner_manager.constants import GITHUB_SELF_HOSTED_ARCH_LABELS
 from github_runner_manager.errors import (
     CloudError,
@@ -19,7 +16,6 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     ReconcileError,
 )
-from github_runner_manager.manager.cloud_runner_manager import HealthState
 from github_runner_manager.manager.runner_manager import (
     FlushMode,
     IssuedMetricEventsStats,
@@ -27,14 +23,21 @@ from github_runner_manager.manager.runner_manager import (
     RunnerManager,
     RunnerMetadata,
 )
+from github_runner_manager.manager.vm_manager import HealthState
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics.reconcile import (
+    BUSY_RUNNERS_COUNT,
+    EXPECTED_RUNNERS_COUNT,
+    IDLE_RUNNERS_COUNT,
+    RECONCILE_DURATION_SECONDS,
+)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManager,
     OpenStackRunnerManagerConfig,
 )
-from github_runner_manager.platform.multiplexer_provider import MultiplexerPlatform
-from github_runner_manager.platform.platform_provider import PlatformRunnerState
+from github_runner_manager.platform.factory import platform_factory
+from github_runner_manager.platform.platform_provider import Platform, PlatformRunnerState
 from github_runner_manager.reactive.types_ import ReactiveProcessConfig
 
 logger = logging.getLogger(__name__)
@@ -91,7 +94,7 @@ class _ReconcileMetricData:
     start_timestamp: float
     end_timestamp: float
     metric_stats: IssuedMetricEventsStats
-    runner_list: tuple[RunnerInstance]
+    runner_list: tuple[RunnerInstance, ...]
     flavor: str
     expected_runner_quantity: int
 
@@ -138,9 +141,10 @@ class RunnerScaler:
             server_config=server_config,
             service_config=application_configuration.service_config,
         )
-        platform_provider = MultiplexerPlatform.build(
-            prefix=application_configuration.openstack_configuration.vm_prefix,
-            github_configuration=application_configuration.github_config,
+        platform_provider = platform_factory(
+            vm_prefix=application_configuration.openstack_configuration.vm_prefix,
+            github_config=application_configuration.github_config,
+            jobmanager_config=application_configuration.jobmanager_config,
         )
 
         runner_manager = RunnerManager(
@@ -163,6 +167,7 @@ class RunnerScaler:
                 queue=reactive_config.queue,
                 manager_name=application_configuration.name,
                 github_configuration=application_configuration.github_config,
+                jobmanager_configuration=application_configuration.jobmanager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 supported_labels=supported_labels,
                 labels=labels,
@@ -174,6 +179,9 @@ class RunnerScaler:
             user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
+            platform_name=(
+                Platform.GITHUB if application_configuration.github_config else Platform.JOBMANAGER
+            ),
             python_path=python_path,
         )
 
@@ -190,6 +198,7 @@ class RunnerScaler:
         base_quantity: int,
         max_quantity: int,
         python_path: str | None = None,
+        platform_name: Platform = Platform.GITHUB,
     ):
         """Construct the object.
 
@@ -199,6 +208,7 @@ class RunnerScaler:
             user: The user to run the reactive process.
             base_quantity: The number of intended non-reactive runners.
             max_quantity: The number of maximum runners for reactive.
+            platform_name: The name of the platform used for spawning runners.
             python_path: The PYTHONPATH to access the github-runner-manager library.
         """
         self._manager = runner_manager
@@ -206,7 +216,10 @@ class RunnerScaler:
         self._user = user
         self._base_quantity = base_quantity
         self._max_quantity = max_quantity
+        self._platform_name = platform_name
         self._python_path = python_path
+
+        EXPECTED_RUNNERS_COUNT.labels(self._manager.manager_name).set(self._base_quantity)
 
     def get_runner_info(self) -> RunnerInfo:
         """Get information on the runners.
@@ -254,6 +267,8 @@ class RunnerScaler:
             Number of runners flushed.
         """
         metric_stats = self._manager.cleanup()
+        if self._reactive_config is not None:
+            reactive_runner_manager.flush_reactive_processes()
         delete_metric_stats = self._manager.flush_runners(flush_mode=flush_mode)
         events = set(delete_metric_stats.keys()) | set(metric_stats.keys())
         metric_stats = {
@@ -313,7 +328,10 @@ class RunnerScaler:
                 flavor=self._manager.manager_name,
                 expected_runner_quantity=expected_runner_quantity,
             )
-            _issue_reconciliation_metric(reconcile_metric_data)
+            RECONCILE_DURATION_SECONDS.labels(self._manager.manager_name).observe(
+                end_timestamp - start_timestamp
+            )
+            _issue_reconciliation_metric(reconcile_metric_data, self._manager.manager_name)
 
         logger.info("Finished reconciliation.")
 
@@ -335,7 +353,9 @@ class RunnerScaler:
         runner_diff = expected_quantity - len(runners)
         if runner_diff > 0:
             try:
-                self._manager.create_runners(num=runner_diff, metadata=RunnerMetadata())
+                self._manager.create_runners(
+                    num=runner_diff, metadata=RunnerMetadata(platform_name=self._platform_name)
+                )
             except MissingServerConfigError:
                 logging.exception(
                     "Unable to spawn runner due to missing server configuration, "
@@ -355,7 +375,7 @@ class RunnerScaler:
         return _ReconcileResult(runner_diff=runner_diff, metric_stats=metric_stats)
 
     @staticmethod
-    def _log_runners(runner_list: tuple[RunnerInstance]) -> None:
+    def _log_runners(runner_list: tuple[RunnerInstance, ...]) -> None:
         """Log information about the runners found.
 
         Args:
@@ -393,12 +413,13 @@ class RunnerScaler:
 
 
 def _issue_reconciliation_metric(
-    reconcile_metric_data: _ReconcileMetricData,
+    reconcile_metric_data: _ReconcileMetricData, manager_name: str
 ) -> None:
     """Issue the reconciliation metric.
 
     Args:
         reconcile_metric_data: The data used to issue the reconciliation metric.
+        manager_name: The name of the manager.
     """
     idle_runners = {
         runner.name
@@ -421,8 +442,10 @@ def _issue_reconciliation_metric(
     logger.info("Current available runners (idle + healthy offline): %s", available_runners)
     logger.info("Current active runners: %s", active_runners)
 
-    try:
+    BUSY_RUNNERS_COUNT.labels(manager_name).set(len(active_runners))
+    IDLE_RUNNERS_COUNT.labels(manager_name).set(len(idle_runners))
 
+    try:
         metric_events.issue_event(
             metric_events.Reconciliation(
                 timestamp=time.time(),

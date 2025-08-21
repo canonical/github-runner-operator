@@ -10,7 +10,7 @@ import pytest
 import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
-from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.manager.vm_manager import PostJobStatus
 from juju.application import Application
 from juju.model import Model
 
@@ -44,7 +44,7 @@ async def app_fixture(model: Model, app_for_metric: Application) -> AsyncIterato
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_runner_installed_metric(
-    app: Application, model: Model, instance_helper: OpenStackInstanceHelper
+    app: Application, instance_helper: OpenStackInstanceHelper
 ):
     """
     arrange: A charm integrated with grafana-agent using the cos-agent integration.
@@ -55,7 +55,7 @@ async def test_charm_issues_runner_installed_metric(
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     metrics_log = await get_metrics_log(app.units[0])
     log_lines = list(map(lambda line: json.loads(line), metrics_log.splitlines()))
@@ -73,7 +73,6 @@ async def test_charm_issues_runner_installed_metric(
 @pytest.mark.asyncio
 @pytest.mark.abort_on_fail
 async def test_charm_issues_metrics_after_reconciliation(
-    model: Model,
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -100,7 +99,7 @@ async def test_charm_issues_metrics_after_reconciliation(
 
     # Set the number of virtual machines to 0 to speedup reconciliation
     await app.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
-    await wait_for_reconcile(app=app, model=model)
+    await wait_for_reconcile(app=app)
 
     await assert_events_after_reconciliation(
         app=app, github_repository=github_repository, post_job_status=PostJobStatus.NORMAL

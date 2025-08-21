@@ -10,7 +10,7 @@ from typing import Optional, TextIO
 import yaml
 from pydantic import AnyHttpUrl, BaseModel, Field, IPvAnyAddress, MongoDsn, root_validator
 
-from github_runner_manager.configuration import github
+from github_runner_manager.configuration import github, jobmanager
 from github_runner_manager.openstack_cloud.configuration import OpenStackConfiguration
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,7 @@ class ApplicationConfiguration(BaseModel):
     Attributes:
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
+        jobmanager_config: Configuration for the jobmanager platform.
         github_config: GitHub configuration.
         service_config: The configuration for supporting services.
         non_reactive_configuration: Configuration for non-reactive mode.
@@ -50,6 +51,7 @@ class ApplicationConfiguration(BaseModel):
 
     name: str
     extra_labels: list[str]
+    jobmanager_config: jobmanager.JobManagerConfiguration | None
     github_config: github.GitHubConfiguration | None
     service_config: "SupportServiceConfig"
     non_reactive_configuration: "NonReactiveConfiguration"
@@ -79,6 +81,8 @@ class SupportServiceConfig(BaseModel):
         proxy_config: The proxy configuration.
         runner_proxy_config: The proxy configuration for the runner.
         use_aproxy: Whether aproxy should be used for the runners.
+        aproxy_exclude_addresses: A list of addresses to exclude from the aproxy proxy.
+        aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
         repo_policy_compliance: The configuration of the repo policy compliance service.
@@ -89,6 +93,8 @@ class SupportServiceConfig(BaseModel):
     proxy_config: "ProxyConfig | None"
     runner_proxy_config: "ProxyConfig | None"
     use_aproxy: bool
+    aproxy_exclude_addresses: list[str] = []
+    aproxy_redirect_ports: list[str] = []
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
     repo_policy_compliance: "RepoPolicyComplianceConfig | None"

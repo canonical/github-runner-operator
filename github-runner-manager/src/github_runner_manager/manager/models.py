@@ -32,8 +32,8 @@ class InstanceID:
     """
 
     prefix: str
-    reactive: bool | None
     suffix: str
+    reactive: bool | None = None
 
     @property
     def name(self) -> str:

@@ -24,6 +24,11 @@ logger = logging.getLogger(__name__)
 NO_RESPONSE_ERROR_MESSAGE = "Failed request with no response"
 CONNECTION_ERROR_MESSAGE = "Failed request due to connection failure"
 NOT_READY_ERROR_MESSAGE = "GitHub runner manager service not ready"
+# For request that modifies the runner, GitHub runner manager service might need to wait for
+# reconcile to finish before processing the request, hence the long timeout for write-level
+# requests.
+WRITE_TIMEOUT = 60 * 20
+READ_TIMEOUT = 60 * 5
 
 
 def catch_requests_errors(func: Callable) -> Callable:
@@ -63,6 +68,8 @@ def catch_requests_errors(func: Callable) -> Callable:
                 f"Failed request with code {err.response.status_code}: {err.response.text}"
             ) from err
         except requests.ConnectionError as err:
+            raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
+        except requests.ReadTimeout as err:
             raise RunnerManagerServiceConnectionError(CONNECTION_ERROR_MESSAGE) from err
 
     return func_with_error_handling
@@ -122,7 +129,7 @@ class GitHubRunnerManagerClient:
             The information on the runners.
         """
         self.wait_till_ready()
-        response = self._request(_HTTPMethod.GET, "/runner/check")
+        response = self._request(_HTTPMethod.GET, "/runner/check", timeout=READ_TIMEOUT)
         runner_info = json.loads(response.text)
         runner_info["runners"] = tuple(runner_info["runners"])
         runner_info["busy_runners"] = tuple(runner_info["busy_runners"])
@@ -138,7 +145,7 @@ class GitHubRunnerManagerClient:
         """
         self.wait_till_ready()
         params = {"flush-busy": str(busy)}
-        self._request(_HTTPMethod.POST, "/runner/flush", params=params)
+        self._request(_HTTPMethod.POST, "/runner/flush", params=params, timeout=WRITE_TIMEOUT)
 
     def health_check(self) -> None:
         """Request a health check on the runner manager service.
@@ -151,7 +158,7 @@ class GitHubRunnerManagerClient:
                 API requests.
         """
         try:
-            response = self._request(_HTTPMethod.GET, "/health")
+            response = self._request(_HTTPMethod.GET, "/health", timeout=READ_TIMEOUT)
         except requests.HTTPError as err:
             raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
         except requests.ConnectionError as err:

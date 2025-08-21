@@ -5,7 +5,6 @@
 
 import copy
 import logging
-import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from functools import partial
@@ -14,20 +13,14 @@ from typing import Iterable, Iterator, Sequence, Type, cast
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-    CloudRunnerState,
-    HealthState,
-)
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
 from github_runner_manager.platform.platform_provider import (
-    DeleteRunnerBusyError,
     PlatformApiError,
     PlatformProvider,
     PlatformRunnerHealth,
@@ -62,7 +55,7 @@ class FlushMode(Enum):
     FLUSH_BUSY = auto()
 
 
-@dataclass
+@dataclass(frozen=True)
 class RunnerInstance:
     """Represents an instance of runner.
 
@@ -72,37 +65,55 @@ class RunnerInstance:
         metadata: Metadata for the runner.
         health: The health state of the runner.
         platform_state: State on the platform.
+        platform_health: Health information queried from the platform provider.
         cloud_state: State on cloud.
     """
 
     name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
     platform_state: PlatformRunnerState | None
-    cloud_state: CloudRunnerState
+    platform_health: PlatformRunnerHealth | None
+    cloud_state: VMState
 
-    def __init__(
-        self,
-        cloud_instance: CloudRunnerInstance,
+    @property
+    def health(self) -> HealthState:
+        """Overall health state of the runner instance."""
+        if not self.platform_health:
+            return HealthState.UNKNOWN
+        if self.platform_health.deletable:
+            return HealthState.UNHEALTHY
+        if self.platform_health.online:
+            return HealthState.HEALTHY
+        return HealthState.UNKNOWN
+
+    @classmethod
+    def from_cloud_and_platform_health(
+        cls,
+        cloud_instance: VM,
         platform_health_state: PlatformRunnerHealth | None,
-    ):
+    ) -> "RunnerInstance":
         """Construct an instance.
 
         Args:
             cloud_instance: Information on the cloud instance.
             platform_health_state: Health state in the platform provider.
+
+        Returns:
+            The RunnerInstance instantiated from cloud instance and platform state.
         """
-        self.name = cloud_instance.name
-        self.instance_id = cloud_instance.instance_id
-        self.metadata = cloud_instance.metadata
-        self.health = cloud_instance.health
-        self.platform_state = (
-            PlatformRunnerState.from_platform_health(platform_health_state)
-            if platform_health_state is not None
-            else None
+        return cls(
+            name=cloud_instance.instance_id.name,
+            instance_id=cloud_instance.instance_id,
+            metadata=cloud_instance.metadata,
+            platform_state=(
+                PlatformRunnerState.from_platform_health(health=platform_health_state)
+                if platform_health_state is not None
+                else None
+            ),
+            platform_health=platform_health_state,
+            cloud_state=cloud_instance.state,
         )
-        self.cloud_state = cloud_instance.state
 
 
 class RunnerManager:
@@ -174,29 +185,19 @@ class RunnerManager:
             Information on the runners.
         """
         logger.debug("runner_manager::get_runners")
-        runner_instances = []
         cloud_runners = self._cloud.get_runners()
         runners_health_response = self._platform.get_runners_health(cloud_runners)
         logger.info("clouds runners response %s", cloud_runners)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
-        for cloud_runner in cloud_runners:
-            if cloud_runner.instance_id not in health_runners_map:
-                runner_instance = RunnerInstance(cloud_runner, None)
-                runner_instance.health = HealthState.UNKNOWN
-                runner_instances.append(runner_instance)
-                continue
-            health_runner = health_runners_map[cloud_runner.instance_id]
-            if health_runner.deletable:
-                cloud_runner.health = HealthState.UNHEALTHY
-            elif health_runner.online:
-                cloud_runner.health = HealthState.HEALTHY
-            else:
-                cloud_runner.health = HealthState.UNHEALTHY
-            runner_instance = RunnerInstance(cloud_runner, health_runner)
-            runner_instances.append(runner_instance)
-        return cast(tuple[RunnerInstance], tuple(runner_instances))
+        return tuple(
+            RunnerInstance.from_cloud_and_platform_health(
+                cloud_instance=cloud_runner,
+                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
+            )
+            for cloud_runner in cloud_runners
+        )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
         """Delete runners.
@@ -268,7 +269,9 @@ class RunnerManager:
         )
         cloud_runners = self._cloud.get_runners()
         logger.info("cleanup cloud_runners %s", cloud_runners)
-        runners_health_response = self._platform.get_runners_health(cloud_runners)
+        runners_health_response = self._platform.get_runners_health(
+            requested_runners=cloud_runners
+        )
         logger.info("cleanup health_response %s", runners_health_response)
 
         # Clean dangling resources in the cloud
@@ -295,7 +298,7 @@ class RunnerManager:
             )
         )
 
-        if maximum_runners_to_delete:
+        if maximum_runners_to_delete is not None:
             cloud_runners_to_delete.sort(
                 key=partial(_runner_deletion_sort_key, health_runners_map)
             )
@@ -309,61 +312,74 @@ class RunnerManager:
 
     def _delete_cloud_runners(
         self,
-        cloud_runners: Sequence[CloudRunnerInstance],
+        cloud_runners: Sequence[VM],
         runners_health: Sequence[PlatformRunnerHealth],
         delete_busy_runners: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
-        """Delete runners in the platform ant the cloud.
+        """Delete runners in the platform and the cloud.
 
         If delete_busy_runners is False, when the platform provider fails in deleting the
         runner because it can be busy, will mean that that runner should not be deleted.
-        """
-        extracted_runner_metrics = []
-        health_runners_map = {health.identity.instance_id: health for health in runners_health}
-        for cloud_runner in cloud_runners:
-            logging.info("Trying to delete cloud_runner %s", cloud_runner)
-            runner_health = health_runners_map.get(cloud_runner.instance_id)
-            if runner_health and runner_health.runner_in_platform:
-                try:
-                    self._platform.delete_runner(runner_health.identity)
-                except DeleteRunnerBusyError:
-                    if not delete_busy_runners:
-                        logger.warning(
-                            "Skipping deletion as the runner is busy. %s", cloud_runner.instance_id
-                        )
-                        continue
-                    logger.info("Deleting busy runner: %s", cloud_runner.instance_id)
-                except PlatformApiError as exc:
-                    if not delete_busy_runners:
-                        logger.warning(
-                            "Failed to delete platform runner %s. %s. Skipping.",
-                            cloud_runner.instance_id,
-                            exc,
-                        )
-                        continue
-                    logger.warning(
-                        "Deleting runner: %s after platform failure %s.",
-                        cloud_runner.instance_id,
-                        exc,
-                    )
 
-            logging.info("Delete runner in cloud: %s", cloud_runner.instance_id)
-            runner_metric = self._cloud.delete_runner(cloud_runner.instance_id)
-            if not runner_metric:
-                logger.error("No metrics returned after deleting %s", cloud_runner.instance_id)
-            else:
-                extracted_runner_metrics.append(runner_metric)
-        return extracted_runner_metrics
+        Runners without health information should not be deleted.
+        """
+        if not cloud_runners:
+            return []
+
+        runner_identity_map = {
+            health_info.identity.instance_id: health_info.identity
+            for health_info in runners_health
+        }
+        platform_runner_ids_to_delete = [
+            # The runner_id cannot be None due to the if condition. the type system
+            # isn't able to catch that.
+            cast(str, runner_identity_map[runner.instance_id].metadata.runner_id)
+            for runner in cloud_runners
+            if runner.instance_id in runner_identity_map
+            and runner_identity_map[runner.instance_id].metadata.runner_id
+        ]
+        logger.info("Deleting runners from platform: %s", platform_runner_ids_to_delete)
+        deleted_runner_ids = self._platform.delete_runners(
+            runner_ids=platform_runner_ids_to_delete
+        )
+        logger.info(
+            "Deleted runners from platform: %s (diff: %s)",
+            deleted_runner_ids,
+            set(platform_runner_ids_to_delete) - set(deleted_runner_ids),
+        )
+
+        logger.info("Cloud runners: %s", cloud_runners)
+        cloud_vm_ids_to_delete = [
+            runner.instance_id
+            for runner in cloud_runners
+            # We can delete all VMs if delete_busy_runners is True
+            if delete_busy_runners
+            # We can delete the VM if no runner is associated with it
+            or not runner.metadata.runner_id
+            # We can delete the VM if it has been deleted from the Platform provider.
+            or runner.metadata.runner_id in deleted_runner_ids
+        ]
+        logger.info("Extracting metrics from cloud VMs: %s", cloud_vm_ids_to_delete)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=cloud_vm_ids_to_delete)
+        logger.info("Extracted metrics from cloud VMs: %s", extracted_metrics)
+        logger.info("Deleting VMs %s", cloud_vm_ids_to_delete)
+        deleted_vm_ids = self._cloud.delete_vms(instance_ids=cloud_vm_ids_to_delete)
+        logger.info(
+            "Deleted VMs: %s, (diff: %s)",
+            deleted_vm_ids,
+            set(cloud_vm_ids_to_delete) - set(deleted_vm_ids),
+        )
+        return tuple(extracted_metrics)
 
     def _clean_platform_runners(self, runners: list[RunnerIdentity]) -> None:
         """Clean the specified runners in the platform."""
-        for runner in runners:
-            try:
-                self._platform.delete_runner(runner)
-            except DeleteRunnerBusyError:
-                logger.warning("Tried to delete busy runner in cleanup %s", runner)
-            except PlatformApiError:
-                logger.warning("Failed to delete platform runner %s", runner)
+        if not runners:
+            return
+
+        runner_ids_to_delete = [
+            runner.metadata.runner_id for runner in runners if runner.metadata.runner_id
+        ]
+        self._platform.delete_runners(runner_ids=runner_ids_to_delete)
 
     @staticmethod
     def _spawn_runners(
@@ -508,13 +524,13 @@ class RunnerManager:
             RunnerError: On error creating OpenStack runner.
         """
         instance_id = InstanceID.build(args.cloud_runner_manager.name_prefix, args.reactive)
-        runner_context, github_runner = args.platform_provider.get_runner_context(
+        runner_context, runner_info = args.platform_provider.get_runner_context(
             instance_id=instance_id, metadata=args.metadata, labels=args.labels
         )
 
         # Update the runner id if necessary
         if not args.metadata.runner_id:
-            args.metadata.runner_id = str(github_runner.id)
+            args.metadata.runner_id = str(runner_info.id)
 
         runner_identity = RunnerIdentity(instance_id=instance_id, metadata=args.metadata)
         try:
@@ -522,58 +538,15 @@ class RunnerManager:
                 runner_identity=runner_identity,
                 runner_context=runner_context,
             )
-
-            # This wait should be deleted to make the runner creation as
-            # quick as possible. The waiting should only be done in the
-            # reactive case, before checking that a job was taken.
-            RunnerManager.wait_for_runner_online(
-                platform_provider=args.platform_provider,
-                runner_identity=runner_identity,
-            )
-
         except RunnerError:
             logger.warning("Deleting runner %s from platform after creation failed", instance_id)
-            args.platform_provider.delete_runner(github_runner.identity)
+            args.platform_provider.delete_runners(runner_ids=[args.metadata.runner_id])
             raise
         return instance_id
 
-    @staticmethod
-    def wait_for_runner_online(
-        platform_provider: PlatformProvider,
-        runner_identity: RunnerIdentity,
-    ) -> None:
-        """Wait until the runner is online.
-
-        The constant RUNNER_CREATION_WAITING_TIMES defines the time before calling
-        the platform provider to check if the runner is online. Besides online runner,
-        deletable runner will also be equivalent to online, as no more waiting should
-        be needed.
-
-        Args:
-            platform_provider: Platform provider to use for health checks.
-            runner_identity: Identity of the runner.
-
-        Raises:
-            RunnerError: If the runner did not come online after the specified time.
-
-        """
-        for wait_time in RUNNER_CREATION_WAITING_TIMES:
-            time.sleep(wait_time)
-            try:
-                runner_health = platform_provider.get_runner_health(runner_identity)
-            except PlatformApiError:
-                logger.exception("Error getting the runner health: %s", runner_identity)
-                continue
-            if runner_health.online or runner_health.deletable:
-                logger.info("Runner %s online", runner_identity)
-                break
-            logger.info("Runner %s not yet online", runner_identity)
-        else:
-            raise RunnerError(f"Runner {runner_identity} did not get online")
-
 
 def _filter_runner_to_delete(
-    cloud_runner: CloudRunnerInstance,
+    cloud_runner: VM,
     health: PlatformRunnerHealth | None,
     *,
     clean_idle: bool = False,
@@ -620,7 +593,7 @@ def _filter_runner_to_delete(
 
 
 def _runner_deletion_sort_key(
-    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: CloudRunnerInstance
+    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: VM
 ) -> int:
     """Order the runners in accordance to how inconvenient it is to delete them.
 

@@ -1,6 +1,8 @@
 # Integrations
 
-### debug-ssh
+This document provides an overview of the integrations supported by the GitHub Runner charm.
+
+### `debug-ssh`
 
 _Interface_: debug-ssh    
 _Supported charms_: [tmate-ssh-server](https://charmhub.io/tmate-ssh-server)
@@ -14,7 +16,7 @@ juju integrate github-runner tmate-ssh-server
 ```
 
 
-### mongodb
+### `mongodb`
 
 _Interface_: mongodb_client   
 _Supported charms_: [mongodb](https://charmhub.io/mongodb), [mongodb-k8s](https://charmhub.io/mongodb-k8s)

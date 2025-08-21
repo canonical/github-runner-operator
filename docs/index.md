@@ -1,4 +1,6 @@
-# GitHub Runner Operator
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
+# GitHub runner operator
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance. 
 
@@ -8,7 +10,7 @@ For the github-runner-operator charm, this includes:
 * Configurable resource limits.
 * Ability to redeploy without losing any data (no need to back up).
 * Supported observability through the `cos-agent` integration.
-* Scheduled dependences upgrades to mitigate security risks. Furthermore, the landscape-client charm can be deployed with this charm to ensure other dependencies are kept up to date.
+* Scheduled dependencies upgrades to mitigate security risks. Furthermore, the Landscape Client charm can be deployed with this charm to ensure other dependencies are kept up to date.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 Just like GitHub's runners, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
@@ -24,7 +26,10 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 |  [Overview](https://charmhub.io/github-runner)</br>  Overview of the charm </br> | [How-to guides](https://charmhub.io/github-runner/docs/how-to-openstack-runner) </br> Step-by-step guides covering key operations and common tasks |
 | [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
+<!-- vale Canonical.004-Canonical-product-names = NO -->
 If you want to use ephemeral LXD virtual machines spawned by charm, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner/docs/local-lxd).
+<!-- vale Canonical.004-Canonical-product-names = YES -->
+
 
 ## Contributing to this documentation
 
@@ -44,7 +49,7 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)!
 
 # Contents
-
+<!-- vale Canonical.004-Canonical-product-names = NO -->
 1. [How to](how-to)
   1. [Change repository or organization](how-to/change-path.md)
   1. [Change GitHub personal access token](how-to/change-token.md)
@@ -85,7 +90,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Set base image](local-lxd/how-to/set-base-image.md)
   1. [Reference](local-lxd/reference)
     1. [Actions](local-lxd/reference/actions.md)
-    1. [ARM64](local-lxd/reference/arm64.md)
     1. [Configurations](local-lxd/reference/configurations.md)
     1. [COS Integration](local-lxd/reference/cos.md)
     1. [GitHub runner cryptographic overview](local-lxd/reference/cryptographic-overview.md)
@@ -96,3 +100,4 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [ARM64](local-lxd/explanation/arm64.md)
     1. [Charm architecture](local-lxd/explanation/charm-architecture.md)
     1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
+<!-- vale Canonical.004-Canonical-product-names = YES -->

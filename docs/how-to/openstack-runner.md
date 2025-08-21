@@ -29,7 +29,7 @@ The first cloud in the `clouds.yaml` is used by the charm.
 
 Here is a sample of the `clouds.yaml`:
 
-```yaml
+```
 clouds:
   cloud:
     auth:
@@ -44,13 +44,13 @@ clouds:
 
 The `clouds.yaml` documentation is [here](https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
 
-### OpenStack Flavour
+### OpenStack flavour
 
 The `openstack-flavor` configuration sets the flavour used to create the OpenStack virtual machine when spawning new runners.
 The flavour is tied with the vCPU, memory, and storage.
 The flavours documentation is [here](https://docs.openstack.org/nova/rocky/user/flavors.html).
 
-### OpenStack Network
+### OpenStack network
 
 The `openstack-network` configuration sets the network used to create the OpenStack virtual machine when spawning new runners.
 

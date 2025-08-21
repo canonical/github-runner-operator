@@ -9,8 +9,9 @@ import secrets
 import string
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Generator, Iterator, Optional
+from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
 
+import jubilant
 import nest_asyncio
 import openstack
 import pytest
@@ -28,6 +29,7 @@ from openstack.connection import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -39,11 +41,14 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
+    get_github_runner_manager_service_log,
     wait_for,
-    wait_for_reconcile,
+    wait_for_runner_ready,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
 from tests.status_name import ACTIVE
+
+DEFAULT_RECONCILE_INTERVAL = 2
 
 IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
 
@@ -291,6 +296,7 @@ def openstack_connection_fixture(
     clouds_yaml_contents: str,
     app_name: str,
     existing_app_suffix: str,
+    request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -300,11 +306,19 @@ def openstack_connection_fixture(
     with openstack.connect(first_cloud) as connection:
         yield connection
 
+    servers = connection.list_servers(filters={"name": app_name})
+
+    if request.session.testsfailed:
+        logging.info("OpenStack servers: %s", servers)
+        for server in servers:
+            console_log = connection.get_server_console(server=server)
+            logging.info("Server %s console log:\n%s", server.name, console_log)
+
     if not existing_app_suffix:
         # servers, keys, security groups, security rules, images are created by the charm.
         # don't remove security groups & rules since they are single instances.
         # don't remove images since it will be moved to image-builder
-        for server in connection.list_servers():
+        for server in servers:
             server_name: str = server.name
             if server_name.startswith(app_name):
                 connection.delete_server(server_name)
@@ -434,6 +448,7 @@ async def app_openstack_runner_fixture(
     flavor_name: str,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app_suffix:
@@ -448,7 +463,7 @@ async def app_openstack_runner_fixture(
             http_proxy=openstack_http_proxy,
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
-            reconcile_interval=2,
+            reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
@@ -458,6 +473,7 @@ async def app_openstack_runner_fixture(
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_http_proxy),
+                APROXY_REDIRECT_PORTS_CONFIG_NAME: "1-3127,3129-65535",
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
@@ -469,7 +485,14 @@ async def app_openstack_runner_fixture(
         timeout=IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS,
     )
 
-    return application
+    yield application
+
+    if request.session.testsfailed:
+        try:
+            app_log = await get_github_runner_manager_service_log(unit=application.units[0])
+            logging.info("Application log: \n%s", app_log)
+        except AssertionError:
+            logging.warning("Failed to get application log.")
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -482,7 +505,7 @@ async def app_scheduled_events_fixture(
     await application.set_config({"reconcile-interval": "8"})
     await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await model.wait_for_idle(apps=[application.name], status=ACTIVE, timeout=20 * 60)
-    await wait_for_reconcile(app=application, model=model)
+    await wait_for_runner_ready(app=application)
     return application
 
 
@@ -588,7 +611,7 @@ def github_client(token: str) -> Github:
     """Returns the github client."""
     gh = Github(token)
     rate_limit = gh.get_rate_limit()
-    logging.info("GitHub token rate limit: %s", rate_limit.core)
+    logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
 
 
@@ -743,3 +766,38 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     """Instance helper fixture."""
     openstack_connection = request.getfixturevalue("openstack_connection")
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
+
+
+@pytest_asyncio.fixture(scope="module")
+async def juju(
+    request: pytest.FixtureRequest, model: Model
+) -> AsyncGenerator[jubilant.Juju, None]:
+    """Pytest fixture that wraps :meth:`jubilant.with_model`."""
+
+    def show_debug_log(juju: jubilant.Juju):
+        """Show debug log if tests failed.
+
+        Args:
+            juju: The jubilant.Juju instance.
+        """
+        if request.session.testsfailed:
+            log = juju.debug_log(limit=1000)
+            print(log, end="")
+
+    controller = await model.get_controller()
+    if model:
+        # Currently juju has no way of switching controller context, this is required to operate
+        # in the right controller's right model when using multiple controllers.
+        # See: https://github.com/canonical/jubilant/issues/158
+        juju = jubilant.Juju(model=f"{controller.controller_name}:{model.name}")
+        yield juju
+        show_debug_log(juju)
+        return
+
+    keep_models = cast(bool, request.config.getoption("--keep-models"))
+    with jubilant.temp_model(keep=keep_models, controller=controller.controller_name) as juju:
+        juju.model = f"{controller.controller_name}:{juju.model}"
+        juju.wait_timeout = 10 * 60
+        yield juju
+        show_debug_log(juju)
+        return

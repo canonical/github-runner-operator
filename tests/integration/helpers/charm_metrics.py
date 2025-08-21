@@ -13,7 +13,7 @@ from github.GithubException import GithubException
 from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
-from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
+from github_runner_manager.manager.vm_manager import PostJobStatus
 from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.types_.github import JobConclusion
 from juju.application import Application
