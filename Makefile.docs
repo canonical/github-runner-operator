@@ -72,3 +72,4 @@ lychee: .check-lychee ## Run Lychee checks on docs
 vale-clean:
 	$(call msg,--- Cleaning downloaded packages and ignored files from "$(VALE_DIR)"... ---)
 	@git clean -dfX $(VALE_DIR)
+

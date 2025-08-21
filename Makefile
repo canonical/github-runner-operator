@@ -38,3 +38,4 @@ _list-targets: ## This collects and prints all targets, ignore internal commands
 			if (target != ".PHONY" && target !~ /^_/ && !seen[target]++) \
 				printf "  make %-20s $(YELLOW_COLOR)# %s$(NO_COLOR)\n", target, comment;    \
 		}' $(MAKEFILE_LIST) | sort
+
