@@ -1,0 +1,338 @@
+18:24:12 INFO IP Address to use as the fake jobmanager: 10.145.216.204
+18:24:12 WARNING unexpected facade SSHServer received from the controller
+18:24:12 INFO Adding model github-pr-19119-lxd:test-jobmanager-prespawned-0rmk on cloud localhost
+18:24:12 WARNING unexpected facade SSHServer received from the controller
+18:24:12 WARNING unexpected facade SSHSession received from the controller
+18:24:12 WARNING unexpected facade SSHTunneler received from the controller
+18:24:14 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:24:36 INFO Deploying local:jammy/github-runner-0
+18:24:36 INFO Waiting for model:
+  test-qfpvtkq9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qfpvtkq9/0 [allocating] waiting: waiting for machine
+18:25:06 INFO Waiting for model:
+  test-qfpvtkq9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qfpvtkq9/0 [allocating] waiting: waiting for machine
+18:25:36 INFO Waiting for model:
+  test-qfpvtkq9/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-qfpvtkq9/0 [allocating] waiting: agent initialising
+18:26:07 INFO Waiting for model:
+  test-qfpvtkq9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qfpvtkq9/0 [executing] maintenance: Setting up Builder.
+18:26:37 INFO Waiting for model:
+  test-qfpvtkq9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-qfpvtkq9/0 [executing] maintenance: Setting up Builder.
+18:27:07 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] maintenance: Setting up Builder.
+18:27:38 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] maintenance: Setting up Builder.
+18:28:08 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] maintenance: Setting up Builder.
+18:28:38 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:29:09 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:29:39 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:30:09 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:30:40 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:31:10 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:31:41 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:32:11 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:32:41 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:33:11 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:33:41 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:34:11 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:34:41 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:35:11 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:35:42 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:36:12 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:36:42 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:37:12 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:37:43 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:38:13 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:38:43 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:39:13 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:39:43 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:40:13 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:40:44 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:41:14 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:41:44 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:42:14 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:42:44 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-qfpvtkq9/0 [executing] active: Building image.
+18:43:14 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:43:29 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:43:44 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:44:14 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:44:29 INFO Current reconcile ID: 53ae5a9b-b180-4775-813c-3837f5bc6da7
+18:45:30 INFO Current reconcile ID: 53ae5a9b-b180-4775-813c-3837f5bc6da7
+18:46:32 INFO Current reconcile ID: eba3ccd7-fa22-47cd-b449-b82a5d64e4e9
+18:46:32 INFO Waiting for runner to be registered.
+18:46:39 INFO 10.55.67.234 - - [21/Aug/2025 18:46:39] "POST /v1/runners/register HTTP/1.1" 200 -
+18:46:39 INFO server log: [(<Request 'http://10.145.216.204:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+18:46:39 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer b24df86c57fa597a'} data=None json=<UNDEFINED>>
+18:46:39 INFO trying to prepare tunnel for builder agent
+18:46:41 INFO no runner or two or more runners in unit, return False
+18:46:41 INFO Wait for condition not met, sleeping 10
+18:46:43 INFO 10.55.67.234 - - [21/Aug/2025 18:46:43] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:46:51 INFO trying to prepare tunnel for builder agent
+18:46:52 INFO no addresses yet, return False
+18:46:52 INFO Wait for condition not met, sleeping 10
+18:47:02 INFO trying to prepare tunnel for builder agent
+18:47:03 INFO no addresses yet, return False
+18:47:03 INFO Wait for condition not met, sleeping 10
+18:47:13 INFO trying to prepare tunnel for builder agent
+18:47:14 INFO no addresses yet, return False
+18:47:14 INFO Wait for condition not met, sleeping 10
+18:47:24 INFO trying to prepare tunnel for builder agent
+18:47:25 INFO no addresses yet, return False
+18:47:25 INFO Wait for condition not met, sleeping 10
+18:47:35 INFO trying to prepare tunnel for builder agent
+18:47:36 INFO no addresses yet, return False
+18:47:36 INFO Wait for condition not met, sleeping 10
+18:47:46 INFO trying to prepare tunnel for builder agent
+18:47:49 INFO [TEST SETUP] Run command 'echo hello' on test-qfpvtkq9-0-n-d30f7761d785
+18:47:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.31', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:78:0d'}]])
+18:47:50 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qfpvtkq9-0-n-d30f7761d785.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.31 'echo hello''
+18:47:52 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.31' (ED25519) to the list of known hosts.
+'
+18:48:45 INFO 10.55.67.234 - - [21/Aug/2025 18:48:45] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:48:50 INFO 10.55.67.234 - - [21/Aug/2025 18:48:50] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:48:52 INFO 10.55.67.234 - - [21/Aug/2025 18:48:52] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:48:53 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.204 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-qfpvtkq9-0-n-d30f7761d785
+18:48:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.31', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:78:0d'}]])
+18:48:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qfpvtkq9-0-n-d30f7761d785.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.31 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.204 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+18:48:55 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.204 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+18:48:56 INFO [TEST SETUP] Exposing port 8000 on test-qfpvtkq9-0-n-d30f7761d785
+18:48:56 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.31', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:78:0d'}]])
+18:48:57 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.204:8000 -i /home/runner-manager/.ssh/test-qfpvtkq9-0-n-d30f7761d785.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.31 &
+18:48:58 INFO ssh tunnel result 0 None None
+18:49:00 INFO 10.55.67.234 - - [21/Aug/2025 18:49:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:01 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-qfpvtkq9-0-n-d30f7761d785
+18:49:01 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.31', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:78:0d'}]])
+18:49:02 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qfpvtkq9-0-n-d30f7761d785.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.31 nc -z localhost 8000'
+18:49:03 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+18:49:03 INFO prepared tunnel for builder agent
+18:49:03 INFO Waiting for builder-agent to contact us.
+18:49:05 INFO 10.55.67.234 - - [21/Aug/2025 18:49:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:05 INFO server log after executing: [(<Request 'http://10.145.216.204:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:49:05 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer b24df86c57fa597a'} data=None json=<UNDEFINED>>
+18:49:06 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-qfpvtkq9-0-n-d30f7761d785
+18:49:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.31', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:73:78:0d'}]])
+18:49:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qfpvtkq9-0-n-d30f7761d785.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.31 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+18:49:08 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  11627  17099 --:--:-- --:--:-- --:--:-- 42000
+'
+18:49:08 INFO Waiting for builder-agent to contact us.
+18:49:10 INFO 10.55.67.234 - - [21/Aug/2025 18:49:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:15 INFO 10.55.67.234 - - [21/Aug/2025 18:49:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:20 INFO 10.55.67.234 - - [21/Aug/2025 18:49:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:25 INFO 10.55.67.234 - - [21/Aug/2025 18:49:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:30 INFO 10.55.67.234 - - [21/Aug/2025 18:49:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:35 INFO 10.55.67.234 - - [21/Aug/2025 18:49:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:40 INFO 10.55.67.234 - - [21/Aug/2025 18:49:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:40 INFO server log after executing: [(<Request 'http://10.145.216.204:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.204:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:49:40 INFO First reconcile that should not delete the runner, as it is still healthy.
+18:49:40 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:49:45 INFO 10.55.67.234 - - [21/Aug/2025 18:49:45] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:45 INFO 10.55.67.234 - - [21/Aug/2025 18:49:45] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:49 INFO 10.55.67.234 - - [21/Aug/2025 18:49:49] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:50 INFO 10.55.67.234 - - [21/Aug/2025 18:49:50] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:51 INFO 10.55.67.234 - - [21/Aug/2025 18:49:51] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:49:55 INFO 10.55.67.234 - - [21/Aug/2025 18:49:55] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:00 INFO 10.55.67.234 - - [21/Aug/2025 18:50:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:05 INFO 10.55.67.234 - - [21/Aug/2025 18:50:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:10 INFO 10.55.67.234 - - [21/Aug/2025 18:50:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:10 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:50:13 INFO Current reconcile ID: a79c9964-0ba1-4a45-bacd-bd49aa9c1e06
+18:50:15 INFO 10.55.67.234 - - [21/Aug/2025 18:50:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:20 INFO 10.55.67.234 - - [21/Aug/2025 18:50:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:25 INFO 10.55.67.234 - - [21/Aug/2025 18:50:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:30 INFO 10.55.67.234 - - [21/Aug/2025 18:50:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:35 INFO 10.55.67.234 - - [21/Aug/2025 18:50:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:40 INFO 10.55.67.234 - - [21/Aug/2025 18:50:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:45 INFO 10.55.67.234 - - [21/Aug/2025 18:50:45] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:50 INFO 10.55.67.234 - - [21/Aug/2025 18:50:50] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:50:55 INFO 10.55.67.234 - - [21/Aug/2025 18:50:55] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:00 INFO 10.55.67.234 - - [21/Aug/2025 18:51:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:05 INFO 10.55.67.234 - - [21/Aug/2025 18:51:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:10 INFO 10.55.67.234 - - [21/Aug/2025 18:51:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:14 INFO Current reconcile ID: a79c9964-0ba1-4a45-bacd-bd49aa9c1e06
+18:51:15 INFO 10.55.67.234 - - [21/Aug/2025 18:51:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:20 INFO 10.55.67.234 - - [21/Aug/2025 18:51:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:25 INFO 10.55.67.234 - - [21/Aug/2025 18:51:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:30 INFO 10.55.67.234 - - [21/Aug/2025 18:51:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:35 INFO 10.55.67.234 - - [21/Aug/2025 18:51:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:40 INFO 10.55.67.234 - - [21/Aug/2025 18:51:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:45 INFO 10.55.67.234 - - [21/Aug/2025 18:51:45] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:50 INFO 10.55.67.234 - - [21/Aug/2025 18:51:50] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:51:55 INFO 10.55.67.234 - - [21/Aug/2025 18:51:55] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:00 INFO 10.55.67.234 - - [21/Aug/2025 18:52:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:05 INFO 10.55.67.234 - - [21/Aug/2025 18:52:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:10 INFO 10.55.67.234 - - [21/Aug/2025 18:52:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:15 INFO 10.55.67.234 - - [21/Aug/2025 18:52:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:15 INFO Current reconcile ID: a79c9964-0ba1-4a45-bacd-bd49aa9c1e06
+18:52:20 INFO 10.55.67.234 - - [21/Aug/2025 18:52:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:25 INFO 10.55.67.234 - - [21/Aug/2025 18:52:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:30 INFO 10.55.67.234 - - [21/Aug/2025 18:52:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:35 INFO 10.55.67.234 - - [21/Aug/2025 18:52:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:40 INFO 10.55.67.234 - - [21/Aug/2025 18:52:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:45 INFO 10.55.67.234 - - [21/Aug/2025 18:52:45] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:50 INFO 10.55.67.234 - - [21/Aug/2025 18:52:50] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:53 INFO 10.55.67.234 - - [21/Aug/2025 18:52:53] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:55 INFO 10.55.67.234 - - [21/Aug/2025 18:52:55] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:57 INFO 10.55.67.234 - - [21/Aug/2025 18:52:57] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:52:58 INFO 10.55.67.234 - - [21/Aug/2025 18:52:58] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:00 INFO 10.55.67.234 - - [21/Aug/2025 18:53:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:05 INFO 10.55.67.234 - - [21/Aug/2025 18:53:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:10 INFO 10.55.67.234 - - [21/Aug/2025 18:53:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:15 INFO 10.55.67.234 - - [21/Aug/2025 18:53:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:16 INFO Current reconcile ID: 9ed74e3d-e0e6-4a5e-bb1b-6239cc42f939
+18:53:19 INFO 10.55.67.234 - - [21/Aug/2025 18:53:19] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:20 INFO 10.55.67.234 - - [21/Aug/2025 18:53:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:23 INFO 10.55.67.234 - - [21/Aug/2025 18:53:23] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:24 INFO check-runners: {'busy': '1', 'busy-runners': "('test-qfpvtkq9-0-n-d30f7761d785',)", 'offline': '0', 'online': '1', 'return-code': 0, 'runners': "('test-qfpvtkq9-0-n-d30f7761d785',)", 'unknown': '0'}
+18:53:24 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer b24df86c57fa597a'} data=None json=<UNDEFINED>>
+18:53:24 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:53:25 INFO 10.55.67.234 - - [21/Aug/2025 18:53:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:29 INFO 10.55.67.234 - - [21/Aug/2025 18:53:29] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:30 INFO 10.55.67.234 - - [21/Aug/2025 18:53:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:35 INFO 10.55.67.234 - - [21/Aug/2025 18:53:35] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:53:54 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:53:57 INFO Current reconcile ID: b4ef6003-fa22-490f-961b-f19bc4c02ab4
+18:54:59 INFO Current reconcile ID: b4ef6003-fa22-490f-961b-f19bc4c02ab4
+18:56:00 INFO Current reconcile ID: b4ef6003-fa22-490f-961b-f19bc4c02ab4
+18:57:01 INFO Current reconcile ID: b4ef6003-fa22-490f-961b-f19bc4c02ab4
+18:57:42 INFO 10.55.67.234 - - [21/Aug/2025 18:57:42] "[35m[1mPOST /v1/runners/register HTTP/1.1[0m" 500 -
+18:58:02 INFO Current reconcile ID: e6d2e84d-725e-4ce6-a498-1d2a4f40a509
+18:58:06 INFO check-runners: {'busy': '0', 'busy-runners': '()', 'offline': '0', 'online': '0', 'return-code': 0, 'runners': '()', 'unknown': '0'}
+18:58:06 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:58:36 INFO Waiting for model:
+  test-qfpvtkq9/0 [idle] active: 
+18:58:39 INFO Current reconcile ID: 3bedc96d-ab7c-4eef-afc5-ac71e8724f22
+18:59:40 INFO Current reconcile ID: 3bedc96d-ab7c-4eef-afc5-ac71e8724f22
+19:00:41 INFO Current reconcile ID: 1b96c0ba-98b3-4b8c-b11f-a94b06a8d390
+19:00:42 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-0rmk  github-pr-19119-lxd  localhost/localhost  3.6.9    unsupported  19:00:42Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qfpvtkq9           active      1  github-runner-image-builder  latest/edge  106  no       
+test-qfpvtkq9                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-qfpvtkq9/0*  active    idle   0        10.55.67.202           
+test-qfpvtkq9/0*                         active    idle   1        10.55.67.234           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.55.67.202  juju-32c52f-0  ubuntu@22.04  github-runner  Running
+1        started  10.55.67.234  juju-32c52f-1  ubuntu@22.04  github-runner  Running
+
+19:00:42 INFO Juju error logs:
+
+machine-0: 18:25:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qfpvtkq9-0: 18:25:30 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:25:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:25:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qfpvtkq9-0: 18:25:36 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-qfpvtkq9-0: 18:26:16 ERROR unit.github-runner-image-builder-qfpvtkq9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-qfpvtkq9-0: 18:26:50 ERROR unit.test-qfpvtkq9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qfpvtkq9-0: 18:26:53 ERROR unit.test-qfpvtkq9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qfpvtkq9-0: 18:28:23 ERROR unit.test-qfpvtkq9/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qfpvtkq9-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:00:42 INFO Forgetting model main...

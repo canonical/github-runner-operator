@@ -1,0 +1,172 @@
+18:24:15 WARNING unexpected facade SSHServer received from the controller
+18:24:15 INFO Adding model github-pr-19119-lxd:test-reactive-5x1h on cloud localhost
+18:24:15 WARNING unexpected facade SSHServer received from the controller
+18:24:15 WARNING unexpected facade SSHSession received from the controller
+18:24:15 WARNING unexpected facade SSHTunneler received from the controller
+18:24:15 INFO GitHub token rate limit: Rate(reset=2025-08-21 18:50:24+00:00, remaining=4944, limit=5000)
+18:24:20 INFO Deploying ch:amd64/jammy/mongodb-229
+18:24:23 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:24:44 INFO Deploying local:jammy/github-runner-0
+18:24:44 INFO Waiting for model:
+  test-cdx16ma7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdx16ma7/0 [allocating] waiting: waiting for machine
+18:25:14 INFO Waiting for model:
+  test-cdx16ma7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdx16ma7/0 [allocating] waiting: waiting for machine
+18:25:45 INFO Waiting for model:
+  test-cdx16ma7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdx16ma7/0 [allocating] waiting: waiting for machine
+18:26:15 INFO Waiting for model:
+  test-cdx16ma7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cdx16ma7/0 [allocating] waiting: waiting for machine
+18:26:45 INFO Waiting for model:
+  test-cdx16ma7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cdx16ma7/0 [allocating] waiting: agent initialising
+18:27:15 INFO Waiting for model:
+  test-cdx16ma7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cdx16ma7/0 [executing] maintenance: Setting up Builder.
+18:27:46 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] maintenance: Setting up Builder.
+18:28:16 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] maintenance: Setting up Builder.
+18:28:46 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] maintenance: Setting up Builder.
+18:29:16 INFO Waiting for model:
+  test-cdx16ma7/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] blocked: image integration required.
+18:29:46 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:30:17 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:30:47 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:31:18 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:31:48 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:32:18 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:32:48 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:33:19 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:33:49 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:34:19 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:34:50 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:35:20 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:35:51 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:36:21 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:36:51 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:37:22 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:37:52 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:38:22 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:38:53 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:39:23 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:39:53 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:40:23 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:40:54 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:41:24 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:41:54 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:42:24 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdx16ma7/0 [executing] active: Building image.
+18:42:54 INFO Waiting for model:
+  test-cdx16ma7/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cdx16ma7/0 [idle] active: 
+18:43:25 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:43:30 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:43:30 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:44:00 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:44:12 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:44:43 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:44:46 INFO Current reconcile ID: 1bf466ca-ba14-4bf1-926e-e97c92c5d5e2
+18:45:47 INFO Current reconcile ID: 1bf466ca-ba14-4bf1-926e-e97c92c5d5e2
+18:46:48 INFO Current reconcile ID: 1bf466ca-ba14-4bf1-926e-e97c92c5d5e2
+18:47:49 INFO Current reconcile ID: 0d09ec7c-7ff7-4d8d-acc3-bddf20a1f1f7
+18:47:52 INFO Wait for condition not met, sleeping 10
+18:48:14 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:48:30 INFO Current reconcile ID: 0d09ec7c-7ff7-4d8d-acc3-bddf20a1f1f7
+18:49:31 INFO Current reconcile ID: dfef1e48-3aab-4fa9-9b70-5a843440546b
+18:49:32 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:49:48 INFO Current reconcile ID: dfef1e48-3aab-4fa9-9b70-5a843440546b
+18:50:49 INFO Current reconcile ID: dfef1e48-3aab-4fa9-9b70-5a843440546b
+18:51:50 INFO Current reconcile ID: 6dab2d43-a405-4dac-9c67-1757171880d5
+18:51:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755802150.7200596, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 0, "duration": 18.835267782211304}
+{"timestamp": 1755802146.0, "event": "runner_installed", "flavor": "test-cdx16ma7", "duration": 58.0}
+{"timestamp": 1755802149.0, "event": "runner_start", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1755802151.0, "event": "runner_stop", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755802293.6644201, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.834980487823486}
+
+18:51:52 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755802150.7200596, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 0, "duration": 18.835267782211304}
+{"timestamp": 1755802146.0, "event": "runner_installed", "flavor": "test-cdx16ma7", "duration": 58.0}
+{"timestamp": 1755802149.0, "event": "runner_start", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1755802151.0, "event": "runner_stop", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755802293.6644201, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.834980487823486}
+
+18:51:53 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755802150.7200596, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 0, "duration": 18.835267782211304}
+{"timestamp": 1755802146.0, "event": "runner_installed", "flavor": "test-cdx16ma7", "duration": 58.0}
+{"timestamp": 1755802149.0, "event": "runner_start", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 75.0}
+{"timestamp": 1755802151.0, "event": "runner_stop", "flavor": "test-cdx16ma7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1755802293.6644201, "event": "reconciliation", "flavor": "test-cdx16ma7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.834980487823486}
+18:51:53 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:52:24 INFO Waiting for model:
+  test-cdx16ma7/0 [idle] active: 
+18:52:26 INFO Current reconcile ID: 2cae4b9f-3021-49f6-9b65-0bbcd8518563
+18:53:27 INFO Current reconcile ID: 2cae4b9f-3021-49f6-9b65-0bbcd8518563
+18:54:28 INFO Current reconcile ID: 2cae4b9f-3021-49f6-9b65-0bbcd8518563
+18:55:29 INFO Current reconcile ID: d3f52dcb-901a-4d84-93ea-edaecfaa360c

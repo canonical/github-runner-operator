@@ -1,0 +1,186 @@
+18:24:26 WARNING unexpected facade SSHServer received from the controller
+18:24:26 INFO Adding model github-pr-19119-lxd:test-charm-fork-repo-zqrg on cloud localhost
+18:24:26 WARNING unexpected facade SSHServer received from the controller
+18:24:26 WARNING unexpected facade SSHSession received from the controller
+18:24:26 WARNING unexpected facade SSHTunneler received from the controller
+18:24:28 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:24:50 INFO Deploying local:jammy/github-runner-0
+18:24:51 INFO Waiting for model:
+  test-laftw0r7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-laftw0r7/0 [allocating] waiting: waiting for machine
+18:25:21 INFO Waiting for model:
+  test-laftw0r7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-laftw0r7/0 [allocating] waiting: waiting for machine
+18:25:51 INFO Waiting for model:
+  test-laftw0r7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-laftw0r7/0 [allocating] waiting: agent initialising
+18:26:21 INFO Waiting for model:
+  test-laftw0r7/0 [executing] waiting: agent initialising
+  github-runner-image-builder-laftw0r7/0 [executing] maintenance: Setting up Builder.
+18:26:51 INFO Waiting for model:
+  test-laftw0r7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-laftw0r7/0 [executing] maintenance: Setting up Builder.
+18:27:21 INFO Waiting for model:
+  test-laftw0r7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-laftw0r7/0 [executing] maintenance: Setting up Builder.
+18:27:52 INFO Waiting for model:
+  test-laftw0r7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-laftw0r7/0 [executing] maintenance: Setting up Builder.
+18:28:22 INFO Waiting for model:
+  test-laftw0r7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-laftw0r7/0 [executing] maintenance: Setting up Builder.
+18:28:52 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:29:22 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:29:53 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:30:23 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:30:54 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:31:24 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:31:54 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:32:24 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:32:54 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:33:25 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:33:55 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:34:25 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:34:55 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:35:26 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:35:56 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:36:26 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:36:57 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:37:27 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:37:57 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:38:28 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:38:58 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:39:28 INFO Waiting for model:
+  test-laftw0r7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-laftw0r7/0 [executing] active: Building image.
+18:39:59 INFO Waiting for model:
+  test-laftw0r7/0 [idle] active: 
+18:40:13 INFO GitHub token rate limit: Rate(reset=2025-08-21 18:50:24+00:00, remaining=4829, limit=5000)
+18:41:21 INFO Waiting for model:
+  test-laftw0r7/0 [idle] active: 
+18:41:52 INFO Waiting for model:
+  test-laftw0r7/0 [idle] active: 
+18:41:55 INFO Current reconcile ID: 6b746c40-c8ab-463b-95ab-170204bb8e2e
+18:42:56 INFO Current reconcile ID: 6b746c40-c8ab-463b-95ab-170204bb8e2e
+18:43:57 INFO Current reconcile ID: 64134410-f263-4302-89c3-fa11d96ecdcf
+18:44:03 INFO [TEST SETUP] Exposing port 8080 on test-laftw0r7-0-n-2cad677466fd
+18:44:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.25', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d4:b8:59'}]])
+18:44:05 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-laftw0r7-0-n-2cad677466fd.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.25 &
+18:44:06 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.25' (ED25519) to the list of known hosts.
+
+18:44:07 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-laftw0r7-0-n-2cad677466fd
+18:44:07 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.25', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d4:b8:59'}]])
+18:44:08 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-laftw0r7-0-n-2cad677466fd.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.25 nc -z localhost 8080'
+18:44:11 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:44:12 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-laftw0r7-0-n-2cad677466fd
+18:44:12 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.25', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d4:b8:59'}]])
+18:44:13 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-laftw0r7-0-n-2cad677466fd.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.25 curl http://localhost:8080'
+18:44:14 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  49063      0 --:--:-- --:--:-- --:--:-- 51750
+'
+18:44:17 INFO Wait for condition not met, sleeping 10
+18:44:28 INFO Wait for condition not met, sleeping 60
+18:45:34 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-zqrg  github-pr-19119-lxd  localhost/localhost  3.6.9    unsupported  18:45:34Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-laftw0r7           active      1  github-runner-image-builder  latest/edge  106  no       
+test-laftw0r7                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-laftw0r7/0*  active    idle   0        10.100.211.6              
+test-laftw0r7/0*                         active    idle   1        10.100.211.123  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.100.211.6    juju-1bd3ef-0  ubuntu@22.04  github-runner  Running
+1        started  10.100.211.123  juju-1bd3ef-1  ubuntu@22.04  github-runner  Running
+
+18:45:34 INFO Juju error logs:
+
+machine-0: 18:25:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-laftw0r7-0: 18:25:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-laftw0r7-0: 18:26:02 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-laftw0r7-0: 18:26:28 ERROR unit.github-runner-image-builder-laftw0r7/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-laftw0r7-0: 18:27:14 ERROR unit.test-laftw0r7/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-laftw0r7-0: 18:27:16 ERROR unit.test-laftw0r7/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-laftw0r7-0: 18:28:25 ERROR unit.test-laftw0r7/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-laftw0r7-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:45:34 INFO Forgetting model main...
