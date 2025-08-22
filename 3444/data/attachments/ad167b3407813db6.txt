@@ -1,0 +1,106 @@
+18:53:42 INFO Waiting for model:
+  test-ekrs2inx/0 [idle] active: 
+18:54:12 INFO Waiting for model:
+  test-ekrs2inx/0 [idle] active: 
+18:54:15 INFO Current reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:54:15 INFO Waiting for reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:55:16 INFO Current reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:55:16 INFO Current reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b, expected reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:55:16 INFO Waiting for reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:56:17 INFO Current reconcile ID: a38118bc-eeff-4b73-96b6-f36cfd1f9d44
+18:56:17 INFO Current reconcile ID: a38118bc-eeff-4b73-96b6-f36cfd1f9d44, expected reconcile ID: 8bf752cf-22c6-42b3-8d24-6825ca31b46b
+18:56:17 INFO Waiting for model:
+  test-ekrs2inx/0 [idle] active: 
+18:56:47 INFO Waiting for model:
+  test-ekrs2inx/0 [executing] active: 
+18:57:04 INFO Current reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:57:04 INFO Waiting for reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:58:05 INFO Current reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:58:05 INFO Current reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c, expected reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:58:05 INFO Waiting for reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:59:06 INFO Current reconcile ID: b9be29a7-7e65-411b-b8be-1cd6cc6824d8
+18:59:06 INFO Current reconcile ID: b9be29a7-7e65-411b-b8be-1cd6cc6824d8, expected reconcile ID: a9031d61-d7c0-497a-9b90-ae87c817214c
+18:59:14 INFO Wait for condition not met, sleeping 30
+18:59:58 INFO [TEST SETUP] Run command pkill -9 run.sh on test-ekrs2inx-0-n-cf1ce7ac22fe
+18:59:58 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.185', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:46:f5:2f'}]])
+18:59:59 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ekrs2inx-0-n-cf1ce7ac22fe.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.185 pkill -9 run.sh'
+19:00:00 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.185' (ED25519) to the list of known hosts.
+'
+19:00:05 INFO Runner test-ekrs2inx-0-n-cf1ce7ac22fe status: online
+19:00:05 INFO Runner still marked as online, waiting for it to be marked offline
+19:01:06 INFO Waiting for model:
+  test-ekrs2inx/0 [idle] active: 
+19:01:36 INFO Waiting for model:
+  test-ekrs2inx/0 [idle] active: 
+19:01:40 INFO Current reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:01:40 INFO Waiting for reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:02:41 INFO Current reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:02:41 INFO Current reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4, expected reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:02:41 INFO Waiting for reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:03:42 INFO Current reconcile ID: 8f8cc5ce-2fd0-4e93-930c-ebbdeda4fcb9
+19:03:42 INFO Current reconcile ID: 8f8cc5ce-2fd0-4e93-930c-ebbdeda4fcb9, expected reconcile ID: 8b25a404-9687-4296-8a8d-4116a3fa0ff4
+19:03:43 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1755888837.1864328, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.732786893844604}
+{"timestamp": 1755888968.3952065, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.068770408630371}
+{"timestamp": 1755888996.2578232, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 16.264161109924316}
+{"timestamp": 1755889127.4317756, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.116568326950073}
+{"timestamp": 1755889054.0, "event": "runner_installed", "flavor": "test-ekrs2inx", "duration": 62.0}
+{"timestamp": 1755889156.0, "event": "runner_start", "flavor": "test-ekrs2inx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 102.0, "queue_duration": 1.0}
+{"timestamp": 1755889200.0, "event": "runner_stop", "flavor": "test-ekrs2inx", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 44.0, "job_conclusion": "cancelled"}
+{"timestamp": 1755889267.110247, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 19.531181573867798}
+{"timestamp": 1755889281.1629994, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.982879638671875}
+{"timestamp": 1755889412.1823394, "event": "reconciliation", "flavor": "test-ekrs2inx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.88834834098816}
+19:03:44 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-045t  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  19:03:44Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ekrs2inx           active      1  github-runner-image-builder  latest/edge  106  no       
+test-ekrs2inx                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ekrs2inx/0*  active    idle   0        10.83.3.135               
+test-ekrs2inx/0*                         active    idle   1        10.83.3.214     8080/tcp  
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.83.3.135  juju-a33a12-0  ubuntu@22.04  github-runner  Running
+1        started  10.83.3.214  juju-a33a12-1  ubuntu@22.04  github-runner  Running
+
+19:03:44 INFO Juju error logs:
+
+machine-0: 18:27:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:27:18 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ekrs2inx-0: 18:27:18 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:27:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ekrs2inx-0: 18:27:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ekrs2inx-0: 18:28:09 ERROR unit.github-runner-image-builder-ekrs2inx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ekrs2inx-0: 18:28:48 ERROR unit.test-ekrs2inx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ekrs2inx-0: 18:28:51 ERROR unit.test-ekrs2inx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ekrs2inx-0: 18:30:03 ERROR unit.test-ekrs2inx/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ekrs2inx-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:03:44 INFO Forgetting model main...
