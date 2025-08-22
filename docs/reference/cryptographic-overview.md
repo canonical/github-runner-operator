@@ -21,7 +21,7 @@ The GitHub runner charm supports being deployed behind an HTTP proxy. [Aproxy](h
 Images that run in the OpenStack VM (Cloud images) are verified by SHA256 checksum. Runner binary is also downloaded by [GitHub Runner Charm](https://github.com/canonical/github-runner-operator) and verified by SHA256 in this charm.
 
 ### User SSH access
-Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://tmate.io/) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with RSA keypair and ed25519 fingerprints.
+Sometimes users need to access the VM instance that is running the workload, to establish this connection [Tmate](https://github.com/tmate-io/tmate) is used. Tmate uses the SSH protocol to secure shell connections between users and the GitHub runner. The connection is secured with RSA keypair and ed25519 fingerprints.
 
 ## Cryptographic technology used by the product
 The following cryptographic technologies are used internally by our product:
@@ -46,7 +46,7 @@ The communication between these virtual machines and the runner is done via SSH 
 The following sections describe the cryptographic technologies exposed to the user:
 
 ### Tmate
-- [Tmate](https://tmate.io/) uses RSA (384 byte) and ED25519 (32 byte) fingerprints for connections from users to [Tmate](https://tmate.io/) and from the managers to [Tmate](https://tmate.io/). [OpenSSL](https://www.openssl.org/) is being used by [Tmate](https://tmate.io/) to secure the connection between the user/manager to the runner.
+- [Tmate](https://github.com/tmate-io/tmate) uses RSA (384 byte) and ED25519 (32 byte) fingerprints for connections from users to Tmate and from the managers to Tmate. [OpenSSL](https://www.openssl.org/) is being used by Tmate to secure the connection between the user/manager to the runner.
 
 ### Docker hub cache
 [Docker Hub cache](https://github.com/canonical/docker-registry-charm) connection is secured via TLS 1.3 and certified by [Let’s Encrypt](https://letsencrypt.org/).

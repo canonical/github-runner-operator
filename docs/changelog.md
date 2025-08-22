@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+
+## 2025-08-21
+
+- Updated the documentation workflow to be fully integrated with the Vale GitHub Action.
+
 ## 2025-08-20
 
 - Document relevant log files.
