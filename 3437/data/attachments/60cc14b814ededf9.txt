@@ -1,0 +1,255 @@
+06:37:47 INFO IP Address to use as the fake jobmanager: 10.145.216.63
+06:37:47 WARNING unexpected facade SSHServer received from the controller
+06:37:47 INFO Adding model github-pr-2102c-lxd:test-jobmanager-reactive-8w2t on cloud localhost
+06:37:48 WARNING unexpected facade SSHServer received from the controller
+06:37:48 WARNING unexpected facade SSHSession received from the controller
+06:37:48 WARNING unexpected facade SSHTunneler received from the controller
+06:37:48 WARNING unexpected facade SSHServer received from the controller
+06:37:49 INFO Deploying ch:amd64/jammy/mongodb-229
+06:37:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+06:38:09 INFO Deploying local:jammy/github-runner-0
+06:38:09 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iugzsk6v/0 [allocating] waiting: waiting for machine
+06:38:39 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iugzsk6v/0 [allocating] waiting: waiting for machine
+06:39:09 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iugzsk6v/0 [allocating] waiting: waiting for machine
+06:39:39 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iugzsk6v/0 [allocating] waiting: waiting for machine
+06:40:10 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iugzsk6v/0 [allocating] waiting: waiting for machine
+06:40:40 INFO Waiting for model:
+  test-iugzsk6v/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-iugzsk6v/0 [executing] maintenance: Setting up Builder.
+06:41:10 INFO Waiting for model:
+  test-iugzsk6v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-iugzsk6v/0 [executing] maintenance: Setting up Builder.
+06:41:40 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] maintenance: Setting up Builder.
+06:42:10 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] maintenance: Setting up Builder.
+06:42:41 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] maintenance: Setting up Builder.
+06:43:11 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Waiting for first image.
+06:43:42 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:44:12 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:44:42 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:45:13 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:45:43 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:46:13 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:46:44 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:47:14 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:47:44 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:48:14 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:48:44 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:49:14 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:49:44 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:50:15 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:50:45 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:51:15 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:51:45 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:52:16 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:52:46 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:53:16 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:53:46 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:54:17 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:54:47 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:55:17 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:55:47 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:56:17 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:56:48 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:57:18 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:57:49 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:58:19 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:58:50 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:59:20 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+06:59:50 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:00:20 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:00:51 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:01:21 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:01:52 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:02:22 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:02:52 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:03:23 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:03:53 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:04:24 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:04:54 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:05:24 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:05:54 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:06:25 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:06:55 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:07:25 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:07:55 INFO Waiting for model:
+  test-iugzsk6v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iugzsk6v/0 [executing] active: Building image.
+07:08:10 INFO OpenStack servers: []
+07:08:10 INFO cli: juju debug-log --model github-pr-2102c-lxd:test-jobmanager-reactive-8w2t --limit 1000
+07:08:10 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-8w2t  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  07:08:10Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-iugzsk6v           active       1  github-runner-image-builder  latest/edge  106  no       Building image.
+mongodb                               6.0.24   active       1  mongodb                      6/edge       229  no       
+test-iugzsk6v                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent      Machine  Public address  Ports      Message
+github-runner-image-builder-iugzsk6v/0*  active    executing  1        10.49.145.7                Building image.
+mongodb/0*                               active    idle       0        10.49.145.97    27017/tcp  Primary.
+test-iugzsk6v/0*                         waiting   idle       2        10.49.145.131              Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.49.145.97   juju-c39854-0  ubuntu@22.04  github-runner  Running
+1        started  10.49.145.7    juju-c39854-1  ubuntu@22.04  github-runner  Running
+2        started  10.49.145.131  juju-c39854-2  ubuntu@22.04  github-runner  Running
+
+07:08:10 INFO Juju error logs:
+
+machine-0: 06:39:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:39:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:39:14 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:39:51 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:39:51 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:40:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:40:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-iugzsk6v-0: 06:40:21 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:40:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:40:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-iugzsk6v-0: 06:40:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-iugzsk6v-0: 06:41:01 ERROR unit.github-runner-image-builder-iugzsk6v/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-iugzsk6v-0: 06:41:34 ERROR unit.test-iugzsk6v/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-iugzsk6v-0: 06:41:36 ERROR unit.test-iugzsk6v/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-iugzsk6v-0: 06:43:13 ERROR unit.test-iugzsk6v/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iugzsk6v-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:08:10 INFO Forgetting model main...

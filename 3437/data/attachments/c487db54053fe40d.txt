@@ -1,0 +1,100 @@
+06:25:04 WARNING unexpected facade SSHServer received from the controller
+06:25:04 INFO Adding model github-pr-2102c-lxd:test-charm-fork-repo-6bq7 on cloud localhost
+06:25:04 WARNING unexpected facade SSHServer received from the controller
+06:25:04 WARNING unexpected facade SSHSession received from the controller
+06:25:04 WARNING unexpected facade SSHTunneler received from the controller
+06:25:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+06:25:30 INFO Deploying local:jammy/github-runner-0
+06:25:31 INFO Waiting for model:
+  test-iv6jod1c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iv6jod1c/0 [allocating] waiting: waiting for machine
+06:26:01 INFO Waiting for model:
+  test-iv6jod1c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iv6jod1c/0 [allocating] waiting: waiting for machine
+06:26:32 INFO Waiting for model:
+  test-iv6jod1c/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-iv6jod1c/0 [allocating] waiting: waiting for machine
+06:27:02 INFO Waiting for model:
+  test-iv6jod1c/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-iv6jod1c/0 [allocating] waiting: waiting for machine
+06:27:32 INFO Waiting for model:
+  test-iv6jod1c/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-iv6jod1c/0 [executing] maintenance: Setting up Builder.
+06:28:02 INFO Waiting for model:
+  test-iv6jod1c/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-iv6jod1c/0 [executing] maintenance: Setting up Builder.
+06:28:33 INFO Waiting for model:
+  test-iv6jod1c/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iv6jod1c/0 [executing] maintenance: Setting up Builder.
+06:29:03 INFO Waiting for model:
+  test-iv6jod1c/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iv6jod1c/0 [executing] maintenance: Setting up Builder.
+06:29:33 INFO Waiting for model:
+  test-iv6jod1c/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-iv6jod1c/0 [executing] maintenance: Setting up Builder.
+06:30:04 INFO Waiting for model:
+  test-iv6jod1c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iv6jod1c/0 [executing] active: Building image.
+06:30:34 INFO Waiting for model:
+  test-iv6jod1c/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-iv6jod1c/0 [executing] active: Building image.
+06:30:56 INFO OpenStack servers: []
+06:30:56 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-6bq7  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  06:30:56Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-iv6jod1c           error        1  github-runner-image-builder  latest/edge  106  no       hook failed: "image-relation-changed"
+test-iv6jod1c                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-iv6jod1c/0*  error     idle   0        10.86.222.116          hook failed: "image-relation-changed"
+test-iv6jod1c/0*                         waiting   idle   1        10.86.222.199          Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.86.222.116  juju-d26e23-0  ubuntu@22.04  github-runner  Running
+1        started  10.86.222.199  juju-d26e23-1  ubuntu@22.04  github-runner  Running
+
+06:30:56 INFO Juju error logs:
+
+machine-1: 06:27:00 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:00 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-iv6jod1c-0: 06:27:00 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 06:27:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-iv6jod1c-0: 06:27:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-iv6jod1c-0: 06:27:53 ERROR unit.github-runner-image-builder-iv6jod1c/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-iv6jod1c-0: 06:28:27 ERROR unit.test-iv6jod1c/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-iv6jod1c-0: 06:28:29 ERROR unit.test-iv6jod1c/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-iv6jod1c-0: 06:29:44 ERROR unit.test-iv6jod1c/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-iv6jod1c-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-iv6jod1c-0: 06:29:58 ERROR unit.github-runner-image-builder-iv6jod1c/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-iv6jod1c-0: 06:30:11 ERROR unit.github-runner-image-builder-iv6jod1c/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-iv6jod1c-0: 06:30:21 ERROR unit.github-runner-image-builder-iv6jod1c/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-iv6jod1c-0: 06:30:34 ERROR unit.github-runner-image-builder-iv6jod1c/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+06:30:56 INFO Forgetting model main...
