@@ -273,13 +273,16 @@ def _spawn_runner(
         return
     logger.info("Reactive runner spawned %s", instance_ids)
 
-    for _ in range(5):
+    for attempt in range(5):
         sleep(WAIT_TIME_IN_SEC)
         logger.info("Checking if job picked up for reactive runner %s", instance_ids)
-        if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
-            logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
-            msg.ack()
-            break
+        try:
+            if platform_provider.check_job_been_picked_up(metadata=metadata, job_url=job_url):
+                logger.info("Job picked %s. reactive runner ok %s", job_url, instance_ids)
+                msg.ack()
+                break
+        except JobNotFoundError:
+            logger.warning("Job not found after spawning runner. Retry (%s)/5", attempt)
     else:
         logger.info(
             "Job %s not picked by reactive runner %s. Probably picked up by another job",
