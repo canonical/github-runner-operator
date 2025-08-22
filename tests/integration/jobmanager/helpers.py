@@ -199,7 +199,13 @@ async def prepare_runner_tunnel_for_builder_agent(
 
 
 async def execute_command_with_builder_agent(instance_helper, unit, command) -> None:
-    """Execute a command in the builder-agent."""
+    """Execute a command in the builder-agent.
+
+    Args:
+        instance_helper: Helper class to manage interactions with OpenStack instances.
+        unit: The Juju unit to operate on.
+        command: The command to run.
+    """
     execute_command = (
         "'curl http://127.0.0.1:8080/execute -X POST "
         '--header "Content-Type: application/json" '

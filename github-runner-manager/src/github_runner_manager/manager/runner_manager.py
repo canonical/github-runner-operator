@@ -25,7 +25,6 @@ from github_runner_manager.platform.platform_provider import (
     PlatformProvider,
     PlatformRunnerHealth,
     PlatformRunnerState,
-    RunnersHealthResponse,
 )
 
 logger = logging.getLogger(__name__)
