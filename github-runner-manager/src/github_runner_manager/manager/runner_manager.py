@@ -186,7 +186,7 @@ class RunnerManager:
         """
         logger.debug("runner_manager::get_runners")
         vms = self._cloud.get_vms()
-        logger.info("clouds runners response %s", vms)
+        logger.info("list vms response: %s", vms)
         runners_health_response = self._platform.get_runners_health(vms)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
