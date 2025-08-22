@@ -24,7 +24,7 @@ from tests.unit.fake_runner_managers import FakeCloudRunnerManager, FakeGitHubRu
     "initial_runners, initial_cloud_runners, expected_runners, expected_cloud_runners, flush_mode",
     [
         pytest.param(
-            [SelfHostedRunnerFactory()],
+            [SelfHostedRunnerFactory(busy=False)],
             [],
             [],
             [],
@@ -85,7 +85,9 @@ from tests.unit.fake_runner_managers import FakeCloudRunnerManager, FakeGitHubRu
                     self_hosted_runner=busy_runner_with_cloud
                 )
             ],
-            [],
+            # GitHub returns 422 unprocessible entity on busy runners. The deletion of VM should
+            # trigger it to be deleted on next reconcile as a runner without VM pair.
+            [busy_runner_with_cloud],
             [],
             FlushMode.FLUSH_BUSY,
             id="one busy platform runner, matching cloud runner in cloud is flushed in flush busy",
@@ -120,12 +122,16 @@ def test_flush_runners(
     "initial_runners, initial_cloud_runners, expected_runners, expected_cloud_runners",
     [
         pytest.param(
-            [SelfHostedRunnerFactory()], [], [], [], id="one platform runner not in cloud"
+            [SelfHostedRunnerFactory(busy=False)],
+            [],
+            [],
+            [],
+            id="one platform runner not in cloud",
         ),
         pytest.param(
             [
                 (runner_with_cloud := SelfHostedRunnerFactory()),
-                SelfHostedRunnerFactory(),
+                SelfHostedRunnerFactory(busy=False),
             ],
             [
                 runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
@@ -151,14 +157,18 @@ def test_flush_runners(
             id="cloud runner with platform runner only in cloud",
         ),
         pytest.param(
-            [SelfHostedRunnerFactory(), SelfHostedRunnerFactory(), SelfHostedRunnerFactory()],
+            [
+                SelfHostedRunnerFactory(online=False, busy=False, deletable=True),
+                SelfHostedRunnerFactory(online=False, busy=False, deletable=True),
+                SelfHostedRunnerFactory(online=False, busy=False, deletable=True),
+            ],
             [],
             [],
             [],
             id="multiple runners not in cloud, none in cloud",
         ),
         pytest.param(
-            [runner_with_cloud, SelfHostedRunnerFactory()],
+            [runner_with_cloud, SelfHostedRunnerFactory(online=False, busy=False, deletable=True)],
             [runner_with_platform, runner_without_platform := CloudRunnerInstanceFactory()],
             [runner_with_cloud],
             [runner_with_platform, runner_without_platform],
@@ -166,7 +176,7 @@ def test_flush_runners(
         ),
     ],
 )
-def test_runner_maanger_cleanup(
+def test_runner_manager_cleanup(
     initial_runners: list[SelfHostedRunner],
     initial_cloud_runners: list[VM],
     expected_runners: list[SelfHostedRunner],
@@ -272,7 +282,7 @@ def test_runner_manager_get_runners(
     [
         pytest.param([], [], 1, [], [], id="no runners to delete"),
         pytest.param(
-            [runner_with_cloud := SelfHostedRunnerFactory()],
+            [runner_with_cloud := SelfHostedRunnerFactory(busy=True)],
             [
                 runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
                     self_hosted_runner=runner_with_cloud
@@ -281,7 +291,67 @@ def test_runner_manager_get_runners(
             0,
             [runner_with_cloud],
             [runner_with_platform],
-            id="num delete runners 0",
+            id="num delete runners 0 (busy runner not deleted)",
+        ),
+        pytest.param(
+            [runner_with_cloud := SelfHostedRunnerFactory(busy=True)],
+            [
+                runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=runner_with_cloud
+                )
+            ],
+            1,
+            # the runner remains on GitHub platform until next reconcile since GitHub cannot
+            # delete busy runners
+            [runner_with_cloud],
+            [],
+            id="num delete runners 1 (busy runner force deleted)",
+        ),
+        pytest.param(
+            [
+                runner_with_cloud := SelfHostedRunnerFactory(
+                    online=True, busy=False, deletable=False
+                )
+            ],
+            [
+                runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=runner_with_cloud
+                )
+            ],
+            0,
+            [runner_with_cloud],
+            [runner_with_platform],
+            id="num delete runners 0 (idle runner not deleted)",
+        ),
+        pytest.param(
+            [runner_with_cloud := SelfHostedRunnerFactory(busy=False)],
+            [
+                runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=runner_with_cloud
+                )
+            ],
+            1,
+            [],
+            [],
+            id="num delete runners 1 (idle runner deleted)",
+        ),
+        pytest.param(
+            [
+                idle_runner_with_cloud := SelfHostedRunnerFactory(busy=False),
+                busy_runner_with_cloud := SelfHostedRunnerFactory(busy=True),
+            ],
+            [
+                idle_runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=idle_runner_with_cloud
+                ),
+                busy_runner_with_platform := CloudRunnerInstanceFactory.from_self_hosted_runner(
+                    self_hosted_runner=busy_runner_with_cloud
+                ),
+            ],
+            1,
+            [busy_runner_with_cloud],
+            [busy_runner_with_platform],
+            id="num delete runners 1 (idle runner prioritized for deletion)",
         ),
         pytest.param(
             [runner_with_cloud],
