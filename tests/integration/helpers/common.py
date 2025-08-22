@@ -20,6 +20,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
+from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.action import Action
 from juju.application import Application
 from juju.model import Model
@@ -115,8 +116,10 @@ async def wait_for_reconcile(app: Application) -> None:
     unit = app.units[0]
     base_id = await get_reconcile_id(unit)
     for _ in range(10):
+        logger.info("Waiting for reconcile ID: %s", base_id)
         await sleep(60)
         current_id = await get_reconcile_id(unit)
+        logger.info("Current reconcile ID: %s, expected reconcile ID: %s", current_id, base_id)
         if base_id != current_id:
             return
 
@@ -489,6 +492,32 @@ async def get_github_runner_manager_service_log(unit: Unit) -> str:
         assert_on_failure=True,
         assert_msg="Failed to get the GitHub runner manager logs",
     )
+
+    assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
+    assert stdout is not None
+    return stdout
+
+
+async def get_github_runner_reactive_log(unit: Unit) -> str:
+    """Get the logs of github-runner-manager reactive processes.
+
+    Args:
+        unit: The unit to get the logs from.
+
+    Returns:
+        Reactive process logs.
+    """
+    log_file_path = REACTIVE_RUNNER_LOG_DIR / "*.log"
+    return_code, stdout, stderr = await run_in_unit(
+        unit,
+        f"cat {log_file_path}",
+        timeout=60,
+        assert_on_failure=True,
+        assert_msg="Failed to get the GitHub runner manager reactive logs",
+    )
+
+    if return_code == 1 and any("no matches found" in log for log in (stdout, stderr) if log):
+        return "No reactive logs found."
 
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
     assert stdout is not None
