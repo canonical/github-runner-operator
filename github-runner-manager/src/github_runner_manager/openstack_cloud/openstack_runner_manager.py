@@ -121,7 +121,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
 
-    def get_runners(self) -> Sequence[VM]:
+    def get_vms(self) -> Sequence[VM]:
         """Get cloud self-hosted runners.
 
         Returns:

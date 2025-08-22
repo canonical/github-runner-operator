@@ -185,18 +185,18 @@ class RunnerManager:
             Information on the runners.
         """
         logger.debug("runner_manager::get_runners")
-        cloud_runners = self._cloud.get_runners()
-        runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.info("clouds runners response %s", cloud_runners)
+        vms = self._cloud.get_vms()
+        logger.info("list vms response: %s", vms)
+        runners_health_response = self._platform.get_runners_health(vms)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         return tuple(
             RunnerInstance.from_cloud_and_platform_health(
-                cloud_instance=cloud_runner,
-                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
+                cloud_instance=vm,
+                platform_health_state=health_runners_map.get(vm.instance_id, None),
             )
-            for cloud_runner in cloud_runners
+            for vm in vms
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
@@ -267,11 +267,9 @@ class RunnerManager:
             clean_idle,
             force_delete,
         )
-        cloud_runners = self._cloud.get_runners()
-        logger.info("cleanup cloud_runners %s", cloud_runners)
-        runners_health_response = self._platform.get_runners_health(
-            requested_runners=cloud_runners
-        )
+        vms = self._cloud.get_vms()
+        logger.info("All VMs listed for clean up analysis: %s", vms)
+        runners_health_response = self._platform.get_runners_health(requested_runners=vms)
         logger.info("cleanup health_response %s", runners_health_response)
 
         # Clean dangling resources in the cloud
@@ -280,13 +278,13 @@ class RunnerManager:
         # Always clean all runners in the platform that are not in the cloud
         self._clean_platform_runners(runners_health_response.non_requested_runners)
 
-        cloud_runners_to_delete = list(cloud_runners)
+        vms_to_delete = list(vms)
         health_runners_map = {
             health.identity.instance_id: health
             for health in runners_health_response.requested_runners
         }
 
-        cloud_runners_to_delete = list(
+        vms_to_delete = list(
             filter(
                 lambda cloud_runner: _filter_runner_to_delete(
                     cloud_runner,
@@ -294,25 +292,23 @@ class RunnerManager:
                     clean_idle=clean_idle,
                     force_delete=force_delete,
                 ),
-                cloud_runners_to_delete,
+                vms_to_delete,
             )
         )
 
         if maximum_runners_to_delete is not None:
-            cloud_runners_to_delete.sort(
-                key=partial(_runner_deletion_sort_key, health_runners_map)
-            )
-            cloud_runners_to_delete = cloud_runners_to_delete[:maximum_runners_to_delete]
+            vms_to_delete.sort(key=partial(_runner_deletion_sort_key, health_runners_map))
+            vms_to_delete = vms_to_delete[:maximum_runners_to_delete]
 
-        return self._delete_cloud_runners(
-            cloud_runners_to_delete,
+        return self._delete_vms(
+            vms_to_delete,
             runners_health_response.requested_runners,
             delete_busy_runners=force_delete,
         )
 
-    def _delete_cloud_runners(
+    def _delete_vms(
         self,
-        cloud_runners: Sequence[VM],
+        vms: Sequence[VM],
         runners_health: Sequence[PlatformRunnerHealth],
         delete_busy_runners: bool = False,
     ) -> Iterable[runner_metrics.RunnerMetrics]:
@@ -323,7 +319,7 @@ class RunnerManager:
 
         Runners without health information should not be deleted.
         """
-        if not cloud_runners:
+        if not vms:
             return []
 
         runner_identity_map = {
@@ -334,7 +330,7 @@ class RunnerManager:
             # The runner_id cannot be None due to the if condition. the type system
             # isn't able to catch that.
             cast(str, runner_identity_map[runner.instance_id].metadata.runner_id)
-            for runner in cloud_runners
+            for runner in vms
             if runner.instance_id in runner_identity_map
             and runner_identity_map[runner.instance_id].metadata.runner_id
         ]
@@ -348,16 +344,16 @@ class RunnerManager:
             set(platform_runner_ids_to_delete) - set(deleted_runner_ids),
         )
 
-        logger.info("Cloud runners: %s", cloud_runners)
+        logger.info("VMs: %s", vms)
         cloud_vm_ids_to_delete = [
-            runner.instance_id
-            for runner in cloud_runners
+            vm.instance_id
+            for vm in vms
             # We can delete all VMs if delete_busy_runners is True
             if delete_busy_runners
             # We can delete the VM if no runner is associated with it
-            or not runner.metadata.runner_id
+            or not vm.metadata.runner_id
             # We can delete the VM if it has been deleted from the Platform provider.
-            or runner.metadata.runner_id in deleted_runner_ids
+            or vm.metadata.runner_id in deleted_runner_ids
         ]
         logger.info("Extracting metrics from cloud VMs: %s", cloud_vm_ids_to_delete)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=cloud_vm_ids_to_delete)
