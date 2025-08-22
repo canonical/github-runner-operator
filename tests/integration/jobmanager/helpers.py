@@ -198,7 +198,7 @@ async def prepare_runner_tunnel_for_builder_agent(
     return True
 
 
-async def _execute_command_with_builder_agent(instance_helper, unit, command) -> None:
+async def execute_command_with_builder_agent(instance_helper, unit, command) -> None:
     """Execute a command in the builder-agent."""
     execute_command = (
         "'curl http://127.0.0.1:8080/execute -X POST "

@@ -185,18 +185,18 @@ class RunnerManager:
             Information on the runners.
         """
         logger.debug("runner_manager::get_runners")
-        cloud_runners = self._cloud.get_runners()
-        runners_health_response = self._platform.get_runners_health(cloud_runners)
-        logger.info("clouds runners response %s", cloud_runners)
+        vms = self._cloud.get_vms()
+        logger.info("clouds runners response %s", vms)
+        runners_health_response = self._platform.get_runners_health(vms)
         logger.info("runner health response %s", runners_health_response)
         runners_health = runners_health_response.requested_runners
         health_runners_map = {runner.identity.instance_id: runner for runner in runners_health}
         return tuple(
             RunnerInstance.from_cloud_and_platform_health(
-                cloud_instance=cloud_runner,
-                platform_health_state=health_runners_map.get(cloud_runner.instance_id, None),
+                cloud_instance=vm,
+                platform_health_state=health_runners_map.get(vm.instance_id, None),
             )
-            for cloud_runner in cloud_runners
+            for vm in vms
         )
 
     def delete_runners(self, num: int) -> IssuedMetricEventsStats:
