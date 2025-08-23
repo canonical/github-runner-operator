@@ -1,0 +1,213 @@
+18:24:07 WARNING unexpected facade SSHServer received from the controller
+18:24:07 INFO Adding model github-pr-2102c-lxd:test-charm-fork-repo-ngh4 on cloud localhost
+18:24:07 WARNING unexpected facade SSHServer received from the controller
+18:24:07 WARNING unexpected facade SSHSession received from the controller
+18:24:07 WARNING unexpected facade SSHTunneler received from the controller
+18:24:09 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:24:46 INFO Deploying local:jammy/github-runner-0
+18:24:46 INFO Waiting for model:
+  test-wugb0ce3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wugb0ce3/0 [allocating] waiting: waiting for machine
+18:25:17 INFO Waiting for model:
+  test-wugb0ce3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wugb0ce3/0 [allocating] waiting: waiting for machine
+18:25:47 INFO Waiting for model:
+  test-wugb0ce3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wugb0ce3/0 [allocating] waiting: waiting for machine
+18:26:17 INFO Waiting for model:
+  test-wugb0ce3/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-wugb0ce3/0 [executing] maintenance: Setting up Builder.
+18:26:48 INFO Waiting for model:
+  test-wugb0ce3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wugb0ce3/0 [executing] maintenance: Setting up Builder.
+18:27:18 INFO Waiting for model:
+  test-wugb0ce3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wugb0ce3/0 [executing] maintenance: Setting up Builder.
+18:27:48 INFO Waiting for model:
+  test-wugb0ce3/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] maintenance: Setting up Builder.
+18:28:18 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] maintenance: Setting up Builder.
+18:28:48 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] blocked: image integration required.
+18:29:18 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:29:49 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:30:19 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:30:49 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:31:20 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:32:20 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:32:51 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:33:21 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:33:52 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:34:22 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:34:52 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:35:23 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:35:53 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:36:23 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:36:54 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:37:24 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:37:54 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:38:24 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:38:54 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:39:25 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:39:55 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:40:25 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:40:55 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:41:25 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:41:55 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:42:26 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:42:56 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:43:26 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wugb0ce3/0 [executing] active: Building image.
+18:43:56 INFO Waiting for model:
+  test-wugb0ce3/0 [executing] maintenance: Update image for runners
+18:44:25 INFO GitHub token rate limit: Rate(reset=2025-08-23 19:18:03+00:00, remaining=4759, limit=5000)
+18:45:35 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] active: 
+18:46:06 INFO Waiting for model:
+  test-wugb0ce3/0 [idle] active: 
+18:46:09 INFO Current reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:46:09 INFO Waiting for reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:47:10 INFO Current reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:47:10 INFO Current reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9, expected reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:47:10 INFO Waiting for reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:48:11 INFO Current reconcile ID: 55f8ebe2-dab8-4bef-a006-98b085b073ed
+18:48:11 INFO Current reconcile ID: 55f8ebe2-dab8-4bef-a006-98b085b073ed, expected reconcile ID: 20684c43-4d18-442f-8834-ed28546adae9
+18:48:19 INFO [TEST SETUP] Exposing port 8080 on test-wugb0ce3-0-n-91384cd0f0e5
+18:48:19 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.152', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:c4:ef'}]])
+18:48:21 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-wugb0ce3-0-n-91384cd0f0e5.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.152 &
+18:48:22 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.152' (ED25519) to the list of known hosts.
+
+18:48:24 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-wugb0ce3-0-n-91384cd0f0e5
+18:48:24 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.152', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:c4:ef'}]])
+18:48:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wugb0ce3-0-n-91384cd0f0e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.152 nc -z localhost 8080'
+18:48:26 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:48:28 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-wugb0ce3-0-n-91384cd0f0e5
+18:48:28 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.152', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:c4:ef'}]])
+18:48:29 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-wugb0ce3-0-n-91384cd0f0e5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.152 curl http://localhost:8080'
+18:48:30 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  55406      0 --:--:-- --:--:-- --:--:-- 69000
+'
+18:48:32 INFO Wait for condition not met, sleeping 10
+18:48:48 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-ngh4  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  18:48:48Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-wugb0ce3           active      1  github-runner-image-builder  latest/edge  106  no       
+test-wugb0ce3                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-wugb0ce3/0*  active    idle   0        10.131.216.181            
+test-wugb0ce3/0*                         active    idle   1        10.131.216.154  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.131.216.181  juju-87d4c4-0  ubuntu@22.04  github-runner  Running
+1        started  10.131.216.154  juju-87d4c4-1  ubuntu@22.04  github-runner  Running
+
+18:48:49 INFO Juju error logs:
+
+machine-0: 18:25:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:25:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-wugb0ce3-0: 18:25:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-wugb0ce3-0: 18:26:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-wugb0ce3-0: 18:26:52 ERROR unit.github-runner-image-builder-wugb0ce3/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-wugb0ce3-0: 18:27:47 ERROR unit.test-wugb0ce3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wugb0ce3-0: 18:27:50 ERROR unit.test-wugb0ce3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wugb0ce3-0: 18:28:45 ERROR unit.test-wugb0ce3/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wugb0ce3-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:48:49 INFO Forgetting model main...
