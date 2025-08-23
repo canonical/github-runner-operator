@@ -1,0 +1,103 @@
+07:02:49 INFO Waiting for model:
+  test-y2ssatk1/0 [idle] active: 
+07:03:19 INFO Waiting for model:
+  test-y2ssatk1/0 [idle] active: 
+07:03:22 INFO Current reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:03:22 INFO Waiting for reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:04:23 INFO Current reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:04:23 INFO Current reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff, expected reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:04:23 INFO Waiting for reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:05:24 INFO Current reconcile ID: 7908107c-5818-4965-af09-7eb28b37d9ed
+07:05:24 INFO Current reconcile ID: 7908107c-5818-4965-af09-7eb28b37d9ed, expected reconcile ID: 500b9ddb-0b0e-40d0-99bb-ec2f427503ff
+07:05:34 INFO [TEST SETUP] Exposing port 8080 on test-y2ssatk1-0-n-ed8222d36584
+07:05:34 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a0:54:9b'}]])
+07:05:35 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-y2ssatk1-0-n-ed8222d36584.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.192 &
+07:05:36 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.192' (ED25519) to the list of known hosts.
+
+07:05:38 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-y2ssatk1-0-n-ed8222d36584
+07:05:38 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a0:54:9b'}]])
+07:05:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-y2ssatk1-0-n-ed8222d36584.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 nc -z localhost 8080'
+07:05:41 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:05:42 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-y2ssatk1-0-n-ed8222d36584
+07:05:42 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.192', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a0:54:9b'}]])
+07:05:43 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-y2ssatk1-0-n-ed8222d36584.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.192 curl http://localhost:8080'
+07:05:44 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  67536      0 --:--:-- --:--:-- --:--:-- 69000
+'
+07:05:46 INFO Wait for condition not met, sleeping 10
+07:05:57 INFO Waiting for model:
+  test-y2ssatk1/0 [idle] active: 
+07:06:27 INFO Waiting for model:
+  test-y2ssatk1/0 [idle] active: 
+07:06:31 INFO Current reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:06:31 INFO Waiting for reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:07:32 INFO Current reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:07:32 INFO Current reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9, expected reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:07:32 INFO Waiting for reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:08:33 INFO Current reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:08:33 INFO Current reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9, expected reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:08:33 INFO Waiting for reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:09:34 INFO Current reconcile ID: df5c5de1-cffb-4b60-9f77-92d52ad83515
+07:09:34 INFO Current reconcile ID: df5c5de1-cffb-4b60-9f77-92d52ad83515, expected reconcile ID: cfce27b0-9e72-46b3-b804-831a650e21e9
+07:09:35 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-oamr  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  07:09:35Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-y2ssatk1           active      1  github-runner-image-builder  latest/edge  106  no       
+test-y2ssatk1                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-y2ssatk1/0*  active    idle   0        10.101.211.42             
+test-y2ssatk1/0*                         active    idle   1        10.101.211.189  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.101.211.42   juju-485246-0  ubuntu@22.04  github-runner  Running
+1        started  10.101.211.189  juju-485246-1  ubuntu@22.04  github-runner  Running
+
+07:09:35 INFO Juju error logs:
+
+machine-0: 06:25:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:25:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-y2ssatk1-0: 06:25:26 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:25:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:25:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-y2ssatk1-0: 06:25:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-y2ssatk1-0: 06:26:07 ERROR unit.github-runner-image-builder-y2ssatk1/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-y2ssatk1-0: 06:26:43 ERROR unit.test-y2ssatk1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-y2ssatk1-0: 06:26:45 ERROR unit.test-y2ssatk1/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-y2ssatk1-0: 06:28:06 ERROR unit.test-y2ssatk1/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ssatk1-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:09:35 INFO Forgetting model main...
