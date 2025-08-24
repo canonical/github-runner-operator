@@ -1,0 +1,151 @@
+18:53:04 WARNING unexpected facade SSHServer received from the controller
+18:53:04 INFO Adding model github-pr-2102c-lxd:test-charm-upgrade-z1sr on cloud localhost
+18:53:04 WARNING unexpected facade SSHServer received from the controller
+18:53:04 WARNING unexpected facade SSHSession received from the controller
+18:53:04 WARNING unexpected facade SSHTunneler received from the controller
+18:53:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:53:27 INFO Deploying local:jammy/github-runner-0
+18:53:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dmlvpfjs/0 [allocating] waiting: waiting for machine
+18:53:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dmlvpfjs/0 [allocating] waiting: waiting for machine
+18:54:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-dmlvpfjs/0 [allocating] waiting: waiting for machine
+18:54:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-dmlvpfjs/0 [executing] maintenance: Setting up Builder.
+18:55:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-dmlvpfjs/0 [executing] maintenance: Setting up Builder.
+18:55:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] maintenance: Setting up Builder.
+18:56:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] maintenance: Setting up Builder.
+18:56:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] maintenance: Setting up Builder.
+18:57:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Waiting for first image.
+18:57:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+18:58:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+18:58:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+18:59:27 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+18:59:57 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:00:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:00:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:01:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:01:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:02:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:02:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:03:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:03:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:04:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:04:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:05:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:05:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:06:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:06:58 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-dmlvpfjs/0 [executing] active: Building image.
+19:07:28 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] active: 
+  github-runner-image-builder-dmlvpfjs/0 [idle] active: 
+19:09:46 INFO Waiting for model:
+  test-dmlvpfjs/0 [idle] active:
+19:10:18 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-z1sr  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  19:10:18Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-dmlvpfjs           active      1  github-runner-image-builder  latest/edge  106  no       
+test-dmlvpfjs                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-dmlvpfjs/0*  active    idle   0        10.62.192.12           
+test-dmlvpfjs/0*                         active    idle   1        10.62.192.184          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.62.192.12   juju-10d688-0  ubuntu@22.04  github-runner  Running
+1        started  10.62.192.184  juju-10d688-1  ubuntu@22.04  github-runner  Running
+
+19:10:19 INFO Juju error logs:
+
+machine-0: 18:54:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:54:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-dmlvpfjs-0: 18:54:35 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:54:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:54:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-dmlvpfjs-0: 18:54:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-dmlvpfjs-0: 18:55:22 ERROR unit.github-runner-image-builder-dmlvpfjs/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-dmlvpfjs-0: 18:55:46 ERROR unit.test-dmlvpfjs/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dmlvpfjs-0: 18:55:48 ERROR unit.test-dmlvpfjs/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-dmlvpfjs-0: 18:57:29 ERROR unit.test-dmlvpfjs/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-dmlvpfjs-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:10:19 INFO Forgetting model main...
