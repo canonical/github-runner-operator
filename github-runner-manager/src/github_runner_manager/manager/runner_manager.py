@@ -239,14 +239,16 @@ class RunnerManager:
         )
         logger.info("Deleted runners: %s", deleted_runner_ids)
 
-        vm_ids_to_cleanup = _get_vms_to_cleanup(
-            vms=vms,
-            runner_ids=platform_runner_ids_to_delete,
+        vm_ids_to_cleanup = list(
+            _get_vms_to_cleanup(
+                vms=vms,
+                runner_ids=platform_runner_ids_to_delete,
+            )
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
+        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
@@ -284,21 +286,23 @@ class RunnerManager:
         )
         logger.info("Deleted runners: %s", deleted_runner_ids)
 
-        vm_ids_to_cleanup = _get_vms_to_cleanup(
-            vms=vms,
-            runner_ids=(
-                # Some runners may be rejected for deletion due to a race condition in which the
-                # runner has picked up a job when delete runner was requested. Flush idle shoud
-                # only delete underlying VMs for the runners which were successfully deleted.
-                deleted_runner_ids
-                if flush_mode == FlushMode.FLUSH_IDLE
-                else platform_runner_ids_to_delete
-            ),
+        vm_ids_to_cleanup = list(
+            _get_vms_to_cleanup(
+                vms=vms,
+                runner_ids=(
+                    # Some runners may be rejected for deletion due to a race condition in which the
+                    # runner has picked up a job when delete runner was requested. Flush idle shoud
+                    # only delete underlying VMs for the runners which were successfully deleted.
+                    deleted_runner_ids
+                    if flush_mode == FlushMode.FLUSH_IDLE
+                    else platform_runner_ids_to_delete
+                ),
+            )
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
+        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
