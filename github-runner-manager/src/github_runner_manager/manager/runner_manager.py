@@ -7,9 +7,8 @@ import copy
 import logging
 from dataclasses import dataclass
 from enum import Enum, auto
-from functools import partial
 from multiprocessing import Pool
-from typing import Iterable, Iterator, Sequence, Type
+from typing import Iterator, Sequence, Type
 
 from github_runner_manager import constants
 from github_runner_manager.errors import GithubMetricsError, RunnerError
@@ -210,10 +209,50 @@ class RunnerManager:
             Stats on metrics events issued during the deletion of runners.
         """
         logger.info("runner_manager::delete_runners Deleting %s runners", num)
-        extracted_runner_metrics = self._cleanup_resources(
-            force_delete=True, maximum_runners_to_delete=num
+        vms = self._cloud.get_vms()
+        logger.info("VMs: %s", vms)
+        runners_health_response = self._platform.get_runners_health(requested_runners=vms)
+        logger.info("Runner health: %s", runners_health_response)
+
+        platform_runner_ids_to_cleanup = _get_platform_runners_to_cleanup(
+            runners=runners_health_response, vms=vms
         )
-        return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
+        logger.info("Runners to clean up: %s", platform_runner_ids_to_cleanup)
+        num_runners_to_cleanup = len(platform_runner_ids_to_cleanup)
+        if len(platform_runner_ids_to_cleanup) < num:
+            num -= num_runners_to_cleanup
+
+        runners_not_marked_for_cleanup = [
+            runner
+            for runner in runners_health_response.requested_runners
+            if runner.identity.metadata.runner_id
+            and runner.identity.metadata.runner_id not in platform_runner_ids_to_cleanup
+        ]
+        platform_runner_ids_to_scaledown = _get_platform_runners_to_scale_down(
+            runners=runners_not_marked_for_cleanup,
+            num=num,
+        )
+        logger.info("Runners to scale down: %s", platform_runner_ids_to_scaledown)
+        platform_runner_ids_to_delete = list(
+            platform_runner_ids_to_cleanup | platform_runner_ids_to_scaledown
+        )
+        logger.info("Deleting platform runners: %s", platform_runner_ids_to_delete)
+        deleted_runner_ids = self._platform.delete_runners(
+            runner_ids=platform_runner_ids_to_delete
+        )
+        logger.info("Deleted runners: %s", deleted_runner_ids)
+
+        vm_ids_to_cleanup = _get_vms_to_cleanup(
+            vms=vms,
+            cleanedup_runner_ids=platform_runner_ids_to_delete,
+            runners=runners_health_response,
+        )
+        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
+        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
+
+        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
     def flush_runners(
         self, flush_mode: FlushMode = FlushMode.FLUSH_IDLE
@@ -227,24 +266,39 @@ class RunnerManager:
             Stats on metrics events issued during the deletion of runners.
         """
         logger.info("runner_manager::flush_runners. mode %s", flush_mode)
-        match flush_mode:
-            case FlushMode.FLUSH_IDLE:
-                logger.info("Flushing idle runners...")
-            case FlushMode.FLUSH_BUSY:
-                logger.info("Flushing idle and busy runners...")
-            case _:
-                logger.critical(
-                    "Unknown flush mode %s encountered, contact developers", flush_mode
-                )
+        vms = self._cloud.get_vms()
+        logger.info("VMs: %s", vms)
+        runners_health_response = self._platform.get_runners_health(requested_runners=vms)
+        logger.info("Runner health: %s", runners_health_response)
 
-        flush_busy = False
-        if flush_mode == FlushMode.FLUSH_BUSY:
-            flush_busy = True
-
-        extracted_runner_metrics = self._cleanup_resources(
-            clean_idle=True, force_delete=flush_busy
+        platform_runner_ids_to_cleanup = _get_platform_runners_to_cleanup(
+            runners=runners_health_response, vms=vms
         )
-        return self._issue_runner_metrics(metrics=iter(extracted_runner_metrics))
+        logger.info("Runners to clean up: %s", platform_runner_ids_to_cleanup)
+        platform_runner_ids_to_flush = _get_platform_runners_to_flush(
+            runners=runners_health_response, flush_mode=flush_mode
+        )
+        logger.info("Runners to flush: %s", platform_runner_ids_to_flush)
+        platform_runner_ids_to_delete = list(
+            platform_runner_ids_to_cleanup | platform_runner_ids_to_flush
+        )
+        logger.info("Deleting platform runners: %s", platform_runner_ids_to_flush)
+        deleted_runner_ids = self._platform.delete_runners(
+            runner_ids=platform_runner_ids_to_delete
+        )
+        logger.info("Deleted runners: %s", deleted_runner_ids)
+
+        vm_ids_to_cleanup = _get_vms_to_cleanup(
+            vms=vms,
+            cleanedup_runner_ids=platform_runner_ids_to_delete,
+            runners=runners_health_response,
+        )
+        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
+        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
+
+        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
     def cleanup(self) -> IssuedMetricEventsStats:
         """Run cleanup of the runners and other resources.
@@ -253,56 +307,32 @@ class RunnerManager:
             Stats on metrics events issued during the cleanup of runners.
         """
         logger.info("runner_manager::cleanup")
-        deleted_runner_metrics = self._cleanup_resources()
-        return self._issue_runner_metrics(metrics=iter(deleted_runner_metrics))
-
-    def _cleanup_resources(
-        self,
-        clean_idle: bool = False,
-        force_delete: bool = False,
-        maximum_runners_to_delete: int | None = None,
-    ) -> Iterable[runner_metrics.RunnerMetrics]:
-        """Cleanup the indicated runners in the platform and in the cloud."""
-        logger.info(
-            " _cleanup_resources idle: %s, force: %s",
-            clean_idle,
-            force_delete,
-        )
         vms = self._cloud.get_vms()
-        logger.info("All VMs listed for clean up analysis:\n%s", vms)
+        logger.info("VMs: %s", vms)
         runners_health_response = self._platform.get_runners_health(requested_runners=vms)
-        logger.info("Cleanup health_response:\n%s", runners_health_response)
+        logger.info("Runner health: %s", runners_health_response)
 
-        # Clean dangling resources in the cloud
         self._cloud.cleanup()
+        platform_runner_ids_to_cleanup = _get_platform_runners_to_cleanup(
+            runners=runners_health_response, vms=vms
+        )
+        logger.info("Cleaning up platform runners: %s", platform_runner_ids_to_cleanup)
+        cleanedup_runner_ids = self._platform.delete_runners(
+            runner_ids=list(platform_runner_ids_to_cleanup)
+        )
+        logger.info("Cleaned up platform runners: %s", cleanedup_runner_ids)
 
-        platform_runner_ids_to_delete = _get_platform_runners_to_delete(
-            runners=runners_health_response,
+        vm_ids_to_cleanup = _get_vms_to_cleanup(
             vms=vms,
-            clean_idle=clean_idle,
-            force_delete=force_delete,
-            max_runners_to_delete=maximum_runners_to_delete,
-        )
-        logger.info("Deleting platform runners:\n%s", platform_runner_ids_to_delete)
-        deleted_runner_ids = self._platform.delete_runners(
-            runner_ids=platform_runner_ids_to_delete
-        )
-        logger.info("Deleted platform runners:\n%s", deleted_runner_ids)
-
-        vm_ids_to_delete = _get_vms_to_delete(
-            vms=vms,
-            deleted_runner_ids=deleted_runner_ids,
+            cleanedup_runner_ids=list(platform_runner_ids_to_cleanup),
             runners=runners_health_response,
-            force_delete=force_delete,
-            max_vms_to_delete=maximum_runners_to_delete,
         )
-        logger.info("Extracting metrics from vms:\n%s", vm_ids_to_delete)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_delete)
-        logger.info("Deleting vms:\n%s", vm_ids_to_delete)
-        deleted_vms = self._cloud.delete_vms(instance_ids=vm_ids_to_delete)
-        logger.info("Deleted VMs:\n%s", deleted_vms)
+        logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        logger.info("Cleaning up VMs: %s", vm_ids_to_cleanup)
+        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
 
-        return extracted_metrics
+        return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
     @staticmethod
     def _spawn_runners(
@@ -468,34 +498,20 @@ class RunnerManager:
         return instance_id
 
 
-def _get_platform_runners_to_delete(
-    *,
-    runners: RunnersHealthResponse,
-    vms: Sequence[VM],
-    clean_idle: bool = False,
-    force_delete: bool = False,
-    max_runners_to_delete: int | None = None,
-) -> list[str]:
-    """Determine platform runners to delete.
+def _get_platform_runners_to_cleanup(
+    *, runners: RunnersHealthResponse, vms: Sequence[VM]
+) -> set[str]:
+    """Determine platform runners to clean up.
 
-    1. Delete all platform runners on force_delete.
-    2. Always delete danging platform runners (platform runners that have no VM associated).
-    3. Always delete deletable platform runners (deletable decision made by platform provider).
-    4. Delete runners that in offline-idle status that have timed out where the possible scenarios
-        is:
+    1. Always clean up danging platform runners (platform runners that have no VM associated).
+    2. Always clean up deletable platform runners (deletable decision made by platform provider).
+    3. Clean up runners that in offline-idle status that have timed out where the possible
+        scenarios is:
         - runner registered (during registration token generation) but VM has failed to spawn.
-    5. Delete online-idle runners on clean_idle request.
-    6. Force delete all runners if max_runners_to_delete is None
-    7. Force delete number of remaining runners after cleanup
-        (max_runners_to_delete - cleaned up runners)
-        prioritized by deletable, idle, busy
 
     Args:
         runners: platform runners health information.
         vms: cloud VM state.
-        clean_idle: whether to clean up online idle runners.
-        force_delete: whether to force deletion of runners.
-        max_runners_to_delete: number of maximum runners to force delete.
 
     Returns:
         The runner IDs to delete.
@@ -506,14 +522,14 @@ def _get_platform_runners_to_delete(
         for runner in runners.non_requested_runners
         if runner.metadata.runner_id
     )
-    logger.info("Dangling runners IDs: %s", dangling_runners)
+    logger.debug("Dangling runners IDs: %s", dangling_runners)
 
     deletable_runners: set[str] = set(
         runner.identity.metadata.runner_id
         for runner in runners.requested_runners
         if runner.deletable and runner.identity.metadata.runner_id
     )
-    logger.info("Deletable runner IDs: %s", deletable_runners)
+    logger.debug("Deletable runner IDs: %s", deletable_runners)
 
     vm_instance_id_map = {vm.instance_id: vm for vm in vms}
     # Kill old runners that are offline and idle as they could be in failed state.
@@ -530,118 +546,86 @@ def _get_platform_runners_to_delete(
             RUNNER_MAXIMUM_CREATION_TIME
         )
     )
-    logger.info("Timed out offline idle runner IDs: %s", timed_out_offline_idle_runners)
+    logger.debug("Timed out offline idle runner IDs: %s", timed_out_offline_idle_runners)
 
-    online_idle_runners: set[str] = set(
+    return dangling_runners | deletable_runners | timed_out_offline_idle_runners
+
+
+def _get_platform_runners_to_flush(
+    runners: RunnersHealthResponse, flush_mode: FlushMode
+) -> set[str]:
+    """Determine runners to flush.
+
+    Args:
+        runners: RunnersHealthResponse
+        flush_mode: Runner flushing strategy.
+    """
+    online_idle_runners = set(
         runner.identity.metadata.runner_id
         for runner in runners.requested_runners
-        if clean_idle and runner.online and not runner.busy and runner.identity.metadata.runner_id
+        if runner.identity.metadata.runner_id and runner.online and not runner.busy
     )
-    logger.info("Online idle runners (clean idle: %s): %s", clean_idle, online_idle_runners)
-
-    runners_to_cleanup = list(
-        dangling_runners | deletable_runners | timed_out_offline_idle_runners | online_idle_runners
-    )
-    if not force_delete:
-        return runners_to_cleanup
-
-    if max_runners_to_delete is None:
-        logger.info("Force delete all runners")
-        return [
-            runner.metadata.runner_id
-            for runner in runners.non_requested_runners
-            + [runner.identity for runner in runners.requested_runners]
-            if runner.metadata.runner_id
-        ]
-
-    num_runners_to_cleanup = len(runners_to_cleanup)
-    # max_runners_to_delete is used for scaling down - if we're already able to clean up enough
-    # runners, skip scaling down.
-    # this function is targeted for refactor in a follow up PR to separate scaling logic from
-    # cleanup logic.
-    if num_runners_to_cleanup >= max_runners_to_delete:
-        return runners_to_cleanup
-
-    max_runners_to_delete -= num_runners_to_cleanup
-    runners_not_marked_for_cleanup = [
-        runner
+    logger.debug("Online idle runners: %s", online_idle_runners)
+    busy_runners = set(
+        runner.identity.metadata.runner_id
         for runner in runners.requested_runners
         if runner.identity.metadata.runner_id
-        and runner.identity.metadata.runner_id not in runners_to_cleanup
-    ]
-    runners_not_marked_for_cleanup.sort(
-        # prioritize deletable --> idle --> busy
-        key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
+        and runner.identity.metadata.runner_id not in online_idle_runners
     )
-    runners_to_force_delete = [
+    logger.debug("Busy runners: %s", busy_runners)
+    match flush_mode:
+        case FlushMode.FLUSH_IDLE:
+            return online_idle_runners
+        case FlushMode.FLUSH_BUSY:
+            return online_idle_runners | busy_runners
+        case _:
+            logger.critical("Unknown flush mode %s encountered, contact developers", flush_mode)
+            return set()
+
+
+def _get_platform_runners_to_scale_down(
+    runners: Sequence[PlatformRunnerHealth], num: int
+) -> set[str]:
+    """Determine the number of runners to scale down.
+
+    Args:
+        runners: pool of runners to select to scale down.
+        num: number of runners to scale down by.
+    """
+    # prioritize deletable --> idle --> busy
+    sorted_runners = sorted(
+        runners, key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
+    )
+    return set(
         runner.identity.metadata.runner_id
-        for runner in runners_not_marked_for_cleanup[:max_runners_to_delete]
+        for runner in sorted_runners[:num]
         if runner.identity.metadata.runner_id
-    ]
-    logger.info("Runners to force delete after cleanup: %s", runners_to_force_delete)
-    return runners_to_cleanup + runners_to_force_delete
+    )
 
 
-def _get_vms_to_delete(
-    *,
-    vms: Sequence[VM],
-    deleted_runner_ids: list[str],
-    runners: RunnersHealthResponse,
-    force_delete: bool = False,
-    max_vms_to_delete: int | None = None,
-) -> list[InstanceID]:
-    """Determine cloud VMs to delete.
+def _get_vms_to_cleanup(
+    *, vms: Sequence[VM], cleanedup_runner_ids: list[str], runners: RunnersHealthResponse
+) -> set[InstanceID]:
+    """Determine cloud VMs to clean up.
 
     Args:
         vms: cloud VM state.
-        deleted_runner_ids: platform runners that have been deleted.
+        cleanedup_runner_ids: platform runners that have been cleaned up.
         runners: platform runners health information.
-        force_delete: whether to force delete busy runners if necessary to scale down.
-        max_vms_to_delete: number of VMs to force scale down if necessary.
 
     Returns:
-        The VM InstanceIDs (NOT VM UUIDs) to delete.
+        The VM InstanceIDs (NOT VM UUIDs) to clean up.
     """
     vms_without_runner_ids = set(vm.instance_id for vm in vms if not vm.metadata.runner_id)
     logger.info("VMs without platform runner ID metadata:\n%s", vms_without_runner_ids)
     vms_with_deleted_runners = set(
         vm.instance_id
         for vm in vms
-        if vm.metadata.runner_id and vm.metadata.runner_id in deleted_runner_ids
+        if vm.metadata.runner_id and vm.metadata.runner_id in cleanedup_runner_ids
     )
     logger.info("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
 
-    vms_to_cleanup = list(vms_without_runner_ids | vms_with_deleted_runners)
-
-    if not force_delete:
-        return vms_to_cleanup
-
-    if max_vms_to_delete is None:
-        logger.info("Force delete all VMs")
-        return [vm.instance_id for vm in vms]
-
-    num_vms_to_cleanup = len(vms_to_cleanup)
-    # max_vms_to_delete is used for scaling down - if we're already able to clean up enough
-    # runners, skip scaling down.
-    # this function is targeted for refactor in a follow up PR to separate scaling logic from
-    # cleanup logic.
-    if num_vms_to_cleanup >= max_vms_to_delete:
-        return vms_to_cleanup
-
-    max_vms_to_delete -= num_vms_to_cleanup
-    vms_not_marked_for_cleanup = [vm for vm in vms if vm.instance_id not in vms_to_cleanup]
-    instance_id_to_runner_map = {
-        runner.identity.instance_id: runner for runner in runners.requested_runners
-    }
-    vms_to_force_delete = [
-        vm.instance_id
-        for vm in sorted(
-            vms_not_marked_for_cleanup,
-            key=partial(_runner_deletion_sort_key, instance_id_to_runner_map),
-        )[:max_vms_to_delete]
-    ]
-    logger.info("VMs to force delete after cleanup: %s", vms_to_force_delete)
-    return vms_to_cleanup + vms_to_force_delete
+    return vms_without_runner_ids | vms_with_deleted_runners
 
 
 def _runner_deletion_sort_key(
