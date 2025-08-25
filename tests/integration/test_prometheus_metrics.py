@@ -11,9 +11,18 @@ import jubilant
 import pytest
 import pytest_asyncio
 import requests
+from github.Branch import Branch
+from github.Repository import Repository
 from jubilant.statustypes import AppStatus
 from juju.application import Application
 from tenacity import retry, stop_after_attempt, wait_exponential
+
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
+from tests.integration.helpers.common import (
+    DISPATCH_TEST_WORKFLOW_FILENAME,
+    dispatch_workflow,
+    wait_for_reconcile,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -121,13 +130,15 @@ def openstack_app_cos_agent_fixture(juju: jubilant.Juju, app_openstack_runner: A
 
 @pytest.mark.usefixtures("traefik_ingress")
 @pytest.mark.openstack
-def test_prometheus_metrics(
+async def test_prometheus_metrics(
     juju: jubilant.Juju,
     k8s_juju: jubilant.Juju,
     openstack_app_cos_agent: Application,
     grafana_app: AppStatus,
     grafana_password: str,
     prometheus_app: AppStatus,
+    test_github_branch: Branch,
+    github_repository: Repository,
 ):
     """
     arrange: given a prometheus charm application.
@@ -174,6 +185,20 @@ def test_prometheus_metrics(
     _patiently_wait_for_prometheus_datasource(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
+
+    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1})
+    await wait_for_reconcile(app=openstack_app_cos_agent)
+    await dispatch_workflow(
+        app=openstack_app_cos_agent,
+        branch=test_github_branch,
+        github_repository=github_repository,
+        conclusion="success",
+        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+    )
+    # Set the number of virtual machines to 0 to speedup reconciliation
+    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
+    await wait_for_reconcile(app=openstack_app_cos_agent)
+
     prometheus_ip = prometheus_app.address
     _patiently_wait_for_prometheus_metrics(
         prometheus_ip,
