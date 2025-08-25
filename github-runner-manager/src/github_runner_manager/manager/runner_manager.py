@@ -245,7 +245,6 @@ class RunnerManager:
         vm_ids_to_cleanup = _get_vms_to_cleanup(
             vms=vms,
             cleanedup_runner_ids=platform_runner_ids_to_delete,
-            runners=runners_health_response,
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
@@ -291,7 +290,6 @@ class RunnerManager:
         vm_ids_to_cleanup = _get_vms_to_cleanup(
             vms=vms,
             cleanedup_runner_ids=platform_runner_ids_to_delete,
-            runners=runners_health_response,
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
@@ -313,24 +311,25 @@ class RunnerManager:
         logger.info("Runner health: %s", runners_health_response)
 
         self._cloud.cleanup()
-        platform_runner_ids_to_cleanup = _get_platform_runners_to_cleanup(
-            runners=runners_health_response, vms=vms
+        platform_runner_ids_to_cleanup = list(
+            _get_platform_runners_to_cleanup(runners=runners_health_response, vms=vms)
         )
         logger.info("Cleaning up platform runners: %s", platform_runner_ids_to_cleanup)
         cleanedup_runner_ids = self._platform.delete_runners(
-            runner_ids=list(platform_runner_ids_to_cleanup)
+            runner_ids=platform_runner_ids_to_cleanup
         )
         logger.info("Cleaned up platform runners: %s", cleanedup_runner_ids)
 
-        vm_ids_to_cleanup = _get_vms_to_cleanup(
-            vms=vms,
-            cleanedup_runner_ids=list(platform_runner_ids_to_cleanup),
-            runners=runners_health_response,
+        vm_ids_to_cleanup = list(
+            _get_vms_to_cleanup(
+                vms=vms,
+                cleanedup_runner_ids=platform_runner_ids_to_cleanup,
+            )
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
-        extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
+        extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Cleaning up VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=list(vm_ids_to_cleanup))
+        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
@@ -603,15 +602,12 @@ def _get_platform_runners_to_scale_down(
     )
 
 
-def _get_vms_to_cleanup(
-    *, vms: Sequence[VM], cleanedup_runner_ids: list[str], runners: RunnersHealthResponse
-) -> set[InstanceID]:
+def _get_vms_to_cleanup(*, vms: Sequence[VM], cleanedup_runner_ids: list[str]) -> set[InstanceID]:
     """Determine cloud VMs to clean up.
 
     Args:
         vms: cloud VM state.
         cleanedup_runner_ids: platform runners that have been cleaned up.
-        runners: platform runners health information.
 
     Returns:
         The VM InstanceIDs (NOT VM UUIDs) to clean up.
