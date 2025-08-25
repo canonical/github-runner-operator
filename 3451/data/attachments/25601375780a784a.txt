@@ -1,0 +1,37 @@
+06:26:56 WARNING unexpected facade SSHServer received from the controller
+06:26:56 INFO Adding model github-pr-2102c-lxd:test-charm-metrics-success-ozp1 on cloud localhost
+06:26:57 WARNING unexpected facade SSHServer received from the controller
+06:26:57 WARNING unexpected facade SSHSession received from the controller
+06:26:57 WARNING unexpected facade SSHTunneler received from the controller
+06:26:58 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+06:27:21 INFO Deploying local:jammy/github-runner-0
+06:27:21 INFO Waiting for model:
+  test-lsu9psny/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lsu9psny/0 [allocating] waiting: waiting for machine
+06:27:51 INFO Waiting for model:
+  test-lsu9psny/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lsu9psny/0 [allocating] waiting: waiting for machine
+06:28:21 INFO Waiting for model:
+  test-lsu9psny/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lsu9psny/0 [allocating] waiting: waiting for machine
+06:28:52 INFO Waiting for model:
+  test-lsu9psny/0 [executing] waiting: agent initialising
+  github-runner-image-builder-lsu9psny/0 [executing] maintenance: Setting up Builder.
+06:29:22 INFO Waiting for model:
+  test-lsu9psny/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lsu9psny/0 [executing] maintenance: Setting up Builder.
+06:29:52 INFO Waiting for model:
+  test-lsu9psny/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lsu9psny/0 [executing] maintenance: Setting up Builder.
+06:30:22 INFO Waiting for model:
+  test-lsu9psny/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lsu9psny/0 [executing] maintenance: Setting up Builder.
+06:30:52 INFO Waiting for model:
+  test-lsu9psny/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lsu9psny/0 [executing] maintenance: Setting up Builder.
+06:31:23 INFO Waiting for model:
+  test-lsu9psny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lsu9psny/0 [executing] blocked: image integration required.
+06:31:53 INFO Waiting for model:
+  test-lsu9psny/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lsu9psny/0 [executing] active: Building image.

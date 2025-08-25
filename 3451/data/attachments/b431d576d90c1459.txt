@@ -1,0 +1,153 @@
+06:26:18 WARNING unexpected facade SSHServer received from the controller
+06:26:18 INFO Adding model github-pr-2102c-lxd:test-charm-upgrade-6x4e on cloud localhost
+06:26:18 WARNING unexpected facade SSHServer received from the controller
+06:26:18 WARNING unexpected facade SSHSession received from the controller
+06:26:18 WARNING unexpected facade SSHTunneler received from the controller
+06:26:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+06:26:39 INFO Deploying local:jammy/github-runner-0
+06:26:39 INFO Waiting for model:
+  test-ebuqncah/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ebuqncah/0 [allocating] waiting: waiting for machine
+06:27:09 INFO Waiting for model:
+  test-ebuqncah/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ebuqncah/0 [allocating] waiting: waiting for machine
+06:27:39 INFO Waiting for model:
+  test-ebuqncah/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ebuqncah/0 [allocating] waiting: waiting for machine
+06:28:09 INFO Waiting for model:
+  test-ebuqncah/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:28:39 INFO Waiting for model:
+  test-ebuqncah/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:29:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:29:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:30:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:30:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ebuqncah/0 [executing] maintenance: Setting up Builder.
+06:31:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:31:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:32:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:32:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:33:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:33:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:34:09 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:34:39 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:35:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:35:40 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:37:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:37:40 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:38:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:38:40 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:39:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:39:40 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:40:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ebuqncah/0 [executing] active: Building image.
+06:40:40 INFO Waiting for model:
+  test-ebuqncah/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ebuqncah/0 [idle] active: 
+06:41:10 INFO Waiting for model:
+  test-ebuqncah/0 [idle] active: 
+06:43:27 INFO Waiting for model:
+  test-ebuqncah/0 [idle] active:
+06:43:59 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-6x4e  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  06:43:59Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ebuqncah           active      1  github-runner-image-builder  latest/edge  106  no       
+test-ebuqncah                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ebuqncah/0*  active    idle   0        10.109.40.179          
+test-ebuqncah/0*                         active    idle   1        10.109.40.46           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.109.40.179  juju-bfd8ae-0  ubuntu@22.04  github-runner  Running
+1        started  10.109.40.46   juju-bfd8ae-1  ubuntu@22.04  github-runner  Running
+
+06:43:59 INFO Juju error logs:
+
+machine-0: 06:27:45 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:27:45 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ebuqncah-0: 06:27:45 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:27:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ebuqncah-0: 06:27:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ebuqncah-0: 06:28:39 ERROR unit.github-runner-image-builder-ebuqncah/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ebuqncah-0: 06:29:00 ERROR unit.test-ebuqncah/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ebuqncah-0: 06:29:02 ERROR unit.test-ebuqncah/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ebuqncah-0: 06:30:44 ERROR unit.test-ebuqncah/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ebuqncah-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:43:59 INFO Forgetting model main...
