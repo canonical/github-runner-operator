@@ -562,7 +562,6 @@ def _get_platform_runners_to_delete(
     if num_runners_to_cleanup >= max_runners_to_delete:
         return runners_to_cleanup
 
-    max_runners_to_delete -= num_runners_to_cleanup
     runners_not_marked_for_cleanup = [
         runner
         for runner in runners.requested_runners
@@ -573,9 +572,10 @@ def _get_platform_runners_to_delete(
         # prioritize deletable --> idle --> busy
         key=lambda runner: 1 if runner.deletable else 2 if not runner.busy else 3
     )
+    max_remaining_runners_to_delete = max_runners_to_delete - num_runners_to_cleanup
     runners_to_force_delete = [
         runner.identity.metadata.runner_id
-        for runner in runners_not_marked_for_cleanup[:max_runners_to_delete]
+        for runner in runners_not_marked_for_cleanup[:max_remaining_runners_to_delete]
         if runner.identity.metadata.runner_id
     ]
     logger.info("Runners to force delete after cleanup: %s", runners_to_force_delete)
@@ -628,17 +628,17 @@ def _get_vms_to_delete(
     if num_vms_to_cleanup >= max_vms_to_delete:
         return vms_to_cleanup
 
-    max_vms_to_delete -= num_vms_to_cleanup
     vms_not_marked_for_cleanup = [vm for vm in vms if vm.instance_id not in vms_to_cleanup]
     instance_id_to_runner_map = {
         runner.identity.instance_id: runner for runner in runners.requested_runners
     }
+    max_remaining_vms_to_delete = max_vms_to_delete - num_vms_to_cleanup
     vms_to_force_delete = [
         vm.instance_id
         for vm in sorted(
             vms_not_marked_for_cleanup,
             key=partial(_runner_deletion_sort_key, instance_id_to_runner_map),
-        )[:max_vms_to_delete]
+        )[:max_remaining_vms_to_delete]
     ]
     logger.info("VMs to force delete after cleanup: %s", vms_to_force_delete)
     return vms_to_cleanup + vms_to_force_delete
