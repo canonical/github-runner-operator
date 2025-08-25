@@ -1,0 +1,106 @@
+18:54:02 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+18:54:32 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+18:54:35 INFO Current reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:54:35 INFO Waiting for reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:55:36 INFO Current reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:55:36 INFO Current reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6, expected reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:55:36 INFO Waiting for reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:56:37 INFO Current reconcile ID: 5e36a31b-9916-4dd6-ba06-e38d734e8247
+18:56:37 INFO Current reconcile ID: 5e36a31b-9916-4dd6-ba06-e38d734e8247, expected reconcile ID: 77223c64-2312-49bd-989d-b91c1cd9c8f6
+18:56:37 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+18:57:08 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+18:57:20 INFO Current reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:57:20 INFO Waiting for reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:58:21 INFO Current reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:58:21 INFO Current reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21, expected reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:58:21 INFO Waiting for reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:59:22 INFO Current reconcile ID: 3a87fb56-bd44-4337-b59a-d0d8f4a4ba6e
+18:59:22 INFO Current reconcile ID: 3a87fb56-bd44-4337-b59a-d0d8f4a4ba6e, expected reconcile ID: 6731a7ae-b07a-4a54-b012-39e409d60d21
+18:59:31 INFO Wait for condition not met, sleeping 30
+19:00:16 INFO [TEST SETUP] Run command pkill -9 run.sh on test-nxald5yv-0-n-298346bace73
+19:00:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.75', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:01:f9:f3'}]])
+19:00:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-nxald5yv-0-n-298346bace73.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.75 pkill -9 run.sh'
+19:00:18 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.75' (ED25519) to the list of known hosts.
+'
+19:00:23 INFO Runner test-nxald5yv-0-n-298346bace73 status: online
+19:00:23 INFO Runner still marked as online, waiting for it to be marked offline
+19:01:24 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+19:01:54 INFO Waiting for model:
+  test-nxald5yv/0 [idle] active: 
+19:01:58 INFO Current reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:01:58 INFO Waiting for reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:02:59 INFO Current reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:02:59 INFO Current reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f, expected reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:02:59 INFO Waiting for reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:04:00 INFO Current reconcile ID: fb2f85dd-d879-492e-a4f2-236e7f710e3d
+19:04:00 INFO Current reconcile ID: fb2f85dd-d879-492e-a4f2-236e7f710e3d, expected reconcile ID: cb3badd5-c053-4190-a210-3a5cf105809f
+19:04:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756148056.3710244, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.219677448272705}
+{"timestamp": 1756148185.8125699, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.365421533584595}
+{"timestamp": 1756148213.6235914, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 13.6005380153656}
+{"timestamp": 1756148345.355221, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 11.602650165557861}
+{"timestamp": 1756148266.0, "event": "runner_installed", "flavor": "test-nxald5yv", "duration": 56.0}
+{"timestamp": 1756148373.0, "event": "runner_start", "flavor": "test-nxald5yv", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 107.0, "queue_duration": 1.0}
+{"timestamp": 1756148418.0, "event": "runner_stop", "flavor": "test-nxald5yv", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 45.0, "job_conclusion": "cancelled"}
+{"timestamp": 1756148485.2334325, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 19.760155200958252}
+{"timestamp": 1756148499.5483465, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.629855155944824}
+{"timestamp": 1756148630.7434468, "event": "reconciliation", "flavor": "test-nxald5yv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.097187519073486}
+19:04:02 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-jvgm  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  19:04:02Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-nxald5yv           active      1  github-runner-image-builder  latest/edge  106  no       
+test-nxald5yv                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-nxald5yv/0*  active    idle   0        10.7.138.7                
+test-nxald5yv/0*                         active    idle   1        10.7.138.186    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.7.138.7    juju-7831ec-0  ubuntu@22.04  github-runner  Running
+1        started  10.7.138.186  juju-7831ec-1  ubuntu@22.04  github-runner  Running
+
+19:04:02 INFO Juju error logs:
+
+machine-0: 18:26:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-nxald5yv-0: 18:26:16 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-nxald5yv-0: 18:26:24 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-nxald5yv-0: 18:26:59 ERROR unit.github-runner-image-builder-nxald5yv/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-nxald5yv-0: 18:27:40 ERROR unit.test-nxald5yv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nxald5yv-0: 18:27:43 ERROR unit.test-nxald5yv/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-nxald5yv-0: 18:28:50 ERROR unit.test-nxald5yv/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-nxald5yv-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:04:02 INFO Forgetting model main...

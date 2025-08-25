@@ -1,0 +1,186 @@
+18:24:26 WARNING unexpected facade SSHServer received from the controller
+18:24:26 INFO Adding model github-pr-2102c-lxd:test-reactive-3e1x on cloud localhost
+18:24:27 WARNING unexpected facade SSHServer received from the controller
+18:24:27 WARNING unexpected facade SSHSession received from the controller
+18:24:27 WARNING unexpected facade SSHTunneler received from the controller
+18:24:27 INFO GitHub token rate limit: Rate(reset=2025-08-25 18:44:52+00:00, remaining=4935, limit=5000)
+18:24:32 INFO Deploying ch:amd64/jammy/mongodb-229
+18:24:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:24:55 INFO Deploying local:jammy/github-runner-0
+18:24:55 INFO Waiting for model:
+  test-cdei1ovu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdei1ovu/0 [allocating] waiting: waiting for machine
+18:25:25 INFO Waiting for model:
+  test-cdei1ovu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdei1ovu/0 [allocating] waiting: waiting for machine
+18:25:56 INFO Waiting for model:
+  test-cdei1ovu/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cdei1ovu/0 [allocating] waiting: waiting for machine
+18:26:26 INFO Waiting for model:
+  test-cdei1ovu/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cdei1ovu/0 [allocating] waiting: waiting for machine
+18:26:56 INFO Waiting for model:
+  test-cdei1ovu/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cdei1ovu/0 [allocating] waiting: waiting for machine
+18:27:27 INFO Waiting for model:
+  test-cdei1ovu/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cdei1ovu/0 [executing] maintenance: Setting up Builder.
+18:27:57 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] maintenance: Setting up Builder.
+18:28:27 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] maintenance: Setting up Builder.
+18:28:58 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] maintenance: Setting up Builder.
+18:29:28 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] blocked: image integration required.
+18:29:58 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:30:29 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:30:59 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:31:29 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:31:59 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:32:30 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:33:00 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:33:30 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:34:01 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:34:31 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:35:01 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:35:32 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:36:02 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:36:32 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:37:02 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:37:33 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:38:03 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:38:34 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:39:04 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:39:34 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:40:05 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:40:35 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cdei1ovu/0 [executing] active: Building image.
+18:41:05 INFO Waiting for model:
+  test-cdei1ovu/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-cdei1ovu/0 [idle] active: 
+18:41:35 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:41:38 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:41:38 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:42:08 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:42:19 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:42:50 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:42:52 INFO Current reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:42:52 INFO Waiting for reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:43:53 INFO Current reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:43:53 INFO Current reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f, expected reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:43:53 INFO Waiting for reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:44:54 INFO Current reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:44:54 INFO Current reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f, expected reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:44:54 INFO Waiting for reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:45:55 INFO Current reconcile ID: 2dc36cd5-5e97-419b-98f5-d59136aa6481
+18:45:55 INFO Current reconcile ID: 2dc36cd5-5e97-419b-98f5-d59136aa6481, expected reconcile ID: 9ff7e40d-62a6-4241-9192-73db6fc9c47f
+18:45:59 INFO Wait for condition not met, sleeping 10
+18:46:21 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:46:37 INFO Current reconcile ID: 2dc36cd5-5e97-419b-98f5-d59136aa6481
+18:46:37 INFO Waiting for reconcile ID: 2dc36cd5-5e97-419b-98f5-d59136aa6481
+18:47:38 INFO Current reconcile ID: e9cf9126-d276-4f35-9639-8d8690b72afd
+18:47:38 INFO Current reconcile ID: e9cf9126-d276-4f35-9639-8d8690b72afd, expected reconcile ID: 2dc36cd5-5e97-419b-98f5-d59136aa6481
+18:47:39 INFO Wait for condition not met, sleeping 60
+18:48:39 INFO Wait for condition not met, sleeping 60
+18:49:40 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:49:56 INFO Current reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:49:56 INFO Waiting for reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:50:57 INFO Current reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:50:57 INFO Current reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9, expected reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:50:57 INFO Waiting for reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:51:58 INFO Current reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:51:58 INFO Current reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9, expected reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:51:58 INFO Waiting for reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:52:59 INFO Current reconcile ID: 77fef192-f223-4d2b-a65b-7b2875794eca
+18:52:59 INFO Current reconcile ID: 77fef192-f223-4d2b-a65b-7b2875794eca, expected reconcile ID: 3aca2fd4-47c1-4b89-a5ba-b16d4cae11e9
+18:53:00 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756147635.3984234, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.847848653793335}
+{"timestamp": 1756147714.0, "event": "runner_installed", "flavor": "test-cdei1ovu", "duration": 139.0}
+{"timestamp": 1756147718.0, "event": "runner_start", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 158.0}
+{"timestamp": 1756147720.0, "event": "runner_stop", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756147784.7670977, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.850882291793823}
+{"timestamp": 1756147924.1708875, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.299340963363647}
+
+18:53:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756147635.3984234, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.847848653793335}
+{"timestamp": 1756147714.0, "event": "runner_installed", "flavor": "test-cdei1ovu", "duration": 139.0}
+{"timestamp": 1756147718.0, "event": "runner_start", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 158.0}
+{"timestamp": 1756147720.0, "event": "runner_stop", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756147784.7670977, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.850882291793823}
+{"timestamp": 1756147924.1708875, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.299340963363647}
+
+18:53:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756147635.3984234, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.847848653793335}
+{"timestamp": 1756147714.0, "event": "runner_installed", "flavor": "test-cdei1ovu", "duration": 139.0}
+{"timestamp": 1756147718.0, "event": "runner_start", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 158.0}
+{"timestamp": 1756147720.0, "event": "runner_stop", "flavor": "test-cdei1ovu", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756147784.7670977, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 27.850882291793823}
+{"timestamp": 1756147924.1708875, "event": "reconciliation", "flavor": "test-cdei1ovu", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.299340963363647}
+18:53:03 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:53:33 INFO Waiting for model:
+  test-cdei1ovu/0 [idle] active: 
+18:53:38 INFO Current reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:53:38 INFO Waiting for reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:54:39 INFO Current reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:54:39 INFO Current reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7, expected reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:54:39 INFO Waiting for reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:55:40 INFO Current reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:55:40 INFO Current reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7, expected reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:55:40 INFO Waiting for reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
+18:56:41 INFO Current reconcile ID: 3ba236cf-3ab6-49a2-a660-be799014878e
+18:56:41 INFO Current reconcile ID: 3ba236cf-3ab6-49a2-a660-be799014878e, expected reconcile ID: d97dd541-6afe-47a8-9caf-a337233e9ab7
