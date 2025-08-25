@@ -218,19 +218,16 @@ class RunnerManager:
             runners=runners_health_response, vms=vms
         )
         logger.info("Runners to clean up: %s", platform_runner_ids_to_cleanup)
-        num_runners_to_cleanup = len(platform_runner_ids_to_cleanup)
-        if len(platform_runner_ids_to_cleanup) < num:
-            num -= num_runners_to_cleanup
-
         runners_not_marked_for_cleanup = [
             runner
             for runner in runners_health_response.requested_runners
             if runner.identity.metadata.runner_id
             and runner.identity.metadata.runner_id not in platform_runner_ids_to_cleanup
         ]
+        num_runners_to_scale_down = max(num - len(platform_runner_ids_to_cleanup), 0)
         platform_runner_ids_to_scaledown = _get_platform_runners_to_scale_down(
             runners=runners_not_marked_for_cleanup,
-            num=num,
+            num=num_runners_to_scale_down,
         )
         logger.info("Runners to scale down: %s", platform_runner_ids_to_scaledown)
         platform_runner_ids_to_delete = list(
