@@ -497,9 +497,8 @@ async def app_openstack_runner_fixture(
             logging.info("Reactive log: \n%s", reactive_log)
             metrics_log = await get_github_runner_metrics_log(unit=application.units[0])
             logging.info("Metrics log: \n%s", metrics_log)
-
         except AssertionError:
-            logging.warning("Failed to get application log.")
+            logging.warning("Failed to get application log.", exc_info=True)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")

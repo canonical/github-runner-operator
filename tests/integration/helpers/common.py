@@ -521,8 +521,8 @@ async def get_github_runner_reactive_log(unit: Unit) -> str:
         return "No reactive logs found."
 
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
-    assert stdout is not None
-    return stdout
+    assert (output := (stdout or stderr)) is not None, f"No output from {REACTIVE_RUNNER_LOG_DIR}"
+    return output or "Empty reactive log"
 
 
 async def get_github_runner_metrics_log(unit: Unit) -> str:
@@ -547,5 +547,5 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
         return "No metrics found."
 
     assert return_code == 0, f"Get metrics log with cat {log_file_path} failed with: {stderr}"
-    assert stdout is not None
-    return stdout
+    assert (output := (stdout or stderr)) is not None, f"No output from {METRICS_LOG_PATH}"
+    return output or "Empty metrics log"
