@@ -7,6 +7,7 @@ import abc
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto
+from typing import Sequence
 
 from pydantic import HttpUrl
 
@@ -86,7 +87,7 @@ class PlatformProvider(abc.ABC):
         """
 
     @abc.abstractmethod
-    def delete_runners(self, runner_ids: list[str]) -> list[str]:
+    def delete_runners(self, runner_ids: Sequence[str]) -> list[str]:
         """Delete runners.
 
         Args:
