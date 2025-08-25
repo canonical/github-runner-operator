@@ -244,7 +244,7 @@ class RunnerManager:
 
         vm_ids_to_cleanup = _get_vms_to_cleanup(
             vms=vms,
-            cleanedup_runner_ids=platform_runner_ids_to_delete,
+            runner_ids=platform_runner_ids_to_delete,
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
@@ -289,7 +289,14 @@ class RunnerManager:
 
         vm_ids_to_cleanup = _get_vms_to_cleanup(
             vms=vms,
-            cleanedup_runner_ids=platform_runner_ids_to_delete,
+            runner_ids=(
+                # Some runners may be rejected for deletion due to a race condition in which the
+                # runner has picked up a job when delete runner was requested. Flush idle shoud
+                # only delete underlying VMs for the runners which were successfully deleted.
+                deleted_runner_ids
+                if flush_mode == FlushMode.FLUSH_IDLE
+                else platform_runner_ids_to_delete
+            ),
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=list(vm_ids_to_cleanup))
@@ -323,7 +330,7 @@ class RunnerManager:
         vm_ids_to_cleanup = list(
             _get_vms_to_cleanup(
                 vms=vms,
-                cleanedup_runner_ids=platform_runner_ids_to_cleanup,
+                runner_ids=cleanedup_runner_ids,
             )
         )
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
@@ -602,12 +609,12 @@ def _get_platform_runners_to_scale_down(
     )
 
 
-def _get_vms_to_cleanup(*, vms: Sequence[VM], cleanedup_runner_ids: list[str]) -> set[InstanceID]:
+def _get_vms_to_cleanup(*, vms: Sequence[VM], runner_ids: list[str]) -> set[InstanceID]:
     """Determine cloud VMs to clean up.
 
     Args:
         vms: cloud VM state.
-        cleanedup_runner_ids: platform runners that have been cleaned up.
+        runner_ids: platform runner IDs that are safe to delete the underlying VM for.
 
     Returns:
         The VM InstanceIDs (NOT VM UUIDs) to clean up.
@@ -617,7 +624,7 @@ def _get_vms_to_cleanup(*, vms: Sequence[VM], cleanedup_runner_ids: list[str]) -
     vms_with_deleted_runners = set(
         vm.instance_id
         for vm in vms
-        if vm.metadata.runner_id and vm.metadata.runner_id in cleanedup_runner_ids
+        if vm.metadata.runner_id and vm.metadata.runner_id in runner_ids
     )
     logger.info("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
 
