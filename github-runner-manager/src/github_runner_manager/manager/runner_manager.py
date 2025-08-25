@@ -626,24 +626,3 @@ def _get_vms_to_cleanup(
     logger.info("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
 
     return vms_without_runner_ids | vms_with_deleted_runners
-
-
-def _runner_deletion_sort_key(
-    health_runners_map: dict[InstanceID, PlatformRunnerHealth], cloud_runner: VM
-) -> int:
-    """Order the runners in accordance to how inconvenient it is to delete them.
-
-    Deletable runner should be the first to be removed, and busy runner should be the last
-    ones to delete. For the other ones it is a bit more arbitrary, but runners without health
-    information should not be preferred to be deleted, as they could be busy.
-    The value returned will be used for the sorting function, so runners with
-    smaller values will be deleted first.
-    """
-    if cloud_runner.instance_id in health_runners_map:
-        health = health_runners_map[cloud_runner.instance_id]
-        if health.deletable:
-            return 1
-        if health.busy:
-            return 4
-        return 2
-    return 3
