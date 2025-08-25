@@ -23,6 +23,7 @@ from tests.integration.helpers.common import (
     dispatch_workflow,
     wait_for_reconcile,
 )
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +140,7 @@ async def test_prometheus_metrics(
     prometheus_app: AppStatus,
     test_github_branch: Branch,
     github_repository: Repository,
+    instance_helper: OpenStackInstanceHelper,
 ):
     """
     arrange: given a prometheus charm application.
@@ -186,7 +188,7 @@ async def test_prometheus_metrics(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
 
-    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await instance_helper.ensure_charm_has_runner(openstack_app_cos_agent)
     await wait_for_reconcile(app=openstack_app_cos_agent)
     await dispatch_workflow(
         app=openstack_app_cos_agent,
