@@ -186,7 +186,7 @@ async def test_prometheus_metrics(
         grafana_ip=grafana_ip, grafana_password=grafana_password
     )
 
-    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1})
+    await openstack_app_cos_agent.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
     await wait_for_reconcile(app=openstack_app_cos_agent)
     await dispatch_workflow(
         app=openstack_app_cos_agent,
