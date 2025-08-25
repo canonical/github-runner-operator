@@ -123,5 +123,4 @@ date +%s >  {{ metrics_exchange_path }}/runner-installed.timestamp
 
 (set +e; {{ run_script }}; write_post_metrics $?)
 
-
 su - ubuntu -c "touch /home/ubuntu/run-completed"
