@@ -4,7 +4,6 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-08-25
 
-- Refactor cleanup logic to one-shot delete from two-step approach.
 - Fix issue with scaling down overshooting in deleting runners after cleanup
 
 ## 2025-08-20
