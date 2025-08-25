@@ -20,6 +20,7 @@ from github.Repository import Repository
 from github.Workflow import Workflow
 from github.WorkflowJob import WorkflowJob
 from github.WorkflowRun import WorkflowRun
+from github_runner_manager.metrics.events import METRICS_LOG_PATH
 from github_runner_manager.reactive.process_manager import REACTIVE_RUNNER_LOG_DIR
 from juju.action import Action
 from juju.application import Application
@@ -520,5 +521,31 @@ async def get_github_runner_reactive_log(unit: Unit) -> str:
         return "No reactive logs found."
 
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
+    assert stdout is not None
+    return stdout
+
+
+async def get_github_runner_metrics_log(unit: Unit) -> str:
+    """Get the github-runner-manager metric logs.
+
+    Args:
+        unit: The unit to get the logs from.
+
+    Returns:
+        Runner metrics logs.
+    """
+    log_file_path = METRICS_LOG_PATH
+    return_code, stdout, stderr = await run_in_unit(
+        unit,
+        f"cat {log_file_path}",
+        timeout=60,
+        assert_on_failure=True,
+        assert_msg="Failed to get the GitHub runner manager metrics",
+    )
+
+    if return_code == 1 and any("no matches found" in log for log in (stdout, stderr) if log):
+        return "No metrics found."
+
+    assert return_code == 0, f"Get metrics log with cat {log_file_path} failed with: {stderr}"
     assert stdout is not None
     return stdout
