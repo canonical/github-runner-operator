@@ -621,12 +621,12 @@ def _get_vms_to_cleanup(*, vms: Sequence[VM], runner_ids: list[str]) -> set[Inst
         The VM InstanceIDs (NOT VM UUIDs) to clean up.
     """
     vms_without_runner_ids = set(vm.instance_id for vm in vms if not vm.metadata.runner_id)
-    logger.info("VMs without platform runner ID metadata:\n%s", vms_without_runner_ids)
+    logger.debug("VMs without platform runner ID metadata:\n%s", vms_without_runner_ids)
     vms_with_deleted_runners = set(
         vm.instance_id
         for vm in vms
         if vm.metadata.runner_id and vm.metadata.runner_id in runner_ids
     )
-    logger.info("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
+    logger.debug("VMs with deleted platform runners:\n%s", vms_with_deleted_runners)
 
     return vms_without_runner_ids | vms_with_deleted_runners
