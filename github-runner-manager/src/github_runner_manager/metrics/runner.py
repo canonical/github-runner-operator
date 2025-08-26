@@ -439,7 +439,7 @@ def _issue_runner_installed(
         flavor=flavor,
         duration=duration,
     )
-    RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(installation_duration)
+    RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(duration)
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
 
@@ -466,10 +466,10 @@ def _issue_runner_start(
     idle_duration = (
         (runner_metrics.installation_end_timestamp - runner_metrics.pre_job.timestamp)
         if runner_metrics.installation_end_timestamp and runner_metrics.pre_job
-        else 0
+        else float("inf")
     )
     RUNNER_IDLE_DURATION_SECONDS.labels(flavor).observe(idle_duration)
-    queue_duration = job_metrics.queue_duration if job_metrics else 0
+    queue_duration = job_metrics.queue_duration if job_metrics else float("inf")
     RUNNER_QUEUE_DURATION_SECONDS.labels(flavor).observe(queue_duration)
     return metric_events.RunnerStart
 
