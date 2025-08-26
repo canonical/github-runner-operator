@@ -1,0 +1,175 @@
+18:29:14 WARNING unexpected facade SSHServer received from the controller
+18:29:14 INFO Adding model github-pr-928bf-lxd:test-reactive-o0hl on cloud localhost
+18:29:15 WARNING unexpected facade SSHServer received from the controller
+18:29:15 WARNING unexpected facade SSHSession received from the controller
+18:29:15 WARNING unexpected facade SSHTunneler received from the controller
+18:29:16 INFO GitHub token rate limit: Rate(reset=2025-08-26 19:01:34+00:00, remaining=4956, limit=5000)
+18:29:22 INFO Deploying ch:amd64/jammy/mongodb-229
+18:29:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+18:33:22 INFO Deploying local:jammy/github-runner-0
+18:33:23 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: waiting for machine
+18:33:53 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: agent initialising
+18:34:24 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: agent initialising
+18:34:54 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: agent initialising
+18:35:25 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: agent initialising
+18:35:55 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nzwnvr77/0 [allocating] waiting: agent initialising
+18:36:25 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:36:56 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:37:26 INFO Waiting for model:
+  test-nzwnvr77/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:37:57 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:38:27 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:38:58 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:39:28 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:39:58 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] maintenance: Setting up Builder.
+18:40:28 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:40:59 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:41:29 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:42:00 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:42:30 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:43:00 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:43:30 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:44:00 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:44:31 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:45:01 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:45:31 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:46:02 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:46:32 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:47:02 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:47:33 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:48:03 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:48:33 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:49:04 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [executing] active: Building image.
+18:49:34 INFO Waiting for model:
+  test-nzwnvr77/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-nzwnvr77/0 [idle] active: 
+18:50:05 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:50:16 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:50:17 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:50:47 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+  mongodb/0 [executing] active: Primary.
+18:51:06 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:51:36 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:51:41 INFO Current reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:51:41 INFO Waiting for reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:52:42 INFO Current reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:52:42 INFO Current reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181, expected reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:52:42 INFO Waiting for reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:53:43 INFO Current reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:53:43 INFO Current reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181, expected reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:53:43 INFO Waiting for reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:54:44 INFO Current reconcile ID: 15cebaeb-bc31-458f-b5e7-46c4e5fcfbea
+18:54:44 INFO Current reconcile ID: 15cebaeb-bc31-458f-b5e7-46c4e5fcfbea, expected reconcile ID: 47f61d11-5fb7-486a-a4f4-902fcf013181
+18:54:48 INFO Wait for condition not met, sleeping 10
+18:55:10 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:55:26 INFO Current reconcile ID: 15cebaeb-bc31-458f-b5e7-46c4e5fcfbea
+18:55:26 INFO Waiting for reconcile ID: 15cebaeb-bc31-458f-b5e7-46c4e5fcfbea
+18:56:27 INFO Current reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:56:27 INFO Current reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509, expected reconcile ID: 15cebaeb-bc31-458f-b5e7-46c4e5fcfbea
+18:56:28 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:56:44 INFO Current reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:56:44 INFO Waiting for reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:57:45 INFO Current reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:57:45 INFO Current reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509, expected reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:57:45 INFO Waiting for reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:58:47 INFO Current reconcile ID: 20b967ad-4dfe-4a31-a6ba-3e34878d60ca
+18:58:47 INFO Current reconcile ID: 20b967ad-4dfe-4a31-a6ba-3e34878d60ca, expected reconcile ID: 322845c3-fec1-4911-bd06-d8cabd49e509
+18:58:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756234561.4784753, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.758271932601929}
+{"timestamp": 1756234563.0, "event": "runner_installed", "flavor": "test-nzwnvr77", "duration": 59.0}
+{"timestamp": 1756234566.0, "event": "runner_start", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 77.0}
+{"timestamp": 1756234568.0, "event": "runner_stop", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756234703.3263361, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.704285144805908}
+
+18:58:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756234561.4784753, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.758271932601929}
+{"timestamp": 1756234563.0, "event": "runner_installed", "flavor": "test-nzwnvr77", "duration": 59.0}
+{"timestamp": 1756234566.0, "event": "runner_start", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 77.0}
+{"timestamp": 1756234568.0, "event": "runner_stop", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756234703.3263361, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.704285144805908}
+
+18:58:50 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756234561.4784753, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.758271932601929}
+{"timestamp": 1756234563.0, "event": "runner_installed", "flavor": "test-nzwnvr77", "duration": 59.0}
+{"timestamp": 1756234566.0, "event": "runner_start", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 77.0}
+{"timestamp": 1756234568.0, "event": "runner_stop", "flavor": "test-nzwnvr77", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756234703.3263361, "event": "reconciliation", "flavor": "test-nzwnvr77", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.704285144805908}
+18:58:50 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:59:20 INFO Waiting for model:
+  test-nzwnvr77/0 [idle] active: 
+18:59:24 INFO Current reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
+18:59:24 INFO Waiting for reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
+19:00:25 INFO Current reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
+19:00:25 INFO Current reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2, expected reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
+19:00:25 INFO Waiting for reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
+19:01:26 INFO Current reconcile ID: f0b59c63-0cc3-42af-8d5a-7d713f75afc5
+19:01:26 INFO Current reconcile ID: f0b59c63-0cc3-42af-8d5a-7d713f75afc5, expected reconcile ID: 932827a4-2d33-40b3-9bf1-1e757ae389c2
