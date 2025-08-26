@@ -42,6 +42,7 @@ from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
     get_github_runner_manager_service_log,
+    get_github_runner_metrics_log,
     get_github_runner_reactive_log,
     wait_for,
     wait_for_runner_ready,
@@ -494,8 +495,10 @@ async def app_openstack_runner_fixture(
             logging.info("Application log: \n%s", app_log)
             reactive_log = await get_github_runner_reactive_log(unit=application.units[0])
             logging.info("Reactive log: \n%s", reactive_log)
+            metrics_log = await get_github_runner_metrics_log(unit=application.units[0])
+            logging.info("Metrics log: \n%s", metrics_log)
         except AssertionError:
-            logging.warning("Failed to get application log.")
+            logging.warning("Failed to get application log.", exc_info=True)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
