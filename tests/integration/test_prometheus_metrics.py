@@ -213,9 +213,9 @@ async def test_prometheus_metrics(
         "runner_idle_duration_seconds_bucket",
         "runner_queue_duration_seconds_bucket",
         "deleted_runners_total",
-        "delete_runner_duration_seconds",
+        "delete_runner_duration_seconds_bucket",
         "deleted_vms_total",
-        "delete_vm_duration_seconds",
+        "delete_vm_duration_seconds_bucket",
     )
 
 
