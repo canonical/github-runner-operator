@@ -290,9 +290,10 @@ class RunnerManager:
             _get_vms_to_cleanup(
                 vms=vms,
                 runner_ids=(
-                    # Some runners may be rejected for deletion due to a race condition in which the
-                    # runner has picked up a job when delete runner was requested. Flush idle shoud
-                    # only delete underlying VMs for the runners which were successfully deleted.
+                    # Some runners may be rejected for deletion due to a race condition in which
+                    # the runner has picked up a job when delete runner was requested. Flush idle
+                    # should only delete underlying VMs for the runners which were successfully
+                    # deleted.
                     deleted_runner_ids
                     if flush_mode == FlushMode.FLUSH_IDLE
                     else platform_runner_ids_to_delete
