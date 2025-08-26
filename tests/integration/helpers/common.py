@@ -517,7 +517,11 @@ async def get_github_runner_reactive_log(unit: Unit) -> str:
         assert_msg="Failed to get the GitHub runner manager reactive logs",
     )
 
-    if return_code == 1 and any("no matches found" in log for log in (stdout, stderr) if log):
+    if return_code == 1 and any(
+        ("no matches found" in log or "No such file or directory" in log)
+        for log in (stdout, stderr)
+        if log
+    ):
         return "No reactive logs found."
 
     assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
@@ -543,7 +547,11 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
         assert_msg="Failed to get the GitHub runner manager metrics",
     )
 
-    if return_code == 1 and any("no matches found" in log for log in (stdout, stderr) if log):
+    if return_code == 1 and any(
+        ("no matches found" in log or "No such file or directory" in log)
+        for log in (stdout, stderr)
+        if log
+    ):
         return "No metrics found."
 
     assert return_code == 0, f"Get metrics log with cat {log_file_path} failed with: {stderr}"
