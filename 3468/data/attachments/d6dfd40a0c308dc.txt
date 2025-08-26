@@ -1,0 +1,106 @@
+07:24:07 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:24:37 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:24:40 INFO Current reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:24:40 INFO Waiting for reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:25:41 INFO Current reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:25:41 INFO Current reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5, expected reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:25:41 INFO Waiting for reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:26:42 INFO Current reconcile ID: a8530621-e89d-4a19-b59e-3a70b2f247f1
+07:26:42 INFO Current reconcile ID: a8530621-e89d-4a19-b59e-3a70b2f247f1, expected reconcile ID: cbb79518-5694-4823-a8f6-c69f5bb2bdf5
+07:26:42 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:27:13 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:27:26 INFO Current reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:27:26 INFO Waiting for reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:28:27 INFO Current reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:28:27 INFO Current reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c, expected reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:28:27 INFO Waiting for reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:29:28 INFO Current reconcile ID: e169a04f-8944-4441-8807-9c828a665bdc
+07:29:28 INFO Current reconcile ID: e169a04f-8944-4441-8807-9c828a665bdc, expected reconcile ID: 217fb068-b46b-4eab-9474-ccb52dae424c
+07:29:36 INFO Wait for condition not met, sleeping 30
+07:30:18 INFO [TEST SETUP] Run command pkill -9 run.sh on test-kum137to-0-n-9cfe346dab4f
+07:30:18 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.132', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:5b:95:1b'}]])
+07:30:19 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kum137to-0-n-9cfe346dab4f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.132 pkill -9 run.sh'
+07:30:20 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.132' (ED25519) to the list of known hosts.
+'
+07:30:25 INFO Runner test-kum137to-0-n-9cfe346dab4f status: online
+07:30:25 INFO Runner still marked as online, waiting for it to be marked offline
+07:31:26 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:31:57 INFO Waiting for model:
+  test-kum137to/0 [idle] active: 
+07:32:00 INFO Current reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:32:00 INFO Waiting for reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:33:01 INFO Current reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:33:01 INFO Current reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1, expected reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:33:01 INFO Waiting for reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:34:02 INFO Current reconcile ID: d2b9297a-636d-41bc-8171-067e19a27f39
+07:34:02 INFO Current reconcile ID: d2b9297a-636d-41bc-8171-067e19a27f39, expected reconcile ID: d91e2405-f3b2-46e8-b6d8-d4368de6b2b1
+07:34:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756193058.0418613, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.409509420394897}
+{"timestamp": 1756193186.7526205, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.582430362701416}
+{"timestamp": 1756193219.928332, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 14.416499853134155}
+{"timestamp": 1756193350.2061977, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 10.140842199325562}
+{"timestamp": 1756193304.0, "event": "runner_installed", "flavor": "test-kum137to", "duration": 87.0}
+{"timestamp": 1756193378.0, "event": "runner_start", "flavor": "test-kum137to", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 74.0, "queue_duration": 1.0}
+{"timestamp": 1756193420.0, "event": "runner_stop", "flavor": "test-kum137to", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1756193485.6870627, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 15.336811065673828}
+{"timestamp": 1756193499.022294, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.839352130889893}
+{"timestamp": 1756193628.5828605, "event": "reconciliation", "flavor": "test-kum137to", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.432506322860718}
+07:34:04 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-ssom  github-pr-2102c-lxd  localhost/localhost  3.6.9    unsupported  07:34:04Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kum137to           active      1  github-runner-image-builder  latest/edge  106  no       
+test-kum137to                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-kum137to/0*  active    idle   0        10.63.139.184             
+test-kum137to/0*                         active    idle   1        10.63.139.236   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.63.139.184  juju-427707-0  ubuntu@22.04  github-runner  Running
+1        started  10.63.139.236  juju-427707-1  ubuntu@22.04  github-runner  Running
+
+07:34:04 INFO Juju error logs:
+
+machine-0: 06:59:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:59:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kum137to-0: 06:59:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:59:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:59:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kum137to-0: 06:59:32 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kum137to-0: 07:00:20 ERROR unit.github-runner-image-builder-kum137to/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-kum137to-0: 07:00:56 ERROR unit.test-kum137to/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kum137to-0: 07:00:58 ERROR unit.test-kum137to/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kum137to-0: 07:02:13 ERROR unit.test-kum137to/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kum137to-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:34:04 INFO Forgetting model main...

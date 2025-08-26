@@ -1,0 +1,185 @@
+06:25:47 WARNING unexpected facade SSHServer received from the controller
+06:25:47 INFO Adding model github-pr-2102c-lxd:test-reactive-hvuw on cloud localhost
+06:25:48 WARNING unexpected facade SSHServer received from the controller
+06:25:48 WARNING unexpected facade SSHSession received from the controller
+06:25:48 WARNING unexpected facade SSHTunneler received from the controller
+06:25:48 INFO GitHub token rate limit: Rate(reset=2025-08-26 06:54:30+00:00, remaining=4794, limit=5000)
+06:25:53 INFO Deploying ch:amd64/jammy/mongodb-229
+06:25:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-106
+06:26:14 INFO Deploying local:jammy/github-runner-0
+06:26:15 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: waiting for machine
+06:26:45 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: waiting for machine
+06:27:15 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: waiting for machine
+06:27:45 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: waiting for machine
+06:28:15 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: waiting for machine
+06:28:45 INFO Waiting for model:
+  test-mzz66cq4/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-mzz66cq4/0 [allocating] waiting: agent initialising
+06:29:16 INFO Waiting for model:
+  test-mzz66cq4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-mzz66cq4/0 [executing] maintenance: Setting up Builder.
+06:29:46 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] maintenance: Setting up Builder.
+06:30:16 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] maintenance: Setting up Builder.
+06:30:46 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] maintenance: Setting up Builder.
+06:31:17 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] blocked: image integration required.
+06:31:47 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:32:17 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:32:48 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:33:18 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:33:48 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:34:19 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:34:49 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:35:20 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:35:50 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:36:20 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:37:21 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:37:51 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:38:52 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:39:22 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:39:53 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:40:23 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:40:53 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:41:23 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:41:53 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:42:23 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:42:53 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:43:23 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:43:54 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-mzz66cq4/0 [executing] active: Building image.
+06:44:24 INFO Waiting for model:
+  test-mzz66cq4/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-mzz66cq4/0 [idle] active: 
+06:44:54 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:44:55 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:45:25 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:45:36 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:46:07 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:46:09 INFO Current reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:46:09 INFO Waiting for reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:47:10 INFO Current reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:47:10 INFO Current reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e, expected reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:47:10 INFO Waiting for reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:48:11 INFO Current reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:48:11 INFO Current reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625, expected reconcile ID: 1a46f762-fe0b-4c8a-8605-fb6658182e8e
+06:48:15 INFO Wait for condition not met, sleeping 10
+06:48:37 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:48:53 INFO Current reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:48:53 INFO Waiting for reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:49:54 INFO Current reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:49:54 INFO Current reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625, expected reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:49:54 INFO Waiting for reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:50:55 INFO Current reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:50:55 INFO Current reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c, expected reconcile ID: 78e30b23-dc29-45f2-8bbf-8263338e5625
+06:50:56 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:51:12 INFO Current reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:51:12 INFO Waiting for reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:52:13 INFO Current reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:52:13 INFO Current reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c, expected reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:52:13 INFO Waiting for reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:53:14 INFO Current reconcile ID: 018a54f0-529d-4c7d-85b1-5d2f335e4e23
+06:53:14 INFO Current reconcile ID: 018a54f0-529d-4c7d-85b1-5d2f335e4e23, expected reconcile ID: 83e455dd-fe44-4b04-b655-afa1b86acb0c
+06:53:15 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756190990.0, "event": "runner_installed", "flavor": "test-mzz66cq4", "duration": 80.0}
+{"timestamp": 1756190994.0, "event": "runner_start", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1756190996.0, "event": "runner_stop", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756191029.2456677, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.54015040397644}
+{"timestamp": 1756191164.410417, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.02766227722168}
+
+06:53:16 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756190990.0, "event": "runner_installed", "flavor": "test-mzz66cq4", "duration": 80.0}
+{"timestamp": 1756190994.0, "event": "runner_start", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1756190996.0, "event": "runner_stop", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756191029.2456677, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.54015040397644}
+{"timestamp": 1756191164.410417, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.02766227722168}
+
+06:53:17 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756190990.0, "event": "runner_installed", "flavor": "test-mzz66cq4", "duration": 80.0}
+{"timestamp": 1756190994.0, "event": "runner_start", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 97.0}
+{"timestamp": 1756190996.0, "event": "runner_stop", "flavor": "test-mzz66cq4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756191029.2456677, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.54015040397644}
+{"timestamp": 1756191164.410417, "event": "reconciliation", "flavor": "test-mzz66cq4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.02766227722168}
+06:53:17 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:53:48 INFO Waiting for model:
+  test-mzz66cq4/0 [idle] active: 
+06:53:51 INFO Current reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
+06:53:51 INFO Waiting for reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
+06:54:52 INFO Current reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
+06:54:52 INFO Current reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9, expected reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
+06:54:52 INFO Waiting for reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
+06:55:53 INFO Current reconcile ID: a9f96597-cd99-4d17-8568-8de306ec220b
+06:55:53 INFO Current reconcile ID: a9f96597-cd99-4d17-8568-8de306ec220b, expected reconcile ID: feec064c-fc08-4cb6-ba92-2e57209096d9
