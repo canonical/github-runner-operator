@@ -209,9 +209,9 @@ async def test_prometheus_metrics(
         "expected_runners_count",
         "busy_runners_count",
         "idle_runners_count",
-        "runner_spawn_duration_seconds",
-        "runner_idle_duration_seconds",
-        "runner_queue_duration_seconds",
+        "runner_spawn_duration_seconds_bucket",
+        "runner_idle_duration_seconds_bucket",
+        "runner_queue_duration_seconds_bucket",
     )
 
 
