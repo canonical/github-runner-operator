@@ -509,24 +509,15 @@ async def get_github_runner_reactive_log(unit: Unit) -> str:
         Reactive process logs.
     """
     log_file_path = REACTIVE_RUNNER_LOG_DIR / "*.log"
-    return_code, stdout, stderr = await run_in_unit(
+    _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",
         timeout=60,
-        assert_on_failure=True,
+        assert_on_failure=False,
         assert_msg="Failed to get the GitHub runner manager reactive logs",
     )
 
-    if return_code == 1 and any(
-        ("no matches found" in log or "No such file or directory" in log)
-        for log in (stdout, stderr)
-        if log
-    ):
-        return "No reactive logs found."
-
-    assert return_code == 0, f"Get log with cat {log_file_path} failed with: {stderr}"
-    assert (output := (stdout or stderr)) is not None, f"No output from {REACTIVE_RUNNER_LOG_DIR}"
-    return output or "Empty reactive log"
+    return stdout or stderr or "Empty reactive log"
 
 
 async def get_github_runner_metrics_log(unit: Unit) -> str:
@@ -539,21 +530,12 @@ async def get_github_runner_metrics_log(unit: Unit) -> str:
         Runner metrics logs.
     """
     log_file_path = METRICS_LOG_PATH
-    return_code, stdout, stderr = await run_in_unit(
+    _, stdout, stderr = await run_in_unit(
         unit,
         f"cat {log_file_path}",
         timeout=60,
-        assert_on_failure=True,
+        assert_on_failure=False,
         assert_msg="Failed to get the GitHub runner manager metrics",
     )
 
-    if return_code == 1 and any(
-        ("no matches found" in log or "No such file or directory" in log)
-        for log in (stdout, stderr)
-        if log
-    ):
-        return "No metrics found."
-
-    assert return_code == 0, f"Get metrics log with cat {log_file_path} failed with: {stderr}"
-    assert (output := (stdout or stderr)) is not None, f"No output from {METRICS_LOG_PATH}"
-    return output or "Empty metrics log"
+    return stdout or stderr or "Empty metrics log"
