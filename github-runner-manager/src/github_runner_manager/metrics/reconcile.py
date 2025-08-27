@@ -28,11 +28,6 @@ IDLE_RUNNERS_COUNT = Gauge(
     documentation="Number of idle runners",
     labelnames=[labels.FLAVOR],
 )
-CLEANED_RUNNERS_TOTAL = Gauge(
-    name="cleaned_runners_total",
-    documentation="Total number of runners cleaned up",
-    labelnames=[labels.FLAVOR],
-)
 DELETED_RUNNERS_TOTAL = Counter(
     name="deleted_runners_total",
     documentation="The number of removed runners from GitHub during reconciliation.",

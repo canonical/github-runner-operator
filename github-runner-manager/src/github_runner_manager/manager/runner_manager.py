@@ -5,6 +5,7 @@
 
 import copy
 import logging
+import time
 from dataclasses import dataclass
 from enum import Enum, auto
 from multiprocessing import Pool
@@ -16,6 +17,7 @@ from github_runner_manager.manager.models import InstanceID, RunnerIdentity, Run
 from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, HealthState, VMState
 from github_runner_manager.metrics import events as metric_events
 from github_runner_manager.metrics import github as github_metrics
+from github_runner_manager.metrics import reconcile as reconcile_metrics
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.metrics.runner import RunnerMetrics
 from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
@@ -234,8 +236,16 @@ class RunnerManager:
             platform_runner_ids_to_cleanup | platform_runner_ids_to_scaledown
         )
         logger.info("Deleting platform runners: %s", platform_runner_ids_to_delete)
+        delete_runner_start = time.time()
         deleted_runner_ids = self._platform.delete_runners(
             runner_ids=platform_runner_ids_to_delete
+        )
+        delete_runner_end = time.time()
+        reconcile_metrics.DELETED_RUNNERS_TOTAL.labels(self.manager_name).inc(
+            len(deleted_runner_ids)
+        )
+        reconcile_metrics.DELETE_RUNNER_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_runner_end - delete_runner_start
         )
         logger.info("Deleted runners: %s", deleted_runner_ids)
 
@@ -248,7 +258,13 @@ class RunnerManager:
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_start = time.time()
+        deleted_vms = self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_end = time.time()
+        reconcile_metrics.DELETED_VMS_TOTAL.labels(self.manager_name).inc(len(deleted_vms))
+        reconcile_metrics.DELETE_VM_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_vms_end - delete_vms_start
+        )
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
@@ -281,8 +297,16 @@ class RunnerManager:
             platform_runner_ids_to_cleanup | platform_runner_ids_to_flush
         )
         logger.info("Deleting platform runners: %s", platform_runner_ids_to_flush)
+        delete_runner_start = time.time()
         deleted_runner_ids = self._platform.delete_runners(
             runner_ids=platform_runner_ids_to_delete
+        )
+        delete_runner_end = time.time()
+        reconcile_metrics.DELETED_RUNNERS_TOTAL.labels(self.manager_name).inc(
+            len(deleted_runner_ids)
+        )
+        reconcile_metrics.DELETE_RUNNER_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_runner_end - delete_runner_start
         )
         logger.info("Deleted runners: %s", deleted_runner_ids)
 
@@ -303,7 +327,13 @@ class RunnerManager:
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Deleting VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_start = time.time()
+        deleted_vms = self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_end = time.time()
+        reconcile_metrics.DELETED_VMS_TOTAL.labels(self.manager_name).inc(len(deleted_vms))
+        reconcile_metrics.DELETE_VM_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_vms_end - delete_vms_start
+        )
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
@@ -324,8 +354,16 @@ class RunnerManager:
             _get_platform_runners_to_cleanup(runners=runners_health_response, vms=vms)
         )
         logger.info("Cleaning up platform runners: %s", platform_runner_ids_to_cleanup)
+        delete_runner_start = time.time()
         cleanedup_runner_ids = self._platform.delete_runners(
             runner_ids=platform_runner_ids_to_cleanup
+        )
+        delete_runner_end = time.time()
+        reconcile_metrics.DELETED_RUNNERS_TOTAL.labels(self.manager_name).inc(
+            len(cleanedup_runner_ids)
+        )
+        reconcile_metrics.DELETE_RUNNER_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_runner_end - delete_runner_start
         )
         logger.info("Cleaned up platform runners: %s", cleanedup_runner_ids)
 
@@ -338,7 +376,13 @@ class RunnerManager:
         logger.info("Extracting metrics from VMs: %s", vm_ids_to_cleanup)
         extracted_metrics = self._cloud.extract_metrics(instance_ids=vm_ids_to_cleanup)
         logger.info("Cleaning up VMs: %s", vm_ids_to_cleanup)
-        self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_start = time.time()
+        deleted_vms = self._cloud.delete_vms(instance_ids=vm_ids_to_cleanup)
+        delete_vms_end = time.time()
+        reconcile_metrics.DELETED_VMS_TOTAL.labels(self.manager_name).inc(len(deleted_vms))
+        reconcile_metrics.DELETE_VM_DURATION_SECONDS.labels(self.manager_name).observe(
+            delete_vms_end - delete_vms_start
+        )
 
         return self._issue_runner_metrics(metrics=iter(extracted_metrics))
 
