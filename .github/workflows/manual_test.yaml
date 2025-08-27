@@ -7,7 +7,7 @@ on:
 
 jobs:
   pfe-ci:
-    runs-on: [self-hosted, self-hosted-linux-amd64-noble-pfe-ci]
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-private-endpoint-medium]
     steps:
       - run: lscpu
       - run: df -h
