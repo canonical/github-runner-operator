@@ -130,7 +130,7 @@ class FakeCloudRunnerManager(CloudRunnerManager):
         self._cloud_runners[runner_identity.instance_id] = created_runner
         return created_runner
 
-    def get_runners(self) -> Sequence[VM]:
+    def get_vms(self) -> Sequence[VM]:
         """Get all the cloud runner instances managed by the manager.
 
         Returns:
@@ -253,6 +253,9 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
         for runner_id in runner_ids:
             runner = runner_id_map.get(runner_id, None)
             if not runner:
+                continue
+            # GitHub will issue 422 Unprocessible entity on trying to delete busy runners.
+            if runner.busy:
                 continue
             self._runners.pop(runner.identity.instance_id)
             deleted_runner_ids.append(runner_id)
