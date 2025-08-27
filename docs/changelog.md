@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-08-26
+
+- Add charm configuration for setting the log level of the GitHub runner manager service.
+
 ## 2025-08-20
 
 - Document relevant log files.
@@ -9,7 +13,6 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-08-12
 
 - Metrics are now issued even without runner installed timestamp.
-
 
 ## 2025-07-28
 
@@ -22,7 +25,6 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-07-22
 
 - Removed support for using both jobmanager and GitHub at the same time.
-
 
 ## 2025-07-18
 
