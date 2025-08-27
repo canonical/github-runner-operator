@@ -254,6 +254,9 @@ class FakeGitHubRunnerPlatform(PlatformProvider):
             runner = runner_id_map.get(runner_id, None)
             if not runner:
                 continue
+            # GitHub will issue 422 Unprocessible entity on trying to delete busy runners.
+            if runner.busy:
+                continue
             self._runners.pop(runner.identity.instance_id)
             deleted_runner_ids.append(runner_id)
         return deleted_runner_ids
