@@ -20,8 +20,8 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.integration.jobmanager.helpers import (
     GetRunnerHealthEndpoint,
     _assert_runners,
-    _execute_command_with_builder_agent,
     add_builder_agent_health_endpoint_response,
+    execute_command_with_builder_agent,
     prepare_runner_tunnel_for_builder_agent,
     wait_for_runner_to_be_registered,
 )
@@ -121,7 +121,7 @@ async def test_jobmanager(
 
     # Ok, at this point, we want to tell the builder-agent to execute some command,
     # specifically a sleep so we can check that it goes over executing and finished statuses.
-    await _execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
+    await execute_command_with_builder_agent(instance_helper, unit, "sleep 30")
 
     # 7. The builder-agent will run the job. While running the job it will send the status
     #         EXECUTING and after it is finished it will send the status FINISHED.
