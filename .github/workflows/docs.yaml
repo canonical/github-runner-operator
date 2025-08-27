@@ -1,0 +1,14 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+jobs:
+  docs-checks:
+    uses: canonical/operator-workflows/.github/workflows/docs.yaml@main
+    secrets: inherit
+    with:
+      linkcheck-files: "'*.md' 'docs/**/*.md' 'terraform/**/*.md' './**/*.rst'"
+
