@@ -245,7 +245,7 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self) -> Sequence[VM]:
+    def get_vms(self) -> Sequence[VM]:
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod

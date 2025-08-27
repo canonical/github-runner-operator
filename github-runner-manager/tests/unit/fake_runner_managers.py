@@ -130,7 +130,7 @@ class FakeCloudRunnerManager(CloudRunnerManager):
         self._cloud_runners[runner_identity.instance_id] = created_runner
         return created_runner
 
-    def get_runners(self) -> Sequence[VM]:
+    def get_vms(self) -> Sequence[VM]:
         """Get all the cloud runner instances managed by the manager.
 
         Returns:
