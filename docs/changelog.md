@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-08-26
+
+- Add charm configuration for setting the log level of the GitHub runner manager service.
+
 ## 2025-08-25
 
 - Fix issue with scaling down overshooting in deleting runners after cleanup
@@ -14,7 +18,6 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 - Metrics are now issued even without runner installed timestamp.
 
-
 ## 2025-07-28
 
 - Fix an issue where the charm can error out due to timeout during flush runners.
@@ -26,7 +29,6 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-07-22
 
 - Removed support for using both jobmanager and GitHub at the same time.
-
 
 ## 2025-07-18
 

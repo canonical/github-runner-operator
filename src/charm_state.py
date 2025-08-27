@@ -8,7 +8,7 @@ import json
 import logging
 import re
 from pathlib import Path
-from typing import cast
+from typing import Literal, cast
 from urllib.parse import urlsplit
 
 import yaml
@@ -62,12 +62,15 @@ APROXY_REDIRECT_PORTS_CONFIG_NAME = "aproxy-redirect-ports"
 USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME = "use-runner-proxy-for-tmate"
 VIRTUAL_MACHINES_CONFIG_NAME = "virtual-machines"
 CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME = "pre-job-script"
+RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME = "runner-manager-log-level"
 
 # Integration names
 COS_AGENT_INTEGRATION_NAME = "cos-agent"
 DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
+
+LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
 
 
 @dataclasses.dataclass
@@ -269,6 +272,7 @@ class CharmConfig(BaseModel):
         custom_pre_job_script: Custom pre-job script to run before the job.
         jobmanager_url: Base URL of the job manager service.
         jobmanager_token: Token for authentication with the job manager service.
+        runner_manager_log_level: The log level of the runner manager application.
     """
 
     dockerhub_mirror: AnyHttpsUrl | None
@@ -285,6 +289,7 @@ class CharmConfig(BaseModel):
     custom_pre_job_script: str | None
     jobmanager_url: AnyHttpUrl | None
     jobmanager_token: str | None
+    runner_manager_log_level: LogLevel
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -554,6 +559,10 @@ class CharmConfig(BaseModel):
         custom_pre_job_script = (
             cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
         )
+
+        runner_manager_log_level = cast(
+            LogLevel, charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
+        )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
@@ -573,6 +582,7 @@ class CharmConfig(BaseModel):
                 APROXY_REDIRECT_PORTS_CONFIG_NAME
             ),
             custom_pre_job_script=custom_pre_job_script,
+            runner_manager_log_level=runner_manager_log_level,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
             jobmanager_token=jobmanager_config.token if jobmanager_config else None,
         )
