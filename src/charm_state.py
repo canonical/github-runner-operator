@@ -70,6 +70,8 @@ DEBUG_SSH_INTEGRATION_NAME = "debug-ssh"
 IMAGE_INTEGRATION_NAME = "image"
 MONGO_DB_INTEGRATION_NAME = "mongodb"
 
+LogLevel = Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+
 
 @dataclasses.dataclass
 class GithubConfig:
@@ -287,7 +289,7 @@ class CharmConfig(BaseModel):
     custom_pre_job_script: str | None
     jobmanager_url: AnyHttpUrl | None
     jobmanager_token: str | None
-    runner_manager_log_level: Literal["CRITICAL", "FATAL", "ERROR", "WARNING", "INFO", "DEBUG"]
+    runner_manager_log_level: LogLevel
 
     @classmethod
     def _parse_dockerhub_mirror(cls, charm: CharmBase) -> str | None:
@@ -558,7 +560,9 @@ class CharmConfig(BaseModel):
             cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
         )
 
-        runner_manager_log_level = charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
+        runner_manager_log_level = cast(
+            LogLevel, charm.config.get(RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME, "INFO")
+        )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
@@ -578,7 +582,7 @@ class CharmConfig(BaseModel):
                 APROXY_REDIRECT_PORTS_CONFIG_NAME
             ),
             custom_pre_job_script=custom_pre_job_script,
-            runner_manager_log_level=runner_manager_log_level,  # type: ignore
+            runner_manager_log_level=runner_manager_log_level,
             jobmanager_url=jobmanager_config.url if jobmanager_config else None,
             jobmanager_token=jobmanager_config.token if jobmanager_config else None,
         )
