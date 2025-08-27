@@ -6,6 +6,10 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 - Add charm configuration for setting the log level of the GitHub runner manager service.
 
+## 2025-08-25
+
+- Fix issue with scaling down overshooting in deleting runners after cleanup
+
 ## 2025-08-20
 
 - Document relevant log files.
