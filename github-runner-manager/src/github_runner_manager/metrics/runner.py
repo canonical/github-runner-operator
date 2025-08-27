@@ -56,6 +56,11 @@ RUNNER_QUEUE_DURATION_SECONDS = Histogram(
     documentation="Time taken in seconds for the job to be started.",
     labelnames=[labels.FLAVOR],
 )
+EXTRACT_METRICS_DURATION_SECONDS = Histogram(
+    name="extract_metrics_duration_seconds",
+    documentation="Time taken in seconds for the metrics to be extracted.",
+    labelnames=[labels.FLAVOR],
+)
 
 
 class PullFileError(Exception):
