@@ -156,6 +156,7 @@ def complete_charm_state_fixture():
             token="githubtoken",
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,
+            runner_manager_log_level="INFO",
         ),
         runner_config=charm_state.OpenstackRunnerConfig(
             base_virtual_machines=1,

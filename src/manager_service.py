@@ -82,7 +82,7 @@ def setup(state: CharmState, app_name: str, unit_name: str) -> None:
     GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR.mkdir(parents=True, exist_ok=True)
     log_file_path = _get_log_file_path(unit_name)
     log_file_path.touch(exist_ok=True)
-    _setup_service_file(config_file, log_file_path)
+    _setup_service_file(config_file, log_file_path, state.charm_config.runner_manager_log_level)
     try:
         systemd.daemon_reload()
     except SystemdError as err:
@@ -187,12 +187,13 @@ def _setup_config_file(config: ApplicationConfiguration) -> Path:
     return path
 
 
-def _setup_service_file(config_file: Path, log_file: Path) -> None:
+def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> None:
     """Configure the systemd service.
 
     Args:
         config_file: The configuration file for the service.
         log_file: The file location to store the logs.
+        log_level: The log level of the service.
     """
     python_path = Path(os.getcwd()) / "venv"
     service_file_content = textwrap.dedent(
@@ -205,7 +206,8 @@ def _setup_service_file(config_file: Path, log_file: Path) -> None:
         User={constants.RUNNER_MANAGER_USER}
         Group={constants.RUNNER_MANAGER_GROUP}
         ExecStart=github-runner-manager --config-file {str(config_file)} --host \
-{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} --python-path {str(python_path)}
+{GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
+--python-path {str(python_path)} --log-level {log_level}
         Restart=on-failure
         KillMode=process
         StandardOutput=append:{log_file}
