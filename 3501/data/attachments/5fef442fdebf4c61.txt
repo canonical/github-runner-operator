@@ -1,0 +1,105 @@
+18:52:58 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+18:53:28 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+18:53:32 INFO Current reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:53:32 INFO Waiting for reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:54:33 INFO Current reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:54:33 INFO Current reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce, expected reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:54:33 INFO Waiting for reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:55:34 INFO Current reconcile ID: 4dacad9d-9961-43a1-8a51-ee2fa041bdad
+18:55:34 INFO Current reconcile ID: 4dacad9d-9961-43a1-8a51-ee2fa041bdad, expected reconcile ID: 687fb02b-8411-4753-b145-def24c5cacce
+18:55:34 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+18:56:05 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+18:56:16 INFO Current reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:56:16 INFO Waiting for reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:57:17 INFO Current reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:57:17 INFO Current reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70, expected reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:57:17 INFO Waiting for reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:58:18 INFO Current reconcile ID: 4bfefd9b-20dd-48b2-8bc4-620aee3c118e
+18:58:18 INFO Current reconcile ID: 4bfefd9b-20dd-48b2-8bc4-620aee3c118e, expected reconcile ID: d5c1a6ae-f033-4a2f-bb2f-783d912aef70
+18:58:25 INFO Wait for condition not met, sleeping 30
+18:59:08 INFO [TEST SETUP] Run command pkill -9 run.sh on test-agad5cod-0-n-365734885212
+18:59:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.122', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:80:a3:a0'}]])
+18:59:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-agad5cod-0-n-365734885212.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.122 pkill -9 run.sh'
+18:59:10 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.122' (ED25519) to the list of known hosts.
+'
+18:59:14 INFO Runner test-agad5cod-0-n-365734885212 status: online
+18:59:14 INFO Runner still marked as online, waiting for it to be marked offline
+19:00:16 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+19:00:47 INFO Waiting for model:
+  test-agad5cod/0 [idle] active: 
+19:00:50 INFO Current reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:00:50 INFO Waiting for reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:01:51 INFO Current reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:01:51 INFO Current reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311, expected reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:01:51 INFO Waiting for reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:02:52 INFO Current reconcile ID: de88a93a-a43d-4803-9c1c-a2856d973bc5
+19:02:52 INFO Current reconcile ID: de88a93a-a43d-4803-9c1c-a2856d973bc5, expected reconcile ID: be67de39-72c0-4d86-9c14-b35246f4d311
+19:02:53 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756320791.0979078, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.72301197052002}
+{"timestamp": 1756320922.5373685, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.359339714050293}
+{"timestamp": 1756320951.475934, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 14.270580768585205}
+{"timestamp": 1756321084.0353386, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.439741849899292}
+{"timestamp": 1756320985.0, "event": "runner_installed", "flavor": "test-agad5cod", "duration": 38.0}
+{"timestamp": 1756321108.0, "event": "runner_start", "flavor": "test-agad5cod", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 123.0, "queue_duration": 1.0}
+{"timestamp": 1756321150.0, "event": "runner_stop", "flavor": "test-agad5cod", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1756321230.5944262, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.096581935882568}
+{"timestamp": 1756321364.247828, "event": "reconciliation", "flavor": "test-agad5cod", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.531381845474243}
+19:02:54 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-q64p  github-pr-bc1fc-lxd  localhost/localhost  3.6.9    unsupported  19:02:54Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-agad5cod           active      1  github-runner-image-builder  latest/edge  107  no       
+test-agad5cod                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-agad5cod/0*  active    idle   0        10.131.86.50              
+test-agad5cod/0*                         active    idle   1        10.131.86.121   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.131.86.50   juju-c62a38-0  ubuntu@22.04  github-runner  Running
+1        started  10.131.86.121  juju-c62a38-1  ubuntu@22.04  github-runner  Running
+
+19:02:54 INFO Juju error logs:
+
+machine-0: 18:26:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-agad5cod-0: 18:26:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-agad5cod-0: 18:26:58 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-agad5cod-0: 18:27:39 ERROR unit.github-runner-image-builder-agad5cod/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-agad5cod-0: 18:28:24 ERROR unit.test-agad5cod/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-agad5cod-0: 18:28:27 ERROR unit.test-agad5cod/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-agad5cod-0: 18:29:36 ERROR unit.test-agad5cod/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-agad5cod-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:02:54 INFO Forgetting model main...
