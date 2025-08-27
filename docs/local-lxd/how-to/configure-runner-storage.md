@@ -11,7 +11,7 @@ This is configured with the [`runner-storage`](https://charmhub.io/github-runner
 
 The random access memory of the Juju machine is configured as LXD storage and used as the root disk for the LXD instances.
 
-The `runner-storage` configuration needs to be set to `memory` during deployment, and the Juju machine constraints should have enough memory for the virtual machine memory and disk. See [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+The `runner-storage` configuration needs to be set to `memory` during deployment, and the Juju machine constraints should have enough memory for the virtual machine memory and disk. See [Managing resource usage](https://charmhub.io/github-runner/docs/local-lxd-tutorial-managing-resource-usage).
 
 An example deployment:
 

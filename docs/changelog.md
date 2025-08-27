@@ -2,6 +2,11 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+
+## 2025-08-27
+
+- Updated the documentation workflow to be fully integrated with the Vale GitHub Action.
+
 ## 2025-08-26
 
 - Add charm configuration for setting the log level of the GitHub runner manager service.
@@ -9,6 +14,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-08-25
 
 - Fix issue with scaling down overshooting in deleting runners after cleanup
+
 
 ## 2025-08-20
 
