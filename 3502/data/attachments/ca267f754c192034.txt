@@ -1,0 +1,217 @@
+06:25:04 WARNING unexpected facade SSHServer received from the controller
+06:25:04 INFO Adding model github-pr-bc1fc-lxd:test-charm-fork-path-change-m5yg on cloud localhost
+06:25:05 WARNING unexpected facade SSHServer received from the controller
+06:25:05 WARNING unexpected facade SSHSession received from the controller
+06:25:05 WARNING unexpected facade SSHTunneler received from the controller
+06:25:07 INFO Deploying ch:amd64/jammy/github-runner-image-builder-108
+06:25:25 INFO Deploying local:jammy/github-runner-0
+06:25:25 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-efrk66mo/0 [allocating] waiting: waiting for machine
+06:25:55 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-efrk66mo/0 [allocating] waiting: waiting for machine
+06:26:25 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-efrk66mo/0 [allocating] waiting: waiting for machine
+06:26:56 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-efrk66mo/0 [allocating] waiting: agent initialising
+06:27:26 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-efrk66mo/0 [executing] maintenance: Setting up Builder.
+06:27:56 INFO Waiting for model:
+  test-efrk66mo/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-efrk66mo/0 [executing] maintenance: Setting up Builder.
+06:28:26 INFO Waiting for model:
+  test-efrk66mo/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-efrk66mo/0 [executing] maintenance: Setting up Builder.
+06:28:57 INFO Waiting for model:
+  test-efrk66mo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-efrk66mo/0 [executing] maintenance: Setting up Builder.
+06:29:27 INFO Waiting for model:
+  test-efrk66mo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-efrk66mo/0 [executing] maintenance: Setting up Builder.
+06:29:58 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:30:28 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:30:58 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:31:29 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:31:59 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:32:30 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:33:00 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:33:30 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:34:01 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:34:31 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:35:02 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:35:32 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:36:02 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:36:33 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:37:03 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:37:34 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:38:04 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:38:35 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:39:05 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:39:35 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:40:06 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:40:36 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:41:07 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:41:37 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:42:08 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:42:38 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:43:09 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:43:39 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:44:10 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:44:40 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:45:10 INFO Waiting for model:
+  test-efrk66mo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-efrk66mo/0 [executing] active: Building image.
+06:45:41 INFO Waiting for model:
+  test-efrk66mo/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-efrk66mo/0 [idle] active: 
+06:46:08 INFO GitHub token rate limit: Rate(reset=2025-08-28 07:43:06+00:00, remaining=4849, limit=5000)
+06:46:20 INFO test_path_config_change
+06:46:20 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:46:50 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:47:14 INFO Ensure there is a runner (this calls reconcile)
+06:47:14 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:47:44 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:47:47 INFO Current reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:47:47 INFO Waiting for reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:48:48 INFO Current reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:48:48 INFO Current reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8, expected reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:48:48 INFO Waiting for reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:49:49 INFO Current reconcile ID: 1bd108bf-e14f-4f1e-ba7f-66223245c687
+06:49:49 INFO Current reconcile ID: 1bd108bf-e14f-4f1e-ba7f-66223245c687, expected reconcile ID: 656370bd-c3bb-4bcb-880e-ac7ce614e8f8
+06:49:55 INFO Reconciling (again)
+06:49:55 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:50:25 INFO Waiting for model:
+  test-efrk66mo/0 [idle] active: 
+06:50:35 INFO Current reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:50:35 INFO Waiting for reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:51:36 INFO Current reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:51:36 INFO Current reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49, expected reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:51:36 INFO Waiting for reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:52:37 INFO Current reconcile ID: 51f42d70-b8da-4dc3-b0ca-39c36b2f9c00
+06:52:37 INFO Current reconcile ID: 51f42d70-b8da-4dc3-b0ca-39c36b2f9c00, expected reconcile ID: bbfd8821-747c-49d5-97a1-d8fff84bda49
+06:53:19 INFO runners: ['test-efrk66mo-0-n-ec3dbb74acfc']
+06:53:21 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-jammy-stg-private-endpoint-ps7-0-n-431b651be800"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-07c83f328bb0"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-142e0ab049db"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-2615010d26f8"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-35f10944588a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-47e3de69d894"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-5c53e719984a"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-67af69d591c3"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-748bc287661d"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-8b8cc28431e0"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-f388c8e430ad"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps6-4-n-f61c3055f1d2"), SelfHostedActionsRunner(name="os-amd-jammy-staging-ps7-0-n-959ef872951b"), SelfHostedActionsRunner(name="reactive-amd64-pfe-ci-ps7-3-n-bffc825dec5a"), SelfHostedActionsRunner(name="test-a40d4ffo-0-n-aa5cbd14460f"), SelfHostedActionsRunner(name="test-b153uyc4-0-n-be6ded34117e"), SelfHostedActionsRunner(name="test-b3lnkxur-0-n-24739ad060d6"), SelfHostedActionsRunner(name="test-btt53clo-0-n-5bcecef30a02"), SelfHostedActionsRunner(name="test-cqht6ojc-0-n-fa63ba2f7596"), SelfHostedActionsRunner(name="test-d6aw9k9h-0-n-f67c503d3589"), SelfHostedActionsRunner(name="test-e89fv998-0-n-c8e2490b3594"), SelfHostedActionsRunner(name="test-edz7ywc0-0-n-29da50429b4f"), SelfHostedActionsRunner(name="test-efrk66mo-0-n-ec3dbb74acfc"), SelfHostedActionsRunner(name="test-egm6zo11-0-n-06d35870c11d"), SelfHostedActionsRunner(name="test-f9frcr6y-0-n-6e26cfd1a87c"), SelfHostedActionsRunner(name="test-fda3b2at-0-n-9197f4c579d3"), SelfHostedActionsRunner(name="test-gudo1g95-0-n-e1d38c33f390"), SelfHostedActionsRunner(name="test-hhcinn5m-0-n-2c1446e2a898"), SelfHostedActionsRunner(name="test-hqimxyml-0-n-3bb972f254ad"), SelfHostedActionsRunner(name="test-huu65bkx-0-n-d6f40dc3b66c"), SelfHostedActionsRunner(name="test-hvrxh87d-0-n-90d54c092219"), SelfHostedActionsRunner(name="test-hzyayp89-0-n-ba939fabbba3"), SelfHostedActionsRunner(name="test-io6ss4gm-0-n-38b83b5c04ba"), SelfHostedActionsRunner(name="test-j2zj49j1-0-n-c5e65e3418cb"), SelfHostedActionsRunner(name="test-jdoxcmkm-0-n-aaf0930cdf2d"), SelfHostedActionsRunner(name="test-jk68r8eg-0-n-9b50f3da9433"), SelfHostedActionsRunner(name="test-juywmpv9-0-n-afdaa67d2c8e"), SelfHostedActionsRunner(name="test-k60cqxgm-0-n-25b9d32b445a"), SelfHostedActionsRunner(name="test-keexpcy8-0-n-79cd6f13e1ee"), SelfHostedActionsRunner(name="test-keub3uz0-0-n-6ae635bef407"), SelfHostedActionsRunner(name="test-l8jowo8w-0-n-0c4221cdefc5"), SelfHostedActionsRunner(name="test-lkioit9i-0-n-41749b540db4"), SelfHostedActionsRunner(name="test-mamew8vn-0-n-9c204f3dcf08"), SelfHostedActionsRunner(name="test-mmqpmgtl-0-n-86d6ffc5bd69"), SelfHostedActionsRunner(name="test-mnthgmur-0-n-568fca2190fd"), SelfHostedActionsRunner(name="test-mv66gdm6-0-n-0ce47e862a00"), SelfHostedActionsRunner(name="test-ncjxy3o3-0-n-2c20040302cd"), SelfHostedActionsRunner(name="test-nof5j18q-0-n-e924aaf41981"), SelfHostedActionsRunner(name="test-oaaxq7oi-0-n-ec565657f595"), SelfHostedActionsRunner(name="test-oiradkop-0-n-1af4b5cb4707"), SelfHostedActionsRunner(name="test-pcwt48gt-0-n-9949cf32c100"), SelfHostedActionsRunner(name="test-pmub6aw0-0-n-5f81f4f4c884"), SelfHostedActionsRunner(name="test-q9kn2caa-0-n-6078cf6362f6"), SelfHostedActionsRunner(name="test-qa3569tq-0-n-5a765310fd3d"), SelfHostedActionsRunner(name="test-qg28tf3c-0-n-b936d324152b"), SelfHostedActionsRunner(name="test-qpp9cgn6-0-n-1b88d3c687dd"), SelfHostedActionsRunner(name="test-r0rskh69-0-n-2f6a57482bdb"), SelfHostedActionsRunner(name="test-r8o5lodz-0-n-2a5f9ee0a9bc"), SelfHostedActionsRunner(name="test-rh4e9w2e-0-n-409e1c472dfb"), SelfHostedActionsRunner(name="test-sis2nxq4-0-n-e0fbd345c283"), SelfHostedActionsRunner(name="test-sl0izk3h-0-n-73d853d3899c"), SelfHostedActionsRunner(name="test-smx01qvq-0-n-ef6f2e8485e8"), SelfHostedActionsRunner(name="test-t2nekacf-0-n-6b4173e0de3f"), SelfHostedActionsRunner(name="test-tcyo4pn4-0-n-31dd863680e7"), SelfHostedActionsRunner(name="test-thjizqed-0-n-ce16cdaaf2ba"), SelfHostedActionsRunner(name="test-uyumq3ju-0-n-24715229eec6"), SelfHostedActionsRunner(name="test-v937ifp6-0-n-2ea386ef4350"), SelfHostedActionsRunner(name="test-vcfqxmco-0-n-3515cfb2c883"), SelfHostedActionsRunner(name="test-vm03tx7b-0-n-53e66278cdd8"), SelfHostedActionsRunner(name="test-vpfui6h0-0-n-f51be01b3fbe"), SelfHostedActionsRunner(name="test-vq6yk83z-0-n-f8ce1a094126"), SelfHostedActionsRunner(name="test-vtaeopu2-0-n-afa185c08b97"), SelfHostedActionsRunner(name="test-waft6wd5-0-n-0f6986d1763f"), SelfHostedActionsRunner(name="test-wosobi6t-0-n-2aa8b0bef67e"), SelfHostedActionsRunner(name="test-wskarlsn-0-n-b4999d154e6d"), SelfHostedActionsRunner(name="test-x57binim-0-n-1e420a5ac5ef"), SelfHostedActionsRunner(name="test-xk6nlxy0-0-n-62f093dad0f4"), SelfHostedActionsRunner(name="test-ydjc28dz-0-n-a49a59869a76"), SelfHostedActionsRunner(name="test-yzgqaulf-0-n-321075d1c001"), SelfHostedActionsRunner(name="test-ze1pzb8w-0-n-987ef91a4360"), SelfHostedActionsRunner(name="test-zfxvyk0v-0-n-c90e51c157c1")]
+06:53:22 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-m5yg  github-pr-bc1fc-lxd  localhost/localhost  3.6.9    unsupported  06:53:22Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-efrk66mo           active      1  github-runner-image-builder  latest/edge  108  no       
+test-efrk66mo                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-efrk66mo/0*  active    idle   0        10.121.223.191         
+test-efrk66mo/0*                         active    idle   1        10.121.223.202         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.121.223.191  juju-0c4d93-0  ubuntu@22.04  github-runner  Running
+1        started  10.121.223.202  juju-0c4d93-1  ubuntu@22.04  github-runner  Running
+
+06:53:22 INFO Juju error logs:
+
+machine-0: 06:26:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-efrk66mo-0: 06:26:49 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-efrk66mo-0: 06:27:30 ERROR unit.github-runner-image-builder-efrk66mo/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:27:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-efrk66mo-0: 06:27:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-efrk66mo-0: 06:28:54 ERROR unit.test-efrk66mo/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-efrk66mo-0: 06:28:56 ERROR unit.test-efrk66mo/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-efrk66mo-0: 06:29:30 ERROR unit.test-efrk66mo/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-efrk66mo-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:53:22 INFO Forgetting model main...
