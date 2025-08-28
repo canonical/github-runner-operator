@@ -1,0 +1,100 @@
+19:02:58 INFO Waiting for model:
+  test-rdexyq03/0 [idle] active: 
+19:03:28 INFO Waiting for model:
+  test-rdexyq03/0 [idle] active: 
+19:03:31 INFO Current reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:03:31 INFO Waiting for reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:04:32 INFO Current reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:04:32 INFO Current reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4, expected reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:04:32 INFO Waiting for reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:05:33 INFO Current reconcile ID: f37f015f-a172-47e1-8936-d52d585b02d5
+19:05:33 INFO Current reconcile ID: f37f015f-a172-47e1-8936-d52d585b02d5, expected reconcile ID: 74c9ce5e-8e14-4892-8de0-4e323bb983b4
+19:05:40 INFO [TEST SETUP] Exposing port 8080 on test-rdexyq03-0-n-de916265fa7e
+19:05:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b4:32:12'}]])
+19:05:41 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-rdexyq03-0-n-de916265fa7e.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.55 &
+19:05:42 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.55' (ED25519) to the list of known hosts.
+
+19:05:43 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-rdexyq03-0-n-de916265fa7e
+19:05:43 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b4:32:12'}]])
+19:05:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rdexyq03-0-n-de916265fa7e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 nc -z localhost 8080'
+19:05:46 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:05:46 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-rdexyq03-0-n-de916265fa7e
+19:05:46 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b4:32:12'}]])
+19:05:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-rdexyq03-0-n-de916265fa7e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 curl http://localhost:8080'
+19:05:48 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  60954      0 --:--:-- --:--:-- --:--:-- 69000
+'
+19:05:50 INFO Wait for condition not met, sleeping 10
+19:06:02 INFO Waiting for model:
+  test-rdexyq03/0 [idle] active: 
+19:06:32 INFO Waiting for model:
+  test-rdexyq03/0 [idle] active: 
+19:06:35 INFO Current reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:06:35 INFO Waiting for reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:07:36 INFO Current reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:07:36 INFO Current reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb, expected reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:07:36 INFO Waiting for reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:08:37 INFO Current reconcile ID: fe6c975c-cc6f-4b1e-a3ed-93cba2ab6a3d
+19:08:37 INFO Current reconcile ID: fe6c975c-cc6f-4b1e-a3ed-93cba2ab6a3d, expected reconcile ID: 22baefb0-d5b4-431d-90ed-9f0ef9bf54fb
+19:08:38 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-jeaq  github-pr-bc1fc-lxd  localhost/localhost  3.6.9    unsupported  19:08:38Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-rdexyq03           active      1  github-runner-image-builder  latest/edge  108  no       
+test-rdexyq03                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-rdexyq03/0*  active    idle   0        10.7.211.184              
+test-rdexyq03/0*                         active    idle   1        10.7.211.95     8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.7.211.184  juju-bb7da3-0  ubuntu@22.04  github-runner  Running
+1        started  10.7.211.95   juju-bb7da3-1  ubuntu@22.04  github-runner  Running
+
+19:08:38 INFO Juju error logs:
+
+machine-0: 18:26:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-rdexyq03-0: 18:26:17 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-rdexyq03-0: 18:27:33 ERROR unit.github-runner-image-builder-rdexyq03/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 18:27:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rdexyq03-0: 18:27:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-rdexyq03-0: 18:29:49 ERROR unit.test-rdexyq03/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-rdexyq03-0: 18:29:52 ERROR unit.test-rdexyq03/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-rdexyq03-0: 18:29:56 ERROR unit.test-rdexyq03/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-rdexyq03-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:08:38 INFO Forgetting model main...
