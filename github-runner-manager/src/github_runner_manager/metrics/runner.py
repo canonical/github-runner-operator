@@ -15,7 +15,7 @@ from typing import Optional, Sequence, Type
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
-from prometheus_client import Histogram
+from prometheus_client import Gauge, Histogram
 from pydantic import NonNegativeFloat, ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
@@ -60,6 +60,29 @@ EXTRACT_METRICS_DURATION_SECONDS = Histogram(
     name="extract_metrics_duration_seconds",
     documentation="Time taken in seconds for the metrics to be extracted.",
     labelnames=[labels.FLAVOR],
+)
+JOB_DURATION_SECONDS = Histogram(
+    name="job_duration_seconds",
+    documentation="Time taken in seconds for the job to be completed.",
+    labelnames=[labels.FLAVOR],
+)
+JOB_REPOSITORY_COUNT = Gauge(
+    name="job_repository_count",
+    documentation="Number of jobs run per repository.",
+    labelnames=[labels.REPOSITORY],
+)
+JOB_EVENT_COUNT = Gauge(
+    name="job_event_count",
+    documentation="Number of jobs triggered per event.",
+    labelnames=[labels.EVENT],
+)
+JOB_CONCLUSION_COUNT = Gauge(
+    name="job_conclusion_count",
+    documentation="Number of jobs per conclusion.",
+    labelnames=[labels.CONCLUSION],
+)
+JOB_STATUS_COUNT = Gauge(
+    name="job_status_count", documentation="Number of jobs per status.", labelnames=[labels.STATUS]
 )
 
 
@@ -596,7 +619,11 @@ def _create_runner_stop(
             runner_metrics.instance_id,
         )
     job_duration = max(post_job_metrics.timestamp - pre_job_metrics.timestamp, 0)
-
+    JOB_DURATION_SECONDS.labels(flavor).observe(job_duration)
+    JOB_REPOSITORY_COUNT.labels(pre_job_metrics.repository).inc()
+    JOB_EVENT_COUNT.labels(pre_job_metrics.event).inc()
+    JOB_CONCLUSION_COUNT.labels(job_metrics.conclusion if job_metrics else "unknown").inc()
+    JOB_STATUS_COUNT.labels(str(post_job_metrics.status)).inc()
     return metric_events.RunnerStop(
         timestamp=post_job_metrics.timestamp,
         flavor=flavor,

@@ -5,3 +5,7 @@
 
 FLAVOR = "flavor"
 CLOUD = "cloud"
+REPOSITORY = "repository"
+EVENT = "event"
+CONCLUSION = "conclusion"
+STATUS = "status"
