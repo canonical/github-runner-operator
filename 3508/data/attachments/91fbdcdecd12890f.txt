@@ -1,0 +1,189 @@
+18:27:06 WARNING unexpected facade SSHServer received from the controller
+18:27:06 INFO Adding model github-pr-f6dab-lxd:test-reactive-6md1 on cloud localhost
+18:27:06 WARNING unexpected facade SSHServer received from the controller
+18:27:06 WARNING unexpected facade SSHSession received from the controller
+18:27:06 WARNING unexpected facade SSHTunneler received from the controller
+18:27:07 INFO GitHub token rate limit: Rate(reset=2025-08-29 19:20:34+00:00, remaining=4988, limit=5000)
+18:27:12 INFO Deploying ch:amd64/jammy/mongodb-229
+18:27:14 INFO Deploying ch:amd64/jammy/github-runner-image-builder-108
+18:27:56 INFO Deploying local:jammy/github-runner-0
+18:27:56 INFO Waiting for model:
+  test-ynte91fs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: waiting for machine
+18:28:27 INFO Waiting for model:
+  test-ynte91fs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: waiting for machine
+18:28:57 INFO Waiting for model:
+  test-ynte91fs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: waiting for machine
+18:29:27 INFO Waiting for model:
+  test-ynte91fs/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: waiting for machine
+18:29:58 INFO Waiting for model:
+  test-ynte91fs/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: waiting for machine
+18:30:28 INFO Waiting for model:
+  test-ynte91fs/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ynte91fs/0 [allocating] waiting: agent initialising
+18:30:58 INFO Waiting for model:
+  test-ynte91fs/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ynte91fs/0 [executing] maintenance: Setting up Builder.
+18:31:29 INFO Waiting for model:
+  test-ynte91fs/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ynte91fs/0 [executing] maintenance: Setting up Builder.
+18:31:59 INFO Waiting for model:
+  test-ynte91fs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ynte91fs/0 [executing] maintenance: Setting up Builder.
+18:32:30 INFO Waiting for model:
+  test-ynte91fs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ynte91fs/0 [executing] maintenance: Setting up Builder.
+18:33:00 INFO Waiting for model:
+  test-ynte91fs/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ynte91fs/0 [executing] maintenance: Setting up Builder.
+18:33:31 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:34:01 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:34:31 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:35:01 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:35:31 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:36:01 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:36:31 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:37:02 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:37:32 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:38:02 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:38:32 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:39:02 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:39:33 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:40:03 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:40:33 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:41:04 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:41:34 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:42:04 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:42:35 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:43:05 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:43:36 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:44:06 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:44:37 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:45:07 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:45:37 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:46:08 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:46:38 INFO Waiting for model:
+  test-ynte91fs/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ynte91fs/0 [executing] active: Building image.
+18:47:08 INFO Waiting for model:
+  test-ynte91fs/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ynte91fs/0 [idle] active: 
+18:47:38 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:47:38 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:48:08 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:48:21 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:48:51 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:48:55 INFO Current reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:48:55 INFO Waiting for reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:49:56 INFO Current reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:49:56 INFO Current reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79, expected reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:49:56 INFO Waiting for reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:50:57 INFO Current reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:50:57 INFO Current reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338, expected reconcile ID: 7a0046e4-3177-46d3-9a7f-c45a84afde79
+18:51:00 INFO Wait for condition not met, sleeping 10
+18:51:22 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:51:38 INFO Current reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:51:38 INFO Waiting for reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:52:39 INFO Current reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:52:39 INFO Current reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338, expected reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:52:39 INFO Waiting for reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:53:40 INFO Current reconcile ID: 33887546-0286-4275-bd19-a0a0e526bff6
+18:53:40 INFO Current reconcile ID: 33887546-0286-4275-bd19-a0a0e526bff6, expected reconcile ID: 09a0b7a9-fe78-4dfc-bca4-e0d350cd1338
+18:53:41 INFO Wait for condition not met, sleeping 60
+18:54:41 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:54:57 INFO Current reconcile ID: 33887546-0286-4275-bd19-a0a0e526bff6
+18:54:57 INFO Waiting for reconcile ID: 33887546-0286-4275-bd19-a0a0e526bff6
+18:55:59 INFO Current reconcile ID: 65ea99cb-a617-427c-92d9-b75fd016728b
+18:55:59 INFO Current reconcile ID: 65ea99cb-a617-427c-92d9-b75fd016728b, expected reconcile ID: 33887546-0286-4275-bd19-a0a0e526bff6
+18:56:00 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756493585.8177981, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.381656169891357}
+{"timestamp": 1756493614.0, "event": "runner_installed", "flavor": "test-ynte91fs", "duration": 138.0}
+{"timestamp": 1756493619.0, "event": "runner_start", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1756493622.0, "event": "runner_stop", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1756493725.4060445, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.523087739944458}
+
+18:56:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756493585.8177981, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.381656169891357}
+{"timestamp": 1756493614.0, "event": "runner_installed", "flavor": "test-ynte91fs", "duration": 138.0}
+{"timestamp": 1756493619.0, "event": "runner_start", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1756493622.0, "event": "runner_stop", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1756493725.4060445, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.523087739944458}
+
+18:56:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756493585.8177981, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.381656169891357}
+{"timestamp": 1756493614.0, "event": "runner_installed", "flavor": "test-ynte91fs", "duration": 138.0}
+{"timestamp": 1756493619.0, "event": "runner_start", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1756493622.0, "event": "runner_stop", "flavor": "test-ynte91fs", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1756493725.4060445, "event": "reconciliation", "flavor": "test-ynte91fs", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.523087739944458}
+18:56:02 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:56:32 INFO Waiting for model:
+  test-ynte91fs/0 [idle] active: 
+18:56:36 INFO Current reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d
+18:56:36 INFO Waiting for reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d
+18:57:37 INFO Current reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d
+18:57:37 INFO Current reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d, expected reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d
+18:57:37 INFO Waiting for reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d
+18:58:38 INFO Current reconcile ID: 3bb8cc45-ab1f-416a-b2c2-39aa39118802
+18:58:38 INFO Current reconcile ID: 3bb8cc45-ab1f-416a-b2c2-39aa39118802, expected reconcile ID: bfd795dc-eb7e-4530-a442-4f2f7f7caa6d

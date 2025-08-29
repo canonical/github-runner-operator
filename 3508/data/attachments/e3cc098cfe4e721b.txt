@@ -1,0 +1,104 @@
+18:59:18 WARNING unexpected facade SSHServer received from the controller
+18:59:18 INFO Adding model github-pr-f6dab-lxd:test-charm-no-runner-mwga on cloud localhost
+18:59:18 WARNING unexpected facade SSHServer received from the controller
+18:59:18 WARNING unexpected facade SSHSession received from the controller
+18:59:18 WARNING unexpected facade SSHTunneler received from the controller
+18:59:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-108
+18:59:42 INFO Deploying local:jammy/github-runner-0
+18:59:42 INFO Waiting for model:
+  test-zv08rua6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zv08rua6/0 [allocating] waiting: waiting for machine
+19:00:12 INFO Waiting for model:
+  test-zv08rua6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zv08rua6/0 [allocating] waiting: waiting for machine
+19:00:43 INFO Waiting for model:
+  test-zv08rua6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zv08rua6/0 [allocating] waiting: waiting for machine
+19:01:13 INFO Waiting for model:
+  test-zv08rua6/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-zv08rua6/0 [executing] maintenance: Setting up Builder.
+19:01:43 INFO Waiting for model:
+  test-zv08rua6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zv08rua6/0 [executing] maintenance: Setting up Builder.
+19:02:13 INFO Waiting for model:
+  test-zv08rua6/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zv08rua6/0 [executing] maintenance: Setting up Builder.
+19:02:43 INFO Waiting for model:
+  test-zv08rua6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zv08rua6/0 [executing] maintenance: Setting up Builder.
+19:03:13 INFO Waiting for model:
+  test-zv08rua6/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zv08rua6/0 [executing] maintenance: Setting up Builder.
+19:03:44 INFO Waiting for model:
+  test-zv08rua6/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Waiting for first image.
+19:04:14 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:04:45 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:05:15 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:05:45 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:06:16 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:06:46 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:07:16 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:07:46 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:08:17 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:08:47 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:09:17 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:09:48 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:10:18 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:10:48 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:11:18 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:11:48 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:12:19 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:12:49 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:13:19 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:13:49 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:14:20 INFO Waiting for model:
+  test-zv08rua6/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zv08rua6/0 [executing] active: Building image.
+19:14:50 INFO Waiting for model:
+  test-zv08rua6/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-zv08rua6/0 [idle] active: 
+19:15:20 INFO Waiting for model:
+  test-zv08rua6/0 [idle] active: 
+19:15:25 INFO Waiting for model:
+  test-zv08rua6/0 [idle] active:
