@@ -1,0 +1,184 @@
+06:24:46 WARNING unexpected facade SSHServer received from the controller
+06:24:46 INFO Adding model github-pr-f6dab-lxd:test-reactive-lr8f on cloud localhost
+06:24:47 WARNING unexpected facade SSHServer received from the controller
+06:24:47 WARNING unexpected facade SSHSession received from the controller
+06:24:47 WARNING unexpected facade SSHTunneler received from the controller
+06:24:47 INFO GitHub token rate limit: Rate(reset=2025-08-31 06:44:25+00:00, remaining=4952, limit=5000)
+06:24:52 INFO Deploying ch:amd64/jammy/mongodb-229
+06:24:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-108
+06:25:11 INFO Deploying local:jammy/github-runner-0
+06:25:12 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hiytp0w1/0 [allocating] waiting: waiting for machine
+06:25:42 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hiytp0w1/0 [allocating] waiting: waiting for machine
+06:26:12 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hiytp0w1/0 [allocating] waiting: waiting for machine
+06:26:42 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hiytp0w1/0 [allocating] waiting: waiting for machine
+06:27:12 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hiytp0w1/0 [allocating] waiting: waiting for machine
+06:27:42 INFO Waiting for model:
+  test-hiytp0w1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-hiytp0w1/0 [executing] maintenance: Setting up Builder.
+06:28:13 INFO Waiting for model:
+  test-hiytp0w1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hiytp0w1/0 [executing] maintenance: Setting up Builder.
+06:28:43 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] maintenance: Setting up Builder.
+06:29:13 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] maintenance: Setting up Builder.
+06:29:44 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] maintenance: Setting up Builder.
+06:30:14 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:30:44 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:31:15 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:31:45 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:32:16 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:32:46 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:33:16 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:33:47 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:34:17 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:34:47 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:35:18 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:35:48 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:36:18 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:36:49 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:37:19 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:37:49 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:38:20 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:38:50 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:39:20 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:39:50 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:40:20 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:40:50 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:41:21 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:41:51 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:42:21 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:42:51 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:43:21 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hiytp0w1/0 [executing] active: Building image.
+06:43:51 INFO Waiting for model:
+  test-hiytp0w1/0 [executing] maintenance: Update image for runners
+06:44:10 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:44:10 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:44:40 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:44:52 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:45:22 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:45:25 INFO Current reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:45:25 INFO Waiting for reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:46:26 INFO Current reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:46:26 INFO Current reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49, expected reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:46:26 INFO Waiting for reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:47:27 INFO Current reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:47:27 INFO Current reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b, expected reconcile ID: d44ebfab-b7b4-43bb-8564-e0ffd2496e49
+06:47:31 INFO Wait for condition not met, sleeping 10
+06:47:52 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:48:08 INFO Current reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:48:08 INFO Waiting for reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:49:09 INFO Current reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:49:09 INFO Current reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b, expected reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:49:09 INFO Waiting for reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:50:10 INFO Current reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:50:10 INFO Current reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc, expected reconcile ID: 595b8f32-3c12-4087-830e-0c904607586b
+06:50:11 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:50:27 INFO Current reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:50:27 INFO Waiting for reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:51:28 INFO Current reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:51:28 INFO Current reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc, expected reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:51:28 INFO Waiting for reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:52:29 INFO Current reconcile ID: 98e6d276-a675-43a4-9869-b223a1108b2c
+06:52:29 INFO Current reconcile ID: 98e6d276-a675-43a4-9869-b223a1108b2c, expected reconcile ID: 252d65e4-2b08-49e7-b66b-d91769764dfc
+06:52:30 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756622931.0, "event": "runner_installed", "flavor": "test-hiytp0w1", "duration": 65.0}
+{"timestamp": 1756622935.0, "event": "runner_start", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 84.0}
+{"timestamp": 1756622937.0, "event": "runner_stop", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756622977.5365438, "event": "reconciliation", "flavor": "test-hiytp0w1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.64529848098755}
+
+06:52:31 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756622931.0, "event": "runner_installed", "flavor": "test-hiytp0w1", "duration": 65.0}
+{"timestamp": 1756622935.0, "event": "runner_start", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 84.0}
+{"timestamp": 1756622937.0, "event": "runner_stop", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756622977.5365438, "event": "reconciliation", "flavor": "test-hiytp0w1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.64529848098755}
+
+06:52:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756622931.0, "event": "runner_installed", "flavor": "test-hiytp0w1", "duration": 65.0}
+{"timestamp": 1756622935.0, "event": "runner_start", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 84.0}
+{"timestamp": 1756622937.0, "event": "runner_stop", "flavor": "test-hiytp0w1", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756622977.5365438, "event": "reconciliation", "flavor": "test-hiytp0w1", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.64529848098755}
+06:52:33 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:53:03 INFO Waiting for model:
+  test-hiytp0w1/0 [idle] active: 
+06:53:06 INFO Current reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
+06:53:06 INFO Waiting for reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
+06:54:07 INFO Current reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
+06:54:07 INFO Current reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481, expected reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
+06:54:07 INFO Waiting for reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
+06:55:08 INFO Current reconcile ID: e825b197-9ddb-4c1f-ac39-e34217cfee41
+06:55:08 INFO Current reconcile ID: e825b197-9ddb-4c1f-ac39-e34217cfee41, expected reconcile ID: 6b6659dd-b2b6-4673-aa41-b6550fa5d481
