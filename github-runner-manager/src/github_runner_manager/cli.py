@@ -47,17 +47,33 @@ version = importlib.metadata.version("github-runner-manager")
     help="Debug mode for testing.",
 )
 @click.option(
+    "--log-level",
+    type=click.Choice(
+        [
+            "CRITICAL",
+            "FATAL",
+            "ERROR",
+            "WARNING",
+            "INFO",
+            "DEBUG",
+        ]
+    ),
+    default="INFO",
+    help="The log level for the application.",
+)
+@click.option(
     "--python-path",
     type=str,
     default="",
     help="The PYTHONPATH to the github-runner-manager library.",
 )
 # The entry point for the CLI will be tested with integration test.
-def main(
+def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     config_file: TextIO,
     host: str,
     port: int,
     debug: bool,
+    log_level: str,
     python_path: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
@@ -67,12 +83,10 @@ def main(
         host: The hostname to listen on for the HTTP server
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
+        log_level: The log level.
         python_path: The PYTHONPATH to access the github-runner-manager library.
     """
     python_path_config = python_path if python_path else None
-    log_level = logging.INFO
-    if debug:
-        log_level = logging.DEBUG
     logging.basicConfig(
         level=log_level,
         stream=sys.stderr,

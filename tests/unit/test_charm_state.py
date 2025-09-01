@@ -32,6 +32,7 @@ from charm_state import (
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
+    RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
@@ -447,6 +448,7 @@ cat > ~/.ssh/config <<EOF
       EOF
 """
         ),
+        RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME: "INFO",
     }
 
     result = CharmConfig.from_charm(mock_charm)

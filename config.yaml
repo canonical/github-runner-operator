@@ -163,7 +163,6 @@ options:
           port 22
           proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
       EOF
-
   runner-http-proxy:
     type: string
     default: ""
@@ -176,3 +175,9 @@ options:
     description: >-
       When set to true, the ssh connection from the runner to the tmate-ssh-server will be done
       using the proxy for the runner.
+  runner-manager-log-level:
+    type: string
+    default: "INFO"
+    description: >-
+      The log level for the runner manager application. The value can be CRITICAL, FATAL, ERROR,
+      WARNING, INFO, or DEBUG.

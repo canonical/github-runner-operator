@@ -15,6 +15,7 @@ from typing import Optional, Sequence, Type
 import paramiko
 import paramiko.ssh_exception
 from fabric import Connection as SSHConnection
+from prometheus_client import Gauge, Histogram
 from pydantic import NonNegativeFloat, ValidationError
 
 from github_runner_manager.errors import IssueMetricEventError, RunnerMetricsError, SSHError
@@ -26,6 +27,7 @@ from github_runner_manager.manager.vm_manager import (
     RunnerMetrics,
 )
 from github_runner_manager.metrics import events as metric_events
+from github_runner_manager.metrics import labels
 from github_runner_manager.metrics.type import GithubJobMetrics
 from github_runner_manager.openstack_cloud.constants import (
     POST_JOB_METRICS_FILE_PATH,
@@ -37,6 +39,51 @@ from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 logger = logging.getLogger(__name__)
 
 MAX_METRICS_FILE_SIZE = 1024
+
+RUNNER_SPAWN_DURATION_SECONDS = Histogram(
+    name="runner_spawn_duration_seconds",
+    documentation="Time in seconds to initialize the VM and register the runner on GitHub.",
+    labelnames=[labels.FLAVOR],
+    buckets=[5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, float("inf")],
+)
+RUNNER_IDLE_DURATION_SECONDS = Histogram(
+    name="runner_idle_duration_seconds",
+    documentation="Time in seconds to runner waiting idle for the job to be picked up.",
+    labelnames=[labels.FLAVOR],
+)
+RUNNER_QUEUE_DURATION_SECONDS = Histogram(
+    name="runner_queue_duration_seconds",
+    documentation="Time taken in seconds for the job to be started.",
+    labelnames=[labels.FLAVOR],
+)
+EXTRACT_METRICS_DURATION_SECONDS = Histogram(
+    name="extract_metrics_duration_seconds",
+    documentation="Time taken in seconds for the metrics to be extracted.",
+    labelnames=[labels.FLAVOR],
+)
+JOB_DURATION_SECONDS = Histogram(
+    name="job_duration_seconds",
+    documentation="Time taken in seconds for the job to be completed.",
+    labelnames=[labels.FLAVOR],
+)
+JOB_REPOSITORY_COUNT = Gauge(
+    name="job_repository_count",
+    documentation="Number of jobs run per repository.",
+    labelnames=[labels.REPOSITORY],
+)
+JOB_EVENT_COUNT = Gauge(
+    name="job_event_count",
+    documentation="Number of jobs triggered per event.",
+    labelnames=[labels.EVENT],
+)
+JOB_CONCLUSION_COUNT = Gauge(
+    name="job_conclusion_count",
+    documentation="Number of jobs per conclusion.",
+    labelnames=[labels.CONCLUSION],
+)
+JOB_STATUS_COUNT = Gauge(
+    name="job_status_count", documentation="Number of jobs per status.", labelnames=[labels.STATUS]
+)
 
 
 class PullFileError(Exception):
@@ -89,7 +136,6 @@ def pull_runner_metrics(
                 logger.warning("No metrics pulled for %s", pull_config.instance_id)
             else:
                 pulled_metrics.append(metric)
-
     return pulled_metrics
 
 
@@ -416,6 +462,7 @@ def _issue_runner_installed(
         flavor=flavor,
         duration=duration,
     )
+    RUNNER_SPAWN_DURATION_SECONDS.labels(flavor).observe(duration)
     logger.debug("Issuing RunnerInstalled metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_installed)
 
@@ -439,7 +486,14 @@ def _issue_runner_start(
 
     logger.debug("Issuing RunnerStart metric for runner %s", runner_metrics.instance_id)
     metric_events.issue_event(runner_start_event)
-
+    idle_duration = (
+        (runner_metrics.installation_end_timestamp - runner_metrics.pre_job.timestamp)
+        if runner_metrics.installation_end_timestamp and runner_metrics.pre_job
+        else float("inf")
+    )
+    RUNNER_IDLE_DURATION_SECONDS.labels(flavor).observe(idle_duration)
+    queue_duration = job_metrics.queue_duration if job_metrics else float("inf")
+    RUNNER_QUEUE_DURATION_SECONDS.labels(flavor).observe(queue_duration)
     return metric_events.RunnerStart
 
 
@@ -565,7 +619,11 @@ def _create_runner_stop(
             runner_metrics.instance_id,
         )
     job_duration = max(post_job_metrics.timestamp - pre_job_metrics.timestamp, 0)
-
+    JOB_DURATION_SECONDS.labels(flavor).observe(job_duration)
+    JOB_REPOSITORY_COUNT.labels(pre_job_metrics.repository).inc()
+    JOB_EVENT_COUNT.labels(pre_job_metrics.event).inc()
+    JOB_CONCLUSION_COUNT.labels(job_metrics.conclusion if job_metrics else "unknown").inc()
+    JOB_STATUS_COUNT.labels(str(post_job_metrics.status)).inc()
     return metric_events.RunnerStop(
         timestamp=post_job_metrics.timestamp,
         flavor=flavor,

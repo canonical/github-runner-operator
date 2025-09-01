@@ -12,7 +12,7 @@ juju deploy github-runner --channel=local-lxd/stable --constraints="cores=2 mem=
 ```
 
 This constraint ensures the Juju machine hosting the charm is a LXD virtual machine. See
-[Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage) for
+[Managing resource usage](https://charmhub.io/github-runner/docs/local-lxd-tutorial-managing-resource-usage) for
 recommendation on `cores` and `mem` constraint.
 
 > NOTE: The name of the application must not be longer than 29 characters. This is due to the nature of LXD
