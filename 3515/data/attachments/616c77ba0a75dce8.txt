@@ -1,0 +1,172 @@
+07:12:51 WARNING unexpected facade SSHServer received from the controller
+07:12:51 INFO Adding model github-pr-420bb-lxd:test-reactive-6xk1 on cloud localhost
+07:12:51 WARNING unexpected facade SSHServer received from the controller
+07:12:51 WARNING unexpected facade SSHSession received from the controller
+07:12:51 WARNING unexpected facade SSHTunneler received from the controller
+07:12:53 INFO GitHub token rate limit: Rate(reset=2025-09-01 07:35:34+00:00, remaining=4015, limit=5000)
+07:12:58 INFO Deploying ch:amd64/jammy/mongodb-229
+07:13:00 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+07:13:21 INFO Deploying local:jammy/github-runner-0
+07:13:22 INFO Waiting for model:
+  test-m8obdvmw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m8obdvmw/0 [allocating] waiting: waiting for machine
+07:13:52 INFO Waiting for model:
+  test-m8obdvmw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m8obdvmw/0 [allocating] waiting: waiting for machine
+07:14:23 INFO Waiting for model:
+  test-m8obdvmw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m8obdvmw/0 [allocating] waiting: waiting for machine
+07:14:53 INFO Waiting for model:
+  test-m8obdvmw/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-m8obdvmw/0 [allocating] waiting: waiting for machine
+07:15:23 INFO Waiting for model:
+  test-m8obdvmw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-m8obdvmw/0 [allocating] waiting: waiting for machine
+07:15:53 INFO Waiting for model:
+  test-m8obdvmw/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] maintenance: Setting up Builder.
+07:16:24 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] maintenance: Setting up Builder.
+07:16:54 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] maintenance: Setting up Builder.
+07:17:24 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] maintenance: Setting up Builder.
+07:17:54 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] maintenance: Setting up Builder.
+07:18:24 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:18:54 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:19:24 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:19:54 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:20:25 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:20:55 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:21:25 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:21:55 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:22:25 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:22:56 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:23:26 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:23:57 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:24:27 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:24:57 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:25:28 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:25:58 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:26:29 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:26:59 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:27:29 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:28:00 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:28:30 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:29:00 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-m8obdvmw/0 [executing] active: Building image.
+07:29:31 INFO Waiting for model:
+  test-m8obdvmw/0 [executing] maintenance: Update image for runners
+07:29:54 WARNING relate is deprecated and will be removed. Use integrate instead.
+07:29:54 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+07:30:24 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+07:30:35 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:31:06 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:31:09 INFO Current reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:31:09 INFO Waiting for reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:32:10 INFO Current reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:32:10 INFO Current reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb, expected reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:32:10 INFO Waiting for reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:33:11 INFO Current reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:33:11 INFO Current reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989, expected reconcile ID: ac14b2f7-582c-4a34-92c0-082fa6d68bbb
+07:33:15 INFO Wait for condition not met, sleeping 10
+07:33:36 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:33:53 INFO Current reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:33:53 INFO Waiting for reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:34:54 INFO Current reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:34:54 INFO Current reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989, expected reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:34:54 INFO Waiting for reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:35:55 INFO Current reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:35:55 INFO Current reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148, expected reconcile ID: dca40359-4a49-438b-b8ff-50d9eee99989
+07:35:56 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:36:12 INFO Current reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:36:12 INFO Waiting for reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:37:13 INFO Current reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:37:13 INFO Current reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148, expected reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:37:13 INFO Waiting for reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:38:14 INFO Current reconcile ID: f46765ce-c0b1-4a81-ab03-927f77ae03df
+07:38:14 INFO Current reconcile ID: f46765ce-c0b1-4a81-ab03-927f77ae03df, expected reconcile ID: 27ef1e8d-7c6a-40f0-8c86-0653a47d2148
+07:38:15 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756712066.0, "event": "runner_installed", "flavor": "test-m8obdvmw", "duration": 56.0}
+{"timestamp": 1756712070.0, "event": "runner_start", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 73.0}
+{"timestamp": 1756712072.0, "event": "runner_stop", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756712132.005441, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.166045904159546}
+{"timestamp": 1756712265.112647, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.981684684753418}
+
+07:38:17 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756712066.0, "event": "runner_installed", "flavor": "test-m8obdvmw", "duration": 56.0}
+{"timestamp": 1756712070.0, "event": "runner_start", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 73.0}
+{"timestamp": 1756712072.0, "event": "runner_stop", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756712132.005441, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.166045904159546}
+{"timestamp": 1756712265.112647, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.981684684753418}
+
+07:38:18 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756712066.0, "event": "runner_installed", "flavor": "test-m8obdvmw", "duration": 56.0}
+{"timestamp": 1756712070.0, "event": "runner_start", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 73.0}
+{"timestamp": 1756712072.0, "event": "runner_stop", "flavor": "test-m8obdvmw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1756712132.005441, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.166045904159546}
+{"timestamp": 1756712265.112647, "event": "reconciliation", "flavor": "test-m8obdvmw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.981684684753418}
+07:38:18 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:38:48 INFO Waiting for model:
+  test-m8obdvmw/0 [idle] active: 
+07:38:51 INFO Current reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742
+07:38:51 INFO Waiting for reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742
+07:39:52 INFO Current reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742
+07:39:52 INFO Current reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742, expected reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742
+07:39:52 INFO Waiting for reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742
+07:40:53 INFO Current reconcile ID: 4dd706f9-c338-4a70-aa51-56cfbed0dd04
+07:40:53 INFO Current reconcile ID: 4dd706f9-c338-4a70-aa51-56cfbed0dd04, expected reconcile ID: b0b01ccf-af36-494a-87c8-03a7af196742

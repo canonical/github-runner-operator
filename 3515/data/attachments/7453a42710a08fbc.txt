@@ -1,0 +1,101 @@
+07:22:31 WARNING unexpected facade SSHServer received from the controller
+07:22:31 INFO Adding model github-pr-420bb-lxd:test-charm-no-runner-r8e9 on cloud localhost
+07:22:32 WARNING unexpected facade SSHServer received from the controller
+07:22:32 WARNING unexpected facade SSHSession received from the controller
+07:22:32 WARNING unexpected facade SSHTunneler received from the controller
+07:22:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+07:22:53 INFO Deploying local:jammy/github-runner-0
+07:22:53 INFO Waiting for model:
+  test-zbcnehxg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zbcnehxg/0 [allocating] waiting: waiting for machine
+07:23:23 INFO Waiting for model:
+  test-zbcnehxg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zbcnehxg/0 [allocating] waiting: waiting for machine
+07:23:53 INFO Waiting for model:
+  test-zbcnehxg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zbcnehxg/0 [allocating] waiting: waiting for machine
+07:24:24 INFO Waiting for model:
+  test-zbcnehxg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zbcnehxg/0 [executing] maintenance: Setting up Builder.
+07:24:54 INFO Waiting for model:
+  test-zbcnehxg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-zbcnehxg/0 [executing] maintenance: Setting up Builder.
+07:25:24 INFO Waiting for model:
+  test-zbcnehxg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zbcnehxg/0 [executing] maintenance: Setting up Builder.
+07:25:55 INFO Waiting for model:
+  test-zbcnehxg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-zbcnehxg/0 [executing] maintenance: Setting up Builder.
+07:26:25 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] maintenance: Setting up Builder.
+07:26:55 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:27:25 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:27:55 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:28:26 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:28:56 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:29:26 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:29:56 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:30:26 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:30:56 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:31:26 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:31:56 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:32:26 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:32:56 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:33:27 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:33:57 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:34:27 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:34:58 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:35:28 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:35:58 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:36:29 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:36:59 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:37:29 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-zbcnehxg/0 [executing] active: Building image.
+07:37:59 INFO Waiting for model:
+  test-zbcnehxg/0 [executing] maintenance: Update image for runners
+07:38:20 INFO Waiting for model:
+  test-zbcnehxg/0 [idle] active:
