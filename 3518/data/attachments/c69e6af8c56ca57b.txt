@@ -1,0 +1,142 @@
+18:24:20 WARNING unexpected facade SSHServer received from the controller
+18:24:20 INFO Adding model github-pr-420bb-lxd:test-charm-runner-uzh9 on cloud localhost
+18:24:21 WARNING unexpected facade SSHServer received from the controller
+18:24:21 WARNING unexpected facade SSHSession received from the controller
+18:24:21 WARNING unexpected facade SSHTunneler received from the controller
+18:24:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:24:48 INFO Deploying local:jammy/github-runner-0
+18:24:49 INFO Waiting for model:
+  test-rzglc1c0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rzglc1c0/0 [allocating] waiting: waiting for machine
+18:25:19 INFO Waiting for model:
+  test-rzglc1c0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rzglc1c0/0 [allocating] waiting: waiting for machine
+18:25:50 INFO Waiting for model:
+  test-rzglc1c0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rzglc1c0/0 [allocating] waiting: waiting for machine
+18:26:20 INFO Waiting for model:
+  test-rzglc1c0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rzglc1c0/0 [executing] maintenance: Setting up Builder.
+18:26:51 INFO Waiting for model:
+  test-rzglc1c0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rzglc1c0/0 [executing] maintenance: Setting up Builder.
+18:27:21 INFO Waiting for model:
+  test-rzglc1c0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rzglc1c0/0 [executing] maintenance: Setting up Builder.
+18:27:51 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] maintenance: Setting up Builder.
+18:28:22 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] maintenance: Setting up Builder.
+18:28:52 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] blocked: image integration required.
+18:29:22 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:29:52 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:30:22 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:30:53 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:31:23 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:31:53 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:32:23 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:32:53 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:33:24 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:33:54 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:34:24 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:34:54 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:35:25 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:35:55 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:36:25 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:36:55 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:37:25 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:37:56 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:38:26 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:38:57 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:39:27 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:39:57 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:40:28 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:40:58 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:41:29 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:41:59 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:42:29 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:43:00 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rzglc1c0/0 [executing] active: Building image.
+18:43:30 INFO Waiting for model:
+  test-rzglc1c0/0 [executing] maintenance: Update image for runners
+18:43:52 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] active: 
+18:44:22 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] active: 
+18:44:26 INFO Current reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:44:26 INFO Waiting for reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:45:27 INFO Current reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:45:27 INFO Current reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573, expected reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:45:27 INFO Waiting for reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:46:28 INFO Current reconcile ID: 2a8a7448-dbc2-4669-ac64-05e6f6ff533c
+18:46:28 INFO Current reconcile ID: 2a8a7448-dbc2-4669-ac64-05e6f6ff533c, expected reconcile ID: fa92d374-7eeb-469a-9434-e844e1882573
+18:46:38 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] active: 
+18:47:08 INFO Waiting for model:
+  test-rzglc1c0/0 [idle] active: 
+18:47:11 INFO Current reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
+18:47:11 INFO Waiting for reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
+18:48:13 INFO Current reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
+18:48:13 INFO Current reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f, expected reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
+18:48:13 INFO Waiting for reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
+18:49:14 INFO Current reconcile ID: 1668c29b-d84a-42d2-937d-3707c45273cc
+18:49:14 INFO Current reconcile ID: 1668c29b-d84a-42d2-937d-3707c45273cc, expected reconcile ID: bdd1de00-b258-473e-b32c-ae5a8f260f4f
