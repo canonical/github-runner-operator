@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  pfe-ci:
-    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-private-endpoint-medium]
+  amd64-edge:
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-edge]
     steps:
       - run: lscpu
       - run: df -h
