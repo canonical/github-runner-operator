@@ -119,6 +119,7 @@ JOB_DURATION_SECONDS = Histogram(
         HOURS_IN_SECONDS * 6,
         # days
         DAYS_IN_SECONDS * 3,
+        DAYS_IN_SECONDS * 5,
         float("inf"),
     ],
 )
