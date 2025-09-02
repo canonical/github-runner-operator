@@ -50,21 +50,25 @@ RUNNER_IDLE_DURATION_SECONDS = Histogram(
     name="runner_idle_duration_seconds",
     documentation="Time in seconds to runner waiting idle for the job to be picked up.",
     labelnames=[labels.FLAVOR],
+    buckets=[5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, float("inf")],
 )
 RUNNER_QUEUE_DURATION_SECONDS = Histogram(
     name="runner_queue_duration_seconds",
     documentation="Time taken in seconds for the job to be started.",
     labelnames=[labels.FLAVOR],
+    buckets=[5, 30, 60, 60 * 5, 60 * 10, 60 * 20, 60 * 30, 60 * 60, 60 * 60 * 2, float("inf")],
 )
 EXTRACT_METRICS_DURATION_SECONDS = Histogram(
     name="extract_metrics_duration_seconds",
     documentation="Time taken in seconds for the metrics to be extracted.",
     labelnames=[labels.FLAVOR],
+    buckets=[5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, float("inf")],
 )
 JOB_DURATION_SECONDS = Histogram(
     name="job_duration_seconds",
     documentation="Time taken in seconds for the job to be completed.",
     labelnames=[labels.FLAVOR],
+    buckets=[60, 60 * 5, 60 * 10, 60 * 20, 60 * 30, 60 * 60, 60 * 60 * 2, float("inf")],
 )
 JOB_REPOSITORY_COUNT = Gauge(
     name="job_repository_count",
