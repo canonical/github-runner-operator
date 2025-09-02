@@ -1,0 +1,105 @@
+07:05:53 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:06:23 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:06:26 INFO Current reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:06:26 INFO Waiting for reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:07:27 INFO Current reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:07:27 INFO Current reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f, expected reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:07:27 INFO Waiting for reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:08:28 INFO Current reconcile ID: 21ec568f-0076-46f1-a5fa-d4b92dac1a58
+07:08:28 INFO Current reconcile ID: 21ec568f-0076-46f1-a5fa-d4b92dac1a58, expected reconcile ID: 82af00da-601c-497d-b622-60641d0ed38f
+07:08:28 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:08:58 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:09:10 INFO Current reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:09:10 INFO Waiting for reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:10:11 INFO Current reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:10:11 INFO Current reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27, expected reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:10:11 INFO Waiting for reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:11:12 INFO Current reconcile ID: 7a9ec9d5-467f-468d-b309-1e9018a1e563
+07:11:12 INFO Current reconcile ID: 7a9ec9d5-467f-468d-b309-1e9018a1e563, expected reconcile ID: 6b5f6d0d-0acf-4a43-b9d0-06b76adc3e27
+07:11:20 INFO Wait for condition not met, sleeping 30
+07:12:04 INFO [TEST SETUP] Run command pkill -9 run.sh on test-cb2egmuf-0-n-7e22c2ea949e
+07:12:04 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.173', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:11:a4:2a'}]])
+07:12:05 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cb2egmuf-0-n-7e22c2ea949e.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.173 pkill -9 run.sh'
+07:12:06 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.173' (ED25519) to the list of known hosts.
+'
+07:12:10 INFO Runner test-cb2egmuf-0-n-7e22c2ea949e status: online
+07:12:10 INFO Runner still marked as online, waiting for it to be marked offline
+07:13:12 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:13:42 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:13:45 INFO Current reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:13:45 INFO Waiting for reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:14:46 INFO Current reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:14:46 INFO Current reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3, expected reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:14:46 INFO Waiting for reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:15:47 INFO Current reconcile ID: 593e9da9-99b9-4133-afa5-8fd479301ca7
+07:15:47 INFO Current reconcile ID: 593e9da9-99b9-4133-afa5-8fd479301ca7, expected reconcile ID: b2405eaa-4dab-4edd-af00-8f6bc6e449c3
+07:15:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756796765.4311235, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.983041524887085}
+{"timestamp": 1756796894.4700787, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.894816637039185}
+{"timestamp": 1756796926.7531466, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 15.955853462219238}
+{"timestamp": 1756797058.942825, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.13095235824585}
+{"timestamp": 1756796997.0, "event": "runner_installed", "flavor": "test-cb2egmuf", "duration": 74.0}
+{"timestamp": 1756797082.0, "event": "runner_start", "flavor": "test-cb2egmuf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 85.0, "queue_duration": 1.0}
+{"timestamp": 1756797126.0, "event": "runner_stop", "flavor": "test-cb2egmuf", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 44.0, "job_conclusion": "cancelled"}
+{"timestamp": 1756797207.2555914, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.905001163482666}
+{"timestamp": 1756797338.1454618, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.78057050704956}
+07:15:49 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-y80b  github-pr-420bb-lxd  localhost/localhost  3.6.9    unsupported  07:15:49Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-cb2egmuf           active      1  github-runner-image-builder  latest/edge  110  no       
+test-cb2egmuf                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-cb2egmuf/0*  active    idle   0        10.110.117.205            
+test-cb2egmuf/0*                         active    idle   1        10.110.117.67   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.110.117.205  juju-49d30a-0  ubuntu@22.04  github-runner  Running
+1        started  10.110.117.67   juju-49d30a-1  ubuntu@22.04  github-runner  Running
+
+07:15:49 INFO Juju error logs:
+
+machine-0: 06:40:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:40:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-cb2egmuf-0: 06:40:23 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:40:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:40:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-cb2egmuf-0: 06:40:27 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-cb2egmuf-0: 06:41:27 ERROR unit.github-runner-image-builder-cb2egmuf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-cb2egmuf-0: 06:41:40 ERROR unit.test-cb2egmuf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cb2egmuf-0: 06:41:42 ERROR unit.test-cb2egmuf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-cb2egmuf-0: 06:43:44 ERROR unit.test-cb2egmuf/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-cb2egmuf-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:15:49 INFO Forgetting model main...

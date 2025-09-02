@@ -1,0 +1,173 @@
+06:38:39 INFO GitHub token rate limit: Rate(reset=2025-09-02 07:16:03+00:00, remaining=4356, limit=5000)
+06:38:54 WARNING unexpected facade SSHServer received from the controller
+06:38:54 INFO Adding model github-pr-420bb-lxd:test-charm-metrics-failure-y80b on cloud localhost
+06:38:54 WARNING unexpected facade SSHServer received from the controller
+06:38:54 WARNING unexpected facade SSHSession received from the controller
+06:38:54 WARNING unexpected facade SSHTunneler received from the controller
+06:38:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:39:15 INFO Deploying local:jammy/github-runner-0
+06:39:15 INFO Waiting for model:
+  test-cb2egmuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cb2egmuf/0 [allocating] waiting: waiting for machine
+06:39:45 INFO Waiting for model:
+  test-cb2egmuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cb2egmuf/0 [allocating] waiting: waiting for machine
+06:40:15 INFO Waiting for model:
+  test-cb2egmuf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cb2egmuf/0 [allocating] waiting: waiting for machine
+06:40:46 INFO Waiting for model:
+  test-cb2egmuf/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:41:16 INFO Waiting for model:
+  test-cb2egmuf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:41:46 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:42:16 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:42:46 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:43:17 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] maintenance: Setting up Builder.
+06:43:47 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] blocked: image integration required.
+06:44:17 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:44:47 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:45:18 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:45:48 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:46:19 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:46:49 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:47:19 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:47:49 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:48:20 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:48:50 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:49:20 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:49:50 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:50:20 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:50:51 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:51:21 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:51:51 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:52:22 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:52:52 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:53:23 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:53:53 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:54:24 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:54:54 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:55:24 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:55:55 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cb2egmuf/0 [executing] active: Building image.
+06:56:25 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+06:56:39 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+06:57:10 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+06:57:13 INFO Current reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+06:57:13 INFO Waiting for reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+06:58:14 INFO Current reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+06:58:14 INFO Current reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee, expected reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+06:58:14 INFO Waiting for reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+06:59:15 INFO Current reconcile ID: c9642b1c-ebe6-4194-8b0b-55e2b4d3522c
+06:59:15 INFO Current reconcile ID: c9642b1c-ebe6-4194-8b0b-55e2b4d3522c, expected reconcile ID: 9180c73d-6691-4172-b883-8a925f6e30ee
+07:00:07 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:00:37 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:00:40 INFO Current reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:00:40 INFO Waiting for reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:01:41 INFO Current reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:01:41 INFO Current reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc, expected reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:01:41 INFO Waiting for reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:02:42 INFO Current reconcile ID: 1740bc5d-5bd2-4a03-ad60-9d0abf7f6f24
+07:02:42 INFO Current reconcile ID: 1740bc5d-5bd2-4a03-ad60-9d0abf7f6f24, expected reconcile ID: dd049588-5cf5-4e12-bdde-6163536c0abc
+07:02:49 INFO [TEST SETUP] Exposing port 8080 on test-cb2egmuf-0-n-1383d8f40875
+07:02:49 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.65', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8b:87:db'}]])
+07:02:50 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-cb2egmuf-0-n-1383d8f40875.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.65 &
+07:02:51 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.65' (ED25519) to the list of known hosts.
+
+07:02:53 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-cb2egmuf-0-n-1383d8f40875
+07:02:53 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.65', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8b:87:db'}]])
+07:02:54 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cb2egmuf-0-n-1383d8f40875.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.65 nc -z localhost 8080'
+07:02:55 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+07:02:56 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-cb2egmuf-0-n-1383d8f40875
+07:02:56 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.65', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:8b:87:db'}]])
+07:02:57 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-cb2egmuf-0-n-1383d8f40875.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.65 curl http://localhost:8080'
+07:02:58 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  75327      0 --:--:-- --:--:-- --:--:--  101k
+'
+07:03:02 INFO Wait for condition not met, sleeping 10
+07:03:13 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:03:43 INFO Waiting for model:
+  test-cb2egmuf/0 [idle] active: 
+07:03:46 INFO Current reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:03:46 INFO Waiting for reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:04:47 INFO Current reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:04:47 INFO Current reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f, expected reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:04:47 INFO Waiting for reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:05:48 INFO Current reconcile ID: 41caf9e3-9349-4c3e-9aea-372572b1ea98
+07:05:48 INFO Current reconcile ID: 41caf9e3-9349-4c3e-9aea-372572b1ea98, expected reconcile ID: 0fdabc3c-dde8-42e4-9933-d413ebdb8c0f
+07:05:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1756796487.0, "event": "runner_installed", "flavor": "test-cb2egmuf", "duration": 67.0}
+{"timestamp": 1756796585.0, "event": "runner_start", "flavor": "test-cb2egmuf", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 98.0, "queue_duration": 1.0}
+{"timestamp": 1756796585.0, "event": "runner_stop", "flavor": "test-cb2egmuf", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1756796615.2597356, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.473766088485718}
+{"timestamp": 1756796744.994165, "event": "reconciliation", "flavor": "test-cb2egmuf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.613103866577148}
