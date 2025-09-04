@@ -14,7 +14,7 @@ concurrency:
 jobs:
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args 
     secrets: inherit
     with:
       juju-channel: 3.6/stable
@@ -26,7 +26,7 @@ jobs:
       self-hosted-runner-label: self-hosted-linux-amd64-noble-pfe-ci 
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args 
     secrets: inherit
     with:
       juju-channel: 3.6/stable
