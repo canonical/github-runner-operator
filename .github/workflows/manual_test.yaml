@@ -7,7 +7,7 @@ on:
 
 jobs:
   pfe-ci:
-    runs-on: [self-hosted, pfe-ci]
+    runs-on: [self-hosted, x64, pfe-ci, noble]
     steps:
       - run: lscpu
       - run: df -h
