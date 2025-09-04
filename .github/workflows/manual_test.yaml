@@ -15,6 +15,6 @@ jobs:
       - run: uname -a
       - run: lsb_release -a
       - uses: actions/checkout@v5
-      - run: ${{ secrets.INTEGRATION_TEST_ARGS }} > test.txt
+      - run: echo '${{ secrets.INTEGRATION_TEST_ARGS }}' > test.txt
       - name: Setup tmate session
         uses: canonical/action-tmate@main
