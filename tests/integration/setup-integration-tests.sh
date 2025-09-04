@@ -22,7 +22,7 @@ fi
 # Get preferred source IP address for metallb
 IPADDR=$( { ip -4 -j route get 2.2.2.2 | jq -r '.[] | .prefsrc'; } )
 sudo microk8s enable "metallb:$IPADDR-$IPADDR" "hostpath-storage"
-microk8s status --wait-ready
+microk8s status --wait-ready --timeout=1200
 
 unset JUJU_CONTROLLER
 unset JUJU_MODEL
