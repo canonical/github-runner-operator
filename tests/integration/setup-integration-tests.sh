@@ -12,7 +12,7 @@
 ORIGINAL_CONTROLLER=$(juju controllers --format json | jq -r '.controllers | keys | .[0]')
 
 echo "bootstrapping microk8s juju controller"
-sudo snap install microk8s --channel=1.32-strict/stable
+sudo snap install microk8s --channel=1.34-strict/stable
 GROUP=snap_microk8s
 sudo usermod -a -G "$GROUP" "$USER"
 if [ "$(id -gn)" != "$GROUP" ]; then
