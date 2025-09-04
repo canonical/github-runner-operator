@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  amd64-edge:
-    runs-on: [self-hosted, edge, amd64]
+  pfe-ci:
+    runs-on: [self-hosted, pfe-ci]
     steps:
       - run: lscpu
       - run: df -h
@@ -15,6 +15,5 @@ jobs:
       - run: uname -a
       - run: lsb_release -a
       - uses: actions/checkout@v5
-      - run: echo '${{ secrets.INTEGRATION_TEST_ARGS }}' > test.txt
       - name: Setup tmate session
         uses: canonical/action-tmate@main
