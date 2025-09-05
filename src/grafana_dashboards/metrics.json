@@ -1920,7 +1920,7 @@
         "type": "loki",
         "uid": "${lokids}"
       },
-      "description": "Visualises the number of jobs per repository.",
+      "description": "Visualises the number of jobs per workflow per repository.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1931,7 +1931,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1972,7 +1973,7 @@
             "uid": "${lokids}"
           },
           "editorMode": "code",
-          "expr": "sum by(repo)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json repo=\"repo\" | flavor=~\"$flavor\" | repo=~\"$repository\"[$__range]))",
+          "expr": "sum by(repo,workflow)(count_over_time({filename=\"/var/log/github-runner-metrics.log\", juju_application=~\"$juju_application\", juju_model=~\"$juju_model\", juju_model_uuid=~\"$juju_model_uuid\", juju_unit=~\"$juju_unit\"} | json event=\"event\",flavor=\"flavor\" | event=\"runner_start\" | json repo=\"repo\",workflow=\"workflow\" | flavor=~\"$flavor\" | repo=~\"$repository\"[$__range]))",
           "legendFormat": "",
           "queryType": "instant",
           "refId": "A"
