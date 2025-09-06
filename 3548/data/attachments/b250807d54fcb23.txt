@@ -1,0 +1,106 @@
+18:58:42 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+18:59:12 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+18:59:16 INFO Current reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+18:59:16 INFO Waiting for reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+19:00:17 INFO Current reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+19:00:17 INFO Current reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657, expected reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+19:00:17 INFO Waiting for reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+19:01:18 INFO Current reconcile ID: 3a8482ac-6679-40a3-8f61-7029def68fed
+19:01:18 INFO Current reconcile ID: 3a8482ac-6679-40a3-8f61-7029def68fed, expected reconcile ID: 835f3388-a1d2-432e-863d-e91a03786657
+19:01:18 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+19:01:48 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+19:01:59 INFO Current reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:01:59 INFO Waiting for reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:03:00 INFO Current reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:03:00 INFO Current reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95, expected reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:03:00 INFO Waiting for reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:04:01 INFO Current reconcile ID: f751ae8b-5e6b-4683-8e13-f6414dfd8f09
+19:04:01 INFO Current reconcile ID: f751ae8b-5e6b-4683-8e13-f6414dfd8f09, expected reconcile ID: c0876709-557e-4fa1-9aeb-7c2e60085b95
+19:04:08 INFO Wait for condition not met, sleeping 30
+19:04:51 INFO [TEST SETUP] Run command pkill -9 run.sh on test-ze4q2vwq-0-n-45fd0550fe23
+19:04:51 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.27', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:3e:48:49'}]])
+19:04:52 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ze4q2vwq-0-n-45fd0550fe23.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.27 pkill -9 run.sh'
+19:04:53 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.27' (ED25519) to the list of known hosts.
+'
+19:04:55 INFO Runner test-ze4q2vwq-0-n-45fd0550fe23 status: online
+19:04:55 INFO Runner still marked as online, waiting for it to be marked offline
+19:05:56 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+19:06:26 INFO Waiting for model:
+  test-ze4q2vwq/0 [idle] active: 
+19:06:29 INFO Current reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:06:29 INFO Waiting for reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:07:30 INFO Current reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:07:30 INFO Current reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22, expected reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:07:30 INFO Waiting for reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:08:31 INFO Current reconcile ID: 5ca0bd1f-def1-4244-9f85-acb988f17f0c
+19:08:31 INFO Current reconcile ID: 5ca0bd1f-def1-4244-9f85-acb988f17f0c, expected reconcile ID: 30bbe7b6-eb8f-4693-81ef-9cfe866b0e22
+19:08:32 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757185133.5952544, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.937572956085205}
+{"timestamp": 1757185263.575845, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.894289493560791}
+{"timestamp": 1757185292.2973027, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.882998943328857}
+{"timestamp": 1757185422.0598195, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 9.656590223312378}
+{"timestamp": 1757185387.0, "event": "runner_installed", "flavor": "test-ze4q2vwq", "duration": 98.0}
+{"timestamp": 1757185451.0, "event": "runner_start", "flavor": "test-ze4q2vwq", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 64.0, "queue_duration": 1.0}
+{"timestamp": 1757185493.0, "event": "runner_stop", "flavor": "test-ze4q2vwq", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1757185555.1031651, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.902699708938599}
+{"timestamp": 1757185568.0748708, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.625674486160278}
+{"timestamp": 1757185697.4169233, "event": "reconciliation", "flavor": "test-ze4q2vwq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.210612058639526}
+19:08:36 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-b25e  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:08:36Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ze4q2vwq           active      1  github-runner-image-builder  latest/edge  110  no       
+test-ze4q2vwq                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ze4q2vwq/0*  active    idle   0        10.118.76.182             
+test-ze4q2vwq/0*                         active    idle   1        10.118.76.64    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.118.76.182  juju-41e17a-0  ubuntu@22.04  github-runner  Running
+1        started  10.118.76.64   juju-41e17a-1  ubuntu@22.04  github-runner  Running
+
+19:08:36 INFO Juju error logs:
+
+machine-0: 18:32:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:32:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ze4q2vwq-0: 18:32:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:33:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:33:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ze4q2vwq-0: 18:33:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ze4q2vwq-0: 18:33:43 ERROR unit.github-runner-image-builder-ze4q2vwq/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ze4q2vwq-0: 18:34:30 ERROR unit.test-ze4q2vwq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ze4q2vwq-0: 18:34:32 ERROR unit.test-ze4q2vwq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ze4q2vwq-0: 18:35:59 ERROR unit.test-ze4q2vwq/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ze4q2vwq-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:08:36 INFO Forgetting model main...
