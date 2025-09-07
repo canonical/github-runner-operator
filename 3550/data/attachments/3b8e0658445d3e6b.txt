@@ -1,0 +1,185 @@
+18:26:04 WARNING unexpected facade SSHServer received from the controller
+18:26:04 INFO Adding model github-pr-77d1e-lxd:test-reactive-ua6v on cloud localhost
+18:26:04 WARNING unexpected facade SSHServer received from the controller
+18:26:04 WARNING unexpected facade SSHSession received from the controller
+18:26:04 WARNING unexpected facade SSHTunneler received from the controller
+18:26:05 INFO GitHub token rate limit: Rate(reset=2025-09-07 19:11:06+00:00, remaining=4982, limit=5000)
+18:26:09 INFO Deploying ch:amd64/jammy/mongodb-229
+18:26:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:26:32 INFO Deploying local:jammy/github-runner-0
+18:26:32 INFO Waiting for model:
+  test-pplvofei/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pplvofei/0 [allocating] waiting: waiting for machine
+18:27:02 INFO Waiting for model:
+  test-pplvofei/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pplvofei/0 [allocating] waiting: waiting for machine
+18:27:32 INFO Waiting for model:
+  test-pplvofei/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pplvofei/0 [allocating] waiting: waiting for machine
+18:28:02 INFO Waiting for model:
+  test-pplvofei/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pplvofei/0 [allocating] waiting: waiting for machine
+18:28:32 INFO Waiting for model:
+  test-pplvofei/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pplvofei/0 [allocating] waiting: waiting for machine
+18:29:03 INFO Waiting for model:
+  test-pplvofei/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pplvofei/0 [executing] maintenance: Setting up Builder.
+18:29:33 INFO Waiting for model:
+  test-pplvofei/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pplvofei/0 [executing] maintenance: Setting up Builder.
+18:30:03 INFO Waiting for model:
+  test-pplvofei/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pplvofei/0 [executing] maintenance: Setting up Builder.
+18:30:33 INFO Waiting for model:
+  test-pplvofei/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pplvofei/0 [executing] maintenance: Setting up Builder.
+18:31:04 INFO Waiting for model:
+  test-pplvofei/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pplvofei/0 [executing] maintenance: Setting up Builder.
+18:31:34 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] blocked: image integration required.
+18:32:05 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:32:35 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:33:06 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:33:36 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:34:07 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:34:37 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:35:08 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:35:38 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:36:09 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:36:39 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:37:09 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:37:40 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:38:10 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:38:40 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:39:10 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:39:41 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:40:11 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:40:41 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:41:11 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:41:41 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:42:11 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:42:42 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:43:12 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:43:42 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:44:12 INFO Waiting for model:
+  test-pplvofei/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pplvofei/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-pplvofei/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pplvofei/0 [idle] active: 
+18:45:08 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:45:08 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:45:38 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:45:54 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:46:24 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:46:27 INFO Current reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:46:27 INFO Waiting for reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:47:28 INFO Current reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:47:28 INFO Current reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80, expected reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:47:28 INFO Waiting for reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:48:29 INFO Current reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:48:29 INFO Current reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9, expected reconcile ID: bc9fb600-f9ee-41aa-b591-ec3b1bb0dd80
+18:48:33 INFO Wait for condition not met, sleeping 10
+18:48:54 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:49:10 INFO Current reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:49:10 INFO Waiting for reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:50:11 INFO Current reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:50:11 INFO Current reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9, expected reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:50:11 INFO Waiting for reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:51:12 INFO Current reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:51:12 INFO Current reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7, expected reconcile ID: 37d47bb7-dfe2-4c8f-b18e-89c993a797f9
+18:51:13 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:51:29 INFO Current reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:51:29 INFO Waiting for reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:52:30 INFO Current reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:52:30 INFO Current reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7, expected reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:52:30 INFO Waiting for reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:53:31 INFO Current reconcile ID: 15497d06-f15f-4659-bb82-e84e25b07ce4
+18:53:31 INFO Current reconcile ID: 15497d06-f15f-4659-bb82-e84e25b07ce4, expected reconcile ID: 3c78077e-bdde-4140-b9d3-d415ca8887e7
+18:53:32 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757271038.5225606, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.035942554473877}
+{"timestamp": 1757271054.0, "event": "runner_installed", "flavor": "test-pplvofei", "duration": 126.0}
+{"timestamp": 1757271058.0, "event": "runner_start", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 143.0}
+{"timestamp": 1757271060.0, "event": "runner_stop", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757271178.3437078, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.697352409362793}
+
+18:53:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757271038.5225606, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.035942554473877}
+{"timestamp": 1757271054.0, "event": "runner_installed", "flavor": "test-pplvofei", "duration": 126.0}
+{"timestamp": 1757271058.0, "event": "runner_start", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 143.0}
+{"timestamp": 1757271060.0, "event": "runner_stop", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757271178.3437078, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.697352409362793}
+
+18:53:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757271038.5225606, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.035942554473877}
+{"timestamp": 1757271054.0, "event": "runner_installed", "flavor": "test-pplvofei", "duration": 126.0}
+{"timestamp": 1757271058.0, "event": "runner_start", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 143.0}
+{"timestamp": 1757271060.0, "event": "runner_stop", "flavor": "test-pplvofei", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757271178.3437078, "event": "reconciliation", "flavor": "test-pplvofei", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 19.697352409362793}
+18:53:34 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:54:04 INFO Waiting for model:
+  test-pplvofei/0 [idle] active: 
+18:54:07 INFO Current reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc
+18:54:07 INFO Waiting for reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc
+18:55:08 INFO Current reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc
+18:55:08 INFO Current reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc, expected reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc
+18:55:08 INFO Waiting for reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc
+18:56:09 INFO Current reconcile ID: e5528261-b1b4-40c4-9133-d7b72547ed41
+18:56:09 INFO Current reconcile ID: e5528261-b1b4-40c4-9133-d7b72547ed41, expected reconcile ID: e0d91086-ce4a-4246-98e6-d686df3c9ccc

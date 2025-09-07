@@ -1,0 +1,124 @@
+18:25:58 WARNING unexpected facade SSHServer received from the controller
+18:25:58 INFO Adding model github-pr-77d1e-lxd:test-charm-runner-jtzr on cloud localhost
+18:25:58 WARNING unexpected facade SSHServer received from the controller
+18:25:58 WARNING unexpected facade SSHSession received from the controller
+18:25:58 WARNING unexpected facade SSHTunneler received from the controller
+18:26:00 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:26:19 INFO Deploying local:jammy/github-runner-0
+18:26:20 INFO Waiting for model:
+  test-lldcb3b1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lldcb3b1/0 [allocating] waiting: waiting for machine
+18:26:50 INFO Waiting for model:
+  test-lldcb3b1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lldcb3b1/0 [allocating] waiting: waiting for machine
+18:27:20 INFO Waiting for model:
+  test-lldcb3b1/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lldcb3b1/0 [allocating] waiting: waiting for machine
+18:27:51 INFO Waiting for model:
+  test-lldcb3b1/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-lldcb3b1/0 [allocating] waiting: agent initialising
+18:28:21 INFO Waiting for model:
+  test-lldcb3b1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lldcb3b1/0 [executing] maintenance: Setting up Builder.
+18:28:51 INFO Waiting for model:
+  test-lldcb3b1/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lldcb3b1/0 [executing] maintenance: Setting up Builder.
+18:29:22 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] maintenance: Setting up Builder.
+18:29:52 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] maintenance: Setting up Builder.
+18:30:22 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] blocked: image integration required.
+18:30:52 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:31:23 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:31:53 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:32:23 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:32:54 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:33:24 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:33:54 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:34:25 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:34:55 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:35:25 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:35:55 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:36:25 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:36:55 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:37:25 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:37:56 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:38:26 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:38:56 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:39:26 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:39:56 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:40:26 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:40:57 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: Building image.
+18:41:27 INFO Waiting for model:
+  test-lldcb3b1/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-lldcb3b1/0 [executing] active: 
+18:41:57 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] active:
+18:42:10 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] active: 
+18:42:40 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] active: 
+18:42:43 INFO Current reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:42:43 INFO Waiting for reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:43:44 INFO Current reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:43:44 INFO Current reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d, expected reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:43:44 INFO Waiting for reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:44:45 INFO Current reconcile ID: 9792a6f3-beed-41a9-b815-4635402061f8
+18:44:45 INFO Current reconcile ID: 9792a6f3-beed-41a9-b815-4635402061f8, expected reconcile ID: 5818c722-e7e7-4bd9-8cc7-4ee6686fb40d
+18:44:55 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] active: 
+18:45:25 INFO Waiting for model:
+  test-lldcb3b1/0 [idle] active: 
+18:45:28 INFO Current reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
+18:45:28 INFO Waiting for reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
+18:46:29 INFO Current reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
+18:46:29 INFO Current reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9, expected reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
+18:46:29 INFO Waiting for reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
+18:47:30 INFO Current reconcile ID: f1bd32e1-9a05-4a95-8c1e-dc47af33be94
+18:47:30 INFO Current reconcile ID: f1bd32e1-9a05-4a95-8c1e-dc47af33be94, expected reconcile ID: c6720706-a29e-42b2-8993-5f965e109be9
