@@ -39,32 +39,90 @@ from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud
 logger = logging.getLogger(__name__)
 
 MAX_METRICS_FILE_SIZE = 1024
+MINUTE_IN_SECONDS = 60
+HOURS_IN_SECONDS = MINUTE_IN_SECONDS * 60
+DAYS_IN_SECONDS = HOURS_IN_SECONDS * 24
 
 RUNNER_SPAWN_DURATION_SECONDS = Histogram(
     name="runner_spawn_duration_seconds",
     documentation="Time in seconds to initialize the VM and register the runner on GitHub.",
     labelnames=[labels.FLAVOR],
-    buckets=[5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, float("inf")],
+    buckets=[
+        5,
+        10,
+        15,
+        30,
+        MINUTE_IN_SECONDS,
+        MINUTE_IN_SECONDS * 2,
+        MINUTE_IN_SECONDS * 3,
+        MINUTE_IN_SECONDS * 5,
+        MINUTE_IN_SECONDS * 10,
+        float("inf"),
+    ],
 )
 RUNNER_IDLE_DURATION_SECONDS = Histogram(
     name="runner_idle_duration_seconds",
     documentation="Time in seconds to runner waiting idle for the job to be picked up.",
     labelnames=[labels.FLAVOR],
+    buckets=[
+        5,
+        10,
+        15,
+        30,
+        MINUTE_IN_SECONDS,
+        MINUTE_IN_SECONDS * 2,
+        MINUTE_IN_SECONDS * 3,
+        MINUTE_IN_SECONDS * 5,
+        MINUTE_IN_SECONDS * 10,
+        float("inf"),
+    ],
 )
 RUNNER_QUEUE_DURATION_SECONDS = Histogram(
     name="runner_queue_duration_seconds",
     documentation="Time taken in seconds for the job to be started.",
     labelnames=[labels.FLAVOR],
+    buckets=[
+        # seconds
+        5,
+        30,
+        MINUTE_IN_SECONDS,
+        MINUTE_IN_SECONDS * 5,
+        MINUTE_IN_SECONDS * 10,
+        MINUTE_IN_SECONDS * 20,
+        MINUTE_IN_SECONDS * 30,
+        HOURS_IN_SECONDS,
+        HOURS_IN_SECONDS * 2,
+        HOURS_IN_SECONDS * 5,
+        float("inf"),
+    ],
 )
 EXTRACT_METRICS_DURATION_SECONDS = Histogram(
     name="extract_metrics_duration_seconds",
     documentation="Time taken in seconds for the metrics to be extracted.",
     labelnames=[labels.FLAVOR],
+    buckets=[5, 10, 15, 30, 60, 60 * 2, 60 * 3, 60 * 5, 60 * 10, float("inf")],
 )
 JOB_DURATION_SECONDS = Histogram(
     name="job_duration_seconds",
     documentation="Time taken in seconds for the job to be completed.",
     labelnames=[labels.FLAVOR],
+    buckets=[
+        MINUTE_IN_SECONDS,
+        MINUTE_IN_SECONDS * 5,
+        MINUTE_IN_SECONDS * 10,
+        MINUTE_IN_SECONDS * 20,
+        MINUTE_IN_SECONDS * 30,
+        MINUTE_IN_SECONDS * 60,
+        # hours
+        HOURS_IN_SECONDS * 2,
+        HOURS_IN_SECONDS * 4,
+        HOURS_IN_SECONDS * 6,
+        # days
+        DAYS_IN_SECONDS * 3,
+        # Limit of the run is 5 days: https://docs.github.com/en/actions/reference/limits
+        DAYS_IN_SECONDS * 5,
+        float("inf"),
+    ],
 )
 JOB_REPOSITORY_COUNT = Gauge(
     name="job_repository_count",
