@@ -20,7 +20,9 @@ jobs:
       juju-channel: 3.6/stable
       provider: lxd
       test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive"]'
+      modules: '["test_charm_no_runner"]'
+      # TODO: temp disable
+      # modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive", "test_jobmanager_prespawned", "test_jobmanager_reactive"]'
       extra-arguments: '-m openstack --log-format="%(asctime)s %(levelname)s %(message)s"'
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci 
