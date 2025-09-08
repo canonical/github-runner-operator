@@ -1,0 +1,84 @@
+18:52:17 INFO GitHub token rate limit: Rate(reset=2025-09-08 18:54:34+00:00, remaining=4564, limit=5000)
+18:52:21 INFO Waiting for model:
+  test-fsuarp4j/0 [idle] active: 
+18:52:51 INFO Waiting for model:
+  test-fsuarp4j/0 [idle] active: 
+18:52:54 INFO Current reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:52:54 INFO Waiting for reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:53:55 INFO Current reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:53:55 INFO Current reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb, expected reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:53:55 INFO Waiting for reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:54:56 INFO Current reconcile ID: 82ff3e5b-a0ba-4699-b201-7d990970a528
+18:54:56 INFO Current reconcile ID: 82ff3e5b-a0ba-4699-b201-7d990970a528, expected reconcile ID: 5031fac9-347e-4005-9414-81887c8aeebb
+18:55:04 INFO Wait for condition not met, sleeping 10
+18:55:15 INFO Waiting for model:
+  test-fsuarp4j/0 [idle] active: 
+18:55:45 INFO Waiting for model:
+  test-fsuarp4j/0 [idle] active: 
+18:55:48 INFO Current reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:55:48 INFO Waiting for reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:56:49 INFO Current reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:56:49 INFO Current reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3, expected reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:56:49 INFO Waiting for reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:57:50 INFO Current reconcile ID: d180ad2b-c476-4f3d-afb1-e32987e21c2f
+18:57:50 INFO Current reconcile ID: d180ad2b-c476-4f3d-afb1-e32987e21c2f, expected reconcile ID: 68fbfc26-ee12-435a-9a7d-e6b310f251b3
+18:57:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757357626.0, "event": "runner_installed", "flavor": "test-fsuarp4j", "duration": 73.0}
+{"timestamp": 1757357707.0, "event": "runner_start", "flavor": "test-fsuarp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 81.0, "queue_duration": 1.0}
+{"timestamp": 1757357709.0, "event": "runner_stop", "flavor": "test-fsuarp4j", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757357734.833427, "event": "reconciliation", "flavor": "test-fsuarp4j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 17.755357265472412}
+{"timestamp": 1757357865.391119, "event": "reconciliation", "flavor": "test-fsuarp4j", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.508814096450806}
+18:57:55 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-w41x  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:57:55Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fsuarp4j           active      1  github-runner-image-builder  latest/edge  110  no       
+test-fsuarp4j                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-fsuarp4j/0*  active    idle   0        10.40.69.47            
+test-fsuarp4j/0*                         active    idle   1        10.40.69.119           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.40.69.47   juju-586332-0  ubuntu@22.04  github-runner  Running
+1        started  10.40.69.119  juju-586332-1  ubuntu@22.04  github-runner  Running
+
+18:57:55 INFO Juju error logs:
+
+machine-0: 18:28:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-fsuarp4j-0: 18:28:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:28:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:28:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-fsuarp4j-0: 18:28:25 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-fsuarp4j-0: 18:29:07 ERROR unit.github-runner-image-builder-fsuarp4j/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-fsuarp4j-0: 18:29:57 ERROR unit.test-fsuarp4j/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fsuarp4j-0: 18:30:00 ERROR unit.test-fsuarp4j/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-fsuarp4j-0: 18:31:04 ERROR unit.test-fsuarp4j/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-fsuarp4j-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:57:55 INFO Forgetting model main...

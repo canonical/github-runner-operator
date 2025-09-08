@@ -1,0 +1,224 @@
+18:26:53 WARNING unexpected facade SSHServer received from the controller
+18:26:53 INFO Adding model github-pr-77d1e-lxd:test-charm-fork-repo-w8u2 on cloud localhost
+18:26:53 WARNING unexpected facade SSHServer received from the controller
+18:26:53 WARNING unexpected facade SSHSession received from the controller
+18:26:53 WARNING unexpected facade SSHTunneler received from the controller
+18:26:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:27:22 INFO Deploying local:jammy/github-runner-0
+18:27:23 INFO Waiting for model:
+  test-odg95w6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-odg95w6r/0 [allocating] waiting: waiting for machine
+18:27:53 INFO Waiting for model:
+  test-odg95w6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-odg95w6r/0 [allocating] waiting: waiting for machine
+18:28:23 INFO Waiting for model:
+  test-odg95w6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-odg95w6r/0 [allocating] waiting: waiting for machine
+18:28:53 INFO Waiting for model:
+  test-odg95w6r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-odg95w6r/0 [allocating] waiting: agent initialising
+18:29:23 INFO Waiting for model:
+  test-odg95w6r/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-odg95w6r/0 [executing] maintenance: Setting up Builder.
+18:29:53 INFO Waiting for model:
+  test-odg95w6r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-odg95w6r/0 [executing] maintenance: Setting up Builder.
+18:30:24 INFO Waiting for model:
+  test-odg95w6r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-odg95w6r/0 [executing] maintenance: Setting up Builder.
+18:30:54 INFO Waiting for model:
+  test-odg95w6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-odg95w6r/0 [executing] maintenance: Setting up Builder.
+18:31:25 INFO Waiting for model:
+  test-odg95w6r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-odg95w6r/0 [executing] maintenance: Setting up Builder.
+18:31:55 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] blocked: image integration required.
+18:32:25 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:32:55 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:33:26 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:33:56 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:34:26 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:34:57 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:35:27 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:35:57 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:36:27 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:36:58 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:37:28 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:37:58 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:38:28 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:38:59 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:39:29 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:39:59 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:40:30 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:41:00 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:41:30 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:42:00 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:42:30 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:43:00 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:43:30 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:44:01 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:44:31 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:45:02 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:45:32 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:46:02 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:46:33 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:47:03 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:47:33 INFO Waiting for model:
+  test-odg95w6r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-odg95w6r/0 [executing] active: Building image.
+18:48:04 INFO Waiting for model:
+  test-odg95w6r/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-odg95w6r/0 [idle] active: 
+18:48:31 INFO GitHub token rate limit: Rate(reset=2025-09-08 18:54:34+00:00, remaining=4801, limit=5000)
+18:49:48 INFO Waiting for model:
+  test-odg95w6r/0 [idle] active: 
+18:50:18 INFO Waiting for model:
+  test-odg95w6r/0 [executing] active: 
+18:50:43 INFO Current reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:50:43 INFO Waiting for reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:51:44 INFO Current reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:51:44 INFO Current reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a, expected reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:51:44 INFO Waiting for reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:52:45 INFO Current reconcile ID: 753f1fcd-c545-45a5-a148-d5b0612aa344
+18:52:45 INFO Current reconcile ID: 753f1fcd-c545-45a5-a148-d5b0612aa344, expected reconcile ID: 5e4ab6dd-bd27-4f3b-a91a-5f72d4e16b7a
+18:52:56 INFO [TEST SETUP] Exposing port 8080 on test-odg95w6r-0-n-32be8b00ea49
+18:52:56 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.18', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e5:39:50'}]])
+18:52:57 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-odg95w6r-0-n-32be8b00ea49.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.18 &
+18:52:58 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.18' (ED25519) to the list of known hosts.
+
+18:53:00 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-odg95w6r-0-n-32be8b00ea49
+18:53:00 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.18', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e5:39:50'}]])
+18:53:01 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-odg95w6r-0-n-32be8b00ea49.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.18 nc -z localhost 8080'
+18:53:02 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:53:03 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-odg95w6r-0-n-32be8b00ea49
+18:53:03 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.18', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:e5:39:50'}]])
+18:53:04 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-odg95w6r-0-n-32be8b00ea49.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.18 curl http://localhost:8080'
+18:53:05 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  38262      0 --:--:-- --:--:-- --:--:-- 41400
+'
+18:53:07 INFO Wait for condition not met, sleeping 10
+18:53:18 INFO Wait for condition not met, sleeping 60
+18:54:28 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-w8u2  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:54:28Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-odg95w6r           active      1  github-runner-image-builder  latest/edge  110  no       
+test-odg95w6r                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-odg95w6r/0*  active    idle   0        10.163.120.54             
+test-odg95w6r/0*                         active    idle   1        10.163.120.24   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.163.120.54  juju-c7eec6-0  ubuntu@22.04  github-runner  Running
+1        started  10.163.120.24  juju-c7eec6-1  ubuntu@22.04  github-runner  Running
+
+18:54:28 INFO Juju error logs:
+
+machine-0: 18:28:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-odg95w6r-0: 18:28:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:29:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-odg95w6r-0: 18:29:04 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-odg95w6r-0: 18:29:50 ERROR unit.github-runner-image-builder-odg95w6r/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-odg95w6r-0: 18:30:41 ERROR unit.test-odg95w6r/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-odg95w6r-0: 18:30:45 ERROR unit.test-odg95w6r/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-odg95w6r-0: 18:31:52 ERROR unit.test-odg95w6r/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-odg95w6r-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:54:28 INFO Forgetting model main...
