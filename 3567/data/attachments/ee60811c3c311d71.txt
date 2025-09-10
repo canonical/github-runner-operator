@@ -1,0 +1,90 @@
+19:26:36 INFO GitHub token rate limit: Rate(reset=2025-09-10 19:33:14+00:00, remaining=3739, limit=5000)
+19:26:39 INFO Waiting for model:
+  test-jedtuaoa/0 [idle] active: 
+19:27:10 INFO Waiting for model:
+  test-jedtuaoa/0 [idle] active: 
+19:27:13 INFO Current reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:27:13 INFO Waiting for reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:28:14 INFO Current reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:28:14 INFO Current reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd, expected reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:28:14 INFO Waiting for reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:29:15 INFO Current reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:29:15 INFO Current reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd, expected reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:29:15 INFO Waiting for reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:30:16 INFO Current reconcile ID: cccdac9f-ab31-4dce-b442-f8ec424a2673
+19:30:16 INFO Current reconcile ID: cccdac9f-ab31-4dce-b442-f8ec424a2673, expected reconcile ID: be72656f-200f-4046-9a05-a90bfcf76bbd
+19:30:27 INFO Wait for condition not met, sleeping 10
+19:30:38 INFO Waiting for model:
+  test-jedtuaoa/0 [idle] active: 
+19:31:08 INFO Waiting for model:
+  test-jedtuaoa/0 [idle] active: 
+19:31:12 INFO Current reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:31:12 INFO Waiting for reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:32:13 INFO Current reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:32:13 INFO Current reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450, expected reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:32:13 INFO Waiting for reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:33:14 INFO Current reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:33:14 INFO Current reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450, expected reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:33:14 INFO Waiting for reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:34:15 INFO Current reconcile ID: 19f0a6e2-bd35-4810-87d4-2d9fd82bfabb
+19:34:15 INFO Current reconcile ID: 19f0a6e2-bd35-4810-87d4-2d9fd82bfabb, expected reconcile ID: 49b12b6f-b8a0-427f-ba63-20f7eda98450
+19:34:16 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757532461.0, "event": "runner_installed", "flavor": "test-jedtuaoa", "duration": 47.0}
+{"timestamp": 1757532630.0, "event": "runner_start", "flavor": "test-jedtuaoa", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 169.0, "queue_duration": 1.0}
+{"timestamp": 1757532633.0, "event": "runner_stop", "flavor": "test-jedtuaoa", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1757532667.5469098, "event": "reconciliation", "flavor": "test-jedtuaoa", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 26.361920833587646}
+{"timestamp": 1757532799.425022, "event": "reconciliation", "flavor": "test-jedtuaoa", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.73952579498291}
+19:34:21 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-bz4t  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:34:21Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-jedtuaoa           active      1  github-runner-image-builder  latest/edge  110  no       
+test-jedtuaoa                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-jedtuaoa/0*  active    idle   0        10.103.233.81          
+test-jedtuaoa/0*                         active    idle   1        10.103.233.134         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.103.233.81   juju-9951f9-0  ubuntu@22.04  github-runner  Running
+1        started  10.103.233.134  juju-9951f9-1  ubuntu@22.04  github-runner  Running
+
+19:34:22 INFO Juju error logs:
+
+machine-0: 19:05:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 19:05:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-jedtuaoa-0: 19:05:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-jedtuaoa-0: 19:06:09 ERROR unit.github-runner-image-builder-jedtuaoa/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 19:06:33 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 19:06:33 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-jedtuaoa-0: 19:06:33 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-jedtuaoa-0: 19:08:10 ERROR unit.test-jedtuaoa/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-jedtuaoa-0: 19:08:13 ERROR unit.test-jedtuaoa/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-jedtuaoa-0: 19:08:16 ERROR unit.test-jedtuaoa/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-jedtuaoa-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:34:22 INFO Forgetting model main...
