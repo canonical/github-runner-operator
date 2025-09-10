@@ -1,0 +1,198 @@
+06:27:22 WARNING unexpected facade SSHServer received from the controller
+06:27:22 INFO Adding model github-pr-77d1e-lxd:test-charm-upgrade-fmx9 on cloud localhost
+06:27:23 WARNING unexpected facade SSHServer received from the controller
+06:27:23 WARNING unexpected facade SSHSession received from the controller
+06:27:23 WARNING unexpected facade SSHTunneler received from the controller
+06:27:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:27:49 INFO Deploying local:jammy/github-runner-0
+06:27:49 INFO Waiting for model:
+  test-y2ujssb9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y2ujssb9/0 [allocating] waiting: waiting for machine
+06:28:19 INFO Waiting for model:
+  test-y2ujssb9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y2ujssb9/0 [allocating] waiting: waiting for machine
+06:28:49 INFO Waiting for model:
+  test-y2ujssb9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-y2ujssb9/0 [allocating] waiting: waiting for machine
+06:29:19 INFO Waiting for model:
+  test-y2ujssb9/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-y2ujssb9/0 [allocating] waiting: agent initialising
+06:29:49 INFO Waiting for model:
+  test-y2ujssb9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-y2ujssb9/0 [executing] maintenance: Setting up Builder.
+06:30:19 INFO Waiting for model:
+  test-y2ujssb9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-y2ujssb9/0 [executing] maintenance: Setting up Builder.
+06:30:49 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] maintenance: Setting up Builder.
+06:31:19 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] maintenance: Setting up Builder.
+06:31:49 INFO Waiting for model:
+  test-y2ujssb9/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Waiting for first image.
+06:32:19 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:32:49 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:33:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:33:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:34:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:34:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:35:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:35:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:36:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:37:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:38:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:38:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:39:20 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:39:50 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:40:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:40:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:41:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:41:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:42:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:42:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:43:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:43:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:44:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:44:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:45:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:45:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:46:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:46:51 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:47:21 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:47:52 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:48:22 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:48:52 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-y2ujssb9/0 [executing] active: Building image.
+06:49:22 INFO Waiting for model:
+  test-y2ujssb9/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-y2ujssb9/0 [idle] active: 
+06:49:52 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] active: 
+06:52:33 INFO Waiting for model:
+  test-y2ujssb9/0 [idle] active:
+06:53:09 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-fmx9  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  06:53:09Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-y2ujssb9           active      1  github-runner-image-builder  latest/edge  110  no       
+test-y2ujssb9                                  active      1  github-runner                               1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-y2ujssb9/0*  active    idle   0        10.115.136.249         
+test-y2ujssb9/0*                         active    idle   1        10.115.136.88          
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.115.136.249  juju-c6298b-0  ubuntu@22.04  github-runner  Running
+1        started  10.115.136.88   juju-c6298b-1  ubuntu@22.04  github-runner  Running
+
+06:53:10 INFO Juju error logs:
+
+machine-0: 06:29:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:29:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-y2ujssb9-0: 06:29:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:29:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-y2ujssb9-0: 06:29:10 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-y2ujssb9-0: 06:30:00 ERROR unit.github-runner-image-builder-y2ujssb9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-y2ujssb9-0: 06:30:34 ERROR unit.test-y2ujssb9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-y2ujssb9-0: 06:30:37 ERROR unit.test-y2ujssb9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-y2ujssb9-0: 06:31:51 ERROR unit.test-y2ujssb9/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-y2ujssb9-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:53:10 INFO Forgetting model main...
