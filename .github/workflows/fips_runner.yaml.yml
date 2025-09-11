@@ -7,7 +7,7 @@ jobs:
     - name: test fips kernel
       run: |
         uname -a | grep fips
-        cat /proc/sys/crypto/fips_enabled
+        grep 1 /proc/sys/crypto/fips_enabled
     - name: test no pro status
       run: |
-        sudo pro status | grep not attached
+        sudo pro status | grep "not attached"
