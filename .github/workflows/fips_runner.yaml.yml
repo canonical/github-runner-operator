@@ -1,0 +1,13 @@
+name: Fips runner test
+on: [push]
+jobs:
+  build:
+    runs-on: [self-hosted-linux-noble-arm64-fips]
+    steps:
+    - name: test fips kernel
+      run: |
+        uname -a | grep fips
+        cat /proc/sys/crypto/fips_enabled
+    - name: test no pro status
+      run: |
+        sudo pro status | grep not attached
