@@ -1,0 +1,100 @@
+19:35:01 INFO Waiting for model:
+  test-namn3nh0/0 [idle] active: 
+19:35:32 INFO Waiting for model:
+  test-namn3nh0/0 [idle] active: 
+19:35:35 INFO Current reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:35:35 INFO Waiting for reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:36:36 INFO Current reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:36:36 INFO Current reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171, expected reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:36:36 INFO Waiting for reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:37:37 INFO Current reconcile ID: 6d8f563c-f95d-402e-87d6-df1894780102
+19:37:37 INFO Current reconcile ID: 6d8f563c-f95d-402e-87d6-df1894780102, expected reconcile ID: a172ce40-f9fd-4d07-b2e5-4ad466e6d171
+19:37:43 INFO [TEST SETUP] Exposing port 8080 on test-namn3nh0-0-n-2a5926c4992d
+19:37:43 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.123', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:cb:3d:be'}]])
+19:37:45 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-namn3nh0-0-n-2a5926c4992d.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.123 &
+19:37:46 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.123' (ED25519) to the list of known hosts.
+
+19:37:47 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-namn3nh0-0-n-2a5926c4992d
+19:37:47 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.123', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:cb:3d:be'}]])
+19:37:48 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-namn3nh0-0-n-2a5926c4992d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.123 nc -z localhost 8080'
+19:37:49 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:37:50 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-namn3nh0-0-n-2a5926c4992d
+19:37:50 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.123', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:cb:3d:be'}]])
+19:37:51 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-namn3nh0-0-n-2a5926c4992d.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.123 curl http://localhost:8080'
+19:37:52 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  20493      0 --:--:-- --:--:-- --:--:-- 20700
+'
+19:37:53 INFO Wait for condition not met, sleeping 10
+19:38:04 INFO Waiting for model:
+  test-namn3nh0/0 [idle] active: 
+19:38:35 INFO Waiting for model:
+  test-namn3nh0/0 [idle] active: 
+19:38:38 INFO Current reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:38:38 INFO Waiting for reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:39:39 INFO Current reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:39:39 INFO Current reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d, expected reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:39:39 INFO Waiting for reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:40:40 INFO Current reconcile ID: 54f36946-d3bb-4bf7-8335-9747af813bc4
+19:40:40 INFO Current reconcile ID: 54f36946-d3bb-4bf7-8335-9747af813bc4, expected reconcile ID: 5b6fbda5-e719-4dc1-acf5-3cb788fd967d
+19:40:44 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-vvgp  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:40:44Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-namn3nh0           active      1  github-runner-image-builder  latest/edge  110  no       
+test-namn3nh0                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-namn3nh0/0*  active    idle   0        10.164.184.46             
+test-namn3nh0/0*                         active    idle   1        10.164.184.232  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.164.184.46   juju-dd800b-0  ubuntu@22.04  github-runner  Running
+1        started  10.164.184.232  juju-dd800b-1  ubuntu@22.04  github-runner  Running
+
+19:40:44 INFO Juju error logs:
+
+machine-0: 18:56:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:56:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-namn3nh0-0: 18:56:42 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:56:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:56:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-namn3nh0-0: 18:56:57 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-namn3nh0-0: 18:57:33 ERROR unit.github-runner-image-builder-namn3nh0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-namn3nh0-0: 18:58:20 ERROR unit.test-namn3nh0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-namn3nh0-0: 18:58:23 ERROR unit.test-namn3nh0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-namn3nh0-0: 18:59:35 ERROR unit.test-namn3nh0/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-namn3nh0-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:40:44 INFO Forgetting model main...
