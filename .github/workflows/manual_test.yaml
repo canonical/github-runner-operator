@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, amd64, large]
+    runs-on: [self-hosted, arm64, medium]
     steps:
       - run: lscpu
       - run: df -h
