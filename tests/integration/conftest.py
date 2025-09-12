@@ -419,7 +419,8 @@ async def image_builder_fixture(
         app = await model.deploy(
             "github-runner-image-builder",
             application_name=application_name,
-            channel="latest/edge",
+            # TODO: Temp switch to a fix branch
+            channel="latest/edge/snap-install-proxy-fix",
             config=image_builder_config,
         )
     else:
