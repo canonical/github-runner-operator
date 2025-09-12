@@ -1,0 +1,105 @@
+18:52:39 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+18:53:09 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+18:53:12 INFO Current reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:53:12 INFO Waiting for reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:54:14 INFO Current reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:54:14 INFO Current reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9, expected reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:54:14 INFO Waiting for reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:55:15 INFO Current reconcile ID: d5e414b9-40c2-4da0-bea4-fa3502e6aefa
+18:55:15 INFO Current reconcile ID: d5e414b9-40c2-4da0-bea4-fa3502e6aefa, expected reconcile ID: 772ded60-8f16-45f9-9377-d76a7ed134f9
+18:55:15 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+18:55:45 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+18:55:55 INFO Current reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:55:55 INFO Waiting for reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:56:56 INFO Current reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:56:56 INFO Current reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8, expected reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:56:56 INFO Waiting for reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:57:57 INFO Current reconcile ID: c4e6e57c-7c89-473d-a088-5243aa5f0c21
+18:57:57 INFO Current reconcile ID: c4e6e57c-7c89-473d-a088-5243aa5f0c21, expected reconcile ID: c4e654a7-2897-44fb-8a81-22c9b82170b8
+18:58:04 INFO Wait for condition not met, sleeping 30
+18:58:47 INFO [TEST SETUP] Run command pkill -9 run.sh on test-mql961m2-0-n-0e67135bc4e9
+18:58:47 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.73', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:1b:5c:80'}]])
+18:58:48 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-mql961m2-0-n-0e67135bc4e9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.73 pkill -9 run.sh'
+18:58:49 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.145.193.73' (ED25519) to the list of known hosts.
+'
+18:58:51 INFO Runner test-mql961m2-0-n-0e67135bc4e9 status: online
+18:58:51 INFO Runner still marked as online, waiting for it to be marked offline
+18:59:52 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+19:00:22 INFO Waiting for model:
+  test-mql961m2/0 [idle] active: 
+19:00:25 INFO Current reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:00:25 INFO Waiting for reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:01:26 INFO Current reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:01:26 INFO Current reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb, expected reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:01:26 INFO Waiting for reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:02:27 INFO Current reconcile ID: 109ad385-7f19-40eb-8074-58bd37b0365f
+19:02:27 INFO Current reconcile ID: 109ad385-7f19-40eb-8074-58bd37b0365f, expected reconcile ID: 51e98f84-a7d9-49f4-91c9-1c656169e6bb
+19:02:28 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757703172.355249, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.290891885757446}
+{"timestamp": 1757703301.7858446, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.29436206817627}
+{"timestamp": 1757703331.3849337, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 13.84132695198059}
+{"timestamp": 1757703461.1234033, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 9.608768939971924}
+{"timestamp": 1757703385.0, "event": "runner_installed", "flavor": "test-mql961m2", "duration": 57.0}
+{"timestamp": 1757703487.0, "event": "runner_start", "flavor": "test-mql961m2", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 102.0, "queue_duration": 1.0}
+{"timestamp": 1757703529.0, "event": "runner_stop", "flavor": "test-mql961m2", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 42.0, "job_conclusion": "cancelled"}
+{"timestamp": 1757703607.1081045, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.317366123199463}
+{"timestamp": 1757703736.7960784, "event": "reconciliation", "flavor": "test-mql961m2", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.578952074050903}
+19:02:32 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-m1yk  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:02:32Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mql961m2           active      1  github-runner-image-builder  latest/edge  110  no       
+test-mql961m2                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-mql961m2/0*  active    idle   0        10.208.125.224            
+test-mql961m2/0*                         active    idle   1        10.208.125.73   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.208.125.224  juju-447741-0  ubuntu@22.04  github-runner  Running
+1        started  10.208.125.73   juju-447741-1  ubuntu@22.04  github-runner  Running
+
+19:02:32 INFO Juju error logs:
+
+machine-0: 18:27:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:27:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-mql961m2-0: 18:27:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:27:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-mql961m2-0: 18:27:13 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-mql961m2-0: 18:27:53 ERROR unit.github-runner-image-builder-mql961m2/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-mql961m2-0: 18:28:28 ERROR unit.test-mql961m2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-mql961m2-0: 18:28:31 ERROR unit.test-mql961m2/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-mql961m2-0: 18:29:39 ERROR unit.test-mql961m2/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mql961m2-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:02:32 INFO Forgetting model main...
