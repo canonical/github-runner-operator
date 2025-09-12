@@ -421,7 +421,7 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             # TODO: Temp switch to a fix revision
-            revision=112,
+            revision=113,
             config=image_builder_config,
         )
     else:
