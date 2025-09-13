@@ -1,0 +1,132 @@
+06:26:00 WARNING unexpected facade SSHServer received from the controller
+06:26:00 INFO Adding model github-pr-77d1e-lxd:test-charm-metrics-success-3u3r on cloud localhost
+06:26:00 WARNING unexpected facade SSHServer received from the controller
+06:26:00 WARNING unexpected facade SSHSession received from the controller
+06:26:00 WARNING unexpected facade SSHTunneler received from the controller
+06:26:02 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:26:21 INFO Deploying local:jammy/github-runner-0
+06:26:21 INFO Waiting for model:
+  test-xx3wnjvb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xx3wnjvb/0 [allocating] waiting: waiting for machine
+06:26:51 INFO Waiting for model:
+  test-xx3wnjvb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xx3wnjvb/0 [allocating] waiting: waiting for machine
+06:27:21 INFO Waiting for model:
+  test-xx3wnjvb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xx3wnjvb/0 [allocating] waiting: waiting for machine
+06:27:51 INFO Waiting for model:
+  test-xx3wnjvb/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-xx3wnjvb/0 [allocating] waiting: agent initialising
+06:28:22 INFO Waiting for model:
+  test-xx3wnjvb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xx3wnjvb/0 [executing] maintenance: Setting up Builder.
+06:28:52 INFO Waiting for model:
+  test-xx3wnjvb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xx3wnjvb/0 [executing] maintenance: Setting up Builder.
+06:29:22 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] maintenance: Setting up Builder.
+06:29:52 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] maintenance: Setting up Builder.
+06:30:22 INFO Waiting for model:
+  test-xx3wnjvb/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] blocked: image integration required.
+06:30:52 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:31:23 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:31:53 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:32:23 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:32:53 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:33:23 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:33:53 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:34:54 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:35:24 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:36:24 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:37:54 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:38:24 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:38:55 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:39:25 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:39:55 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:40:25 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:40:56 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:41:26 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xx3wnjvb/0 [executing] active: Building image.
+06:41:56 INFO Waiting for model:
+  test-xx3wnjvb/0 [executing] maintenance: Update image for runners
+06:42:18 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] active: 
+06:42:48 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] active: 
+06:42:51 INFO Current reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:42:51 INFO Waiting for reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:43:52 INFO Current reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:43:52 INFO Current reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b, expected reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:43:52 INFO Waiting for reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:44:53 INFO Current reconcile ID: af9432e7-ee1b-4e16-bd40-4273fc5051cb
+06:44:53 INFO Current reconcile ID: af9432e7-ee1b-4e16-bd40-4273fc5051cb, expected reconcile ID: 36b2fc47-ae79-4b74-80ac-d6512082d74b
+06:44:58 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] active: 
+06:45:29 INFO Waiting for model:
+  test-xx3wnjvb/0 [idle] active: 
+06:45:32 INFO Current reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:45:32 INFO Waiting for reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:46:33 INFO Current reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:46:33 INFO Current reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135, expected reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:46:33 INFO Waiting for reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:47:34 INFO Current reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:47:34 INFO Current reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135, expected reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:47:34 INFO Waiting for reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:48:35 INFO Current reconcile ID: 8aea0f2c-54f4-4e8f-8f5b-0040921ef924
+06:48:35 INFO Current reconcile ID: 8aea0f2c-54f4-4e8f-8f5b-0040921ef924, expected reconcile ID: 25512f7a-44ca-445d-845f-f3dbd9c87135
+06:48:36 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757745756.7620144, "event": "reconciliation", "flavor": "test-xx3wnjvb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 16.138825178146362}
+{"timestamp": 1757745889.3490222, "event": "reconciliation", "flavor": "test-xx3wnjvb", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 12.524613618850708}
+{"timestamp": 1757745862.0, "event": "runner_installed", "flavor": "test-xx3wnjvb", "duration": 109.0}
+{"timestamp": 1757745922.9483342, "event": "reconciliation", "flavor": "test-xx3wnjvb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 21.839402198791504}
+{"timestamp": 1757746054.2400973, "event": "reconciliation", "flavor": "test-xx3wnjvb", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.190572023391724}
