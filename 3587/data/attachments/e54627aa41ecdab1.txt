@@ -1,0 +1,185 @@
+06:26:48 INFO GitHub token rate limit: Rate(reset=2025-09-14 07:12:48+00:00, remaining=4978, limit=5000)
+06:27:00 WARNING unexpected facade SSHServer received from the controller
+06:27:00 INFO Adding model github-pr-77d1e-lxd:test-charm-metrics-failure-g7n4 on cloud localhost
+06:27:01 WARNING unexpected facade SSHServer received from the controller
+06:27:01 WARNING unexpected facade SSHSession received from the controller
+06:27:01 WARNING unexpected facade SSHTunneler received from the controller
+06:27:02 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:27:24 INFO Deploying local:jammy/github-runner-0
+06:27:24 INFO Waiting for model:
+  test-j6vleaeg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j6vleaeg/0 [allocating] waiting: waiting for machine
+06:27:55 INFO Waiting for model:
+  test-j6vleaeg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j6vleaeg/0 [allocating] waiting: waiting for machine
+06:28:25 INFO Waiting for model:
+  test-j6vleaeg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j6vleaeg/0 [allocating] waiting: waiting for machine
+06:28:55 INFO Waiting for model:
+  test-j6vleaeg/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-j6vleaeg/0 [allocating] waiting: agent initialising
+06:29:25 INFO Waiting for model:
+  test-j6vleaeg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:29:56 INFO Waiting for model:
+  test-j6vleaeg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:30:26 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:30:57 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:31:27 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:31:57 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] maintenance: Setting up Builder.
+06:32:27 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] blocked: image integration required.
+06:32:58 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:33:28 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:33:58 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:34:29 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:34:59 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:35:30 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:36:00 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:36:30 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:37:01 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:37:31 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:38:02 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:38:32 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:39:02 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:39:33 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:40:03 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:40:34 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:41:04 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:41:34 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:42:04 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:42:34 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:43:05 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:43:35 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:44:06 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:44:36 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:45:06 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:45:36 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:46:06 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-j6vleaeg/0 [executing] active: Building image.
+06:46:37 INFO Waiting for model:
+  test-j6vleaeg/0 [executing] maintenance: Update image for runners
+06:46:54 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:47:24 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:47:27 INFO Current reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:47:27 INFO Waiting for reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:48:28 INFO Current reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:48:28 INFO Current reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16, expected reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:48:28 INFO Waiting for reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:49:29 INFO Current reconcile ID: 92b8813c-d2da-423c-b03c-94d878470748
+06:49:29 INFO Current reconcile ID: 92b8813c-d2da-423c-b03c-94d878470748, expected reconcile ID: ac12af10-07bf-45a1-a5df-eae9e4bfaf16
+06:50:20 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:50:50 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:50:53 INFO Current reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:50:53 INFO Waiting for reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:51:54 INFO Current reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:51:54 INFO Current reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993, expected reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:51:54 INFO Waiting for reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:52:55 INFO Current reconcile ID: e4b2ec22-ed16-4e49-af39-853db1e40b06
+06:52:55 INFO Current reconcile ID: e4b2ec22-ed16-4e49-af39-853db1e40b06, expected reconcile ID: e5179872-9357-48f2-a8ac-94c212d5d993
+06:53:02 INFO [TEST SETUP] Exposing port 8080 on test-j6vleaeg-0-n-d637a9e86a0f
+06:53:02 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.188', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9e:fa:75'}]])
+06:53:03 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-j6vleaeg-0-n-d637a9e86a0f.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.188 &
+06:53:04 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.188' (ED25519) to the list of known hosts.
+
+06:53:06 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-j6vleaeg-0-n-d637a9e86a0f
+06:53:06 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.188', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9e:fa:75'}]])
+06:53:07 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-j6vleaeg-0-n-d637a9e86a0f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.188 nc -z localhost 8080'
+06:53:08 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:53:08 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-j6vleaeg-0-n-d637a9e86a0f
+06:53:08 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.188', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:9e:fa:75'}]])
+06:53:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-j6vleaeg-0-n-d637a9e86a0f.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.188 curl http://localhost:8080'
+06:53:11 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  59176      0 --:--:-- --:--:-- --:--:-- 69000
+'
+06:53:13 INFO Wait for condition not met, sleeping 10
+06:53:24 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:53:54 INFO Waiting for model:
+  test-j6vleaeg/0 [idle] active: 
+06:53:59 INFO Current reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:53:59 INFO Waiting for reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:55:00 INFO Current reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:55:00 INFO Current reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202, expected reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:55:00 INFO Waiting for reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:56:01 INFO Current reconcile ID: a799a7f9-09db-407b-90f6-4ab59489583c
+06:56:01 INFO Current reconcile ID: a799a7f9-09db-407b-90f6-4ab59489583c, expected reconcile ID: 197706a1-7e9b-437f-b352-8e40e1d8a202
+06:56:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757832717.0, "event": "runner_installed", "flavor": "test-j6vleaeg", "duration": 84.0}
+{"timestamp": 1757832796.0, "event": "runner_start", "flavor": "test-j6vleaeg", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 79.0, "queue_duration": 1.0}
+{"timestamp": 1757832796.0, "event": "runner_stop", "flavor": "test-j6vleaeg", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1757832822.327212, "event": "reconciliation", "flavor": "test-j6vleaeg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.623915672302246}
+{"timestamp": 1757832950.3269362, "event": "reconciliation", "flavor": "test-j6vleaeg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.872819900512695}

@@ -1,0 +1,121 @@
+06:26:33 WARNING unexpected facade SSHServer received from the controller
+06:26:33 INFO Adding model github-pr-77d1e-lxd:test-charm-runner-l6ly on cloud localhost
+06:26:33 WARNING unexpected facade SSHServer received from the controller
+06:26:33 WARNING unexpected facade SSHSession received from the controller
+06:26:33 WARNING unexpected facade SSHTunneler received from the controller
+06:26:35 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:26:55 INFO Deploying local:jammy/github-runner-0
+06:26:55 INFO Waiting for model:
+  test-b1k1hypq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b1k1hypq/0 [allocating] waiting: waiting for machine
+06:27:26 INFO Waiting for model:
+  test-b1k1hypq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b1k1hypq/0 [allocating] waiting: waiting for machine
+06:27:56 INFO Waiting for model:
+  test-b1k1hypq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-b1k1hypq/0 [allocating] waiting: waiting for machine
+06:28:26 INFO Waiting for model:
+  test-b1k1hypq/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-b1k1hypq/0 [allocating] waiting: agent initialising
+06:28:57 INFO Waiting for model:
+  test-b1k1hypq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b1k1hypq/0 [executing] maintenance: Setting up Builder.
+06:29:27 INFO Waiting for model:
+  test-b1k1hypq/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-b1k1hypq/0 [executing] maintenance: Setting up Builder.
+06:29:57 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] maintenance: Setting up Builder.
+06:30:27 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] maintenance: Setting up Builder.
+06:30:58 INFO Waiting for model:
+  test-b1k1hypq/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Waiting for first image.
+06:31:28 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:31:59 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:32:29 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:32:59 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:33:29 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:33:59 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:34:30 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:35:00 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:35:30 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:36:01 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:36:31 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:37:01 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:37:32 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:38:02 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:38:32 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:39:03 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:39:33 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:40:03 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:40:33 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:41:04 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-b1k1hypq/0 [executing] active: Building image.
+06:41:34 INFO Waiting for model:
+  test-b1k1hypq/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-b1k1hypq/0 [idle] active: 
+06:42:04 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] active:
+06:42:08 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] active: 
+06:42:38 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] active: 
+06:42:42 INFO Current reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:42:42 INFO Waiting for reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:43:43 INFO Current reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:43:43 INFO Current reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5, expected reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:43:43 INFO Waiting for reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:44:44 INFO Current reconcile ID: 7108a99f-fe0c-49eb-b088-70ffc1744aac
+06:44:44 INFO Current reconcile ID: 7108a99f-fe0c-49eb-b088-70ffc1744aac, expected reconcile ID: dcf2c97e-a85f-4466-900f-a39984070cb5
+06:44:54 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] active: 
+06:45:24 INFO Waiting for model:
+  test-b1k1hypq/0 [idle] active: 
+06:45:28 INFO Current reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
+06:45:28 INFO Waiting for reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
+06:46:29 INFO Current reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
+06:46:29 INFO Current reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a, expected reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
+06:46:29 INFO Waiting for reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
+06:47:30 INFO Current reconcile ID: a26551ab-f649-443a-b5d6-25ee8d03e261
+06:47:30 INFO Current reconcile ID: a26551ab-f649-443a-b5d6-25ee8d03e261, expected reconcile ID: 84f4c44a-91c3-49c6-b6ad-324614a99a6a
