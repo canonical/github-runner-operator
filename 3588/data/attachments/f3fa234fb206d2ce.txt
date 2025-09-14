@@ -1,0 +1,188 @@
+18:23:36 INFO GitHub token rate limit: Rate(reset=2025-09-14 18:46:35+00:00, remaining=4955, limit=5000)
+18:23:49 WARNING unexpected facade SSHServer received from the controller
+18:23:49 INFO Adding model github-pr-77d1e-lxd:test-charm-metrics-failure-whxn on cloud localhost
+18:23:49 WARNING unexpected facade SSHServer received from the controller
+18:23:49 WARNING unexpected facade SSHSession received from the controller
+18:23:49 WARNING unexpected facade SSHTunneler received from the controller
+18:23:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:24:11 INFO Deploying local:jammy/github-runner-0
+18:24:11 INFO Waiting for model:
+  test-inh5oxct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-inh5oxct/0 [allocating] waiting: waiting for machine
+18:24:41 INFO Waiting for model:
+  test-inh5oxct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-inh5oxct/0 [allocating] waiting: waiting for machine
+18:25:12 INFO Waiting for model:
+  test-inh5oxct/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-inh5oxct/0 [allocating] waiting: waiting for machine
+18:25:42 INFO Waiting for model:
+  test-inh5oxct/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-inh5oxct/0 [executing] maintenance: Setting up Builder.
+18:26:13 INFO Waiting for model:
+  test-inh5oxct/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-inh5oxct/0 [executing] maintenance: Setting up Builder.
+18:26:43 INFO Waiting for model:
+  test-inh5oxct/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-inh5oxct/0 [executing] maintenance: Setting up Builder.
+18:27:13 INFO Waiting for model:
+  test-inh5oxct/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-inh5oxct/0 [executing] maintenance: Setting up Builder.
+18:27:43 INFO Waiting for model:
+  test-inh5oxct/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-inh5oxct/0 [executing] maintenance: Setting up Builder.
+18:28:14 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] blocked: image integration required.
+18:28:44 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:29:14 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:29:44 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:30:14 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:30:44 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:31:14 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:31:44 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:32:14 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:32:44 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:33:15 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:33:45 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:34:15 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:34:45 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:35:15 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:35:46 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:36:16 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:36:46 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:37:16 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:37:46 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:38:16 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:38:46 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:39:16 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:39:47 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:40:17 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:40:47 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:41:17 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:41:47 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:42:18 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:42:48 INFO Waiting for model:
+  test-inh5oxct/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-inh5oxct/0 [executing] active: Building image.
+18:43:18 INFO Waiting for model:
+  test-inh5oxct/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-inh5oxct/0 [idle] active: 
+18:43:48 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:43:53 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:44:23 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:44:26 INFO Current reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:44:26 INFO Waiting for reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:45:27 INFO Current reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:45:27 INFO Current reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb, expected reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:45:27 INFO Waiting for reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:46:28 INFO Current reconcile ID: 0d1ebc03-c1e1-4be3-825f-b0550a593111
+18:46:28 INFO Current reconcile ID: 0d1ebc03-c1e1-4be3-825f-b0550a593111, expected reconcile ID: 043aa202-7f18-4c46-96ea-01149d63a9eb
+18:47:19 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:47:49 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:47:52 INFO Current reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:47:52 INFO Waiting for reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:48:53 INFO Current reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:48:53 INFO Current reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb, expected reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:48:53 INFO Waiting for reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:49:54 INFO Current reconcile ID: 3d89a7b8-6181-4b8e-b4b3-620bb50376c7
+18:49:54 INFO Current reconcile ID: 3d89a7b8-6181-4b8e-b4b3-620bb50376c7, expected reconcile ID: 371ec28c-38cb-4e2b-9619-b20fd605c9bb
+18:50:00 INFO [TEST SETUP] Exposing port 8080 on test-inh5oxct-0-n-18e18199c4a9
+18:50:00 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:a3:73'}]])
+18:50:01 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-inh5oxct-0-n-18e18199c4a9.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.55 &
+18:50:02 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.55' (ED25519) to the list of known hosts.
+
+18:50:04 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-inh5oxct-0-n-18e18199c4a9
+18:50:04 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:a3:73'}]])
+18:50:05 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-inh5oxct-0-n-18e18199c4a9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 nc -z localhost 8080'
+18:50:06 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:50:07 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-inh5oxct-0-n-18e18199c4a9
+18:50:07 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.55', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0b:a3:73'}]])
+18:50:08 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-inh5oxct-0-n-18e18199c4a9.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.55 curl http://localhost:8080'
+18:50:09 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  66155      0 --:--:-- --:--:-- --:--:-- 69000
+'
+18:50:11 INFO Wait for condition not met, sleeping 10
+18:50:22 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:50:52 INFO Waiting for model:
+  test-inh5oxct/0 [idle] active: 
+18:50:55 INFO Current reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:50:55 INFO Waiting for reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:51:56 INFO Current reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:51:56 INFO Current reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085, expected reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:51:56 INFO Waiting for reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:52:57 INFO Current reconcile ID: 3e92061c-9047-45b0-a96d-c6634a3eaab7
+18:52:57 INFO Current reconcile ID: 3e92061c-9047-45b0-a96d-c6634a3eaab7, expected reconcile ID: b59fc948-370c-4f96-8cd0-5161d811a085
+18:52:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757875720.0, "event": "runner_installed", "flavor": "test-inh5oxct", "duration": 69.0}
+{"timestamp": 1757875814.0, "event": "runner_start", "flavor": "test-inh5oxct", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 94.0, "queue_duration": 1.0}
+{"timestamp": 1757875814.0, "event": "runner_stop", "flavor": "test-inh5oxct", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1757875840.569075, "event": "reconciliation", "flavor": "test-inh5oxct", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.949302196502686}
+{"timestamp": 1757875969.049466, "event": "reconciliation", "flavor": "test-inh5oxct", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.348281860351562}
