@@ -1,0 +1,178 @@
+06:25:57 WARNING unexpected facade SSHServer received from the controller
+06:25:57 INFO Adding model github-pr-77d1e-lxd:test-reactive-84pw on cloud localhost
+06:25:57 WARNING unexpected facade SSHServer received from the controller
+06:25:57 WARNING unexpected facade SSHSession received from the controller
+06:25:57 WARNING unexpected facade SSHTunneler received from the controller
+06:25:58 INFO GitHub token rate limit: Rate(reset=2025-09-15 07:06:49+00:00, remaining=4968, limit=5000)
+06:26:02 INFO Deploying ch:amd64/jammy/mongodb-229
+06:26:04 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:26:26 INFO Deploying local:jammy/github-runner-0
+06:26:26 INFO Waiting for model:
+  test-ybnj97gw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ybnj97gw/0 [allocating] waiting: waiting for machine
+06:26:56 INFO Waiting for model:
+  test-ybnj97gw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ybnj97gw/0 [allocating] waiting: waiting for machine
+06:27:27 INFO Waiting for model:
+  test-ybnj97gw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ybnj97gw/0 [allocating] waiting: waiting for machine
+06:27:57 INFO Waiting for model:
+  test-ybnj97gw/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ybnj97gw/0 [allocating] waiting: waiting for machine
+06:28:27 INFO Waiting for model:
+  test-ybnj97gw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ybnj97gw/0 [allocating] waiting: waiting for machine
+06:28:58 INFO Waiting for model:
+  test-ybnj97gw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ybnj97gw/0 [executing] maintenance: Setting up Builder.
+06:29:28 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] maintenance: Setting up Builder.
+06:29:58 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] maintenance: Setting up Builder.
+06:30:28 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] maintenance: Setting up Builder.
+06:30:59 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] maintenance: Setting up Builder.
+06:31:29 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:31:59 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:32:29 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:33:00 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:33:30 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:34:00 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:34:30 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:35:01 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:35:31 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:36:01 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:36:31 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:37:02 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:37:32 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:38:02 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:38:32 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:39:03 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:39:33 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:40:03 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:40:33 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:41:04 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:41:34 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:42:04 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:42:34 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ybnj97gw/0 [executing] active: Building image.
+06:43:04 INFO Waiting for model:
+  test-ybnj97gw/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ybnj97gw/0 [idle] active: 
+06:43:35 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:43:38 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:43:38 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:44:08 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:44:23 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:44:53 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:44:56 INFO Current reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:44:56 INFO Waiting for reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:45:57 INFO Current reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:45:57 INFO Current reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17, expected reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:45:57 INFO Waiting for reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:46:59 INFO Current reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:46:59 INFO Current reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292, expected reconcile ID: 7180ffbe-1c17-4e20-a1ea-9f8a19492d17
+06:47:02 INFO Wait for condition not met, sleeping 10
+06:47:23 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:47:39 INFO Current reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:47:39 INFO Waiting for reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:48:40 INFO Current reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:48:40 INFO Current reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292, expected reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:48:40 INFO Waiting for reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:49:41 INFO Current reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:49:41 INFO Current reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285, expected reconcile ID: ad7ab4af-3312-4c70-b4ef-13b0207ef292
+06:49:42 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:49:58 INFO Current reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:49:58 INFO Waiting for reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:50:59 INFO Current reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:50:59 INFO Current reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285, expected reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:50:59 INFO Waiting for reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:52:00 INFO Current reconcile ID: e6f1e9d8-bb17-4062-b6ed-381f07a8dceb
+06:52:00 INFO Current reconcile ID: e6f1e9d8-bb17-4062-b6ed-381f07a8dceb, expected reconcile ID: 61fdff8f-2c56-4a6a-bdbf-eecf81a35285
+06:52:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757918924.0, "event": "runner_installed", "flavor": "test-ybnj97gw", "duration": 86.0}
+{"timestamp": 1757918927.0, "event": "runner_start", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 102.0}
+{"timestamp": 1757918929.0, "event": "runner_stop", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757918950.1564102, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.702287435531616}
+{"timestamp": 1757919081.489744, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.215869903564453}
+
+06:52:02 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757918924.0, "event": "runner_installed", "flavor": "test-ybnj97gw", "duration": 86.0}
+{"timestamp": 1757918927.0, "event": "runner_start", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 102.0}
+{"timestamp": 1757918929.0, "event": "runner_stop", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757918950.1564102, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.702287435531616}
+{"timestamp": 1757919081.489744, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.215869903564453}
+
+06:52:03 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1757918924.0, "event": "runner_installed", "flavor": "test-ybnj97gw", "duration": 86.0}
+{"timestamp": 1757918927.0, "event": "runner_start", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 3.0, "queue_duration": 102.0}
+{"timestamp": 1757918929.0, "event": "runner_stop", "flavor": "test-ybnj97gw", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1757918950.1564102, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.702287435531616}
+{"timestamp": 1757919081.489744, "event": "reconciliation", "flavor": "test-ybnj97gw", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.215869903564453}
+06:52:03 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:52:34 INFO Waiting for model:
+  test-ybnj97gw/0 [idle] active: 
+06:52:37 INFO Current reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
+06:52:37 INFO Waiting for reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
+06:53:39 INFO Current reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
+06:53:39 INFO Current reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef, expected reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
+06:53:39 INFO Waiting for reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
+06:54:40 INFO Current reconcile ID: 2d156d5d-81e7-432e-9997-f88eb16fe50d
+06:54:40 INFO Current reconcile ID: 2d156d5d-81e7-432e-9997-f88eb16fe50d, expected reconcile ID: c7d5200b-7dfb-43db-9b0b-9c5c1e32c1ef
