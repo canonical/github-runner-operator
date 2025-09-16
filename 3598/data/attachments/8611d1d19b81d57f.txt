@@ -1,0 +1,30 @@
+18:40:32 INFO GitHub token rate limit: Rate(reset=2025-09-16 19:37:59+00:00, remaining=4989, limit=5000)
+18:40:36 INFO OpenStack servers: []
+18:40:36 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-ogde  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:40:36Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-lxzr5cya           maintenance      1  github-runner-image-builder  latest/edge  110  no       Setting up Builder.
+test-lxzr5cya                                  error            1  github-runner                               0  no       hook failed: "storage-attached"
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-lxzr5cya/0*  maintenance  executing  0        10.54.53.113           (install) Setting up Builder.
+test-lxzr5cya/0*                         error        idle       1        10.54.53.214           hook failed: "storage-attached"
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.54.53.113  juju-d9928f-0  ubuntu@22.04  github-runner  Running
+1        started  10.54.53.214  juju-d9928f-1  ubuntu@22.04  github-runner  Running
+
+18:40:37 INFO Juju error logs:
+
+machine-0: 18:39:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:39:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-lxzr5cya-0: 18:39:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:40:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:40:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-lxzr5cya-0: 18:40:03 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-lxzr5cya-0: 18:40:31 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:40:37 INFO Forgetting model main...

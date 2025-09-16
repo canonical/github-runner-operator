@@ -1,0 +1,285 @@
+18:38:00 WARNING unexpected facade SSHServer received from the controller
+18:38:00 INFO Adding model github-pr-77d1e-lxd:test-charm-upgrade-ooae on cloud localhost
+18:38:00 WARNING unexpected facade SSHServer received from the controller
+18:38:00 WARNING unexpected facade SSHSession received from the controller
+18:38:00 WARNING unexpected facade SSHTunneler received from the controller
+18:38:02 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:38:41 INFO Deploying local:jammy/github-runner-0
+18:38:41 INFO Waiting for model:
+  test-gy0iaoy0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gy0iaoy0/0 [allocating] waiting: waiting for machine
+18:39:11 INFO Waiting for model:
+  test-gy0iaoy0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gy0iaoy0/0 [allocating] waiting: waiting for machine
+18:39:41 INFO Waiting for model:
+  test-gy0iaoy0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gy0iaoy0/0 [allocating] waiting: waiting for machine
+18:40:11 INFO Waiting for model:
+  test-gy0iaoy0/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:40:41 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:41:11 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:41:41 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:42:11 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:42:41 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] maintenance: Setting up Builder.
+18:43:11 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:43:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:44:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:45:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:45:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:46:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:46:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:47:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:47:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:48:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:48:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:49:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:49:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:50:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:50:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:51:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:51:42 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:52:12 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:52:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:53:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:53:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gy0iaoy0/0 [executing] active: Building image.
+18:54:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-gy0iaoy0/0 [idle] active: 
+18:54:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: Update image for runners
+18:55:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: Update image for runners
+18:55:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [executing] maintenance: Update image for runners
+18:56:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:56:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:57:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:57:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:58:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:58:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:59:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+18:59:43 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:00:13 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:00:44 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:01:14 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:01:44 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:02:14 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:02:44 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:03:14 INFO Waiting for model:
+  test-gy0iaoy0/0 [idle] error: hook failed: "image-relation-changed"
+19:03:44 INFO OpenStack servers: []
+19:03:48 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-ooae  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:03:48Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-gy0iaoy0           active      1  github-runner-image-builder  latest/edge  110  no       
+test-gy0iaoy0                                  error       1  github-runner                               0  no       hook failed: "image-relation-changed"
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-gy0iaoy0/0*  active    idle   0        10.178.78.164          
+test-gy0iaoy0/0*                         error     idle   1        10.178.78.77           hook failed: "image-relation-changed"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.178.78.164  juju-7fe98c-0  ubuntu@22.04  github-runner  Running
+1        started  10.178.78.77   juju-7fe98c-1  ubuntu@22.04  github-runner  Running
+
+19:03:48 INFO Juju error logs:
+
+machine-0: 18:39:49 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:39:49 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-gy0iaoy0-0: 18:39:50 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:40:09 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:40:09 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-gy0iaoy0-0: 18:40:09 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-gy0iaoy0-0: 18:40:49 ERROR unit.github-runner-image-builder-gy0iaoy0/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-gy0iaoy0-0: 18:41:39 ERROR unit.test-gy0iaoy0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-gy0iaoy0-0: 18:41:41 ERROR unit.test-gy0iaoy0/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-gy0iaoy0-0: 18:42:48 ERROR unit.test-gy0iaoy0/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-test-gy0iaoy0-0: 18:55:59 ERROR unit.test-gy0iaoy0/0.juju-log image:0: Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/util/connection.py", line 85, in create_connection
+    raise err
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/util/connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connection.py", line 494, in request
+    self.endheaders()
+  File "/usr/lib/python3.10/http/client.py", line 1278, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "/usr/lib/python3.10/http/client.py", line 1038, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.10/http/client.py", line 976, in send
+    self.connect()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connection.py", line 325, in connect
+    self.sock = self._new_conn()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x790096655690>: Failed to establish a new connection: [Errno 111] Connection refused
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/requests/adapters.py", line 644, in send
+    resp = conn.urlopen(
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=55555): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x790096655690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/src/manager_client.py", line 161, in health_check
+    response = self._request(_HTTPMethod.GET, "/health", timeout=READ_TIMEOUT)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/src/manager_client.py", line 120, in _request
+    response = self._requests.request(method, url, *args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/requests/sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/requests/sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/requests/adapters.py", line 677, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=55555): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x790096655690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 604, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/__init__.py", line 356, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 480, in _on_image_relation_changed
+    self._setup_service(state)
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/./src/charm.py", line 386, in _setup_service
+    self._manager_client.wait_till_ready()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/src/manager_client.py", line 181, in wait_till_ready
+    self.health_check()
+  File "/var/lib/juju/agents/unit-test-gy0iaoy0-0/charm/src/manager_client.py", line 165, in health_check
+    raise RunnerManagerServiceNotReadyError(NOT_READY_ERROR_MESSAGE) from err
+errors.RunnerManagerServiceNotReadyError: GitHub runner manager service not ready
+unit-test-gy0iaoy0-0: 18:55:59 ERROR juju.worker.uniter.operation hook "image-relation-changed" (via hook dispatching script: dispatch) failed: exit status 1
+
+19:03:48 INFO Forgetting model main...

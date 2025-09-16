@@ -1,0 +1,29 @@
+18:39:48 INFO OpenStack servers: []
+18:39:49 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-8p7n  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:39:49Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-z3xxo91c           maintenance      1  github-runner-image-builder  latest/edge  110  no       Setting up Builder.
+test-z3xxo91c                                  error            1  github-runner                               0  no       hook failed: "storage-attached"
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-z3xxo91c/0*  maintenance  executing  0        10.165.6.11            (install) Setting up Builder.
+test-z3xxo91c/0*                         error        idle       1        10.165.6.104           hook failed: "storage-attached"
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.165.6.11   juju-1981d6-0  ubuntu@22.04  github-runner  Running
+1        started  10.165.6.104  juju-1981d6-1  ubuntu@22.04  github-runner  Running
+
+18:39:49 INFO Juju error logs:
+
+machine-0: 18:39:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:39:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-z3xxo91c-0: 18:39:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:39:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:39:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-z3xxo91c-0: 18:39:19 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-z3xxo91c-0: 18:39:44 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:39:49 INFO Forgetting model main...

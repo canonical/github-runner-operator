@@ -1,0 +1,49 @@
+18:36:49 INFO IP Address to use as the fake jobmanager: 10.145.216.251
+18:36:49 WARNING unexpected facade SSHServer received from the controller
+18:36:49 INFO Adding model github-pr-77d1e-lxd:test-jobmanager-prespawned-mikb on cloud localhost
+18:36:50 WARNING unexpected facade SSHServer received from the controller
+18:36:50 WARNING unexpected facade SSHSession received from the controller
+18:36:50 WARNING unexpected facade SSHTunneler received from the controller
+18:36:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:37:20 INFO Deploying local:jammy/github-runner-0
+18:37:20 INFO Waiting for model:
+  test-f4rfy5y8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f4rfy5y8/0 [allocating] waiting: waiting for machine
+18:37:50 INFO Waiting for model:
+  test-f4rfy5y8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f4rfy5y8/0 [allocating] waiting: waiting for machine
+18:38:20 INFO Waiting for model:
+  test-f4rfy5y8/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-f4rfy5y8/0 [allocating] waiting: waiting for machine
+18:38:51 INFO Waiting for model:
+  test-f4rfy5y8/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-f4rfy5y8/0 [allocating] waiting: agent initialising
+18:39:18 INFO OpenStack servers: []
+18:39:18 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-mikb  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:39:18Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-f4rfy5y8           maintenance      1  github-runner-image-builder  latest/edge  110  no       Setting up Builder.
+test-f4rfy5y8                                  error            1  github-runner                               0  no       hook failed: "storage-attached"
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-f4rfy5y8/0*  maintenance  executing  0        10.87.158.110          (install) Setting up Builder.
+test-f4rfy5y8/0*                         error        idle       1        10.87.158.113          hook failed: "storage-attached"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.87.158.110  juju-4ad06a-0  ubuntu@22.04  github-runner  Running
+1        started  10.87.158.113  juju-4ad06a-1  ubuntu@22.04  github-runner  Running
+
+18:39:19 INFO Juju error logs:
+
+machine-0: 18:38:36 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:38:36 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-f4rfy5y8-0: 18:38:37 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:38:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:38:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-f4rfy5y8-0: 18:38:46 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-f4rfy5y8-0: 18:39:17 ERROR juju.worker.uniter.operation hook "runner-storage-attached" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:39:19 INFO Forgetting model main...
