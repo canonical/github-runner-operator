@@ -5,7 +5,7 @@ on:
 
   schedule:
     # Trigger at 6:00 AM and 6:00 PM UTC
-    - cron: "0 6,18 * * *"
+    - cron: "0 6,17 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
