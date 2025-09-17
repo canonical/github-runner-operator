@@ -1,0 +1,398 @@
+18:27:34 INFO IP Address to use as the fake jobmanager: 10.145.216.80
+18:27:35 WARNING unexpected facade SSHServer received from the controller
+18:27:35 INFO Adding model github-pr-77d1e-lxd:test-jobmanager-prespawned-pulx on cloud localhost
+18:27:35 WARNING unexpected facade SSHServer received from the controller
+18:27:35 WARNING unexpected facade SSHSession received from the controller
+18:27:35 WARNING unexpected facade SSHTunneler received from the controller
+18:27:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:28:39 INFO Deploying local:jammy/github-runner-0
+18:28:39 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pebn95kn/0 [allocating] waiting: waiting for machine
+18:29:09 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pebn95kn/0 [allocating] waiting: waiting for machine
+18:29:39 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pebn95kn/0 [allocating] waiting: waiting for machine
+18:30:09 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pebn95kn/0 [allocating] waiting: agent initialising
+18:30:40 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:31:10 INFO Waiting for model:
+  test-pebn95kn/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:31:40 INFO Waiting for model:
+  test-pebn95kn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:32:11 INFO Waiting for model:
+  test-pebn95kn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:32:41 INFO Waiting for model:
+  test-pebn95kn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:33:11 INFO Waiting for model:
+  test-pebn95kn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:33:41 INFO Waiting for model:
+  test-pebn95kn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-pebn95kn/0 [executing] maintenance: Setting up Builder.
+18:34:12 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:34:42 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:35:13 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:35:43 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:36:13 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:36:43 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:37:14 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:37:44 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:38:14 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:38:44 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:39:14 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:39:44 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:40:15 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:40:45 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:41:15 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:41:46 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:42:16 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:42:47 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:43:17 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:43:48 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:44:18 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:44:49 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:45:19 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:45:50 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:46:20 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:46:50 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:47:20 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:47:50 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:48:20 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:48:51 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:49:21 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:49:52 INFO Waiting for model:
+  test-pebn95kn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-pebn95kn/0 [executing] active: Building image.
+18:50:22 INFO Waiting for model:
+  test-pebn95kn/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-pebn95kn/0 [idle] active: 
+18:50:53 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:50:58 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:51:14 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:51:44 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:51:53 INFO Current reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:51:53 INFO Waiting for reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:52:55 INFO Current reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:52:55 INFO Current reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304, expected reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:52:55 INFO Waiting for reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:53:56 INFO Current reconcile ID: 9188a895-555a-4198-8b27-3a9d3835d5d9
+18:53:56 INFO Current reconcile ID: 9188a895-555a-4198-8b27-3a9d3835d5d9, expected reconcile ID: 5dc2a1a6-d9e3-4774-a379-ec38bfecd304
+18:53:56 INFO Waiting for runner to be registered.
+18:54:03 INFO 10.88.180.15 - - [17/Sep/2025 18:54:03] "POST /v1/runners/register HTTP/1.1" 200 -
+18:54:03 INFO server log: [(<Request 'http://10.145.216.80:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+18:54:03 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer c735fa12b2406427'} data=None json=<UNDEFINED>>
+18:54:03 INFO trying to prepare tunnel for builder agent
+18:54:04 INFO no runner or two or more runners in unit, return False
+18:54:04 INFO Wait for condition not met, sleeping 10
+18:54:07 INFO 10.88.180.15 - - [17/Sep/2025 18:54:07] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:54:14 INFO trying to prepare tunnel for builder agent
+18:54:15 INFO no addresses yet, return False
+18:54:15 INFO Wait for condition not met, sleeping 10
+18:54:25 INFO trying to prepare tunnel for builder agent
+18:54:25 INFO no addresses yet, return False
+18:54:25 INFO Wait for condition not met, sleeping 10
+18:54:35 INFO trying to prepare tunnel for builder agent
+18:54:36 INFO no addresses yet, return False
+18:54:36 INFO Wait for condition not met, sleeping 10
+18:54:46 INFO trying to prepare tunnel for builder agent
+18:54:46 INFO no addresses yet, return False
+18:54:46 INFO Wait for condition not met, sleeping 10
+18:54:56 INFO trying to prepare tunnel for builder agent
+18:54:57 INFO no addresses yet, return False
+18:54:57 INFO Wait for condition not met, sleeping 10
+18:55:07 INFO trying to prepare tunnel for builder agent
+18:55:07 INFO no addresses yet, return False
+18:55:07 INFO Wait for condition not met, sleeping 10
+18:55:17 INFO trying to prepare tunnel for builder agent
+18:55:18 INFO no addresses yet, return False
+18:55:18 INFO Wait for condition not met, sleeping 10
+18:55:28 INFO trying to prepare tunnel for builder agent
+18:55:28 INFO no addresses yet, return False
+18:55:28 INFO Wait for condition not met, sleeping 10
+18:55:38 INFO trying to prepare tunnel for builder agent
+18:55:40 INFO [TEST SETUP] Run command 'echo hello' on test-pebn95kn-0-n-2015285bf5f5
+18:55:40 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:55:41 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 'echo hello''
+18:55:49 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.145.193.77 port 22: Connection refused
+'
+18:55:49 INFO cannot ssh yet, return False
+18:55:49 INFO Wait for condition not met, sleeping 10
+18:55:59 INFO trying to prepare tunnel for builder agent
+18:56:00 INFO [TEST SETUP] Run command 'echo hello' on test-pebn95kn-0-n-2015285bf5f5
+18:56:00 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:56:01 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 'echo hello''
+18:56:03 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.145.193.77' (ED25519) to the list of known hosts.
+'
+18:56:09 INFO 10.88.180.15 - - [17/Sep/2025 18:56:09] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:13 INFO 10.88.180.15 - - [17/Sep/2025 18:56:13] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:56:14 INFO 10.88.180.15 - - [17/Sep/2025 18:56:14] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:05 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.80 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-pebn95kn-0-n-2015285bf5f5
+18:57:05 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:57:06 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.80 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+18:57:08 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.145.216.80 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+18:57:09 INFO [TEST SETUP] Exposing port 8000 on test-pebn95kn-0-n-2015285bf5f5
+18:57:09 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:57:10 INFO ssh tunnel command ssh -fNT -R 8000:10.145.216.80:8000 -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.77 &
+18:57:10 INFO 10.88.180.15 - - [17/Sep/2025 18:57:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:11 INFO ssh tunnel result 0 None None
+18:57:12 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-pebn95kn-0-n-2015285bf5f5
+18:57:12 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:57:13 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 nc -z localhost 8000'
+18:57:14 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+18:57:14 INFO prepared tunnel for builder agent
+18:57:14 INFO Waiting for builder-agent to contact us.
+18:57:15 INFO 10.88.180.15 - - [17/Sep/2025 18:57:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:15 INFO server log after executing: [(<Request 'http://10.145.216.80:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:57:15 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer c735fa12b2406427'} data=None json=<UNDEFINED>>
+18:57:16 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-pebn95kn-0-n-2015285bf5f5
+18:57:16 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.77', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:a6:49:48'}]])
+18:57:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-pebn95kn-0-n-2015285bf5f5.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.77 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+18:57:18 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  15932  23430 --:--:-- --:--:-- --:--:-- 42000
+'
+18:57:18 INFO Waiting for builder-agent to contact us.
+18:57:20 INFO 10.88.180.15 - - [17/Sep/2025 18:57:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:25 INFO 10.88.180.15 - - [17/Sep/2025 18:57:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:30 INFO 10.88.180.15 - - [17/Sep/2025 18:57:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:35 INFO 10.88.180.15 - - [17/Sep/2025 18:57:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:40 INFO 10.88.180.15 - - [17/Sep/2025 18:57:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:45 INFO 10.88.180.15 - - [17/Sep/2025 18:57:45] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:50 INFO 10.88.180.15 - - [17/Sep/2025 18:57:50] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:50 INFO server log after executing: [(<Request 'http://10.145.216.80:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.145.216.80:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+18:57:50 INFO First reconcile that should not delete the runner, as it is still healthy.
+18:57:50 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:57:55 INFO 10.88.180.15 - - [17/Sep/2025 18:57:55] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:56 INFO 10.88.180.15 - - [17/Sep/2025 18:57:56] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:57:59 INFO 10.88.180.15 - - [17/Sep/2025 18:57:59] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:00 INFO 10.88.180.15 - - [17/Sep/2025 18:58:00] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:00 INFO 10.88.180.15 - - [17/Sep/2025 18:58:00] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:05 INFO 10.88.180.15 - - [17/Sep/2025 18:58:05] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:10 INFO 10.88.180.15 - - [17/Sep/2025 18:58:10] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:15 INFO 10.88.180.15 - - [17/Sep/2025 18:58:15] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:20 INFO 10.88.180.15 - - [17/Sep/2025 18:58:20] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:21 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+18:58:25 INFO Current reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+18:58:25 INFO Waiting for reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+18:58:25 INFO 10.88.180.15 - - [17/Sep/2025 18:58:25] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:30 INFO 10.88.180.15 - - [17/Sep/2025 18:58:30] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:35 INFO 10.88.180.15 - - [17/Sep/2025 18:58:35] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:40 INFO 10.88.180.15 - - [17/Sep/2025 18:58:40] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:46 INFO 10.88.180.15 - - [17/Sep/2025 18:58:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:51 INFO 10.88.180.15 - - [17/Sep/2025 18:58:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:58:56 INFO 10.88.180.15 - - [17/Sep/2025 18:58:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:01 INFO 10.88.180.15 - - [17/Sep/2025 18:59:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:06 INFO 10.88.180.15 - - [17/Sep/2025 18:59:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:11 INFO 10.88.180.15 - - [17/Sep/2025 18:59:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:16 INFO 10.88.180.15 - - [17/Sep/2025 18:59:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:21 INFO 10.88.180.15 - - [17/Sep/2025 18:59:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:26 INFO 10.88.180.15 - - [17/Sep/2025 18:59:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:26 INFO Current reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+18:59:26 INFO Current reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802, expected reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+18:59:26 INFO Waiting for reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+18:59:31 INFO 10.88.180.15 - - [17/Sep/2025 18:59:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:36 INFO 10.88.180.15 - - [17/Sep/2025 18:59:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:41 INFO 10.88.180.15 - - [17/Sep/2025 18:59:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:46 INFO 10.88.180.15 - - [17/Sep/2025 18:59:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:51 INFO 10.88.180.15 - - [17/Sep/2025 18:59:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+18:59:56 INFO 10.88.180.15 - - [17/Sep/2025 18:59:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:01 INFO 10.88.180.15 - - [17/Sep/2025 19:00:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:06 INFO 10.88.180.15 - - [17/Sep/2025 19:00:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:11 INFO 10.88.180.15 - - [17/Sep/2025 19:00:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:16 INFO 10.88.180.15 - - [17/Sep/2025 19:00:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:21 INFO 10.88.180.15 - - [17/Sep/2025 19:00:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:26 INFO 10.88.180.15 - - [17/Sep/2025 19:00:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:27 INFO Current reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+19:00:27 INFO Current reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802, expected reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+19:00:27 INFO Waiting for reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+19:00:31 INFO 10.88.180.15 - - [17/Sep/2025 19:00:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:36 INFO 10.88.180.15 - - [17/Sep/2025 19:00:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:41 INFO 10.88.180.15 - - [17/Sep/2025 19:00:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:46 INFO 10.88.180.15 - - [17/Sep/2025 19:00:46] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:51 INFO 10.88.180.15 - - [17/Sep/2025 19:00:51] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:00:56 INFO 10.88.180.15 - - [17/Sep/2025 19:00:56] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:01 INFO 10.88.180.15 - - [17/Sep/2025 19:01:01] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:02 INFO 10.88.180.15 - - [17/Sep/2025 19:01:02] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:05 INFO 10.88.180.15 - - [17/Sep/2025 19:01:05] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:06 INFO 10.88.180.15 - - [17/Sep/2025 19:01:06] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:07 INFO 10.88.180.15 - - [17/Sep/2025 19:01:07] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:11 INFO 10.88.180.15 - - [17/Sep/2025 19:01:11] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:16 INFO 10.88.180.15 - - [17/Sep/2025 19:01:16] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:21 INFO 10.88.180.15 - - [17/Sep/2025 19:01:21] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:26 INFO 10.88.180.15 - - [17/Sep/2025 19:01:26] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:28 INFO Current reconcile ID: 107e290e-4fcb-480d-9b0c-917c1ca75da2
+19:01:28 INFO Current reconcile ID: 107e290e-4fcb-480d-9b0c-917c1ca75da2, expected reconcile ID: cdf54d56-d901-4e95-aef8-71be7245c802
+19:01:31 INFO 10.88.180.15 - - [17/Sep/2025 19:01:31] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:31 INFO 10.88.180.15 - - [17/Sep/2025 19:01:31] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:35 INFO 10.88.180.15 - - [17/Sep/2025 19:01:35] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:36 INFO 10.88.180.15 - - [17/Sep/2025 19:01:36] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:36 INFO check-runners: {'busy': '1', 'busy-runners': "('test-pebn95kn-0-n-2015285bf5f5',)", 'offline': '0', 'online': '1', 'return-code': 0, 'runners': "('test-pebn95kn-0-n-2015285bf5f5',)", 'unknown': '0'}
+19:01:36 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer c735fa12b2406427'} data=None json=<UNDEFINED>>
+19:01:36 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+19:01:41 INFO 10.88.180.15 - - [17/Sep/2025 19:01:41] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:41 INFO 10.88.180.15 - - [17/Sep/2025 19:01:41] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:01:48 INFO 10.88.180.15 - - [17/Sep/2025 19:01:48] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+19:02:06 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+19:02:10 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:02:10 INFO Waiting for reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:03:11 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:03:11 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556, expected reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:03:11 INFO Waiting for reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:04:12 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:04:12 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556, expected reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:04:12 INFO Waiting for reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:05:13 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:05:13 INFO Current reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556, expected reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:05:13 INFO Waiting for reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:05:55 INFO 10.88.180.15 - - [17/Sep/2025 19:05:55] "[35m[1mPOST /v1/runners/register HTTP/1.1[0m" 500 -
+19:06:15 INFO Current reconcile ID: 9610e4ef-b89c-4598-8834-049259b7ad45
+19:06:15 INFO Current reconcile ID: 9610e4ef-b89c-4598-8834-049259b7ad45, expected reconcile ID: b60af4e2-a4ed-4c08-9957-0fe828268556
+19:06:19 INFO check-runners: {'busy': '0', 'busy-runners': '()', 'offline': '0', 'online': '0', 'return-code': 0, 'runners': '()', 'unknown': '0'}
+19:06:19 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+19:06:49 INFO Waiting for model:
+  test-pebn95kn/0 [idle] active: 
+19:06:53 INFO Current reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:06:53 INFO Waiting for reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:07:54 INFO Current reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:07:54 INFO Current reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811, expected reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:07:54 INFO Waiting for reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:08:55 INFO Current reconcile ID: 2c2ee425-cd15-4166-b769-7ba4b903e3b5
+19:08:55 INFO Current reconcile ID: 2c2ee425-cd15-4166-b769-7ba4b903e3b5, expected reconcile ID: 15989d67-09f3-4483-b4e6-9d310e73e811
+19:08:56 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-pulx  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  19:08:56Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pebn95kn           active      1  github-runner-image-builder  latest/edge  110  no       
+test-pebn95kn                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-pebn95kn/0*  active    idle   0        10.88.180.163          
+test-pebn95kn/0*                         active    idle   1        10.88.180.15           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.88.180.163  juju-165e20-0  ubuntu@22.04  github-runner  Running
+1        started  10.88.180.15   juju-165e20-1  ubuntu@22.04  github-runner  Running
+
+19:08:57 INFO Juju error logs:
+
+machine-0: 18:29:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:29:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pebn95kn-0: 18:29:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:30:44 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:44 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pebn95kn-0: 18:30:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pebn95kn-0: 18:31:53 ERROR unit.github-runner-image-builder-pebn95kn/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-pebn95kn-0: 18:32:55 ERROR unit.test-pebn95kn/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pebn95kn-0: 18:32:59 ERROR unit.test-pebn95kn/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pebn95kn-0: 18:33:54 ERROR unit.test-pebn95kn/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pebn95kn-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:08:57 INFO Forgetting model main...
