@@ -1,0 +1,133 @@
+06:27:39 INFO GitHub token rate limit: Rate(reset=2025-09-17 07:02:09+00:00, remaining=4957, limit=5000)
+06:27:52 WARNING unexpected facade SSHServer received from the controller
+06:27:52 INFO Adding model github-pr-77d1e-lxd:test-charm-metrics-failure-njg1 on cloud localhost
+06:27:53 WARNING unexpected facade SSHServer received from the controller
+06:27:53 WARNING unexpected facade SSHSession received from the controller
+06:27:53 WARNING unexpected facade SSHTunneler received from the controller
+06:27:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:28:29 INFO Deploying local:jammy/github-runner-0
+06:28:29 INFO Waiting for model:
+  test-jvgt3yzr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvgt3yzr/0 [allocating] waiting: waiting for machine
+06:29:00 INFO Waiting for model:
+  test-jvgt3yzr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvgt3yzr/0 [allocating] waiting: waiting for machine
+06:29:30 INFO Waiting for model:
+  test-jvgt3yzr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvgt3yzr/0 [allocating] waiting: waiting for machine
+06:30:00 INFO Waiting for model:
+  test-jvgt3yzr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jvgt3yzr/0 [allocating] waiting: waiting for machine
+06:30:30 INFO Waiting for model:
+  test-jvgt3yzr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:31:01 INFO Waiting for model:
+  test-jvgt3yzr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:31:31 INFO Waiting for model:
+  test-jvgt3yzr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:32:01 INFO Waiting for model:
+  test-jvgt3yzr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:32:31 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:33:02 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] maintenance: Setting up Builder.
+06:33:32 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] blocked: image integration required.
+06:34:03 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:34:33 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:35:03 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:35:33 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:36:04 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:36:34 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:37:05 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:37:35 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:38:05 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:38:36 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:39:06 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:39:37 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:40:07 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:40:37 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:41:08 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:41:38 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:42:08 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:42:39 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:43:09 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:43:40 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:44:10 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:44:40 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:45:11 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:45:41 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:46:12 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:46:42 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jvgt3yzr/0 [executing] active: Building image.
+06:47:12 INFO Waiting for model:
+  test-jvgt3yzr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-jvgt3yzr/0 [idle] active: 
+06:47:44 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] active: 
+06:48:14 INFO Waiting for model:
+  test-jvgt3yzr/0 [idle] active: 
+06:48:18 INFO Current reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f
+06:48:18 INFO Waiting for reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f
+06:49:19 INFO Current reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f
+06:49:19 INFO Current reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f, expected reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f
+06:49:19 INFO Waiting for reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f
+06:50:20 INFO Current reconcile ID: be911342-e42f-4189-897c-947fdb6f5aaa
+06:50:20 INFO Current reconcile ID: be911342-e42f-4189-897c-947fdb6f5aaa, expected reconcile ID: 38dbf7fa-d1e0-47cc-ba03-596d4412192f

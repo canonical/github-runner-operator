@@ -1,0 +1,191 @@
+06:27:13 WARNING unexpected facade SSHServer received from the controller
+06:27:13 INFO Adding model github-pr-77d1e-lxd:test-reactive-oaq4 on cloud localhost
+06:27:14 WARNING unexpected facade SSHServer received from the controller
+06:27:14 WARNING unexpected facade SSHSession received from the controller
+06:27:14 WARNING unexpected facade SSHTunneler received from the controller
+06:27:15 INFO GitHub token rate limit: Rate(reset=2025-09-17 07:02:09+00:00, remaining=4961, limit=5000)
+06:27:19 INFO Deploying ch:amd64/jammy/mongodb-229
+06:27:21 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:27:47 INFO Deploying local:jammy/github-runner-0
+06:27:47 INFO Waiting for model:
+  test-rgl5gnq0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: waiting for machine
+06:28:17 INFO Waiting for model:
+  test-rgl5gnq0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: waiting for machine
+06:28:48 INFO Waiting for model:
+  test-rgl5gnq0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: waiting for machine
+06:29:18 INFO Waiting for model:
+  test-rgl5gnq0/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: waiting for machine
+06:29:48 INFO Waiting for model:
+  test-rgl5gnq0/0 [executing] waiting: agent initialising
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: waiting for machine
+06:30:19 INFO Waiting for model:
+  test-rgl5gnq0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rgl5gnq0/0 [allocating] waiting: agent initialising
+06:30:49 INFO Waiting for model:
+  test-rgl5gnq0/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rgl5gnq0/0 [executing] maintenance: Setting up Builder.
+06:31:19 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] maintenance: Setting up Builder.
+06:31:50 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] maintenance: Setting up Builder.
+06:32:20 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] maintenance: Setting up Builder.
+06:32:51 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] maintenance: Setting up Builder.
+06:33:21 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:33:51 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:34:21 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:34:51 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:35:21 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:35:52 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:36:22 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:36:52 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:37:23 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:37:53 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:38:23 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:38:53 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:39:24 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:39:54 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:40:24 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:40:54 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:41:25 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:41:55 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:42:25 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:42:55 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:43:26 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:43:56 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:44:26 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:44:57 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:45:27 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:45:57 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:46:27 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:46:58 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rgl5gnq0/0 [executing] active: Building image.
+06:47:28 INFO Waiting for model:
+  test-rgl5gnq0/0 [executing] active: 
+06:47:44 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:47:44 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:48:14 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+  mongodb/0 [executing] active: Primary.
+06:48:42 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:49:13 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:49:17 INFO Current reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:49:17 INFO Waiting for reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:50:18 INFO Current reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:50:18 INFO Current reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d, expected reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:50:18 INFO Waiting for reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:51:19 INFO Current reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:51:19 INFO Current reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09, expected reconcile ID: 41d3f0df-a4ea-4217-a1fd-9bf6de873a8d
+06:51:23 INFO Wait for condition not met, sleeping 10
+06:51:44 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:52:01 INFO Current reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:52:01 INFO Waiting for reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:53:02 INFO Current reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:53:02 INFO Current reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09, expected reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:53:02 INFO Waiting for reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:54:03 INFO Current reconcile ID: 401fe09d-4950-4929-907f-8eb31df5e091
+06:54:03 INFO Current reconcile ID: 401fe09d-4950-4929-907f-8eb31df5e091, expected reconcile ID: e05a5094-c08e-4f7d-af42-05ba0ca7bb09
+06:54:04 INFO Wait for condition not met, sleeping 60
+06:55:04 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:55:21 INFO Current reconcile ID: 401fe09d-4950-4929-907f-8eb31df5e091
+06:55:21 INFO Waiting for reconcile ID: 401fe09d-4950-4929-907f-8eb31df5e091
+06:56:22 INFO Current reconcile ID: c1c43257-a612-42dc-a50b-cc33ee6c5b35
+06:56:22 INFO Current reconcile ID: c1c43257-a612-42dc-a50b-cc33ee6c5b35, expected reconcile ID: 401fe09d-4950-4929-907f-8eb31df5e091
+06:56:23 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758092007.792832, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.443184614181519}
+{"timestamp": 1758092088.0, "event": "runner_installed", "flavor": "test-rgl5gnq0", "duration": 190.0}
+{"timestamp": 1758092095.0, "event": "runner_start", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 207.0}
+{"timestamp": 1758092097.0, "event": "runner_stop", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758092151.1385734, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.236809730529785}
+
+06:56:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758092007.792832, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.443184614181519}
+{"timestamp": 1758092088.0, "event": "runner_installed", "flavor": "test-rgl5gnq0", "duration": 190.0}
+{"timestamp": 1758092095.0, "event": "runner_start", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 207.0}
+{"timestamp": 1758092097.0, "event": "runner_stop", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758092151.1385734, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.236809730529785}
+
+06:56:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758092007.792832, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.443184614181519}
+{"timestamp": 1758092088.0, "event": "runner_installed", "flavor": "test-rgl5gnq0", "duration": 190.0}
+{"timestamp": 1758092095.0, "event": "runner_start", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 207.0}
+{"timestamp": 1758092097.0, "event": "runner_stop", "flavor": "test-rgl5gnq0", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758092151.1385734, "event": "reconciliation", "flavor": "test-rgl5gnq0", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.236809730529785}
+06:56:25 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:56:56 INFO Waiting for model:
+  test-rgl5gnq0/0 [idle] active: 
+06:57:03 INFO Current reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
+06:57:03 INFO Waiting for reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
+06:58:04 INFO Current reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
+06:58:04 INFO Current reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c, expected reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
+06:58:04 INFO Waiting for reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
+06:59:05 INFO Current reconcile ID: a35066f8-bfec-4fd6-a369-f7025503caa6
+06:59:05 INFO Current reconcile ID: a35066f8-bfec-4fd6-a369-f7025503caa6, expected reconcile ID: ca8189a5-f571-4710-83de-e945c0deb75c
