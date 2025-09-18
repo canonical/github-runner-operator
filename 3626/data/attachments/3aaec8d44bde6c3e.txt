@@ -1,0 +1,80 @@
+18:54:54 INFO GitHub token rate limit: Rate(reset=2025-09-18 19:15:59+00:00, remaining=4497, limit=5000)
+18:54:58 INFO Waiting for model:
+  test-zfl7piir/0 [idle] active: 
+18:55:28 INFO Waiting for model:
+  test-zfl7piir/0 [idle] active: 
+18:55:31 INFO Current reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:55:31 INFO Waiting for reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:56:33 INFO Current reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:56:33 INFO Current reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00, expected reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:56:33 INFO Waiting for reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:57:34 INFO Current reconcile ID: 2bd803e5-7fa4-45f8-b967-7be3e90ce09c
+18:57:34 INFO Current reconcile ID: 2bd803e5-7fa4-45f8-b967-7be3e90ce09c, expected reconcile ID: 0484fb4d-1ff6-4aa3-aa09-61f4683ecd00
+18:57:42 INFO Wait for condition not met, sleeping 10
+18:57:53 INFO Waiting for model:
+  test-zfl7piir/0 [idle] active: 
+18:58:24 INFO Waiting for model:
+  test-zfl7piir/0 [idle] active: 
+18:58:27 INFO Current reconcile ID: 1dcd4e15-c048-42f6-9c9d-f4c69418ed04
+18:58:27 INFO Waiting for reconcile ID: 1dcd4e15-c048-42f6-9c9d-f4c69418ed04
+18:59:28 INFO Current reconcile ID: 8456bd61-1b79-4072-8222-659eec381b23
+18:59:28 INFO Current reconcile ID: 8456bd61-1b79-4072-8222-659eec381b23, expected reconcile ID: 1dcd4e15-c048-42f6-9c9d-f4c69418ed04
+18:59:29 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758221788.0, "event": "runner_installed", "flavor": "test-zfl7piir", "duration": 78.0}
+{"timestamp": 1758221867.0, "event": "runner_start", "flavor": "test-zfl7piir", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 79.0, "queue_duration": 1.0}
+{"timestamp": 1758221869.0, "event": "runner_stop", "flavor": "test-zfl7piir", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758221908.4373791, "event": "reconciliation", "flavor": "test-zfl7piir", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 32.20940446853638}
+18:59:33 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-qjg3  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:59:33Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-zfl7piir           active      1  github-runner-image-builder  latest/edge  110  no       
+test-zfl7piir                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-zfl7piir/0*  active    idle   0        10.238.89.228          
+test-zfl7piir/0*                         active    idle   1        10.238.89.36           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.238.89.228  juju-5dbee3-0  ubuntu@22.04  github-runner  Running
+1        started  10.238.89.36   juju-5dbee3-1  ubuntu@22.04  github-runner  Running
+
+18:59:33 INFO Juju error logs:
+
+machine-0: 18:29:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:29:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-zfl7piir-0: 18:29:26 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:30:06 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:06 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-zfl7piir-0: 18:30:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-zfl7piir-0: 18:30:29 ERROR unit.github-runner-image-builder-zfl7piir/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-zfl7piir-0: 18:31:44 ERROR unit.test-zfl7piir/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zfl7piir-0: 18:31:47 ERROR unit.test-zfl7piir/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-zfl7piir-0: 18:32:28 ERROR unit.test-zfl7piir/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-zfl7piir-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:59:33 INFO Forgetting model main...

@@ -1,0 +1,187 @@
+18:27:25 WARNING unexpected facade SSHServer received from the controller
+18:27:25 INFO Adding model github-pr-77d1e-lxd:test-reactive-z14j on cloud localhost
+18:27:26 WARNING unexpected facade SSHServer received from the controller
+18:27:26 WARNING unexpected facade SSHSession received from the controller
+18:27:26 WARNING unexpected facade SSHTunneler received from the controller
+18:27:27 INFO GitHub token rate limit: Rate(reset=2025-09-18 19:15:59+00:00, remaining=4968, limit=5000)
+18:27:31 INFO Deploying ch:amd64/jammy/mongodb-229
+18:27:34 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:28:34 INFO Deploying local:jammy/github-runner-0
+18:28:34 INFO Waiting for model:
+  test-beh31pbr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beh31pbr/0 [allocating] waiting: waiting for machine
+18:29:04 INFO Waiting for model:
+  test-beh31pbr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beh31pbr/0 [allocating] waiting: waiting for machine
+18:29:35 INFO Waiting for model:
+  test-beh31pbr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beh31pbr/0 [allocating] waiting: waiting for machine
+18:30:05 INFO Waiting for model:
+  test-beh31pbr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-beh31pbr/0 [allocating] waiting: waiting for machine
+18:30:35 INFO Waiting for model:
+  test-beh31pbr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-beh31pbr/0 [allocating] waiting: waiting for machine
+18:31:06 INFO Waiting for model:
+  test-beh31pbr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:31:36 INFO Waiting for model:
+  test-beh31pbr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:32:06 INFO Waiting for model:
+  test-beh31pbr/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:32:36 INFO Waiting for model:
+  test-beh31pbr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:33:07 INFO Waiting for model:
+  test-beh31pbr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:33:37 INFO Waiting for model:
+  test-beh31pbr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-beh31pbr/0 [executing] maintenance: Setting up Builder.
+18:34:08 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:34:38 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:35:08 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:35:38 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:36:08 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:36:39 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:37:09 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:37:39 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:38:09 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:38:39 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:39:10 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:39:40 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:40:10 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:40:40 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:41:10 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:41:41 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:42:11 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:42:41 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:43:11 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:43:42 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:44:12 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:45:13 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:45:43 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:46:13 INFO Waiting for model:
+  test-beh31pbr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-beh31pbr/0 [executing] active: Building image.
+18:46:43 INFO Waiting for model:
+  test-beh31pbr/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-beh31pbr/0 [idle] active: 
+18:47:13 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:47:19 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:47:19 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:47:49 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:48:07 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:48:38 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:48:41 INFO Current reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:48:41 INFO Waiting for reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:49:42 INFO Current reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:49:42 INFO Current reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd, expected reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:49:42 INFO Waiting for reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:50:43 INFO Current reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:50:43 INFO Current reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe, expected reconcile ID: 072899e3-6062-45a8-84e3-d780e261d3fd
+18:50:47 INFO Wait for condition not met, sleeping 10
+18:51:08 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:51:24 INFO Current reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:51:24 INFO Waiting for reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:52:25 INFO Current reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:52:25 INFO Current reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe, expected reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:52:25 INFO Waiting for reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:53:26 INFO Current reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:53:26 INFO Current reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139, expected reconcile ID: 1e3d7849-8091-434b-99c2-4be45ba101fe
+18:53:27 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:53:43 INFO Current reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:53:43 INFO Waiting for reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:54:44 INFO Current reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:54:44 INFO Current reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139, expected reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:54:44 INFO Waiting for reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:55:45 INFO Current reconcile ID: 8a80688c-63bb-43bc-819c-510bbb31927e
+18:55:45 INFO Current reconcile ID: 8a80688c-63bb-43bc-819c-510bbb31927e, expected reconcile ID: 9da9d54d-7cfc-479f-aefb-e712d0a4a139
+18:55:46 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758221543.0, "event": "runner_installed", "flavor": "test-beh31pbr", "duration": 79.0}
+{"timestamp": 1758221548.0, "event": "runner_start", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1758221550.0, "event": "runner_stop", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758221582.342969, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.660846710205078}
+{"timestamp": 1758221714.5874248, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.101942777633667}
+
+18:55:47 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758221543.0, "event": "runner_installed", "flavor": "test-beh31pbr", "duration": 79.0}
+{"timestamp": 1758221548.0, "event": "runner_start", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1758221550.0, "event": "runner_stop", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758221582.342969, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.660846710205078}
+{"timestamp": 1758221714.5874248, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.101942777633667}
+
+18:55:48 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758221543.0, "event": "runner_installed", "flavor": "test-beh31pbr", "duration": 79.0}
+{"timestamp": 1758221548.0, "event": "runner_start", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 98.0}
+{"timestamp": 1758221550.0, "event": "runner_stop", "flavor": "test-beh31pbr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758221582.342969, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 20.660846710205078}
+{"timestamp": 1758221714.5874248, "event": "reconciliation", "flavor": "test-beh31pbr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.101942777633667}
+18:55:49 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:56:19 INFO Waiting for model:
+  test-beh31pbr/0 [idle] active: 
+18:56:22 INFO Current reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
+18:56:22 INFO Waiting for reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
+18:57:23 INFO Current reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
+18:57:23 INFO Current reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b, expected reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
+18:57:23 INFO Waiting for reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
+18:58:24 INFO Current reconcile ID: 647d4450-1e2a-44c0-b35a-7de8b24bb645
+18:58:24 INFO Current reconcile ID: 647d4450-1e2a-44c0-b35a-7de8b24bb645, expected reconcile ID: df8c3eac-29ce-4006-bf87-16155dfcd21b
