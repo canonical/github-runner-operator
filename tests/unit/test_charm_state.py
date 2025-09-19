@@ -2,7 +2,6 @@
 # See LICENSE file for licensing details.
 import json
 import logging
-import platform
 import secrets
 from unittest.mock import MagicMock
 
@@ -16,6 +15,8 @@ from pydantic.networks import IPv4Address
 
 import charm_state
 from charm_state import (
+    APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME,
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
@@ -31,11 +32,11 @@ from charm_state import (
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
     RUNNER_HTTP_PROXY_CONFIG_NAME,
+    RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
     USE_RUNNER_PROXY_FOR_TMATE_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
-    Arch,
     CharmConfig,
     CharmConfigInvalidError,
     CharmState,
@@ -45,7 +46,6 @@ from charm_state import (
     OpenstackRunnerConfig,
     ProxyConfig,
     SSHDebugConnection,
-    UnsupportedArchitectureError,
 )
 from errors import MissingMongoDBError
 from tests.unit.factories import MockGithubRunnerCharmFactory
@@ -96,6 +96,20 @@ def test_github_config_from_charm_invalid_token():
 
     with pytest.raises(CharmConfigInvalidError):
         GithubConfig.from_charm(mock_charm)
+
+
+def test_jobmanager_config_from_charm_empty_token():
+    """
+    arrange: Create a mock CharmBase instance with an empty token configuration.
+    act: Call from_charm method with the mock CharmBase instance.
+    assert:
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[PATH_CONFIG_NAME] = "https://jobmanager/"
+    mock_charm.config[TOKEN_CONFIG_NAME] = ""
+
+    with pytest.raises(CharmConfigInvalidError):
+        charm_state.JobManagerConfig.from_charm(mock_charm)
 
 
 def test_github_config_from_charm_url_path_returns_none():
@@ -150,34 +164,6 @@ def test_parse_github_path(
     assert isinstance(result, expected_type)
     for attr, value in expected_attrs.items():
         assert getattr(result, attr) == value
-
-
-@pytest.mark.parametrize(
-    "size, expected_result",
-    [
-        ("100KiB", True),
-        ("10MiB", True),
-        ("1GiB", True),
-        ("0TiB", True),
-        ("1000PiB", True),
-        ("10000EiB", True),
-        ("100KB", False),  # Invalid suffix
-        ("100GB", False),  # Invalid suffix
-        ("abc", False),  # Non-numeric characters
-        ("100", False),  # No suffix
-        ("100Ki", False),  # Incomplete suffix
-        ("100.5MiB", False),  # Non-integer size
-    ],
-)
-def test_valid_storage_size_str(size: str, expected_result: bool):
-    """
-    arrange: Provide storage size string.
-    act: Call _valid_storage_size_str with the provided storage size string.
-    assert: Verify that the function returns the expected result.
-    """
-    result = charm_state._valid_storage_size_str(size)
-
-    assert result == expected_result
 
 
 def test_parse_labels_invalid():
@@ -403,12 +389,15 @@ def test_charm_config_from_charm_sets_jobmanager_config():
     assert: Verify that job manager setting is set and github configs not.
     """
     jobmanager_url = "http://jobmanager.url:80"
+    jobmanager_token = secrets.token_hex(4)
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config[PATH_CONFIG_NAME] = jobmanager_url
+    mock_charm.config[TOKEN_CONFIG_NAME] = jobmanager_token
 
     config = CharmConfig.from_charm(mock_charm)
 
     assert config.jobmanager_url == jobmanager_url
+    assert config.jobmanager_token == jobmanager_token
     assert config.token is None
     assert config.path is None
 
@@ -459,6 +448,7 @@ cat > ~/.ssh/config <<EOF
       EOF
 """
         ),
+        RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME: "INFO",
     }
 
     result = CharmConfig.from_charm(mock_charm)
@@ -582,45 +572,6 @@ def test_proxy_config_from_charm(
     result = charm_state.build_proxy_config_from_charm()
 
     assert result.no_proxy is None
-
-
-@pytest.mark.parametrize(
-    "mocked_arch",
-    [
-        "ppc64le",  # Test with unsupported architecture
-        "sparc",  # Another example of unsupported architecture
-    ],
-)
-def test__get_supported_arch_unsupported(mocked_arch: str, monkeypatch: pytest.MonkeyPatch):
-    """
-    arrange: Mock the platform.machine() function to return an unsupported architecture.
-    act: Call the _get_supported_arch function.
-    assert: Verify that the function raises an UnsupportedArchitectureError.
-    """
-    monkeypatch.setattr(platform, "machine", MagicMock(return_value=mocked_arch))
-
-    with pytest.raises(UnsupportedArchitectureError):
-        charm_state._get_supported_arch()
-
-
-@pytest.mark.parametrize(
-    "mocked_arch, expected_result",
-    [
-        ("arm64", Arch.ARM64),  # Test with supported ARM64 architecture
-        ("x86_64", Arch.X64),  # Test with supported X64 architecture
-    ],
-)
-def test__get_supported_arch_supported(
-    mocked_arch: str, expected_result: Arch, monkeypatch: pytest.MonkeyPatch
-):
-    """
-    arrange: Mock the platform.machine() function to return a specific architecture.
-    act: Call the _get_supported_arch function.
-    assert: Verify that the function returns the expected supported architecture.
-    """
-    monkeypatch.setattr(platform, "machine", MagicMock(return_value=mocked_arch))
-
-    assert charm_state._get_supported_arch() == expected_result
 
 
 def test_ssh_debug_connection_from_charm_no_connections():
@@ -796,7 +747,6 @@ class MockModel(BaseModel):
         (charm_state, "build_proxy_config_from_charm", ValueError),
         (CharmConfig, "from_charm", ValidationError([], MockModel)),
         (CharmConfig, "from_charm", ValueError),
-        (charm_state, "_get_supported_arch", UnsupportedArchitectureError(arch="testarch")),
         (charm_state, "_build_ssh_debug_connection_from_charm", ValidationError([], MockModel)),
     ],
 )
@@ -817,7 +767,6 @@ def test_charm_state_from_charm_invalid_cases(
     mock_charm_config_from_charm.return_value = mock_charm_config
     monkeypatch.setattr(CharmConfig, "from_charm", mock_charm_config_from_charm)
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(charm_state, "_build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(module, target, MagicMock(side_effect=exc))
 
@@ -836,7 +785,6 @@ def test_charm_state_from_charm(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr("charm_state.build_proxy_config_from_charm", MagicMock())
     monkeypatch.setattr(CharmConfig, "from_charm", MagicMock())
     monkeypatch.setattr(OpenstackRunnerConfig, "from_charm", MagicMock())
-    monkeypatch.setattr(charm_state, "_get_supported_arch", MagicMock())
     monkeypatch.setattr(charm_state, "ReactiveConfig", MagicMock())
     monkeypatch.setattr("charm_state._build_ssh_debug_connection_from_charm", MagicMock())
     monkeypatch.setattr(json, "loads", MagicMock())
@@ -1053,11 +1001,12 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
 
 
 @pytest.mark.parametrize(
-    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy,"
-    "expected_proxy, expected_runner_proxy",
+    "juju_http, juju_https, juju_no_proxy, runner_http, use_aproxy, "
+    "aproxy_exclude_addresses, aproxy_redirect_ports, expected_proxy, "
+    "expected_runner_proxy",
     [
         pytest.param(
-            "", "", "", "", False, ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
+            "", "", "", "", False, "", "", ProxyConfig(), ProxyConfig(), id="No proxy. No aproxy"
         ),
         pytest.param(
             "",
@@ -1065,6 +1014,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "localhost",
             "",
             False,
+            "",
+            "",
             ProxyConfig(),
             ProxyConfig(),
             id="No proxy with only no_proxy. No aproxy",
@@ -1075,6 +1026,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "",
             False,
+            "",
+            "",
             ProxyConfig(http="http://example.com:3128"),
             ProxyConfig(http="http://example.com:3128"),
             id="Only proxy from juju. No aproxy.",
@@ -1085,6 +1038,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "http://runner.example.com:3128",
             False,
+            "",
+            "",
             ProxyConfig(http="http://manager.example.com:3128"),
             ProxyConfig(http="http://runner.example.com:3128"),
             id="Both juju and runner proxy. No aproxy.",
@@ -1095,6 +1050,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "",
             "http://runner.example.com:3128",
             True,
+            "",
+            "",
             ProxyConfig(),
             ProxyConfig(http="http://runner.example.com:3128"),
             id="Only proxy in runner. aproxy configured.",
@@ -1105,6 +1062,8 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             "127.0.0.1",
             "http://runner.example.com:3128",
             True,
+            "",
+            "",
             ProxyConfig(
                 http="http://manager.example.com:3128",
                 https="http://securemanager.example.com:3128",
@@ -1115,6 +1074,24 @@ def test_charm_state__log_prev_state_redacts_sensitive_information(
             ),
             id="Proxy in juju and the runner. aproxy configured.",
         ),
+        pytest.param(
+            "http://manager.example.com:3128",
+            "http://securemanager.example.com:3128",
+            "127.0.0.1",
+            "http://runner.example.com:3128",
+            True,
+            "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16",
+            "80, 443",
+            ProxyConfig(
+                http="http://manager.example.com:3128",
+                https="http://securemanager.example.com:3128",
+                no_proxy="127.0.0.1",
+            ),
+            ProxyConfig(
+                http="http://runner.example.com:3128",
+            ),
+            id="Proxy in juju and the runner. aproxy configured with exclude addresses and redirect ports.",
+        ),
     ],
 )
 def test_proxy_config(
@@ -1124,6 +1101,8 @@ def test_proxy_config(
     juju_no_proxy: str,
     runner_http: str,
     use_aproxy: bool,
+    aproxy_exclude_addresses: str,
+    aproxy_redirect_ports: str,
     expected_proxy: ProxyConfig,
     expected_runner_proxy: ProxyConfig,
 ):
@@ -1140,7 +1119,8 @@ def test_proxy_config(
     monkeypatch.setenv("JUJU_CHARM_NO_PROXY", juju_no_proxy)
     mock_charm.config[USE_APROXY_CONFIG_NAME] = use_aproxy
     mock_charm.config[RUNNER_HTTP_PROXY_CONFIG_NAME] = runner_http
-
+    mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
+    mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
     mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
     mock_database = MagicMock(spec=DatabaseRequires)
     mock_database.relations = []
@@ -1148,5 +1128,42 @@ def test_proxy_config(
     charm_state = CharmState.from_charm(mock_charm, mock_database)
 
     assert charm_state.charm_config.use_aproxy == use_aproxy
+    assert ", ".join(charm_state.charm_config.aproxy_exclude_addresses) == aproxy_exclude_addresses
+    assert ", ".join(charm_state.charm_config.aproxy_redirect_ports) == aproxy_redirect_ports
     assert charm_state.proxy_config == expected_proxy
     assert charm_state.runner_proxy_config == expected_runner_proxy
+
+
+@pytest.mark.parametrize(
+    "aproxy_exclude_addresses, aproxy_redirect_ports",
+    [
+        ["256.0.0.0/8", ""],
+        ["10.0.0.0-", ""],
+        ["-192.168.0.0", ""],
+        ["-", ""],
+        ["foobar", ""],
+        ["", "foobar"],
+        ["", "99999"],
+        ["", "-1"],
+        ["", "80-"],
+        ["", "-"],
+    ],
+)
+def test_invalid_aproxy_config_in_charm_state(
+    monkeypatch, aproxy_exclude_addresses: str, aproxy_redirect_ports: str
+):
+    """
+    arrange: Mock CharmBase and necessary methods to raise the specified exceptions.
+    act: Call CharmState.from_charm with invalid aproxy related configurations.
+    assert: Ensure CharmConfigInvalidError is raised.
+    """
+    mock_charm = MockGithubRunnerCharmFactory()
+    mock_charm.config[USE_APROXY_CONFIG_NAME] = True
+    mock_charm.config[APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME] = aproxy_exclude_addresses
+    mock_charm.config[APROXY_REDIRECT_PORTS_CONFIG_NAME] = aproxy_redirect_ports
+    mock_charm.model.relations[IMAGE_INTEGRATION_NAME] = []
+    mock_database = MagicMock(spec=DatabaseRequires)
+    mock_database.relations = []
+
+    with pytest.raises(CharmConfigInvalidError):
+        CharmState.from_charm(mock_charm, mock_database)

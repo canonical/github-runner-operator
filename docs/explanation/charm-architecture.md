@@ -1,6 +1,6 @@
 # Charm architecture
 
-A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) to operate a set of [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) while managing security and resource usage.
+A [Juju](https://juju.is/) [charm](https://documentation.ubuntu.com/juju/3.6/reference/charm/) to operate a set of [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) while managing security and resource usage.
 
 Conceptually, the charm can be divided into the following:
 
@@ -11,7 +11,7 @@ Conceptually, the charm can be divided into the following:
 - Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
-# Description of the main components github-runner charm
+# Description of the charm's main components
 
 ```mermaid
 C4Context
@@ -62,7 +62,7 @@ The `RunnerManager` is the main component of the charm. The `RunnerManager` inte
 In the case of reactive runners, the `RunnerManager` will also create processes that
 will be in charge of consuming events that were created from GitHub webhooks, and starting GitHub runners in a
 reactive manner. Those events are stored in `mongodb` and are enqueued by
-the charm [github-runner-webhook-router](https://github.com/canonical/github-runner-webhook-router).
+the charm [`github-runner-webhook-router`](https://github.com/canonical/github-runner-webhook-router).
 
 ## Virtual machines
 
@@ -74,7 +74,7 @@ On schedule or upon configuration change, the charm performs a reconcile to ensu
 
 ## Virtual machine image
 
-The virtual machine images are built on installation and on a schedule using the [github-runner-image-builder](https://github.com/canonical/github-runner-image-builder).
+The virtual machine images are built on installation and on a schedule using the [`github-runner-image-builder`](https://github.com/canonical/github-runner-image-builder).
 
 ## Network configuration
 
@@ -88,7 +88,9 @@ Not all applications within a workflow may adhere to these variables as they
 [lack standardisation](https://about.gitlab.com/blog/2021/01/27/we-need-to-talk-no-proxy/). 
 This inconsistency can result in failed workflows, prompting the introduction of aproxy, as detailed in the subsection below.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### aproxy
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 If the proxy configuration is utilised and [aproxy](https://github.com/canonical/aproxy) is specified through the charm's configuration option,
 all HTTP(S) requests to standard ports (80, 443, 11371) within the GitHub workflow will be automatically directed 
 to the specified HTTP(s) proxy. Network traffic destined for ports 80 and 443 is redirected to aproxy using iptables.
@@ -99,7 +101,9 @@ It's worth noting that this setup deviates from the behaviour when not using apr
 where these variables are set in the runner environment. In that scenario, traffic to non-standard ports 
 would also be directed to the HTTP(s) proxy, unlike when using aproxy.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## GitHub API usage
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The charm requires a GitHub personal access token for the [`token` configuration](https://charmhub.io/github-runner/configure#token). This token is used for:
 
@@ -113,13 +117,15 @@ The token is also passed to [repo-policy-compliance](https://github.com/canonica
 Note that the GitHub API uses a [rate-limiting mechanism](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28). When this is reached, the charm may not be able to perform the necessary operations and may go into
 BlockedStatus. The charm will automatically recover from this state once the rate limit is reset, but using a different token with a higher rate limit may be a better solution depending on your deployment requirements.
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ## GitHub repository setting check
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) is a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
 
 Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#about-pre--and-post-job-scripts), the self-hosted runners call the Python web service to check if the GitHub repository settings for the job are compliant. If not compliant, it will output an error message and force stop the runner to prevent code from being executed.
 
-## COS Integration
+## COS integration
 Upon integration through the `cos-agent`, the charm initiates the logging of specific metric events
 into the file `/var/log/github-runner-metrics.log`. For comprehensive details, please refer to the
 pertinent [specification](https://discourse.charmhub.io/t/specification-isd075-github-runner-cos-integration/12084).

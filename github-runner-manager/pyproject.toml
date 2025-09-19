@@ -3,7 +3,7 @@
 
 [project]
 name = "github-runner-manager"
-version = "0.5.0"
+version = "0.6.2"
 authors = [
     { name = "Canonical IS DevOps", email = "is-devops-team@canonical.com" },
 ]
@@ -79,8 +79,15 @@ select = ["E", "W", "F", "C", "N", "R", "D", "H"]
 # Ignore W503,E203 because using black creates errors with this
 # Ignore D107 Missing docstring in __init__
 ignore = ["W503", "D107", "E203"]
-# D100, D101, D102, D103, D104: Ignore docstring style issues in tests
-per-file-ignores = ["tests/*:D100,D101,D102,D103,D104,D205,D212"]
+per-file-ignores = [
+    # Ignore factory methods attributes docstring
+    "tests/unit/factories/*:DCO060",
+    # Ignore no return values (DCO031) in docstring for abstract methods
+    "src/github_runner_manager/manager/cloud_runner_manager.py:DCO031",
+    # DCO020, DCO030, DCO050, DCO060: Ignore docstring argument, returns, raises, attribute
+    # sections in tests
+    "tests/*:D100,D101,D102,D103,D104,D205,D212,DCO020,DCO030,DCO050,DCO060",
+]
 docstring-convention = "google"
 # Check for properly formatted copyright header in each file
 copyright-check = "True"

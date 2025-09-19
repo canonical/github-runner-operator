@@ -12,6 +12,7 @@ from github_runner_manager.configuration.github import GitHubOrg
 
 import charm_state
 import utilities
+from models import FlavorLabel, OpenStackCloudsYAML
 
 
 @pytest.fixture(name="exec_command")
@@ -117,7 +118,6 @@ def skip_retry_fixture(monkeypatch: pytest.MonkeyPatch):
 def complete_charm_state_fixture():
     """Returns a fixture with a fully populated CharmState."""
     return charm_state.CharmState(
-        arch="arm64",
         is_metrics_logging_available=False,
         proxy_config=charm_state.ProxyConfig(
             http="http://httpproxy.example.com:3128",
@@ -132,7 +132,7 @@ def complete_charm_state_fixture():
         charm_config=charm_state.CharmConfig(
             dockerhub_mirror="https://docker.example.com",
             labels=("label1", "label2"),
-            openstack_clouds_yaml=charm_state.OpenStackCloudsYAML(
+            openstack_clouds_yaml=OpenStackCloudsYAML(
                 clouds={
                     "microstack": {
                         "auth": {
@@ -156,12 +156,13 @@ def complete_charm_state_fixture():
             token="githubtoken",
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,
+            runner_manager_log_level="INFO",
         ),
         runner_config=charm_state.OpenstackRunnerConfig(
             base_virtual_machines=1,
             max_total_virtual_machines=2,
             flavor_label_combinations=[
-                charm_state.FlavorLabel(
+                FlavorLabel(
                     flavor="flavor",
                     label="flavorlabel",
                 )

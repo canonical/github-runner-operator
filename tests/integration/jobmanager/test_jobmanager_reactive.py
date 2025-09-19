@@ -40,6 +40,11 @@ from tests.integration.utils_reactive import (
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.openstack
 
+# This is tied to the wait time in reactive processes.
+REACTIVE_WAIT_TIME = 60
+# Set to a higher reconcile time, due to flush on empty queue in reconcile can affect the tests.
+RECONCILE_INTERVAL = 15
+
 
 @pytest_asyncio.fixture(name="app_for_reactive")
 async def app_for_reactive_fixture(
@@ -70,9 +75,7 @@ async def app_for_reactive_fixture(
         {
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "0",
             MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            # set larger recon interval as the default due to race condition
-            # killing reactive process
-            RECONCILE_INTERVAL_CONFIG_NAME: "5",
+            RECONCILE_INTERVAL_CONFIG_NAME: str(RECONCILE_INTERVAL),
         }
     )
     await wait_for_reconcile(app_for_reactive)
@@ -96,6 +99,7 @@ async def test_jobmanager_reactive(
     httpserver: HTTPServer,
     jobmanager_base_url: str,
     jobmanager_ip_address: str,
+    jobmanager_token: str,
 ):
     """
     Test reactive mode together with jobmanager.
@@ -170,11 +174,13 @@ async def test_jobmanager_reactive(
     job_get_handler.respond_with_json(returned_job.to_dict())
 
     # 2. Wait for runner to be registered
-    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token)
+    await wait_for_runner_to_be_registered(httpserver, runner_id, runner_token, jobmanager_token)
 
     # For the github runner manager, at this point, the jobmanager will return
     # that the runner health is pending and not deletable
-    runner_health_endpoint = GetRunnerHealthEndpoint(httpserver, runner_health_path)
+    runner_health_endpoint = GetRunnerHealthEndpoint(
+        httpserver, runner_health_path, jobmanager_token
+    )
     runner_health_endpoint.set(status="PENDING", deletable=False)
 
     unit = app_for_reactive.units[0]
@@ -191,10 +197,14 @@ async def test_jobmanager_reactive(
     runner_health_endpoint.set(status="IN_PROGRESS", deletable=False)
 
     returned_job.status = JobStatus.IN_PROGRESS.value
-    job_get_handler = httpserver.expect_oneshot_request(job_path)
+    job_get_handler = httpserver.expect_oneshot_request(
+        uri=job_path, method="GET", headers={"Authorization": f"Bearer {jobmanager_token}"}
+    )
     job_get_handler.respond_with_json(returned_job.to_dict())
 
-    with httpserver.wait(raise_assertions=True, stop_on_nohandler=False, timeout=30) as waiting:
+    with httpserver.wait(
+        raise_assertions=True, stop_on_nohandler=False, timeout=REACTIVE_WAIT_TIME + 30
+    ) as waiting:
         logger.info("Waiting for job status to be queried.")
     logger.info("server log: %s ", (httpserver.log))
     assert waiting.result, "Failed waiting for job status to be queried."
@@ -206,7 +216,7 @@ async def test_jobmanager_reactive(
     # TMP: hack to trigger reconcile by changing the configuration, which cause config_changed hook
     # to restart the reconcile service.
     await app_for_reactive.set_config(
-        {RECONCILE_INTERVAL_CONFIG_NAME: str(DEFAULT_RECONCILE_INTERVAL + 1)}
+        {RECONCILE_INTERVAL_CONFIG_NAME: str(RECONCILE_INTERVAL + 1)}
     )
     await wait_for_reconcile(app_for_reactive)
 

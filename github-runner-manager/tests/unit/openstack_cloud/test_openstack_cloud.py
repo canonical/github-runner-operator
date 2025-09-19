@@ -11,21 +11,28 @@ from unittest.mock import MagicMock
 
 import keystoneauth1.exceptions
 import openstack
+import openstack.exceptions
 import pytest
 from openstack.compute.v2.keypair import Keypair
 from openstack.connection import Connection
 from openstack.network.v2.security_group import SecurityGroup as OpenstackSecurityGroup
 from openstack.network.v2.security_group_rule import SecurityGroupRule
+from pytest import LogCaptureFixture
 
+import github_runner_manager.openstack_cloud.openstack_cloud
 from github_runner_manager.errors import OpenStackError, SSHError
 from github_runner_manager.openstack_cloud.openstack_cloud import (
+    _MAX_NOVA_COMPUTE_API_VERSION,
     _MIN_KEYPAIR_AGE_IN_SECONDS_BEFORE_DELETION,
     _TEST_STRING,
     DEFAULT_SECURITY_RULES,
+    InstanceID,
     OpenstackCloud,
     OpenStackCredentials,
+    _DeleteKeypairConfig,
     get_missing_security_rules,
 )
+from tests.unit.fake_runner_managers import FakeOpenstackCloud
 
 FAKE_ARG = "fake"
 FAKE_PREFIX = "fake_prefix"
@@ -51,6 +58,19 @@ def openstack_cloud_fixture(monkeypatch):
     return OpenstackCloud(creds, FAKE_PREFIX, FAKE_ARG)
 
 
+@pytest.fixture(name="mock_openstack_conn", scope="function")
+def mock_openstack_conn_fixture(monkeypatch: pytest.MonkeyPatch):
+    """Patch OpenStack connection."""
+    connection_mock = MagicMock()
+    connection_mock.__enter__.return_value = connection_mock
+    monkeypatch.setattr(
+        github_runner_manager.openstack_cloud.openstack_cloud.openstack,
+        "connect",
+        MagicMock(return_value=connection_mock),
+    )
+    return connection_mock
+
+
 @pytest.mark.parametrize(
     "public_method, args",
     [
@@ -64,9 +84,8 @@ def openstack_cloud_fixture(monkeypatch):
             id="launch_instance",
         ),
         pytest.param("get_instance", {"instance_id": FAKE_ARG}, id="get_instance"),
-        pytest.param("delete_instance", {"instance_id": FAKE_ARG}, id="delete_instance"),
         pytest.param("get_instances", {}, id="get_instances"),
-        pytest.param("cleanup", {}, id="cleanup"),
+        pytest.param("delete_expired_keys", {}, id="delete_expired_keys"),
     ],
 )
 def test_raises_openstack_error(
@@ -218,7 +237,7 @@ def test_keypair_cleanup_freshly_created_keypairs(
     openstack_connect_mock.return_value = openstack_connection_mock
 
     # act #
-    openstack_cloud.cleanup()
+    openstack_cloud.delete_expired_keys()
 
     # assert #
     # Check if only the old keypairs are deleted
@@ -302,3 +321,191 @@ def test_get_ssh_connection_failure(openstack_cloud, monkeypatch):
             pass
 
     assert "No connectable SSH addresses found" in str(err.value)
+
+
+# We test this internal method because this fails silently without bubbling up exceptions due to
+# it's non-critical nature.
+def test__delete_keypair_fail(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack delete_keypair method that returns False.
+    act: when _delete_keypair method is called.
+    assert: None is returned and the failure is logged.
+    """
+    mock_openstack_conn.delete_keypair = MagicMock(return_value=False)
+    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+
+    assert (
+        openstack_cloud._delete_keypair(
+            _DeleteKeypairConfig(
+                keys_dir=MagicMock(), instance_id=test_key_instance_id, conn=mock_openstack_conn
+            )
+        )
+        is None
+    )
+    assert f"Failed to delete key: {test_key_instance_id.name}" in caplog.messages
+
+
+def test__delete_keypair_error(
+    openstack_cloud: OpenstackCloud, mock_openstack_conn: MagicMock, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack delete_keypair method that returns False.
+    act: when _delete_keypair method is called.
+    assert: None is returned and the failure is logged.
+    """
+    mock_openstack_conn.delete_keypair = MagicMock(
+        side_effect=[openstack.exceptions.ResourceTimeout()]
+    )
+    test_key_instance_id = InstanceID(prefix="test-key-delete", reactive=False, suffix="fail")
+
+    assert (
+        openstack_cloud._delete_keypair(
+            _DeleteKeypairConfig(
+                keys_dir=MagicMock(), instance_id=test_key_instance_id, conn=mock_openstack_conn
+            )
+        )
+        is None
+    )
+    assert f"Error attempting to delete key: {test_key_instance_id.name}" in caplog.messages
+
+
+def test_delete_instances_partial_server_delete_failure(
+    monkeypatch: pytest.MonkeyPatch, openstack_cloud: OpenstackCloud, caplog: LogCaptureFixture
+):
+    """
+    arrange: given a mocked openstack connection that errors on few failed requests.
+    act: when delete_instances method is called.
+    assert: successfully deleted instance IDs are returned and failed instances are logged.
+    """
+    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
+    timeout_id = InstanceID(prefix="timeout error", reactive=False, suffix="")
+    mock_cloud = FakeOpenstackCloud(
+        initial_servers=[successful_delete_id, timeout_id],
+        server_to_errors={timeout_id: openstack.exceptions.ResourceTimeout()},
+    )
+    monkeypatch.setattr(
+        github_runner_manager.openstack_cloud.openstack_cloud.openstack,
+        "connect",
+        MagicMock(return_value=mock_cloud),
+    )
+
+    deleted_instance_ids = openstack_cloud.delete_instances(
+        instance_ids=[successful_delete_id, already_deleted_id, timeout_id]
+    )
+
+    assert successful_delete_id in deleted_instance_ids
+    assert already_deleted_id not in deleted_instance_ids
+    assert timeout_id not in deleted_instance_ids
+    assert f"Failed to delete OpenStack VM instance: {timeout_id}" in caplog.messages
+
+
+def test_delete_instances(
+    openstack_cloud: OpenstackCloud,
+    mock_openstack_conn: MagicMock,
+):
+    """
+    arrange: given a mocked openstack connection.
+    act: when delete_instances method is called.
+    assert: deleted instance IDs are returned.
+    """
+    mock_openstack_conn.delete_server = MagicMock(side_effect=[True, False])
+    successful_delete_id = InstanceID(prefix="success", reactive=False, suffix="")
+    already_deleted_id = InstanceID(prefix="already_deleted", reactive=False, suffix="")
+
+    deleted_instance_ids = openstack_cloud.delete_instances(
+        instance_ids=[successful_delete_id, already_deleted_id]
+    )
+
+    assert deleted_instance_ids == [successful_delete_id]
+
+
+@pytest.mark.parametrize(
+    "max_compute_api_version, expected_version",
+    [
+        pytest.param(
+            "2.110",
+            _MAX_NOVA_COMPUTE_API_VERSION,
+            id="higher version but string is lexically smaller",
+        ),
+        pytest.param(
+            "2.92", _MAX_NOVA_COMPUTE_API_VERSION, id="one higher version than supported"
+        ),
+        pytest.param("2.91", _MAX_NOVA_COMPUTE_API_VERSION, id="highest supported version"),
+        pytest.param("2.90", "2.90", id="one version lower than supported"),
+        pytest.param("2.1", "2.1", id="really low version"),
+    ],
+)
+def test_get_openstack_connection_sets_max_compute_api(
+    openstack_cloud,
+    monkeypatch: pytest.MonkeyPatch,
+    max_compute_api_version: str,
+    expected_version: str,
+):
+    """
+    arrange: Setup get_compute_api to return different max versions.
+    act: Get OpenStack connection using context manager
+    assert: The max compute API version is set to be < 2.95.
+    """
+    monkeypatch.setattr(
+        openstack_cloud,
+        "_determine_max_compute_api_version_by_cloud",
+        MagicMock(return_value=max_compute_api_version),
+    )
+    openstack_connect_mock = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
+        openstack_connect_mock,
+    )
+
+    with openstack_cloud._get_openstack_connection():
+        pass
+
+    assert openstack_connect_mock.call_args[1]["compute_api_version"] == expected_version
+
+
+def test_determine_max_api_version(
+    openstack_cloud: OpenstackCloud, monkeypatch: pytest.MonkeyPatch
+):
+    """
+    arrange: Mock the OpenStack connection to return a specific max API version.
+    act: Call _determine_max_compute_api_version.
+    assert: The returned version is as expected.
+    """
+    mock_connection = MagicMock()
+    monkeypatch.setattr(
+        "github_runner_manager.openstack_cloud.openstack_cloud.openstack.connect",
+        MagicMock(return_value=mock_connection),
+    )
+    mock_connection.__enter__.return_value = mock_connection
+
+    endpoint_resp_json = {
+        "version": {
+            "id": "v2.1",
+            "status": "CURRENT",
+            "version": "2.96",
+            "min_version": "2.1",
+            "updated": "2013-07-23T11:33:21Z",
+            "links": [
+                {"rel": "self", "href": "http://172.16.1.204/openstack-nova/v2.1/"},
+                {"rel": "describedby", "type": "text/html", "href": "http://docs.openstack.org/"},
+            ],
+            "media-types": [
+                {
+                    "base": "application/json",
+                    "type": "application/vnd.openstack.compute+json;version=2.1",
+                }
+            ],
+        }
+    }
+    endpoint_resp = MagicMock()
+    endpoint_resp.json.return_value = endpoint_resp_json
+
+    session_mock = MagicMock()
+    mock_connection.session = session_mock
+    session_mock.get = MagicMock(return_value=endpoint_resp)
+
+    max_version = openstack_cloud._determine_max_compute_api_version_by_cloud()
+    assert max_version == "2.96"

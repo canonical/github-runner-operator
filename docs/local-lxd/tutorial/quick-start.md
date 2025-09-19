@@ -15,12 +15,15 @@ The charm will deploy a self-hosted runner that can be used to run GitHub Action
 
 - GitHub Account.
 - A working station, e.g., a laptop, with amd64 architecture and at least 16 GB of RAM.
-- Juju 3 installed and bootstrapped to an LXD controller. You can accomplish this process by following this guide: [Set up / Tear down your test environment](https://juju.is/docs/juju/set-up--tear-down-your-test-environment)
+- Juju 3 installed and bootstrapped to an LXD controller. You can accomplish this process by following this guide: [Set up / Tear down your test environment](https://documentation.ubuntu.com/juju/3.6/howto/manage-your-juju-deployment/set-up-your-juju-deployment-local-testing-and-development/#)
 
-For more information about how to install Juju, see [Get started with Juju](https://juju.is/docs/olm/get-started-with-juju).
+For more information about how to install Juju, see [Get started with Juju](https://documentation.ubuntu.com/juju/3.6/tutorial/).
+
 ## Steps
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### Add more RAM to the Multipass VM
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 > NOTE: If you're working locally, you don't need to do this step.
 The blueprint used for deploying Multipass VM is configured with 8 GB of RAM. To add more RAM to the VM, follow these steps:
 Stop the VM:
@@ -40,7 +43,9 @@ To be able to work inside the Multipass VM first you need to log in with the fol
 multipass shell my-juju-vm
 ```
 
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
 ### Create GitHub repository
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 The GitHub self-hosted runner spawned by the charm needs to connect to a GitHub repository or organization. GitHub repositories are used as it is simpler to manage.
 
@@ -71,7 +76,7 @@ juju add-model github-runner-tutorial
 
 The charm requires a GitHub personal access token with `repo` access, which can be created following the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
 A user with `admin` access for the repository/org is required, otherwise, the repo-policy-compliance will fail the job.
-For information on token scopes, see [How to change GitHub personal access token](how-to/change-token.md).
+For information on token scopes, see [How to change GitHub personal access token](https://charmhub.io/github-runner/docs/local-lxd-how-to-change-token).
 
 Once the personal access token is created, the charm can be deployed with:
 
@@ -81,9 +86,9 @@ juju deploy github-runner --channel=local-lxd/stable --constraints="cores=4 mem=
 
 Replacing the `<TOKEN>` with the personal access token, and `<OWNER/REPO>` the GitHub account name and GitHub repository separated with `/`.
 
-The `--constraints` option for the `juju deploy` sets the resource requirements for the Juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/managing-resource-usage).
+The `--constraints` option for the `juju deploy` sets the resource requirements for the Juju machine hosting the charm application. This is used to accommodate different sizes of self-hosted runners. For details, refer to [Managing resource usage](https://charmhub.io/github-runner/docs/local-lxd-tutorial-managing-resource-usage).
 
-The `--storage` option mounts a Juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/configure-runner-storage) for more information.
+The `--storage` option mounts a Juju storage to be used as the disk for LXD instances hosting the self-hosted runners. Refer [How to configure runner storage](https://charmhub.io/github-runner/docs/local-lxd-how-to-configure-runner-storage) for more information.
 
 The charm performs various installation and configuration on startup. The charm might upgrade the kernel of the Juju machine and reboot the Juju machine. During reboot, the Juju machine will go into the `down` state; this is a part of the normal reboot process and the Juju machine should be restarted after a while.
 
@@ -120,7 +125,7 @@ If the workflow failed at the `Set up runner` step with the following message:
 
 > This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
 
-The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/repo-policy).
+The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/local-lxd-how-to-repo-policy).
 
 ### Clean up the environment
 

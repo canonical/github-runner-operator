@@ -13,7 +13,6 @@ jobs:
     secrets: inherit
     with:
       juju-channel: 3.6/stable
-      pre-run-script: scripts/setup-integration-tests.sh
       provider: lxd
       test-tox-env: integration-juju3.6
       modules: '["test_e2e"]'

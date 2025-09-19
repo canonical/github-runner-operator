@@ -12,11 +12,7 @@ from juju.unit import Unit
 from openstack.compute.v2.server import Server
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
-from tests.integration.helpers.common import (
-    run_in_unit,
-    wait_for,
-    wait_for_runner_ready,
-)
+from tests.integration.helpers.common import run_in_unit, wait_for, wait_for_runner_ready
 
 logger = logging.getLogger(__name__)
 
@@ -145,10 +141,10 @@ class OpenStackInstanceHelper:
         Args:
             app: The GitHub Runner Charm app to create the runner for.
         """
-        await OpenStackInstanceHelper._set_app_runner_amount(app, 1)
+        await OpenStackInstanceHelper.set_app_runner_amount(app, 1)
 
     @staticmethod
-    async def _set_app_runner_amount(app: Application, num_runners: int) -> None:
+    async def set_app_runner_amount(app: Application, num_runners: int) -> None:
         """Reconcile the application to a runner amount.
 
         Args:

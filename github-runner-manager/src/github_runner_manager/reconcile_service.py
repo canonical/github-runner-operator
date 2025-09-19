@@ -53,15 +53,18 @@ def start_reconcile_service(
     logger.info(RECONCILE_SERVICE_START_MSG)
 
     # This is used for in test to distinguish which reconcile run the unit is at.
-    RECONCILE_ID_FILE.write_text(str(uuid.uuid4()), encoding="utf-8")
+    reconcile_id = uuid.uuid4()
+    RECONCILE_ID_FILE.write_text(str(reconcile_id), encoding="utf-8")
 
     while True:
         with lock:
             logger.info(RECONCILE_START_MSG)
+            logger.info("Reconcile ID: %s", reconcile_id)
             runner_scaler = get_runner_scaler(app_config, python_path=python_path)
             delta = runner_scaler.reconcile()
             logger.info("Change in number of runner after reconcile: %s", delta)
         logger.info(RECONCILE_END_MSG)
-        RECONCILE_ID_FILE.write_text(str(uuid.uuid4()), encoding="utf-8")
+        reconcile_id = uuid.uuid4()
+        RECONCILE_ID_FILE.write_text(str(reconcile_id), encoding="utf-8")
 
         sleep(app_config.reconcile_interval * 60)

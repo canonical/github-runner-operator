@@ -1,6 +1,8 @@
-# GitHub Runner Operator
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
+# GitHub runner operator
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance. 
+A [Juju](https://juju.is/) [charm](https://documentation.ubuntu.com/juju/3.6/reference/charm/) for deploying and managing [GitHub self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners) on virtual machines. The charm maintains a set of self-hosted runners, each isolated in a single-use virtual machine instance. 
 
 Like any Juju charm, this charm supports one-line deployment, configuration, integration, scaling, and more. 
 For the github-runner-operator charm, this includes:
@@ -8,7 +10,7 @@ For the github-runner-operator charm, this includes:
 * Configurable resource limits.
 * Ability to redeploy without losing any data (no need to back up).
 * Supported observability through the `cos-agent` integration.
-* Scheduled dependences upgrades to mitigate security risks. Furthermore, the Landscape Client charm can be deployed with this charm to ensure other dependencies are kept up to date.
+* Scheduled dependencies upgrades to mitigate security risks. Furthermore, the Landscape Client charm can be deployed with this charm to ensure other dependencies are kept up to date.
 
 Operating a self-hosted runner comes with [certain security concerns according to GitHub](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security).
 Just like GitHub's runners, the self-hosted runners managed by the charm are isolated in a single-use virtual machine.
@@ -25,7 +27,7 @@ The charm enforces a set of GitHub repository settings as best practice. This is
 | [Reference](https://charmhub.io/github-runner/docs/reference-actions) </br> Technical information - specifications, APIs, architecture | [Explanation](https://charmhub.io/github-runner/docs/explanation-charm-architecture) </br> Concepts - discussion and clarification of key topics  |
 
 <!-- vale Canonical.004-Canonical-product-names = NO -->
-If you want to use ephemeral LXD virtual machines spawned by charm, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner/docs/local-lxd).
+If you want to use ephemeral LXD virtual machines spawned by charm, you can refer to the section [Track local-lxd](https://charmhub.io/github-runner).
 <!-- vale Canonical.004-Canonical-product-names = YES -->
 
 
@@ -42,7 +44,7 @@ The GitHub runner charm is a member of the Ubuntu family. It's an open-source pr
 - [Code of conduct](https://ubuntu.com/community/code-of-conduct)
 - [Get support](https://discourse.charmhub.io/)
 - [Join our online chat](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)
-- [Contribute](Contribute)
+- [Contribute](https://github.com/canonical/github-runner-operator/blob/main/CONTRIBUTING.md)
 
 Thinking about using the GitHub runner charm for your next project? [Get in touch](https://matrix.to/#/#charmhub-charmdev:ubuntu.com)!
 

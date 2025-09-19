@@ -1,4 +1,6 @@
-# Github Runner Manager
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
+# Github runner manager
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 This repository contains a python package with the code of a runner manager used 
 by [GitHub runner operator](https://github.com/canonical/github-runner-operator).

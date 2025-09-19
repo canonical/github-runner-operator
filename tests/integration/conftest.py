@@ -9,7 +9,7 @@ import secrets
 import string
 from pathlib import Path
 from time import sleep
-from typing import Any, AsyncIterator, Generator, Iterator, Optional, cast
+from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
 
 import jubilant
 import nest_asyncio
@@ -29,6 +29,7 @@ from openstack.connection import Connection
 from pytest_operator.plugin import OpsTest
 
 from charm_state import (
+    APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
@@ -40,6 +41,9 @@ from charm_state import (
 from tests.integration.helpers.common import (
     MONGODB_APP_NAME,
     deploy_github_runner_charm,
+    get_github_runner_manager_service_log,
+    get_github_runner_metrics_log,
+    get_github_runner_reactive_log,
     wait_for,
     wait_for_runner_ready,
 )
@@ -294,6 +298,7 @@ def openstack_connection_fixture(
     clouds_yaml_contents: str,
     app_name: str,
     existing_app_suffix: str,
+    request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
     clouds_yaml = yaml.safe_load(clouds_yaml_contents)
@@ -303,11 +308,19 @@ def openstack_connection_fixture(
     with openstack.connect(first_cloud) as connection:
         yield connection
 
+    servers = connection.list_servers(filters={"name": app_name})
+
+    if request.session.testsfailed:
+        logging.info("OpenStack servers: %s", servers)
+        for server in servers:
+            console_log = connection.get_server_console(server=server)
+            logging.info("Server %s console log:\n%s", server.name, console_log)
+
     if not existing_app_suffix:
         # servers, keys, security groups, security rules, images are created by the charm.
         # don't remove security groups & rules since they are single instances.
         # don't remove images since it will be moved to image-builder
-        for server in connection.list_servers():
+        for server in servers:
             server_name: str = server.name
             if server_name.startswith(app_name):
                 connection.delete_server(server_name)
@@ -437,6 +450,7 @@ async def app_openstack_runner_fixture(
     flavor_name: str,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
     if existing_app_suffix:
@@ -461,6 +475,7 @@ async def app_openstack_runner_fixture(
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
                 OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
                 USE_APROXY_CONFIG_NAME: bool(openstack_http_proxy),
+                APROXY_REDIRECT_PORTS_CONFIG_NAME: "1-3127,3129-65535",
                 LABELS_CONFIG_NAME: app_name,
             },
             wait_idle=False,
@@ -472,7 +487,18 @@ async def app_openstack_runner_fixture(
         timeout=IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS,
     )
 
-    return application
+    yield application
+
+    if request.session.testsfailed:
+        try:
+            app_log = await get_github_runner_manager_service_log(unit=application.units[0])
+            logging.info("Application log: \n%s", app_log)
+            reactive_log = await get_github_runner_reactive_log(unit=application.units[0])
+            logging.info("Reactive log: \n%s", reactive_log)
+            metrics_log = await get_github_runner_metrics_log(unit=application.units[0])
+            logging.info("Metrics log: \n%s", metrics_log)
+        except AssertionError:
+            logging.warning("Failed to get application log.", exc_info=True)
 
 
 @pytest_asyncio.fixture(scope="module", name="app_scheduled_events")
@@ -591,7 +617,7 @@ def github_client(token: str) -> Github:
     """Returns the github client."""
     gh = Github(token)
     rate_limit = gh.get_rate_limit()
-    logging.info("GitHub token rate limit: %s", rate_limit.core)
+    logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
 
 
@@ -748,8 +774,10 @@ async def instance_helper_fixture(request: pytest.FixtureRequest) -> OpenStackIn
     return OpenStackInstanceHelper(openstack_connection=openstack_connection)
 
 
-@pytest.fixture(scope="module")
-def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juju, None, None]:
+@pytest_asyncio.fixture(scope="module")
+async def juju(
+    request: pytest.FixtureRequest, model: Model
+) -> AsyncGenerator[jubilant.Juju, None]:
     """Pytest fixture that wraps :meth:`jubilant.with_model`."""
 
     def show_debug_log(juju: jubilant.Juju):
@@ -762,14 +790,19 @@ def juju(request: pytest.FixtureRequest, model: Model) -> Generator[jubilant.Juj
             log = juju.debug_log(limit=1000)
             print(log, end="")
 
+    controller = await model.get_controller()
     if model:
-        juju = jubilant.Juju(model=model.name)
+        # Currently juju has no way of switching controller context, this is required to operate
+        # in the right controller's right model when using multiple controllers.
+        # See: https://github.com/canonical/jubilant/issues/158
+        juju = jubilant.Juju(model=f"{controller.controller_name}:{model.name}")
         yield juju
         show_debug_log(juju)
         return
 
     keep_models = cast(bool, request.config.getoption("--keep-models"))
-    with jubilant.temp_model(keep=keep_models) as juju:
+    with jubilant.temp_model(keep=keep_models, controller=controller.controller_name) as juju:
+        juju.model = f"{controller.controller_name}:{juju.model}"
         juju.wait_timeout = 10 * 60
         yield juju
         show_debug_log(juju)

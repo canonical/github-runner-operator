@@ -9,7 +9,7 @@ import functools
 import logging
 from datetime import datetime
 from typing import Callable, ParamSpec, TypeVar
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 
 import requests
 
@@ -23,11 +23,7 @@ from ghapi.page import paged
 from requests import RequestException
 from typing_extensions import assert_never
 
-from github_runner_manager.configuration.github import (
-    GitHubOrg,
-    GitHubPath,
-    GitHubRepo,
-)
+from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
@@ -38,6 +34,8 @@ from github_runner_manager.platform.platform_provider import (
 from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRunner
 
 logger = logging.getLogger(__name__)
+
+TIMEOUT_IN_SECS = 60
 
 
 class GithubRunnerNotFoundError(Exception):
@@ -77,6 +75,7 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         try:
             return func(*args, **kwargs)
+        # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
             if exc.code in (401, 403):
                 if exc.code == 401:
@@ -86,8 +85,14 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
                 raise TokenError(msg) from exc
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
+        except URLError as exc:
+            logger.warning("General error in GitHub request: %s", exc)
+            raise PlatformApiError from exc
         except RequestException as exc:
             logger.warning("Error in GitHub request: %s", exc)
+            raise PlatformApiError from exc
+        except TimeoutError as exc:
+            logger.warning("Timeout in GitHub request: %s", exc)
             raise PlatformApiError from exc
 
     return wrapper
@@ -124,11 +129,11 @@ class GithubClient:
         try:
             if isinstance(path, GitHubRepo):
                 raw_runner = self._client.actions.get_self_hosted_runner_for_repo(
-                    path.owner, path.repo, runner_id
+                    path.owner, path.repo, runner_id, timeout=TIMEOUT_IN_SECS
                 )
             else:
                 raw_runner = self._client.actions.get_self_hosted_runner_for_org(
-                    path.org, runner_id
+                    path.org, runner_id, timeout=TIMEOUT_IN_SECS
                 )
         except HTTP404NotFoundError as err:
             raise GithubRunnerNotFoundError from err
@@ -164,6 +169,7 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     per_page=100,
+                    timeout=TIMEOUT_IN_SECS,
                 )
                 for item in page["runners"]
             ]
@@ -179,6 +185,7 @@ class GithubClient:
                     num_of_pages + 1,
                     org=path.org,
                     per_page=100,
+                    timeout=TIMEOUT_IN_SECS,
                 )
                 for item in page["runners"]
             ]
@@ -217,6 +224,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=1,
                 labels=labels,
+                timeout=TIMEOUT_IN_SECS,
             )
         elif isinstance(path, GitHubOrg):
             # We cannot cache it in here, as we are running in a forked process.
@@ -227,6 +235,7 @@ class GithubClient:
                 name=instance_id.name,
                 runner_group_id=runner_group_id,
                 labels=labels,
+                timeout=TIMEOUT_IN_SECS,
             )
         else:
             assert_never(token)
@@ -249,7 +258,7 @@ class GithubClient:
             "Authorization": f"Bearer {self._token}",
             "X-GitHub-Api-Version": "2022-11-28",
         }
-        response = requests.get(url, headers=headers, timeout=30)
+        response = requests.get(url, headers=headers, timeout=TIMEOUT_IN_SECS)
         response.raise_for_status()
         data = response.json()
         try:
@@ -282,11 +291,13 @@ class GithubClient:
                     owner=path.owner,
                     repo=path.repo,
                     runner_id=runner_id,
+                    timeout=TIMEOUT_IN_SECS,
                 )
             else:
                 self._client.actions.delete_self_hosted_runner_from_org(
                     org=path.org,
                     runner_id=runner_id,
+                    timeout=TIMEOUT_IN_SECS,
                 )
         # The function delete_self_hosted_runner fails in GitHub if the runner does not exist,
         # so we do not have to worry about that.
@@ -310,7 +321,12 @@ class GithubClient:
         Returns:
             Job information.
         """
-        paged_kwargs = {"owner": path.owner, "repo": path.repo, "run_id": workflow_run_id}
+        paged_kwargs = {
+            "owner": path.owner,
+            "repo": path.repo,
+            "run_id": workflow_run_id,
+            "timeout": 60,
+        }
         try:
             for wf_run_page in paged(
                 self._client.actions.list_jobs_for_workflow_run, **paged_kwargs
@@ -353,6 +369,7 @@ class GithubClient:
                 owner=path.owner,
                 repo=path.repo,
                 job_id=job_id,
+                timeout=TIMEOUT_IN_SECS,
             )
         except HTTPError as exc:
             if exc.code == 404:

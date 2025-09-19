@@ -14,7 +14,9 @@ We are going to showcase the steps required to set up a reactive spawning enviro
 
 Note, that the specific revisions/channels in the steps are only marked here for reproducibility, you should adapt the revisions/channels to your needs.
 
-### GitHub Runner Applications
+<!-- vale Canonical.007-Headings-sentence-case = NO -->
+### GitHub runner applications
+<!-- vale Canonical.007-Headings-sentence-case = YES -->
 
 For this how-to-guide, we decided to have deployed three GitHub Runner charm applications: `large`, `large-arm`, `small` . We need
 to deploy those with these names, to comply with the routing table defined below.
@@ -26,7 +28,7 @@ juju deploy github-runner large-arm --channel latest/stable ....
 juju deploy github-runner small --channel latest/stable ....
 ```
 
-Please refer to [How to spawn OpenStack runner](how-to/openstack-runner.md).
+Please refer to [How to spawn OpenStack runner](openstack-runner.md).
 for more information on how to deploy the runners.
 
 ### MongoDB
@@ -54,9 +56,9 @@ juju integrate small mongodb
 ### Define a webhook in your organisation or repository where the self-hosted runners are registered
 
 On your repository or organisation's page on Github, you need to go to the settings and create a Webhook
-(e.g. https://github.com/canonical/github-runner-operator/settings/hooks). Please make sure to select
+(e.g. `https://github.com/canonical/github-runner-operator/settings/hooks`). Please make sure to select
 
-- the Webhook url to be the URL of the webhook router
+- the Webhook URL to be the URL of the webhook router
 - the content type `application/json`
 - the secret you defined in the webhook router (if you have so, which is recommended for security reasons)
 - the individual event "Workflow jobs" (and only this, as all other events will just be rejected by the webhook router)
@@ -108,5 +110,5 @@ juju integrate nginx-ingress-integrator github-runner-webhook-router
 You will probably also need some observability.
 The GitHub Runner and MongoDB machine charm provide COS integration via the `cos-agent` endpoint, and the
 Github Runner Webhook Router charm  provides the usual endpoints (`logging`, `metrics-endpoint`, `grafana-dashboard`). Please refer to
-[How to integrate with COS](how-to/integrate-with-cos.md) and [Canonical Observability Stack (COS) documentation](https://charmhub.io/topics/canonical-observability-stack) 
+[How to integrate with COS](integrate-with-cos.md) and [Canonical Observability Stack (COS) documentation](https://charmhub.io/topics/canonical-observability-stack) 
 for more information.

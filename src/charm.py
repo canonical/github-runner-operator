@@ -186,7 +186,12 @@ class GithubRunnerCharm(CharmBase):
         super().__init__(*args, **kwargs)
         self._log_charm_status()
 
-        self._grafana_agent = COSAgentProvider(self)
+        self._grafana_agent = COSAgentProvider(
+            self,
+            metrics_endpoints=[
+                {"path": "/metrics", "port": int(manager_service.GITHUB_RUNNER_MANAGER_PORT)}
+            ],
+        )
 
         self._stored.set_default(
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
@@ -314,6 +319,9 @@ class GithubRunnerCharm(CharmBase):
         logger.info(UPGRADE_MSG)
         self._common_install_code()
         _disable_legacy_service()
+        state = self._setup_state()
+        self._setup_service(state)
+        self._manager_client.flush_runner()
 
     @catch_charm_errors
     def _on_config_changed(self, _: ConfigChangedEvent) -> None:
@@ -321,7 +329,7 @@ class GithubRunnerCharm(CharmBase):
         state = self._setup_state()
 
         flush_runners = False
-        if state.charm_config.token != self._stored.token:
+        if self.config[TOKEN_CONFIG_NAME] != self._stored.token:
             self._stored.token = self.config[TOKEN_CONFIG_NAME]
             flush_runners = True
         if self.config[PATH_CONFIG_NAME] != self._stored.path:

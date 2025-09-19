@@ -5,7 +5,6 @@
 
 import logging
 import secrets
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Sequence
 
@@ -16,19 +15,9 @@ from github_runner_manager.errors import (
     MissingServerConfigError,
     OpenStackError,
     RunnerCreateError,
-    SSHError,
 )
-from github_runner_manager.manager.cloud_runner_manager import (
-    CloudRunnerInstance,
-    CloudRunnerManager,
-    CloudRunnerState,
-)
-from github_runner_manager.manager.models import (
-    InstanceID,
-    RunnerContext,
-    RunnerIdentity,
-)
-from github_runner_manager.manager.runner_manager import HealthState
+from github_runner_manager.manager.models import InstanceID, RunnerContext, RunnerIdentity
+from github_runner_manager.manager.vm_manager import VM, CloudRunnerManager, RunnerMetrics, VMState
 from github_runner_manager.metrics import runner as runner_metrics
 from github_runner_manager.openstack_cloud.constants import (
     CREATE_SERVER_TIMEOUT,
@@ -49,25 +38,6 @@ PRE_JOB_SCRIPT = RUNNER_APPLICATION / "pre-job.sh"
 RUNNER_STARTUP_PROCESS = "/home/ubuntu/actions-runner/run.sh"
 
 OUTDATED_METRICS_STORAGE_IN_SECONDS = CREATE_SERVER_TIMEOUT + 30  # add a bit on top of the timeout
-
-
-class _GithubRunnerRemoveError(Exception):
-    """Represents an error while SSH into a runner and running the remove script."""
-
-
-@dataclass
-class _RunnerHealth:
-    """Runners with health state.
-
-    Attributes:
-        healthy: The list of healthy runners.
-        unhealthy:  The list of unhealthy runners.
-        unknown: The list of runners whose health state could not be determined.
-    """
-
-    healthy: tuple[OpenstackInstance, ...]
-    unhealthy: tuple[OpenstackInstance, ...]
-    unknown: tuple[OpenstackInstance, ...]
 
 
 class OpenStackRunnerManager(CloudRunnerManager):
@@ -118,7 +88,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -151,7 +121,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
         logger.info("Runner %s created successfully", instance.instance_id)
         return self._build_cloud_runner_instance(instance)
 
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_vms(self) -> Sequence[VM]:
         """Get cloud self-hosted runners.
 
         Returns:
@@ -162,74 +132,17 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
     def cleanup(self) -> None:
         """Cleanup runner and resource on the cloud."""
-        self._openstack_cloud.cleanup()
+        self._openstack_cloud.delete_expired_keys()
 
-    def _build_cloud_runner_instance(
-        self, instance: OpenstackInstance, healthy: bool | None = None
-    ) -> CloudRunnerInstance:
+    def _build_cloud_runner_instance(self, instance: OpenstackInstance) -> VM:
         """Build a new cloud runner instance from an openstack instance."""
         metadata = instance.metadata
-        return CloudRunnerInstance(
-            name=instance.instance_id.name,
+        return VM(
             metadata=metadata,
             instance_id=instance.instance_id,
-            health=HealthState.from_value(healthy),
-            state=CloudRunnerState.from_openstack_server_status(instance.status),
+            state=VMState.from_openstack_server_status(instance.status),
             created_at=instance.created_at,
         )
-
-    def delete_runner(self, instance_id: InstanceID) -> runner_metrics.RunnerMetrics | None:
-        """Delete self-hosted runners.
-
-        Args:
-            instance_id: The instance id of the runner to delete.
-
-        Returns:
-            Any metrics collected during the deletion of the runner.
-        """
-        logger.debug("Delete instance %s", instance_id)
-        instance = self._openstack_cloud.get_instance(instance_id)
-        if instance is None:
-            logger.warning(
-                "Unable to delete instance %s as it is not found",
-                instance_id,
-            )
-            return None
-
-        pulled_metrics = self._delete_runner(instance)
-        logger.debug(
-            "Metrics extracted, deleting instance %s %s", instance_id, instance.instance_id
-        )
-        logger.debug("Instance deleted successfully %s %s", instance_id, instance.instance_id)
-        logger.debug("Extract metrics for runner %s %s", instance_id, instance.instance_id)
-        cloud_instance = self._build_cloud_runner_instance(instance)
-        return pulled_metrics.to_runner_metrics(cloud_instance, instance.created_at)
-
-    def _delete_runner(self, instance: OpenstackInstance) -> runner_metrics.PulledMetrics:
-        """Delete self-hosted runners by openstack instance.
-
-        Args:
-            instance: The OpenStack instance.
-        """
-        pulled_metrics = runner_metrics.PulledMetrics()
-        try:
-            with self._openstack_cloud.get_ssh_connection(instance) as ssh_conn:
-                pulled_metrics = runner_metrics.pull_runner_metrics(instance.instance_id, ssh_conn)
-        except SSHError:
-            logger.exception(
-                "Failed to get SSH connection while removing %s", instance.instance_id
-            )
-            logger.warning(
-                "Skipping runner remove script for %s due to SSH issues", instance.instance_id
-            )
-
-        try:
-            self._openstack_cloud.delete_instance(instance.instance_id)
-        except OpenStackError:
-            logger.exception(
-                "Unable to delete openstack instance for runner %s", instance.instance_id
-            )
-        return pulled_metrics
 
     def _generate_cloud_init(self, runner_context: RunnerContext) -> str:
         """Generate cloud init userdata.
@@ -282,15 +195,24 @@ class OpenStackRunnerManager(CloudRunnerManager):
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
-        aproxy_address = (
-            service_config.runner_proxy_config.proxy_address if service_config.use_aproxy else None
-        )
+        use_aproxy = service_config.use_aproxy
+        if not service_config.runner_proxy_config.proxy_address:
+            use_aproxy = False
+        aproxy_redirect_ports = service_config.aproxy_redirect_ports
+        if not aproxy_redirect_ports:
+            use_aproxy = False
+        aproxy_exclude_ipv4_addresses = [
+            address for address in service_config.aproxy_exclude_addresses if ":" not in address
+        ]
         return jinja.get_template("openstack-userdata.sh.j2").render(
             run_script=runner_context.shell_run_script,
             env_contents=env_contents,
             pre_job_contents=pre_job_contents,
             metrics_exchange_path=str(METRICS_EXCHANGE_PATH),
-            aproxy_address=aproxy_address,
+            use_aproxy=use_aproxy,
+            aproxy_address=service_config.runner_proxy_config.proxy_address,
+            aproxy_exclude_ipv4_addresses=", ".join(aproxy_exclude_ipv4_addresses),
+            aproxy_redirect_ports=", ".join(aproxy_redirect_ports),
             dockerhub_mirror=service_config.dockerhub_mirror,
             ssh_debug_info=ssh_debug_info,
             runner_proxy_config=service_config.runner_proxy_config,
@@ -308,3 +230,33 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 service_config.repo_policy_compliance.token,
             )
         return None
+
+    def delete_vms(
+        self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
+    ) -> list[InstanceID]:
+        """Delete VMs.
+
+        Args:
+            instance_ids: The ID of the VMs to request deletion.
+            wait: Whether to wait for the delete to be complete.
+            timeout: Timeout in seconds to wait for the deletion to complete.
+
+        Returns:
+            The instance IDs requested for deletion.
+        """
+        return self._openstack_cloud.delete_instances(
+            instance_ids=instance_ids, wait=wait, timeout=timeout
+        )
+
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> Sequence[RunnerMetrics]:
+        """Extract metrics from cloud VMs.
+
+        Args:
+            instance_ids: The ID of the VMs to fetch metrics from.
+
+        Returns:
+            Metrics from VMs.
+        """
+        return runner_metrics.pull_runner_metrics(
+            cloud_service=self._openstack_cloud, instance_ids=instance_ids
+        )

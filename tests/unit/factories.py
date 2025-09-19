@@ -33,6 +33,7 @@ from charm_state import (
     OPENSTACK_NETWORK_CONFIG_NAME,
     PATH_CONFIG_NAME,
     RECONCILE_INTERVAL_CONFIG_NAME,
+    RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME,
     TEST_MODE_CONFIG_NAME,
     TOKEN_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
@@ -158,6 +159,7 @@ class MockGithubRunnerCharmFactory(factory.Factory):
             TOKEN_CONFIG_NAME: factory.Sequence(lambda n: f"mock_token_{n}"),
             USE_APROXY_CONFIG_NAME: False,
             VIRTUAL_MACHINES_CONFIG_NAME: 1,
+            RUNNER_MANAGER_LOG_LEVEL_CONFIG_NAME: "INFO",
         }
     )
 

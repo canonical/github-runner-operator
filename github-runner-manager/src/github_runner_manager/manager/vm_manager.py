@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum, auto
-from typing import Optional, Sequence
+from typing import Optional, Protocol, Sequence
 
 from pydantic import BaseModel, Field, NonNegativeFloat
 
@@ -35,22 +35,8 @@ class HealthState(Enum):
     UNHEALTHY = auto()
     UNKNOWN = auto()
 
-    @staticmethod
-    def from_value(health: bool | None) -> "HealthState":
-        """Create from a health value.
 
-        Args:
-            health: The health value as boolean or None.
-
-        Returns:
-            The health state.
-        """
-        if health is None:
-            return HealthState.UNKNOWN
-        return HealthState.HEALTHY if health else HealthState.UNHEALTHY
-
-
-class CloudRunnerState(str, Enum):
+class VMState(str, Enum):
     """Represent state of the instance hosting the runner.
 
     Attributes:
@@ -75,7 +61,7 @@ class CloudRunnerState(str, Enum):
     @staticmethod
     def from_openstack_server_status(  # pragma: no cover
         openstack_server_status: str,
-    ) -> "CloudRunnerState":
+    ) -> "VMState":
         """Create from openstack server status.
 
         The openstack server status are documented here:
@@ -87,72 +73,41 @@ class CloudRunnerState(str, Enum):
         Returns:
             The state of the runner.
         """
-        state = CloudRunnerState.UNEXPECTED
+        state = VMState.UNEXPECTED
         match openstack_server_status:
             case "BUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "REBUILD":
-                state = CloudRunnerState.CREATED
+                state = VMState.CREATED
             case "ACTIVE":
-                state = CloudRunnerState.ACTIVE
+                state = VMState.ACTIVE
             case "ERROR":
-                state = CloudRunnerState.ERROR
+                state = VMState.ERROR
             case "STOPPED":
-                state = CloudRunnerState.STOPPED
+                state = VMState.STOPPED
             case "DELETED":
-                state = CloudRunnerState.DELETED
+                state = VMState.DELETED
             case "UNKNOWN":
-                state = CloudRunnerState.UNKNOWN
+                state = VMState.UNKNOWN
             case _:
-                state = CloudRunnerState.UNEXPECTED
+                state = VMState.UNEXPECTED
         return state
 
 
-class CloudInitStatus(str, Enum):
-    """Represents the state of cloud-init script.
-
-    The cloud init script is used to launch ephemeral GitHub runners. If the script is being
-    initialized, GitHub runner is listening for jobs or GitHub runner is running the job, the
-    cloud-init script should report "running" status.
-
-    Refer to the official documentation on cloud-init status:
-    https://cloudinit.readthedocs.io/en/latest/howto/status.html.
-
-    Attributes:
-        NOT_STARTED: The cloud-init script has not yet been started.
-        RUNNING: The cloud-init script is running.
-        DONE: The cloud-init script has completed successfully.
-        ERROR: There was an error while running the cloud-init script.
-        DEGRADED: There was a non-critical issue while running the cloud-inits script.
-        DISABLED: Cloud init was disabled by other system configurations.
-    """
-
-    NOT_STARTED = "not started"
-    RUNNING = "running"
-    DONE = "done"
-    ERROR = "error"
-    DEGRADED = "degraded"
-    DISABLED = "disabled"
-
-
 @dataclass
-class CloudRunnerInstance:
+class VM:
     """Information on the runner on the cloud.
 
     Attributes:
-        name: Name of the instance hosting the runner.
-        instance_id: ID of the instance.
-        metadata: Metadata of the runner.
-        health: Health state of the runner.
-        state: State of the instance hosting the runner.
+        instance_id: VM instance identifier (NOT VM UUID).
+        metadata: Metadata associated with the VM.
+        state: The VM state.
         created_at: Creation time of the runner in the cloud provider.
     """
 
-    name: str
     instance_id: InstanceID
     metadata: RunnerMetadata
-    health: HealthState
-    state: CloudRunnerState
+    state: VMState
     created_at: datetime
 
     def is_older_than(self, seconds: float) -> bool:
@@ -224,25 +179,44 @@ class PostJobMetrics(BaseModel):
     status_info: Optional[CodeInformation]
 
 
-class RunnerMetrics(BaseModel):
+class RunnerMetrics(Protocol):
     """Metrics for a runner.
 
     Attributes:
-        instance_id: The name of the runner.
-        metadata: Runner metadata.
-        installation_start_timestamp: The UNIX time stamp of the time at which the runner
-            installation started.
-        installed_timestamp: The UNIX time stamp of the time at which the runner was installed.
+        metadata: The metadata of the VM in which the metrics are fetched from.
+        instance_id: The instance ID of the VM in which the metrics are fetched from.
+        installation_start_timestamp: The UNIX timestamp of in which the VM setup started.
+        installation_end_timestamp: The UNIX timestamp of in which the VM setup ended.
         pre_job: The metrics for the pre-job phase.
         post_job: The metrics for the post-job phase.
     """
 
-    instance_id: InstanceID
-    metadata: RunnerMetadata
-    installation_start_timestamp: NonNegativeFloat | None
-    installed_timestamp: NonNegativeFloat
-    pre_job: PreJobMetrics | None
-    post_job: PostJobMetrics | None
+    @property
+    def pre_job(self) -> PreJobMetrics | None:
+        """Metrics from the pre-job phase."""
+
+    @property
+    def post_job(self) -> PostJobMetrics | None:
+        """Metrics from the post-job phase."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def metadata(self) -> RunnerMetadata:  # type: ignore
+        """Metadata of the VM in which the metrics are fetche from."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def instance_id(self) -> InstanceID:  # type: ignore
+        """Instance ID of the VM in which the metrics are fetched from."""
+
+    @property
+    # Ignore no return implementation because this is a protocol class.
+    def installation_start_timestamp(self) -> NonNegativeFloat:  # type: ignore
+        """UNIX timestamp of in which the VM setup started."""
+
+    @property
+    def installation_end_timestamp(self) -> NonNegativeFloat | None:
+        """UNIX timestamp of in which the VM setup ended."""
 
 
 class CloudRunnerManager(abc.ABC):
@@ -262,7 +236,7 @@ class CloudRunnerManager(abc.ABC):
         self,
         runner_identity: RunnerIdentity,
         runner_context: RunnerContext,
-    ) -> CloudRunnerInstance:
+    ) -> VM:
         """Create a self-hosted runner.
 
         Args:
@@ -271,16 +245,32 @@ class CloudRunnerManager(abc.ABC):
         """
 
     @abc.abstractmethod
-    def get_runners(self) -> Sequence[CloudRunnerInstance]:
+    def get_vms(self) -> Sequence[VM]:
         """Get cloud self-hosted runners."""
 
     @abc.abstractmethod
-    def delete_runner(self, instance_id: InstanceID) -> RunnerMetrics | None:
-        """Delete self-hosted runner.
+    # Abstract methods do not have a return value, ignore the docstring error DCO031
+    def delete_vms(self, instance_ids: Sequence[InstanceID]) -> list[InstanceID]:
+        """Delete cloud VM instances.
 
         Args:
-            instance_id: The instance id of the runner to delete.
-        """
+            instance_ids: The ID of the VMs to request deletion.
+
+        Returns:
+            The deleted instance IDs.
+        """  # noqa: DCO031
+
+    @abc.abstractmethod
+    # Abstract methods do not have a return value, ignore the docstring error DCO031
+    def extract_metrics(self, instance_ids: Sequence[InstanceID]) -> list[RunnerMetrics]:
+        """Extract metrics from cloud VMs.
+
+        Args:
+            instance_ids: The VM instance IDs to fetch the metrics from.
+
+        Returns:
+            The fetched runner metrics.
+        """  # noqa: DCO031
 
     @abc.abstractmethod
     def cleanup(self) -> None:

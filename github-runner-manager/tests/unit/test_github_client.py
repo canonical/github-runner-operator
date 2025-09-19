@@ -36,7 +36,6 @@ from github_runner_manager.types_.github import (
     JobInfo,
     JobStatus,
     SelfHostedRunner,
-    SelfHostedRunnerLabel,
 )
 
 JobStatsRawData = namedtuple(
@@ -405,7 +404,7 @@ def test_get_runner_context_repo(github_client: GithubClient):
         ),
         busy=False,
         id=113,
-        labels=[SelfHostedRunnerLabel(name="label1"), SelfHostedRunnerLabel(name="label2")],
+        labels=["label1", "label2"],
         status=GitHubRunnerStatus.OFFLINE,
     )
 
@@ -517,7 +516,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
 
     instance_id = InstanceID.build("test-runner")
 
-    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels):
+    def _mock_generate_runner_jitconfig_for_org(org, name, runner_group_id, labels, timeout):
         """Mocked generate_runner_jitconfig_for_org."""
         assert org == "theorg"
         assert name == instance_id.name
@@ -556,7 +555,7 @@ def test_get_runner_context_org(github_client: GithubClient, monkeypatch: pytest
         ),
         busy=False,
         id=18,
-        labels=[SelfHostedRunnerLabel(name="self-hosted"), SelfHostedRunnerLabel(name="X64")],
+        labels=["self-hosted", "X64"],
         status=GitHubRunnerStatus.OFFLINE,
     )
 

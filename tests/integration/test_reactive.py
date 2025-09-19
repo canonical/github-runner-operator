@@ -9,8 +9,8 @@ from typing import AsyncIterator
 import pytest
 import pytest_asyncio
 from github import Branch, Repository
-from github_runner_manager.manager.cloud_runner_manager import PostJobStatus
-from github_runner_manager.reactive.consumer import JobDetails
+from github_runner_manager.manager.vm_manager import PostJobStatus
+from github_runner_manager.reactive.consumer import WAIT_TIME_IN_SEC, JobDetails
 from juju.application import Application
 from pytest_operator.plugin import OpsTest
 
@@ -243,6 +243,9 @@ async def test_reactive_mode_scale_down(
     )
 
     await wait_for_status(run, "in_progress")
+    # Sleep for enough time due to race condition where the reactive process would be sleeping due
+    # to job_picked_up check but the application would kill the process on scale down.
+    await sleep(WAIT_TIME_IN_SEC * 1.5)
 
     # 1. Scale down the number of virtual machines to 0 and call reconcile.
     await app.set_config({MAX_TOTAL_VIRTUAL_MACHINES_CONFIG_NAME: "0"})
