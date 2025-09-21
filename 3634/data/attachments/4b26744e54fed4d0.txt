@@ -1,0 +1,138 @@
+18:24:34 INFO GitHub token rate limit: Rate(reset=2025-09-21 19:13:34+00:00, remaining=4982, limit=5000)
+18:24:47 WARNING unexpected facade SSHServer received from the controller
+18:24:47 INFO Adding model github-pr-77d1e-lxd:test-charm-metrics-failure-ql22 on cloud localhost
+18:24:47 WARNING unexpected facade SSHServer received from the controller
+18:24:47 WARNING unexpected facade SSHSession received from the controller
+18:24:47 WARNING unexpected facade SSHTunneler received from the controller
+18:24:49 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+18:25:24 INFO Deploying local:jammy/github-runner-0
+18:25:25 INFO Waiting for model:
+  test-xhmlu85v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhmlu85v/0 [allocating] waiting: waiting for machine
+18:25:55 INFO Waiting for model:
+  test-xhmlu85v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhmlu85v/0 [allocating] waiting: waiting for machine
+18:26:25 INFO Waiting for model:
+  test-xhmlu85v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhmlu85v/0 [allocating] waiting: waiting for machine
+18:26:56 INFO Waiting for model:
+  test-xhmlu85v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhmlu85v/0 [executing] maintenance: Setting up Builder.
+18:27:27 INFO Waiting for model:
+  test-xhmlu85v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xhmlu85v/0 [executing] maintenance: Setting up Builder.
+18:27:57 INFO Waiting for model:
+  test-xhmlu85v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xhmlu85v/0 [executing] maintenance: Setting up Builder.
+18:28:27 INFO Waiting for model:
+  test-xhmlu85v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xhmlu85v/0 [executing] maintenance: Setting up Builder.
+18:28:57 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] maintenance: Setting up Builder.
+18:29:27 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] blocked: image integration required.
+18:29:58 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:30:28 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:30:59 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:31:29 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:31:59 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:32:30 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:33:00 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:33:31 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:34:01 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:34:31 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:35:02 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:35:32 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:36:02 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:36:33 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:37:03 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:37:33 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:38:03 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:38:34 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:39:04 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:39:34 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:40:04 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:40:34 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:41:04 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:41:35 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:42:05 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:42:35 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:43:05 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:43:36 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:44:06 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:44:36 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhmlu85v/0 [executing] active: Building image.
+18:45:06 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] active: 
+18:45:18 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] active: 
+18:45:48 INFO Waiting for model:
+  test-xhmlu85v/0 [idle] active: 
+18:45:52 INFO Current reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229
+18:45:52 INFO Waiting for reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229
+18:46:53 INFO Current reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229
+18:46:53 INFO Current reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229, expected reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229
+18:46:53 INFO Waiting for reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229
+18:47:54 INFO Current reconcile ID: 8fafee9e-cfc0-4947-9fc5-a826baef7b71
+18:47:54 INFO Current reconcile ID: 8fafee9e-cfc0-4947-9fc5-a826baef7b71, expected reconcile ID: ea227f09-99f7-470d-a2d2-a085d87aa229

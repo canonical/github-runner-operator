@@ -1,0 +1,64 @@
+18:46:21 INFO Waiting for model:
+  test-pgwo39rh/0 [idle] active: 
+18:46:37 INFO Current reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:46:37 INFO Waiting for reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:47:38 INFO Current reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:47:38 INFO Current reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d, expected reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:47:38 INFO Waiting for reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:48:39 INFO Current reconcile ID: 3d4264fb-f8f5-4aa9-8d7a-de1c71c282a6
+18:48:39 INFO Current reconcile ID: 3d4264fb-f8f5-4aa9-8d7a-de1c71c282a6, expected reconcile ID: a8f4187b-0ca9-44f8-8c5f-29900559f65d
+18:48:44 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-r4j5  github-pr-77d1e-lxd  localhost/localhost  3.6.9    unsupported  18:48:44Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-pgwo39rh           active      1  github-runner-image-builder  latest/edge  110  no       
+test-pgwo39rh                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-pgwo39rh/0*  active    idle   0        10.199.47.38           
+test-pgwo39rh/0*                         active    idle   1        10.199.47.95           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.199.47.38  juju-2cd4d3-0  ubuntu@22.04  github-runner  Running
+1        started  10.199.47.95  juju-2cd4d3-1  ubuntu@22.04  github-runner  Running
+
+18:48:44 INFO Juju error logs:
+
+machine-0: 18:26:07 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:07 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-pgwo39rh-0: 18:26:07 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-pgwo39rh-0: 18:26:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-pgwo39rh-0: 18:27:07 ERROR unit.github-runner-image-builder-pgwo39rh/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-pgwo39rh-0: 18:28:01 ERROR unit.test-pgwo39rh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pgwo39rh-0: 18:28:04 ERROR unit.test-pgwo39rh/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-pgwo39rh-0: 18:29:00 ERROR unit.test-pgwo39rh/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-pgwo39rh-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:48:44 INFO Forgetting model main...
