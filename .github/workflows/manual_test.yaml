@@ -16,7 +16,6 @@ jobs:
       - run: lscpu
       - run: df -h
       - run: free -h
-      - run: uname -a
       - run: lsb_release -a
       - name: Setup tmate session
         uses: canonical/action-tmate@main
