@@ -1,0 +1,183 @@
+06:27:44 WARNING unexpected facade SSHServer received from the controller
+06:27:44 INFO Adding model github-pr-77d1e-lxd:test-reactive-vkpd on cloud localhost
+06:27:44 WARNING unexpected facade SSHServer received from the controller
+06:27:44 WARNING unexpected facade SSHSession received from the controller
+06:27:44 WARNING unexpected facade SSHTunneler received from the controller
+06:27:45 INFO GitHub token rate limit: Rate(reset=2025-09-22 06:36:59+00:00, remaining=4921, limit=5000)
+06:27:49 INFO Deploying ch:amd64/jammy/mongodb-229
+06:27:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:28:16 INFO Deploying local:jammy/github-runner-0
+06:28:16 INFO Waiting for model:
+  test-kmc5niup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:28:47 INFO Waiting for model:
+  test-kmc5niup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:29:17 INFO Waiting for model:
+  test-kmc5niup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:29:47 INFO Waiting for model:
+  test-kmc5niup/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:30:17 INFO Waiting for model:
+  test-kmc5niup/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:30:47 INFO Waiting for model:
+  test-kmc5niup/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kmc5niup/0 [allocating] waiting: waiting for machine
+06:31:18 INFO Waiting for model:
+  test-kmc5niup/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kmc5niup/0 [executing] maintenance: Setting up Builder.
+06:31:48 INFO Waiting for model:
+  test-kmc5niup/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kmc5niup/0 [executing] maintenance: Setting up Builder.
+06:32:18 INFO Waiting for model:
+  test-kmc5niup/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kmc5niup/0 [executing] maintenance: Setting up Builder.
+06:32:49 INFO Waiting for model:
+  test-kmc5niup/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kmc5niup/0 [executing] maintenance: Setting up Builder.
+06:33:19 INFO Waiting for model:
+  test-kmc5niup/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kmc5niup/0 [executing] maintenance: Setting up Builder.
+06:33:49 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] blocked: image integration required.
+06:34:20 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:34:50 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:35:21 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:35:51 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:36:22 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:36:52 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:37:22 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:37:53 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:38:23 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:38:53 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:39:23 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:39:53 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:40:23 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:40:53 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:41:24 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:41:54 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:42:24 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:42:55 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:43:25 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:43:56 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:44:26 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:44:57 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:45:27 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:45:57 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:46:27 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:46:57 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:47:27 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:47:58 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:48:28 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:48:58 INFO Waiting for model:
+  test-kmc5niup/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kmc5niup/0 [executing] active: Building image.
+06:49:29 INFO Waiting for model:
+  test-kmc5niup/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-kmc5niup/0 [idle] active: 
+06:49:59 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:50:05 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:50:05 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:50:35 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:50:54 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:51:24 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:51:28 INFO Current reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:51:28 INFO Waiting for reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:52:29 INFO Current reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:52:29 INFO Current reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887, expected reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:52:29 INFO Waiting for reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:53:30 INFO Current reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:53:30 INFO Current reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd, expected reconcile ID: e1cd653c-e59c-4d3d-a856-1d2a7df28887
+06:53:33 INFO Wait for condition not met, sleeping 10
+06:53:54 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:54:10 INFO Current reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:54:10 INFO Waiting for reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:55:11 INFO Current reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:55:11 INFO Current reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd, expected reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:55:11 INFO Waiting for reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:56:13 INFO Current reconcile ID: 68c56059-f34a-4f8f-beff-f87a3e0f99ec
+06:56:13 INFO Current reconcile ID: 68c56059-f34a-4f8f-beff-f87a3e0f99ec, expected reconcile ID: 80437b8b-44a8-49f6-931e-4609d95cc4fd
+06:56:13 INFO Queue item payload: {"labels": ["test-kmc5niup", "x64"], "url": "https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/50910343792", "ignored_noise": "foobar"}, headers: {'X-Process-Count': 1}
+06:56:13 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:56:43 INFO Waiting for model:
+  test-kmc5niup/0 [idle] active: 
+06:56:47 INFO Current reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:56:47 INFO Waiting for reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:57:48 INFO Current reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:57:48 INFO Current reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2, expected reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:57:48 INFO Waiting for reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:58:49 INFO Current reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:58:49 INFO Current reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2, expected reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:58:49 INFO Waiting for reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2
+06:59:50 INFO Current reconcile ID: 64a5f072-8194-44b6-8853-2504fe57ab64
+06:59:50 INFO Current reconcile ID: 64a5f072-8194-44b6-8853-2504fe57ab64, expected reconcile ID: 155f9b5c-8a67-4805-a05a-868bc73896f2

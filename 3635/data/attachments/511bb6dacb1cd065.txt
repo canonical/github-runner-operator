@@ -1,0 +1,114 @@
+06:26:57 WARNING unexpected facade SSHServer received from the controller
+06:26:57 INFO Adding model github-pr-77d1e-lxd:test-charm-no-runner-tsgf on cloud localhost
+06:26:58 WARNING unexpected facade SSHServer received from the controller
+06:26:58 WARNING unexpected facade SSHSession received from the controller
+06:26:58 WARNING unexpected facade SSHTunneler received from the controller
+06:26:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-110
+06:27:23 INFO Deploying local:jammy/github-runner-0
+06:27:23 INFO Waiting for model:
+  test-t2fpd01g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2fpd01g/0 [allocating] waiting: waiting for machine
+06:27:54 INFO Waiting for model:
+  test-t2fpd01g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2fpd01g/0 [allocating] waiting: waiting for machine
+06:28:24 INFO Waiting for model:
+  test-t2fpd01g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2fpd01g/0 [allocating] waiting: waiting for machine
+06:28:54 INFO Waiting for model:
+  test-t2fpd01g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-t2fpd01g/0 [allocating] waiting: agent initialising
+06:29:25 INFO Waiting for model:
+  test-t2fpd01g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t2fpd01g/0 [executing] maintenance: Setting up Builder.
+06:29:55 INFO Waiting for model:
+  test-t2fpd01g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t2fpd01g/0 [executing] maintenance: Setting up Builder.
+06:30:25 INFO Waiting for model:
+  test-t2fpd01g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-t2fpd01g/0 [executing] maintenance: Setting up Builder.
+06:30:55 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] maintenance: Setting up Builder.
+06:31:26 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] maintenance: Setting up Builder.
+06:31:56 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:32:26 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:32:56 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:33:26 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:33:57 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:34:27 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:34:57 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:35:27 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:35:58 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:36:28 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:36:59 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:37:29 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:37:59 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:38:29 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:38:59 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:39:29 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:40:00 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:40:30 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:41:01 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:41:31 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:42:01 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:42:32 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:43:02 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:43:33 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:44:03 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-t2fpd01g/0 [executing] active: Building image.
+06:44:33 INFO Waiting for model:
+  test-t2fpd01g/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-t2fpd01g/0 [idle] active: 
+06:45:03 INFO Waiting for model:
+  test-t2fpd01g/0 [idle] active:
