@@ -28,7 +28,7 @@ jobs:
       self-hosted-runner-label: pfe-ci 
       tmate-debug: true
       tmate-timeout: 3000
-  # TODO: disable for debugging
+  # TODO: re-enable
   # openstack-integration-tests-cross-controller-private-endpoint:
   #   name: Cross controller integration test using private-endpoint
   #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args 
