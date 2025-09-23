@@ -1,8 +1,7 @@
 name: End-to-End tests
 
 on:
-  # TODO: tmp disable for testing.
-  # pull_request:
+  pull_request:
   workflow_dispatch:
    
 
