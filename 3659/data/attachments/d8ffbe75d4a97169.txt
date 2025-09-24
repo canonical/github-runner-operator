@@ -1,0 +1,88 @@
+19:10:33 INFO GitHub token rate limit: Rate(reset=2025-09-24 19:23:48+00:00, remaining=4143, limit=5000)
+19:10:37 INFO Waiting for model:
+  test-qengq2wz/0 [idle] active: 
+19:11:07 INFO Waiting for model:
+  test-qengq2wz/0 [idle] active: 
+19:11:11 INFO Current reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:11:11 INFO Waiting for reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:12:12 INFO Current reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:12:12 INFO Current reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17, expected reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:12:12 INFO Waiting for reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:13:13 INFO Current reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:13:13 INFO Current reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17, expected reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:13:13 INFO Waiting for reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:14:14 INFO Current reconcile ID: e6aae0f1-c362-45e1-b5b5-e9bd9160827f
+19:14:14 INFO Current reconcile ID: e6aae0f1-c362-45e1-b5b5-e9bd9160827f, expected reconcile ID: faa741e9-17c1-4808-87a9-3a2882e6ca17
+19:14:23 INFO Wait for condition not met, sleeping 10
+19:14:34 INFO Waiting for model:
+  test-qengq2wz/0 [idle] active: 
+19:15:04 INFO Waiting for model:
+  test-qengq2wz/0 [idle] active: 
+19:15:09 INFO Current reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:15:09 INFO Waiting for reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:16:10 INFO Current reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:16:10 INFO Current reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6, expected reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:16:10 INFO Waiting for reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:17:11 INFO Current reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:17:11 INFO Current reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6, expected reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:17:11 INFO Waiting for reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:18:12 INFO Current reconcile ID: baf711c4-fed8-4eaa-b75f-d620f222a223
+19:18:12 INFO Current reconcile ID: baf711c4-fed8-4eaa-b75f-d620f222a223, expected reconcile ID: 8ef58bcf-3e08-4f5f-8503-a2925cd467c6
+19:18:13 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758741129.0, "event": "runner_installed", "flavor": "test-qengq2wz", "duration": 75.0}
+{"timestamp": 1758741267.0, "event": "runner_start", "flavor": "test-qengq2wz", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 138.0, "queue_duration": 1.0}
+{"timestamp": 1758741270.0, "event": "runner_stop", "flavor": "test-qengq2wz", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 3.0, "job_conclusion": "success"}
+{"timestamp": 1758741301.832821, "event": "reconciliation", "flavor": "test-qengq2wz", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 23.859652280807495}
+{"timestamp": 1758741440.0821943, "event": "reconciliation", "flavor": "test-qengq2wz", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 18.19165277481079}
+19:18:15 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-gp6d  github-pr-64507-lxd  localhost/localhost  3.6.10   unsupported  19:18:15Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qengq2wz           active      1  github-runner-image-builder  latest/edge  122  no       
+test-qengq2wz                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-qengq2wz/0*  active    idle   0        10.216.4.160           
+test-qengq2wz/0*                         active    idle   1        10.216.4.130           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.216.4.160  juju-20082b-0  ubuntu@22.04  github-runner  Running
+1        started  10.216.4.130  juju-20082b-1  ubuntu@22.04  github-runner  Running
+
+19:18:15 INFO Juju error logs:
+
+machine-0: 18:50:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:50:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:50:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-qengq2wz-0: 18:51:12 ERROR unit.github-runner-image-builder-qengq2wz/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-qengq2wz-0: 18:52:15 ERROR unit.test-qengq2wz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qengq2wz-0: 18:52:19 ERROR unit.test-qengq2wz/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qengq2wz-0: 18:53:10 ERROR unit.test-qengq2wz/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qengq2wz-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:18:15 INFO Forgetting model main...
