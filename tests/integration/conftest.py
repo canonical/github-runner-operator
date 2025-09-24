@@ -387,6 +387,7 @@ async def image_builder_config_fixture(
     if not private_endpoint_config:
         raise ValueError("Private endpoints are required for testing OpenStack runners.")
     return {
+        "base-image": "jammy,noble",
         "build-interval": "12",
         "revision-history-limit": "2",
         "openstack-auth-url": private_endpoint_config["auth_url"],
