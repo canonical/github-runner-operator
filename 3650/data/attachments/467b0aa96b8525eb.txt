@@ -1,0 +1,227 @@
+06:27:04 WARNING unexpected facade SSHServer received from the controller
+06:27:04 INFO Adding model github-pr-77d1e-lxd:test-charm-fork-repo-wrl7 on cloud localhost
+06:27:04 WARNING unexpected facade SSHServer received from the controller
+06:27:04 WARNING unexpected facade SSHSession received from the controller
+06:27:04 WARNING unexpected facade SSHTunneler received from the controller
+06:27:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-121
+06:27:39 INFO Deploying local:jammy/github-runner-0
+06:27:39 INFO Waiting for model:
+  test-kn33rcmf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kn33rcmf/0 [allocating] waiting: waiting for machine
+06:28:09 INFO Waiting for model:
+  test-kn33rcmf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kn33rcmf/0 [allocating] waiting: waiting for machine
+06:28:40 INFO Waiting for model:
+  test-kn33rcmf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kn33rcmf/0 [allocating] waiting: waiting for machine
+06:29:10 INFO Waiting for model:
+  test-kn33rcmf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kn33rcmf/0 [allocating] waiting: waiting for machine
+06:29:40 INFO Waiting for model:
+  test-kn33rcmf/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-kn33rcmf/0 [allocating] waiting: agent initialising
+06:30:11 INFO Waiting for model:
+  test-kn33rcmf/0 [executing] waiting: agent initialising
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:30:41 INFO Waiting for model:
+  test-kn33rcmf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:31:11 INFO Waiting for model:
+  test-kn33rcmf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:31:41 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:32:12 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:32:42 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] maintenance: Setting up Builder.
+06:33:12 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Waiting for first image.
+06:33:42 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:34:13 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:34:43 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:35:13 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:35:43 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:36:13 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:36:43 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:37:13 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:37:43 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:38:14 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:38:44 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:39:14 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:39:44 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:40:15 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:40:45 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:41:16 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:41:46 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:42:16 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:42:46 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:43:16 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:43:47 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:44:17 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:44:47 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:45:18 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:45:48 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:46:18 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:46:49 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:47:19 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:47:49 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:48:20 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:48:50 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kn33rcmf/0 [executing] active: Building image.
+06:49:20 INFO Waiting for model:
+  test-kn33rcmf/0 [executing] maintenance: Update image for runners
+06:49:46 INFO GitHub token rate limit: Rate(reset=2025-09-24 07:10:20+00:00, remaining=4680, limit=5000)
+06:50:55 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] active: 
+06:51:26 INFO Waiting for model:
+  test-kn33rcmf/0 [idle] active: 
+06:51:29 INFO Current reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:51:29 INFO Waiting for reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:52:30 INFO Current reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:52:30 INFO Current reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b, expected reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:52:30 INFO Waiting for reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:53:31 INFO Current reconcile ID: bf7a241d-ba02-4ed6-bcfe-f35823a45dde
+06:53:31 INFO Current reconcile ID: bf7a241d-ba02-4ed6-bcfe-f35823a45dde, expected reconcile ID: 1b035901-5565-491e-bcf7-6d48f51f1f3b
+06:53:37 INFO [TEST SETUP] Exposing port 8080 on test-kn33rcmf-0-n-1d33a8af4a52
+06:53:37 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.147', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:e0:1c'}]])
+06:53:38 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-kn33rcmf-0-n-1d33a8af4a52.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.145.193.147 &
+06:53:39 INFO ssh tunnel result 0 None Warning: Permanently added '10.145.193.147' (ED25519) to the list of known hosts.
+
+06:53:41 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-kn33rcmf-0-n-1d33a8af4a52
+06:53:41 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.147', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:e0:1c'}]])
+06:53:42 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kn33rcmf-0-n-1d33a8af4a52.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.147 nc -z localhost 8080'
+06:53:43 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:53:44 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-kn33rcmf-0-n-1d33a8af4a52
+06:53:44 WARNING dict_values([[{'version': 4, 'addr': '10.145.193.147', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:2a:e0:1c'}]])
+06:53:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-kn33rcmf-0-n-1d33a8af4a52.key -o "StrictHostKeyChecking no" ubuntu@10.145.193.147 curl http://localhost:8080'
+06:53:46 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  56572      0 --:--:-- --:--:-- --:--:-- 69000
+'
+06:53:48 INFO Wait for condition not met, sleeping 10
+06:53:59 INFO Wait for condition not met, sleeping 60
+06:55:07 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-wrl7  github-pr-77d1e-lxd  localhost/localhost  3.6.10   unsupported  06:55:07Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kn33rcmf           active      1  github-runner-image-builder  latest/edge  121  no       
+test-kn33rcmf                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-kn33rcmf/0*  active    idle   0        10.76.158.12              
+test-kn33rcmf/0*                         active    idle   1        10.76.158.234   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.76.158.12   juju-2e3dca-0  ubuntu@22.04  github-runner  Running
+1        started  10.76.158.234  juju-2e3dca-1  ubuntu@22.04  github-runner  Running
+
+06:55:07 INFO Juju error logs:
+
+machine-1: 06:29:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:29:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:29:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kn33rcmf-0: 06:31:02 ERROR unit.github-runner-image-builder-kn33rcmf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-kn33rcmf-0: 06:31:30 ERROR unit.test-kn33rcmf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kn33rcmf-0: 06:31:34 ERROR unit.test-kn33rcmf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kn33rcmf-0: 06:33:15 ERROR unit.test-kn33rcmf/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kn33rcmf-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:55:07 INFO Forgetting model main...
