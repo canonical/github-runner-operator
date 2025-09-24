@@ -420,8 +420,6 @@ async def image_builder_fixture(
             "github-runner-image-builder",
             application_name=application_name,
             channel="latest/edge",
-            # TODO: Temp switch to a fix revision
-            revision=120,
             config=image_builder_config,
         )
     else:

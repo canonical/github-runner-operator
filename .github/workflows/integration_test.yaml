@@ -14,6 +14,7 @@ concurrency:
 jobs:
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
+    # TODO: use main branch
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args 
     secrets: inherit
     with:
@@ -26,6 +27,7 @@ jobs:
       self-hosted-runner-label: pfe-ci 
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
+    # TODO: use main branch
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args 
     secrets: inherit
     with:
