@@ -2,8 +2,6 @@ name: End-to-End tests
 
 on:
   pull_request:
-  workflow_dispatch:
-   
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -14,8 +12,7 @@ jobs:
   # INTEGRATION_TEST_ARGS to operator-workflows automatically.
   openstack-integration-end-to-end-test:
     name: end-to-end test using private-endpoint
-    # TODO: use main branch
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@tmp-integration-test-args
+    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
     secrets: inherit
     with:
       juju-channel: 3.6/stable
