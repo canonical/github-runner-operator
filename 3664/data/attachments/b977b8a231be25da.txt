@@ -1,0 +1,196 @@
+06:26:50 WARNING unexpected facade SSHServer received from the controller
+06:26:50 INFO Adding model github-pr-64507-lxd:test-reactive-csli on cloud localhost
+06:26:51 WARNING unexpected facade SSHServer received from the controller
+06:26:51 WARNING unexpected facade SSHSession received from the controller
+06:26:51 WARNING unexpected facade SSHTunneler received from the controller
+06:26:51 INFO GitHub token rate limit: Rate(reset=2025-09-25 06:44:33+00:00, remaining=4387, limit=5000)
+06:26:56 INFO Deploying ch:amd64/jammy/mongodb-229
+06:26:58 INFO Deploying ch:amd64/jammy/github-runner-image-builder-122
+06:27:26 INFO Deploying local:jammy/github-runner-0
+06:27:27 INFO Waiting for model:
+  test-ns42mlm7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:27:57 INFO Waiting for model:
+  test-ns42mlm7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:28:28 INFO Waiting for model:
+  test-ns42mlm7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:28:58 INFO Waiting for model:
+  test-ns42mlm7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:29:28 INFO Waiting for model:
+  test-ns42mlm7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:29:58 INFO Waiting for model:
+  test-ns42mlm7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ns42mlm7/0 [allocating] waiting: waiting for machine
+06:30:28 INFO Waiting for model:
+  test-ns42mlm7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:30:58 INFO Waiting for model:
+  test-ns42mlm7/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:31:29 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:31:59 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:32:29 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:33:00 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] maintenance: Setting up Builder.
+06:33:30 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:34:00 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:34:30 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:35:01 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:35:31 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:36:01 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:36:31 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:37:01 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:37:32 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:38:02 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:38:32 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:39:02 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:39:32 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:40:02 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:40:32 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:41:03 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:41:33 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:42:03 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:42:34 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:43:04 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:43:35 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:44:05 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:44:35 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:45:05 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:45:35 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:46:05 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:46:36 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:47:06 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ns42mlm7/0 [executing] active: Building image.
+06:47:37 INFO Waiting for model:
+  test-ns42mlm7/0 [executing] maintenance: Update image for runners
+06:47:53 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:47:53 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:48:23 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:48:43 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:49:13 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:49:17 INFO Current reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:49:17 INFO Waiting for reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:50:18 INFO Current reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:50:18 INFO Current reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029, expected reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:50:18 INFO Waiting for reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:51:19 INFO Current reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:51:19 INFO Current reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44, expected reconcile ID: 197a9258-7ba6-4f54-aa3c-8121e63c5029
+06:51:25 INFO Wait for condition not met, sleeping 10
+06:51:46 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:52:02 INFO Current reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:52:02 INFO Waiting for reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:53:03 INFO Current reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:53:03 INFO Current reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44, expected reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:53:03 INFO Waiting for reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:54:04 INFO Current reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:54:04 INFO Current reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840, expected reconcile ID: 8f8db4f5-67b0-492e-8be2-6773b03bdb44
+06:54:05 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:54:22 INFO Current reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:54:22 INFO Waiting for reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:55:23 INFO Current reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:55:23 INFO Current reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840, expected reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:55:23 INFO Waiting for reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:56:24 INFO Current reconcile ID: c992f7b4-46e8-4aa7-b0c8-702e1424d840
+06:56:24 INFO Current reconcile ID: c992f7b4-46e8-4aa7-b0c8-702e1424d840, expected reconcile ID: 5d22fefc-2f4a-446c-a91d-533a59316840
+06:56:25 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758783162.0, "event": "runner_installed", "flavor": "test-ns42mlm7", "duration": 62.0}
+{"timestamp": 1758783166.0, "event": "runner_start", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 78.0}
+{"timestamp": 1758783168.0, "event": "runner_stop", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758783216.9423108, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.849469661712646}
+{"timestamp": 1758783349.0203552, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.953891515731812}
+
+06:56:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758783162.0, "event": "runner_installed", "flavor": "test-ns42mlm7", "duration": 62.0}
+{"timestamp": 1758783166.0, "event": "runner_start", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 78.0}
+{"timestamp": 1758783168.0, "event": "runner_stop", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758783216.9423108, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.849469661712646}
+{"timestamp": 1758783349.0203552, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.953891515731812}
+
+06:56:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1758783162.0, "event": "runner_installed", "flavor": "test-ns42mlm7", "duration": 62.0}
+{"timestamp": 1758783166.0, "event": "runner_start", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 4.0, "queue_duration": 78.0}
+{"timestamp": 1758783168.0, "event": "runner_stop", "flavor": "test-ns42mlm7", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 2.0, "job_conclusion": "success"}
+{"timestamp": 1758783216.9423108, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 22.849469661712646}
+{"timestamp": 1758783349.0203552, "event": "reconciliation", "flavor": "test-ns42mlm7", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.953891515731812}
+06:56:27 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:56:57 INFO Waiting for model:
+  test-ns42mlm7/0 [idle] active: 
+06:57:01 INFO Current reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
+06:57:01 INFO Waiting for reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
+06:58:05 INFO Current reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
+06:58:05 INFO Current reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e, expected reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
+06:58:05 INFO Waiting for reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
+06:59:06 INFO Current reconcile ID: f22e2b5e-2328-42e9-8f8d-953d4badd2d3
+06:59:06 INFO Current reconcile ID: f22e2b5e-2328-42e9-8f8d-953d4badd2d3, expected reconcile ID: 3321b518-b7ef-4a73-a2b7-69f3a6d0f09e
