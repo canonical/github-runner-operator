@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  pfe-ci:
+  edge:
     strategy:
       fail-fast: false
       matrix:
