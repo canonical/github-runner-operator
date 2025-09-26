@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  edge:
+  pfe-ci:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, edge, X64]
+    runs-on: [self-hosted, pfe-ci, X64]
     steps:
       - run: lscpu
       - run: df -h
