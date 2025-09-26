@@ -1,0 +1,102 @@
+18:28:08 WARNING Failed to discover available identity versions when contacting https://keystone.ps7.canonical.com:5000/v3. Attempting to parse version from URL.
+18:28:12 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-roa5  github-pr-64507-lxd  localhost/localhost  3.6.10   unsupported  18:28:12Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ishn1f2v           error        1  github-runner-image-builder  latest/edge  122  no       hook failed: "install"
+mongodb                                        waiting    0/1  mongodb                      6/edge       229  no       waiting for machine
+test-ishn1f2v                                  waiting    0/1  github-runner                               0  no       agent initialising
+
+Unit                                     Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-ishn1f2v/0*  error     idle        1        10.28.163.113          hook failed: "install"
+mongodb/0                                waiting   allocating  0        10.28.163.14           waiting for machine
+test-ishn1f2v/0*                         waiting   allocating  2        10.28.163.16           agent initialising
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        down     10.28.163.14   juju-8e3483-0  ubuntu@22.04  github-runner  Running
+1        started  10.28.163.113  juju-8e3483-1  ubuntu@22.04  github-runner  Running
+2        started  10.28.163.16   juju-8e3483-2  ubuntu@22.04  github-runner  Running
+
+18:28:13 INFO Juju error logs:
+
+machine-1: 18:27:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:27:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:27:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ishn1f2v-0: 18:28:07 ERROR unit.github-runner-image-builder-ishn1f2v/0.juju-log apt-get update --error-on=any:
+stdout:
+Ign:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Err:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+  Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused)
+Err:2 http://archive.ubuntu.com/ubuntu jammy InRelease
+  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+Err:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+  Unable to connect to egress.ps7.internal:3128:
+Err:4 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+  Unable to connect to egress.ps7.internal:3128:
+Reading package lists...
+
+stderr:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy/InRelease  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy-updates/InRelease  Unable to connect to egress.ps7.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy-backports/InRelease  Unable to connect to egress.ps7.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/dists/jammy-security/InRelease  Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused)
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+
+unit-github-runner-image-builder-ishn1f2v-0: 18:28:07 ERROR unit.github-runner-image-builder-ishn1f2v/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/__init__.py", line 359, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/./src/charm.py", line 85, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/./src/charm.py", line 183, in _setup_builder
+    builder.initialize(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/src/builder.py", line 91, in initialize
+    _install_dependencies()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/src/builder.py", line 106, in _install_dependencies
+    _install_apt_packages()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/src/builder.py", line 117, in _install_apt_packages
+    apt.add_package(APT_DEPENDENCIES, update_cache=True)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 793, in add_package
+    update()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ishn1f2v-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 904, in update
+    subprocess.run(cmd, capture_output=True, check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['apt-get', 'update', '--error-on=any']' returned non-zero exit status 100.
+unit-github-runner-image-builder-ishn1f2v-0: 18:28:07 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:28:13 INFO Forgetting model main...

@@ -1,0 +1,101 @@
+18:26:45 INFO IP Address to use as the fake jobmanager: 10.145.216.72
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 INFO Adding model github-pr-64507-lxd:test-jobmanager-reactive-ci5p on cloud localhost
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 WARNING unexpected facade SSHSession received from the controller
+18:26:45 WARNING unexpected facade SSHTunneler received from the controller
+18:26:46 WARNING unexpected facade SSHServer received from the controller
+18:26:48 INFO Deploying ch:amd64/jammy/mongodb-229
+18:26:50 INFO Deploying ch:amd64/jammy/github-runner-image-builder-122
+18:27:35 INFO Deploying local:jammy/github-runner-0
+18:27:35 INFO Waiting for model:
+  test-h3knxdar/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-h3knxdar/0 [allocating] waiting: waiting for machine
+18:28:05 INFO Waiting for model:
+  test-h3knxdar/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-h3knxdar/0 [allocating] waiting: waiting for machine
+18:28:36 INFO Waiting for model:
+  test-h3knxdar/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-h3knxdar/0 [allocating] waiting: waiting for machine
+18:29:06 INFO Waiting for model:
+  test-h3knxdar/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-h3knxdar/0 [allocating] waiting: waiting for machine
+18:29:36 WARNING Failed to discover available identity versions when contacting https://keystone.ps7.canonical.com:5000/v3. Attempting to parse version from URL.
+18:29:36 INFO cli: juju debug-log --model github-pr-64507-lxd:test-jobmanager-reactive-ci5p --limit 1000
+18:29:36 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-ci5p  github-pr-64507-lxd  localhost/localhost  3.6.10   unsupported  18:29:36Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-h3knxdar           maintenance      1  github-runner-image-builder  latest/edge  122  no       Setting up Builder.
+mongodb                               6.0.24   maintenance      1  mongodb                      6/edge       229  no       installing MongoDB
+test-h3knxdar                                  error            1  github-runner                               0  no       hook failed: "install"
+
+Unit                                     Workload     Agent      Machine  Public address  Ports  Message
+github-runner-image-builder-h3knxdar/0*  maintenance  executing  1        10.209.116.173         (install) Setting up Builder.
+mongodb/0*                               maintenance  executing  0        10.209.116.143         installing MongoDB
+test-h3knxdar/0*                         error        idle       2        10.209.116.28          hook failed: "install"
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.209.116.143  juju-31a90a-0  ubuntu@22.04  github-runner  Running
+1        started  10.209.116.173  juju-31a90a-1  ubuntu@22.04  github-runner  Running
+2        started  10.209.116.28   juju-31a90a-2  ubuntu@22.04  github-runner  Running
+
+18:29:37 INFO Juju error logs:
+
+machine-0: 18:28:24 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:28:24 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:28:47 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:28:47 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:29:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:29:28 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:29:28 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-h3knxdar-0: 18:29:35 ERROR unit.test-h3knxdar/0.juju-log Command /usr/bin/apt-get install -qy run-one python3-pip python3-venv failed with code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-h3knxdar-0: 18:29:35 ERROR unit.test-h3knxdar/0.juju-log Failed to install charm dependencies
+unit-test-h3knxdar-0: 18:29:35 ERROR unit.test-h3knxdar/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/apt-get', 'install', '-qy', 'run-one', 'python3-pip', 'python3-venv']' returned non-zero exit status 100.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 604, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/__init__.py", line 356, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 308, in _on_install
+    self._common_install_code()
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 279, in _common_install_code
+    self._install_deps()
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 432, in _install_deps
+    self._apt_install(["run-one", "python3-pip", "python3-venv"])
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/./src/charm.py", line 448, in _apt_install
+    execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+  File "/var/lib/juju/agents/unit-test-h3knxdar-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/apt-get install -qy run-one python3-pip python3-venv] failed with return code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-h3knxdar-0: 18:29:35 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:29:37 INFO Forgetting model main...
