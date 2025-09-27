@@ -1,0 +1,21 @@
+06:25:18 WARNING unexpected facade SSHServer received from the controller
+06:25:19 INFO Adding model github-pr-64507-lxd:test-reactive-r106 on cloud localhost
+06:25:19 WARNING unexpected facade SSHServer received from the controller
+06:25:19 WARNING unexpected facade SSHSession received from the controller
+06:25:19 WARNING unexpected facade SSHTunneler received from the controller
+06:25:20 INFO GitHub token rate limit: Rate(reset=2025-09-27 07:23:32+00:00, remaining=4992, limit=5000)
+06:25:24 INFO Deploying ch:amd64/jammy/mongodb-229
+06:25:26 INFO Deploying ch:amd64/jammy/github-runner-image-builder-122
+06:25:51 INFO Deploying local:jammy/github-runner-0
+06:25:51 INFO Waiting for model:
+  test-qmqumry7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qmqumry7/0 [allocating] waiting: waiting for machine
+06:26:22 INFO Waiting for model:
+  test-qmqumry7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qmqumry7/0 [allocating] waiting: waiting for machine
+06:26:52 INFO Waiting for model:
+  test-qmqumry7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-qmqumry7/0 [allocating] waiting: waiting for machine
+06:27:23 INFO Waiting for model:
+  test-qmqumry7/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-qmqumry7/0 [allocating] waiting: waiting for machine

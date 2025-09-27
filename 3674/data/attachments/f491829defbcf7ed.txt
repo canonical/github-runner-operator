@@ -1,0 +1,74 @@
+06:27:39 WARNING Failed to discover available identity versions when contacting https://keystone.ps7.canonical.com:5000/v3. Attempting to parse version from URL.
+06:27:40 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-r106  github-pr-64507-lxd  localhost/localhost  3.6.10   unsupported  06:27:40Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-qmqumry7           waiting        0/1  github-runner-image-builder  latest/edge  122  no       waiting for machine
+mongodb                                        maintenance      1  mongodb                      6/edge       229  no       installing MongoDB
+test-qmqumry7                                  error            1  github-runner                               0  no       hook failed: "install"
+
+Unit                                    Workload     Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-qmqumry7/0  waiting      allocating  1        10.119.66.28           waiting for machine
+mongodb/0*                              maintenance  executing   0        10.119.66.136          (install) installing MongoDB
+test-qmqumry7/0*                        error        idle        2        10.119.66.175          hook failed: "install"
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.119.66.136  juju-8e7276-0  ubuntu@22.04  github-runner  Running
+1        down     10.119.66.28   juju-8e7276-1  ubuntu@22.04  github-runner  Running
+2        started  10.119.66.175  juju-8e7276-2  ubuntu@22.04  github-runner  Running
+
+06:27:41 INFO Juju error logs:
+
+machine-0: 06:26:50 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:50 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:27:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:27:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qmqumry7-0: 06:27:39 ERROR unit.test-qmqumry7/0.juju-log Command /usr/bin/apt-get install -qy run-one python3-pip python3-venv failed with code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-qmqumry7-0: 06:27:39 ERROR unit.test-qmqumry7/0.juju-log Failed to install charm dependencies
+unit-test-qmqumry7-0: 06:27:39 ERROR unit.test-qmqumry7/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/src/utilities.py", line 55, in execute_command
+    result.check_returncode()
+  File "/usr/lib/python3.10/subprocess.py", line 457, in check_returncode
+    raise CalledProcessError(self.returncode, self.args, self.stdout,
+subprocess.CalledProcessError: Command '['/usr/bin/apt-get', 'install', '-qy', 'run-one', 'python3-pip', 'python3-venv']' returned non-zero exit status 100.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 604, in <module>
+    ops.main(GithubRunnerCharm)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/__init__.py", line 356, in __call__
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 308, in _on_install
+    self._common_install_code()
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 279, in _common_install_code
+    self._install_deps()
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 432, in _install_deps
+    self._apt_install(["run-one", "python3-pip", "python3-venv"])
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/./src/charm.py", line 448, in _apt_install
+    execute_command(["/usr/bin/apt-get", "install", "-qy"] + list(packages))
+  File "/var/lib/juju/agents/unit-test-qmqumry7-0/charm/src/utilities.py", line 64, in execute_command
+    raise SubprocessError(cmd, err.returncode, err.stdout, err.stderr) from err
+errors.SubprocessError: [/usr/bin/apt-get install -qy run-one python3-pip python3-venv] failed with return code 100: b"E: Package 'python3-pip' has no installation candidate\nE: Package 'python3-venv' has no installation candidate\n"
+unit-test-qmqumry7-0: 06:27:39 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:27:41 INFO Forgetting model main...
