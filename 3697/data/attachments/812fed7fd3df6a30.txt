@@ -1,0 +1,138 @@
+18:28:48 INFO IP Address to use as the fake jobmanager: 10.145.216.49
+18:28:48 WARNING unexpected facade SSHServer received from the controller
+18:28:48 INFO Adding model github-pr-64507-lxd:test-jobmanager-reactive-n0lv on cloud localhost
+18:28:49 WARNING unexpected facade SSHServer received from the controller
+18:28:49 WARNING unexpected facade SSHSession received from the controller
+18:28:49 WARNING unexpected facade SSHTunneler received from the controller
+18:28:49 WARNING unexpected facade SSHServer received from the controller
+18:28:51 INFO Deploying ch:amd64/jammy/mongodb-229
+18:28:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-123
+18:31:57 INFO Deploying local:jammy/github-runner-0
+18:31:57 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rp0rpdfd/0 [allocating] waiting: agent initialising
+18:32:28 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rp0rpdfd/0 [allocating] waiting: agent initialising
+18:32:58 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rp0rpdfd/0 [allocating] waiting: agent initialising
+18:33:29 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rp0rpdfd/0 [allocating] waiting: agent initialising
+18:33:59 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rp0rpdfd/0 [allocating] waiting: agent initialising
+18:34:29 INFO Waiting for model:
+  test-rp0rpdfd/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-rp0rpdfd/0 [executing] maintenance: Setting up Builder.
+18:34:49 WARNING Failed to discover available identity versions when contacting https://keystone.ps7.canonical.com:5000/v3. Attempting to parse version from URL.
+18:34:49 INFO cli: juju debug-log --model github-pr-64507-lxd:test-jobmanager-reactive-n0lv --limit 1000
+18:34:50 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-n0lv  github-pr-64507-lxd  localhost/localhost  3.6.9    unsupported  18:34:50Z
+
+App                                   Version  Status       Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-rp0rpdfd           error            1  github-runner-image-builder  latest/edge  123  no       hook failed: "install"
+mongodb                               6.0.24   maintenance      1  mongodb                      6/edge       229  no       installing MongoDB
+test-rp0rpdfd                                  waiting        0/1  github-runner                               0  no       agent initialising
+
+Unit                                     Workload     Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-rp0rpdfd/0*  error        idle        1        10.25.156.159          hook failed: "install"
+mongodb/0*                               maintenance  executing   0        10.25.156.151          (start) installing MongoDB
+test-rp0rpdfd/0*                         waiting      allocating  2        10.25.156.225          agent initialising
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.25.156.151  juju-fcfcf4-0  ubuntu@22.04  github-runner  Running
+1        started  10.25.156.159  juju-fcfcf4-1  ubuntu@22.04  github-runner  Running
+2        started  10.25.156.225  juju-fcfcf4-2  ubuntu@22.04  github-runner  Running
+
+18:34:51 INFO Juju error logs:
+
+machine-0: 18:30:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:30:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 18:30:56 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:31:46 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:31:46 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-rp0rpdfd-0: 18:31:47 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 18:33:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:33:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-rp0rpdfd-0: 18:33:44 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 18:34:20 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 18:34:20 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-github-runner-image-builder-rp0rpdfd-0: 18:34:47 ERROR unit.github-runner-image-builder-rp0rpdfd/0.juju-log apt-get update --error-on=any:
+stdout:
+Ign:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Ign:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Ign:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+Ign:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+Ign:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+Ign:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Err:1 http://archive.ubuntu.com/ubuntu jammy InRelease
+  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+Err:2 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
+  Unable to connect to egress.ps7.internal:3128:
+Err:3 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
+  Unable to connect to egress.ps7.internal:3128:
+Err:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+Reading package lists...
+
+stderr:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy/InRelease  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy-updates/InRelease  Unable to connect to egress.ps7.internal:3128:
+E: Failed to fetch http://archive.ubuntu.com/ubuntu/dists/jammy-backports/InRelease  Unable to connect to egress.ps7.internal:3128:
+E: Failed to fetch http://security.ubuntu.com/ubuntu/dists/jammy-security/InRelease  Could not connect to egress.ps7.internal:3128 (10.151.41.7). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.6). - connect (111: Connection refused) Could not connect to egress.ps7.internal:3128 (10.151.41.5). - connect (111: Connection refused)
+E: Some index files failed to download. They have been ignored, or old ones used instead.
+
+unit-github-runner-image-builder-rp0rpdfd-0: 18:34:48 ERROR unit.github-runner-image-builder-rp0rpdfd/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/__init__.py", line 359, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/./src/charm.py", line 85, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/./src/charm.py", line 183, in _setup_builder
+    builder.initialize(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/src/builder.py", line 91, in initialize
+    _install_dependencies()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/src/builder.py", line 106, in _install_dependencies
+    _install_apt_packages()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/src/builder.py", line 117, in _install_apt_packages
+    apt.add_package(APT_DEPENDENCIES, update_cache=True)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 793, in add_package
+    update()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-rp0rpdfd-0/charm/lib/charms/operator_libs_linux/v0/apt.py", line 904, in update
+    subprocess.run(cmd, capture_output=True, check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['apt-get', 'update', '--error-on=any']' returned non-zero exit status 100.
+unit-github-runner-image-builder-rp0rpdfd-0: 18:34:48 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+18:34:51 INFO Forgetting model main...

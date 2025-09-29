@@ -1,0 +1,27 @@
+18:28:40 WARNING unexpected facade SSHServer received from the controller
+18:28:40 INFO Adding model github-pr-64507-lxd:test-reactive-tnau on cloud localhost
+18:28:41 WARNING unexpected facade SSHServer received from the controller
+18:28:41 WARNING unexpected facade SSHSession received from the controller
+18:28:41 WARNING unexpected facade SSHTunneler received from the controller
+18:28:42 INFO GitHub token rate limit: Rate(reset=2025-09-29 18:56:44+00:00, remaining=4943, limit=5000)
+18:28:46 INFO Deploying ch:amd64/jammy/mongodb-229
+18:28:48 INFO Deploying ch:amd64/jammy/github-runner-image-builder-123
+18:31:17 INFO Deploying local:jammy/github-runner-0
+18:31:18 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a89bp5ep/0 [allocating] waiting: waiting for machine
+18:31:48 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a89bp5ep/0 [allocating] waiting: waiting for machine
+18:32:18 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a89bp5ep/0 [allocating] waiting: agent initialising
+18:32:48 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a89bp5ep/0 [allocating] waiting: agent initialising
+18:33:18 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-a89bp5ep/0 [allocating] waiting: agent initialising
+18:33:49 INFO Waiting for model:
+  test-a89bp5ep/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-a89bp5ep/0 [executing] maintenance: Setting up Builder.
