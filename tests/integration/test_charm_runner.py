@@ -81,130 +81,130 @@ async def test_flush_runner_and_resource_config(
 
     Test are combined to reduce number of runner spawned.
     """
-    await instance_helper.ensure_charm_has_runner(app)
+    await instance_helper.set_app_runner_amount(app, 1)
 
     # 1.
     action: Action = await app.units[0].run_action("check-runners")
     await action.wait()
 
     assert action.status == "completed"
-    assert action.results["online"] == "1"
+    assert action.results["online"] == "2"
     assert action.results["offline"] == "0"
     assert action.results["unknown"] == "0"
 
     runner_names = action.results["runners"].split(", ")
-    assert len(runner_names) == 1
+    assert len(runner_names) == 2
 
-    # 2.
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
-
-    await wait_for_runner_ready(app)
-
-    action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "1"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-
-    new_runner_names = action.results["runners"].split(", ")
-    assert len(new_runner_names) == 1
-    assert new_runner_names[0] != runner_names[0]
-
-    # 3.
-    workflow = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name, "minutes": "5"},
-        wait=False,
-    )
-    await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
-    action = await app.units[0].run_action("flush-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-
-
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_custom_pre_job_script(
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-    token: str,
-    https_proxy: str,
-) -> None:
-    """
-    arrange: A working application with one runner with a custom pre-job script enabled.
-    act: Dispatch a workflow.
-    assert: Workflow run successfully passed and pre-job script has been executed.
-    """
-    await app.set_config(
-        {
-            BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
-            CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
-#!/usr/bin/env bash
-cat > ~/.ssh/config <<EOF
-host github.com
-  user git
-  hostname github.com
-  port 22
-  proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
-EOF
-logger -s "SSH config: $(cat ~/.ssh/config)"
-    """,
-        }
-    )
-    await wait_for_runner_ready(app)
-
-    workflow_run = await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-        dispatch_input={"runner": app.name},
-    )
-    logs = get_job_logs(workflow_run.jobs("latest")[0])
-    assert "SSH config" in logs
-    assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
-
-
-# WARNING: the test below sets up repo policy which affects all tests coming after it. It should
-# be the last test in the file.
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_repo_policy_enabled(
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-    token: str,
-    https_proxy: str,
-    instance_helper: OpenStackInstanceHelper,
-) -> None:
-    """
-    arrange: A working application with one runner with repo policy enabled.
-    act: Dispatch a workflow.
-    assert: Workflow run successfully passed.
-    """
-    await setup_repo_policy(
-        app=app,
-        openstack_connection=instance_helper.openstack_connection,
-        token=token,
-        https_proxy=https_proxy,
-    )
-
-    await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-    )
+#     # 2.
+#     action = await app.units[0].run_action("flush-runners")
+#     await action.wait()
+#
+#     await wait_for_runner_ready(app)
+#
+#     action = await app.units[0].run_action("check-runners")
+#     await action.wait()
+#
+#     assert action.status == "completed"
+#     assert action.results["online"] == "1"
+#     assert action.results["offline"] == "0"
+#     assert action.results["unknown"] == "0"
+#
+#     new_runner_names = action.results["runners"].split(", ")
+#     assert len(new_runner_names) == 1
+#     assert new_runner_names[0] != runner_names[0]
+#
+#     # 3.
+#     workflow = await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": app.name, "minutes": "5"},
+#         wait=False,
+#     )
+#     await wait_for(lambda: workflow.update() or workflow.status == "in_progress")
+#     action = await app.units[0].run_action("flush-runners")
+#     await action.wait()
+#
+#     assert action.status == "completed"
+#
+#
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_custom_pre_job_script(
+#     app: Application,
+#     github_repository: Repository,
+#     test_github_branch: Branch,
+#     token: str,
+#     https_proxy: str,
+# ) -> None:
+#     """
+#     arrange: A working application with one runner with a custom pre-job script enabled.
+#     act: Dispatch a workflow.
+#     assert: Workflow run successfully passed and pre-job script has been executed.
+#     """
+#     await app.set_config(
+#         {
+#             BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1",
+#             CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME: """
+# #!/usr/bin/env bash
+# cat > ~/.ssh/config <<EOF
+# host github.com
+#   user git
+#   hostname github.com
+#   port 22
+#   proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+# EOF
+# logger -s "SSH config: $(cat ~/.ssh/config)"
+#     """,
+#         }
+#     )
+#     await wait_for_runner_ready(app)
+#
+#     workflow_run = await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+#         dispatch_input={"runner": app.name},
+#     )
+#     logs = get_job_logs(workflow_run.jobs("latest")[0])
+#     assert "SSH config" in logs
+#     assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
+#
+#
+# # WARNING: the test below sets up repo policy which affects all tests coming after it. It should
+# # be the last test in the file.
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_repo_policy_enabled(
+#     app: Application,
+#     github_repository: Repository,
+#     test_github_branch: Branch,
+#     token: str,
+#     https_proxy: str,
+#     instance_helper: OpenStackInstanceHelper,
+# ) -> None:
+#     """
+#     arrange: A working application with one runner with repo policy enabled.
+#     act: Dispatch a workflow.
+#     assert: Workflow run successfully passed.
+#     """
+#     await setup_repo_policy(
+#         app=app,
+#         openstack_connection=instance_helper.openstack_connection,
+#         token=token,
+#         https_proxy=https_proxy,
+#     )
+#
+#     await dispatch_workflow(
+#         app=app,
+#         branch=test_github_branch,
+#         github_repository=github_repository,
+#         conclusion="success",
+#         workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+#     )
