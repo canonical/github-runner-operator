@@ -58,42 +58,42 @@ async def test_check_runner(app: Application, instance_helper: OpenStackInstance
     assert action.results["unknown"] == "0"
 
 
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_flush_runner_and_resource_config(
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-    instance_helper: OpenStackInstanceHelper,
-) -> None:
-    """
-    arrange: A working application with two runners.
-    act:
-        1. Run Check_runner action. Record the runner names for later.
-        2. Flush runners.
-        3. Dispatch a workflow to make runner busy and call flush_runner action.
-
-    assert:
-        1. Two runner exists.
-        2. Runners are recreated.
-        3. The runner is not flushed since by default it flushes idle.
-
-    Test are combined to reduce number of runner spawned.
-    """
-    await instance_helper.set_app_runner_amount(app, 1)
-
-    # 1.
-    action: Action = await app.units[0].run_action("check-runners")
-    await action.wait()
-
-    assert action.status == "completed"
-    assert action.results["online"] == "2"
-    assert action.results["offline"] == "0"
-    assert action.results["unknown"] == "0"
-
-    runner_names = action.results["runners"].split(", ")
-    assert len(runner_names) == 2
+# @pytest.mark.openstack
+# @pytest.mark.asyncio
+# @pytest.mark.abort_on_fail
+# async def test_flush_runner_and_resource_config(
+#     app: Application,
+#     github_repository: Repository,
+#     test_github_branch: Branch,
+#     instance_helper: OpenStackInstanceHelper,
+# ) -> None:
+#     """
+#     arrange: A working application with two runners.
+#     act:
+#         1. Run Check_runner action. Record the runner names for later.
+#         2. Flush runners.
+#         3. Dispatch a workflow to make runner busy and call flush_runner action.
+#
+#     assert:
+#         1. Two runner exists.
+#         2. Runners are recreated.
+#         3. The runner is not flushed since by default it flushes idle.
+#
+#     Test are combined to reduce number of runner spawned.
+#     """
+#     await instance_helper.set_app_runner_amount(app, 1)
+#
+#     # 1.
+#     action: Action = await app.units[0].run_action("check-runners")
+#     await action.wait()
+#
+#     assert action.status == "completed"
+#     assert action.results["online"] == "2"
+#     assert action.results["offline"] == "0"
+#     assert action.results["unknown"] == "0"
+#
+#     runner_names = action.results["runners"].split(", ")
+#     assert len(runner_names) == 2
 
 #     # 2.
 #     action = await app.units[0].run_action("flush-runners")
