@@ -2,6 +2,8 @@ name: integration-tests
 
 on:
   push:
+    branches:
+      - test/multi-threading
 
   schedule:
     # Trigger at 6:00 AM and 6:00 PM UTC
