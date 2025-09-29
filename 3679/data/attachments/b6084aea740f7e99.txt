@@ -1,0 +1,16 @@
+06:27:40 WARNING unexpected facade SSHServer received from the controller
+06:27:40 INFO Adding model github-pr-64507-lxd:test-charm-no-runner-5754 on cloud localhost
+06:27:40 WARNING unexpected facade SSHServer received from the controller
+06:27:40 WARNING unexpected facade SSHSession received from the controller
+06:27:40 WARNING unexpected facade SSHTunneler received from the controller
+06:27:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-122
+06:27:58 INFO Deploying local:jammy/github-runner-0
+06:27:59 INFO Waiting for model:
+  test-l0y06xz6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l0y06xz6/0 [allocating] waiting: waiting for machine
+06:28:29 INFO Waiting for model:
+  test-l0y06xz6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l0y06xz6/0 [allocating] waiting: waiting for machine
+06:28:59 INFO Waiting for model:
+  test-l0y06xz6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-l0y06xz6/0 [executing] maintenance: Setting up Builder.
