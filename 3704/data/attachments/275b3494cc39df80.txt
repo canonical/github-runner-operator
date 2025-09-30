@@ -1,0 +1,41 @@
+06:31:09 INFO GitHub token rate limit: Rate(reset=2025-09-30 07:28:10+00:00, remaining=4871, limit=5000)
+06:31:22 WARNING unexpected facade SSHServer received from the controller
+06:31:22 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-z9fn on cloud localhost
+06:31:22 WARNING unexpected facade SSHServer received from the controller
+06:31:22 WARNING unexpected facade SSHSession received from the controller
+06:31:22 WARNING unexpected facade SSHTunneler received from the controller
+06:31:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-123
+06:31:38 INFO Deploying local:jammy/github-runner-0
+06:31:38 INFO Waiting for model:
+  test-emkec9u9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-emkec9u9/0 [allocating] waiting: waiting for machine
+06:32:08 INFO Waiting for model:
+  test-emkec9u9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-emkec9u9/0 [allocating] waiting: waiting for machine
+06:32:38 INFO Waiting for model:
+  test-emkec9u9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-emkec9u9/0 [allocating] waiting: waiting for machine
+06:33:09 INFO Waiting for model:
+  test-emkec9u9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-emkec9u9/0 [executing] maintenance: Setting up Builder.
+06:33:39 INFO Waiting for model:
+  test-emkec9u9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-emkec9u9/0 [executing] maintenance: Setting up Builder.
+06:34:09 INFO Waiting for model:
+  test-emkec9u9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-emkec9u9/0 [executing] maintenance: Setting up Builder.
+06:34:39 INFO Waiting for model:
+  test-emkec9u9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-emkec9u9/0 [executing] maintenance: Setting up Builder.
+06:35:09 INFO Waiting for model:
+  test-emkec9u9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-emkec9u9/0 [executing] blocked: image integration required.
+06:35:39 INFO Waiting for model:
+  test-emkec9u9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-emkec9u9/0 [executing] active: Building image.
+06:36:10 INFO Waiting for model:
+  test-emkec9u9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-emkec9u9/0 [executing] active: Building image.
+06:36:40 INFO Waiting for model:
+  test-emkec9u9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-emkec9u9/0 [executing] active: Building image.
