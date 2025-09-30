@@ -1,0 +1,35 @@
+18:24:36 INFO GitHub token rate limit: Rate(reset=2025-09-30 19:03:16+00:00, remaining=4932, limit=5000)
+18:24:49 WARNING unexpected facade SSHServer received from the controller
+18:24:49 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-zlad on cloud localhost
+18:24:50 WARNING unexpected facade SSHServer received from the controller
+18:24:50 WARNING unexpected facade SSHSession received from the controller
+18:24:50 WARNING unexpected facade SSHTunneler received from the controller
+18:24:52 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:25:09 INFO Deploying local:jammy/github-runner-0
+18:25:10 INFO Waiting for model:
+  test-a4nupggb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a4nupggb/0 [allocating] waiting: waiting for machine
+18:25:40 INFO Waiting for model:
+  test-a4nupggb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a4nupggb/0 [allocating] waiting: waiting for machine
+18:26:10 INFO Waiting for model:
+  test-a4nupggb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-a4nupggb/0 [allocating] waiting: waiting for machine
+18:26:41 INFO Waiting for model:
+  test-a4nupggb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-a4nupggb/0 [executing] maintenance: Setting up Builder.
+18:27:11 INFO Waiting for model:
+  test-a4nupggb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-a4nupggb/0 [executing] maintenance: Setting up Builder.
+18:27:41 INFO Waiting for model:
+  test-a4nupggb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-a4nupggb/0 [executing] maintenance: Setting up Builder.
+18:28:11 INFO Waiting for model:
+  test-a4nupggb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-a4nupggb/0 [executing] maintenance: Setting up Builder.
+18:28:42 INFO Waiting for model:
+  test-a4nupggb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a4nupggb/0 [executing] blocked: image integration required.
+18:29:12 INFO Waiting for model:
+  test-a4nupggb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-a4nupggb/0 [executing] active: Building image.

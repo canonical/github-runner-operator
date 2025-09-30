@@ -1,0 +1,37 @@
+18:24:37 WARNING unexpected facade SSHServer received from the controller
+18:24:37 INFO Adding model github-pr-e1eb1-lxd:test-charm-runner-2mrs on cloud localhost
+18:24:37 WARNING unexpected facade SSHServer received from the controller
+18:24:37 WARNING unexpected facade SSHSession received from the controller
+18:24:37 WARNING unexpected facade SSHTunneler received from the controller
+18:24:39 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:24:53 INFO Deploying local:jammy/github-runner-0
+18:24:54 INFO Waiting for model:
+  test-c9lw2lwm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c9lw2lwm/0 [allocating] waiting: waiting for machine
+18:25:24 INFO Waiting for model:
+  test-c9lw2lwm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c9lw2lwm/0 [allocating] waiting: waiting for machine
+18:25:54 INFO Waiting for model:
+  test-c9lw2lwm/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-c9lw2lwm/0 [allocating] waiting: waiting for machine
+18:26:24 INFO Waiting for model:
+  test-c9lw2lwm/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-c9lw2lwm/0 [executing] maintenance: Setting up Builder.
+18:26:55 INFO Waiting for model:
+  test-c9lw2lwm/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-c9lw2lwm/0 [executing] maintenance: Setting up Builder.
+18:27:25 INFO Waiting for model:
+  test-c9lw2lwm/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-c9lw2lwm/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Waiting for model:
+  test-c9lw2lwm/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-c9lw2lwm/0 [executing] maintenance: Setting up Builder.
+18:28:26 INFO Waiting for model:
+  test-c9lw2lwm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c9lw2lwm/0 [executing] active: Building image.
+18:28:56 INFO Waiting for model:
+  test-c9lw2lwm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c9lw2lwm/0 [executing] active: Building image.
+18:29:26 INFO Waiting for model:
+  test-c9lw2lwm/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-c9lw2lwm/0 [executing] active: Building image.
