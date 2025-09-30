@@ -99,5 +99,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
   1. [Explanation](local-lxd/explanation)
     1. [ARM64](local-lxd/explanation/arm64.md)
     1. [Charm architecture](local-lxd/explanation/charm-architecture.md)
+    1. [Security](explanation/security.md)
     1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
 <!-- vale Canonical.004-Canonical-product-names = YES -->
