@@ -1,0 +1,17 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange:         1. A forked repository.         2. A working application using repo-policy checks with one runner on the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
+    assert: The workflow that was dispatched failed and the reason is logged.
+    ","","test_dispatch_workflow_failure","tests.integration","","unknown","","","test_charm_fork_repo","",""
+"
+    arrange: given latest stable version of the charm.
+    act: charm upgrade is called.
+    assert: the charm is upgraded successfully.
+    ","","test_charm_upgrade","tests.integration","","unknown","","","test_charm_upgrade","",""
+"
+    arrange: given a prometheus charm application.
+    act: when GitHub runner is integrated.
+    assert: the datasource is registered and basic metrics are available.
+    ","0","test_prometheus_metrics","tests.integration","2025-10-01","broken","2025-10-01","","test_prometheus_metrics","",""
