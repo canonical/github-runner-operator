@@ -1,0 +1,45 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: A working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 1.
+        2.  a. Set virtual-machines config to 0.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    ","0","test_reconcile_runners","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_no_runner","",""
+"
+    arrange: A working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    ","0","test_check_runners_no_runners","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_no_runner","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1. Check the github runner manager service.
+        2. Force a logrotate
+    assert:
+        1. The service should be running, and logs generated.
+        2. New lines of log should be found, the initialize logs should not be found.
+    ","0","test_manager_service_started","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_no_runner","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow that fails the repo-policy check. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to failure.
+    ","0","test_charm_issues_metrics_for_failed_repo_policy","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_metrics_failure","",""
+"
+    arrange:         1. A forked repository.         2. A working application using repo-policy checks with one runner on the forked repository.
+    act: Trigger a workflow dispatch that fails the repo policy check on a branch
+     in the forked repository.
+    assert: The workflow that was dispatched failed and the reason is logged.
+    ","0","test_dispatch_workflow_failure","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_fork_repo","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a test workflow and afterwards kill run.sh. After that, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to Abnormal.
+    ","0","test_charm_issues_metrics_for_abnormal_termination","tests.integration","2025-10-01","broken","2025-10-01","","test_charm_metrics_failure","",""
