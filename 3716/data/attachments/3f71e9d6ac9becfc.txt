@@ -1,0 +1,34 @@
+18:25:40 WARNING unexpected facade SSHServer received from the controller
+18:25:40 INFO Adding model github-pr-e1eb1-lxd:test-charm-no-runner-nhuw on cloud localhost
+18:25:41 WARNING unexpected facade SSHServer received from the controller
+18:25:41 WARNING unexpected facade SSHSession received from the controller
+18:25:41 WARNING unexpected facade SSHTunneler received from the controller
+18:25:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:25:53 INFO Deploying local:jammy/github-runner-0
+18:25:53 INFO Waiting for model:
+  test-rrdi0u6g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rrdi0u6g/0 [allocating] waiting: waiting for machine
+18:26:24 INFO Waiting for model:
+  test-rrdi0u6g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rrdi0u6g/0 [allocating] waiting: waiting for machine
+18:26:54 INFO Waiting for model:
+  test-rrdi0u6g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-rrdi0u6g/0 [executing] maintenance: Setting up Builder.
+18:27:24 INFO Waiting for model:
+  test-rrdi0u6g/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] maintenance: Setting up Builder.
+18:27:54 INFO Waiting for model:
+  test-rrdi0u6g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] maintenance: Setting up Builder.
+18:28:25 INFO Waiting for model:
+  test-rrdi0u6g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] maintenance: Setting up Builder.
+18:28:55 INFO Waiting for model:
+  test-rrdi0u6g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] maintenance: Setting up Builder.
+18:29:25 INFO Waiting for model:
+  test-rrdi0u6g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] blocked: image integration required.
+18:29:56 INFO Waiting for model:
+  test-rrdi0u6g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-rrdi0u6g/0 [executing] active: Building image.
