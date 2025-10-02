@@ -1,0 +1,31 @@
+06:28:58 WARNING unexpected facade SSHServer received from the controller
+06:28:58 INFO Adding model github-pr-e1eb1-lxd:test-charm-runner-eu0q on cloud localhost
+06:28:58 WARNING unexpected facade SSHServer received from the controller
+06:28:58 WARNING unexpected facade SSHSession received from the controller
+06:28:58 WARNING unexpected facade SSHTunneler received from the controller
+06:28:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:29:11 INFO Deploying local:jammy/github-runner-0
+06:29:11 INFO Waiting for model:
+  test-wlq9v1de/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wlq9v1de/0 [allocating] waiting: waiting for machine
+06:29:42 INFO Waiting for model:
+  test-wlq9v1de/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wlq9v1de/0 [allocating] waiting: waiting for machine
+06:30:12 INFO Waiting for model:
+  test-wlq9v1de/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wlq9v1de/0 [executing] maintenance: Setting up Builder.
+06:30:42 INFO Waiting for model:
+  test-wlq9v1de/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wlq9v1de/0 [executing] maintenance: Setting up Builder.
+06:31:13 INFO Waiting for model:
+  test-wlq9v1de/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wlq9v1de/0 [executing] maintenance: Setting up Builder.
+06:31:43 INFO Waiting for model:
+  test-wlq9v1de/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wlq9v1de/0 [executing] maintenance: Setting up Builder.
+06:32:13 INFO Waiting for model:
+  test-wlq9v1de/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wlq9v1de/0 [executing] blocked: image integration required.
+06:32:44 INFO Waiting for model:
+  test-wlq9v1de/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wlq9v1de/0 [executing] active: Building image.

@@ -1,0 +1,39 @@
+06:28:33 WARNING unexpected facade SSHServer received from the controller
+06:28:33 INFO Adding model github-pr-e1eb1-lxd:test-reactive-v4py on cloud localhost
+06:28:33 WARNING unexpected facade SSHServer received from the controller
+06:28:33 WARNING unexpected facade SSHSession received from the controller
+06:28:33 WARNING unexpected facade SSHTunneler received from the controller
+06:28:34 INFO GitHub token rate limit: Rate(reset=2025-10-02 06:31:47+00:00, remaining=4828, limit=5000)
+06:28:37 INFO Deploying ch:amd64/jammy/mongodb-229
+06:28:39 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:28:50 INFO Deploying local:jammy/github-runner-0
+06:28:50 INFO Waiting for model:
+  test-ny7phs2j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ny7phs2j/0 [allocating] waiting: waiting for machine
+06:29:20 INFO Waiting for model:
+  test-ny7phs2j/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ny7phs2j/0 [allocating] waiting: waiting for machine
+06:29:50 INFO Waiting for model:
+  test-ny7phs2j/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ny7phs2j/0 [allocating] waiting: waiting for machine
+06:30:20 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ny7phs2j/0 [allocating] waiting: agent initialising
+06:30:51 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] maintenance: Setting up Builder.
+06:31:21 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] maintenance: Setting up Builder.
+06:31:51 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] maintenance: Setting up Builder.
+06:32:22 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] maintenance: Setting up Builder.
+06:32:52 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] blocked: image integration required.
+06:33:22 INFO Waiting for model:
+  test-ny7phs2j/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ny7phs2j/0 [executing] active: Building image.

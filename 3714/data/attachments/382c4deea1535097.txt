@@ -1,0 +1,35 @@
+06:34:22 INFO GitHub token rate limit: Rate(reset=2025-10-02 07:32:02+00:00, remaining=4988, limit=5000)
+06:34:34 WARNING unexpected facade SSHServer received from the controller
+06:34:34 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-71a5 on cloud localhost
+06:34:34 WARNING unexpected facade SSHServer received from the controller
+06:34:34 WARNING unexpected facade SSHSession received from the controller
+06:34:34 WARNING unexpected facade SSHTunneler received from the controller
+06:34:36 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:34:50 INFO Deploying local:jammy/github-runner-0
+06:34:50 INFO Waiting for model:
+  test-jdjia1tj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jdjia1tj/0 [allocating] waiting: waiting for machine
+06:35:20 INFO Waiting for model:
+  test-jdjia1tj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jdjia1tj/0 [allocating] waiting: waiting for machine
+06:35:50 INFO Waiting for model:
+  test-jdjia1tj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jdjia1tj/0 [executing] maintenance: Setting up Builder.
+06:36:21 INFO Waiting for model:
+  test-jdjia1tj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-jdjia1tj/0 [executing] maintenance: Setting up Builder.
+06:36:51 INFO Waiting for model:
+  test-jdjia1tj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jdjia1tj/0 [executing] maintenance: Setting up Builder.
+06:37:21 INFO Waiting for model:
+  test-jdjia1tj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-jdjia1tj/0 [executing] maintenance: Setting up Builder.
+06:37:51 INFO Waiting for model:
+  test-jdjia1tj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jdjia1tj/0 [executing] blocked: image integration required.
+06:38:22 INFO Waiting for model:
+  test-jdjia1tj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jdjia1tj/0 [executing] active: Building image.
+06:38:52 INFO Waiting for model:
+  test-jdjia1tj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-jdjia1tj/0 [executing] active: Building image.
