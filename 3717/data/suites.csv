@@ -1,0 +1,43 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"
+    arrange: A charm integrated with grafana-agent using the cos-agent integration.
+    act: Config the charm to contain one runner.
+    assert: The RunnerInstalled metric is logged.
+    ","0","test_charm_issues_runner_installed_metric","tests.integration","2025-10-03","broken","2025-10-03","","test_charm_metrics_success","",""
+"
+    arrange: A working application with no runners.
+    act: Run check-runners action.
+    assert: Action returns result with no runner.
+    ","0","test_check_runners_no_runners","tests.integration","2025-10-03","broken","2025-10-03","","test_charm_no_runner","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1. Check the github runner manager service.
+        2. Force a logrotate
+    assert:
+        1. The service should be running, and logs generated.
+        2. New lines of log should be found, the initialize logs should not be found.
+    ","0","test_manager_service_started","tests.integration","2025-10-03","broken","2025-10-03","","test_charm_no_runner","",""
+"
+    arrange: A properly integrated charm with a runner registered on the fork repo.
+    act: Dispatch a workflow on a branch for the runner to run. After completion, reconcile.
+    assert: The RunnerStart, RunnerStop and Reconciliation metric is logged.
+        The Reconciliation metric has the post job status set to normal.
+    ","0","test_charm_issues_metrics_after_reconciliation","tests.integration","2025-10-03","broken","2025-10-03","","test_charm_metrics_success","",""
+"
+    arrange: A working application with no runners.
+    act:
+        1.  a. Set virtual-machines config to 1.
+        2.  a. Set virtual-machines config to 0.
+    assert:
+        1. One runner should exist.
+        2. No runner should exist.
+
+    The two test is combine to maintain no runners in the application after the
+    test.
+    ","0","test_reconcile_runners","tests.integration","2025-10-03","broken","2025-10-03","","test_charm_no_runner","",""
+"
+    arrange: given an integrated GitHub-Runner charm and tmate-ssh-server charm.
+    act: when canonical/action-tmate is triggered.
+    assert: the ssh connection info from action-log and tmate-ssh-server matches.
+    ","0","test_ssh_debug","tests.integration","2025-10-03","broken","2025-10-03","","test_debug_ssh","",""
