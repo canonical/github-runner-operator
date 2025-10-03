@@ -1,0 +1,34 @@
+18:26:11 WARNING unexpected facade SSHServer received from the controller
+18:26:11 INFO Adding model github-pr-e1eb1-lxd:test-charm-no-runner-dzq3 on cloud localhost
+18:26:12 WARNING unexpected facade SSHServer received from the controller
+18:26:12 WARNING unexpected facade SSHSession received from the controller
+18:26:12 WARNING unexpected facade SSHTunneler received from the controller
+18:26:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:26:25 INFO Deploying local:jammy/github-runner-0
+18:26:25 INFO Waiting for model:
+  test-uoqpzwkc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uoqpzwkc/0 [allocating] waiting: waiting for machine
+18:26:55 INFO Waiting for model:
+  test-uoqpzwkc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uoqpzwkc/0 [allocating] waiting: waiting for machine
+18:27:25 INFO Waiting for model:
+  test-uoqpzwkc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uoqpzwkc/0 [executing] maintenance: Setting up Builder.
+18:27:55 INFO Waiting for model:
+  test-uoqpzwkc/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] maintenance: Setting up Builder.
+18:28:26 INFO Waiting for model:
+  test-uoqpzwkc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] maintenance: Setting up Builder.
+18:28:56 INFO Waiting for model:
+  test-uoqpzwkc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] maintenance: Setting up Builder.
+18:29:27 INFO Waiting for model:
+  test-uoqpzwkc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] maintenance: Setting up Builder.
+18:29:57 INFO Waiting for model:
+  test-uoqpzwkc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] blocked: image integration required.
+18:30:28 INFO Waiting for model:
+  test-uoqpzwkc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uoqpzwkc/0 [executing] active: Building image.

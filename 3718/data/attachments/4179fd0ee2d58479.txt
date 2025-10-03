@@ -1,0 +1,37 @@
+18:26:15 WARNING unexpected facade SSHServer received from the controller
+18:26:15 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-success-rzbd on cloud localhost
+18:26:15 WARNING unexpected facade SSHServer received from the controller
+18:26:15 WARNING unexpected facade SSHSession received from the controller
+18:26:15 WARNING unexpected facade SSHTunneler received from the controller
+18:26:17 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:26:29 INFO Deploying local:jammy/github-runner-0
+18:26:29 INFO Waiting for model:
+  test-e7beuh0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e7beuh0b/0 [allocating] waiting: waiting for machine
+18:26:59 INFO Waiting for model:
+  test-e7beuh0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e7beuh0b/0 [allocating] waiting: waiting for machine
+18:27:29 INFO Waiting for model:
+  test-e7beuh0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e7beuh0b/0 [executing] maintenance: Setting up Builder.
+18:27:59 INFO Waiting for model:
+  test-e7beuh0b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-e7beuh0b/0 [executing] maintenance: Setting up Builder.
+18:28:29 INFO Waiting for model:
+  test-e7beuh0b/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-e7beuh0b/0 [executing] maintenance: Setting up Builder.
+18:28:59 INFO Waiting for model:
+  test-e7beuh0b/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-e7beuh0b/0 [executing] maintenance: Setting up Builder.
+18:29:30 INFO Waiting for model:
+  test-e7beuh0b/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-e7beuh0b/0 [executing] maintenance: Setting up Builder.
+18:30:00 INFO Waiting for model:
+  test-e7beuh0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e7beuh0b/0 [executing] blocked: image integration required.
+18:30:30 INFO Waiting for model:
+  test-e7beuh0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e7beuh0b/0 [executing] active: Building image.
+18:31:01 INFO Waiting for model:
+  test-e7beuh0b/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-e7beuh0b/0 [executing] active: Building image.
