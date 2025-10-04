@@ -1,0 +1,38 @@
+06:25:52 INFO GitHub token rate limit: Rate(reset=2025-10-04 07:19:30+00:00, remaining=4942, limit=5000)
+06:26:05 WARNING unexpected facade SSHServer received from the controller
+06:26:05 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-3jv2 on cloud localhost
+06:26:05 WARNING unexpected facade SSHServer received from the controller
+06:26:05 WARNING unexpected facade SSHSession received from the controller
+06:26:05 WARNING unexpected facade SSHTunneler received from the controller
+06:26:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:26:19 INFO Deploying local:jammy/github-runner-0
+06:26:19 INFO Waiting for model:
+  test-fzpewsfw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fzpewsfw/0 [allocating] waiting: waiting for machine
+06:26:50 INFO Waiting for model:
+  test-fzpewsfw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fzpewsfw/0 [allocating] waiting: waiting for machine
+06:27:20 INFO Waiting for model:
+  test-fzpewsfw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fzpewsfw/0 [executing] maintenance: Setting up Builder.
+06:27:50 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] maintenance: Setting up Builder.
+06:28:20 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] maintenance: Setting up Builder.
+06:28:51 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] maintenance: Setting up Builder.
+06:29:21 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] maintenance: Setting up Builder.
+06:29:52 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] blocked: image integration required.
+06:30:22 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] active: Building image.
+06:30:52 INFO Waiting for model:
+  test-fzpewsfw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fzpewsfw/0 [executing] active: Building image.

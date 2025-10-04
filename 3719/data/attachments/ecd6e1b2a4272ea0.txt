@@ -1,0 +1,37 @@
+06:25:55 WARNING unexpected facade SSHServer received from the controller
+06:25:55 INFO Adding model github-pr-e1eb1-lxd:test-charm-no-runner-yilv on cloud localhost
+06:25:55 WARNING unexpected facade SSHServer received from the controller
+06:25:55 WARNING unexpected facade SSHSession received from the controller
+06:25:55 WARNING unexpected facade SSHTunneler received from the controller
+06:25:56 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:26:08 INFO Deploying local:jammy/github-runner-0
+06:26:08 INFO Waiting for model:
+  test-uzk1v11w/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uzk1v11w/0 [allocating] waiting: waiting for machine
+06:26:38 INFO Waiting for model:
+  test-uzk1v11w/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uzk1v11w/0 [allocating] waiting: waiting for machine
+06:27:08 INFO Waiting for model:
+  test-uzk1v11w/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uzk1v11w/0 [executing] maintenance: Setting up Builder.
+06:27:38 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] maintenance: Setting up Builder.
+06:28:09 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] maintenance: Setting up Builder.
+06:28:39 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] maintenance: Setting up Builder.
+06:29:10 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] maintenance: Setting up Builder.
+06:29:40 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] blocked: image integration required.
+06:30:11 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] active: Building image.
+06:30:41 INFO Waiting for model:
+  test-uzk1v11w/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uzk1v11w/0 [executing] active: Building image.
