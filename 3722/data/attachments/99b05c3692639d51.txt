@@ -1,0 +1,146 @@
+06:31:15 INFO OpenStack servers: []
+06:31:17 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-hylx  github-pr-e1eb1-lxd  localhost/localhost  3.6.9    unsupported  06:31:17Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-u6xxhxuc           error        1  github-runner-image-builder  latest/edge  125  no       hook failed: "image-relation-changed"
+mongodb                               6.0.24   active       1  mongodb                      6/edge       229  no       
+test-u6xxhxuc                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-u6xxhxuc/0*  error     idle   1        10.29.61.231               hook failed: "image-relation-changed"
+mongodb/0*                               active    idle   0        10.29.61.238    27017/tcp  
+test-u6xxhxuc/0*                         waiting   idle   2        10.29.61.149               Waiting for image over integration.
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.29.61.238  juju-2df8ff-0  ubuntu@22.04  github-runner  Running
+1        started  10.29.61.231  juju-2df8ff-1  ubuntu@22.04  github-runner  Running
+2        started  10.29.61.149  juju-2df8ff-2  ubuntu@22.04  github-runner  Running
+
+06:31:17 INFO Juju error logs:
+
+machine-0: 06:26:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:26:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:26:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:26:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-u6xxhxuc-0: 06:26:20 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:26:47 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:26:47 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+unit-test-u6xxhxuc-0: 06:27:09 ERROR unit.test-u6xxhxuc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-u6xxhxuc-0: 06:27:11 ERROR unit.test-u6xxhxuc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-1: 06:27:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-u6xxhxuc-0: 06:27:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-u6xxhxuc-0: 06:27:49 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-u6xxhxuc-0: 06:29:58 ERROR unit.test-u6xxhxuc/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u6xxhxuc-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-u6xxhxuc-0: 06:30:31 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-u6xxhxuc-0: 06:30:38 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-u6xxhxuc-0: 06:30:45 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-u6xxhxuc-0: 06:30:55 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-u6xxhxuc-0: 06:31:13 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-u6xxhxuc-0: 06:31:13 ERROR unit.github-runner-image-builder-u6xxhxuc/0.juju-log image:4: Uncaught exception while in charm code:
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/src/builder.py", line 523, in _run
+    stdout = subprocess.check_output(  # pylint: disable=unexpected-keyword-arg # nosec:B603
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/run-one', '/usr/bin/sudo', '--preserve-env', '/home/ubuntu/.local/bin/github-runner-image-builder', '--os-cloud', 'builder', 'run', 'github-runner-image-builder-u6xxhxuc-noble-x64', '--flavor', 'shared.xsmall', '--keep-revisions', '2', '--network', 'net_stg-ps7-github-runner-test-amd64', '--prefix', 'github-runner-image-builder-u6xxhxuc', '--upload-clouds', 'stg-ps7-github-runner-test-amd64_project_stg-ps7-github-runner-test-amd64', '--arch', 'x64', '--base-image', 'noble', '--proxy', 'egress.ps7.internal:3128']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 338, in wrapped_f
+    return copy(f, *args, **kw)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/src/builder.py", line 553, in _run
+    raise BuilderRunError from exc
+exceptions.BuilderRunError
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/__init__.py", line 363, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/./src/charm.py", line 153, in _on_image_relation_changed
+    self._run(cloud_id=cloud_id)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/./src/charm.py", line 253, in _run
+    cloud_images = builder.run(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-u6xxhxuc-0/charm/src/builder.py", line 435, in run
+    build_results = pool.map(_run, build_configs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 774, in get
+    raise self._value
+exceptions.BuilderRunError
+unit-github-runner-image-builder-u6xxhxuc-0: 06:31:14 ERROR juju.worker.uniter.operation hook "image-relation-changed" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:31:17 INFO Forgetting model main...

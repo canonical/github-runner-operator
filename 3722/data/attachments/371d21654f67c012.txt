@@ -1,0 +1,35 @@
+06:25:13 INFO GitHub token rate limit: Rate(reset=2025-10-05 07:17:15+00:00, remaining=4936, limit=5000)
+06:25:26 WARNING unexpected facade SSHServer received from the controller
+06:25:26 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-8lk5 on cloud localhost
+06:25:26 WARNING unexpected facade SSHServer received from the controller
+06:25:26 WARNING unexpected facade SSHSession received from the controller
+06:25:26 WARNING unexpected facade SSHTunneler received from the controller
+06:25:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:25:38 INFO Deploying local:jammy/github-runner-0
+06:25:38 INFO Waiting for model:
+  test-liduygwf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-liduygwf/0 [allocating] waiting: waiting for machine
+06:26:09 INFO Waiting for model:
+  test-liduygwf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-liduygwf/0 [allocating] waiting: waiting for machine
+06:26:39 INFO Waiting for model:
+  test-liduygwf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-liduygwf/0 [executing] maintenance: Setting up Builder.
+06:27:09 INFO Waiting for model:
+  test-liduygwf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-liduygwf/0 [executing] maintenance: Setting up Builder.
+06:27:39 INFO Waiting for model:
+  test-liduygwf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-liduygwf/0 [executing] maintenance: Setting up Builder.
+06:28:10 INFO Waiting for model:
+  test-liduygwf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-liduygwf/0 [executing] maintenance: Setting up Builder.
+06:28:40 INFO Waiting for model:
+  test-liduygwf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-liduygwf/0 [executing] maintenance: Setting up Builder.
+06:29:10 INFO Waiting for model:
+  test-liduygwf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-liduygwf/0 [executing] blocked: image integration required.
+06:29:41 INFO Waiting for model:
+  test-liduygwf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-liduygwf/0 [executing] active: Building image.
