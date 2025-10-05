@@ -1,0 +1,42 @@
+18:24:49 WARNING unexpected facade SSHServer received from the controller
+18:24:49 INFO Adding model github-pr-e1eb1-lxd:test-reactive-yi2l on cloud localhost
+18:24:49 WARNING unexpected facade SSHServer received from the controller
+18:24:49 WARNING unexpected facade SSHSession received from the controller
+18:24:49 WARNING unexpected facade SSHTunneler received from the controller
+18:24:50 INFO GitHub token rate limit: Rate(reset=2025-10-05 18:47:47+00:00, remaining=4894, limit=5000)
+18:24:53 INFO Deploying ch:amd64/jammy/mongodb-229
+18:24:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:25:08 INFO Deploying local:jammy/github-runner-0
+18:25:08 INFO Waiting for model:
+  test-wsid9n87/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wsid9n87/0 [allocating] waiting: waiting for machine
+18:25:39 INFO Waiting for model:
+  test-wsid9n87/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wsid9n87/0 [allocating] waiting: waiting for machine
+18:26:09 INFO Waiting for model:
+  test-wsid9n87/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wsid9n87/0 [allocating] waiting: waiting for machine
+18:26:39 INFO Waiting for model:
+  test-wsid9n87/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-wsid9n87/0 [allocating] waiting: waiting for machine
+18:27:09 INFO Waiting for model:
+  test-wsid9n87/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wsid9n87/0 [executing] maintenance: Setting up Builder.
+18:27:40 INFO Waiting for model:
+  test-wsid9n87/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wsid9n87/0 [executing] maintenance: Setting up Builder.
+18:28:10 INFO Waiting for model:
+  test-wsid9n87/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wsid9n87/0 [executing] maintenance: Setting up Builder.
+18:28:40 INFO Waiting for model:
+  test-wsid9n87/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wsid9n87/0 [executing] maintenance: Setting up Builder.
+18:29:10 INFO Waiting for model:
+  test-wsid9n87/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-wsid9n87/0 [executing] maintenance: Setting up Builder.
+18:29:41 INFO Waiting for model:
+  test-wsid9n87/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wsid9n87/0 [executing] blocked: image integration required.
+18:30:11 INFO Waiting for model:
+  test-wsid9n87/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-wsid9n87/0 [executing] active: Building image.

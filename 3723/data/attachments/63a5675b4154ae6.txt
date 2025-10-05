@@ -1,0 +1,38 @@
+18:25:07 INFO GitHub token rate limit: Rate(reset=2025-10-05 18:47:47+00:00, remaining=4884, limit=5000)
+18:25:19 WARNING unexpected facade SSHServer received from the controller
+18:25:19 INFO Adding model github-pr-e1eb1-lxd:test-charm-metrics-failure-6f73 on cloud localhost
+18:25:20 WARNING unexpected facade SSHServer received from the controller
+18:25:20 WARNING unexpected facade SSHSession received from the controller
+18:25:20 WARNING unexpected facade SSHTunneler received from the controller
+18:25:21 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+18:25:33 INFO Deploying local:jammy/github-runner-0
+18:25:33 INFO Waiting for model:
+  test-ujdpcteg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ujdpcteg/0 [allocating] waiting: waiting for machine
+18:26:04 INFO Waiting for model:
+  test-ujdpcteg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ujdpcteg/0 [allocating] waiting: waiting for machine
+18:26:34 INFO Waiting for model:
+  test-ujdpcteg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ujdpcteg/0 [executing] maintenance: Setting up Builder.
+18:27:04 INFO Waiting for model:
+  test-ujdpcteg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ujdpcteg/0 [executing] maintenance: Setting up Builder.
+18:27:34 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] maintenance: Setting up Builder.
+18:28:04 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] maintenance: Setting up Builder.
+18:28:34 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] maintenance: Setting up Builder.
+18:29:04 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] blocked: image integration required.
+18:29:34 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] active: Building image.
+18:30:05 INFO Waiting for model:
+  test-ujdpcteg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ujdpcteg/0 [executing] active: Building image.
