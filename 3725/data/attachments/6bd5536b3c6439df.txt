@@ -1,0 +1,45 @@
+06:26:02 WARNING unexpected facade SSHServer received from the controller
+06:26:02 INFO Adding model github-pr-e1eb1-lxd:test-reactive-hklf on cloud localhost
+06:26:02 WARNING unexpected facade SSHServer received from the controller
+06:26:02 WARNING unexpected facade SSHSession received from the controller
+06:26:02 WARNING unexpected facade SSHTunneler received from the controller
+06:26:02 INFO GitHub token rate limit: Rate(reset=2025-10-06 07:19:55+00:00, remaining=4932, limit=5000)
+06:26:06 INFO Deploying ch:amd64/jammy/mongodb-229
+06:26:07 INFO Deploying ch:amd64/jammy/github-runner-image-builder-125
+06:26:23 INFO Deploying local:jammy/github-runner-0
+06:26:24 INFO Waiting for model:
+  test-fc5qafua/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fc5qafua/0 [allocating] waiting: waiting for machine
+06:26:54 INFO Waiting for model:
+  test-fc5qafua/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fc5qafua/0 [allocating] waiting: waiting for machine
+06:27:24 INFO Waiting for model:
+  test-fc5qafua/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fc5qafua/0 [allocating] waiting: waiting for machine
+06:27:54 INFO Waiting for model:
+  test-fc5qafua/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fc5qafua/0 [allocating] waiting: waiting for machine
+06:28:24 INFO Waiting for model:
+  test-fc5qafua/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fc5qafua/0 [executing] maintenance: Setting up Builder.
+06:28:54 INFO Waiting for model:
+  test-fc5qafua/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fc5qafua/0 [executing] maintenance: Setting up Builder.
+06:29:25 INFO Waiting for model:
+  test-fc5qafua/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fc5qafua/0 [executing] maintenance: Setting up Builder.
+06:29:55 INFO Waiting for model:
+  test-fc5qafua/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fc5qafua/0 [executing] maintenance: Setting up Builder.
+06:30:25 INFO Waiting for model:
+  test-fc5qafua/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fc5qafua/0 [executing] maintenance: Setting up Builder.
+06:30:56 INFO Waiting for model:
+  test-fc5qafua/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fc5qafua/0 [executing] blocked: image integration required.
+06:31:26 INFO Waiting for model:
+  test-fc5qafua/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fc5qafua/0 [executing] active: Building image.
+06:31:56 INFO Waiting for model:
+  test-fc5qafua/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fc5qafua/0 [executing] active: Building image.
