@@ -1,0 +1,44 @@
+18:25:14 INFO GitHub token rate limit: Rate(reset=2025-10-07 18:50:56+00:00, remaining=4897, limit=5000)
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-51f7 on cloud localhost
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 WARNING unexpected facade SSHSession received from the controller
+18:25:26 WARNING unexpected facade SSHTunneler received from the controller
+18:25:28 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:41 INFO Deploying local:jammy/github-runner-0
+18:25:41 INFO Waiting for model:
+  test-hdgm9w5v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hdgm9w5v/0 [allocating] waiting: waiting for machine
+18:26:12 INFO Waiting for model:
+  test-hdgm9w5v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hdgm9w5v/0 [allocating] waiting: waiting for machine
+18:26:42 INFO Waiting for model:
+  test-hdgm9w5v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:27:12 INFO Waiting for model:
+  test-hdgm9w5v/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:27:42 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:28:13 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:28:43 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:29:13 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] maintenance: Setting up Builder.
+18:29:44 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] blocked: image integration required.
+18:30:14 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] blocked: image integration required.
+18:30:44 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] active: Building image.
+18:31:14 INFO Waiting for model:
+  test-hdgm9w5v/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hdgm9w5v/0 [executing] active: Building image.
