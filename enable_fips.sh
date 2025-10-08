@@ -5,8 +5,8 @@
 #
 
 
-pro attach $protoken --no-auto-enable
-pro enable fips-updates --assume-yes
+pro attach $protoken --no-auto-enable > /dev/null 2>&1
+pro enable fips-updates --assume-yes > /dev/null 2>&1
 truncate -s 0 /etc/machine-id
 rm /var/lib/dbus/machine-id
 rm -rf /var/lib/ubuntu-advantage/private
