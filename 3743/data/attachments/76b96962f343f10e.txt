@@ -1,0 +1,43 @@
+18:25:43 WARNING unexpected facade SSHServer received from the controller
+18:25:43 INFO Adding model github-pr-587b7-lxd:test-charm-runner-3p3q on cloud localhost
+18:25:43 WARNING unexpected facade SSHServer received from the controller
+18:25:43 WARNING unexpected facade SSHSession received from the controller
+18:25:43 WARNING unexpected facade SSHTunneler received from the controller
+18:25:45 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:59 INFO Deploying local:jammy/github-runner-0
+18:25:59 INFO Waiting for model:
+  test-n4c4mhxn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n4c4mhxn/0 [allocating] waiting: waiting for machine
+18:26:29 INFO Waiting for model:
+  test-n4c4mhxn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n4c4mhxn/0 [allocating] waiting: waiting for machine
+18:27:00 INFO Waiting for model:
+  test-n4c4mhxn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:27:30 INFO Waiting for model:
+  test-n4c4mhxn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:28:00 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:28:30 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:29:01 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:29:31 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] maintenance: Setting up Builder.
+18:30:02 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] blocked: image integration required.
+18:30:32 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] blocked: image integration required.
+18:31:03 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] blocked: image integration required.
+18:31:33 INFO Waiting for model:
+  test-n4c4mhxn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n4c4mhxn/0 [executing] active: Building image.

@@ -1,0 +1,106 @@
+18:25:30 WARNING unexpected facade SSHServer received from the controller
+18:25:30 INFO Adding model github-pr-587b7-lxd:test-charm-fork-path-change-ewbp on cloud localhost
+18:25:30 WARNING unexpected facade SSHServer received from the controller
+18:25:30 WARNING unexpected facade SSHSession received from the controller
+18:25:30 WARNING unexpected facade SSHTunneler received from the controller
+18:25:32 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:45 INFO Deploying local:jammy/github-runner-0
+18:25:45 INFO Waiting for model:
+  test-w4q14d3d/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w4q14d3d/0 [allocating] waiting: waiting for machine
+18:26:15 INFO Waiting for model:
+  test-w4q14d3d/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-w4q14d3d/0 [allocating] waiting: waiting for machine
+18:26:46 INFO Waiting for model:
+  test-w4q14d3d/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w4q14d3d/0 [allocating] waiting: agent initialising
+18:27:16 INFO Waiting for model:
+  test-w4q14d3d/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:27:46 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:28:16 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:28:47 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:29:17 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:29:48 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] maintenance: Setting up Builder.
+18:30:18 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] blocked: image integration required.
+18:30:49 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] blocked: image integration required.
+18:31:19 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] active: Building image.
+18:31:50 INFO Waiting for model:
+  test-w4q14d3d/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-w4q14d3d/0 [executing] active: Building image.
+18:32:01 INFO OpenStack servers: []
+18:32:01 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-ewbp  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  18:32:01Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-w4q14d3d           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+test-w4q14d3d                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-w4q14d3d/0*  error     idle   0        10.32.160.150          hook failed: "image-relation-changed"
+test-w4q14d3d/0*                         waiting   idle   1        10.32.160.85           Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.32.160.150  juju-7931e4-0  ubuntu@22.04  github-runner  Running
+1        started  10.32.160.85   juju-7931e4-1  ubuntu@22.04  github-runner  Running
+
+18:32:01 INFO Juju error logs:
+
+machine-1: 18:26:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-w4q14d3d-0: 18:26:28 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-0: 18:26:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-w4q14d3d-0: 18:26:42 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-w4q14d3d-0: 18:27:15 ERROR unit.github-runner-image-builder-w4q14d3d/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-w4q14d3d-0: 18:27:21 ERROR unit.test-w4q14d3d/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-w4q14d3d-0: 18:27:23 ERROR unit.test-w4q14d3d/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-w4q14d3d-0: 18:30:05 ERROR unit.test-w4q14d3d/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-w4q14d3d-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-w4q14d3d-0: 18:31:15 ERROR unit.github-runner-image-builder-w4q14d3d/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-w4q14d3d-0: 18:31:23 ERROR unit.github-runner-image-builder-w4q14d3d/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-w4q14d3d-0: 18:31:30 ERROR unit.github-runner-image-builder-w4q14d3d/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-w4q14d3d-0: 18:31:41 ERROR unit.github-runner-image-builder-w4q14d3d/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+18:32:01 INFO Forgetting model main...

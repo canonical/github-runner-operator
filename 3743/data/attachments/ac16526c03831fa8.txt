@@ -1,0 +1,107 @@
+18:25:52 INFO IP Address to use as the fake jobmanager: 10.151.128.88
+18:25:52 WARNING unexpected facade SSHServer received from the controller
+18:25:52 INFO Adding model github-pr-587b7-lxd:test-jobmanager-prespawned-ktky on cloud localhost
+18:25:52 WARNING unexpected facade SSHServer received from the controller
+18:25:52 WARNING unexpected facade SSHSession received from the controller
+18:25:52 WARNING unexpected facade SSHTunneler received from the controller
+18:25:55 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:26:10 INFO Deploying local:jammy/github-runner-0
+18:26:10 INFO Waiting for model:
+  test-ygjmilrc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ygjmilrc/0 [allocating] waiting: waiting for machine
+18:26:41 INFO Waiting for model:
+  test-ygjmilrc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ygjmilrc/0 [allocating] waiting: waiting for machine
+18:27:11 INFO Waiting for model:
+  test-ygjmilrc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:27:41 INFO Waiting for model:
+  test-ygjmilrc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:28:12 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:28:42 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:29:12 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:29:42 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:30:12 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] maintenance: Setting up Builder.
+18:30:42 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] blocked: image integration required.
+18:31:12 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] blocked: image integration required.
+18:31:42 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] active: Building image.
+18:32:12 INFO Waiting for model:
+  test-ygjmilrc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ygjmilrc/0 [executing] active: Building image.
+18:32:22 INFO OpenStack servers: []
+18:32:22 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-ktky  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  18:32:22Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ygjmilrc           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+test-ygjmilrc                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ygjmilrc/0*  error     idle   0        10.182.180.19          hook failed: "image-relation-changed"
+test-ygjmilrc/0*                         waiting   idle   1        10.182.180.13          Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.182.180.19  juju-3ff976-0  ubuntu@22.04  github-runner  Running
+1        started  10.182.180.13  juju-3ff976-1  ubuntu@22.04  github-runner  Running
+
+18:32:23 INFO Juju error logs:
+
+machine-0: 18:26:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ygjmilrc-0: 18:26:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ygjmilrc-0: 18:26:55 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-ygjmilrc-0: 18:27:29 ERROR unit.github-runner-image-builder-ygjmilrc/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ygjmilrc-0: 18:27:56 ERROR unit.test-ygjmilrc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ygjmilrc-0: 18:27:59 ERROR unit.test-ygjmilrc/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ygjmilrc-0: 18:30:26 ERROR unit.test-ygjmilrc/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ygjmilrc-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-ygjmilrc-0: 18:31:37 ERROR unit.github-runner-image-builder-ygjmilrc/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ygjmilrc-0: 18:31:45 ERROR unit.github-runner-image-builder-ygjmilrc/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ygjmilrc-0: 18:31:52 ERROR unit.github-runner-image-builder-ygjmilrc/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ygjmilrc-0: 18:32:03 ERROR unit.github-runner-image-builder-ygjmilrc/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+18:32:23 INFO Forgetting model main...
