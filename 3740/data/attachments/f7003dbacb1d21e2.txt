@@ -1,0 +1,51 @@
+06:25:30 WARNING unexpected facade SSHServer received from the controller
+06:25:30 INFO Adding model github-pr-587b7-lxd:test-reactive-6moy on cloud localhost
+06:25:30 WARNING unexpected facade SSHServer received from the controller
+06:25:30 WARNING unexpected facade SSHSession received from the controller
+06:25:30 WARNING unexpected facade SSHTunneler received from the controller
+06:25:31 INFO GitHub token rate limit: Rate(reset=2025-10-08 07:19:20+00:00, remaining=4939, limit=5000)
+06:25:35 INFO Deploying ch:amd64/jammy/mongodb-229
+06:25:38 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:25:52 INFO Deploying local:jammy/github-runner-0
+06:25:52 INFO Waiting for model:
+  test-nofqjdr4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nofqjdr4/0 [allocating] waiting: waiting for machine
+06:26:22 INFO Waiting for model:
+  test-nofqjdr4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-nofqjdr4/0 [allocating] waiting: waiting for machine
+06:26:53 INFO Waiting for model:
+  test-nofqjdr4/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-nofqjdr4/0 [allocating] waiting: waiting for machine
+06:27:23 INFO Waiting for model:
+  test-nofqjdr4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-nofqjdr4/0 [allocating] waiting: waiting for machine
+06:27:54 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:28:24 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:28:54 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:29:24 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:29:55 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:30:25 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] maintenance: Setting up Builder.
+06:30:55 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] blocked: image integration required.
+06:31:26 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] blocked: image integration required.
+06:31:56 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] active: Building image.
+06:32:26 INFO Waiting for model:
+  test-nofqjdr4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-nofqjdr4/0 [executing] active: Building image.
