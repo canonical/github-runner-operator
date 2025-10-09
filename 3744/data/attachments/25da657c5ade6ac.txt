@@ -1,0 +1,49 @@
+06:26:41 WARNING unexpected facade SSHServer received from the controller
+06:26:41 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-success-fj6i on cloud localhost
+06:26:41 WARNING unexpected facade SSHServer received from the controller
+06:26:41 WARNING unexpected facade SSHSession received from the controller
+06:26:41 WARNING unexpected facade SSHTunneler received from the controller
+06:26:44 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:26:58 INFO Deploying local:jammy/github-runner-0
+06:26:58 INFO Waiting for model:
+  test-crovf93z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-crovf93z/0 [allocating] waiting: waiting for machine
+06:27:28 INFO Waiting for model:
+  test-crovf93z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-crovf93z/0 [allocating] waiting: waiting for machine
+06:27:59 INFO Waiting for model:
+  test-crovf93z/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:28:29 INFO Waiting for model:
+  test-crovf93z/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:28:59 INFO Waiting for model:
+  test-crovf93z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:29:29 INFO Waiting for model:
+  test-crovf93z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:30:00 INFO Waiting for model:
+  test-crovf93z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:30:30 INFO Waiting for model:
+  test-crovf93z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:31:01 INFO Waiting for model:
+  test-crovf93z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-crovf93z/0 [executing] maintenance: Setting up Builder.
+06:31:31 INFO Waiting for model:
+  test-crovf93z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-crovf93z/0 [executing] blocked: image integration required.
+06:32:02 INFO Waiting for model:
+  test-crovf93z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-crovf93z/0 [executing] blocked: image integration required.
+06:32:32 INFO Waiting for model:
+  test-crovf93z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-crovf93z/0 [executing] blocked: image integration required.
+06:33:02 INFO Waiting for model:
+  test-crovf93z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-crovf93z/0 [executing] active: Building image.
+06:33:33 INFO Waiting for model:
+  test-crovf93z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-crovf93z/0 [executing] active: Building image.
