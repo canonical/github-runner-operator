@@ -1,0 +1,47 @@
+18:26:28 INFO GitHub token rate limit: Rate(reset=2025-10-10 19:10:02+00:00, remaining=4914, limit=5000)
+18:26:41 WARNING unexpected facade SSHServer received from the controller
+18:26:41 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-9gm4 on cloud localhost
+18:26:41 WARNING unexpected facade SSHServer received from the controller
+18:26:41 WARNING unexpected facade SSHSession received from the controller
+18:26:41 WARNING unexpected facade SSHTunneler received from the controller
+18:26:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:26:57 INFO Deploying local:jammy/github-runner-0
+18:26:57 INFO Waiting for model:
+  test-bspng1nv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bspng1nv/0 [allocating] waiting: waiting for machine
+18:27:27 INFO Waiting for model:
+  test-bspng1nv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bspng1nv/0 [allocating] waiting: waiting for machine
+18:27:58 INFO Waiting for model:
+  test-bspng1nv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-bspng1nv/0 [allocating] waiting: agent initialising
+18:28:28 INFO Waiting for model:
+  test-bspng1nv/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:28:58 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:29:28 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:29:58 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:30:29 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:30:59 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:31:30 INFO Waiting for model:
+  test-bspng1nv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-bspng1nv/0 [executing] maintenance: Setting up Builder.
+18:32:00 INFO Waiting for model:
+  test-bspng1nv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bspng1nv/0 [executing] blocked: image integration required.
+18:32:30 INFO Waiting for model:
+  test-bspng1nv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bspng1nv/0 [executing] blocked: image integration required.
+18:33:00 INFO Waiting for model:
+  test-bspng1nv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-bspng1nv/0 [executing] active: Building image.

@@ -1,0 +1,49 @@
+18:26:21 WARNING unexpected facade SSHServer received from the controller
+18:26:21 INFO Adding model github-pr-587b7-lxd:test-charm-runner-aqpc on cloud localhost
+18:26:21 WARNING unexpected facade SSHServer received from the controller
+18:26:21 WARNING unexpected facade SSHSession received from the controller
+18:26:21 WARNING unexpected facade SSHTunneler received from the controller
+18:26:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:26:35 INFO Deploying local:jammy/github-runner-0
+18:26:35 INFO Waiting for model:
+  test-uais2fqn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uais2fqn/0 [allocating] waiting: waiting for machine
+18:27:06 INFO Waiting for model:
+  test-uais2fqn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uais2fqn/0 [allocating] waiting: waiting for machine
+18:27:36 INFO Waiting for model:
+  test-uais2fqn/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-uais2fqn/0 [allocating] waiting: waiting for machine
+18:28:06 INFO Waiting for model:
+  test-uais2fqn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:28:37 INFO Waiting for model:
+  test-uais2fqn/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:29:07 INFO Waiting for model:
+  test-uais2fqn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:29:37 INFO Waiting for model:
+  test-uais2fqn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:30:08 INFO Waiting for model:
+  test-uais2fqn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:30:38 INFO Waiting for model:
+  test-uais2fqn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:31:09 INFO Waiting for model:
+  test-uais2fqn/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] maintenance: Setting up Builder.
+18:31:39 INFO Waiting for model:
+  test-uais2fqn/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-uais2fqn/0 [executing] blocked: image integration required.
+18:32:09 INFO Waiting for model:
+  test-uais2fqn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uais2fqn/0 [executing] blocked: image integration required.
+18:32:39 INFO Waiting for model:
+  test-uais2fqn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uais2fqn/0 [executing] blocked: image integration required.
+18:33:09 INFO Waiting for model:
+  test-uais2fqn/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-uais2fqn/0 [executing] active: Building image.
