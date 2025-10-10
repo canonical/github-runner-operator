@@ -1,0 +1,47 @@
+06:27:45 INFO GitHub token rate limit: Rate(reset=2025-10-10 06:37:43+00:00, remaining=4860, limit=5000)
+06:27:57 WARNING unexpected facade SSHServer received from the controller
+06:27:57 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-qwur on cloud localhost
+06:27:58 WARNING unexpected facade SSHServer received from the controller
+06:27:58 WARNING unexpected facade SSHSession received from the controller
+06:27:58 WARNING unexpected facade SSHTunneler received from the controller
+06:27:59 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:28:11 INFO Deploying local:jammy/github-runner-0
+06:28:11 INFO Waiting for model:
+  test-s66geeeo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s66geeeo/0 [allocating] waiting: waiting for machine
+06:28:41 INFO Waiting for model:
+  test-s66geeeo/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-s66geeeo/0 [allocating] waiting: waiting for machine
+06:29:12 INFO Waiting for model:
+  test-s66geeeo/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:29:42 INFO Waiting for model:
+  test-s66geeeo/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:30:12 INFO Waiting for model:
+  test-s66geeeo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:30:42 INFO Waiting for model:
+  test-s66geeeo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:31:13 INFO Waiting for model:
+  test-s66geeeo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:31:43 INFO Waiting for model:
+  test-s66geeeo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:32:14 INFO Waiting for model:
+  test-s66geeeo/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-s66geeeo/0 [executing] maintenance: Setting up Builder.
+06:32:44 INFO Waiting for model:
+  test-s66geeeo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s66geeeo/0 [executing] blocked: image integration required.
+06:33:14 INFO Waiting for model:
+  test-s66geeeo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s66geeeo/0 [executing] blocked: image integration required.
+06:33:45 INFO Waiting for model:
+  test-s66geeeo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s66geeeo/0 [executing] active: Building image.
+06:34:15 INFO Waiting for model:
+  test-s66geeeo/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-s66geeeo/0 [executing] active: Building image.

@@ -1,0 +1,68 @@
+06:35:31 INFO OpenStack servers: []
+06:35:32 INFO Model status:
+
+Model               Controller           Cloud/Region         Version  SLA          Timestamp
+test-reactive-om3f  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  06:35:32Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mfr7wkjy           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+mongodb                               6.0.24   active       1  mongodb                      6/edge       229  no       
+test-mfr7wkjy                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-mfr7wkjy/0*  error     idle   1        10.97.87.235               hook failed: "image-relation-changed"
+mongodb/0*                               active    idle   0        10.97.87.116    27017/tcp  Primary.
+test-mfr7wkjy/0*                         waiting   idle   2        10.97.87.115               Waiting for image over integration.
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.97.87.116  juju-857d32-0  ubuntu@22.04  github-runner  Running
+1        started  10.97.87.235  juju-857d32-1  ubuntu@22.04  github-runner  Running
+2        started  10.97.87.115  juju-857d32-2  ubuntu@22.04  github-runner  Running
+
+06:35:32 INFO Juju error logs:
+
+machine-0: 06:29:11 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:29:11 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:29:11 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:29:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:29:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-mfr7wkjy-0: 06:29:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:29:46 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:29:46 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:29:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:29:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-mfr7wkjy-0: 06:29:59 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-mfr7wkjy-0: 06:30:26 ERROR unit.test-mfr7wkjy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-mfr7wkjy-0: 06:30:28 ERROR unit.test-mfr7wkjy/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-mfr7wkjy-0: 06:30:42 ERROR unit.github-runner-image-builder-mfr7wkjy/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-mfr7wkjy-0: 06:33:41 ERROR unit.test-mfr7wkjy/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mfr7wkjy-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-mfr7wkjy-0: 06:34:46 ERROR unit.github-runner-image-builder-mfr7wkjy/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-mfr7wkjy-0: 06:34:53 ERROR unit.github-runner-image-builder-mfr7wkjy/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-mfr7wkjy-0: 06:35:01 ERROR unit.github-runner-image-builder-mfr7wkjy/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-mfr7wkjy-0: 06:35:11 ERROR unit.github-runner-image-builder-mfr7wkjy/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+
+06:35:32 INFO Forgetting model main...
