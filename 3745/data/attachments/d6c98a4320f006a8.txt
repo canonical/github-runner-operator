@@ -1,0 +1,124 @@
+03:12:44 INFO IP Address to use as the fake jobmanager: 10.151.128.175
+03:12:44 WARNING unexpected facade SSHServer received from the controller
+03:12:44 INFO Adding model github-pr-587b7-lxd:test-jobmanager-reactive-wtb6 on cloud localhost
+03:12:44 WARNING unexpected facade SSHServer received from the controller
+03:12:44 WARNING unexpected facade SSHSession received from the controller
+03:12:44 WARNING unexpected facade SSHTunneler received from the controller
+03:12:44 WARNING unexpected facade SSHServer received from the controller
+03:12:45 INFO Deploying ch:amd64/jammy/mongodb-229
+03:12:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+03:13:01 INFO Deploying local:jammy/github-runner-0
+03:13:01 INFO Waiting for model:
+  test-yl2qqtu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yl2qqtu9/0 [allocating] waiting: waiting for machine
+03:13:31 INFO Waiting for model:
+  test-yl2qqtu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yl2qqtu9/0 [allocating] waiting: waiting for machine
+03:14:02 INFO Waiting for model:
+  test-yl2qqtu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yl2qqtu9/0 [allocating] waiting: waiting for machine
+03:14:32 INFO Waiting for model:
+  test-yl2qqtu9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yl2qqtu9/0 [allocating] waiting: waiting for machine
+03:15:02 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:15:33 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:16:03 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:16:33 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:17:03 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:17:34 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:18:04 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] maintenance: Setting up Builder.
+03:18:34 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] blocked: image integration required.
+03:19:05 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] blocked: image integration required.
+03:19:35 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] active: Building image.
+03:20:05 INFO Waiting for model:
+  test-yl2qqtu9/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yl2qqtu9/0 [executing] active: Building image.
+03:20:10 INFO OpenStack servers: []
+03:20:10 INFO cli: juju debug-log --model github-pr-587b7-lxd:test-jobmanager-reactive-wtb6 --limit 1000
+03:20:10 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-wtb6  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  03:20:10Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yl2qqtu9           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+mongodb                               6.0.24   active       1  mongodb                      6/edge       229  no       
+test-yl2qqtu9                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-yl2qqtu9/0*  error     idle   1        10.166.167.182             hook failed: "image-relation-changed"
+mongodb/0*                               active    idle   0        10.166.167.184  27017/tcp  Primary.
+test-yl2qqtu9/0*                         waiting   idle   2        10.166.167.17              Waiting for image over integration.
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.166.167.184  juju-f7fa83-0  ubuntu@22.04  github-runner  Running
+1        started  10.166.167.182  juju-f7fa83-1  ubuntu@22.04  github-runner  Running
+2        started  10.166.167.17   juju-f7fa83-2  ubuntu@22.04  github-runner  Running
+
+03:20:10 INFO Juju error logs:
+
+machine-0: 03:13:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 03:13:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 03:13:31 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 03:14:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 03:14:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yl2qqtu9-0: 03:14:05 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 03:14:06 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 03:14:06 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 03:14:34 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 03:14:34 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yl2qqtu9-0: 03:14:34 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-yl2qqtu9-0: 03:14:55 ERROR unit.test-yl2qqtu9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yl2qqtu9-0: 03:14:57 ERROR unit.test-yl2qqtu9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-yl2qqtu9-0: 03:15:07 ERROR unit.github-runner-image-builder-yl2qqtu9/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-yl2qqtu9-0: 03:18:17 ERROR unit.test-yl2qqtu9/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yl2qqtu9-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-yl2qqtu9-0: 03:19:24 ERROR unit.github-runner-image-builder-yl2qqtu9/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-yl2qqtu9-0: 03:19:32 ERROR unit.github-runner-image-builder-yl2qqtu9/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-yl2qqtu9-0: 03:19:39 ERROR unit.github-runner-image-builder-yl2qqtu9/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-yl2qqtu9-0: 03:19:51 ERROR unit.github-runner-image-builder-yl2qqtu9/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+
+03:20:10 INFO Forgetting model main...

@@ -1,0 +1,47 @@
+03:12:54 INFO GitHub token rate limit: Rate(reset=2025-10-10 03:30:29+00:00, remaining=4795, limit=5000)
+03:13:06 WARNING unexpected facade SSHServer received from the controller
+03:13:06 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-jc12 on cloud localhost
+03:13:06 WARNING unexpected facade SSHServer received from the controller
+03:13:06 WARNING unexpected facade SSHSession received from the controller
+03:13:06 WARNING unexpected facade SSHTunneler received from the controller
+03:13:08 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+03:13:22 INFO Deploying local:jammy/github-runner-0
+03:13:22 INFO Waiting for model:
+  test-gf4f15dr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gf4f15dr/0 [allocating] waiting: waiting for machine
+03:13:53 INFO Waiting for model:
+  test-gf4f15dr/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gf4f15dr/0 [allocating] waiting: waiting for machine
+03:14:23 INFO Waiting for model:
+  test-gf4f15dr/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:14:53 INFO Waiting for model:
+  test-gf4f15dr/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:15:24 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:15:54 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:16:25 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:16:55 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:17:25 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] maintenance: Setting up Builder.
+03:17:56 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] blocked: image integration required.
+03:18:26 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] blocked: image integration required.
+03:18:57 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] blocked: image integration required.
+03:19:27 INFO Waiting for model:
+  test-gf4f15dr/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gf4f15dr/0 [executing] active: Building image.

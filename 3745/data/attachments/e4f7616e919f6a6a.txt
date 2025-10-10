@@ -1,0 +1,109 @@
+03:12:41 WARNING unexpected facade SSHServer received from the controller
+03:12:41 INFO Adding model github-pr-587b7-lxd:test-charm-fork-path-change-w3qr on cloud localhost
+03:12:41 WARNING unexpected facade SSHServer received from the controller
+03:12:41 WARNING unexpected facade SSHSession received from the controller
+03:12:41 WARNING unexpected facade SSHTunneler received from the controller
+03:12:42 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+03:12:56 INFO Deploying local:jammy/github-runner-0
+03:12:56 INFO Waiting for model:
+  test-kkdn068z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kkdn068z/0 [allocating] waiting: waiting for machine
+03:13:26 INFO Waiting for model:
+  test-kkdn068z/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-kkdn068z/0 [allocating] waiting: waiting for machine
+03:13:56 INFO Waiting for model:
+  test-kkdn068z/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:14:27 INFO Waiting for model:
+  test-kkdn068z/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:14:57 INFO Waiting for model:
+  test-kkdn068z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:15:27 INFO Waiting for model:
+  test-kkdn068z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:15:57 INFO Waiting for model:
+  test-kkdn068z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:16:28 INFO Waiting for model:
+  test-kkdn068z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:16:58 INFO Waiting for model:
+  test-kkdn068z/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-kkdn068z/0 [executing] maintenance: Setting up Builder.
+03:17:29 INFO Waiting for model:
+  test-kkdn068z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kkdn068z/0 [executing] blocked: image integration required.
+03:17:59 INFO Waiting for model:
+  test-kkdn068z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kkdn068z/0 [executing] blocked: image integration required.
+03:18:30 INFO Waiting for model:
+  test-kkdn068z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kkdn068z/0 [executing] blocked: image integration required.
+03:19:00 INFO Waiting for model:
+  test-kkdn068z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kkdn068z/0 [executing] active: Building image.
+03:19:30 INFO Waiting for model:
+  test-kkdn068z/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-kkdn068z/0 [executing] active: Building image.
+03:19:46 INFO OpenStack servers: []
+03:19:46 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-w3qr  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  03:19:46Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kkdn068z           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+test-kkdn068z                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kkdn068z/0*  error     idle   0        10.129.46.87           hook failed: "image-relation-changed"
+test-kkdn068z/0*                         waiting   idle   1        10.129.46.54           Waiting for image over integration.
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.129.46.87  juju-d04091-0  ubuntu@22.04  github-runner  Running
+1        started  10.129.46.54  juju-d04091-1  ubuntu@22.04  github-runner  Running
+
+03:19:46 INFO Juju error logs:
+
+machine-0: 03:13:40 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 03:13:40 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kkdn068z-0: 03:13:40 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 03:13:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 03:13:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kkdn068z-0: 03:13:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kkdn068z-0: 03:14:22 ERROR unit.github-runner-image-builder-kkdn068z/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-kkdn068z-0: 03:14:41 ERROR unit.test-kkdn068z/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kkdn068z-0: 03:14:43 ERROR unit.test-kkdn068z/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kkdn068z-0: 03:17:20 ERROR unit.test-kkdn068z/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kkdn068z-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-kkdn068z-0: 03:19:00 ERROR unit.github-runner-image-builder-kkdn068z/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-kkdn068z-0: 03:19:08 ERROR unit.github-runner-image-builder-kkdn068z/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-kkdn068z-0: 03:19:15 ERROR unit.github-runner-image-builder-kkdn068z/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-kkdn068z-0: 03:19:26 ERROR unit.github-runner-image-builder-kkdn068z/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+03:19:46 INFO Forgetting model main...
