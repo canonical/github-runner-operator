@@ -1,0 +1,53 @@
+18:30:58 INFO GitHub token rate limit: Rate(reset=2025-10-11 19:13:28+00:00, remaining=4808, limit=5000)
+18:31:11 WARNING unexpected facade SSHServer received from the controller
+18:31:11 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-oqgl on cloud localhost
+18:31:11 WARNING unexpected facade SSHServer received from the controller
+18:31:11 WARNING unexpected facade SSHSession received from the controller
+18:31:11 WARNING unexpected facade SSHTunneler received from the controller
+18:31:13 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:31:30 INFO Deploying local:jammy/github-runner-0
+18:31:30 INFO Waiting for model:
+  test-xhicxo7r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhicxo7r/0 [allocating] waiting: waiting for machine
+18:32:00 INFO Waiting for model:
+  test-xhicxo7r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xhicxo7r/0 [allocating] waiting: waiting for machine
+18:32:30 INFO Waiting for model:
+  test-xhicxo7r/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:33:00 INFO Waiting for model:
+  test-xhicxo7r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:33:31 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:34:01 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:34:32 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:35:02 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:35:32 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] maintenance: Setting up Builder.
+18:36:03 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] blocked: image integration required.
+18:36:33 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] blocked: image integration required.
+18:37:04 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] blocked: image integration required.
+18:37:34 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] blocked: image integration required.
+18:38:04 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-xhicxo7r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xhicxo7r/0 [executing] active: Building image.

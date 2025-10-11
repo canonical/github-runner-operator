@@ -1,0 +1,57 @@
+18:30:58 WARNING unexpected facade SSHServer received from the controller
+18:30:58 INFO Adding model github-pr-587b7-lxd:test-reactive-igxf on cloud localhost
+18:30:58 WARNING unexpected facade SSHServer received from the controller
+18:30:58 WARNING unexpected facade SSHSession received from the controller
+18:30:58 WARNING unexpected facade SSHTunneler received from the controller
+18:30:58 INFO GitHub token rate limit: Rate(reset=2025-10-11 19:13:28+00:00, remaining=4808, limit=5000)
+18:31:02 INFO Deploying ch:amd64/jammy/mongodb-229
+18:31:04 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:31:19 INFO Deploying local:jammy/github-runner-0
+18:31:19 INFO Waiting for model:
+  test-cuc0itz2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cuc0itz2/0 [allocating] waiting: waiting for machine
+18:31:49 INFO Waiting for model:
+  test-cuc0itz2/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cuc0itz2/0 [allocating] waiting: waiting for machine
+18:32:19 INFO Waiting for model:
+  test-cuc0itz2/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cuc0itz2/0 [allocating] waiting: waiting for machine
+18:32:50 INFO Waiting for model:
+  test-cuc0itz2/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cuc0itz2/0 [allocating] waiting: waiting for machine
+18:33:20 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:33:50 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:34:21 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:34:51 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:35:21 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:35:52 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:36:22 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:36:52 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] maintenance: Setting up Builder.
+18:37:22 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] blocked: image integration required.
+18:37:52 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] blocked: image integration required.
+18:38:22 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] active: Building image.
+18:38:53 INFO Waiting for model:
+  test-cuc0itz2/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cuc0itz2/0 [executing] active: Building image.

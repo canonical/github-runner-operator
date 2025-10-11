@@ -1,0 +1,55 @@
+18:30:53 WARNING unexpected facade SSHServer received from the controller
+18:30:53 INFO Adding model github-pr-587b7-lxd:test-charm-runner-ty2a on cloud localhost
+18:30:53 WARNING unexpected facade SSHServer received from the controller
+18:30:53 WARNING unexpected facade SSHSession received from the controller
+18:30:53 WARNING unexpected facade SSHTunneler received from the controller
+18:30:54 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:31:07 INFO Deploying local:jammy/github-runner-0
+18:31:07 INFO Waiting for model:
+  test-fq4ds1wc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fq4ds1wc/0 [allocating] waiting: waiting for machine
+18:31:37 INFO Waiting for model:
+  test-fq4ds1wc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fq4ds1wc/0 [allocating] waiting: waiting for machine
+18:32:08 INFO Waiting for model:
+  test-fq4ds1wc/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-fq4ds1wc/0 [allocating] waiting: agent initialising
+18:32:38 INFO Waiting for model:
+  test-fq4ds1wc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:33:08 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:33:39 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:34:09 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:34:39 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:35:10 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:35:40 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:36:10 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] maintenance: Setting up Builder.
+18:36:41 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] blocked: image integration required.
+18:37:11 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] blocked: image integration required.
+18:37:42 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] blocked: image integration required.
+18:38:12 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] blocked: image integration required.
+18:38:43 INFO Waiting for model:
+  test-fq4ds1wc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fq4ds1wc/0 [executing] active: Building image.

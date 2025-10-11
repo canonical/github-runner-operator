@@ -1,0 +1,52 @@
+18:31:05 WARNING unexpected facade SSHServer received from the controller
+18:31:05 INFO Adding model github-pr-587b7-lxd:test-charm-no-runner-7ryd on cloud localhost
+18:31:05 WARNING unexpected facade SSHServer received from the controller
+18:31:05 WARNING unexpected facade SSHSession received from the controller
+18:31:05 WARNING unexpected facade SSHTunneler received from the controller
+18:31:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:31:20 INFO Deploying local:jammy/github-runner-0
+18:31:20 INFO Waiting for model:
+  test-ahysn7gc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ahysn7gc/0 [allocating] waiting: waiting for machine
+18:31:51 INFO Waiting for model:
+  test-ahysn7gc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ahysn7gc/0 [allocating] waiting: waiting for machine
+18:32:21 INFO Waiting for model:
+  test-ahysn7gc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:32:51 INFO Waiting for model:
+  test-ahysn7gc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:33:22 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:33:52 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:34:22 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:34:53 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:35:23 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:35:54 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] maintenance: Setting up Builder.
+18:36:24 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] blocked: image integration required.
+18:36:54 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] blocked: image integration required.
+18:37:25 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] blocked: image integration required.
+18:37:55 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] active: Building image.
+18:38:26 INFO Waiting for model:
+  test-ahysn7gc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ahysn7gc/0 [executing] active: Building image.

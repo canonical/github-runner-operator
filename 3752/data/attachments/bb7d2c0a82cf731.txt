@@ -1,0 +1,49 @@
+18:31:00 WARNING unexpected facade SSHServer received from the controller
+18:31:00 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-success-p67p on cloud localhost
+18:31:00 WARNING unexpected facade SSHServer received from the controller
+18:31:00 WARNING unexpected facade SSHSession received from the controller
+18:31:00 WARNING unexpected facade SSHTunneler received from the controller
+18:31:02 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:31:15 INFO Deploying local:jammy/github-runner-0
+18:31:16 INFO Waiting for model:
+  test-enusjj8e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-enusjj8e/0 [allocating] waiting: waiting for machine
+18:31:46 INFO Waiting for model:
+  test-enusjj8e/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-enusjj8e/0 [allocating] waiting: waiting for machine
+18:32:17 INFO Waiting for model:
+  test-enusjj8e/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:32:47 INFO Waiting for model:
+  test-enusjj8e/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:33:17 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:33:48 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:34:18 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:34:49 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:35:19 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:35:49 INFO Waiting for model:
+  test-enusjj8e/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-enusjj8e/0 [executing] maintenance: Setting up Builder.
+18:36:20 INFO Waiting for model:
+  test-enusjj8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-enusjj8e/0 [executing] blocked: image integration required.
+18:36:50 INFO Waiting for model:
+  test-enusjj8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-enusjj8e/0 [executing] blocked: image integration required.
+18:37:21 INFO Waiting for model:
+  test-enusjj8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-enusjj8e/0 [executing] blocked: image integration required.
+18:37:51 INFO Waiting for model:
+  test-enusjj8e/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-enusjj8e/0 [executing] active: Building image.
