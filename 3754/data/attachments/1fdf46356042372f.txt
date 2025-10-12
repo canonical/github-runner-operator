@@ -1,0 +1,53 @@
+18:25:13 INFO GitHub token rate limit: Rate(reset=2025-10-12 19:15:12+00:00, remaining=4921, limit=5000)
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-aq9y on cloud localhost
+18:25:26 WARNING unexpected facade SSHServer received from the controller
+18:25:26 WARNING unexpected facade SSHSession received from the controller
+18:25:26 WARNING unexpected facade SSHTunneler received from the controller
+18:25:27 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:40 INFO Deploying local:jammy/github-runner-0
+18:25:41 INFO Waiting for model:
+  test-n6odetza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n6odetza/0 [allocating] waiting: waiting for machine
+18:26:11 INFO Waiting for model:
+  test-n6odetza/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-n6odetza/0 [allocating] waiting: waiting for machine
+18:26:41 INFO Waiting for model:
+  test-n6odetza/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:27:11 INFO Waiting for model:
+  test-n6odetza/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:27:42 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:28:12 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:28:42 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:29:12 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:29:43 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:30:13 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:30:43 INFO Waiting for model:
+  test-n6odetza/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-n6odetza/0 [executing] maintenance: Setting up Builder.
+18:31:14 INFO Waiting for model:
+  test-n6odetza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n6odetza/0 [executing] blocked: image integration required.
+18:31:44 INFO Waiting for model:
+  test-n6odetza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n6odetza/0 [executing] blocked: image integration required.
+18:32:14 INFO Waiting for model:
+  test-n6odetza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n6odetza/0 [executing] blocked: image integration required.
+18:32:45 INFO Waiting for model:
+  test-n6odetza/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-n6odetza/0 [executing] active: Building image.

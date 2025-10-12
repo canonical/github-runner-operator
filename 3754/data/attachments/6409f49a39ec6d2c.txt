@@ -1,0 +1,52 @@
+18:25:12 WARNING unexpected facade SSHServer received from the controller
+18:25:12 INFO Adding model github-pr-587b7-lxd:test-charm-no-runner-gj90 on cloud localhost
+18:25:12 WARNING unexpected facade SSHServer received from the controller
+18:25:12 WARNING unexpected facade SSHSession received from the controller
+18:25:12 WARNING unexpected facade SSHTunneler received from the controller
+18:25:14 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:37 INFO Deploying local:jammy/github-runner-0
+18:25:37 INFO Waiting for model:
+  test-k46jixrp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k46jixrp/0 [allocating] waiting: waiting for machine
+18:26:08 INFO Waiting for model:
+  test-k46jixrp/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k46jixrp/0 [allocating] waiting: waiting for machine
+18:26:38 INFO Waiting for model:
+  test-k46jixrp/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:27:08 INFO Waiting for model:
+  test-k46jixrp/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:27:39 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:28:09 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:28:40 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:29:10 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:29:41 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:30:11 INFO Waiting for model:
+  test-k46jixrp/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-k46jixrp/0 [executing] maintenance: Setting up Builder.
+18:30:41 INFO Waiting for model:
+  test-k46jixrp/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-k46jixrp/0 [executing] blocked: image integration required.
+18:31:12 INFO Waiting for model:
+  test-k46jixrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k46jixrp/0 [executing] blocked: image integration required.
+18:31:42 INFO Waiting for model:
+  test-k46jixrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k46jixrp/0 [executing] blocked: image integration required.
+18:32:13 INFO Waiting for model:
+  test-k46jixrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k46jixrp/0 [executing] blocked: image integration required.
+18:32:43 INFO Waiting for model:
+  test-k46jixrp/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-k46jixrp/0 [executing] active: Building image.

@@ -1,0 +1,115 @@
+18:24:58 WARNING unexpected facade SSHServer received from the controller
+18:24:58 INFO Adding model github-pr-587b7-lxd:test-charm-fork-path-change-lxut on cloud localhost
+18:24:58 WARNING unexpected facade SSHServer received from the controller
+18:24:58 WARNING unexpected facade SSHSession received from the controller
+18:24:58 WARNING unexpected facade SSHTunneler received from the controller
+18:25:00 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:25:14 INFO Deploying local:jammy/github-runner-0
+18:25:14 INFO Waiting for model:
+  test-sbiusuwb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbiusuwb/0 [allocating] waiting: waiting for machine
+18:25:44 INFO Waiting for model:
+  test-sbiusuwb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbiusuwb/0 [allocating] waiting: waiting for machine
+18:26:15 INFO Waiting for model:
+  test-sbiusuwb/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-sbiusuwb/0 [allocating] waiting: agent initialising
+18:26:45 INFO Waiting for model:
+  test-sbiusuwb/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:27:15 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:27:46 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:28:16 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:28:47 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:29:17 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:29:48 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] maintenance: Setting up Builder.
+18:30:18 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] blocked: image integration required.
+18:30:48 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] blocked: image integration required.
+18:31:19 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] blocked: image integration required.
+18:31:49 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] blocked: image integration required.
+18:32:20 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] active: Building image.
+18:32:50 INFO Waiting for model:
+  test-sbiusuwb/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-sbiusuwb/0 [executing] active: Building image.
+18:32:56 INFO OpenStack servers: []
+18:32:56 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-lxut  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  18:32:56Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-sbiusuwb           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+test-sbiusuwb                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-sbiusuwb/0*  error     idle   0        10.91.18.86            hook failed: "image-relation-changed"
+test-sbiusuwb/0*                         waiting   idle   1        10.91.18.181           Waiting for image over integration.
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.91.18.86   juju-9f6155-0  ubuntu@22.04  github-runner  Running
+1        started  10.91.18.181  juju-9f6155-1  ubuntu@22.04  github-runner  Running
+
+18:32:57 INFO Juju error logs:
+
+machine-0: 18:26:08 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:08 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-sbiusuwb-0: 18:26:08 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:26:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sbiusuwb-0: 18:26:16 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-sbiusuwb-0: 18:26:43 ERROR unit.github-runner-image-builder-sbiusuwb/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-sbiusuwb-0: 18:27:07 ERROR unit.test-sbiusuwb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sbiusuwb-0: 18:27:09 ERROR unit.test-sbiusuwb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sbiusuwb-0: 18:30:11 ERROR unit.test-sbiusuwb/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sbiusuwb-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-sbiusuwb-0: 18:32:08 ERROR unit.github-runner-image-builder-sbiusuwb/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-sbiusuwb-0: 18:32:20 ERROR unit.github-runner-image-builder-sbiusuwb/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-sbiusuwb-0: 18:32:27 ERROR unit.github-runner-image-builder-sbiusuwb/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-sbiusuwb-0: 18:32:37 ERROR unit.github-runner-image-builder-sbiusuwb/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+18:32:57 INFO Forgetting model main...
