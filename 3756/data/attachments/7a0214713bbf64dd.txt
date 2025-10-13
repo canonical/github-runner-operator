@@ -1,0 +1,180 @@
+18:26:10 INFO GitHub token rate limit: Rate(reset=2025-10-13 19:15:37+00:00, remaining=4931, limit=5000)
+18:26:23 WARNING unexpected facade SSHServer received from the controller
+18:26:23 INFO Adding model github-pr-587b7-lxd:test-charm-metrics-failure-0b8y on cloud localhost
+18:26:23 WARNING unexpected facade SSHServer received from the controller
+18:26:23 WARNING unexpected facade SSHSession received from the controller
+18:26:23 WARNING unexpected facade SSHTunneler received from the controller
+18:26:25 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:26:41 INFO Deploying local:jammy/github-runner-0
+18:26:42 INFO Waiting for model:
+  test-at1t5g18/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-at1t5g18/0 [allocating] waiting: waiting for machine
+18:27:12 INFO Waiting for model:
+  test-at1t5g18/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-at1t5g18/0 [allocating] waiting: waiting for machine
+18:27:42 INFO Waiting for model:
+  test-at1t5g18/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-at1t5g18/0 [executing] maintenance: Setting up Builder.
+18:28:13 INFO Waiting for model:
+  test-at1t5g18/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-at1t5g18/0 [executing] maintenance: Setting up Builder.
+18:28:43 INFO Waiting for model:
+  test-at1t5g18/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-at1t5g18/0 [executing] maintenance: Setting up Builder.
+18:29:13 INFO Waiting for model:
+  test-at1t5g18/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-at1t5g18/0 [executing] maintenance: Setting up Builder.
+18:29:43 INFO Waiting for model:
+  test-at1t5g18/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Waiting for first image.
+18:30:14 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:30:44 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:31:14 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:31:45 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:32:15 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:32:45 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:33:16 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:33:46 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:34:17 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:34:47 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:35:17 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:35:48 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:36:18 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:36:49 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:37:19 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:37:49 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:38:20 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:38:50 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:39:21 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:39:51 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:40:21 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:40:52 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:41:22 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:41:52 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:42:22 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:42:53 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:43:23 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:43:53 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:44:23 INFO Waiting for model:
+  test-at1t5g18/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-at1t5g18/0 [executing] active: Building image.
+18:44:54 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:45:10 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:45:41 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:45:43 INFO Current reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:45:43 INFO Waiting for reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:46:44 INFO Current reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:46:44 INFO Current reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb, expected reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:46:44 INFO Waiting for reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:47:45 INFO Current reconcile ID: 56191d68-ce7a-491e-b148-ec1c4bde64b0
+18:47:45 INFO Current reconcile ID: 56191d68-ce7a-491e-b148-ec1c4bde64b0, expected reconcile ID: 9aeda77a-0e2a-4fe1-8ef8-ca5645674ecb
+18:48:24 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:48:55 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:48:58 INFO Current reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:48:58 INFO Waiting for reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:49:59 INFO Current reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:49:59 INFO Current reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7, expected reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:49:59 INFO Waiting for reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:51:00 INFO Current reconcile ID: 002f4291-5a4b-485f-b8ff-5496860bba9b
+18:51:00 INFO Current reconcile ID: 002f4291-5a4b-485f-b8ff-5496860bba9b, expected reconcile ID: 6d1d1e86-45e2-46c3-98b0-2c272d78c1b7
+18:51:04 INFO [TEST SETUP] Exposing port 8080 on test-at1t5g18-0-n-c8967a480603
+18:51:04 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d1:13:c3'}]])
+18:51:05 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-at1t5g18-0-n-c8967a480603.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.235 &
+18:51:06 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.235' (ED25519) to the list of known hosts.
+
+18:51:08 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-at1t5g18-0-n-c8967a480603
+18:51:08 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d1:13:c3'}]])
+18:51:09 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-at1t5g18-0-n-c8967a480603.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.235 nc -z localhost 8080'
+18:51:10 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:51:10 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-at1t5g18-0-n-c8967a480603
+18:51:10 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.235', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:d1:13:c3'}]])
+18:51:11 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-at1t5g18-0-n-c8967a480603.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.235 curl http://localhost:8080'
+18:51:12 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0   111k      0 --:--:-- --:--:-- --:--:--  202k
+'
+18:51:14 INFO Wait for condition not met, sleeping 10
+18:51:25 INFO Wait for condition not met, sleeping 60
+18:52:25 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:52:56 INFO Waiting for model:
+  test-at1t5g18/0 [idle] active: 
+18:52:58 INFO Current reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:52:58 INFO Waiting for reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:53:59 INFO Current reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:53:59 INFO Current reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464, expected reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:53:59 INFO Waiting for reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:55:00 INFO Current reconcile ID: 7ec53863-ff5d-4814-a391-1bbd422ba433
+18:55:00 INFO Current reconcile ID: 7ec53863-ff5d-4814-a391-1bbd422ba433, expected reconcile ID: 7994cda5-7e60-49d0-a8f6-b92cb6764464
+18:55:01 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760381409.0, "event": "runner_installed", "flavor": "test-at1t5g18", "duration": 96.0}
+{"timestamp": 1760381479.0, "event": "runner_start", "flavor": "test-at1t5g18", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 70.0, "queue_duration": 2.0}
+{"timestamp": 1760381479.0, "event": "runner_stop", "flavor": "test-at1t5g18", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1760381557.6427865, "event": "reconciliation", "flavor": "test-at1t5g18", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 10.399594068527222}
+{"timestamp": 1760381683.3987482, "event": "reconciliation", "flavor": "test-at1t5g18", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.636568784713745}
