@@ -18,6 +18,7 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - run: sudo apt update
   medium-arm64:
     strategy:
       fail-fast: false
@@ -30,6 +31,7 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - run: sudo apt update
   edge-s390x:
     strategy:
       fail-fast: false
@@ -42,6 +44,7 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - run: sudo apt update
   edge-ppc64le:
     strategy:
       fail-fast: false
@@ -54,3 +57,4 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - run: sudo apt update
