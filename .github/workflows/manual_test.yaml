@@ -6,25 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  large-amd64:
+  medium-amd64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, large, amd64, reactive]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - run: sudo apt update
-  large-arm64:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    runs-on: [self-hosted, large, arm64, reactive]
+    runs-on: [self-hosted, medium, amd64, reactive]
     steps:
       - run: lscpu
       - run: df -h
