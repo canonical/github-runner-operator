@@ -1,0 +1,12 @@
+name: SSH test
+
+on:
+  push:
+
+
+jobs:
+  build:
+    runs-on: [self-hosted-linux-amd64-jammy-edge]
+    steps:
+    - name: Setup tmate session
+      uses: canonical/action-tmate@main
