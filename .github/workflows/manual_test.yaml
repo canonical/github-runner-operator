@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  medium-amd64:
+  large-amd64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, medium, amd64, reactive]
+    runs-on: [self-hosted, large, amd64, reactive]
     steps:
       - run: lscpu
       - run: df -h
@@ -19,38 +19,12 @@ jobs:
       - run: uname -a
       - run: lsb_release -a
       - run: sudo apt update
-  medium-arm64:
+  large-arm64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, medium, arm64, reactive]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - run: sudo apt update
-  edge-s390x:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - run: sudo apt update
-  edge-ppc64le:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    runs-on: [self-hosted, self-hosted-linux-ppc64el-noble-edge]
+    runs-on: [self-hosted, large, arm64, reactive]
     steps:
       - run: lscpu
       - run: df -h
