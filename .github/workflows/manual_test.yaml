@@ -18,4 +18,5 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
-      - run: sudo apt update
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
