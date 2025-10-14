@@ -1,0 +1,140 @@
+06:26:34 WARNING unexpected facade SSHServer received from the controller
+06:26:34 INFO Adding model github-pr-587b7-lxd:test-charm-runner-yzeq on cloud localhost
+06:26:34 WARNING unexpected facade SSHServer received from the controller
+06:26:34 WARNING unexpected facade SSHSession received from the controller
+06:26:34 WARNING unexpected facade SSHTunneler received from the controller
+06:26:36 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:26:48 INFO Deploying local:jammy/github-runner-0
+06:26:48 INFO Waiting for model:
+  test-tmdv2w16/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tmdv2w16/0 [allocating] waiting: waiting for machine
+06:27:18 INFO Waiting for model:
+  test-tmdv2w16/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-tmdv2w16/0 [allocating] waiting: waiting for machine
+06:27:48 INFO Waiting for model:
+  test-tmdv2w16/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-tmdv2w16/0 [executing] maintenance: Setting up Builder.
+06:28:18 INFO Waiting for model:
+  test-tmdv2w16/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-tmdv2w16/0 [executing] maintenance: Setting up Builder.
+06:28:48 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] maintenance: Setting up Builder.
+06:29:19 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] maintenance: Setting up Builder.
+06:29:49 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] blocked: image integration required.
+06:30:20 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:30:50 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:31:21 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:31:51 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:32:21 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:32:52 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:33:22 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:33:53 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:34:23 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:34:54 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:35:24 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:36:25 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:37:26 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:37:56 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:38:27 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:38:57 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:39:27 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:39:58 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:40:28 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:40:59 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:41:29 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:41:59 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:42:29 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:42:59 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:43:29 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:44:00 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:44:30 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-tmdv2w16/0 [executing] active: Building image.
+06:45:01 INFO Waiting for model:
+  test-tmdv2w16/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-tmdv2w16/0 [idle] active:
+06:45:25 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] active: 
+06:45:56 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] active: 
+06:45:58 INFO Current reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:45:58 INFO Waiting for reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:46:59 INFO Current reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:46:59 INFO Current reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc, expected reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:46:59 INFO Waiting for reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:48:00 INFO Current reconcile ID: 9be547fa-9b59-460d-9114-2ff15c18f3f6
+06:48:00 INFO Current reconcile ID: 9be547fa-9b59-460d-9114-2ff15c18f3f6, expected reconcile ID: ce5666d3-a899-45b8-bcd4-f6f7d7a8f5cc
+06:53:05 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] active: 
+06:53:35 INFO Waiting for model:
+  test-tmdv2w16/0 [idle] active: 
+06:53:38 INFO Current reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
+06:53:38 INFO Waiting for reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
+06:54:39 INFO Current reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
+06:54:39 INFO Current reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b, expected reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
+06:54:39 INFO Waiting for reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
+06:55:40 INFO Current reconcile ID: a56a89c9-1b8a-4b2c-9d2f-a30104366115
+06:55:40 INFO Current reconcile ID: a56a89c9-1b8a-4b2c-9d2f-a30104366115, expected reconcile ID: 607e1751-bbf4-4a8b-b2fa-3506adc8b92b
