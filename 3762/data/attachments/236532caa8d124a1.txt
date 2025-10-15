@@ -1,0 +1,84 @@
+07:01:07 INFO GitHub token rate limit: Rate(reset=2025-10-15 07:37:49+00:00, remaining=4752, limit=5000)
+07:01:10 INFO Waiting for model:
+  test-yk1cifhx/0 [idle] active: 
+07:01:40 INFO Waiting for model:
+  test-yk1cifhx/0 [idle] active: 
+07:01:44 INFO Current reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:01:44 INFO Waiting for reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:02:45 INFO Current reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:02:45 INFO Current reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8, expected reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:02:45 INFO Waiting for reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:03:46 INFO Current reconcile ID: cfba0248-fbb9-4878-9509-a1da4b66420a
+07:03:46 INFO Current reconcile ID: cfba0248-fbb9-4878-9509-a1da4b66420a, expected reconcile ID: 1b12a3cc-d2b5-40df-80b4-70a69783c9c8
+07:03:53 INFO Wait for condition not met, sleeping 10
+07:04:04 INFO Waiting for model:
+  test-yk1cifhx/0 [idle] active: 
+07:04:34 INFO Waiting for model:
+  test-yk1cifhx/0 [idle] active: 
+07:04:37 INFO Current reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:04:37 INFO Waiting for reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:05:38 INFO Current reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:05:38 INFO Current reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e, expected reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:05:38 INFO Waiting for reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:06:39 INFO Current reconcile ID: 156744f3-136e-42de-8f6b-26fdb618d5e9
+07:06:39 INFO Current reconcile ID: 156744f3-136e-42de-8f6b-26fdb618d5e9, expected reconcile ID: 11c333ac-0691-444e-8ae6-4de4019ca67e
+07:06:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760511737.0, "event": "runner_installed", "flavor": "test-yk1cifhx", "duration": 59.0}
+{"timestamp": 1760511837.0, "event": "runner_start", "flavor": "test-yk1cifhx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 100.0, "queue_duration": 1.0}
+{"timestamp": 1760511841.0, "event": "runner_stop", "flavor": "test-yk1cifhx", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1760511856.6548321, "event": "reconciliation", "flavor": "test-yk1cifhx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.072822332382202}
+{"timestamp": 1760511982.8641293, "event": "reconciliation", "flavor": "test-yk1cifhx", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.156554460525513}
+07:06:42 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-znob  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  07:06:42Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-yk1cifhx           active      1  github-runner-image-builder  latest/edge  126  no       
+test-yk1cifhx                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-yk1cifhx/0*  active    idle   0        10.136.196.36          
+test-yk1cifhx/0*                         active    idle   1        10.136.196.52          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.136.196.36  juju-b29c09-0  ubuntu@22.04  github-runner  Running
+1        started  10.136.196.52  juju-b29c09-1  ubuntu@22.04  github-runner  Running
+
+07:06:42 INFO Juju error logs:
+
+machine-0: 06:32:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:32:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-yk1cifhx-0: 06:32:14 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:32:15 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:15 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-yk1cifhx-0: 06:32:15 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-yk1cifhx-0: 06:32:49 ERROR unit.github-runner-image-builder-yk1cifhx/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-yk1cifhx-0: 06:33:06 ERROR unit.test-yk1cifhx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yk1cifhx-0: 06:33:08 ERROR unit.test-yk1cifhx/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-yk1cifhx-0: 06:34:28 ERROR unit.test-yk1cifhx/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-yk1cifhx-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:06:42 INFO Forgetting model main...

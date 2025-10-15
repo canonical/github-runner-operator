@@ -1,0 +1,345 @@
+06:30:34 INFO IP Address to use as the fake jobmanager: 10.151.128.134
+06:30:34 WARNING unexpected facade SSHServer received from the controller
+06:30:34 INFO Adding model github-pr-587b7-lxd:test-jobmanager-reactive-5nmy on cloud localhost
+06:30:34 WARNING unexpected facade SSHServer received from the controller
+06:30:34 WARNING unexpected facade SSHSession received from the controller
+06:30:34 WARNING unexpected facade SSHTunneler received from the controller
+06:30:34 WARNING unexpected facade SSHServer received from the controller
+06:30:35 INFO Deploying ch:amd64/jammy/mongodb-229
+06:30:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:30:52 INFO Deploying local:jammy/github-runner-0
+06:30:52 INFO Waiting for model:
+  test-ij5y0ufj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ij5y0ufj/0 [allocating] waiting: waiting for machine
+06:31:22 INFO Waiting for model:
+  test-ij5y0ufj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ij5y0ufj/0 [allocating] waiting: waiting for machine
+06:31:53 INFO Waiting for model:
+  test-ij5y0ufj/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ij5y0ufj/0 [allocating] waiting: waiting for machine
+06:32:23 INFO Waiting for model:
+  test-ij5y0ufj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ij5y0ufj/0 [allocating] waiting: waiting for machine
+06:32:53 INFO Waiting for model:
+  test-ij5y0ufj/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ij5y0ufj/0 [executing] maintenance: Setting up Builder.
+06:33:23 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] maintenance: Setting up Builder.
+06:33:53 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] maintenance: Setting up Builder.
+06:34:23 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] maintenance: Setting up Builder.
+06:34:54 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] blocked: image integration required.
+06:35:24 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:35:54 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:36:25 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:36:55 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:37:25 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:37:56 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:38:26 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:38:56 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:39:26 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:39:57 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:40:27 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:40:57 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:41:27 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:41:58 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:42:28 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:42:59 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:43:29 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:43:59 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:44:30 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:45:00 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:45:30 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:46:00 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:46:31 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:47:01 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:47:31 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:48:01 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:48:31 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:49:02 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:49:32 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:50:03 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:50:33 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:51:03 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:51:33 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:52:03 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:52:34 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:53:04 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:53:34 INFO Waiting for model:
+  test-ij5y0ufj/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ij5y0ufj/0 [executing] active: Building image.
+06:53:43 INFO OpenStack servers: []
+06:53:43 INFO cli: juju debug-log --model github-pr-587b7-lxd:test-jobmanager-reactive-5nmy --limit 1000
+06:53:46 INFO Model status:
+
+Model                          Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-reactive-5nmy  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  06:53:45Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ij5y0ufj           error        1  github-runner-image-builder  latest/edge  126  no       hook failed: "image-relation-changed"
+mongodb                               6.0.24   active       1  mongodb                      6/edge       229  no       
+test-ij5y0ufj                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-ij5y0ufj/0*  error     idle   1        10.251.240.250             hook failed: "image-relation-changed"
+mongodb/0*                               active    idle   0        10.251.240.40   27017/tcp  Primary.
+test-ij5y0ufj/0*                         waiting   idle   2        10.251.240.117             Waiting for image over integration.
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.251.240.40   juju-8d9288-0  ubuntu@22.04  github-runner  Running
+1        started  10.251.240.250  juju-8d9288-1  ubuntu@22.04  github-runner  Running
+2        started  10.251.240.117  juju-8d9288-2  ubuntu@22.04  github-runner  Running
+
+06:53:46 INFO Juju error logs:
+
+machine-0: 06:31:53 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:31:53 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-mongodb-0: 06:31:53 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-2: 06:31:54 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 06:31:54 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ij5y0ufj-0: 06:31:54 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-mongodb-0: 06:32:26 ERROR unit.mongodb/0.juju-log Unable to set params: ['vm.max_map_count']
+unit-mongodb-0: 06:32:26 ERROR unit.mongodb/0.juju-log Error setting values on sysctl: Unable to set params: ['vm.max_map_count']
+machine-1: 06:32:38 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:38 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ij5y0ufj-0: 06:32:38 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-test-ij5y0ufj-0: 06:32:54 ERROR unit.test-ij5y0ufj/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ij5y0ufj-0: 06:32:55 ERROR unit.test-ij5y0ufj/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-ij5y0ufj-0: 06:33:15 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ij5y0ufj-0: 06:34:49 ERROR unit.test-ij5y0ufj/0.juju-log image:4: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ij5y0ufj-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:01 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Image build failed, code: 1, out: hello world
+............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+Defaults !syslog
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://az3.clouds.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+curl set to manually installed.
+bash is already the newest version (5.2.21-2ubuntu4).
+sudo is already the newest version (1.9.15p5-3ubuntu5.24.04.1).
+sudo set to manually installed.
+build-essential is already the newest version (12.10ubuntu1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+git set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+sourcecraft (edge) 0+git.229b2ba from Daniel W. Steinbrook (dsteinbrook) installed
+rockcraft (edge) 1.15.0.post1+g02572a8 from Canonical** installed
+charmcraft (edge) 4.0.0.post1+g860b88ec.d20250921 from Canonical** installed
+snapcraft (edge) 8.12.0.post54 from Canonical** installed
+builder-agent (beta) 1.1 from Simone Pelosi (pelpsi) installed
+, err: None, stdout: hello world
+............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................status: done
+Defaults !syslog
+Hit:1 http://security.ubuntu.com/ubuntu noble-security InRelease
+Hit:2 http://az3.clouds.archive.ubuntu.com/ubuntu noble InRelease
+Hit:3 http://az3.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease
+Hit:4 http://az3.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (8.5.0-2ubuntu10.6).
+curl set to manually installed.
+bash is already the newest version (5.2.21-2ubuntu4).
+sudo is already the newest version (1.9.15p5-3ubuntu5.24.04.1).
+sudo set to manually installed.
+build-essential is already the newest version (12.10ubuntu1).
+git is already the newest version (1:2.43.0-1ubuntu7.3).
+git set to manually installed.
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+sourcecraft (edge) 0+git.229b2ba from Daniel W. Steinbrook (dsteinbrook) installed
+rockcraft (edge) 1.15.0.post1+g02572a8 from Canonical** installed
+charmcraft (edge) 4.0.0.post1+g860b88ec.d20250921 from Canonical** installed
+snapcraft (edge) 8.12.0.post54 from Canonical** installed
+builder-agent (beta) 1.1 from Simone Pelosi (pelpsi) installed
+
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:08 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:15 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:25 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:43 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:43 ERROR unit.github-runner-image-builder-ij5y0ufj/0.juju-log image:4: Uncaught exception while in charm code:
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/src/builder.py", line 523, in _run
+    stdout = subprocess.check_output(  # pylint: disable=unexpected-keyword-arg # nosec:B603
+  File "/usr/lib/python3.10/subprocess.py", line 421, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/run-one', '/usr/bin/sudo', '--preserve-env', '/home/ubuntu/.local/bin/github-runner-image-builder', '--os-cloud', 'builder', 'run', 'github-runner-image-builder-ij5y0ufj-noble-x64', '--flavor', 'shared.xsmall', '--keep-revisions', '2', '--network', 'net_stg-ps7-github-runner-test-amd64', '--prefix', 'github-runner-image-builder-ij5y0ufj', '--upload-clouds', 'stg-ps7-github-runner-test-amd64_project_stg-ps7-github-runner-test-amd64', '--arch', 'x64', '--base-image', 'noble', '--script-url', 'https://git.launchpad.net/job-manager/plain/scripts/post-image-build.sh?h=main', '--proxy', 'egress.ps7.internal:3128']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 48, in mapstar
+    return list(map(*args))
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 338, in wrapped_f
+    return copy(f, *args, **kw)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 477, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 378, in iter
+    result = action(retry_state)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 420, in exc_check
+    raise retry_exc.reraise()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 187, in reraise
+    raise self.last_attempt.result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 451, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/tenacity/__init__.py", line 480, in __call__
+    result = fn(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/src/builder.py", line 553, in _run
+    raise BuilderRunError from exc
+exceptions.BuilderRunError
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/__init__.py", line 363, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/./src/charm.py", line 153, in _on_image_relation_changed
+    self._run(cloud_id=cloud_id)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/./src/charm.py", line 253, in _run
+    cloud_images = builder.run(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-ij5y0ufj-0/charm/src/builder.py", line 435, in run
+    build_results = pool.map(_run, build_configs)
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 367, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/usr/lib/python3.10/multiprocessing/pool.py", line 774, in get
+    raise self._value
+exceptions.BuilderRunError
+unit-github-runner-image-builder-ij5y0ufj-0: 06:53:43 ERROR juju.worker.uniter.operation hook "image-relation-changed" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:53:46 INFO Forgetting model main...
