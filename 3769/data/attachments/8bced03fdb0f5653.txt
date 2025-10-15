@@ -1,0 +1,43 @@
+18:32:48 WARNING unexpected facade SSHServer received from the controller
+18:32:48 INFO Adding model github-pr-a94c6-lxd:test-charm-runner-0htk on cloud localhost
+18:32:48 WARNING unexpected facade SSHServer received from the controller
+18:32:48 WARNING unexpected facade SSHSession received from the controller
+18:32:48 WARNING unexpected facade SSHTunneler received from the controller
+18:32:50 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:33:02 INFO Deploying local:jammy/github-runner-0
+18:33:02 INFO Waiting for model:
+  test-cq5reqpc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cq5reqpc/0 [allocating] waiting: waiting for machine
+18:33:32 INFO Waiting for model:
+  test-cq5reqpc/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-cq5reqpc/0 [allocating] waiting: waiting for machine
+18:34:02 INFO Waiting for model:
+  test-cq5reqpc/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-cq5reqpc/0 [allocating] waiting: agent initialising
+18:34:33 INFO Waiting for model:
+  test-cq5reqpc/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:35:03 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:35:33 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:36:03 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:36:33 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:37:04 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] maintenance: Setting up Builder.
+18:37:34 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] blocked: image integration required.
+18:38:04 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] active: Building image.
+18:38:35 INFO Waiting for model:
+  test-cq5reqpc/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-cq5reqpc/0 [executing] active: Building image.

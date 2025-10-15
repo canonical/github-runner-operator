@@ -1,0 +1,42 @@
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 INFO Adding model github-pr-a94c6-lxd:test-reactive-g114 on cloud localhost
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 WARNING unexpected facade SSHSession received from the controller
+18:26:45 WARNING unexpected facade SSHTunneler received from the controller
+18:26:46 INFO GitHub token rate limit: Rate(reset=2025-10-15 19:26:30+00:00, remaining=4996, limit=5000)
+18:26:49 INFO Deploying ch:amd64/jammy/mongodb-229
+18:26:51 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:27:03 INFO Deploying local:jammy/github-runner-0
+18:27:03 INFO Waiting for model:
+  test-vssonx8r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vssonx8r/0 [allocating] waiting: waiting for machine
+18:27:33 INFO Waiting for model:
+  test-vssonx8r/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vssonx8r/0 [allocating] waiting: waiting for machine
+18:28:03 INFO Waiting for model:
+  test-vssonx8r/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vssonx8r/0 [allocating] waiting: waiting for machine
+18:28:34 INFO Waiting for model:
+  test-vssonx8r/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vssonx8r/0 [allocating] waiting: waiting for machine
+18:29:04 INFO Waiting for model:
+  test-vssonx8r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vssonx8r/0 [executing] maintenance: Setting up Builder.
+18:29:34 INFO Waiting for model:
+  test-vssonx8r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vssonx8r/0 [executing] maintenance: Setting up Builder.
+18:30:04 INFO Waiting for model:
+  test-vssonx8r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vssonx8r/0 [executing] maintenance: Setting up Builder.
+18:30:35 INFO Waiting for model:
+  test-vssonx8r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vssonx8r/0 [executing] maintenance: Setting up Builder.
+18:31:05 INFO Waiting for model:
+  test-vssonx8r/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vssonx8r/0 [executing] maintenance: Setting up Builder.
+18:31:35 INFO Waiting for model:
+  test-vssonx8r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vssonx8r/0 [executing] active: Building image.
+18:32:05 INFO Waiting for model:
+  test-vssonx8r/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vssonx8r/0 [executing] active: Building image.
