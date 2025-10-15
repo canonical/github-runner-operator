@@ -1,0 +1,84 @@
+18:52:34 INFO GitHub token rate limit: Rate(reset=2025-10-14 19:05:38+00:00, remaining=4437, limit=5000)
+18:52:38 INFO Waiting for model:
+  test-kazmez4p/0 [idle] active: 
+18:53:08 INFO Waiting for model:
+  test-kazmez4p/0 [idle] active: 
+18:53:11 INFO Current reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:53:11 INFO Waiting for reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:54:12 INFO Current reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:54:12 INFO Current reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc, expected reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:54:12 INFO Waiting for reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:55:13 INFO Current reconcile ID: 3a909a92-7586-45c4-8d9f-d0a0f17261cc
+18:55:13 INFO Current reconcile ID: 3a909a92-7586-45c4-8d9f-d0a0f17261cc, expected reconcile ID: 162c1435-0b18-49bc-856c-8d0eed36f5bc
+18:55:53 INFO Wait for condition not met, sleeping 10
+18:56:04 INFO Waiting for model:
+  test-kazmez4p/0 [idle] active: 
+18:56:34 INFO Waiting for model:
+  test-kazmez4p/0 [idle] active: 
+18:56:37 INFO Current reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:56:37 INFO Waiting for reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:57:38 INFO Current reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:57:38 INFO Current reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a, expected reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:57:38 INFO Waiting for reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:58:39 INFO Current reconcile ID: 827711b0-86c1-4239-8801-23c7f78de5be
+18:58:39 INFO Current reconcile ID: 827711b0-86c1-4239-8801-23c7f78de5be, expected reconcile ID: 6e17f03f-7eeb-4563-b495-99c5316a643a
+18:58:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760468129.0, "event": "runner_installed", "flavor": "test-kazmez4p", "duration": 164.0}
+{"timestamp": 1760468156.0, "event": "runner_start", "flavor": "test-kazmez4p", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 27.0, "queue_duration": 2.0}
+{"timestamp": 1760468160.0, "event": "runner_stop", "flavor": "test-kazmez4p", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1760468177.1268857, "event": "reconciliation", "flavor": "test-kazmez4p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.160006046295166}
+{"timestamp": 1760468304.3488343, "event": "reconciliation", "flavor": "test-kazmez4p", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.133927822113037}
+18:58:41 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-hris  github-pr-587b7-lxd  localhost/localhost  3.6.9    unsupported  18:58:41Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-kazmez4p           active      1  github-runner-image-builder  latest/edge  126  no       
+test-kazmez4p                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-kazmez4p/0*  active    idle   0        10.17.70.109           
+test-kazmez4p/0*                         active    idle   1        10.17.70.130           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.17.70.109  juju-a7baad-0  ubuntu@22.04  github-runner  Running
+1        started  10.17.70.130  juju-a7baad-1  ubuntu@22.04  github-runner  Running
+
+18:58:41 INFO Juju error logs:
+
+machine-0: 18:27:29 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:27:29 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-kazmez4p-0: 18:27:29 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 18:27:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:27:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-kazmez4p-0: 18:27:43 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-kazmez4p-0: 18:28:07 ERROR unit.github-runner-image-builder-kazmez4p/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-kazmez4p-0: 18:28:41 ERROR unit.test-kazmez4p/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kazmez4p-0: 18:28:42 ERROR unit.test-kazmez4p/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-kazmez4p-0: 18:29:32 ERROR unit.test-kazmez4p/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-kazmez4p-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+18:58:41 INFO Forgetting model main...
