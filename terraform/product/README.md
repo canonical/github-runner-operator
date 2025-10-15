@@ -12,7 +12,7 @@ the bundle deployment onto any Kubernetes environment managed by [Juju][Juju].
 
 - **main.tf** - Defines the Juju application to be deployed.
 - **variables.tf** - Allows customization of the deployment including Juju model name, charm's channel and configuration.
-- **output.tf** - Responsible for integrating the module with other Terraform modules, primarily by defining potential integration endpoints (charm integrations).
+- **outputs.tf** - Responsible for integrating the module with other Terraform modules, primarily by defining potential integration endpoints (charm integrations).
 - **versions.tf** - Defines the Terraform provider.
 
 [Terraform]: https://www.terraform.io/
