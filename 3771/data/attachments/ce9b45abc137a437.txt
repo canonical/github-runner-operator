@@ -1,0 +1,218 @@
+06:26:04 WARNING unexpected facade SSHServer received from the controller
+06:26:04 INFO Adding model github-pr-a94c6-lxd:test-reactive-xydd on cloud localhost
+06:26:05 WARNING unexpected facade SSHServer received from the controller
+06:26:05 WARNING unexpected facade SSHSession received from the controller
+06:26:05 WARNING unexpected facade SSHTunneler received from the controller
+06:26:05 INFO GitHub token rate limit: Rate(reset=2025-10-16 07:25:47+00:00, remaining=4995, limit=5000)
+06:26:09 INFO Deploying ch:amd64/jammy/mongodb-229
+06:26:11 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:26:31 INFO Deploying local:jammy/github-runner-0
+06:26:31 INFO Waiting for model:
+  test-koielyb4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-koielyb4/0 [allocating] waiting: waiting for machine
+06:27:01 INFO Waiting for model:
+  test-koielyb4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-koielyb4/0 [allocating] waiting: waiting for machine
+06:27:32 INFO Waiting for model:
+  test-koielyb4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-koielyb4/0 [allocating] waiting: waiting for machine
+06:28:02 INFO Waiting for model:
+  test-koielyb4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-koielyb4/0 [allocating] waiting: waiting for machine
+06:28:32 INFO Waiting for model:
+  test-koielyb4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-koielyb4/0 [executing] maintenance: Setting up Builder.
+06:29:02 INFO Waiting for model:
+  test-koielyb4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-koielyb4/0 [executing] maintenance: Setting up Builder.
+06:29:32 INFO Waiting for model:
+  test-koielyb4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-koielyb4/0 [executing] maintenance: Setting up Builder.
+06:30:03 INFO Waiting for model:
+  test-koielyb4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-koielyb4/0 [executing] maintenance: Setting up Builder.
+06:30:33 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:31:04 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:31:34 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:32:04 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:32:34 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:33:05 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:33:35 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:34:05 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:34:35 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:35:05 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:35:36 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:36:06 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:36:36 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:37:07 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:37:37 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:38:07 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:38:37 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:39:07 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:39:38 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:40:08 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:40:38 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:41:08 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:41:38 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:42:09 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:42:39 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:43:09 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:43:39 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:44:09 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:44:40 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:45:10 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:45:40 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:46:10 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:46:40 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:47:11 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:47:41 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:48:11 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:48:42 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:49:12 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:49:43 INFO Waiting for model:
+  test-koielyb4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-koielyb4/0 [executing] active: Building image.
+06:50:13 INFO Waiting for model:
+  test-koielyb4/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-koielyb4/0 [idle] active: 
+06:50:39 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:50:39 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:51:10 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:51:20 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:51:50 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:51:53 INFO Current reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:51:53 INFO Waiting for reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:52:54 INFO Current reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:52:54 INFO Current reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047, expected reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:52:54 INFO Waiting for reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:53:55 INFO Current reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:53:55 INFO Current reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1, expected reconcile ID: c317bf84-539d-4d76-af72-45a2f1c16047
+06:53:58 INFO Wait for condition not met, sleeping 10
+06:54:19 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:54:35 INFO Current reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:54:35 INFO Waiting for reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:55:36 INFO Current reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:55:36 INFO Current reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1, expected reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:55:36 INFO Waiting for reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:56:37 INFO Current reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:56:37 INFO Current reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8, expected reconcile ID: e15e1899-15be-4fda-b3cb-4cf9d6c07dc1
+06:56:38 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:56:54 INFO Current reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:56:54 INFO Waiting for reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:57:55 INFO Current reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:57:55 INFO Current reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8, expected reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:57:55 INFO Waiting for reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:58:56 INFO Current reconcile ID: 077ceabb-d66c-401b-a455-d7ddbdf40436
+06:58:56 INFO Current reconcile ID: 077ceabb-d66c-401b-a455-d7ddbdf40436, expected reconcile ID: a37cff0a-0586-4d90-a7b6-888d8eba3ef8
+06:58:57 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760597746.2143917, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.632604360580444}
+{"timestamp": 1760597763.0, "event": "runner_installed", "flavor": "test-koielyb4", "duration": 111.0}
+{"timestamp": 1760597768.0, "event": "runner_start", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 127.0}
+{"timestamp": 1760597773.0, "event": "runner_stop", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760597879.3810043, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.077534675598145}
+
+06:58:58 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760597746.2143917, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.632604360580444}
+{"timestamp": 1760597763.0, "event": "runner_installed", "flavor": "test-koielyb4", "duration": 111.0}
+{"timestamp": 1760597768.0, "event": "runner_start", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 127.0}
+{"timestamp": 1760597773.0, "event": "runner_stop", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760597879.3810043, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.077534675598145}
+
+06:58:59 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760597746.2143917, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.632604360580444}
+{"timestamp": 1760597763.0, "event": "runner_installed", "flavor": "test-koielyb4", "duration": 111.0}
+{"timestamp": 1760597768.0, "event": "runner_start", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 127.0}
+{"timestamp": 1760597773.0, "event": "runner_stop", "flavor": "test-koielyb4", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760597879.3810043, "event": "reconciliation", "flavor": "test-koielyb4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.077534675598145}
+06:58:59 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:59:30 INFO Waiting for model:
+  test-koielyb4/0 [idle] active: 
+06:59:32 INFO Current reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
+06:59:32 INFO Waiting for reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
+07:00:33 INFO Current reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
+07:00:33 INFO Current reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a, expected reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
+07:00:33 INFO Waiting for reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
+07:01:34 INFO Current reconcile ID: a9b87714-83cb-43de-8aff-f8ec33598bbe
+07:01:34 INFO Current reconcile ID: a9b87714-83cb-43de-8aff-f8ec33598bbe, expected reconcile ID: 22eafe2c-089c-4ae1-a352-12720db7ea9a
