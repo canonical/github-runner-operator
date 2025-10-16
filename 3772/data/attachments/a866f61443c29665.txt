@@ -1,0 +1,39 @@
+18:25:59 WARNING unexpected facade SSHServer received from the controller
+18:25:59 INFO Adding model github-pr-a94c6-lxd:test-reactive-5t5e on cloud localhost
+18:25:59 WARNING unexpected facade SSHServer received from the controller
+18:25:59 WARNING unexpected facade SSHSession received from the controller
+18:25:59 WARNING unexpected facade SSHTunneler received from the controller
+18:26:00 INFO GitHub token rate limit: Rate(reset=2025-10-16 19:26:00+00:00, remaining=5000, limit=5000)
+18:26:04 INFO Deploying ch:amd64/jammy/mongodb-229
+18:26:06 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:26:25 INFO Deploying local:jammy/github-runner-0
+18:26:26 INFO Waiting for model:
+  test-vigeztm3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vigeztm3/0 [allocating] waiting: waiting for machine
+18:26:56 INFO Waiting for model:
+  test-vigeztm3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vigeztm3/0 [allocating] waiting: waiting for machine
+18:27:26 INFO Waiting for model:
+  test-vigeztm3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vigeztm3/0 [allocating] waiting: waiting for machine
+18:27:57 INFO Waiting for model:
+  test-vigeztm3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vigeztm3/0 [allocating] waiting: waiting for machine
+18:28:27 INFO Waiting for model:
+  test-vigeztm3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vigeztm3/0 [executing] maintenance: Setting up Builder.
+18:28:57 INFO Waiting for model:
+  test-vigeztm3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vigeztm3/0 [executing] maintenance: Setting up Builder.
+18:29:28 INFO Waiting for model:
+  test-vigeztm3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vigeztm3/0 [executing] maintenance: Setting up Builder.
+18:29:58 INFO Waiting for model:
+  test-vigeztm3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vigeztm3/0 [executing] maintenance: Setting up Builder.
+18:30:28 INFO Waiting for model:
+  test-vigeztm3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vigeztm3/0 [executing] blocked: image integration required.
+18:30:59 INFO Waiting for model:
+  test-vigeztm3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vigeztm3/0 [executing] active: Building image.
