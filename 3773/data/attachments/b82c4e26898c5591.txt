@@ -1,0 +1,218 @@
+06:30:30 WARNING unexpected facade SSHServer received from the controller
+06:30:30 INFO Adding model github-pr-a94c6-lxd:test-reactive-k2to on cloud localhost
+06:30:30 WARNING unexpected facade SSHServer received from the controller
+06:30:30 WARNING unexpected facade SSHSession received from the controller
+06:30:30 WARNING unexpected facade SSHTunneler received from the controller
+06:30:31 INFO GitHub token rate limit: Rate(reset=2025-10-17 06:30:55+00:00, remaining=4979, limit=5000)
+06:30:35 INFO Deploying ch:amd64/jammy/mongodb-229
+06:30:37 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:30:50 INFO Deploying local:jammy/github-runner-0
+06:30:50 INFO Waiting for model:
+  test-lq1zb2le/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lq1zb2le/0 [allocating] waiting: waiting for machine
+06:31:20 INFO Waiting for model:
+  test-lq1zb2le/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lq1zb2le/0 [allocating] waiting: waiting for machine
+06:31:50 INFO Waiting for model:
+  test-lq1zb2le/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lq1zb2le/0 [allocating] waiting: waiting for machine
+06:32:21 INFO Waiting for model:
+  test-lq1zb2le/0 [executing] waiting: agent initialising
+  github-runner-image-builder-lq1zb2le/0 [allocating] waiting: waiting for machine
+06:32:51 INFO Waiting for model:
+  test-lq1zb2le/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-lq1zb2le/0 [executing] maintenance: Setting up Builder.
+06:33:22 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] maintenance: Setting up Builder.
+06:33:52 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] maintenance: Setting up Builder.
+06:34:22 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] maintenance: Setting up Builder.
+06:34:53 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] blocked: image integration required.
+06:35:23 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:35:53 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:36:23 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:36:54 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:37:24 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:37:54 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:38:24 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:38:54 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:39:24 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:39:55 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:40:25 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:40:55 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:41:25 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:41:55 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:42:26 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:42:56 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:43:26 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:43:56 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:44:27 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:44:57 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:45:27 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:45:57 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:46:28 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:46:58 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:47:28 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:47:58 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:48:28 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:48:59 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:49:29 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:49:59 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:50:29 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:51:00 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:51:30 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:52:00 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:52:31 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:53:01 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:53:31 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:54:01 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:54:32 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-lq1zb2le/0 [executing] active: Building image.
+06:55:02 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+06:55:09 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:55:10 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:55:40 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:55:51 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+06:56:21 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+06:56:24 INFO Current reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:56:24 INFO Waiting for reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:57:25 INFO Current reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:57:25 INFO Current reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6, expected reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:57:25 INFO Waiting for reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:58:26 INFO Current reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+06:58:26 INFO Current reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757, expected reconcile ID: 3e28cb36-12cc-468f-9d5f-7b266b0b98a6
+06:58:29 INFO Wait for condition not met, sleeping 10
+06:58:50 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+06:59:06 INFO Current reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+06:59:06 INFO Waiting for reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+07:00:07 INFO Current reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+07:00:07 INFO Current reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757, expected reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+07:00:07 INFO Waiting for reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+07:01:08 INFO Current reconcile ID: d135e905-7300-4265-9019-85033db54bb9
+07:01:08 INFO Current reconcile ID: d135e905-7300-4265-9019-85033db54bb9, expected reconcile ID: 85717ee5-8d01-49cc-8863-9df581c95757
+07:01:08 INFO Wait for condition not met, sleeping 60
+07:02:09 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+07:02:25 INFO Current reconcile ID: d135e905-7300-4265-9019-85033db54bb9
+07:02:25 INFO Waiting for reconcile ID: d135e905-7300-4265-9019-85033db54bb9
+07:03:26 INFO Current reconcile ID: c442bc6e-4956-4a00-9a46-80131923a4d8
+07:03:26 INFO Current reconcile ID: c442bc6e-4956-4a00-9a46-80131923a4d8, expected reconcile ID: d135e905-7300-4265-9019-85033db54bb9
+07:03:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760684418.080634, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.666935682296753}
+{"timestamp": 1760684460.0, "event": "runner_installed", "flavor": "test-lq1zb2le", "duration": 138.0}
+{"timestamp": 1760684467.0, "event": "runner_start", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 156.0}
+{"timestamp": 1760684472.0, "event": "runner_stop", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760684550.8365364, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.645547151565552}
+
+07:03:28 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760684418.080634, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.666935682296753}
+{"timestamp": 1760684460.0, "event": "runner_installed", "flavor": "test-lq1zb2le", "duration": 138.0}
+{"timestamp": 1760684467.0, "event": "runner_start", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 156.0}
+{"timestamp": 1760684472.0, "event": "runner_stop", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760684550.8365364, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.645547151565552}
+
+07:03:29 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760684418.080634, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.666935682296753}
+{"timestamp": 1760684460.0, "event": "runner_installed", "flavor": "test-lq1zb2le", "duration": 138.0}
+{"timestamp": 1760684467.0, "event": "runner_start", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 156.0}
+{"timestamp": 1760684472.0, "event": "runner_stop", "flavor": "test-lq1zb2le", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1760684550.8365364, "event": "reconciliation", "flavor": "test-lq1zb2le", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.645547151565552}
+07:03:29 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+07:04:00 INFO Waiting for model:
+  test-lq1zb2le/0 [idle] active: 
+07:04:02 INFO Current reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96
+07:04:02 INFO Waiting for reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96
+07:05:03 INFO Current reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96
+07:05:03 INFO Current reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96, expected reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96
+07:05:03 INFO Waiting for reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96
+07:06:04 INFO Current reconcile ID: 3641688c-fb15-463d-a446-91efbcfd0d67
+07:06:04 INFO Current reconcile ID: 3641688c-fb15-463d-a446-91efbcfd0d67, expected reconcile ID: ef041798-9a16-4282-86aa-f662187ebb96

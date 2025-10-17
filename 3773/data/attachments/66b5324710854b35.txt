@@ -1,0 +1,434 @@
+06:29:20 INFO IP Address to use as the fake jobmanager: 10.151.128.58
+06:29:20 WARNING unexpected facade SSHServer received from the controller
+06:29:20 INFO Adding model github-pr-a94c6-lxd:test-jobmanager-prespawned-o6bu on cloud localhost
+06:29:20 WARNING unexpected facade SSHServer received from the controller
+06:29:20 WARNING unexpected facade SSHSession received from the controller
+06:29:20 WARNING unexpected facade SSHTunneler received from the controller
+06:29:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+06:29:33 INFO Deploying local:jammy/github-runner-0
+06:29:33 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [allocating] waiting: waiting for machine
+06:30:03 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [allocating] waiting: waiting for machine
+06:30:34 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [allocating] waiting: waiting for machine
+06:31:04 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [allocating] waiting: waiting for machine
+06:31:34 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [allocating] waiting: waiting for machine
+06:32:04 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:32:34 INFO Waiting for model:
+  test-q6qxegt3/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:33:04 INFO Waiting for model:
+  test-q6qxegt3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:33:35 INFO Waiting for model:
+  test-q6qxegt3/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:34:05 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:34:35 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] maintenance: Setting up Builder.
+06:35:06 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:35:36 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:36:06 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:36:37 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:37:07 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:37:37 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:38:08 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:38:38 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:39:09 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:39:39 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:40:10 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:40:40 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:41:10 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:41:41 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:42:11 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:42:42 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:43:12 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:43:42 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:44:13 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:44:43 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:45:14 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:45:44 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:46:14 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:46:45 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:47:15 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:47:45 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:48:16 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:48:46 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:49:16 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:49:47 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:50:17 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:50:48 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:51:18 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:51:48 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:52:19 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:52:49 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:53:19 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:53:50 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:54:20 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:54:51 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:55:21 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:55:51 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:56:22 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:56:52 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:57:23 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:57:53 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-q6qxegt3/0 [executing] active: Building image.
+06:58:24 INFO Waiting for model:
+  test-q6qxegt3/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-q6qxegt3/0 [idle] active: 
+06:58:53 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+06:59:08 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+06:59:39 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+06:59:44 INFO Current reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+06:59:44 INFO Waiting for reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+07:00:45 INFO Current reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+07:00:45 INFO Current reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720, expected reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+07:00:45 INFO Waiting for reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+07:01:46 INFO Current reconcile ID: e11467bd-6329-4e01-853f-ef794b018596
+07:01:46 INFO Current reconcile ID: e11467bd-6329-4e01-853f-ef794b018596, expected reconcile ID: 344994fe-1b7f-4b2c-b4b2-28dc77ba5720
+07:01:46 INFO Waiting for runner to be registered.
+07:01:51 INFO 10.237.103.73 - - [17/Oct/2025 07:01:51] "POST /v1/runners/register HTTP/1.1" 200 -
+07:01:51 INFO server log: [(<Request 'http://10.151.128.58:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>)] 
+07:01:51 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 83ca00806a59c0ea'} data=None json=<UNDEFINED>>
+07:01:51 INFO trying to prepare tunnel for builder agent
+07:01:52 INFO no runner or two or more runners in unit, return False
+07:01:52 INFO Wait for condition not met, sleeping 10
+07:01:53 INFO 10.237.103.73 - - [17/Oct/2025 07:01:53] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:02:02 INFO trying to prepare tunnel for builder agent
+07:02:03 INFO no addresses yet, return False
+07:02:03 INFO Wait for condition not met, sleeping 10
+07:02:13 INFO trying to prepare tunnel for builder agent
+07:02:13 INFO no addresses yet, return False
+07:02:13 INFO Wait for condition not met, sleeping 10
+07:02:23 INFO trying to prepare tunnel for builder agent
+07:02:24 INFO no addresses yet, return False
+07:02:24 INFO Wait for condition not met, sleeping 10
+07:02:34 INFO trying to prepare tunnel for builder agent
+07:02:34 INFO no addresses yet, return False
+07:02:34 INFO Wait for condition not met, sleeping 10
+07:02:44 INFO trying to prepare tunnel for builder agent
+07:02:44 INFO no addresses yet, return False
+07:02:44 INFO Wait for condition not met, sleeping 10
+07:02:54 INFO trying to prepare tunnel for builder agent
+07:02:55 INFO no addresses yet, return False
+07:02:55 INFO Wait for condition not met, sleeping 10
+07:03:05 INFO trying to prepare tunnel for builder agent
+07:03:05 INFO no addresses yet, return False
+07:03:05 INFO Wait for condition not met, sleeping 10
+07:03:15 INFO trying to prepare tunnel for builder agent
+07:03:16 INFO [TEST SETUP] Run command 'echo hello' on test-q6qxegt3-0-n-4964e7271606
+07:03:16 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:03:17 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.37 'echo hello''
+07:03:25 INFO Run command ''echo hello'' in runner with result 255: 'None' 'ssh: connect to host 10.151.122.37 port 22: Connection refused
+'
+07:03:25 INFO cannot ssh yet, return False
+07:03:25 INFO Wait for condition not met, sleeping 10
+07:03:35 INFO trying to prepare tunnel for builder agent
+07:03:36 INFO [TEST SETUP] Run command 'echo hello' on test-q6qxegt3-0-n-4964e7271606
+07:03:36 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:03:37 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.37 'echo hello''
+07:03:38 INFO Run command ''echo hello'' in runner with result 0: 'hello
+' 'Warning: Permanently added '10.151.122.37' (ED25519) to the list of known hosts.
+'
+07:03:55 INFO 10.237.103.73 - - [17/Oct/2025 07:03:55] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:03:57 INFO 10.237.103.73 - - [17/Oct/2025 07:03:57] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:03:58 INFO 10.237.103.73 - - [17/Oct/2025 07:03:58] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:04:38 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.151.128.58 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000 on test-q6qxegt3-0-n-4964e7271606
+07:04:38 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:04:39 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.37 sudo iptables -t nat -A OUTPUT -p tcp -d 10.151.128.58 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000'
+07:04:40 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.151.128.58 --dport 8000 -j DNAT --to-destination 127.0.0.1:8000' in runner with result 0: 'None' 'None'
+07:04:40 INFO [TEST SETUP] Exposing port 8000 on test-q6qxegt3-0-n-4964e7271606
+07:04:40 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:04:41 INFO ssh tunnel command ssh -fNT -R 8000:10.151.128.58:8000 -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.37 &
+07:04:42 INFO ssh tunnel result 0 None None
+07:04:44 INFO [TEST SETUP] Run command nc -z localhost 8000 on test-q6qxegt3-0-n-4964e7271606
+07:04:44 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:04:45 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.37 nc -z localhost 8000'
+07:04:46 INFO Run command 'nc -z localhost 8000' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8000 port [tcp/*] succeeded!
+'
+07:04:46 INFO prepared tunnel for builder agent
+07:04:46 INFO Waiting for builder-agent to contact us.
+07:04:53 INFO 10.237.103.73 - - [17/Oct/2025 07:04:53] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:04:53 INFO server log after executing: [(<Request 'http://10.151.128.58:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+07:04:53 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 83ca00806a59c0ea'} data=None json=<UNDEFINED>>
+07:04:54 INFO [TEST SETUP] Run command 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"' on test-q6qxegt3-0-n-4964e7271606
+07:04:54 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.37', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:fd:5c:86'}]])
+07:04:55 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-q6qxegt3-0-n-4964e7271606.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.37 'curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"''
+07:04:56 INFO Run command ''curl http://127.0.0.1:8080/execute -X POST --header "Content-Type: application/json" --data "{\"commands\":[\"sleep 30\"]}"'' in runner with result 0: 'Execution started' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    42  100    17  100    25  29411  43252 --:--:-- --:--:-- --:--:-- 42000
+'
+07:04:56 INFO Waiting for builder-agent to contact us.
+07:04:58 INFO 10.237.103.73 - - [17/Oct/2025 07:04:58] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:03 INFO 10.237.103.73 - - [17/Oct/2025 07:05:03] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:08 INFO 10.237.103.73 - - [17/Oct/2025 07:05:08] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:13 INFO 10.237.103.73 - - [17/Oct/2025 07:05:13] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:18 INFO 10.237.103.73 - - [17/Oct/2025 07:05:18] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:23 INFO 10.237.103.73 - - [17/Oct/2025 07:05:23] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:28 INFO 10.237.103.73 - - [17/Oct/2025 07:05:28] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:28 INFO server log after executing: [(<Request 'http://10.151.128.58:8000/v1/runners/register' [POST]>, <Response 40 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [GET]>, <Response 140 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>), (<Request 'http://10.151.128.58:8000/v1/runners/1234/health' [PUT]>, <Response 2 bytes [200 OK]>)] 
+07:05:28 INFO First reconcile that should not delete the runner, as it is still healthy.
+07:05:28 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:05:31 INFO 10.237.103.73 - - [17/Oct/2025 07:05:31] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:33 INFO 10.237.103.73 - - [17/Oct/2025 07:05:33] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:33 INFO 10.237.103.73 - - [17/Oct/2025 07:05:33] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:34 INFO 10.237.103.73 - - [17/Oct/2025 07:05:34] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:38 INFO 10.237.103.73 - - [17/Oct/2025 07:05:38] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:43 INFO 10.237.103.73 - - [17/Oct/2025 07:05:43] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:48 INFO 10.237.103.73 - - [17/Oct/2025 07:05:48] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:53 INFO 10.237.103.73 - - [17/Oct/2025 07:05:53] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:58 INFO 10.237.103.73 - - [17/Oct/2025 07:05:58] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:05:59 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:06:01 INFO Current reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:06:01 INFO Waiting for reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:06:03 INFO 10.237.103.73 - - [17/Oct/2025 07:06:03] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:08 INFO 10.237.103.73 - - [17/Oct/2025 07:06:08] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:13 INFO 10.237.103.73 - - [17/Oct/2025 07:06:13] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:18 INFO 10.237.103.73 - - [17/Oct/2025 07:06:18] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:23 INFO 10.237.103.73 - - [17/Oct/2025 07:06:23] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:28 INFO 10.237.103.73 - - [17/Oct/2025 07:06:28] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:33 INFO 10.237.103.73 - - [17/Oct/2025 07:06:33] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:38 INFO 10.237.103.73 - - [17/Oct/2025 07:06:38] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:43 INFO 10.237.103.73 - - [17/Oct/2025 07:06:43] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:48 INFO 10.237.103.73 - - [17/Oct/2025 07:06:48] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:53 INFO 10.237.103.73 - - [17/Oct/2025 07:06:53] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:06:58 INFO 10.237.103.73 - - [17/Oct/2025 07:06:58] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:02 INFO Current reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:07:02 INFO Current reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597, expected reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:07:02 INFO Waiting for reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:07:03 INFO 10.237.103.73 - - [17/Oct/2025 07:07:03] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:08 INFO 10.237.103.73 - - [17/Oct/2025 07:07:08] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:13 INFO 10.237.103.73 - - [17/Oct/2025 07:07:13] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:18 INFO 10.237.103.73 - - [17/Oct/2025 07:07:18] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:23 INFO 10.237.103.73 - - [17/Oct/2025 07:07:23] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:28 INFO 10.237.103.73 - - [17/Oct/2025 07:07:28] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:33 INFO 10.237.103.73 - - [17/Oct/2025 07:07:33] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:38 INFO 10.237.103.73 - - [17/Oct/2025 07:07:38] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:43 INFO 10.237.103.73 - - [17/Oct/2025 07:07:43] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:48 INFO 10.237.103.73 - - [17/Oct/2025 07:07:48] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:53 INFO 10.237.103.73 - - [17/Oct/2025 07:07:53] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:07:58 INFO 10.237.103.73 - - [17/Oct/2025 07:07:58] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:03 INFO Current reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:08:03 INFO Current reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597, expected reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:08:03 INFO Waiting for reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:08:03 INFO 10.237.103.73 - - [17/Oct/2025 07:08:03] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:08 INFO 10.237.103.73 - - [17/Oct/2025 07:08:08] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:13 INFO 10.237.103.73 - - [17/Oct/2025 07:08:13] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:18 INFO 10.237.103.73 - - [17/Oct/2025 07:08:18] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:23 INFO 10.237.103.73 - - [17/Oct/2025 07:08:23] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:28 INFO 10.237.103.73 - - [17/Oct/2025 07:08:28] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:33 INFO 10.237.103.73 - - [17/Oct/2025 07:08:33] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:35 INFO 10.237.103.73 - - [17/Oct/2025 07:08:35] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:37 INFO 10.237.103.73 - - [17/Oct/2025 07:08:37] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:38 INFO 10.237.103.73 - - [17/Oct/2025 07:08:38] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:39 INFO 10.237.103.73 - - [17/Oct/2025 07:08:39] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:44 INFO 10.237.103.73 - - [17/Oct/2025 07:08:44] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:49 INFO 10.237.103.73 - - [17/Oct/2025 07:08:49] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:54 INFO 10.237.103.73 - - [17/Oct/2025 07:08:54] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:08:59 INFO 10.237.103.73 - - [17/Oct/2025 07:08:59] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:04 INFO 10.237.103.73 - - [17/Oct/2025 07:09:04] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:04 INFO Current reconcile ID: 9cefc246-9f56-489b-af1f-1bb75037a4f6
+07:09:04 INFO Current reconcile ID: 9cefc246-9f56-489b-af1f-1bb75037a4f6, expected reconcile ID: fe539578-1f93-4b48-ac9e-23aa30cac597
+07:09:06 INFO 10.237.103.73 - - [17/Oct/2025 07:09:06] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:09 INFO 10.237.103.73 - - [17/Oct/2025 07:09:09] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:09 INFO 10.237.103.73 - - [17/Oct/2025 07:09:09] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:10 INFO check-runners: {'busy': '1', 'busy-runners': "('test-q6qxegt3-0-n-4964e7271606',)", 'offline': '0', 'online': '1', 'return-code': 0, 'runners': "('test-q6qxegt3-0-n-4964e7271606',)", 'unknown': '0'}
+07:09:10 INFO handler health <RequestHandler uri='/v1/runners/1234/health' method='GET' query_string=None headers={'Authorization': 'Bearer 83ca00806a59c0ea'} data=None json=<UNDEFINED>>
+07:09:10 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:09:13 INFO 10.237.103.73 - - [17/Oct/2025 07:09:13] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:14 INFO 10.237.103.73 - - [17/Oct/2025 07:09:14] "PUT /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:17 INFO 10.237.103.73 - - [17/Oct/2025 07:09:17] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:19 INFO 10.237.103.73 - - [17/Oct/2025 07:09:19] "GET /v1/runners/1234/health HTTP/1.1" 200 -
+07:09:41 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:09:43 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:09:43 INFO Waiting for reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:10:44 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:10:44 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7, expected reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:10:44 INFO Waiting for reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:11:45 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:11:45 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7, expected reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:11:45 INFO Waiting for reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:12:46 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:12:46 INFO Current reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7, expected reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:12:46 INFO Waiting for reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:13:22 INFO 10.237.103.73 - - [17/Oct/2025 07:13:22] "[35m[1mPOST /v1/runners/register HTTP/1.1[0m" 500 -
+07:13:47 INFO Current reconcile ID: 2305151c-7a6b-4f07-ac5e-6cc86131707c
+07:13:47 INFO Current reconcile ID: 2305151c-7a6b-4f07-ac5e-6cc86131707c, expected reconcile ID: 57328c3c-13d4-4c17-8137-3cf0749e9ae7
+07:13:49 INFO check-runners: {'busy': '0', 'busy-runners': '()', 'offline': '0', 'online': '0', 'return-code': 0, 'runners': '()', 'unknown': '0'}
+07:13:49 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:14:20 INFO Waiting for model:
+  test-q6qxegt3/0 [idle] active: 
+07:14:22 INFO Current reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:14:22 INFO Waiting for reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:15:23 INFO Current reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:15:23 INFO Current reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215, expected reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:15:23 INFO Waiting for reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:16:24 INFO Current reconcile ID: 1a3b5ba7-f6ce-487e-a629-1de438af9c99
+07:16:24 INFO Current reconcile ID: 1a3b5ba7-f6ce-487e-a629-1de438af9c99, expected reconcile ID: 2b3388c2-86d5-4171-8db1-3eba8a0be215
+07:16:26 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-jobmanager-prespawned-o6bu  github-pr-a94c6-lxd  localhost/localhost  3.6.9    unsupported  07:16:26Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-q6qxegt3           active      1  github-runner-image-builder  latest/edge  126  no       
+test-q6qxegt3                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-q6qxegt3/0*  active    idle   0        10.237.103.238         
+test-q6qxegt3/0*                         active    idle   1        10.237.103.73          
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.237.103.238  juju-1c3993-0  ubuntu@22.04  github-runner  Running
+1        started  10.237.103.73   juju-1c3993-1  ubuntu@22.04  github-runner  Running
+
+07:16:27 INFO Juju error logs:
+
+machine-0: 06:31:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:31:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-q6qxegt3-0: 06:31:48 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+machine-1: 06:32:51 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:32:51 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-q6qxegt3-0: 06:32:51 ERROR juju.worker.meterstatus error running "meter-status-changed": charm missing from disk
+unit-github-runner-image-builder-q6qxegt3-0: 06:33:11 ERROR unit.github-runner-image-builder-q6qxegt3/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-q6qxegt3-0: 06:33:42 ERROR unit.test-q6qxegt3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-q6qxegt3-0: 06:33:43 ERROR unit.test-q6qxegt3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-q6qxegt3-0: 06:34:42 ERROR unit.test-q6qxegt3/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-q6qxegt3-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:16:27 INFO Forgetting model main...
