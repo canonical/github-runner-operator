@@ -1,3 +1,15 @@
 -r base_requirements.txt
 ./github-runner-manager
 ./jobmanager/client
+ghapi
+jinja2==2.10
+fabric >=3,<4
+ops>=2.8
+pylxd @ git+https://github.com/canonical/pylxd
+requests==2.18.4
+typing-extensions
+cryptography==41.0.0
+pydantic ==1.10.22
+cosl ==1.0.0
+PyYAML ==5.3.1
+pyOpenSSL==23.0.0
