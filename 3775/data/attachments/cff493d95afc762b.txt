@@ -1,0 +1,224 @@
+18:27:41 WARNING unexpected facade SSHServer received from the controller
+18:27:41 INFO Adding model github-pr-a94c6-lxd:test-reactive-c1p6 on cloud localhost
+18:27:41 WARNING unexpected facade SSHServer received from the controller
+18:27:41 WARNING unexpected facade SSHSession received from the controller
+18:27:41 WARNING unexpected facade SSHTunneler received from the controller
+18:27:42 INFO GitHub token rate limit: Rate(reset=2025-10-17 18:30:56+00:00, remaining=4999, limit=5000)
+18:27:45 INFO Deploying ch:amd64/jammy/mongodb-229
+18:27:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-126
+18:28:00 INFO Deploying local:jammy/github-runner-0
+18:28:00 INFO Waiting for model:
+  test-vzdzwkjv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:28:30 INFO Waiting for model:
+  test-vzdzwkjv/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:29:00 INFO Waiting for model:
+  test-vzdzwkjv/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:29:31 INFO Waiting for model:
+  test-vzdzwkjv/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:30:01 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:30:32 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [allocating] waiting: waiting for machine
+18:31:02 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] maintenance: Setting up Builder.
+18:31:32 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] maintenance: Setting up Builder.
+18:32:03 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] maintenance: Setting up Builder.
+18:32:33 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] maintenance: Setting up Builder.
+18:33:03 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] maintenance: Setting up Builder.
+18:33:34 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] blocked: image integration required.
+18:34:04 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:34:34 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:35:04 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:35:35 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:36:05 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:36:35 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:37:05 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:37:35 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:38:06 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:38:36 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:39:06 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:39:36 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:40:07 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:40:37 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:41:07 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:41:38 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:42:08 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:42:38 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:43:08 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:43:39 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:44:09 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:44:39 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:45:09 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:45:39 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:46:09 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:46:40 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:47:10 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:47:40 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:48:10 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:48:40 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:49:10 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:49:41 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:50:11 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:50:41 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:51:11 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:51:42 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:52:12 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:52:43 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-vzdzwkjv/0 [executing] active: Building image.
+18:53:13 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+18:53:25 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:53:26 INFO Waiting for model:
+  test-vzdzwkjv/0 [executing] active: 
+  mongodb/0 [executing] active: Primary.
+18:53:56 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+18:54:05 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+18:54:36 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+18:54:38 INFO Current reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:54:38 INFO Waiting for reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:55:39 INFO Current reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:55:39 INFO Current reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330, expected reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:55:39 INFO Waiting for reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:56:40 INFO Current reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:56:40 INFO Current reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001, expected reconcile ID: 27ef3aad-4f08-4b3d-bca2-6303d9ce3330
+18:56:43 INFO Wait for condition not met, sleeping 10
+18:57:04 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+18:57:21 INFO Current reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:57:21 INFO Waiting for reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:58:22 INFO Current reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:58:22 INFO Current reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001, expected reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:58:22 INFO Waiting for reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:59:23 INFO Current reconcile ID: a7f56458-13cb-4e77-a1cf-69861d6e1848
+18:59:23 INFO Current reconcile ID: a7f56458-13cb-4e77-a1cf-69861d6e1848, expected reconcile ID: e0b9085b-13d4-45d9-b909-f78706df5001
+18:59:23 INFO Wait for condition not met, sleeping 60
+19:00:23 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+19:00:39 INFO Current reconcile ID: a7f56458-13cb-4e77-a1cf-69861d6e1848
+19:00:39 INFO Waiting for reconcile ID: a7f56458-13cb-4e77-a1cf-69861d6e1848
+19:01:40 INFO Current reconcile ID: f6b152fc-b52c-4199-95e3-2f13b306d478
+19:01:40 INFO Current reconcile ID: f6b152fc-b52c-4199-95e3-2f13b306d478, expected reconcile ID: a7f56458-13cb-4e77-a1cf-69861d6e1848
+19:01:41 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760727513.5581372, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.530683279037476}
+{"timestamp": 1760727558.0, "event": "runner_installed", "flavor": "test-vzdzwkjv", "duration": 140.0}
+{"timestamp": 1760727563.0, "event": "runner_start", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1760727567.0, "event": "runner_stop", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1760727646.8484025, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.227564573287964}
+
+19:01:43 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760727513.5581372, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.530683279037476}
+{"timestamp": 1760727558.0, "event": "runner_installed", "flavor": "test-vzdzwkjv", "duration": 140.0}
+{"timestamp": 1760727563.0, "event": "runner_start", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1760727567.0, "event": "runner_stop", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1760727646.8484025, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.227564573287964}
+
+19:01:44 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1760727513.5581372, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.530683279037476}
+{"timestamp": 1760727558.0, "event": "runner_installed", "flavor": "test-vzdzwkjv", "duration": 140.0}
+{"timestamp": 1760727563.0, "event": "runner_start", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 5.0, "queue_duration": 156.0}
+{"timestamp": 1760727567.0, "event": "runner_stop", "flavor": "test-vzdzwkjv", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1760727646.8484025, "event": "reconciliation", "flavor": "test-vzdzwkjv", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.227564573287964}
+19:01:44 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+19:02:14 INFO Waiting for model:
+  test-vzdzwkjv/0 [idle] active: 
+19:02:17 INFO Current reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
+19:02:17 INFO Waiting for reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
+19:03:18 INFO Current reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
+19:03:18 INFO Current reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c, expected reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
+19:03:18 INFO Waiting for reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
+19:04:19 INFO Current reconcile ID: 58344892-ff06-48fe-ba22-cf705d4de6f4
+19:04:19 INFO Current reconcile ID: 58344892-ff06-48fe-ba22-cf705d4de6f4, expected reconcile ID: 54c4b6c2-08d8-42b1-b02f-d2a8bc5c6c2c
