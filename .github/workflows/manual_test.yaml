@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  amd64-edge:
+  tiobe-amd64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, X64, edge]
+    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
     steps:
       - run: lscpu
       - run: df -h
