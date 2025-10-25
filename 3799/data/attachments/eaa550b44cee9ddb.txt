@@ -1,0 +1,23 @@
+18:54:49 INFO GitHub token rate limit: Rate(reset=2025-10-25 19:24:31+00:00, remaining=4984, limit=5000)
+18:54:52 INFO OpenStack servers: []
+18:54:52 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-fv4l  github-pr-a94c6-lxd  localhost/localhost  3.6.11   unsupported  18:54:52Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-p73ic5g5           waiting    0/1  github-runner-image-builder  latest/edge  126  no       waiting for machine
+test-p73ic5g5                                  waiting    0/1  github-runner                               0  no       waiting for machine
+
+Unit                                    Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-p73ic5g5/0  waiting   allocating  0        10.101.241.171         waiting for machine
+test-p73ic5g5/0                         waiting   allocating  1        10.101.241.21          waiting for machine
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        pending  10.101.241.171  juju-ea9533-0  ubuntu@22.04  github-runner  Running
+1        pending  10.101.241.21   juju-ea9533-1  ubuntu@22.04  github-runner  Running
+
+18:54:52 INFO Juju error logs:
+
+
+18:54:52 INFO Forgetting model main...
