@@ -71,6 +71,7 @@ def test_create_application_configuration(
     app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
 
     assert app_configuration == ApplicationConfiguration(
+        allow_external_contributor=False,
         name="app_name",
         extra_labels=["label1", "label2"],
         github_config=expected_github_config,

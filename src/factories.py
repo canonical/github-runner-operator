@@ -96,6 +96,7 @@ def create_application_configuration(
     reactive_configuration = _get_reactive_configuration(state, app_name)
     openstack_configuration = create_openstack_configuration(state, unit_name)
     return ApplicationConfiguration(
+        allow_external_contributor=state.charm_config.allow_external_contributor,
         name=app_name,
         extra_labels=extra_labels,
         github_config=github_configuration,
