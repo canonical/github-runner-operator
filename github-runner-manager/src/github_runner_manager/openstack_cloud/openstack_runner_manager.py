@@ -193,6 +193,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
                 }
             )
 
+        pre_job_contents_dict.update(
+            {"allow_external_contributor": self._config.allow_external_contributor}
+        )
+
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         use_aproxy = service_config.use_aproxy

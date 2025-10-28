@@ -54,7 +54,7 @@ class ApplicationConfiguration(BaseModel):
         reconcile_interval: Seconds to wait between reconciliation.
     """
 
-    allow_external_contributor: bool
+    allow_external_contributor: bool = False
     name: str
     extra_labels: list[str]
     jobmanager_config: jobmanager.JobManagerConfiguration | None

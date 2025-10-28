@@ -32,7 +32,7 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         """
         logger.warning(
             "Repo policy compliance service is marked for deprecation."
-            "Consier using `allow_external_contributor` option instead."
+            "Consider using `allow_external_contributor` option instead."
         )
         self._session = self._create_session()
         self.base_url = url
