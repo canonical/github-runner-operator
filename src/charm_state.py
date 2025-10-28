@@ -266,7 +266,7 @@ class CharmConfig(BaseModel):
 
     Attributes:
         allow_external_contributor: Whether to allow runs from forked repositories with from
-            an external contributor with author association status less than COLLABORATOR. See
+            an external contributor with author association status less than COLLABORATOR. See \
             https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).

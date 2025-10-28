@@ -130,6 +130,7 @@ def complete_charm_state_fixture():
             no_proxy="10.0.0.1",
         ),
         charm_config=charm_state.CharmConfig(
+            allow_external_contributor=False,
             dockerhub_mirror="https://docker.example.com",
             labels=("label1", "label2"),
             openstack_clouds_yaml=OpenStackCloudsYAML(
