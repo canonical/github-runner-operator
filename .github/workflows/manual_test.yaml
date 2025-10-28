@@ -6,12 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  tiobe-amd64:
+  noble-large-amd64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, linux, amd64, tiobe, jammy]
+    runs-on: [self-hosted, reactive-amd64-noble-large-ps7]
     steps:
       - run: lscpu
       - run: df -h
