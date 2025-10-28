@@ -99,13 +99,15 @@ options:
       The URL to the repository-policy-compliance service. This option requires the
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
       will not be used. This option is only supported when using OpenStack Cloud.
-  allow-forked-repository:
+  allow-external-contributor:
     type: boolean
+    default: False
     description: >-
       EXPERIMENTAL
-      Whether to allow runs from forked repository contributions. Enabling this option will disable
-      all runs from forked repositories except contribution authors being in COLLABORATOR, MEMBER
-      or OWNER status. See https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
+      Whether to allow runs from forked repository from an external contributor. Enabling this
+      option will enable all runs from forked repositories. By default, runs from contribution
+      authors being in COLLABORATOR, MEMBER or OWNER status is allowed. See
+      https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
   test-mode:
     type: string
     description: >-
