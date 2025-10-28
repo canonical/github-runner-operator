@@ -88,15 +88,18 @@ options:
   repo-policy-compliance-token:
     type: string
     description: >-
+      DEPRECATED, please use repo-fork-check configuration option instead.
       The token to authenticate with the repository-policy-compliance service in order to
       generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
       If not set, the repository-policy-compliance service will not be used.
   repo-policy-compliance-url:
     type: string
     description: >-
+      DEPRECATED, please use repo-fork-check configuration option instead.
       The URL to the repository-policy-compliance service. This option requires the
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
       will not be used. This option is only supported when using OpenStack Cloud.
+  repo-policy-
   test-mode:
     type: string
     description: >-
