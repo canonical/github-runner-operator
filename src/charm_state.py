@@ -247,6 +247,13 @@ class RepoPolicyComplianceConfig(BaseModel):
                 f"Missing {REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration"
             )
 
+        logger.warning(
+            "%s, %s configuration option is marked for deprecation."
+            "Consider using %s configuration option instead.",
+            REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME,
+            REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME,
+            ALLOW_FORKED_REPOSITORY_CONFIG_NAME,
+        )
         # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
         return cls(url=url, token=token)  # type: ignore
 
