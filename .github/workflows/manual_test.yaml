@@ -18,5 +18,6 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - run: sleep 60000000
       - name: Setup tmate session
         uses: canonical/action-tmate@main
