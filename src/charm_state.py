@@ -36,6 +36,7 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME = "allow-external-contributor"
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
@@ -252,7 +253,7 @@ class RepoPolicyComplianceConfig(BaseModel):
             "Consider using %s configuration option instead.",
             REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME,
             REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME,
-            ALLOW_FORKED_REPOSITORY_CONFIG_NAME,
+            ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
         )
         # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
         return cls(url=url, token=token)  # type: ignore
@@ -264,6 +265,9 @@ class CharmConfig(BaseModel):
     Some charm configurations are grouped into other configuration models.
 
     Attributes:
+        allow_external_contributor: Whether to allow runs from forked repositories with from
+            an external contributor with author association status less than COLLABORATOR. See
+            https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
@@ -282,6 +286,7 @@ class CharmConfig(BaseModel):
         runner_manager_log_level: The log level of the runner manager application.
     """
 
+    allow_external_contributor: bool
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
@@ -572,6 +577,9 @@ class CharmConfig(BaseModel):
         )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
+            allow_external_contributor=cast(
+                bool, charm.config.get(ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, False)
+            ),
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
