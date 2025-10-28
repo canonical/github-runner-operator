@@ -566,7 +566,7 @@ class CharmConfig(BaseModel):
         manager_proxy_command = (
             cast(str, charm.config.get(MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME, "")) or None
         )
-        use_aproxy = cast(bool, charm.config.get(USE_APROXY_CONFIG_NAME))
+        use_aproxy = cast(bool, charm.config.get(USE_APROXY_CONFIG_NAME, False))
 
         custom_pre_job_script = (
             cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
