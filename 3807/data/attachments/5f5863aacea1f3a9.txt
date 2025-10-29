@@ -1,0 +1,22 @@
+06:57:36 INFO OpenStack servers: []
+06:57:37 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-5wkc  github-pr-a94c6-lxd  localhost/localhost  3.6.11   unsupported  06:57:37Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-lhpwz9t4           waiting    0/1  github-runner-image-builder  latest/edge  127  no       waiting for machine
+test-lhpwz9t4                                  waiting    0/1  github-runner                               0  no       waiting for machine
+
+Unit                                    Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-lhpwz9t4/0  waiting   allocating  0        10.77.176.194          waiting for machine
+test-lhpwz9t4/0                         waiting   allocating  1        10.77.176.80           waiting for machine
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        pending  10.77.176.194  juju-854d70-0  ubuntu@22.04  github-runner  Running
+1        pending  10.77.176.80   juju-854d70-1  ubuntu@22.04  github-runner  Running
+
+06:57:37 INFO Juju error logs:
+
+
+06:57:37 INFO Forgetting model main...
