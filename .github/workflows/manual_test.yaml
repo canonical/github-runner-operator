@@ -6,18 +6,27 @@ on:
   workflow_dispatch:
 
 jobs:
-  noble-large-amd64:
+  jammy-medium-amd64:
     strategy:
       fail-fast: false
       matrix:
         index: [0]
-    runs-on: [self-hosted, self-hosted-linux-amd64-noble-large, reactive]
+    runs-on: [self-hosted, jammy, medium, amd64]
     steps:
       - run: lscpu
       - run: df -h
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
-      - run: sleep 60000000
-      - name: Setup tmate session
-        uses: canonical/action-tmate@main
+  private-endpoint-amd64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0,1,2,3,4]
+    runs-on: [self-hosted, self-hosted-linux-amd64-jammy-private-endpoint-medium]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
