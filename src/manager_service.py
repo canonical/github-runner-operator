@@ -200,6 +200,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         f"""\
         [Unit]
         Description=Runs the github-runner-manager service
+        StartLimitIntervalSec=0
 
         [Service]
         Type=simple
@@ -209,6 +210,9 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
 --python-path {str(python_path)} --log-level {log_level}
         Restart=on-failure
+        RestartSec=30
+        RestartSteps=5
+        RestartMaxDelaySec=600
         KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
