@@ -7,6 +7,7 @@ The forked repo is configured to fail the repo-policy-compliance check.
 """
 
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pytest
 import requests
@@ -17,6 +18,7 @@ from juju.model import Model
 
 from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
+    DISPATCH_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
@@ -80,3 +82,56 @@ async def test_dispatch_workflow_failure(
             )
             assert "Endpoint designed for testing that always fails" in logs
             assert "Should not echo if pre-job script failed" not in logs
+
+
+@pytest.mark.openstack
+@pytest.mark.asyncio
+@pytest.mark.abort_on_fail
+async def test_forked_repository_pre_job_failure(
+    model: Model,
+    app_with_forked_repo: Application,
+    forked_github_repository: Repository,
+    forked_github_branch: Branch,
+    instance_helper: OpenStackInstanceHelper,
+    token: str,
+    https_proxy: str,
+) -> None:
+    """
+    arrange: \
+        1. A forked repository from a user not any of OWNER/MEMBER/COLLABORATOR. \
+        2. A forked repository from a user who is a COLLABORATOR.
+    act: \
+        1. Trigger a workflow dispatch from a forked repository. \
+        2. Trigger a workflow dispatch from a forked repository.
+    assert: \
+        1. The workflow that was dispatched failed and the reason is logged. \
+        2. The workflow that was dispatched succeeds.
+    """
+    Path("token").write_text(data=token, encoding="utf-8")
+    raise ValueError()
+    # start_time = datetime.now(timezone.utc)
+
+    # workflow = forked_github_repository.get_workflow(
+    #     id_or_file_name=DISPATCH_TEST_WORKFLOW_FILENAME
+    # )
+
+    # await dispatch_workflow(
+    #     app=app_with_forked_repo,
+    #     workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
+    #     branch=forked_github_branch,
+    #     github_repository=forked_github_repository,
+    #     conclusion="failure",
+    # )
+
+    # # Unable to find the run id of the workflow that was dispatched.
+    # # Therefore, all runs after this test start should pass the conditions.
+    # for run in workflow.get_runs(created=f">={start_time.isoformat()}"):
+    #     if start_time > run.created_at:
+    #         continue
+
+    #     logs_url = run.jobs()[0].logs_url()
+    #     logs = requests.get(logs_url).content.decode("utf-8")
+
+    #     if f"Job is about to start running on the runner: {app_with_forked_repo.name}-" in logs:
+    #         assert run.jobs()[0].conclusion == "failure"
+    #         assert "Insufficient user authorization (author_association)" in logs
