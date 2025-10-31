@@ -48,8 +48,8 @@ omit = [
 fail_under = 73
 show_missing = true
 
-
 [tool.pylint.'MESSAGES CONTROL']
+good-names = ["ParamT", "ReturnT"]
 # see https://github.com/pydantic/pydantic/issues/1961#issuecomment-759522422
 extension-pkg-whitelist = "pydantic"
 # Ignore W0511 TODO comments because the functions are subject to refactor.
