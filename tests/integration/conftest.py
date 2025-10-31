@@ -469,6 +469,7 @@ async def app_openstack_runner_fixture(
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
+                "virt-type": "virtual-machine",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
