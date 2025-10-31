@@ -421,6 +421,9 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             config=image_builder_config,
+            constraints={
+                "virt-type": "virtual-machine",
+            },
         )
     else:
         app = model.applications[image_builder_app_name]
@@ -588,7 +591,9 @@ async def app_no_wait_fixture(
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
 async def tmate_ssh_server_app_fixture(model: Model) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
-    tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
+    tmate_app: Application = await model.deploy(
+        "tmate-ssh-server", channel="edge", constraints={"virt-type": "virtual-machine"}
+    )
     return tmate_app
 
 
@@ -738,7 +743,9 @@ async def app_for_metric_fixture(
 async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Application:
     """Deploy MongoDB."""
     if not existing_app_suffix:
-        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        mongodb = await model.deploy(
+            MONGODB_APP_NAME, channel="6/edge", constraints={"virt-type": "virtual-machine"}
+        )
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
