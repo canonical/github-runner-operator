@@ -422,6 +422,7 @@ async def image_builder_fixture(
             channel="latest/edge",
             config=image_builder_config,
             constraints={
+                "cores": 2,
                 "virt-type": "virtual-machine",
             },
         )
