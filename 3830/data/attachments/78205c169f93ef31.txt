@@ -1,0 +1,667 @@
+06:35:22 INFO cli: juju add-model --no-switch jubilant-75a72ac9 --controller microk8s
+06:35:22 INFO cli: juju deploy --model microk8s:jubilant-75a72ac9 prometheus-k8s --channel 1/stable
+06:35:24 INFO wait: status changed:
++ .model.name = 'jubilant-75a72ac9'
++ .model.type = 'caas'
++ .model.controller = 'microk8s'
++ .model.cloud = 'microk8s'
++ .model.version = '3.6.11'
++ .model.region = 'localhost'
++ .model.model_status.current = 'available'
++ .apps['prometheus-k8s'].charm = 'prometheus-k8s'
++ .apps['prometheus-k8s'].charm_origin = 'charmhub'
++ .apps['prometheus-k8s'].charm_name = 'prometheus-k8s'
++ .apps['prometheus-k8s'].charm_rev = 247
++ .apps['prometheus-k8s'].exposed = False
++ .apps['prometheus-k8s'].base.name = 'ubuntu'
++ .apps['prometheus-k8s'].base.channel = '20.04'
++ .apps['prometheus-k8s'].charm_channel = '1/stable'
++ .apps['prometheus-k8s'].scale = 1
++ .apps['prometheus-k8s'].app_status.current = 'waiting'
++ .apps['prometheus-k8s'].app_status.message = 'installing agent'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].related_app = 'prometheus-k8s'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].interface = 'prometheus_peers'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].scope = 'global'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'installing agent'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'allocating'
++ .apps['prometheus-k8s'].endpoint_bindings[''] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['alertmanager'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['catalogue'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['certificates'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['charm-tracing'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['grafana-dashboard'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['grafana-source'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['ingress'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['metrics-endpoint'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['prometheus-api'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['prometheus-peers'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['receive-remote-write'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['self-metrics-endpoint'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['send-datasource'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['workload-tracing'] = 'alpha'
++ .storage.storage['database/0'].kind = 'filesystem'
++ .storage.storage['database/0'].status.current = 'pending'
++ .storage.storage['database/0'].persistent = False
++ .storage.storage['database/0'].life = 'alive'
++ .storage.storage['database/0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].size = 0
++ .storage.filesystems['0'].volume = '0'
++ .storage.filesystems['0'].storage = 'database/0'
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].mount_point = ''
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].read_only = False
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].life = 'alive'
++ .storage.filesystems['0'].status.current = 'pending'
++ .storage.volumes['0'].size = 0
++ .storage.volumes['0'].persistent = False
++ .storage.volumes['0'].storage = 'database/0'
++ .storage.volumes['0'].attachments.containers['prometheus-k8s/0'].read_only = False
++ .storage.volumes['0'].attachments.containers['prometheus-k8s/0'].life = 'alive'
++ .storage.volumes['0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.volumes['0'].life = 'alive'
++ .storage.volumes['0'].status.current = 'pending'
+06:35:26 INFO wait: status changed:
++ .apps['prometheus-k8s'].charm_version = '24d374c'
+06:35:30 INFO wait: status changed:
++ .apps['prometheus-k8s'].provider_id = '2408359f-cf0a-40a5-bd6d-1a17876b5047'
++ .apps['prometheus-k8s'].address = '10.152.183.104'
+06:35:38 INFO wait: status changed:
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].provider_id = 'prometheus-k8s-0'
+06:35:39 INFO wait: status changed:
+- .storage.storage['database/0'].status.current = 'pending'
++ .storage.storage['database/0'].status.current = 'attached'
++ .storage.storage['database/0'].status.message = 'Successfully provisioned volume pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
+- .storage.filesystems['0'].size = 0
++ .storage.filesystems['0'].size = 1024
++ .storage.filesystems['0'].provider_id = '4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
+- .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].mount_point = ''
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].mount_point = '/var/lib/juju/storage/database/0'
++ .storage.filesystems['0'].pool = 'kubernetes'
+- .storage.filesystems['0'].status.current = 'pending'
+- .storage.volumes['0'].size = 0
+- .storage.volumes['0'].persistent = False
++ .storage.filesystems['0'].status.current = 'attached'
++ .storage.filesystems['0'].status.message = 'Successfully provisioned volume pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.volumes['0'].size = 1024
++ .storage.volumes['0'].persistent = True
++ .storage.volumes['0'].provider_id = 'pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.volumes['0'].pool = 'kubernetes'
+- .storage.volumes['0'].status.current = 'pending'
++ .storage.volumes['0'].status.current = 'attached'
+06:35:41 INFO wait: status changed:
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].address = '10.1.53.11'
+06:35:45 INFO wait: status changed:
+- .apps['prometheus-k8s'].app_status.message = 'installing agent'
++ .apps['prometheus-k8s'].app_status.message = 'agent initialising'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'installing agent'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'agent initialising'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.version = '3.6.11'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].leader = True
+06:35:47 INFO wait: status changed:
+- .apps['prometheus-k8s'].app_status.current = 'waiting'
+- .apps['prometheus-k8s'].app_status.message = 'agent initialising'
++ .apps['prometheus-k8s'].app_status.current = 'maintenance'
++ .apps['prometheus-k8s'].app_status.message = 'installing charm software'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'agent initialising'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'allocating'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'maintenance'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'installing charm software'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running install hook'
+06:35:48 INFO wait: status changed:
+- .apps['prometheus-k8s'].app_status.current = 'maintenance'
+- .apps['prometheus-k8s'].app_status.message = 'installing charm software'
++ .apps['prometheus-k8s'].app_status.current = 'waiting'
++ .apps['prometheus-k8s'].app_status.message = 'installing agent'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'maintenance'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'installing charm software'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'active'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running install hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running prometheus-peers-relation-created hook'
+06:35:49 INFO wait: status changed:
+- .apps['prometheus-k8s'].app_status.current = 'waiting'
+- .apps['prometheus-k8s'].app_status.message = 'installing agent'
++ .apps['prometheus-k8s'].app_status.current = 'active'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running prometheus-peers-relation-created hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running leader-elected hook'
+06:35:50 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running leader-elected hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running database-storage-attached hook'
+06:35:51 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running database-storage-attached hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running config-changed hook'
+06:35:51 INFO Model controller: microk8s:jubilant-75a72ac9
+06:35:51 INFO Controller: microk8s, Model: jubilant-75a72ac9
+06:35:52 INFO cli: juju status --model microk8s:jubilant-75a72ac9 --format json
+06:35:52 INFO cli: juju deploy --model microk8s:jubilant-75a72ac9 grafana-k8s --channel 1/stable
+06:35:53 INFO cli: juju integrate --model microk8s:jubilant-75a72ac9 grafana-k8s:grafana-source prometheus-k8s:grafana-source
+06:35:54 INFO wait: status changed:
++ .model.name = 'jubilant-75a72ac9'
++ .model.type = 'caas'
++ .model.controller = 'microk8s'
++ .model.cloud = 'microk8s'
++ .model.version = '3.6.11'
++ .model.region = 'localhost'
++ .model.model_status.current = 'available'
++ .apps['grafana-k8s'].charm = 'grafana-k8s'
++ .apps['grafana-k8s'].charm_origin = 'charmhub'
++ .apps['grafana-k8s'].charm_name = 'grafana-k8s'
++ .apps['grafana-k8s'].charm_rev = 160
++ .apps['grafana-k8s'].exposed = False
++ .apps['grafana-k8s'].base.name = 'ubuntu'
++ .apps['grafana-k8s'].base.channel = '20.04'
++ .apps['grafana-k8s'].charm_channel = '1/stable'
++ .apps['grafana-k8s'].scale = 1
++ .apps['grafana-k8s'].app_status.current = 'waiting'
++ .apps['grafana-k8s'].app_status.message = 'installing agent'
++ .apps['grafana-k8s'].relations['grafana'][0].related_app = 'grafana-k8s'
++ .apps['grafana-k8s'].relations['grafana'][0].interface = 'grafana_peers'
++ .apps['grafana-k8s'].relations['grafana'][0].scope = 'global'
++ .apps['grafana-k8s'].relations['grafana-source'][0].related_app = 'prometheus-k8s'
++ .apps['grafana-k8s'].relations['grafana-source'][0].interface = 'grafana_datasource'
++ .apps['grafana-k8s'].relations['grafana-source'][0].scope = 'global'
++ .apps['grafana-k8s'].relations['replicas'][0].related_app = 'grafana-k8s'
++ .apps['grafana-k8s'].relations['replicas'][0].interface = 'grafana_replicas'
++ .apps['grafana-k8s'].relations['replicas'][0].scope = 'global'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.current = 'waiting'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'installing agent'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'allocating'
++ .apps['grafana-k8s'].endpoint_bindings[''] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['catalogue'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['certificates'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['charm-tracing'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['database'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['grafana'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['grafana-auth'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['grafana-dashboard'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['grafana-metadata'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['grafana-source'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['ingress'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['metrics-endpoint'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['oauth'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['profiling-endpoint'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['receive-ca-cert'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['replicas'] = 'alpha'
++ .apps['grafana-k8s'].endpoint_bindings['workload-tracing'] = 'alpha'
++ .apps['prometheus-k8s'].charm = 'prometheus-k8s'
++ .apps['prometheus-k8s'].charm_origin = 'charmhub'
++ .apps['prometheus-k8s'].charm_name = 'prometheus-k8s'
++ .apps['prometheus-k8s'].charm_rev = 247
++ .apps['prometheus-k8s'].exposed = False
++ .apps['prometheus-k8s'].base.name = 'ubuntu'
++ .apps['prometheus-k8s'].base.channel = '20.04'
++ .apps['prometheus-k8s'].charm_channel = '1/stable'
++ .apps['prometheus-k8s'].charm_version = '24d374c'
++ .apps['prometheus-k8s'].scale = 1
++ .apps['prometheus-k8s'].provider_id = '2408359f-cf0a-40a5-bd6d-1a17876b5047'
++ .apps['prometheus-k8s'].address = '10.152.183.104'
++ .apps['prometheus-k8s'].app_status.current = 'active'
++ .apps['prometheus-k8s'].relations['grafana-source'][0].related_app = 'grafana-k8s'
++ .apps['prometheus-k8s'].relations['grafana-source'][0].interface = 'grafana_datasource'
++ .apps['prometheus-k8s'].relations['grafana-source'][0].scope = 'global'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].related_app = 'prometheus-k8s'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].interface = 'prometheus_peers'
++ .apps['prometheus-k8s'].relations['prometheus-peers'][0].scope = 'global'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'active'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.version = '3.6.11'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].leader = True
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].address = '10.1.53.11'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].provider_id = 'prometheus-k8s-0'
++ .apps['prometheus-k8s'].endpoint_bindings[''] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['alertmanager'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['catalogue'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['certificates'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['charm-tracing'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['grafana-dashboard'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['grafana-source'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['ingress'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['metrics-endpoint'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['prometheus-api'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['prometheus-peers'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['receive-remote-write'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['self-metrics-endpoint'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['send-datasource'] = 'alpha'
++ .apps['prometheus-k8s'].endpoint_bindings['workload-tracing'] = 'alpha'
++ .offers['prometheus-k8s'].app = 'prometheus-k8s'
++ .offers['prometheus-k8s'].endpoints['receive-remote-write'].interface = 'prometheus_remote_write'
++ .offers['prometheus-k8s'].endpoints['receive-remote-write'].role = 'provider'
++ .offers['prometheus-k8s'].charm = 'ch:amd64/prometheus-k8s-247'
++ .storage.storage['database/0'].kind = 'filesystem'
++ .storage.storage['database/0'].status.current = 'attached'
++ .storage.storage['database/0'].status.message = 'Successfully provisioned volume pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.storage['database/0'].persistent = False
++ .storage.storage['database/0'].life = 'alive'
++ .storage.storage['database/0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.storage['database/1'].kind = 'filesystem'
++ .storage.storage['database/1'].status.current = 'pending'
++ .storage.storage['database/1'].persistent = False
++ .storage.storage['database/1'].life = 'alive'
++ .storage.storage['database/1'].attachments.units['grafana-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].size = 1024
++ .storage.filesystems['0'].provider_id = '4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.filesystems['0'].volume = '0'
++ .storage.filesystems['0'].storage = 'database/0'
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].mount_point = '/var/lib/juju/storage/database/0'
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].read_only = False
++ .storage.filesystems['0'].attachments.containers['prometheus-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.filesystems['0'].pool = 'kubernetes'
++ .storage.filesystems['0'].life = 'alive'
++ .storage.filesystems['0'].status.current = 'attached'
++ .storage.filesystems['0'].status.message = 'Successfully provisioned volume pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.filesystems['1'].size = 0
++ .storage.filesystems['1'].volume = '1'
++ .storage.filesystems['1'].storage = 'database/1'
++ .storage.filesystems['1'].attachments.containers['grafana-k8s/0'].mount_point = ''
++ .storage.filesystems['1'].attachments.containers['grafana-k8s/0'].read_only = False
++ .storage.filesystems['1'].attachments.containers['grafana-k8s/0'].life = 'alive'
++ .storage.filesystems['1'].attachments.units['grafana-k8s/0'].life = 'alive'
++ .storage.filesystems['1'].life = 'alive'
++ .storage.filesystems['1'].status.current = 'pending'
++ .storage.volumes['0'].size = 1024
++ .storage.volumes['0'].persistent = True
++ .storage.volumes['0'].provider_id = 'pvc-4b9c0264-4ac9-4fe8-8c3c-2e69b366743a'
++ .storage.volumes['0'].storage = 'database/0'
++ .storage.volumes['0'].attachments.containers['prometheus-k8s/0'].read_only = False
++ .storage.volumes['0'].attachments.containers['prometheus-k8s/0'].life = 'alive'
++ .storage.volumes['0'].attachments.units['prometheus-k8s/0'].life = 'alive'
++ .storage.volumes['0'].pool = 'kubernetes'
++ .storage.volumes['0'].life = 'alive'
++ .storage.volumes['0'].status.current = 'attached'
++ .storage.volumes['1'].size = 0
++ .storage.volumes['1'].persistent = False
++ .storage.volumes['1'].storage = 'database/1'
++ .storage.volumes['1'].attachments.containers['grafana-k8s/0'].read_only = False
++ .storage.volumes['1'].attachments.containers['grafana-k8s/0'].life = 'alive'
++ .storage.volumes['1'].attachments.units['grafana-k8s/0'].life = 'alive'
++ .storage.volumes['1'].life = 'alive'
++ .storage.volumes['1'].status.current = 'pending'
+06:35:55 INFO wait: status changed:
+- .apps['prometheus-k8s'].app_status.current = 'active'
++ .apps['prometheus-k8s'].app_status.current = 'waiting'
++ .apps['prometheus-k8s'].app_status.message = 'Waiting for resource limit patch to apply'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'active'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'Waiting for resource limit patch to apply'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running start hook'
+06:35:56 INFO wait: status changed:
++ .apps['grafana-k8s'].charm_version = 'rev151-8-g6624bd3'
+06:36:07 INFO wait: status changed:
++ .apps['grafana-k8s'].provider_id = '17034b94-ed1c-4d46-a8fc-bed9dd6ef54f'
++ .apps['grafana-k8s'].address = '10.152.183.239'
+06:36:13 INFO wait: status changed:
+- .apps['grafana-k8s'].app_status.message = 'installing agent'
++ .apps['grafana-k8s'].app_status.message = 'agent initialising'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'installing agent'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'agent initialising'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.version = '3.6.11'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].leader = True
++ .apps['grafana-k8s'].units['grafana-k8s/0'].address = '10.1.53.13'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].provider_id = 'grafana-k8s-0'
+- .storage.storage['database/1'].status.current = 'pending'
++ .storage.storage['database/1'].status.current = 'attached'
++ .storage.storage['database/1'].status.message = 'Successfully provisioned volume pvc-bec73cff-3cdf-422f-a704-fbcfbb397090'
+- .storage.filesystems['1'].size = 0
++ .storage.filesystems['1'].size = 1024
++ .storage.filesystems['1'].provider_id = 'bec73cff-3cdf-422f-a704-fbcfbb397090'
+- .storage.filesystems['1'].attachments.containers['grafana-k8s/0'].mount_point = ''
++ .storage.filesystems['1'].attachments.containers['grafana-k8s/0'].mount_point = '/var/lib/juju/storage/database/0'
++ .storage.filesystems['1'].pool = 'kubernetes'
+- .storage.filesystems['1'].status.current = 'pending'
++ .storage.filesystems['1'].status.current = 'attached'
++ .storage.filesystems['1'].status.message = 'Successfully provisioned volume pvc-bec73cff-3cdf-422f-a704-fbcfbb397090'
+- .storage.volumes['1'].size = 0
+- .storage.volumes['1'].persistent = False
++ .storage.volumes['1'].size = 1024
++ .storage.volumes['1'].persistent = True
++ .storage.volumes['1'].provider_id = 'pvc-bec73cff-3cdf-422f-a704-fbcfbb397090'
++ .storage.volumes['1'].pool = 'kubernetes'
+- .storage.volumes['1'].status.current = 'pending'
++ .storage.volumes['1'].status.current = 'attached'
+06:36:17 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'Waiting for resource limit patch to apply'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running start hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'unknown'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = "agent lost, see 'juju show-status-log prometheus-k8s/0'"
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'lost'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'agent is not communicating with the server'
+06:36:18 INFO wait: status changed:
+- .apps['grafana-k8s'].app_status.current = 'waiting'
+- .apps['grafana-k8s'].app_status.message = 'agent initialising'
++ .apps['grafana-k8s'].app_status.current = 'maintenance'
++ .apps['grafana-k8s'].app_status.message = 'installing charm software'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.current = 'waiting'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'agent initialising'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'allocating'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.current = 'maintenance'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'installing charm software'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'executing'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running install hook'
+06:36:21 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running install hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-relation-created hook'
+06:36:22 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-relation-created hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running replicas-relation-created hook'
+06:36:23 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running replicas-relation-created hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-source-relation-created hook'
+06:36:25 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-source-relation-created hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running leader-elected hook'
+06:36:26 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running leader-elected hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-pebble-ready hook'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].address = '10.1.53.11'
+06:36:27 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'unknown'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = "agent lost, see 'juju show-status-log prometheus-k8s/0'"
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'lost'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'agent is not communicating with the server'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'Waiting for resource limit patch to apply'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running start hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].address = '10.1.53.14'
+06:36:31 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'executing'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-pebble-ready hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'idle'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running start hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
+06:36:32 INFO wait: status changed:
++ .apps['grafana-k8s'].version = '9.5.21'
+06:36:34 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'idle'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'executing'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running litestream-pebble-ready hook'
+06:36:35 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running litestream-pebble-ready hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running database-storage-attached hook'
+- .apps['prometheus-k8s'].app_status.message = 'Waiting for resource limit patch to apply'
++ .apps['prometheus-k8s'].app_status.message = 'installing agent'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'waiting'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.message = 'Waiting for resource limit patch to apply'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].workload_status.current = 'active'
+06:36:36 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running database-storage-attached hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running config-changed hook'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-created hook'
+06:36:37 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'executing'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running config-changed hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'idle'
+- .apps['prometheus-k8s'].app_status.current = 'waiting'
+- .apps['prometheus-k8s'].app_status.message = 'installing agent'
++ .apps['prometheus-k8s'].app_status.current = 'active'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-created hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
+06:36:40 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running prometheus-pebble-ready hook'
+06:36:45 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running prometheus-pebble-ready hook'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-joined hook for grafana-k8s/0'
++ .apps['prometheus-k8s'].version = '2.52.0'
+06:36:48 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-joined hook for grafana-k8s/0'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-changed hook for grafana-k8s/0'
+06:36:52 INFO wait: status changed:
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'executing'
+- .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.message = 'running grafana-source-relation-changed hook for grafana-k8s/0'
++ .apps['prometheus-k8s'].units['prometheus-k8s/0'].juju_status.current = 'idle'
+06:36:57 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].address = '10.1.53.13'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].address = '10.1.53.15'
+06:37:05 INFO wait: status changed:
+- .apps['grafana-k8s'].app_status.current = 'maintenance'
+- .apps['grafana-k8s'].app_status.message = 'installing charm software'
++ .apps['grafana-k8s'].app_status.current = 'waiting'
++ .apps['grafana-k8s'].app_status.message = 'installing agent'
+06:37:07 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.current = 'maintenance'
+- .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.message = 'installing charm software'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].workload_status.current = 'active'
+06:37:08 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'idle'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.current = 'executing'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running start hook'
+06:37:09 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running start hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-pebble-ready hook'
+06:37:13 INFO wait: status changed:
+- .apps['grafana-k8s'].app_status.current = 'waiting'
+- .apps['grafana-k8s'].app_status.message = 'installing agent'
++ .apps['grafana-k8s'].app_status.current = 'active'
+06:37:15 INFO wait: status changed:
+- .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running grafana-pebble-ready hook'
++ .apps['grafana-k8s'].units['grafana-k8s/0'].juju_status.message = 'running litestream-pebble-ready hook'
+06:37:15 INFO Controller: microk8s, Model: jubilant-75a72ac9
+06:37:15 INFO cli: juju status --model microk8s:jubilant-75a72ac9 --format json
+06:37:16 INFO cli: juju deploy --model microk8s:jubilant-75a72ac9 traefik-k8s --channel latest/stable
+06:37:17 INFO cli: juju integrate --model microk8s:jubilant-75a72ac9 traefik-k8s prometheus-k8s:ingress
+06:37:17 INFO cli: juju integrate --model microk8s:jubilant-75a72ac9 traefik-k8s grafana-k8s:ingress
+06:37:18 WARNING unexpected facade SSHServer received from the controller
+06:37:18 INFO Adding model github-pr-a94c6-lxd:test-prometheus-metrics-xcs9 on cloud localhost
+06:37:18 WARNING unexpected facade SSHServer received from the controller
+06:37:18 WARNING unexpected facade SSHSession received from the controller
+06:37:18 WARNING unexpected facade SSHTunneler received from the controller
+06:37:18 WARNING unexpected facade SSHServer received from the controller
+06:37:20 INFO Deploying ch:amd64/jammy/github-runner-image-builder-128
+06:37:44 INFO Deploying local:jammy/github-runner-0
+06:37:44 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:38:14 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:38:44 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:39:14 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:39:44 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:40:14 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:40:44 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:41:15 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:41:45 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:42:16 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:42:46 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:43:16 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:43:46 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:44:16 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:44:46 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:45:16 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:45:46 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:46:17 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:46:47 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:47:17 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:47:47 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:48:17 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:48:47 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:49:18 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:49:48 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:50:18 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:50:48 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:51:18 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:51:48 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:52:18 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:52:49 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:53:19 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:53:49 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:54:19 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:54:49 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:55:19 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:55:49 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:56:19 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:56:49 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:57:20 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:57:50 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:58:20 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:58:50 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:59:20 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+06:59:50 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:00:20 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:00:50 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:01:20 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:01:51 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:02:21 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:02:51 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:03:21 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:03:51 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:04:21 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:04:51 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:05:21 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:05:52 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:06:22 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:06:52 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:07:22 INFO Waiting for model:
+  test-fqlrwlig/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fqlrwlig/0 [allocating] waiting: waiting for machine
+07:07:45 INFO OpenStack servers: []
+07:07:45 INFO cli: juju debug-log --model github-pr-a94c6-lxd:test-prometheus-metrics-xcs9 --limit 1000
+07:07:46 INFO Model status:
+
+Model                         Controller           Cloud/Region         Version  SLA          Timestamp
+test-prometheus-metrics-xcs9  github-pr-a94c6-lxd  localhost/localhost  3.6.11   unsupported  07:07:46Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-fqlrwlig           waiting    0/1  github-runner-image-builder  latest/edge  128  no       waiting for machine
+test-fqlrwlig                                  waiting    0/1  github-runner                               0  no       waiting for machine
+
+Unit                                    Workload  Agent       Machine  Public address  Ports  Message
+github-runner-image-builder-fqlrwlig/0  waiting   allocating  0        10.227.1.80            waiting for machine
+test-fqlrwlig/0                         waiting   allocating  1        10.227.1.121           waiting for machine
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        pending  10.227.1.80   juju-76e25a-0  ubuntu@22.04  github-runner  Running
+1        pending  10.227.1.121  juju-76e25a-1  ubuntu@22.04  github-runner  Running
+
+07:07:46 INFO Juju error logs:
+
+
+07:07:46 INFO Forgetting model main...
