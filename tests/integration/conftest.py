@@ -421,10 +421,6 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             config=image_builder_config,
-            constraints={
-                "cores": 2,
-                "virt-type": "virtual-machine",
-            },
         )
     else:
         app = model.applications[image_builder_app_name]
@@ -473,7 +469,6 @@ async def app_openstack_runner_fixture(
             constraints={
                 "root-disk": 50 * 1024,
                 "mem": 2 * 1024,
-                "virt-type": "virtual-machine",
             },
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
@@ -593,7 +588,8 @@ async def app_no_wait_fixture(
 async def tmate_ssh_server_app_fixture(model: Model) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
     tmate_app: Application = await model.deploy(
-        "tmate-ssh-server", channel="edge", constraints={"virt-type": "virtual-machine"}
+        "tmate-ssh-server",
+        channel="edge",
     )
     return tmate_app
 
@@ -744,9 +740,7 @@ async def app_for_metric_fixture(
 async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Application:
     """Deploy MongoDB."""
     if not existing_app_suffix:
-        mongodb = await model.deploy(
-            MONGODB_APP_NAME, channel="6/edge", constraints={"virt-type": "virtual-machine"}
-        )
+        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
     else:
         mongodb = model.applications["mongodb"]
     return mongodb

@@ -46,7 +46,7 @@ DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
 MONGODB_APP_NAME = "mongodb"
-DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15, "virt-type": "virtual-machine"}
+DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
 
 logger = logging.getLogger(__name__)
 
