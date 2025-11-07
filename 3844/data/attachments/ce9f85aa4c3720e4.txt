@@ -1,0 +1,189 @@
+18:26:33 INFO GitHub token rate limit: Rate(reset=2025-11-07 18:26:44+00:00, remaining=4999, limit=5000)
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 INFO Adding model github-pr-a94c6-lxd:test-charm-metrics-failure-h42w on cloud localhost
+18:26:45 WARNING unexpected facade SSHServer received from the controller
+18:26:45 WARNING unexpected facade SSHSession received from the controller
+18:26:45 WARNING unexpected facade SSHTunneler received from the controller
+18:26:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-128
+18:27:00 INFO Deploying local:jammy/github-runner-0
+18:27:00 INFO Waiting for model:
+  test-fj63gwos/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fj63gwos/0 [allocating] waiting: waiting for machine
+18:27:30 INFO Waiting for model:
+  test-fj63gwos/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fj63gwos/0 [allocating] waiting: waiting for machine
+18:28:01 INFO Waiting for model:
+  test-fj63gwos/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-fj63gwos/0 [executing] maintenance: Setting up Builder.
+18:28:31 INFO Waiting for model:
+  test-fj63gwos/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-fj63gwos/0 [executing] maintenance: Setting up Builder.
+18:29:01 INFO Waiting for model:
+  test-fj63gwos/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fj63gwos/0 [executing] maintenance: Setting up Builder.
+18:29:31 INFO Waiting for model:
+  test-fj63gwos/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-fj63gwos/0 [executing] maintenance: Setting up Builder.
+18:30:01 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:30:32 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:31:02 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:31:33 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:32:03 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:32:33 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:33:04 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:33:34 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:34:05 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:34:35 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:35:05 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:35:36 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:36:06 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:36:37 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:37:07 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:37:38 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:38:08 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:38:38 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:39:08 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:39:39 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:40:09 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:40:40 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:41:10 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:41:40 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:42:11 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:42:41 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:43:12 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:43:42 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:44:12 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:44:42 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:45:13 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:45:43 INFO Waiting for model:
+  test-fj63gwos/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-fj63gwos/0 [executing] active: Building image.
+18:46:13 INFO Waiting for model:
+  test-fj63gwos/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-fj63gwos/0 [idle] active: 
+18:46:44 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:46:49 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:47:19 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:47:22 INFO Current reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:47:22 INFO Waiting for reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:48:23 INFO Current reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:48:23 INFO Current reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18, expected reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:48:23 INFO Waiting for reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:49:24 INFO Current reconcile ID: 9ef11737-7f1e-4dc4-a3b6-426d2ed522de
+18:49:24 INFO Current reconcile ID: 9ef11737-7f1e-4dc4-a3b6-426d2ed522de, expected reconcile ID: fc208564-8d1c-48ae-9d90-444a23074b18
+18:50:02 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:50:32 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:50:36 INFO Current reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:50:36 INFO Waiting for reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:51:37 INFO Current reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:51:37 INFO Current reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580, expected reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:51:37 INFO Waiting for reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:52:38 INFO Current reconcile ID: 996c7418-523a-4ec3-a87e-64ba097da45b
+18:52:38 INFO Current reconcile ID: 996c7418-523a-4ec3-a87e-64ba097da45b, expected reconcile ID: c75f8a9a-6ef1-42fb-b2da-8f8d528d1580
+18:52:42 INFO [TEST SETUP] Exposing port 8080 on test-fj63gwos-0-n-8e4f8a226c73
+18:52:42 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0f:df:90'}]])
+18:52:43 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-fj63gwos-0-n-8e4f8a226c73.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.4 &
+18:52:44 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.4' (ED25519) to the list of known hosts.
+
+18:52:46 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-fj63gwos-0-n-8e4f8a226c73
+18:52:46 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0f:df:90'}]])
+18:52:47 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fj63gwos-0-n-8e4f8a226c73.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.4 nc -z localhost 8080'
+18:52:48 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:52:48 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-fj63gwos-0-n-8e4f8a226c73
+18:52:48 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.4', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0f:df:90'}]])
+18:52:49 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-fj63gwos-0-n-8e4f8a226c73.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.4 curl http://localhost:8080'
+18:52:50 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  98948      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:52:53 INFO Wait for condition not met, sleeping 10
+18:53:03 INFO Wait for condition not met, sleeping 60
+18:54:04 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:54:34 INFO Waiting for model:
+  test-fj63gwos/0 [idle] active: 
+18:54:36 INFO Current reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:54:36 INFO Waiting for reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:55:38 INFO Current reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:55:38 INFO Current reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26, expected reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:55:38 INFO Waiting for reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:56:39 INFO Current reconcile ID: fe0d1173-6ed3-4a8a-9fdd-84192d76d560
+18:56:39 INFO Current reconcile ID: fe0d1173-6ed3-4a8a-9fdd-84192d76d560, expected reconcile ID: bdf257e1-e8e5-4f9b-bda3-d2a21b8bfe26
+18:56:40 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1762541540.0, "event": "runner_installed", "flavor": "test-fj63gwos", "duration": 131.0}
+{"timestamp": 1762541576.0, "event": "runner_start", "flavor": "test-fj63gwos", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 36.0, "queue_duration": 2.0}
+{"timestamp": 1762541576.0, "event": "runner_stop", "flavor": "test-fj63gwos", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yhaliaw/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1762541656.8951888, "event": "reconciliation", "flavor": "test-fj63gwos", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.408726215362549}
+{"timestamp": 1762541783.3611567, "event": "reconciliation", "flavor": "test-fj63gwos", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.403943061828613}
