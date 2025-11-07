@@ -8,7 +8,7 @@ import logging
 import time
 from dataclasses import dataclass
 from enum import Enum, auto
-from multiprocessing import Pool
+from multiprocessing.pool import ThreadPool as Pool
 from typing import Iterator, Sequence, Type
 
 from github_runner_manager import constants
