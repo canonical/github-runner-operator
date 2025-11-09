@@ -1,0 +1,62 @@
+06:49:48 INFO Waiting for model:
+  test-uuluxkbw/0 [idle] active: 
+06:50:04 INFO Current reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:50:04 INFO Waiting for reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:51:05 INFO Current reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:51:05 INFO Current reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc, expected reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:51:05 INFO Waiting for reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:52:06 INFO Current reconcile ID: 92b43338-9d7a-43d3-a7f2-48b08ea9da6a
+06:52:06 INFO Current reconcile ID: 92b43338-9d7a-43d3-a7f2-48b08ea9da6a, expected reconcile ID: 7defca0d-41ba-4ea6-81d8-b08c48f4efcc
+06:52:09 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-1mhd  github-pr-a94c6-lxd  localhost/localhost  3.6.11   unsupported  06:52:09Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-uuluxkbw           active      1  github-runner-image-builder  latest/edge  128  no       
+test-uuluxkbw                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-uuluxkbw/0*  active    idle   0        10.208.200.45          
+test-uuluxkbw/0*                         active    idle   1        10.208.200.83          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.208.200.45  juju-e39417-0  ubuntu@22.04  github-runner  Running
+1        started  10.208.200.83  juju-e39417-1  ubuntu@22.04  github-runner  Running
+
+06:52:09 INFO Juju error logs:
+
+machine-0: 06:26:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:22 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:26:22 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-uuluxkbw-0: 06:26:55 ERROR unit.github-runner-image-builder-uuluxkbw/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-uuluxkbw-0: 06:27:13 ERROR unit.test-uuluxkbw/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-uuluxkbw-0: 06:27:15 ERROR unit.test-uuluxkbw/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-uuluxkbw-0: 06:28:33 ERROR unit.test-uuluxkbw/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-uuluxkbw-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:52:09 INFO Forgetting model main...
