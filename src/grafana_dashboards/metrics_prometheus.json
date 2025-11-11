@@ -593,7 +593,7 @@
             "uid": "PE6731821AF182E02"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(0.95, delete_runner_duration_seconds_bucket)",
+          "expr": "histogram_quantile($quantile, sum by (flavor, le) (rate(delete_runner_duration_seconds_bucket[10m])))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1402,7 +1402,7 @@
             "uid": "PE6731821AF182E02"
           },
           "editorMode": "builder",
-          "expr": "deleted_runners_total",
+          "expr": "sum by(juju_application) (increase(deleted_runners_total[$__rate_interval]))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
