@@ -38,7 +38,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -116,7 +116,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -135,7 +135,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The amount of time a runner is not used.",
       "fieldConfig": {
@@ -214,7 +214,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(1, sum by(flavor, le) (rate(runner_idle_duration_seconds_bucket[10m])))",
@@ -229,7 +229,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "Duration of reconciliation (seconds)",
       "fieldConfig": {
@@ -308,7 +308,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(1, sum(rate(reconcile_duration_seconds_bucket[10m])) by (flavor, le))",
@@ -323,7 +323,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "Time in seconds to initialize the VM and register the runner on GitHub.",
       "fieldConfig": {
@@ -402,7 +402,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(1, sum by (flavor, le) (rate(runner_spawn_duration_seconds_bucket[10m]))) ",
@@ -417,7 +417,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "",
       "fieldConfig": {
@@ -496,7 +496,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(\n  $quantile,\n  sum by (flavor, le) (\n    rate(delete_vm_duration_seconds_bucket[10m])\n  )\n)",
@@ -511,7 +511,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "Number of seconds taken to delete runners from GitHub for each reconcile",
       "fieldConfig": {
@@ -590,7 +590,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile($quantile, sum by (flavor, le) (rate(delete_runner_duration_seconds_bucket[10m])))",
@@ -605,7 +605,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "OpenStack Server List response time",
       "fieldConfig": {
@@ -684,7 +684,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "histogram_quantile(\n  $quantile,\n  sum by (le) (\n    rate(openstack_http_response_time_bucket{endpoint=~\".*servers/detail\"}[10m])\n  )\n)",
@@ -712,7 +712,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -762,7 +762,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by (flavor) (expected_runners_count)",
@@ -777,7 +777,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "Expected runners count - (idle runners count + busy runners count)",
       "fieldConfig": {
@@ -828,7 +828,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "abs(expected_runners_count - (idle_runners_count + busy_runners_count))",
@@ -843,7 +843,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -919,7 +919,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by(flavor) (idle_runners_count)",
@@ -934,7 +934,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1010,7 +1010,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by (flavor) (busy_runners_count)",
@@ -1038,7 +1038,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The number of GitHub runners not found on GitHub but exists on cloud.",
       "fieldConfig": {
@@ -1115,7 +1115,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by(juju_application) (increase(missing_runners_total[$__rate_interval]))",
@@ -1130,7 +1130,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The number of VMs deleted during reconciliation.",
       "fieldConfig": {
@@ -1207,7 +1207,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by(juju_application) (increase(deleted_vms_total[$__rate_interval]))",
@@ -1222,7 +1222,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The number of GitHub runners without an underlying VM.",
       "fieldConfig": {
@@ -1299,7 +1299,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by(juju_application) (increase(dangling_runners_total[$__rate_interval]))",
@@ -1314,7 +1314,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The number of removed runners from GitHub during reconciliation.",
       "fieldConfig": {
@@ -1391,7 +1391,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "builder",
           "expr": "sum by(juju_application) (increase(deleted_runners_total[$__rate_interval]))",
@@ -1406,7 +1406,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "The number of GitHub runners that are older than maximum creation time but has not yet come online nor taken a job.",
       "fieldConfig": {
@@ -1483,7 +1483,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PE6731821AF182E02"
+            "uid": "${prometheusds}"
           },
           "editorMode": "code",
           "expr": "sum by(juju_application) (increase(timed_out_runners_total[$__rate_interval]))",
