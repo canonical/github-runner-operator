@@ -40,19 +40,6 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
         yield juju
 
 
-# juju.offer is not controller aware, we should manually switch to the microk8s controller.
-@pytest.fixture(scope="function", name="switch_microk8s_controller")
-def switch_microk8s_controller_fixture(k8s_juju: jubilant.Juju, juju: jubilant.Juju):
-    """Switch to the MicroK8s controller."""
-    original_model_controller_name = juju.model
-    assert (
-        original_model_controller_name
-    ), f"model & controller name not set: {original_model_controller_name}"
-
-    yield
-
-
-@pytest.mark.usefixtures("switch_microk8s_controller")
 @pytest.fixture(scope="module", name="prometheus_app")
 def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
