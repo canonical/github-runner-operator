@@ -5,7 +5,6 @@ ops>=2.8
 pylxd @ git+https://github.com/canonical/pylxd
 requests
 typing-extensions
-maturin==1.9.4 # issue with Cargo lock v4 on more recent version
 cryptography==45.0.5
 pydantic ==1.10.22
 cosl ==1.0.0
