@@ -304,14 +304,14 @@ def _parse_metrics_contents(metrics_contents_map: dict[Path, str | None]) -> _Pa
         try:
             pre_job_metrics = PreJobMetrics.parse_obj(json.loads(pre_job))
         except (json.JSONDecodeError, ValidationError):
-            logger.warning("Corrupt pre-job metrics: %s")
+            logger.warning("Corrupt pre-job metrics: %s", pre_job)
 
     post_job_metrics: PostJobMetrics | None = None
     if post_job := metrics_contents_map.get(POST_JOB_METRICS_FILE_PATH, None):
         try:
             post_job_metrics = PostJobMetrics.parse_obj(json.loads(post_job))
         except (json.JSONDecodeError, ValidationError):
-            logger.warning("Corrupt post-job metrics %s")
+            logger.warning("Corrupt post-job metrics %s", post_job)
 
     return _ParsedMetricContents(
         runner_installed_timestamp=runner_installed_timestamp,
