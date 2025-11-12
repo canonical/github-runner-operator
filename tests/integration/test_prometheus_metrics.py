@@ -66,7 +66,6 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     return k8s_juju.status().apps["prometheus-k8s"]
 
 
-@pytest.mark.usefixtures("switch_microk8s_controller")
 @pytest.fixture(scope="module", name="grafana_app")
 def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     """Deploy prometheus charm."""
