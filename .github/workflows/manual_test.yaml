@@ -6,22 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  pfe-ci:
-    strategy:
-      fail-fast: false
-      matrix:
-        index: [0]
-    runs-on: [self-hosted, X64, pfe-ci, noble]
-    steps:
-      - run: lscpu
-      - run: df -h
-      - run: free -h
-      - run: uname -a
-      - run: lsb_release -a
-      - name: Setup tmate session
-        uses: canonical/action-tmate@main
   private-endpoint-ps7:
-    runs-on: [self-hosted, self-hosted-linux-amd64-noble-private-endpoint-medium]
+    runs-on: [self-hosted, self-hosted-linux-amd64-noble-private-endpoint-xlarge]
     steps:
       - run: lscpu
       - run: df -h
