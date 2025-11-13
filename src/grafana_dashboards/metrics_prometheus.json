@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 160,
+  "id": 10,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -225,7 +225,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(1, sum by(flavor, le) (rate(runner_idle_duration_seconds_bucket[10m])))",
+          "expr": "histogram_quantile(1, sum by(flavor, le) (rate(runner_idle_duration_seconds_bucket{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[10m])))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -325,7 +325,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(1, sum(rate(reconcile_duration_seconds_bucket[10m])) by (flavor, le))",
+          "expr": "histogram_quantile(1, sum by(flavor, le) (rate(reconcile_duration_seconds_bucket{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[10m])))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -423,7 +423,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(1, sum by (flavor, le) (rate(runner_spawn_duration_seconds_bucket[10m]))) ",
+          "expr": "histogram_quantile(1, sum by(flavor, le) (rate(runner_spawn_duration_seconds_bucket{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[10m])))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -619,7 +619,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(1, sum by (flavor, le) (rate(delete_runner_duration_seconds_bucket[10m])))",
+          "expr": "histogram_quantile(1, sum by(flavor, le) (rate(delete_runner_duration_seconds_bucket{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[10m])))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -738,7 +738,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PE6731821AF182E02"
+        "uid": "${prometheusds}"
       },
       "description": "Amount of 5xx returned by OpenStack API.",
       "fieldConfig": {
@@ -891,7 +891,7 @@
         "showUnfilled": true,
         "valueMode": "color"
       },
-      "pluginVersion": "9.5.3",
+      "pluginVersion": "9.5.21",
       "targets": [
         {
           "datasource": {
@@ -899,7 +899,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by (flavor) (expected_runners_count)",
+          "expr": "sum by(flavor) (expected_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"})",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -958,7 +958,7 @@
         "showUnfilled": true,
         "valueMode": "color"
       },
-      "pluginVersion": "9.5.3",
+      "pluginVersion": "9.5.21",
       "targets": [
         {
           "datasource": {
@@ -966,7 +966,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "abs(expected_runners_count - (idle_runners_count + busy_runners_count))",
+          "expr": "abs(expected_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"} - (idle_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"} + busy_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1062,7 +1062,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(flavor) (idle_runners_count)",
+          "expr": "sum by(flavor) (idle_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"})",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1158,7 +1158,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by (flavor) (busy_runners_count)",
+          "expr": "sum by(flavor) (busy_runners_count{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"})",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1268,7 +1268,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(juju_application) (increase(missing_runners_total[$__rate_interval]))",
+          "expr": "sum by(juju_application) (increase(missing_runners_total{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[$__rate_interval]))",
           "legendFormat": "{{juju_model}}",
           "range": true,
           "refId": "A"
@@ -1365,7 +1365,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(juju_application) (increase(deleted_vms_total[$__rate_interval]))",
+          "expr": "sum by(juju_application) (increase(deleted_vms_total{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[$__rate_interval]))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1462,7 +1462,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(juju_application) (increase(dangling_runners_total[$__rate_interval]))",
+          "expr": "sum by(juju_application) (increase(dangling_runners_total{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[$__rate_interval]))",
           "legendFormat": "{{juju_model}}",
           "range": true,
           "refId": "A"
@@ -1559,7 +1559,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(juju_application) (increase(deleted_runners_total[$__rate_interval]))",
+          "expr": "sum by(juju_application) (increase(deleted_runners_total{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[$__rate_interval]))",
           "legendFormat": "{{flavor}}",
           "range": true,
           "refId": "A"
@@ -1656,7 +1656,7 @@
             "uid": "${prometheusds}"
           },
           "editorMode": "code",
-          "expr": "sum by(juju_application) (increase(timed_out_runners_total[$__rate_interval]))",
+          "expr": "sum by(juju_application) (increase(timed_out_runners_total{juju_application=~\"$juju_application\",juju_model=~\"$juju_model\",juju_model_uuid=~\"$juju_model_uuid\",juju_unit=~\"$juju_unit\"}[$__rate_interval]))",
           "legendFormat": "{{juju_model}}",
           "range": true,
           "refId": "A"
