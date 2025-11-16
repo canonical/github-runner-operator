@@ -1,0 +1,39 @@
+06:24:25 WARNING unexpected facade SSHServer received from the controller
+06:24:25 INFO Adding model github-pr-ef1fa-lxd:test-reactive-kgsl on cloud localhost
+06:24:25 WARNING unexpected facade SSHServer received from the controller
+06:24:25 WARNING unexpected facade SSHSession received from the controller
+06:24:25 WARNING unexpected facade SSHTunneler received from the controller
+06:24:26 INFO GitHub token rate limit: Rate(reset=2025-11-16 07:24:12+00:00, remaining=4995, limit=5000)
+06:24:29 INFO Deploying ch:amd64/jammy/mongodb-229
+06:24:30 INFO Deploying ch:amd64/jammy/github-runner-image-builder-128
+06:24:46 INFO Deploying local:jammy/github-runner-0
+06:24:46 INFO Waiting for model:
+  test-hhgzh2cw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hhgzh2cw/0 [allocating] waiting: waiting for machine
+06:25:17 INFO Waiting for model:
+  test-hhgzh2cw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hhgzh2cw/0 [allocating] waiting: waiting for machine
+06:25:47 INFO Waiting for model:
+  test-hhgzh2cw/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hhgzh2cw/0 [allocating] waiting: waiting for machine
+06:26:17 INFO Waiting for model:
+  test-hhgzh2cw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hhgzh2cw/0 [allocating] waiting: waiting for machine
+06:26:47 INFO Waiting for model:
+  test-hhgzh2cw/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-hhgzh2cw/0 [executing] maintenance: Setting up Builder.
+06:27:18 INFO Waiting for model:
+  test-hhgzh2cw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hhgzh2cw/0 [executing] maintenance: Setting up Builder.
+06:27:48 INFO Waiting for model:
+  test-hhgzh2cw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hhgzh2cw/0 [executing] maintenance: Setting up Builder.
+06:28:18 INFO Waiting for model:
+  test-hhgzh2cw/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-hhgzh2cw/0 [executing] maintenance: Setting up Builder.
+06:28:48 INFO Waiting for model:
+  test-hhgzh2cw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hhgzh2cw/0 [executing] blocked: image integration required.
+06:29:19 INFO Waiting for model:
+  test-hhgzh2cw/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-hhgzh2cw/0 [executing] active: Building image.
