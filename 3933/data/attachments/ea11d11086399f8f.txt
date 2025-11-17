@@ -1,0 +1,34 @@
+19:41:08 WARNING unexpected facade SSHServer received from the controller
+19:41:08 INFO Adding model github-pr-a0cf3-lxd:test-charm-no-runner-jc6i on cloud localhost
+19:41:08 WARNING unexpected facade SSHServer received from the controller
+19:41:08 WARNING unexpected facade SSHSession received from the controller
+19:41:08 WARNING unexpected facade SSHTunneler received from the controller
+19:41:10 INFO Deploying ch:amd64/jammy/github-runner-image-builder-129
+19:41:21 INFO Deploying local:jammy/github-runner-0
+19:41:21 INFO Waiting for model:
+  test-gj3pps8p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gj3pps8p/0 [allocating] waiting: waiting for machine
+19:41:51 INFO Waiting for model:
+  test-gj3pps8p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gj3pps8p/0 [allocating] waiting: waiting for machine
+19:42:22 INFO Waiting for model:
+  test-gj3pps8p/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gj3pps8p/0 [allocating] waiting: waiting for machine
+19:42:52 INFO Waiting for model:
+  test-gj3pps8p/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-gj3pps8p/0 [executing] maintenance: Setting up Builder.
+19:43:22 INFO Waiting for model:
+  test-gj3pps8p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gj3pps8p/0 [executing] maintenance: Setting up Builder.
+19:43:52 INFO Waiting for model:
+  test-gj3pps8p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gj3pps8p/0 [executing] maintenance: Setting up Builder.
+19:44:22 INFO Waiting for model:
+  test-gj3pps8p/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-gj3pps8p/0 [executing] maintenance: Setting up Builder.
+19:44:53 INFO Waiting for model:
+  test-gj3pps8p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gj3pps8p/0 [executing] active: Building image.
+19:45:23 INFO Waiting for model:
+  test-gj3pps8p/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-gj3pps8p/0 [executing] active: Building image.

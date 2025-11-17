@@ -1,0 +1,32 @@
+18:22:33 INFO GitHub token rate limit: Rate(reset=2025-11-17 18:43:43+00:00, remaining=4907, limit=5000)
+18:22:46 WARNING unexpected facade SSHServer received from the controller
+18:22:46 INFO Adding model github-pr-a0cf3-lxd:test-charm-metrics-failure-6e7y on cloud localhost
+18:22:46 WARNING unexpected facade SSHServer received from the controller
+18:22:46 WARNING unexpected facade SSHSession received from the controller
+18:22:46 WARNING unexpected facade SSHTunneler received from the controller
+18:22:47 INFO Deploying ch:amd64/jammy/github-runner-image-builder-129
+18:22:58 INFO Deploying local:jammy/github-runner-0
+18:22:58 INFO Waiting for model:
+  test-asdgaldg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asdgaldg/0 [allocating] waiting: waiting for machine
+18:23:28 INFO Waiting for model:
+  test-asdgaldg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-asdgaldg/0 [allocating] waiting: waiting for machine
+18:23:58 INFO Waiting for model:
+  test-asdgaldg/0 [executing] waiting: agent initialising
+  github-runner-image-builder-asdgaldg/0 [executing] maintenance: Setting up Builder.
+18:24:28 INFO Waiting for model:
+  test-asdgaldg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-asdgaldg/0 [executing] maintenance: Setting up Builder.
+18:24:58 INFO Waiting for model:
+  test-asdgaldg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-asdgaldg/0 [executing] maintenance: Setting up Builder.
+18:25:28 INFO Waiting for model:
+  test-asdgaldg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-asdgaldg/0 [executing] maintenance: Setting up Builder.
+18:25:59 INFO Waiting for model:
+  test-asdgaldg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asdgaldg/0 [executing] active: Building image.
+18:26:29 INFO Waiting for model:
+  test-asdgaldg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-asdgaldg/0 [executing] active: Building image.
