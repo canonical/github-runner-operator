@@ -4,15 +4,52 @@ on:
   # push:
   pull_request:
   workflow_dispatch:
-
 jobs:
-  private-endpoint-ps7:
-    runs-on: [self-hosted, self-hosted-linux-amd64-noble-private-endpoint-xlarge]
+  medium-amd64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, medium, amd64, reactive]
     steps:
       - run: lscpu
       - run: df -h
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
-      - name: Setup tmate session
-        uses: canonical/action-tmate@main
+  medium-arm64:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, medium, arm64, reactive]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-s390x:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, self-hosted-linux-s390x-noble-edge]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+  edge-ppc64le:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, self-hosted-linux-ppc64el-noble-edge]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
