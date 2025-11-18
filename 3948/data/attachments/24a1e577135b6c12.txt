@@ -1,0 +1,99 @@
+19:00:53 INFO Waiting for model:
+  test-stby38do/0 [idle] active: 
+19:01:23 INFO Waiting for model:
+  test-stby38do/0 [idle] active: 
+19:01:27 INFO Current reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:01:27 INFO Waiting for reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:02:28 INFO Current reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:02:28 INFO Current reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78, expected reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:02:28 INFO Waiting for reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:03:29 INFO Current reconcile ID: 371627a6-e452-4b84-977e-2504eb49490c
+19:03:29 INFO Current reconcile ID: 371627a6-e452-4b84-977e-2504eb49490c, expected reconcile ID: 86261149-fcb5-494f-9851-29f4bf591d78
+19:03:33 INFO [TEST SETUP] Exposing port 8080 on test-stby38do-0-n-e844b27dc9bc
+19:03:33 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.207', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0a:16:f0'}]])
+19:03:34 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-stby38do-0-n-e844b27dc9bc.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.207 &
+19:03:35 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.207' (ED25519) to the list of known hosts.
+
+19:03:37 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-stby38do-0-n-e844b27dc9bc
+19:03:37 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.207', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0a:16:f0'}]])
+19:03:38 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-stby38do-0-n-e844b27dc9bc.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.207 nc -z localhost 8080'
+19:03:39 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+19:03:39 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-stby38do-0-n-e844b27dc9bc
+19:03:39 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.207', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:0a:16:f0'}]])
+19:03:40 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-stby38do-0-n-e844b27dc9bc.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.207 curl http://localhost:8080'
+19:03:41 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0   106k      0 --:--:-- --:--:-- --:--:--  202k
+'
+19:03:42 INFO Wait for condition not met, sleeping 10
+19:03:53 INFO Wait for condition not met, sleeping 60
+19:04:54 INFO Waiting for model:
+  test-stby38do/0 [idle] active: 
+19:05:24 INFO Waiting for model:
+  test-stby38do/0 [idle] active: 
+19:05:26 INFO Current reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:05:26 INFO Waiting for reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:06:28 INFO Current reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:06:28 INFO Current reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920, expected reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:06:28 INFO Waiting for reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:07:29 INFO Current reconcile ID: 33884b03-1033-4e33-8766-3f42d78e8527
+19:07:29 INFO Current reconcile ID: 33884b03-1033-4e33-8766-3f42d78e8527, expected reconcile ID: 610ad04a-6a86-4d3e-ae48-2b118c08e920
+19:07:31 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-p4ae  github-pr-a5bdc-lxd  localhost/localhost  3.6.11   unsupported  19:07:31Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-stby38do           active      1  github-runner-image-builder  latest/edge  130  no       
+test-stby38do                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-stby38do/0*  active    idle   0        10.245.231.119            
+test-stby38do/0*                         active    idle   1        10.245.231.100  8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.245.231.119  juju-9cfa24-0  ubuntu@22.04  github-runner  Running
+1        started  10.245.231.100  juju-9cfa24-1  ubuntu@22.04  github-runner  Running
+
+19:07:31 INFO Juju error logs:
+
+machine-0: 18:26:19 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:26:19 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:26 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:26:26 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-stby38do-0: 18:26:51 ERROR unit.github-runner-image-builder-stby38do/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-stby38do-0: 18:27:18 ERROR unit.test-stby38do/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-stby38do-0: 18:27:20 ERROR unit.test-stby38do/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-stby38do-0: 18:28:37 ERROR unit.test-stby38do/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-stby38do-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+19:07:31 INFO Forgetting model main...
