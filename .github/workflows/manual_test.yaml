@@ -17,6 +17,8 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
   medium-arm64:
     strategy:
       fail-fast: false
@@ -29,6 +31,8 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
   edge-s390x:
     strategy:
       fail-fast: false
@@ -41,6 +45,8 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
   edge-ppc64le:
     strategy:
       fail-fast: false
@@ -53,3 +59,19 @@ jobs:
       - run: free -h
       - run: uname -a
       - run: lsb_release -a
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
+  pfe-ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0]
+    runs-on: [self-hosted, X64, pfe-ci, noble]
+    steps:
+      - run: lscpu
+      - run: df -h
+      - run: free -h
+      - run: uname -a
+      - run: lsb_release -a
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
