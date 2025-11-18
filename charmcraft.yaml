@@ -10,8 +10,12 @@ parts:
       - git  # for installing git source of pylxd 
       - libffi-dev  # for cffi
       - libssl-dev  # for cryptography
-      - rust-all  # for cryptography
       - pkg-config # for cryptography
+    build-snaps:
+      - rustup # for cryptography
+    override-build: |
+      rustup default stable
+      craftctl default
 bases:
   - build-on:
     - name: "ubuntu"

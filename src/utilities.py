@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 # Parameters of the function decorated with retry
-ParamT = ParamSpec("ParamT")
+ParamT = ParamSpec("ParamT")  # pylint: disable=invalid-name
 # Return type of the function decorated with retry
 ReturnT = TypeVar("ReturnT")
 
