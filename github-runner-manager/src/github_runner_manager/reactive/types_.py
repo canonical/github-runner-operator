@@ -7,7 +7,6 @@ from pydantic import BaseModel
 
 from github_runner_manager.configuration.base import QueueConfig
 from github_runner_manager.configuration.github import GitHubConfiguration
-from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.openstack_cloud.openstack_runner_manager import (
     OpenStackRunnerManagerConfig,
 )
@@ -19,7 +18,6 @@ class ReactiveProcessConfig(BaseModel):
     Attributes:
         queue: The queue configuration.
         manager_name: Name of the manager.
-        jobmanager_configuration: Configuration for JobManager.
         github_configuration: Configuration for GitHub.
         cloud_runner_manager: The OpenStack runner manager configuration.
         supported_labels: The supported labels for the runner.
@@ -29,7 +27,6 @@ class ReactiveProcessConfig(BaseModel):
     queue: QueueConfig
     manager_name: str
     github_configuration: GitHubConfiguration | None
-    jobmanager_configuration: JobManagerConfiguration | None
     cloud_runner_manager: OpenStackRunnerManagerConfig
     supported_labels: set[str]
     labels: list[str]

@@ -54,7 +54,6 @@ def main() -> None:
     platform_provider = platform_factory(
         vm_prefix=runner_config.cloud_runner_manager.prefix,
         github_config=runner_config.github_configuration,
-        jobmanager_config=runner_config.jobmanager_configuration,
     )
     runner_manager = RunnerManager(
         manager_name=runner_config.manager_name,

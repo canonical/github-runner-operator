@@ -4,7 +4,6 @@
 """Module responsible for consuming jobs from the message queue."""
 import contextlib
 import logging
-import re
 import signal
 import sys
 from contextlib import closing
@@ -197,21 +196,24 @@ def consume(  # noqa: C901
 
 
 def _build_runner_metadata(job_url: str) -> RunnerMetadata:
-    """Build runner metadata from the job url."""
+    """Build runner metadata from the job url.
+
+    Args:
+        job_url: The job URL.
+
+    Returns:
+        RunnerMetadata for GitHub.
+
+    Raises:
+        ValueError: If the URL is not a GitHub URL.
+    """
     parsed_url = urlparse(job_url)
-    # We expect the netloc to contain github.com, otherwise this function will fail,
-    # as will use jobmanager code to handle github runners.
+    # We only support github.com URLs now
     if "github.com" in parsed_url.netloc:
         return RunnerMetadata()
 
-    # From here on jobmanager. For now we just regex on the url to check if it is the url
-    # of a runner.
-    match_result = re.match(r"^(.*)/v1/jobs/(\d+)$", parsed_url.path)
-    if not match_result:
-        logger.error("Invalid URL for a job. url: %s", job_url)
-        raise ValueError(f"Invalid format for job url {job_url}")
-    base_url = parsed_url._replace(path=match_result.group(1)).geturl()
-    return RunnerMetadata(platform_name="jobmanager", url=base_url)
+    logger.error("Invalid URL for a job. Only GitHub URLs are supported. url: %s", job_url)
+    raise ValueError(f"Invalid job url {job_url}. Only GitHub URLs are supported.")
 
 
 def _parse_job_details(msg: Message) -> JobDetails:

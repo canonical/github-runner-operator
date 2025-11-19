@@ -33,9 +33,7 @@ GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE_PATH = (
     SYSTEMD_SERVICE_PATH / GITHUB_RUNNER_MANAGER_SYSTEMD_SERVICE
 )
 GITHUB_RUNNER_MANAGER_PACKAGE = "github_runner_manager"
-JOB_MANAGER_PACKAGE = "jobmanager_client"
 GITHUB_RUNNER_MANAGER_PACKAGE_PATH = "./github-runner-manager"
-JOB_MANAGER_PACKAGE_PATH = "./jobmanager/client"
 GITHUB_RUNNER_MANAGER_SERVICE_NAME = "github-runner-manager"
 GITHUB_RUNNER_MANAGER_SERVICE_LOG_DIR = Path("/var/log/github-runner-manager")
 GITHUB_RUNNER_MANAGER_SERVICE_EXECUTABLE_PATH = "/usr/local/bin/github-runner-manager"
@@ -111,16 +109,6 @@ def install_package() -> None:
         # pipx with `--force` will always overwrite the current installation.
         execute_command(
             ["pipx", "install", "--global", "--force", GITHUB_RUNNER_MANAGER_PACKAGE_PATH]
-        )
-        execute_command(
-            [
-                "pipx",
-                "inject",
-                "--global",
-                "--force",
-                GITHUB_RUNNER_MANAGER_PACKAGE,
-                JOB_MANAGER_PACKAGE_PATH,
-            ]
         )
     except SubprocessError as err:
         raise RunnerManagerApplicationInstallError(_INSTALL_ERROR_MESSAGE) from err
@@ -200,6 +188,7 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
         f"""\
         [Unit]
         Description=Runs the github-runner-manager service
+        StartLimitIntervalSec=0
 
         [Service]
         Type=simple
@@ -209,6 +198,9 @@ def _setup_service_file(config_file: Path, log_file: Path, log_level: str) -> No
 {GITHUB_RUNNER_MANAGER_ADDRESS} --port {GITHUB_RUNNER_MANAGER_PORT} \
 --python-path {str(python_path)} --log-level {log_level}
         Restart=on-failure
+        RestartSec=30
+        RestartSteps=5
+        RestartMaxDelaySec=600
         KillMode=process
         StandardOutput=append:{log_file}
         StandardError=append:{log_file}
