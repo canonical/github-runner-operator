@@ -1,0 +1,107 @@
+06:47:46 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+06:48:16 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+06:48:18 INFO Current reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:48:18 INFO Waiting for reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:49:19 INFO Current reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:49:19 INFO Current reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7, expected reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:49:19 INFO Waiting for reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:50:20 INFO Current reconcile ID: 9ec2a50c-a752-4b77-9849-82824a32e25c
+06:50:20 INFO Current reconcile ID: 9ec2a50c-a752-4b77-9849-82824a32e25c, expected reconcile ID: 44ea80a9-e291-40d4-b334-9b2259882dd7
+06:50:20 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+06:50:51 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+06:50:59 INFO Current reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+06:50:59 INFO Waiting for reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+06:52:00 INFO Current reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+06:52:00 INFO Current reconcile ID: 34060241-8687-4850-8df5-1168aca300ca, expected reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+06:52:00 INFO Waiting for reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+06:53:01 INFO Current reconcile ID: 5ade3756-4109-4461-9de1-5183720ca757
+06:53:01 INFO Current reconcile ID: 5ade3756-4109-4461-9de1-5183720ca757, expected reconcile ID: 34060241-8687-4850-8df5-1168aca300ca
+07:01:27 INFO Wait for condition not met, sleeping 30
+07:02:10 INFO [TEST SETUP] Run command pkill -9 run.sh on test-z28if1cg-0-n-17f0013ca4ba
+07:02:10 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.200', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dd:96:6c'}]])
+07:02:11 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-z28if1cg-0-n-17f0013ca4ba.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.200 pkill -9 run.sh'
+07:02:12 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.200' (ED25519) to the list of known hosts.
+'
+07:02:14 INFO Runner test-z28if1cg-0-n-17f0013ca4ba status: online
+07:02:14 INFO Runner still marked as online, waiting for it to be marked offline
+07:03:15 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+07:03:45 INFO Waiting for model:
+  test-z28if1cg/0 [idle] active: 
+07:03:48 INFO Current reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:03:48 INFO Waiting for reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:04:49 INFO Current reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:04:49 INFO Current reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480, expected reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:04:49 INFO Waiting for reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:05:50 INFO Current reconcile ID: 8122578e-8df7-4e14-834e-990141125223
+07:05:50 INFO Current reconcile ID: 8122578e-8df7-4e14-834e-990141125223, expected reconcile ID: 995ea8ef-fc23-42bb-8999-862529c04480
+07:05:51 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1763534874.3541293, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.9387030601501465}
+{"timestamp": 1763535003.5258012, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.054399728775024}
+{"timestamp": 1763535033.310957, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.041463851928711}
+{"timestamp": 1763535163.8273497, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.40588903427124}
+{"timestamp": 1763535292.4842196, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.531325578689575}
+{"timestamp": 1763535421.0915253, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.515826225280762}
+{"timestamp": 1763535549.1621037, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.971236705780029}
+{"timestamp": 1763535676.0175633, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 6.732388734817505}
+{"timestamp": 1763535681.0, "event": "runner_installed", "flavor": "test-z28if1cg", "duration": 134.0}
+{"timestamp": 1763535691.0, "event": "runner_start", "flavor": "test-z28if1cg", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 10.0, "queue_duration": 1.0}
+{"timestamp": 1763535732.0, "event": "runner_stop", "flavor": "test-z28if1cg", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1763535810.738959, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 14.01121735572815}
+{"timestamp": 1763535939.3412428, "event": "reconciliation", "flavor": "test-z28if1cg", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.532498598098755}
+07:05:53 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-w6xh  github-pr-a5bdc-lxd  localhost/localhost  3.6.11   unsupported  07:05:53Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-z28if1cg           active      1  github-runner-image-builder  latest/edge  133  no       
+test-z28if1cg                                  active      1  github-runner                               0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-z28if1cg/0*  active    idle   0        10.4.141.52               
+test-z28if1cg/0*                         active    idle   1        10.4.141.43     8080/tcp  
+
+Machine  State    Address      Inst id        Base          AZ             Message
+0        started  10.4.141.52  juju-87f39b-0  ubuntu@22.04  github-runner  Running
+1        started  10.4.141.43  juju-87f39b-1  ubuntu@22.04  github-runner  Running
+
+07:05:53 INFO Juju error logs:
+
+machine-0: 06:24:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:24:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:59 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:24:59 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-z28if1cg-0: 06:25:45 ERROR unit.github-runner-image-builder-z28if1cg/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-z28if1cg-0: 06:25:59 ERROR unit.test-z28if1cg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-z28if1cg-0: 06:26:01 ERROR unit.test-z28if1cg/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-z28if1cg-0: 06:27:04 ERROR unit.test-z28if1cg/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-z28if1cg-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+07:05:53 INFO Forgetting model main...
