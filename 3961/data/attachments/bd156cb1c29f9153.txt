@@ -1,0 +1,34 @@
+18:28:41 WARNING unexpected facade SSHServer received from the controller
+18:28:41 INFO Adding model github-pr-1dbf2-lxd:test-charm-no-runner-mux1 on cloud localhost
+18:28:41 WARNING unexpected facade SSHServer received from the controller
+18:28:41 WARNING unexpected facade SSHSession received from the controller
+18:28:41 WARNING unexpected facade SSHTunneler received from the controller
+18:28:43 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+18:28:54 INFO Deploying local:jammy/github-runner-0
+18:28:54 INFO Waiting for model:
+  test-ctr8bhlf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ctr8bhlf/0 [allocating] waiting: waiting for machine
+18:29:24 INFO Waiting for model:
+  test-ctr8bhlf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ctr8bhlf/0 [allocating] waiting: waiting for machine
+18:29:54 INFO Waiting for model:
+  test-ctr8bhlf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ctr8bhlf/0 [allocating] waiting: waiting for machine
+18:30:24 INFO Waiting for model:
+  test-ctr8bhlf/0 [executing] waiting: agent initialising
+  github-runner-image-builder-ctr8bhlf/0 [executing] maintenance: Setting up Builder.
+18:30:55 INFO Waiting for model:
+  test-ctr8bhlf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-ctr8bhlf/0 [executing] maintenance: Setting up Builder.
+18:31:25 INFO Waiting for model:
+  test-ctr8bhlf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ctr8bhlf/0 [executing] maintenance: Setting up Builder.
+18:31:55 INFO Waiting for model:
+  test-ctr8bhlf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-ctr8bhlf/0 [executing] maintenance: Setting up Builder.
+18:32:26 INFO Waiting for model:
+  test-ctr8bhlf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ctr8bhlf/0 [executing] blocked: image integration required.
+18:32:56 INFO Waiting for model:
+  test-ctr8bhlf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-ctr8bhlf/0 [executing] active: Building image.

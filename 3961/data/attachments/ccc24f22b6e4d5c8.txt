@@ -1,0 +1,34 @@
+18:28:20 WARNING unexpected facade SSHServer received from the controller
+18:28:20 INFO Adding model github-pr-1dbf2-lxd:test-charm-runner-u9b0 on cloud localhost
+18:28:20 WARNING unexpected facade SSHServer received from the controller
+18:28:20 WARNING unexpected facade SSHSession received from the controller
+18:28:20 WARNING unexpected facade SSHTunneler received from the controller
+18:28:22 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+18:28:34 INFO Deploying local:jammy/github-runner-0
+18:28:34 INFO Waiting for model:
+  test-yuu0u7f4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yuu0u7f4/0 [allocating] waiting: waiting for machine
+18:29:04 INFO Waiting for model:
+  test-yuu0u7f4/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-yuu0u7f4/0 [allocating] waiting: waiting for machine
+18:29:35 INFO Waiting for model:
+  test-yuu0u7f4/0 [executing] waiting: agent initialising
+  github-runner-image-builder-yuu0u7f4/0 [allocating] waiting: waiting for machine
+18:30:05 INFO Waiting for model:
+  test-yuu0u7f4/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-yuu0u7f4/0 [executing] maintenance: Setting up Builder.
+18:30:35 INFO Waiting for model:
+  test-yuu0u7f4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yuu0u7f4/0 [executing] maintenance: Setting up Builder.
+18:31:05 INFO Waiting for model:
+  test-yuu0u7f4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yuu0u7f4/0 [executing] maintenance: Setting up Builder.
+18:31:36 INFO Waiting for model:
+  test-yuu0u7f4/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-yuu0u7f4/0 [executing] maintenance: Setting up Builder.
+18:32:06 INFO Waiting for model:
+  test-yuu0u7f4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yuu0u7f4/0 [executing] active: Building image.
+18:32:36 INFO Waiting for model:
+  test-yuu0u7f4/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-yuu0u7f4/0 [executing] active: Building image.

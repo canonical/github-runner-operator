@@ -1,0 +1,39 @@
+18:28:17 WARNING unexpected facade SSHServer received from the controller
+18:28:17 INFO Adding model github-pr-1dbf2-lxd:test-reactive-hvpy on cloud localhost
+18:28:17 WARNING unexpected facade SSHServer received from the controller
+18:28:17 WARNING unexpected facade SSHSession received from the controller
+18:28:17 WARNING unexpected facade SSHTunneler received from the controller
+18:28:17 INFO GitHub token rate limit: Rate(reset=2025-11-19 18:52:19+00:00, remaining=4837, limit=5000)
+18:28:21 INFO Deploying ch:amd64/jammy/mongodb-229
+18:28:23 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+18:28:35 INFO Deploying local:jammy/github-runner-0
+18:28:36 INFO Waiting for model:
+  test-i7qmdhcf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-i7qmdhcf/0 [allocating] waiting: waiting for machine
+18:29:06 INFO Waiting for model:
+  test-i7qmdhcf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-i7qmdhcf/0 [allocating] waiting: waiting for machine
+18:29:36 INFO Waiting for model:
+  test-i7qmdhcf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-i7qmdhcf/0 [allocating] waiting: waiting for machine
+18:30:07 INFO Waiting for model:
+  test-i7qmdhcf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-i7qmdhcf/0 [allocating] waiting: waiting for machine
+18:30:37 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] maintenance: Setting up Builder.
+18:31:07 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] maintenance: Setting up Builder.
+18:31:38 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] maintenance: Setting up Builder.
+18:32:08 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] maintenance: Setting up Builder.
+18:32:39 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] active: Building image.
+18:33:09 INFO Waiting for model:
+  test-i7qmdhcf/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-i7qmdhcf/0 [executing] active: Building image.

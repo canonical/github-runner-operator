@@ -1,0 +1,58 @@
+18:33:22 INFO OpenStack servers: []
+18:33:23 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-mux1  github-pr-1dbf2-lxd  localhost/localhost  3.6.11   unsupported  18:33:23Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-ctr8bhlf           error        1  github-runner-image-builder  latest/edge  133  no       hook failed: "image-relation-changed"
+test-ctr8bhlf                                  waiting      1  github-runner                               0  no       Waiting for image over integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ctr8bhlf/0*  error     idle   0        10.47.250.254          hook failed: "image-relation-changed"
+test-ctr8bhlf/0*                         waiting   idle   1        10.47.250.135          Waiting for image over integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.47.250.254  juju-b5a7e1-0  ubuntu@22.04  github-runner  Running
+1        started  10.47.250.135  juju-b5a7e1-1  ubuntu@22.04  github-runner  Running
+
+18:33:23 INFO Juju error logs:
+
+machine-0: 18:30:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:30:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:14 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:30:14 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-ctr8bhlf-0: 18:30:46 ERROR unit.github-runner-image-builder-ctr8bhlf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-ctr8bhlf-0: 18:30:56 ERROR unit.test-ctr8bhlf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ctr8bhlf-0: 18:30:57 ERROR unit.test-ctr8bhlf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ctr8bhlf-0: 18:32:21 ERROR unit.test-ctr8bhlf/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ctr8bhlf-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+unit-github-runner-image-builder-ctr8bhlf-0: 18:32:38 ERROR unit.github-runner-image-builder-ctr8bhlf/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ctr8bhlf-0: 18:32:45 ERROR unit.github-runner-image-builder-ctr8bhlf/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ctr8bhlf-0: 18:32:53 ERROR unit.github-runner-image-builder-ctr8bhlf/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+unit-github-runner-image-builder-ctr8bhlf-0: 18:33:03 ERROR unit.github-runner-image-builder-ctr8bhlf/0.juju-log image:0: Image build failed, code: 1, out: , err: None, stdout: 
+
+18:33:23 INFO Forgetting model main...
