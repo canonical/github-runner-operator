@@ -144,7 +144,6 @@ class RunnerScaler:
         platform_provider = platform_factory(
             vm_prefix=application_configuration.openstack_configuration.vm_prefix,
             github_config=application_configuration.github_config,
-            jobmanager_config=application_configuration.jobmanager_config,
         )
 
         runner_manager = RunnerManager(
@@ -167,7 +166,6 @@ class RunnerScaler:
                 queue=reactive_config.queue,
                 manager_name=application_configuration.name,
                 github_configuration=application_configuration.github_config,
-                jobmanager_configuration=application_configuration.jobmanager_config,
                 cloud_runner_manager=openstack_runner_manager_config,
                 supported_labels=supported_labels,
                 labels=labels,
@@ -179,9 +177,7 @@ class RunnerScaler:
             user=user,
             base_quantity=base_quantity,
             max_quantity=max_quantity,
-            platform_name=(
-                Platform.GITHUB if application_configuration.github_config else Platform.JOBMANAGER
-            ),
+            platform_name=Platform.GITHUB,
             python_path=python_path,
         )
 

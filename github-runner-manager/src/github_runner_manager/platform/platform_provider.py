@@ -20,7 +20,6 @@ from github_runner_manager.manager.models import (
 from github_runner_manager.types_.github import GitHubRunnerStatus, SelfHostedRunner
 
 _GITHUB_PLATFORM_KEY = "github"
-_JOBMANAGER_PLATFORM_KEY = "jobmanager"
 
 
 class Platform(str, Enum):
@@ -28,11 +27,9 @@ class Platform(str, Enum):
 
     Attributes:
         GITHUB: GitHub platform.
-        JOBMANAGER: JobManager platform.
     """
 
     GITHUB = _GITHUB_PLATFORM_KEY
-    JOBMANAGER = _JOBMANAGER_PLATFORM_KEY
 
 
 class PlatformError(Exception):
