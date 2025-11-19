@@ -15,6 +15,7 @@ import pytest
 import pytest_asyncio
 import requests
 from github import Github
+from github.Auth import Token
 from github.Branch import Branch
 from github.GithubException import GithubException
 from github.Repository import Repository
@@ -59,7 +60,7 @@ def trusted_forked_github_repository(
     Note: token_alt must represent a different GitHub user account than token.
     """
     # Create GitHub client with alternate token
-    alt_github_client = Github(token_alt)
+    alt_github_client = Github(auth=Token(token=token_alt))
     alt_user = alt_github_client.get_user()
     primary_user = github_client.get_user()
 

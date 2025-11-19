@@ -19,6 +19,7 @@ import pytest_asyncio
 import yaml
 from git import Repo
 from github import Github, GithubException
+from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.github_client import GithubClient
@@ -615,7 +616,7 @@ async def tmate_ssh_server_unit_ip_fixture(
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
     """Returns the github client."""
-    gh = Github(token)
+    gh = Github(auth=Token(token=token))
     rate_limit = gh.get_rate_limit()
     logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
