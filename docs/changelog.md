@@ -6,6 +6,10 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 - Added Grafana dashboard using Prometheus data source.
 
+## 2025-11-12
+
+- Removed the jobmanager platform provider and related integration tests as they are no longer used and not part of any public API.
+
 ## 2025-08-27
 
 - Updated the documentation workflow to be fully integrated with the Vale GitHub Action.
