@@ -587,7 +587,10 @@ async def app_no_wait_fixture(
 @pytest_asyncio.fixture(scope="module", name="tmate_ssh_server_app")
 async def tmate_ssh_server_app_fixture(model: Model) -> AsyncIterator[Application]:
     """tmate-ssh-server charm application related to GitHub-Runner app charm."""
-    tmate_app: Application = await model.deploy("tmate-ssh-server", channel="edge")
+    tmate_app: Application = await model.deploy(
+        "tmate-ssh-server",
+        channel="edge",
+    )
     return tmate_app
 
 
