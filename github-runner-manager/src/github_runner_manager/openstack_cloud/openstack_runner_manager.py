@@ -182,6 +182,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
             "custom_pre_job_script": service_config.custom_pre_job_script,
+            "allow_external_contributor": self._config.allow_external_contributor,
         }
         repo_policy = self._get_repo_policy_compliance_client()
         if repo_policy is not None:
@@ -192,10 +193,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
                     "do_repo_policy_check": True,
                 }
             )
-
-        pre_job_contents_dict.update(
-            {"allow_external_contributor": self._config.allow_external_contributor}
-        )
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
