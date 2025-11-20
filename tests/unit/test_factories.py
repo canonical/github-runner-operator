@@ -1,6 +1,5 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
-import pytest
 from github_runner_manager.configuration import (
     ApplicationConfiguration,
     Flavor,
@@ -15,7 +14,6 @@ from github_runner_manager.configuration import (
     SupportServiceConfig,
 )
 from github_runner_manager.configuration.github import GitHubConfiguration, GitHubOrg
-from github_runner_manager.configuration.jobmanager import JobManagerConfiguration
 from github_runner_manager.openstack_cloud.configuration import (
     OpenStackConfiguration,
     OpenStackCredentials,
@@ -27,33 +25,8 @@ import charm_state
 import factories
 
 
-@pytest.mark.parametrize(
-    "with_github_config, expected_github_config, expected_jobmanager_config",
-    [
-        pytest.param(
-            True,
-            GitHubConfiguration(
-                token="githubtoken", path=GitHubOrg(org="canonical", group="group")
-            ),
-            None,
-            id="with_github_config",
-        ),
-        pytest.param(
-            False,
-            None,
-            JobManagerConfiguration(
-                url="http://jobmanager.internal",
-                token="jobmanagertoken",
-            ),
-            id="with_jobmanager_config",
-        ),
-    ],
-)
 def test_create_application_configuration(
     complete_charm_state: charm_state.CharmState,
-    with_github_config: bool,
-    expected_github_config: GitHubConfiguration | None,
-    expected_jobmanager_config: JobManagerConfiguration | None,
 ):
     """
     arrange: Prepare a fully populated CharmState.
@@ -62,20 +35,15 @@ def test_create_application_configuration(
     """
     state = complete_charm_state
 
-    if not with_github_config:
-        state.charm_config.path = None
-        state.charm_config.token = None
-        state.charm_config.jobmanager_url = "http://jobmanager.internal"
-        state.charm_config.jobmanager_token = "jobmanagertoken"
-
     app_configuration = factories.create_application_configuration(state, "app_name", "unit_name")
 
     assert app_configuration == ApplicationConfiguration(
         allow_external_contributor=False,
         name="app_name",
         extra_labels=["label1", "label2"],
-        github_config=expected_github_config,
-        jobmanager_config=expected_jobmanager_config,
+        github_config=GitHubConfiguration(
+            token="githubtoken", path=GitHubOrg(org="canonical", group="group")
+        ),
         service_config=SupportServiceConfig(
             manager_proxy_command="ssh -W %h:%p example.com",
             proxy_config=ProxyConfig(

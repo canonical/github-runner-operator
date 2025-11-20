@@ -48,7 +48,7 @@ class RunnerMetadataFactory(factory.Factory):
 
         model = RunnerMetadata
 
-    platform_name = factory.Faker("word", ext_word_list=["github", "jobmanager"])
+    platform_name = factory.Faker("word", ext_word_list=["github"])
     runner_id = str(factory.Faker("random_int", min=1, max=10000))
     url = factory.Faker("url")
 

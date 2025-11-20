@@ -66,14 +66,7 @@ def test_github_config_from_charm_invalid_path():
         GithubConfig.from_charm(mock_charm)
 
 
-@pytest.mark.parametrize(
-    "config_cls",
-    [
-        pytest.param(GithubConfig, id="GithubConfig"),
-        pytest.param(charm_state.JobManagerConfig, id="JobManagerConfig"),
-    ],
-)
-def test_github_jobmanager_config_from_charm_empty_path(config_cls):
+def test_github_config_from_charm_empty_path():
     """
     arrange: Create an empty path configuration and prepare the config class to test.
     act: Call from_charm method with the mock CharmBase instance.
@@ -83,7 +76,7 @@ def test_github_jobmanager_config_from_charm_empty_path(config_cls):
     mock_charm.config[PATH_CONFIG_NAME] = ""
 
     with pytest.raises(CharmConfigInvalidError):
-        config_cls.from_charm(mock_charm)
+        GithubConfig.from_charm(mock_charm)
 
 
 def test_github_config_from_charm_invalid_token():
@@ -97,48 +90,6 @@ def test_github_config_from_charm_invalid_token():
 
     with pytest.raises(CharmConfigInvalidError):
         GithubConfig.from_charm(mock_charm)
-
-
-def test_jobmanager_config_from_charm_empty_token():
-    """
-    arrange: Create a mock CharmBase instance with an empty token configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert:
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = "https://jobmanager/"
-    mock_charm.config[TOKEN_CONFIG_NAME] = ""
-
-    with pytest.raises(CharmConfigInvalidError):
-        charm_state.JobManagerConfig.from_charm(mock_charm)
-
-
-def test_github_config_from_charm_url_path_returns_none():
-    """
-    arrange: Create a mock CharmBase instance with an empty path and token configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method returns None.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = "https://jobmanager/"
-
-    result = GithubConfig.from_charm(mock_charm)
-
-    assert result is None
-
-
-def test_jobmanager_config_from_charm_non_http_path_returns_none():
-    """
-    arrange: Create a mock CharmBase instance with a non-HTTP path configuration.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that the method returns None.
-    """
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = "owner/repo"
-
-    result = charm_state.JobManagerConfig.from_charm(mock_charm)
-
-    assert result is None
 
 
 @pytest.mark.parametrize(
@@ -381,26 +332,6 @@ def test_charm_config_from_charm_invalid_labels():
     with pytest.raises(CharmConfigInvalidError) as exc_info:
         CharmConfig.from_charm(mock_charm)
     assert "Invalid labels config" in str(exc_info.value)
-
-
-def test_charm_config_from_charm_sets_jobmanager_config():
-    """
-    arrange: Create a mock CharmBase instance with a path being equal to a url.
-    act: Call from_charm method with the mock CharmBase instance.
-    assert: Verify that job manager setting is set and github configs not.
-    """
-    jobmanager_url = "http://jobmanager.url:80"
-    jobmanager_token = secrets.token_hex(4)
-    mock_charm = MockGithubRunnerCharmFactory()
-    mock_charm.config[PATH_CONFIG_NAME] = jobmanager_url
-    mock_charm.config[TOKEN_CONFIG_NAME] = jobmanager_token
-
-    config = CharmConfig.from_charm(mock_charm)
-
-    assert config.jobmanager_url == jobmanager_url
-    assert config.jobmanager_token == jobmanager_token
-    assert config.token is None
-    assert config.path is None
 
 
 def test_charm_config_from_charm_valid():
