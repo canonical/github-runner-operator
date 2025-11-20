@@ -76,6 +76,8 @@ class RunningApplication:
     instance running in a separate process for integration testing.
 
     Attributes:
+        base_url: The base URL (e.g., http://127.0.0.1:8080).
+        config: The configuration dictionary.
         process: The multiprocessing.Process running the application.
         port: The port the application is listening on.
         host: The host the application is listening on.
@@ -110,7 +112,7 @@ class RunningApplication:
 
         Args:
             path: The path to request (e.g., /health).
-            **kwargs: Additional arguments to pass to requests.get.
+            kwargs: Additional arguments to pass to requests.get.
 
         Returns:
             The response object.

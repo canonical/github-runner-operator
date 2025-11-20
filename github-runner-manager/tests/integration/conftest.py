@@ -39,8 +39,8 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
     if not token or not path:
         pytest.skip(
-            "GitHub configuration not provided. Use --github-token and --github-repository options or "
-            "set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables."
+            "GitHub configuration not provided. Use --github-token and --github-repository "
+            "options or set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables."
         )
 
     return GitHubConfig(token=token, path=path)
@@ -56,12 +56,12 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     Returns:
         OpenStack configuration object, or None if not all parameters are provided.
     """
-    auth_url = pytestconfig.getoption("--openstack-auth-url") or os.getenv("OS_AUTH_URL")
-    project = pytestconfig.getoption("--openstack-project") or os.getenv("OS_PROJECT_NAME")
-    username = pytestconfig.getoption("--openstack-username") or os.getenv("OS_USERNAME")
-    password = pytestconfig.getoption("--openstack-password") or os.getenv("OS_PASSWORD")
-    network = pytestconfig.getoption("--openstack-network") or os.getenv("OS_NETWORK")
-    region_name = pytestconfig.getoption("--openstack-region") or os.getenv("OS_REGION_NAME")
+    auth_url = pytestconfig.getoption("--openstack-auth-url") or os.getenv("OS_AUTH_URL", "")
+    project = pytestconfig.getoption("--openstack-project") or os.getenv("OS_PROJECT_NAME", "")
+    username = pytestconfig.getoption("--openstack-username") or os.getenv("OS_USERNAME", "")
+    password = pytestconfig.getoption("--openstack-password") or os.getenv("OS_PASSWORD", "")
+    network = pytestconfig.getoption("--openstack-network") or os.getenv("OS_NETWORK", "")
+    region_name = pytestconfig.getoption("--openstack-region") or os.getenv("OS_REGION_NAME", "")
 
     # Only return config if all required parameters are provided
     if all([auth_url, project, username, password, network, region_name]):

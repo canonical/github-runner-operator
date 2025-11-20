@@ -47,7 +47,10 @@ def create_fork_and_pr(
     # Create PR from fork to original repository
     pr = github_repository.create_pull(
         title=f"Test PR from fork {test_id}",
-        body=f"This is a test PR from a forked repository for testing external contributor security. Test ID: {test_id}",
+        body=(
+            f"This is a test PR from a forked repository for testing "
+            f"external contributor security. Test ID: {test_id}"
+        ),
         head=f"{forked_github_repository.owner.login}:{branch_name}",
         base=github_repository.default_branch,
     )
