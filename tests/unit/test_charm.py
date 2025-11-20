@@ -22,6 +22,7 @@ from charm import (
     LEGACY_RECONCILE_SERVICE,
     LEGACY_RECONCILE_TIMER_SERVICE,
     GithubRunnerCharm,
+    _setup_runner_manager_user,
     catch_action_errors,
     catch_charm_errors,
 )
@@ -620,6 +621,7 @@ def test_on_config_changed_openstack_clouds_yaml(mock_side_effects):
 def test_metric_log_ownership_for_upgrade(
     harness: Harness, mock_side_effects, tmp_path: Path, monkeypatch
 ):
+
     """
     arrange: Metric log exists.
     act: Upgrade charm.
@@ -648,6 +650,7 @@ def test_metric_log_ownership_for_upgrade(
         user=constants.RUNNER_MANAGER_USER,
         group=constants.RUNNER_MANAGER_GROUP,
     )
+
 
 
 def test_attempting_disable_legacy_service_for_upgrade(
