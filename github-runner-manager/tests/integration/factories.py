@@ -1,0 +1,163 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Factory functions for creating test data and configurations."""
+
+import secrets
+import string
+from dataclasses import dataclass, field
+from typing import Any
+
+
+def _generate_test_id() -> str:
+    """Generate a unique test identifier.
+
+    Returns:
+        A random 8-character alphanumeric string.
+    """
+    return "".join(secrets.choice(string.ascii_lowercase + string.digits) for _ in range(8))
+
+
+@dataclass
+class GitHubConfig:
+    """GitHub configuration for tests.
+
+    Attributes:
+        token: GitHub personal access token.
+        path: GitHub path in <owner>/<repo> or <org> format.
+    """
+
+    token: str
+    path: str
+
+
+@dataclass
+class OpenStackConfig:
+    """OpenStack configuration for tests.
+
+    Attributes:
+        auth_url: OpenStack authentication URL.
+        project: OpenStack project name.
+        username: OpenStack username.
+        password: OpenStack password.
+        network: OpenStack network name.
+        region_name: OpenStack region name.
+    """
+
+    auth_url: str
+    project: str
+    username: str
+    password: str
+    network: str
+    region_name: str = "RegionOne"
+
+
+@dataclass
+class TestConfig:
+    """Test-specific configuration for parallel test execution.
+
+    Attributes:
+        test_id: Unique identifier for this test run.
+        runner_name: Name prefix for the runner manager.
+        labels: Extra labels to identify runners from this test.
+        vm_prefix: Prefix for VM names to avoid conflicts.
+    """
+
+    test_id: str = field(default_factory=_generate_test_id)
+    runner_name: str = field(init=False)
+    labels: list[str] = field(init=False)
+    vm_prefix: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Initialize derived fields based on test_id."""
+        self.runner_name = f"test-manager-{self.test_id}"
+        self.labels = [f"test-{self.test_id}"]
+        self.vm_prefix = f"test-runner-{self.test_id}"
+
+
+def create_default_config(
+    allow_external_contributor: bool = False,
+    github_config: GitHubConfig | None = None,
+    openstack_config: OpenStackConfig | None = None,
+    test_config: TestConfig | None = None,
+) -> dict[str, Any]:
+    """Create a default test configuration dictionary.
+
+    Args:
+        allow_external_contributor: Whether to allow external contributors.
+        github_config: GitHub configuration. Defaults to test values.
+        openstack_config: OpenStack configuration. Defaults to test values.
+        test_config: Test-specific configuration for parallel execution.
+            Defaults to new unique values.
+
+    Returns:
+        Configuration dictionary for the application.
+    """
+    # Use defaults if not provided
+    if github_config is None:
+        github_config = GitHubConfig(
+            token="ghp_test_token_1234567890abcdef",
+            path="test-org",
+        )
+
+    if openstack_config is None:
+        openstack_config = OpenStackConfig(
+            auth_url="http://openstack.example.com:5000/v3",
+            project="test-project",
+            username="test-user",
+            password="test-password",
+            network="test-network",
+            region_name="RegionOne",
+        )
+
+    if test_config is None:
+        test_config = TestConfig()
+
+    # Parse GitHub path
+    if "/" in github_config.path:
+        owner, repo = github_config.path.split("/", 1)
+        path_config = {"owner": owner, "repo": repo}
+    else:
+        path_config = {"org": github_config.path, "group": "default"}
+
+    return {
+        "name": test_config.runner_name,
+        "allow_external_contributor": allow_external_contributor,
+        "extra_labels": test_config.labels,
+        "github_config": {
+            "token": github_config.token,
+            "path": path_config,
+        },
+        "service_config": {
+            "use_aproxy": False,
+            "dockerhub_mirror": None,
+            "ssh_debug_connections": [],
+            "repo_policy_compliance": None,
+            "proxy_config": None,
+            "runner_proxy_config": None,
+        },
+        "non_reactive_configuration": {
+            "combinations": [
+                {
+                    "image": {"name": "noble", "labels": ["noble", "x64"]},
+                    "flavor": {"name": "small", "labels": ["small"]},
+                    "base_virtual_machines": 1,
+                }
+            ]
+        },
+        "reactive_configuration": None,
+        "openstack_configuration": {
+            "vm_prefix": test_config.vm_prefix,
+            "network": openstack_config.network,
+            "credentials": {
+                "auth_url": openstack_config.auth_url,
+                "project_name": openstack_config.project,
+                "username": openstack_config.username,
+                "password": openstack_config.password,
+                "user_domain_name": "Default",
+                "project_domain_name": "Default",
+                "region_name": openstack_config.region_name,
+            },
+        },
+        "reconcile_interval": 60,
+    }
