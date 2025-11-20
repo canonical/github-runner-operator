@@ -4,10 +4,33 @@ on:
   pull_request:
 
 jobs:
-  unit-tests-github-runner-manager:
+  application-unit-tests:
+    name: Unit tests for github-runner-manager
     uses: canonical/operator-workflows/.github/workflows/test.yaml@main
     secrets: inherit
     with:
       self-hosted-runner: true
       self-hosted-runner-label: edge
       working-directory: ./github-runner-manager/
+  application-integration-tests:
+    name: Integration tests for github-runner-manager
+    runs-on: [self-hosted, pfe-ci]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5.0.1
+      - name: Setup Astral UV
+        uses: astral-sh/setup-uv@v7
+      - name: Install tox with UV
+        run: uv tool install tox --with tox-uv
+      - name: Run integration tests
+        run: uv run tox -e integration -- ./github-runner-manager/tests/integration/
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN_ALT: ${{ secrets.GITHUB_TOKEN_ALT }}
+          GITHUB_REPOSITORY: canonical/github-runner-operator
+          OS_AUTH_URL: ${{ secrets.OS_AUTH_URL }}
+          OS_PROJECT_NAME: ${{ secrets.OS_PROJECT_NAME }}
+          OS_USERNAME: ${{ secrets.OS_USERNAME }}
+          OS_PASSWORD: ${{ secrets.OS_PASSWORD }}
+          OS_NETWORK: ${{ secrets.OS_NETWORK }}
+          OS_REGION_NAME: ${{ secrets.OS_REGION_NAME }}
