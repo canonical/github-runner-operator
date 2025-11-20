@@ -1,0 +1,183 @@
+06:25:19 WARNING unexpected facade SSHServer received from the controller
+06:25:19 INFO Adding model github-pr-1dbf2-lxd:test-reactive-83u3 on cloud localhost
+06:25:20 WARNING unexpected facade SSHServer received from the controller
+06:25:20 WARNING unexpected facade SSHSession received from the controller
+06:25:20 WARNING unexpected facade SSHTunneler received from the controller
+06:25:20 INFO GitHub token rate limit: Rate(reset=2025-11-20 07:15:31+00:00, remaining=4993, limit=5000)
+06:25:24 INFO Deploying ch:amd64/jammy/mongodb-229
+06:25:26 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+06:25:46 INFO Deploying local:jammy/github-runner-0
+06:25:46 INFO Waiting for model:
+  test-osaq1p1g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:26:17 INFO Waiting for model:
+  test-osaq1p1g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:26:47 INFO Waiting for model:
+  test-osaq1p1g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:27:17 INFO Waiting for model:
+  test-osaq1p1g/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:27:48 INFO Waiting for model:
+  test-osaq1p1g/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:28:18 INFO Waiting for model:
+  test-osaq1p1g/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:28:48 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [allocating] waiting: waiting for machine
+06:29:19 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] maintenance: Setting up Builder.
+06:29:49 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] maintenance: Setting up Builder.
+06:30:19 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] maintenance: Setting up Builder.
+06:30:49 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] maintenance: Setting up Builder.
+06:31:19 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] maintenance: Setting up Builder.
+06:31:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:32:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:32:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:33:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:33:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:34:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:34:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:35:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:35:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:36:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:36:50 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:37:20 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:37:51 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:38:21 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:38:51 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:39:21 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:39:51 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:40:21 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:40:51 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:41:21 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:41:52 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:42:22 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:42:52 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:43:22 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-osaq1p1g/0 [executing] active: Building image.
+06:43:53 INFO Waiting for model:
+  test-osaq1p1g/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-osaq1p1g/0 [idle] active: 
+06:44:21 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:44:21 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:44:52 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+  mongodb/0 [idle] active: Primary.
+06:45:02 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:45:32 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:45:34 INFO Current reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:45:34 INFO Waiting for reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:46:35 INFO Current reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:46:35 INFO Current reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31, expected reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:46:35 INFO Waiting for reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:47:36 INFO Current reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:47:36 INFO Current reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910, expected reconcile ID: 4214893e-3245-4661-ae8a-7059d981bc31
+06:47:39 INFO Wait for condition not met, sleeping 10
+06:48:00 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:48:16 INFO Current reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:48:16 INFO Waiting for reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:49:17 INFO Current reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:49:17 INFO Current reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910, expected reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:49:17 INFO Waiting for reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:50:18 INFO Current reconcile ID: fa61efc2-8601-4535-ad40-7165efcfe819
+06:50:18 INFO Current reconcile ID: fa61efc2-8601-4535-ad40-7165efcfe819, expected reconcile ID: 9fca2bf5-ce6b-4bb4-8a36-a45b04d62910
+06:50:19 INFO Wait for condition not met, sleeping 60
+06:51:19 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:51:35 INFO Current reconcile ID: fa61efc2-8601-4535-ad40-7165efcfe819
+06:51:35 INFO Waiting for reconcile ID: fa61efc2-8601-4535-ad40-7165efcfe819
+06:52:36 INFO Current reconcile ID: e4f84596-95ea-4dae-95e4-246ce2b7d0c3
+06:52:36 INFO Current reconcile ID: e4f84596-95ea-4dae-95e4-246ce2b7d0c3, expected reconcile ID: fa61efc2-8601-4535-ad40-7165efcfe819
+06:52:37 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1763621369.9180686, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.077313661575317}
+{"timestamp": 1763621413.0, "event": "runner_installed", "flavor": "test-osaq1p1g", "duration": 139.0}
+{"timestamp": 1763621419.0, "event": "runner_start", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 157.0}
+{"timestamp": 1763621423.0, "event": "runner_stop", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1763621503.1964939, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.186208963394165}
+
+06:52:38 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1763621369.9180686, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.077313661575317}
+{"timestamp": 1763621413.0, "event": "runner_installed", "flavor": "test-osaq1p1g", "duration": 139.0}
+{"timestamp": 1763621419.0, "event": "runner_start", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 157.0}
+{"timestamp": 1763621423.0, "event": "runner_stop", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1763621503.1964939, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.186208963394165}
+
+06:52:39 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1763621369.9180686, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.077313661575317}
+{"timestamp": 1763621413.0, "event": "runner_installed", "flavor": "test-osaq1p1g", "duration": 139.0}
+{"timestamp": 1763621419.0, "event": "runner_start", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 157.0}
+{"timestamp": 1763621423.0, "event": "runner_stop", "flavor": "test-osaq1p1g", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1763621503.1964939, "event": "reconciliation", "flavor": "test-osaq1p1g", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.186208963394165}
+06:52:39 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:53:09 INFO Waiting for model:
+  test-osaq1p1g/0 [idle] active: 
+06:53:12 INFO Current reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663
+06:53:12 INFO Waiting for reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663
+06:54:13 INFO Current reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663
+06:54:13 INFO Current reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663, expected reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663
+06:54:13 INFO Waiting for reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663
+06:55:14 INFO Current reconcile ID: 750546ab-1f02-40cd-b8a4-39f97de8678e
+06:55:14 INFO Current reconcile ID: 750546ab-1f02-40cd-b8a4-39f97de8678e, expected reconcile ID: d8a25bac-0eb9-4e70-862d-300e19ec0663

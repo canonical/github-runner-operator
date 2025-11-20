@@ -1,0 +1,82 @@
+06:47:28 INFO GitHub token rate limit: Rate(reset=2025-11-20 07:15:31+00:00, remaining=4535, limit=5000)
+06:47:32 INFO Waiting for model:
+  test-v2lflucr/0 [idle] active: 
+06:48:02 INFO Waiting for model:
+  test-v2lflucr/0 [idle] active: 
+06:48:04 INFO Current reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:48:04 INFO Waiting for reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:49:05 INFO Current reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:49:05 INFO Current reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0, expected reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:49:05 INFO Waiting for reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:50:06 INFO Current reconcile ID: 0ca9d095-83bc-4303-8e5c-756bbac34c4f
+06:50:06 INFO Current reconcile ID: 0ca9d095-83bc-4303-8e5c-756bbac34c4f, expected reconcile ID: 20edfbf4-60f9-4d5a-9e9f-8deb6912a0f0
+06:50:13 INFO Wait for condition not met, sleeping 10
+06:50:24 INFO Waiting for model:
+  test-v2lflucr/0 [idle] active: 
+06:50:54 INFO Waiting for model:
+  test-v2lflucr/0 [idle] active: 
+06:50:56 INFO Current reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:50:56 INFO Waiting for reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:51:57 INFO Current reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:51:57 INFO Current reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff, expected reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:51:57 INFO Waiting for reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:52:59 INFO Current reconcile ID: c4392843-175b-494d-bb94-a4b83407f5e2
+06:52:59 INFO Current reconcile ID: c4392843-175b-494d-bb94-a4b83407f5e2, expected reconcile ID: 52ace23c-06a5-49a7-9738-2b9309caf3ff
+06:53:00 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1763621360.0, "event": "runner_installed", "flavor": "test-v2lflucr", "duration": 100.0}
+{"timestamp": 1763621417.0, "event": "runner_start", "flavor": "test-v2lflucr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 57.0, "queue_duration": 2.0}
+{"timestamp": 1763621421.0, "event": "runner_stop", "flavor": "test-v2lflucr", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1763621438.821683, "event": "reconciliation", "flavor": "test-v2lflucr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.458265542984009}
+{"timestamp": 1763621565.5552824, "event": "reconciliation", "flavor": "test-v2lflucr", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.606840133666992}
+06:53:03 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-gi7g  github-pr-1dbf2-lxd  localhost/localhost  3.6.11   unsupported  06:53:03Z
+
+App                                   Version  Status  Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-v2lflucr           active      1  github-runner-image-builder  latest/edge  133  no       
+test-v2lflucr                                  active      1  github-runner                               0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-v2lflucr/0*  active    idle   0        10.211.233.17          
+test-v2lflucr/0*                         active    idle   1        10.211.233.70          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.211.233.17  juju-e391d4-0  ubuntu@22.04  github-runner  Running
+1        started  10.211.233.70  juju-e391d4-1  ubuntu@22.04  github-runner  Running
+
+06:53:03 INFO Juju error logs:
+
+machine-0: 06:26:55 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:26:55 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:37 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:37 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-v2lflucr-0: 06:28:09 ERROR unit.github-runner-image-builder-v2lflucr/0.juju-log Pipx command failed, code: 1, out: None, err: None
+unit-test-v2lflucr-0: 06:28:29 ERROR unit.test-v2lflucr/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-v2lflucr-0: 06:28:30 ERROR unit.test-v2lflucr/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-v2lflucr-0: 06:29:30 ERROR unit.test-v2lflucr/0.juju-log image:0: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-v2lflucr-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:53:03 INFO Forgetting model main...
