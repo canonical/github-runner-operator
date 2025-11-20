@@ -9,33 +9,17 @@ The forked repo is configured to fail the repo-policy-compliance check.
 from datetime import datetime, timezone
 
 import pytest
-import pytest_asyncio
 import requests
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from charm_state import PATH_CONFIG_NAME
 from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
 )
 from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
-
-
-@pytest_asyncio.fixture(scope="module")
-async def app_with_forked_repo(
-    model: Model, basic_app: Application, forked_github_repository: Repository
-) -> Application:
-    """Application with no runner on a forked repo.
-
-    Test should ensure it returns with the application in a good state and has
-    one runner.
-    """
-    await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
-
-    return basic_app
 
 
 @pytest.mark.openstack

@@ -36,6 +36,7 @@ from charm_state import (
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
     OPENSTACK_NETWORK_CONFIG_NAME,
+    PATH_CONFIG_NAME,
     USE_APROXY_CONFIG_NAME,
 )
 from tests.integration.helpers.common import (
@@ -680,6 +681,19 @@ def forked_github_branch(
     yield branch
 
     branch_ref.delete()
+
+
+@pytest_asyncio.fixture(scope="module")
+async def app_with_forked_repo(
+    model: Model, basic_app: Application, forked_github_repository: Repository
+) -> Application:
+    """Application with no runner on a forked repo.
+    Test should ensure it returns with the application in a good state and has
+    one runner.
+    """
+    await basic_app.set_config({PATH_CONFIG_NAME: forked_github_repository.full_name})
+
+    return basic_app
 
 
 @pytest_asyncio.fixture(scope="module", name="test_github_branch")
