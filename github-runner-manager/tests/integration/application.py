@@ -103,8 +103,7 @@ class RunningApplication:
         Returns:
             The configuration dictionary.
         """
-        with open(self.config_file_path, "r", encoding="utf-8") as f:
-            return yaml.safe_load(f)
+        return yaml.safe_load(self.config_file_path.read_text(encoding="utf-8"))
 
     def get(self, path: str, **kwargs: Any) -> requests.Response:
         """Make a GET request to the application.
