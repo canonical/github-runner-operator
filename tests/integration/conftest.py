@@ -3,7 +3,6 @@
 
 """Fixtures for github runner charm integration tests."""
 import logging
-import os
 import random
 import secrets
 import string
