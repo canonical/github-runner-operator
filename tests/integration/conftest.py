@@ -125,7 +125,7 @@ def path(pytestconfig: pytest.Config) -> str:
 @pytest.fixture(scope="module")
 def token(pytestconfig: pytest.Config) -> str:
     """Configured token setting."""
-    token = pytestconfig.getoption("--token") or os.environ.get("INTEGRATION_TOKEN")
+    token = pytestconfig.getoption("--token")
     assert token, "Please specify the --token command line option"
     tokens = {token.strip() for token in token.split(",")}
     random_token = random.choice(list(tokens))
