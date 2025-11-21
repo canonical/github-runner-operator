@@ -179,10 +179,9 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     """The private endpoint configuration values."""
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     password = pytestconfig.getoption("--openstack-password")
-    assert password, (
-        "Please specify the --openstack-password option or "
-        "INTEGRATION_OPENSTACK_PASSWORD or OS_PASSWORD environment variable"
-    )
+    assert (
+        password
+    ), "Please specify the --openstack-password option or OS_PASSWORD environment variable"
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
     project_name = pytestconfig.getoption("--openstack-project-name")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
