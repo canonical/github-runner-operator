@@ -1,0 +1,97 @@
+06:34:41 INFO GitHub token rate limit: Rate(reset=2025-11-21 06:56:36+00:00, remaining=4985, limit=5000)
+06:34:44 INFO OpenStack servers: []
+06:34:45 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-lila  github-pr-1dbf2-lxd  localhost/localhost  3.6.11   unsupported  06:34:45Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-hc12y185           error        1  github-runner-image-builder  latest/edge  133  no       hook failed: "install"
+test-hc12y185                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-hc12y185/0*  error     idle   0        10.19.178.93           hook failed: "install"
+test-hc12y185/0*                         blocked   idle   1        10.19.178.150          Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.19.178.93   juju-c341c5-0  ubuntu@22.04  github-runner  Running
+1        started  10.19.178.150  juju-c341c5-1  ubuntu@22.04  github-runner  Running
+
+06:34:45 INFO Juju error logs:
+
+machine-0: 06:30:42 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:30:42 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-hc12y185-0: 06:32:11 ERROR unit.github-runner-image-builder-hc12y185/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:33:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-hc12y185-0: 06:33:58 ERROR unit.test-hc12y185/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-hc12y185-0: 06:33:59 ERROR unit.test-hc12y185/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-hc12y185-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-github-runner-image-builder-hc12y185-0: 06:34:40 ERROR unit.github-runner-image-builder-hc12y185/0.juju-log Failed to initialize builder, code: 1, out: None, err: None
+unit-github-runner-image-builder-hc12y185-0: 06:34:40 ERROR unit.github-runner-image-builder-hc12y185/0.juju-log Uncaught exception while in charm code:
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/src/builder.py", line 156, in _initialize_image_builder
+    subprocess.run(
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/sudo', '/home/ubuntu/.local/bin/github-runner-image-builder', '--os-cloud', 'builder', 'init', '--arch', 'x64', '--prefix', 'github-runner-image-builder-hc12y185']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/src/builder.py", line 92, in initialize
+    _initialize_image_builder(  # pragma: no cover
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/src/builder.py", line 171, in _initialize_image_builder
+    raise ImageBuilderInitializeError from exc
+exceptions.ImageBuilderInitializeError
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/./src/charm.py", line 339, in <module>
+    ops.main.main(GithubRunnerImageBuilderCharm)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/__init__.py", line 363, in main
+    return _legacy_main.main(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/main.py", line 39, in main
+    return _main.main(charm_class=charm_class, use_juju_for_storage=use_juju_for_storage)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/_main.py", line 504, in main
+    manager.run()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/_main.py", line 488, in run
+    self._emit()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/_main.py", line 423, in _emit
+    self._emit_charm_event(self.dispatcher.event_name)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/_main.py", line 467, in _emit_charm_event
+    event_to_emit.emit(*args, **kwargs)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/framework.py", line 351, in emit
+    framework._emit(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/framework.py", line 924, in _emit
+    self._reemit(event_path)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/venv/ops/framework.py", line 1036, in _reemit
+    custom_handler(event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/src/charm_utils.py", line 68, in wrapper
+    return method(instance, event)
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/./src/charm.py", line 85, in _on_install
+    self._setup_builder()
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/./src/charm.py", line 183, in _setup_builder
+    builder.initialize(
+  File "/var/lib/juju/agents/unit-github-runner-image-builder-hc12y185-0/charm/src/builder.py", line 101, in initialize
+    raise BuilderInitError from exc
+exceptions.BuilderInitError
+unit-github-runner-image-builder-hc12y185-0: 06:34:40 ERROR juju.worker.uniter.operation hook "install" (via hook dispatching script: dispatch) failed: exit status 1
+
+06:34:45 INFO Forgetting model main...

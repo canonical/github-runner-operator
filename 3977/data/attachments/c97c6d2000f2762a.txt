@@ -1,0 +1,45 @@
+06:34:44 INFO OpenStack servers: []
+06:34:44 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-sxjv  github-pr-1dbf2-lxd  localhost/localhost  3.6.11   unsupported  06:34:44Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-mwtblglb           error        1  github-runner-image-builder  latest/edge  133  no       hook failed: "install"
+test-mwtblglb                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-mwtblglb/0*  error     idle   0        10.240.149.58          hook failed: "install"
+test-mwtblglb/0*                         blocked   idle   1        10.240.149.60          Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.240.149.58  juju-334383-0  ubuntu@22.04  github-runner  Running
+1        started  10.240.149.60  juju-334383-1  ubuntu@22.04  github-runner  Running
+
+06:34:44 INFO Juju error logs:
+
+machine-0: 06:31:41 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:31:41 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-mwtblglb-0: 06:32:30 ERROR unit.github-runner-image-builder-mwtblglb/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:33:57 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:57 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-mwtblglb-0: 06:34:35 ERROR unit.test-mwtblglb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-mwtblglb-0: 06:34:37 ERROR unit.test-mwtblglb/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-mwtblglb-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:34:44 INFO Forgetting model main...

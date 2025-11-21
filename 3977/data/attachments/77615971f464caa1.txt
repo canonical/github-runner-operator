@@ -1,0 +1,100 @@
+06:30:37 WARNING unexpected facade SSHServer received from the controller
+06:30:37 INFO Adding model github-pr-1dbf2-lxd:test-debug-ssh-fi4x on cloud localhost
+06:30:38 WARNING unexpected facade SSHServer received from the controller
+06:30:38 WARNING unexpected facade SSHSession received from the controller
+06:30:38 WARNING unexpected facade SSHTunneler received from the controller
+06:30:39 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+06:30:50 INFO Deploying local:jammy/github-runner-0
+06:30:50 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [allocating] waiting: waiting for machine
+06:31:21 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [allocating] waiting: waiting for machine
+06:31:51 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [allocating] waiting: waiting for machine
+06:32:22 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [allocating] waiting: agent initialising
+06:32:52 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:33:23 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:33:53 INFO Waiting for model:
+  test-varpzcvf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:34:23 INFO Waiting for model:
+  test-varpzcvf/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:34:53 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:35:24 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:35:54 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:36:24 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:36:55 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:37:25 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:37:55 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:38:26 INFO Waiting for model:
+  test-varpzcvf/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-varpzcvf/0 [executing] maintenance: Setting up Builder.
+06:38:56 INFO OpenStack servers: []
+06:38:57 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-fi4x  github-pr-1dbf2-lxd  localhost/localhost  3.6.11   unsupported  06:38:57Z
+
+App                                   Version  Status   Scale  Charm                        Channel      Rev  Exposed  Message
+github-runner-image-builder-varpzcvf           error        1  github-runner-image-builder  latest/edge  133  no       hook failed: "install"
+test-varpzcvf                                  blocked      1  github-runner                               0  no       Please provide image integration.
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-varpzcvf/0*  error     idle   0        10.151.203.56          hook failed: "install"
+test-varpzcvf/0*                         blocked   idle   1        10.151.203.20          Please provide image integration.
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.151.203.56  juju-7e0b34-0  ubuntu@22.04  github-runner  Running
+1        started  10.151.203.20  juju-7e0b34-1  ubuntu@22.04  github-runner  Running
+
+06:38:57 INFO Juju error logs:
+
+machine-0: 06:32:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:32:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-github-runner-image-builder-varpzcvf-0: 06:32:55 ERROR unit.github-runner-image-builder-varpzcvf/0.juju-log Pipx command failed, code: 1, out: None, err: None
+machine-1: 06:33:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:33:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-varpzcvf-0: 06:34:35 ERROR unit.test-varpzcvf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-varpzcvf-0: 06:34:36 ERROR unit.test-varpzcvf/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-varpzcvf-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:38:57 INFO Forgetting model main...
