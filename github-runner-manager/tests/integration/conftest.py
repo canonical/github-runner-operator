@@ -3,8 +3,6 @@
 
 """Fixtures for github-runner-manager integration tests."""
 
-import os
-
 import pytest
 
 from .factories import GitHubConfig, OpenStackConfig, TestConfig
@@ -34,8 +32,8 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         pytest.skip: If neither --github-token option nor GITHUB_TOKEN
             environment variable is set.
     """
-    token = pytestconfig.getoption("--github-token") or os.getenv("GITHUB_TOKEN")
-    path = pytestconfig.getoption("--github-repository") or os.getenv("GITHUB_REPOSITORY")
+    token = pytestconfig.getoption("--github-token")
+    path = pytestconfig.getoption("--github-repository")
 
     if not token or not path:
         pytest.skip(
@@ -56,12 +54,12 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     Returns:
         OpenStack configuration object, or None if not all parameters are provided.
     """
-    auth_url = pytestconfig.getoption("--openstack-auth-url") or os.getenv("OS_AUTH_URL", "")
-    project = pytestconfig.getoption("--openstack-project") or os.getenv("OS_PROJECT_NAME", "")
-    username = pytestconfig.getoption("--openstack-username") or os.getenv("OS_USERNAME", "")
-    password = pytestconfig.getoption("--openstack-password") or os.getenv("OS_PASSWORD", "")
-    network = pytestconfig.getoption("--openstack-network") or os.getenv("OS_NETWORK", "")
-    region_name = pytestconfig.getoption("--openstack-region") or os.getenv("OS_REGION_NAME", "")
+    auth_url = pytestconfig.getoption("--openstack-auth-url")
+    project = pytestconfig.getoption("--openstack-project")
+    username = pytestconfig.getoption("--openstack-username")
+    password = pytestconfig.getoption("--openstack-password")
+    network = pytestconfig.getoption("--openstack-network")
+    region_name = pytestconfig.getoption("--openstack-region")
 
     # Only return config if all required parameters are provided
     if all([auth_url, project, username, password, network, region_name]):

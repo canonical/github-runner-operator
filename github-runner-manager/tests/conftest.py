@@ -3,6 +3,8 @@
 
 """Fixtures for charm tests."""
 
+import os
+
 
 def pytest_addoption(parser):
     """Parse additional pytest options.
@@ -10,7 +12,6 @@ def pytest_addoption(parser):
     Args:
         parser: Pytest parser.
     """
-    parser.addoption("--charm-file", action="store")
     parser.addoption(
         "--github-token",
         action="store",
@@ -30,29 +31,35 @@ def pytest_addoption(parser):
         "--openstack-auth-url",
         action="store",
         help="OpenStack authentication URL for integration tests.",
+        default=os.getenv("OS_AUTH_URL"),
     )
     parser.addoption(
         "--openstack-project",
         action="store",
         help="OpenStack project name for integration tests.",
+        default=os.getenv("OS_PROJECT_NAME"),
     )
     parser.addoption(
         "--openstack-username",
         action="store",
         help="OpenStack username for integration tests.",
+        default=os.getenv("OS_USERNAME"),
     )
     parser.addoption(
         "--openstack-password",
         action="store",
         help="OpenStack password for integration tests.",
+        default=os.getenv("OS_PASSWORD"),
     )
     parser.addoption(
         "--openstack-network",
         action="store",
         help="OpenStack network name for integration tests.",
+        default=os.getenv("OS_NETWORK"),
     )
     parser.addoption(
         "--openstack-region",
         action="store",
         help="OpenStack region name for integration tests.",
+        default=os.getenv("OS_REGION_NAME"),
     )
