@@ -1,0 +1,32 @@
+18:23:43 INFO GitHub token rate limit: Rate(reset=2025-11-20 19:23:44+00:00, remaining=5000, limit=5000)
+18:23:55 WARNING unexpected facade SSHServer received from the controller
+18:23:55 INFO Adding model github-pr-1dbf2-lxd:test-charm-metrics-failure-n0qx on cloud localhost
+18:23:56 WARNING unexpected facade SSHServer received from the controller
+18:23:56 WARNING unexpected facade SSHSession received from the controller
+18:23:56 WARNING unexpected facade SSHTunneler received from the controller
+18:23:57 INFO Deploying ch:amd64/jammy/github-runner-image-builder-133
+18:24:11 INFO Deploying local:jammy/github-runner-0
+18:24:11 INFO Waiting for model:
+  test-xrjjrllg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xrjjrllg/0 [allocating] waiting: waiting for machine
+18:24:42 INFO Waiting for model:
+  test-xrjjrllg/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xrjjrllg/0 [allocating] waiting: waiting for machine
+18:25:12 INFO Waiting for model:
+  test-xrjjrllg/0 [executing] waiting: agent initialising
+  github-runner-image-builder-xrjjrllg/0 [executing] maintenance: Setting up Builder.
+18:25:42 INFO Waiting for model:
+  test-xrjjrllg/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-xrjjrllg/0 [executing] maintenance: Setting up Builder.
+18:26:13 INFO Waiting for model:
+  test-xrjjrllg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xrjjrllg/0 [executing] maintenance: Setting up Builder.
+18:26:43 INFO Waiting for model:
+  test-xrjjrllg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xrjjrllg/0 [executing] maintenance: Setting up Builder.
+18:27:13 INFO Waiting for model:
+  test-xrjjrllg/0 [idle] blocked: Please provide image integration.
+  github-runner-image-builder-xrjjrllg/0 [executing] maintenance: Setting up Builder.
+18:27:43 INFO Waiting for model:
+  test-xrjjrllg/0 [idle] waiting: Waiting for image over integration.
+  github-runner-image-builder-xrjjrllg/0 [executing] active: Building image.
