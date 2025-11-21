@@ -4,7 +4,6 @@
 """Integration tests for external contributor security configuration."""
 
 import logging
-import os
 import secrets
 from pathlib import Path
 from time import sleep
@@ -83,15 +82,15 @@ def forked_github_repository(
     """
     # Try to get alternate token for creating fork
     # This simulates a different user (external contributor)
-    alt_token = pytestconfig.getoption("--github-token-alt", None) or os.getenv("GITHUB_TOKEN_ALT")
+    alt_token = pytestconfig.getoption("--github-token-alt", None)
 
     if not alt_token:
         logger.warning(
             "Alternate GitHub token not provided. Skipping test requiring fork creation."
         )
         pytest.fail(
-            "Alternate GitHub token not provided. Use --github-token-alt option or "
-            "set GITHUB_TOKEN_ALT environment variable to test with actual fork."
+            "Alternate GitHub token not provided. Use --github-token-alt option to test with "
+            "actual fork."
         )
 
     logger.info(
