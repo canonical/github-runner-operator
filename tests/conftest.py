@@ -3,6 +3,7 @@
 
 """Fixtures for github runner charm."""
 
+import os
 
 from pytest import Parser
 
@@ -83,49 +84,56 @@ def pytest_addoption(parser: Parser):
     )
     # Private endpoint options AMD64
     parser.addoption(
-        "--openstack-network-name-amd64",
+        "--openstack-network-name",
         action="store",
         help="The Openstack network to create testing instances under.",
     )
     parser.addoption(
-        "--openstack-flavor-name-amd64",
+        "--openstack-flavor-name",
         action="store",
         help="The Openstack flavor to create testing instances with.",
     )
     parser.addoption(
-        "--openstack-auth-url-amd64",
+        "--openstack-auth-url",
         action="store",
         help="The URL to Openstack authentication service, i.e. keystone.",
+        default=os.environ.get("OS_AUTH_URL"),
     )
     parser.addoption(
-        "--openstack-password-amd64",
+        "--openstack-password",
         action="store",
         help="The password to authenticate to Openstack service.",
+        default=os.environ.get("OS_PASSWORD"),
     )
     parser.addoption(
-        "--openstack-project-domain-name-amd64",
+        "--openstack-project-domain-name",
         action="store",
         help="The Openstack project domain name to use.",
+        default=os.environ.get("OS_PROJECT_DOMAIN_NAME"),
     )
     parser.addoption(
-        "--openstack-project-name-amd64",
+        "--openstack-project-name",
         action="store",
         help="The Openstack project name to use.",
+        default=os.environ.get("OS_PROJECT_NAME"),
     )
     parser.addoption(
-        "--openstack-user-domain-name-amd64",
+        "--openstack-user-domain-name",
         action="store",
         help="The Openstack user domain name to use.",
+        default=os.environ.get("OS_USER_DOMAIN_NAME"),
     )
     parser.addoption(
-        "--openstack-username-amd64",
+        "--openstack-username",
         action="store",
         help="The Openstack user to authenticate as.",
+        default=os.environ.get("OS_USERNAME"),
     )
     parser.addoption(
-        "--openstack-region-name-amd64",
+        "--openstack-region-name",
         action="store",
         help="The Openstack region to authenticate to.",
+        default=os.environ.get("OS_REGION_NAME"),
     )
     # Interface testing args
     parser.addoption(
