@@ -54,7 +54,7 @@ select = ["E", "W", "F", "C", "N", "R", "D", "H"]
 ignore = ["W503", "E501", "D107", "E203"]
 # D100, D101, D102, D103, D104: Ignore docstring style issues in tests
 # temporary disable E402 for the fix in charm.py for lp:2058335
-per-file-ignores = ["src/charm.py:E402", "tests/*:D100,D101,D102,D103,D104,D205,D212"]
+per-file-ignores = ["src/charm.py:E402", "**/tests/*:D100,D101,D102,D103,D104,D205,D212"]
 docstring-convention = "google"
 # Check for properly formatted copyright header in each file
 copyright-check = "True"
