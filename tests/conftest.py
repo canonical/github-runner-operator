@@ -26,6 +26,7 @@ def pytest_addoption(parser: Parser):
             "An optionally comma separated GitHub Personal Access Token(s). "
             "Add more than one to help reduce rate limiting."
         ),
+        default=os.environ.get("INTEGRATION_TOKEN"),
     )
     parser.addoption(
         "--charm-file", action="store", help="The prebuilt github-runner-operator charm file."
