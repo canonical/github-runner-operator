@@ -45,7 +45,7 @@ that can be used for linting and formatting code when you're preparing contribut
 #### CI testing setup guidelines
 
 To prefer explicit setting arguments passing, use `extra-arguments` of the
-[following reusesable workflow](https://github.com/canonical/operator-workflows/blob/main/.github/workflows/integration_test_run.yaml)
+[following reusable workflow](https://github.com/canonical/operator-workflows/blob/main/.github/workflows/integration_test_run.yaml)
 to pass in non-sensitive values.
 For sensitive values (`--token`, `--openstack-password`), map them via `INTEGRATION_TEST_SECRET_ENV_NAME_<N>`
 [environment variable settings](https://github.com/canonical/github-runner-operator/settings/variables/actions).
