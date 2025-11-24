@@ -6,6 +6,7 @@ import logging
 import random
 import secrets
 import string
+import subprocess
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -94,10 +95,16 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
     return f"github-runner-image-builder-{random_app_name_suffix}"
 
 
-@pytest.fixture(scope="module", name="openstack_clouds_yaml")
-def openstack_clouds_yaml_fixture(pytestconfig: pytest.Config) -> str | None:
-    """The openstack clouds yaml config."""
-    return pytestconfig.getoption("--openstack-clouds-yaml")
+@pytest.fixture(name="codename", scope="module")
+def codename_fixture():
+    """Series codename for deploying any-charm."""
+    return subprocess.check_output(["lsb_release", "-cs"]).strip().decode("utf-8")
+
+
+@pytest.fixture(name="series", scope="module")
+def series_fixture():
+    """Series version for deploying any-charm."""
+    return subprocess.check_output(["lsb_release", "-rs"]).strip().decode("utf-8")
 
 
 @pytest.fixture(scope="module")
@@ -174,7 +181,7 @@ def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module", name="private_endpoint_config")
-def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs | None:
+def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs:
     """The private endpoint configuration values."""
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     password = pytestconfig.getoption("--openstack-password")
@@ -186,8 +193,8 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
     user_name = pytestconfig.getoption("--openstack-username")
     region_name = pytestconfig.getoption("--openstack-region-name")
-    if any(
-        not val
+    assert all(
+        val
         for val in (
             auth_url,
             password,
@@ -197,8 +204,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
             user_name,
             region_name,
         )
-    ):
-        return None
+    ), "Specify all OpenStack private endpoint options."
     return {
         "auth_url": auth_url,
         "password": str(password),
@@ -210,13 +216,9 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     }
 
 
-@pytest.fixture(scope="module", name="private_endpoint_clouds_yaml")
-def private_endpoint_clouds_yaml_fixture(
-    private_endpoint_config: PrivateEndpointConfigs | None,
-) -> Optional[str]:
+@pytest.fixture(scope="module", name="clouds_yaml_contents")
+def clouds_yaml_contents_fixture(private_endpoint_config: PrivateEndpointConfigs) -> str:
     """The openstack private endpoint clouds yaml."""
-    if not private_endpoint_config:
-        return None
     return string.Template(
         Path("tests/integration/data/clouds.yaml.tmpl").read_text(encoding="utf-8")
     ).substitute(
@@ -230,21 +232,6 @@ def private_endpoint_clouds_yaml_fixture(
             "region_name": private_endpoint_config["region_name"],
         }
     )
-
-
-@pytest.fixture(scope="module", name="clouds_yaml_contents")
-def clouds_yaml_contents_fixture(
-    openstack_clouds_yaml: Optional[str], private_endpoint_clouds_yaml: Optional[str]
-):
-    """The Openstack clouds yaml or private endpoint cloud yaml contents."""
-    clouds_yaml_contents = openstack_clouds_yaml or private_endpoint_clouds_yaml
-    assert clouds_yaml_contents, (
-        "Please specify --openstack-clouds-yaml or all of private endpoint arguments "
-        "(--openstack-auth-url, --openstack-password, --openstack-project-domain-name, "
-        "--openstack-project-name, --openstack-user-domain-name, --openstack-user-name, "
-        "--openstack-region-name)"
-    )
-    return clouds_yaml_contents
 
 
 @pytest.fixture(scope="module", name="network_name")
