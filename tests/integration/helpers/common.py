@@ -158,6 +158,7 @@ async def deploy_github_runner_charm(
     https_proxy: str,
     no_proxy: str,
     reconcile_interval: int,
+    series: str = "22.04",
     constraints: dict | None = None,
     config: dict | None = None,
     deploy_kwargs: dict | None = None,
@@ -207,7 +208,7 @@ async def deploy_github_runner_charm(
     application = await model.deploy(
         charm_file,
         application_name=app_name,
-        base="ubuntu@22.04",
+        base=f"ubuntu@{series}",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),

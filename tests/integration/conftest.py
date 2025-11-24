@@ -6,6 +6,7 @@ import logging
 import random
 import secrets
 import string
+import subprocess
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -94,14 +95,27 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
     return f"github-runner-image-builder-{random_app_name_suffix}"
 
 
+@pytest.fixture(name="series", scope="module")
+def series_fixture():
+    """Series version for deploying any-charm."""
+    return (
+        # Ignore B603 since this is a trusted subprocess call
+        subprocess.check_output(["/usr/bin/lsb_release", "-rs"])  # nosec: B603
+        .strip()
+        .decode("utf-8")
+    )
+
+
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config) -> str:
+def charm_file(pytestconfig: pytest.Config, series: str) -> Path:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
-    charm_path_str = f"./{charm}"
 
-    return charm_path_str
+    charm_dir = Path(f"./{charm}").parent
+    charm_matching_series = list(charm_dir.rglob(f"*{series}*.charm"))
+    assert charm_matching_series, f"No build found for series {series}"
+    return charm_matching_series[0]
 
 
 @pytest.fixture(scope="module")
@@ -397,6 +411,7 @@ async def image_builder_fixture(
 async def app_openstack_runner_fixture(
     model: Model,
     charm_file: str,
+    series: str,
     app_name: str,
     path: str,
     token: str,
@@ -417,6 +432,7 @@ async def app_openstack_runner_fixture(
         application = await deploy_github_runner_charm(
             model=model,
             charm_file=charm_file,
+            series=series,
             app_name=app_name,
             path=path,
             token=token,
@@ -488,6 +504,7 @@ async def app_no_wait_tmate_fixture(
 async def app_runner(
     model: Model,
     charm_file: str,
+    series: str,
     app_name: str,
     path: str,
     token: str,
@@ -500,6 +517,7 @@ async def app_runner(
     application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
+        series=series,
         app_name=f"{app_name}-test",
         path=path,
         token=token,
@@ -515,6 +533,7 @@ async def app_runner(
 async def app_no_wait_fixture(
     model: Model,
     charm_file: str,
+    series: str,
     app_name: str,
     path: str,
     token: str,
@@ -526,6 +545,7 @@ async def app_no_wait_fixture(
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
+        series=series,
         app_name=app_name,
         path=path,
         token=token,
