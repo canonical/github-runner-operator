@@ -2,28 +2,22 @@
 # See LICENSE file for licensing details.
 
 type: charm
+
+platforms:
+  ubuntu@22.04:amd64:
+  ubuntu@24.04:amd64:
+
 parts:
   charm:
     charm-python-packages:
-      - setuptools>=75.8.0  # for jinja2
+      - setuptools>=75.8.0 # for jinja2
     build-packages:
-      - git  # for installing git source of pylxd 
-      - libffi-dev  # for cffi
-      - libssl-dev  # for cryptography
+      - git # for installing git source of pylxd
+      - libffi-dev # for cffi
+      - libssl-dev # for cryptography
       - pkg-config # for cryptography
     build-snaps:
       - rustup # for cryptography
     override-build: |
       rustup default stable
       craftctl default
-bases:
-  - build-on:
-    - name: "ubuntu"
-      channel: "22.04"
-      architectures:
-      - amd64
-    run-on:
-    - name: "ubuntu"
-      channel: "22.04"
-      architectures:
-      - amd64
