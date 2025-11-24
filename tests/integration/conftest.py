@@ -381,9 +381,6 @@ async def image_builder_fixture(
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
     image_builder_config: dict,
-    flavor_name: str,
-    network_name: str,
-    openstack_model_proxy: None,
     openstack_connection,
 ):
     """The image builder application for OpenStack runners."""
