@@ -6,7 +6,6 @@ import logging
 import random
 import secrets
 import string
-import subprocess
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
