@@ -43,8 +43,6 @@ jobs:
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
-      tmate-debug: true
-      tmate-timeout: 90
   openstack-integration-tests-cross-controller-private-endpoint:
     name: Cross controller integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
