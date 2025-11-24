@@ -95,18 +95,6 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
     return f"github-runner-image-builder-{random_app_name_suffix}"
 
 
-@pytest.fixture(name="codename", scope="module")
-def codename_fixture():
-    """Series codename for deploying any-charm."""
-    return subprocess.check_output(["lsb_release", "-cs"]).strip().decode("utf-8")
-
-
-@pytest.fixture(name="series", scope="module")
-def series_fixture():
-    """Series version for deploying any-charm."""
-    return subprocess.check_output(["lsb_release", "-rs"]).strip().decode("utf-8")
-
-
 @pytest.fixture(scope="module")
 def charm_file(pytestconfig: pytest.Config, openstack_clouds_yaml: Optional[str]) -> str:
     """Path to the built charm."""
