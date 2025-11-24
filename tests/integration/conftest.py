@@ -98,12 +98,14 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
 @pytest.fixture(name="series", scope="module")
 def series_fixture():
     """Series version for deploying any-charm."""
-    return (
+    series = (
         # Ignore B603 since this is a trusted subprocess call
         subprocess.check_output(["/usr/bin/lsb_release", "-rs"])  # nosec: B603
         .strip()
         .decode("utf-8")
     )
+    logging.info("Series: %s", series)
+    return series
 
 
 @pytest.fixture(scope="module")
