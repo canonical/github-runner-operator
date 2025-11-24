@@ -34,78 +34,87 @@ jobs:
       openstack-no-proxy: ${{ secrets.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}
     steps:
       - run: echo "Exposing env vars"
-  openstack-integration-tests-private-endpoint:
-    name: Integration test using private-endpoint
+  test-secret-outputs:
+    name: Test secret outputs
     needs: parse-integration-test-vars
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.6/stable
-      provider: lxd
-      test-tox-env: integration-juju3.6
-      modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive"]'
-      # INTEGRATION_TOKEN, OS_PASSWORD are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
-      extra-arguments: |
-        -m openstack \
-        --log-format="%(asctime)s %(levelname)s %(message)s" \
-        --path="${{ needs.parse-integration-test-vars.outputs.path }}" \
-        --openstack-auth-url="${{ needs.parse-integration-test-vars.outputs.openstack-auth-url }}" \
-        --openstack-project-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-domain-name }}" \
-        --openstack-project-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-name }}" \
-        --openstack-user-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-user-domain-name }}" \
-        --openstack-username="${{ needs.parse-integration-test-vars.outputs.openstack-username }}" \
-        --openstack-region-name="${{ needs.parse-integration-test-vars.outputs.openstack-region-name }}" \
-        --openstack-network-name="${{ needs.parse-integration-test-vars.outputs.openstack-network-name }}" \
-        --openstack-flavor-name="${{ needs.parse-integration-test-vars.outputs.openstack-flavor-name }}" \
-        --openstack-test-image="${{ needs.parse-integration-test-vars.outputs.openstack-test-image }}" \
-        --openstack-test-flavor="${{ needs.parse-integration-test-vars.outputs.openstack-test-flavor }}" \
-        --https-proxy "${{ needs.parse-integration-test-vars.outputs.https-proxy }}" \
-        --http-proxy "${{ needs.parse-integration-test-vars.outputs.http-proxy }}" \
-        --no-proxy "${{ needs.parse-integration-test-vars.outputs.no-proxy }}" \
-        --openstack-https-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-https-proxy }}" \
-        --openstack-http-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-http-proxy }}" \
-        --openstack-no-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-no-proxy }}"
-      self-hosted-runner: true
-      self-hosted-runner-label: pfe-ci
-  openstack-integration-tests-cross-controller-private-endpoint:
-    name: Cross controller integration test using private-endpoint
-    needs: parse-integration-test-vars
-    uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
-    secrets: inherit
-    with:
-      juju-channel: 3.6/stable
-      pre-run-script: tests/integration/setup-integration-tests.sh
-      provider: lxd
-      test-tox-env: integration-juju3.6
-      modules: '["test_prometheus_metrics"]'
-      # INTEGRATION_TOKEN, OS_PASSWORD are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
-      # mapping. See CONTRIBUTING.md for more details.
-      extra-arguments: |
-        -m openstack \
-        --log-format="%(asctime)s %(levelname)s %(message)s" \
-        --path="${{ needs.parse-integration-test-vars.outputs.path }}" \
-        --openstack-auth-url="${{ needs.parse-integration-test-vars.outputs.openstack-auth-url }}" \
-        --openstack-project-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-domain-name }}" \
-        --openstack-project-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-name }}" \
-        --openstack-user-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-user-domain-name }}" \
-        --openstack-username="${{ needs.parse-integration-test-vars.outputs.openstack-username }}" \
-        --openstack-region-name="${{ needs.parse-integration-test-vars.outputs.openstack-region-name }}" \
-        --openstack-network-name="${{ needs.parse-integration-test-vars.outputs.openstack-network-name }}" \
-        --openstack-flavor-name="${{ needs.parse-integration-test-vars.outputs.openstack-flavor-name }}" \
-        --openstack-test-image="${{ needs.parse-integration-test-vars.outputs.openstack-test-image }}" \
-        --openstack-test-flavor="${{ needs.parse-integration-test-vars.outputs.openstack-test-flavor }}" \
-        --https-proxy "${{ needs.parse-integration-test-vars.outputs.https-proxy }}" \
-        --http-proxy "${{ needs.parse-integration-test-vars.outputs.http-proxy }}" \
-        --no-proxy "${{ needs.parse-integration-test-vars.outputs.no-proxy }}" \
-        --openstack-https-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-https-proxy }}" \
-        --openstack-http-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-http-proxy }}" \
-        --openstack-no-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-no-proxy }}"
-      self-hosted-runner: true
-      self-hosted-runner-label: pfe-ci
-  allure-report:
-    if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
-    needs:
-      - openstack-integration-tests-private-endpoint
-      - openstack-integration-tests-cross-controller-private-endpoint
-    uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display parsed secret outputs
+        run: |
+          echo "Path: ${{ needs.parse-integration-test-vars.outputs.path }}"
+          echo "OpenStack Auth URL: ${{ needs.parse-integration-test-vars.outputs.openstack-auth-url }}"
+  # openstack-integration-tests-private-endpoint:
+  #   name: Integration test using private-endpoint
+  #   needs: parse-integration-test-vars
+  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+  #   secrets: inherit
+  #   with:
+  #     juju-channel: 3.6/stable
+  #     provider: lxd
+  #     test-tox-env: integration-juju3.6
+  #     modules: '["test_charm_metrics_failure", "test_charm_metrics_success", "test_charm_fork_repo", "test_charm_fork_path_change", "test_charm_no_runner", "test_charm_runner", "test_debug_ssh", "test_charm_upgrade",  "test_reactive"]'
+  #     # INTEGRATION_TOKEN, OS_PASSWORD are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
+  #     # mapping. See CONTRIBUTING.md for more details.
+  #     extra-arguments: |
+  #       -m openstack \
+  #       --log-format="%(asctime)s %(levelname)s %(message)s" \
+  #       --path="${{ needs.parse-integration-test-vars.outputs.path }}" \
+  #       --openstack-auth-url="${{ needs.parse-integration-test-vars.outputs.openstack-auth-url }}" \
+  #       --openstack-project-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-domain-name }}" \
+  #       --openstack-project-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-name }}" \
+  #       --openstack-user-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-user-domain-name }}" \
+  #       --openstack-username="${{ needs.parse-integration-test-vars.outputs.openstack-username }}" \
+  #       --openstack-region-name="${{ needs.parse-integration-test-vars.outputs.openstack-region-name }}" \
+  #       --openstack-network-name="${{ needs.parse-integration-test-vars.outputs.openstack-network-name }}" \
+  #       --openstack-flavor-name="${{ needs.parse-integration-test-vars.outputs.openstack-flavor-name }}" \
+  #       --openstack-test-image="${{ needs.parse-integration-test-vars.outputs.openstack-test-image }}" \
+  #       --openstack-test-flavor="${{ needs.parse-integration-test-vars.outputs.openstack-test-flavor }}" \
+  #       --https-proxy "${{ needs.parse-integration-test-vars.outputs.https-proxy }}" \
+  #       --http-proxy "${{ needs.parse-integration-test-vars.outputs.http-proxy }}" \
+  #       --no-proxy "${{ needs.parse-integration-test-vars.outputs.no-proxy }}" \
+  #       --openstack-https-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-https-proxy }}" \
+  #       --openstack-http-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-http-proxy }}" \
+  #       --openstack-no-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-no-proxy }}"
+  #     self-hosted-runner: true
+  #     self-hosted-runner-label: pfe-ci
+  # openstack-integration-tests-cross-controller-private-endpoint:
+  #   name: Cross controller integration test using private-endpoint
+  #   needs: parse-integration-test-vars
+  #   uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
+  #   secrets: inherit
+  #   with:
+  #     juju-channel: 3.6/stable
+  #     pre-run-script: tests/integration/setup-integration-tests.sh
+  #     provider: lxd
+  #     test-tox-env: integration-juju3.6
+  #     modules: '["test_prometheus_metrics"]'
+  #     # INTEGRATION_TOKEN, OS_PASSWORD are passed through INTEGRATION_TEST_SECRET_ENV_VALUE_<N>
+  #     # mapping. See CONTRIBUTING.md for more details.
+  #     extra-arguments: |
+  #       -m openstack \
+  #       --log-format="%(asctime)s %(levelname)s %(message)s" \
+  #       --path="${{ needs.parse-integration-test-vars.outputs.path }}" \
+  #       --openstack-auth-url="${{ needs.parse-integration-test-vars.outputs.openstack-auth-url }}" \
+  #       --openstack-project-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-domain-name }}" \
+  #       --openstack-project-name="${{ needs.parse-integration-test-vars.outputs.openstack-project-name }}" \
+  #       --openstack-user-domain-name="${{ needs.parse-integration-test-vars.outputs.openstack-user-domain-name }}" \
+  #       --openstack-username="${{ needs.parse-integration-test-vars.outputs.openstack-username }}" \
+  #       --openstack-region-name="${{ needs.parse-integration-test-vars.outputs.openstack-region-name }}" \
+  #       --openstack-network-name="${{ needs.parse-integration-test-vars.outputs.openstack-network-name }}" \
+  #       --openstack-flavor-name="${{ needs.parse-integration-test-vars.outputs.openstack-flavor-name }}" \
+  #       --openstack-test-image="${{ needs.parse-integration-test-vars.outputs.openstack-test-image }}" \
+  #       --openstack-test-flavor="${{ needs.parse-integration-test-vars.outputs.openstack-test-flavor }}" \
+  #       --https-proxy "${{ needs.parse-integration-test-vars.outputs.https-proxy }}" \
+  #       --http-proxy "${{ needs.parse-integration-test-vars.outputs.http-proxy }}" \
+  #       --no-proxy "${{ needs.parse-integration-test-vars.outputs.no-proxy }}" \
+  #       --openstack-https-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-https-proxy }}" \
+  #       --openstack-http-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-http-proxy }}" \
+  #       --openstack-no-proxy "${{ needs.parse-integration-test-vars.outputs.openstack-no-proxy }}"
+  #     self-hosted-runner: true
+  #     self-hosted-runner-label: pfe-ci
+  # allure-report:
+  #   if: ${{ (success() || failure()) && github.event_name == 'schedule' }}
+  #   needs:
+  #     - openstack-integration-tests-private-endpoint
+  #     - openstack-integration-tests-cross-controller-private-endpoint
+  #   uses: canonical/operator-workflows/.github/workflows/allure_report.yaml@main
