@@ -394,7 +394,12 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             config=image_builder_config,
-            constraints={"root-disk": 20 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
+            constraints={
+                "root-disk": 20 * 1024,
+                "mem": 2 * 1024,
+                "virt-type": "virtual-machine",
+                "cores": 2,
+            },
         )
     else:
         app = model.applications[image_builder_app_name]
