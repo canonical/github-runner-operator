@@ -378,6 +378,7 @@ async def image_builder_fixture(
             application_name=application_name,
             channel="latest/edge",
             config=image_builder_config,
+            constraints={"root-disk": 20 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
         )
     else:
         app = model.applications[image_builder_app_name]
@@ -423,10 +424,7 @@ async def app_openstack_runner_fixture(
             https_proxy=openstack_https_proxy,
             no_proxy=openstack_no_proxy,
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
-            constraints={
-                "root-disk": 50 * 1024,
-                "mem": 2 * 1024,
-            },
+            constraints={"root-disk": 50 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
             config={
                 OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
                 OPENSTACK_NETWORK_CONFIG_NAME: network_name,
