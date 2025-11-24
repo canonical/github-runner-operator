@@ -95,7 +95,7 @@ def image_builder_app_name(random_app_name_suffix: str) -> str:
 
 
 @pytest.fixture(scope="module")
-def charm_file(pytestconfig: pytest.Config, openstack_clouds_yaml: Optional[str]) -> str:
+def charm_file(pytestconfig: pytest.Config) -> str:
     """Path to the built charm."""
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
