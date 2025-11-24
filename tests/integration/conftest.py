@@ -100,7 +100,7 @@ def charm_file(pytestconfig: pytest.Config) -> str:
     charm = pytestconfig.getoption("--charm-file")
     assert charm, "Please specify the --charm-file command line option"
 
-    return f"./{charm[0]}"
+    return f"./{charm}"
 
 
 @pytest.fixture(scope="module")
