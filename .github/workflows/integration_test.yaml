@@ -35,8 +35,6 @@ jobs:
         --openstack-region-name="${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}" \
         --openstack-network-name="${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --openstack-test-image="${{ vars.INTEGRATION_TEST_OPENSTACK_TEST_IMAGE }}" \
-        --openstack-test-flavor="${{ vars.INTEGRATION_TEST_OPENSTACK_TEST_FLAVOR }}" \
         --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
         --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
@@ -69,8 +67,6 @@ jobs:
         --openstack-region-name="${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}" \
         --openstack-network-name="${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}" \
         --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-        --openstack-test-image="${{ vars.INTEGRATION_TEST_OPENSTACK_TEST_IMAGE }}" \
-        --openstack-test-flavor="${{ vars.INTEGRATION_TEST_OPENSTACK_TEST_FLAVOR }}" \
         --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
         --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
