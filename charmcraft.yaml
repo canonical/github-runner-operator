@@ -62,3 +62,190 @@ storage:
     description: Storage for the root disk of LXD instances hosting the runner application.
     type: filesystem
     location: /storage/juju
+
+actions:
+  check-runners:
+    description: Get info on active and registered runners
+  flush-runners:
+    description: Clear out all runners and start a new set
+
+config:
+  dockerhub-mirror:
+    type: string
+    default: ""
+    description: >-
+      The URL to the private docker registry configured as the dockerhub mirror to be used by the
+      runners. If set a message will be displayed prior to job execution on self-hosted runner
+      informing users to use the provided registry. You must use https:// as the protocol.
+  openstack-clouds-yaml:
+    type: string
+    default: ""
+    description: >-
+      The clouds.yaml yaml necessary for OpenStack integration.
+      The format for the clouds.yaml is described in the docs:
+      (https://docs.openstack.org/python-openstackclient/pike/configuration/index.html#clouds-yaml).
+  openstack-flavor:
+    type: string
+    default: ""
+    description: |
+      (Deprecated, use flavor-label-list instead)
+      The openstack flavor to use to spawn virtual machines. This controls the hardware resource
+      of the virtual machines. See docs for details:
+      (https://docs.openstack.org/nova/rocky/user/flavors.html).
+  openstack-network:
+    type: string
+    default: ""
+    description: |
+      The openstack network for virtual machines hosting the runners. The network must allow this
+      application to be able to access the virtual machine though the IP assigned by the openstack
+      network. See docs for details:
+      (https://docs.openstack.org/neutron/latest/admin/intro-os-networking.html).
+  experimental-use-aproxy:
+    type: boolean
+    default: false
+    description: >-
+      (Experimental, may be removed) When set to true, aproxy (https://github.com/canonical/aproxy)
+      will be installed within the runners. It will forward TCP traffic matching the 'aproxy-exclude-addresses'
+      and 'aproxy-redirect-ports' settings to a proxy server configured by the Juju model config 'juju-http-proxy'
+      (or, if this is not set, 'juju-https-proxy' will be used).
+      This is useful when the charm is deployed in a network that requires a proxy to access the
+      internet.
+      Note that you should carefully choose values for the 'aproxy-exclude-addresses' and
+      'aproxy-redirect-ports' so that the network traffic from the runner to the HTTP proxy is not 
+      captured by aproxy. The simplest way to achieve this is to add the IP address of the HTTP proxy 
+      to 'aproxy-exclude-addresses' or exclude the HTTP proxy port from 'aproxy-redirect-ports'.
+  aproxy-exclude-addresses:
+    type: string
+    default: "10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16"
+    description: >-
+      A comma-separated list of IP addresses that should be excluded from redirection to aproxy.
+      127.0.0.0/8 are always excluded so you can omit if from the configuration.
+  aproxy-redirect-ports:
+    type: string
+    default: "80, 443"
+    description: >-
+      A comma-separated list of ports or port ranges that should be redirected to aproxy.
+  group:
+    type: string
+    default: "default"
+    description: >-
+      The organization runner group to register the self-hosted runner under. This has no effect on
+      runners under a repository.
+  labels:
+    type: string
+    default: ""
+    description: >-
+      Additional comma separated labels to attach to self-hosted runners. By default, the labels
+      "self-hosted", architecture (i.e. "x64", "arm64"), os (i.e. "linux"), os-flavor (i.e. 
+      "jammy") are set. Any labels provided via this configuration will be appended to the default 
+      values.
+  path:
+    type: string
+    default: ""
+    description: >-
+      The organization or the repository to register the self-hosted runners. For organization the
+      path would be the name of the organization. For repository the path should be in the
+      "{owner}/{repo}" format.
+  reconcile-interval:
+    type: int
+    default: 5
+    description: >-
+      Minutes between each reconciliation of the current runners state and their targeted state.
+      On reconciliation, the charm polls the state of runners and see if actions are needed. The
+      value should be kept low, unless Github API rate limiting is encountered.
+  repo-policy-compliance-token:
+    type: string
+    description: >-
+      The token to authenticate with the repository-policy-compliance service in order to
+      generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
+      If not set, the repository-policy-compliance service will not be used.
+  repo-policy-compliance-url:
+    type: string
+    description: >-
+      The URL to the repository-policy-compliance service. This option requires the
+      repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
+      will not be used. This option is only supported when using OpenStack Cloud.
+  test-mode:
+    type: string
+    description: >-
+      When set to 'insecure', the charm test mode is activated, which may deactivate some security
+      hardening measures.
+  token:
+    type: string
+    default: ""
+    description: >-
+      The GitHub Personal Access Token for registering the self-hosted runners. The token requires
+      'repo' scope for repository runners and 'repo' + 'admin:org' scope for organization runners.
+      For fine grained token scopes, see
+      https://charmhub.io/github-runner/docs/how-to-change-token.
+  virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      (Deprecated, use base-virtual-machines or max-total-virtual-machines instead)
+      The number of virtual machine runners. This charm will spawn or destroy virtual machines
+      runners to match this setting. Setting virtual-machines to non-zero and any of
+      base-virtual-machines or max-total-virtual-machines will block the charm.
+  base-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      The number of non-reactive virtual machine runners spawned by the charm per each
+      combination of flavor and base. Currently, if the charm is integrated with MongoDB
+      this config option will be ignored.
+  max-total-virtual-machines:
+    type: int
+    default: 0
+    description: >-
+      If the github-runner charm is integrated with MongoDB, the reactive mode will not spawn
+      new virtual machines if there are max-total-virtual-machines of more virtual machines
+      managed by the charm.
+  flavor-label-combinations:
+    type: string
+    default: ""
+    description: >-
+      List of "flavor:label" entries separated by ",". The flavor will correspond to a OpenStack
+      flavor and the label will be a label for the GitHub runner. Only one flavor-label combination
+      is supported at the moment. A valid configuration looks like "m1.small:small".
+  manager-ssh-proxy-command:
+    type: string
+    default: ""
+    description: >-
+      Optional ProxyCommand used by the ssh connection which is used to access the virtual
+      machine runners from the runner manager. It is equivalent to ProxyCommand in ssh-config,
+      but without a shell. For example, a value could be something like:
+      `bash -c "openssl s_client -quiet -connect 192.168.20.2:2222 -servername %h 2> /dev/null"`
+  pre-job-script:
+    type: string
+    description: >-
+      Optional script (needs shebang) to execute in the pre-job phase of a spawned runner VM. 
+      This can e.g. be useful for specific infrastructure related configurations 
+      (e.g. usage of certain proxies or custom routes).
+      Note that the user executing the script is the ubuntu user (which has sudo rights).
+      Example script:
+      #!/usr/bin/env bash
+      cat > ~/.ssh/config <<EOF
+      host github.com
+          user git
+          hostname github.com
+          port 22
+          proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128
+      EOF
+  runner-http-proxy:
+    type: string
+    default: ""
+    description: >-
+      The HTTP proxy value to use for the runners. If not specified, the model configuration option
+      juju-http-proxy will be used instead.
+  use-runner-proxy-for-tmate:
+    type: boolean
+    default: false
+    description: >-
+      When set to true, the ssh connection from the runner to the tmate-ssh-server will be done
+      using the proxy for the runner.
+  runner-manager-log-level:
+    type: string
+    default: "INFO"
+    description: >-
+      The log level for the runner manager application. The value can be CRITICAL, FATAL, ERROR,
+      WARNING, INFO, or DEBUG.
