@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-11-21
+
+- Updated broken links in `docs/how-to/index.md`.
+
 ## 2025-11-11
 
 - Added Grafana dashboard using Prometheus data source.
