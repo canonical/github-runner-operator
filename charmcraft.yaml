@@ -1,5 +1,27 @@
 # Copyright 2025 Canonical Ltd.
 # See LICENSE file for licensing details.
+name: github-runner
+
+links:
+  contact: https://launchpad.net/~canonical-is-devops
+  documentation: https://discourse.charmhub.io/t/github-runner-documentation-overview/13347
+  issues:
+    - https://github.com/canonical/github-runner-operator/issues
+  source:
+    - https://github.com/canonical/github-runner-operator
+  website:
+    - https://charmhub.io/github-runner
+
+summary: Creates a group of self-hosted github runners.
+description: |
+  A [Juju](https://juju.is/) [charm](https://juju.is/docs/olm/charmed-operators) managing
+  [self-hosted runners for GitHub Actions](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
+
+  Each unit of this charm will start a configurable number of virtual machines to host
+  self-hosted runners. Each runner performs only one job, after which it unregisters from GitHub to 
+  ensure that each job runs in a clean environment. The charm will periodically check the number of 
+  runners and spawn or destroy them as necessary to maintain the configured number of runners. Both 
+  the reconciliation interval and the number of runners to maintain are configurable.
 
 type: charm
 
@@ -21,3 +43,22 @@ parts:
     override-build: |
       rustup default stable
       craftctl default
+
+provides:
+  cos-agent:
+    interface: cos_agent
+
+requires:
+  debug-ssh:
+    interface: debug-ssh
+  image:
+    interface: github_runner_image_v0
+  mongodb:
+    interface: mongodb_client
+    limit: 1
+
+storage:
+  runner:
+    description: Storage for the root disk of LXD instances hosting the runner application.
+    type: filesystem
+    location: /storage/juju
