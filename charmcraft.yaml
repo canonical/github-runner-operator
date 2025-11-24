@@ -27,7 +27,9 @@ type: charm
 
 platforms:
   ubuntu@22.04:amd64:
-  ubuntu@24.04:amd64:
+  # 2025/11/24 deprecated ops testing lib does not support 24.04, deploying 24.04 base on jammy VM
+  # raises issues with crypto libs.
+  # ubuntu@24.04:amd64:
 
 parts:
   charm:
