@@ -377,42 +377,21 @@ async def image_builder_fixture(
     test_image_id: Optional[str],
     image_builder_config: dict,
     openstack_connection,
+    request: pytest.FixtureRequest,
 ):
     """The image builder application for OpenStack runners.
 
     If --test-image-id is provided, uses any-charm to mock the image relation.
     Otherwise, deploys the real github-runner-image-builder charm.
+    For test_e2e module, always deploys the real image builder.
     """
     if existing_app_suffix:
+        logging.info("Using existing image builder %s", image_builder_app_name)
         yield model.applications[image_builder_app_name]
         return
 
-    if test_image_id:
-        # Use any-charm to mock the image relation provider
-        any_charm_src_overwrite = {
-            "any_charm.py": textwrap.dedent(
-                f"""\
-                from any_charm_base import AnyCharmBase
-                
-                class AnyCharm(AnyCharmBase):
-                    def __init__(self, *args, **kwargs):
-                        super().__init__(*args, **kwargs)
-                        self.framework.observe(self.on['image'].relation_changed, self._image_relation_changed)
-                    
-                    def _image_relation_changed(self, event):
-                        # Provide mock image relation data
-                        event.relation.data[self.unit]['id'] = '{test_image_id}'
-                        event.relation.data[self.unit]['tags'] = 'jammy, amd64'
-                """
-            ),
-        }
-        yield await model.deploy(
-            "any-charm",
-            application_name=image_builder_app_name,
-            channel="latest/beta",
-            config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
-        )
-    else:
+    if not test_image_id or request.node.name == "test_e2e":
+        logging.info("Deploying image builder %s", image_builder_app_name)
         # Deploy the real github-runner-image-builder
         yield await model.deploy(
             "github-runner-image-builder",
@@ -427,13 +406,41 @@ async def image_builder_fixture(
             },
         )
 
-    if not existing_app_suffix and not test_image_id:
         # The github-image-builder does not clean keypairs. Until it does,
         # we clean them manually here.
+        logging.info("Cleaning up image builder resources...")
         for key in openstack_connection.list_keypairs():
             key_name: str = key.name
             if key_name.startswith(image_builder_app_name):
                 openstack_connection.delete_keypair(key_name)
+
+        return
+
+    # Use any-charm to mock the image relation provider
+    any_charm_src_overwrite = {
+        "any_charm.py": textwrap.dedent(
+            f"""\
+            from any_charm_base import AnyCharmBase
+            
+            class AnyCharm(AnyCharmBase):
+                def __init__(self, *args, **kwargs):
+                    super().__init__(*args, **kwargs)
+                    self.framework.observe(self.on['image'].relation_changed, self._image_relation_changed)
+                
+                def _image_relation_changed(self, event):
+                    # Provide mock image relation data
+                    event.relation.data[self.unit]['id'] = '{test_image_id}'
+                    event.relation.data[self.unit]['tags'] = 'jammy, amd64'
+            """
+        ),
+    }
+    logging.info("Deploying fake image builder via any-charm for image ID %s", test_image_id)
+    yield await model.deploy(
+        "any-charm",
+        application_name=image_builder_app_name,
+        channel="latest/beta",
+        config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+    )
 
 
 @pytest_asyncio.fixture(scope="module", name="app_openstack_runner")
