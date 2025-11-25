@@ -140,3 +140,10 @@ def pytest_addoption(parser: Parser):
         help="The flavor for testing openstack interfaces. The resource should be enough to boot the test image.",
         default=None,
     )
+    parser.addoption(
+        "--test-image-id",
+        action="store",
+        help="The image ID to use for testing. If provided, any-charm will be used to mock the "
+        "image builder for faster testing deployment.",
+        default=None,
+    )

@@ -2,10 +2,12 @@
 # See LICENSE file for licensing details.
 
 """Fixtures for github runner charm integration tests."""
+import json
 import logging
 import random
 import secrets
 import string
+import textwrap
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -252,6 +254,12 @@ def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
     return test_flavor
 
 
+@pytest.fixture(scope="module", name="test_image_id")
+def test_image_id_fixture(pytestconfig: pytest.Config) -> Optional[str]:
+    """The test image ID for mocking image builder."""
+    return pytestconfig.getoption("--test-image-id")
+
+
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     clouds_yaml_contents: str,
@@ -366,15 +374,49 @@ async def image_builder_fixture(
     model: Model,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
+    test_image_id: Optional[str],
     image_builder_config: dict,
     openstack_connection,
 ):
-    """The image builder application for OpenStack runners."""
-    if not existing_app_suffix:
-        application_name = image_builder_app_name
-        app = await model.deploy(
+    """The image builder application for OpenStack runners.
+
+    If --test-image-id is provided, uses any-charm to mock the image relation.
+    Otherwise, deploys the real github-runner-image-builder charm.
+    """
+    if existing_app_suffix:
+        yield model.applications[image_builder_app_name]
+        return
+
+    if test_image_id:
+        # Use any-charm to mock the image relation provider
+        any_charm_src_overwrite = {
+            "any_charm.py": textwrap.dedent(
+                f"""\
+                from any_charm_base import AnyCharmBase
+                
+                class AnyCharm(AnyCharmBase):
+                    def __init__(self, *args, **kwargs):
+                        super().__init__(*args, **kwargs)
+                        self.framework.observe(self.on['image'].relation_changed, self._image_relation_changed)
+                    
+                    def _image_relation_changed(self, event):
+                        # Provide mock image relation data
+                        event.relation.data[self.unit]['id'] = '{test_image_id}'
+                        event.relation.data[self.unit]['tags'] = 'jammy, amd64'
+                """
+            ),
+        }
+        yield await model.deploy(
+            "any-charm",
+            application_name=image_builder_app_name,
+            channel="latest/beta",
+            config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
+        )
+    else:
+        # Deploy the real github-runner-image-builder
+        yield await model.deploy(
             "github-runner-image-builder",
-            application_name=application_name,
+            application_name=image_builder_app_name,
             channel="latest/edge",
             config=image_builder_config,
             constraints={
@@ -384,11 +426,8 @@ async def image_builder_fixture(
                 "cores": 2,
             },
         )
-    else:
-        app = model.applications[image_builder_app_name]
-    yield app
 
-    if not existing_app_suffix:
+    if not existing_app_suffix and not test_image_id:
         # The github-image-builder does not clean keypairs. Until it does,
         # we clean them manually here.
         for key in openstack_connection.list_keypairs():

@@ -40,7 +40,8 @@ jobs:
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
-        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}"
+        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+        --test-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
   openstack-integration-tests-cross-controller-private-endpoint:
@@ -72,7 +73,8 @@ jobs:
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
-        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}"
+        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+        --test-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
   allure-report:
