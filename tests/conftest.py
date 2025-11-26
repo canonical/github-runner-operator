@@ -26,12 +26,10 @@ def pytest_addoption(parser: Parser):
             "An optionally comma separated GitHub Personal Access Token(s). "
             "Add more than one to help reduce rate limiting."
         ),
+        default=os.environ.get("INTEGRATION_TOKEN"),
     )
     parser.addoption(
         "--charm-file", action="store", help="The prebuilt github-runner-operator charm file."
-    )
-    parser.addoption(
-        "--token-alt", action="store", help="An alternative token to test the change of a token."
     )
     parser.addoption(
         "--http-proxy",
@@ -47,12 +45,6 @@ def pytest_addoption(parser: Parser):
         "--no-proxy",
         action="store",
         help="No proxy configuration value for juju model proxy configuration.",
-    )
-    parser.addoption(
-        "--openstack-clouds-yaml",
-        action="store",
-        help="The OpenStack clouds yaml file for the charm to use.",
-        default="",
     )
     parser.addoption(
         "--use-existing-app-suffix",
@@ -146,5 +138,12 @@ def pytest_addoption(parser: Parser):
         "--openstack-test-flavor",
         action="store",
         help="The flavor for testing openstack interfaces. The resource should be enough to boot the test image.",
+        default=None,
+    )
+    parser.addoption(
+        "--test-image-id",
+        action="store",
+        help="The image ID to use for testing. If provided, any-charm will be used to mock the "
+        "image builder for faster testing deployment.",
         default=None,
     )
