@@ -48,7 +48,7 @@ DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml
 MONGODB_APP_NAME = "mongodb"
 # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
 # https://github.com/canonical/snapd/pull/16131
-DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15, "virt-type": "virtual-machine"}
+DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 20 * 1024, "virt-type": "virtual-machine"}
 
 logger = logging.getLogger(__name__)
 
