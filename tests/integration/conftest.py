@@ -421,12 +421,13 @@ async def image_builder_fixture(
         "any_charm.py": textwrap.dedent(
             f"""\
             from any_charm_base import AnyCharmBase
-            
+
             class AnyCharm(AnyCharmBase):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
-                    self.framework.observe(self.on['image'].relation_changed, self._image_relation_changed)
-                
+                    self.framework.observe(self.on['provide-github-runner-image-v0'].\
+relation_changed, self._image_relation_changed)
+
                 def _image_relation_changed(self, event):
                     # Provide mock image relation data
                     event.relation.data[self.unit]['id'] = '{test_image_id}'
@@ -438,7 +439,7 @@ async def image_builder_fixture(
     yield await model.deploy(
         "any-charm",
         application_name=image_builder_app_name,
-        channel="latest/beta",
+        channel="latest/edge",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
     )
 
