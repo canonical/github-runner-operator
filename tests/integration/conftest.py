@@ -439,7 +439,7 @@ relation_changed, self._image_relation_changed)
     yield await model.deploy(
         "any-charm",
         application_name=image_builder_app_name,
-        channel="latest/edge",
+        channel="latest/beta",
         config={"src-overwrite": json.dumps(any_charm_src_overwrite)},
     )
 
@@ -486,7 +486,7 @@ async def app_openstack_runner_fixture(
             },
             wait_idle=False,
         )
-        await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+        await model.integrate(image_builder.name, f"{application.name}:image")
     await model.wait_for_idle(
         apps=[application.name, image_builder.name],
         status=ACTIVE,
