@@ -91,7 +91,7 @@ async def test_charm_upgrade(
         },
         wait_idle=False,
     )
-    await model.integrate(f"{image_builder.name}:image", f"{application.name}:image")
+    await model.integrate(f"{image_builder.name}", f"{application.name}:image")
     await model.wait_for_idle(
         apps=[application.name, image_builder.name],
         raise_on_error=False,
