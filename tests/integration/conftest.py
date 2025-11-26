@@ -400,6 +400,8 @@ async def image_builder_fixture(
             constraints={
                 "root-disk": 20 * 1024,
                 "mem": 2 * 1024,
+                # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
+                # https://github.com/canonical/snapd/pull/16131
                 "virt-type": "virtual-machine",
                 "cores": 2,
             },
@@ -595,6 +597,9 @@ async def tmate_ssh_server_app_fixture(model: Model) -> AsyncIterator[Applicatio
     tmate_app: Application = await model.deploy(
         "tmate-ssh-server",
         channel="edge",
+        # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
+        # https://github.com/canonical/snapd/pull/16131
+        constraints={"virt-type": "virtual-machine"},
     )
     return tmate_app
 
@@ -747,7 +752,13 @@ async def app_for_metric_fixture(
 async def mongodb_fixture(model: Model, existing_app_suffix: str | None) -> Application:
     """Deploy MongoDB."""
     if not existing_app_suffix:
-        mongodb = await model.deploy(MONGODB_APP_NAME, channel="6/edge")
+        mongodb = await model.deploy(
+            MONGODB_APP_NAME,
+            channel="6/edge",
+            # 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
+            # https://github.com/canonical/snapd/pull/16131
+            constraints={"virt-type": "virtual-machine"},
+        )
     else:
         mongodb = model.applications["mongodb"]
     return mongodb
