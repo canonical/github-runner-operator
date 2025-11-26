@@ -638,6 +638,8 @@ def forked_github_repository(
     github_repository: Repository,
 ) -> Iterator[Repository]:
     """Create a fork for a GitHub repository."""
+    # After fork creation, the repository workflow run must be enabled manually. Otherwise, a 404
+    # on the workflow get API will be returned.
     forked_repository = github_repository.create_fork(name=f"test-{github_repository.name}")
 
     # Wait for repo to be ready
