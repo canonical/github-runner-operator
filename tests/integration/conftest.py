@@ -383,14 +383,13 @@ async def image_builder_fixture(
 
     If --test-image-id is provided, uses any-charm to mock the image relation.
     Otherwise, deploys the real github-runner-image-builder charm.
-    For test_e2e module, always deploys the real image builder.
     """
     if existing_app_suffix:
         logging.info("Using existing image builder %s", image_builder_app_name)
         yield model.applications[image_builder_app_name]
         return
 
-    if not test_image_id or request.node.name == "test_e2e":
+    if not test_image_id:
         logging.info("Deploying image builder %s", image_builder_app_name)
         # Deploy the real github-runner-image-builder
         yield await model.deploy(
