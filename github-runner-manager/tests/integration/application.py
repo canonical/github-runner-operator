@@ -3,6 +3,7 @@
 
 """Test infrastructure for managing running application instances."""
 
+import logging
 import multiprocessing
 import os
 import time
@@ -15,6 +16,8 @@ import yaml
 from click.testing import CliRunner
 
 from src.github_runner_manager.cli import main
+
+logger = logging.getLogger(__name__)
 
 
 def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
@@ -65,8 +68,10 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         catch_exceptions=False,
     )
     if result.exit_code != 0:
-        print(f"CLI exited with code {result.exit_code}")
-        print(f"Output: {result.output}")
+        logger.error("CLI exited with code %d", result.exit_code)
+        logger.error("Output: %s", result.output)
+    else:
+        logger.info("CLI output: %s", result.output)
 
 
 @dataclass
