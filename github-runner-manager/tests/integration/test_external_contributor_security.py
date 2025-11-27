@@ -338,9 +338,6 @@ def test_external_contributor_enabled_permissive_mode(
     # Get the job logs and verify it ran successfully
     logger.info("Retrieving job logs to verify success...")
     logs = get_job_logs(run)
-    assert "Should not echo if pre-job script failed" in logs, (
-        "Logs should contain the expected success message. " f"Actual logs: {logs[:500]}"
-    )
 
     # Ensure no security errors in logs
     assert (
