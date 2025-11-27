@@ -158,7 +158,7 @@ class GithubClient:
             # The documentation of ghapi for pagination is incorrect and examples will give errors.
             # This workaround is a temp solution. Will be moving to PyGitHub in the future.
             self._client.actions.list_self_hosted_runners_for_repo(
-                owner=path.owner, repo=path.repo, per_page=100
+                owner=path.owner, repo=path.repo, per_page=100, timeout=TIMEOUT_IN_SECS
             )
             num_of_pages = self._client.last_page()
             remote_runners_list = [
@@ -176,7 +176,9 @@ class GithubClient:
         if isinstance(path, GitHubOrg):
             # The documentation of ghapi for pagination is incorrect and examples will give errors.
             # This workaround is a temp solution. Will be moving to PyGitHub in the future.
-            self._client.actions.list_self_hosted_runners_for_org(org=path.org, per_page=100)
+            self._client.actions.list_self_hosted_runners_for_org(
+                org=path.org, per_page=100, timeout=TIMEOUT_IN_SECS
+            )
             num_of_pages = self._client.last_page()
             remote_runners_list = [
                 item
@@ -325,7 +327,7 @@ class GithubClient:
             "owner": path.owner,
             "repo": path.repo,
             "run_id": workflow_run_id,
-            "timeout": 60,
+            "timeout": TIMEOUT_IN_SECS,
         }
         try:
             for wf_run_page in paged(
