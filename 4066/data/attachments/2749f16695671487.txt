@@ -1,0 +1,119 @@
+06:25:23 WARNING unexpected facade SSHServer received from the controller
+06:25:23 INFO Adding model github-pr-f7b1c-lxd:test-charm-fork-repo-fz5t on cloud localhost
+06:25:23 WARNING unexpected facade SSHServer received from the controller
+06:25:23 WARNING unexpected facade SSHSession received from the controller
+06:25:23 WARNING unexpected facade SSHTunneler received from the controller
+06:25:23 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:25:25 INFO Deploying ch:amd64/noble/any-charm-113
+06:25:40 INFO Deploying local:jammy/github-runner-0
+06:25:40 INFO Waiting for model:
+  test-k2egtcu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:26:10 INFO Waiting for model:
+  test-k2egtcu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:26:40 INFO Waiting for model:
+  test-k2egtcu9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:27:10 INFO Waiting for model:
+  test-k2egtcu9/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:27:41 INFO Waiting for model:
+  test-k2egtcu9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:28:11 INFO Waiting for model:
+  test-k2egtcu9/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-k2egtcu9/0 [allocating] waiting: waiting for machine
+06:28:41 INFO Waiting for model:
+  test-k2egtcu9/0 [executing] waiting: Waiting for image over integration.
+  github-runner-image-builder-k2egtcu9/0 [executing] maintenance: installing charm software
+06:29:11 INFO Waiting for model:
+  test-k2egtcu9/0 [idle] active: 
+06:29:21 INFO GitHub token rate limit: Rate(reset=2025-11-27 06:39:04+00:00, remaining=4751, limit=5000)
+06:30:13 INFO Waiting for model:
+  test-k2egtcu9/0 [idle] active: 
+06:30:43 INFO Waiting for model:
+  test-k2egtcu9/0 [idle] active: 
+06:30:45 INFO Current reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:30:45 INFO Waiting for reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:31:46 INFO Current reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:31:46 INFO Current reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25, expected reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:31:46 INFO Waiting for reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:32:47 INFO Current reconcile ID: 6863b4ec-9f30-4d4c-8bbf-94a47008b390
+06:32:47 INFO Current reconcile ID: 6863b4ec-9f30-4d4c-8bbf-94a47008b390, expected reconcile ID: 18107a43-859f-46b1-8fbb-938243331c25
+06:34:01 INFO [TEST SETUP] Exposing port 8080 on test-k2egtcu9-0-n-45bdcbc17d45
+06:34:01 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.53', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:e8:dc'}]])
+06:34:02 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-k2egtcu9-0-n-45bdcbc17d45.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.53 &
+06:34:03 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.53' (ED25519) to the list of known hosts.
+
+06:34:04 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-k2egtcu9-0-n-45bdcbc17d45
+06:34:04 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.53', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:e8:dc'}]])
+06:34:05 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-k2egtcu9-0-n-45bdcbc17d45.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.53 nc -z localhost 8080'
+06:34:06 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:34:07 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-k2egtcu9-0-n-45bdcbc17d45
+06:34:07 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.53', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b5:e8:dc'}]])
+06:34:08 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-k2egtcu9-0-n-45bdcbc17d45.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.53 curl http://localhost:8080'
+06:34:09 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  92328      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:34:11 INFO Wait for condition not met, sleeping 10
+06:34:22 INFO Wait for condition not met, sleeping 60
+06:35:25 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-repo-fz5t  github-pr-f7b1c-lxd  localhost/localhost  3.6.12   unsupported  06:35:25Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-k2egtcu9           active      1  any-charm      latest/beta  113  no       
+test-k2egtcu9                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-k2egtcu9/0*  active    idle   0        10.79.92.45               
+test-k2egtcu9/0*                         active    idle   1        10.79.92.188    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.79.92.45   juju-76212d-0  ubuntu@24.04  github-runner  Running
+1        started  10.79.92.188  juju-76212d-1  ubuntu@22.04  github-runner  Running
+
+06:35:25 INFO Juju error logs:
+
+machine-1: 06:27:05 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:05 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-k2egtcu9-0: 06:28:21 ERROR unit.test-k2egtcu9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-k2egtcu9-0: 06:28:23 ERROR unit.test-k2egtcu9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-0: 06:28:35 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:35 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-k2egtcu9-0: 06:28:40 ERROR unit.test-k2egtcu9/0.juju-log image:1: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-k2egtcu9-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:35:25 INFO Forgetting model main...

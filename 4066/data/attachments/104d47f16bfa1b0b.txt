@@ -1,0 +1,61 @@
+06:36:08 INFO Waiting for model:
+  test-viz48n2y/0 [idle] active: 
+06:36:25 INFO Current reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:36:25 INFO Waiting for reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:37:26 INFO Current reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:37:26 INFO Current reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92, expected reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:37:26 INFO Waiting for reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:38:27 INFO Current reconcile ID: 53c6f13b-c940-4c99-a2aa-c3f356bb4f5f
+06:38:27 INFO Current reconcile ID: 53c6f13b-c940-4c99-a2aa-c3f356bb4f5f, expected reconcile ID: 1a36c369-98ee-44b5-86ee-322d835dad92
+06:38:28 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-rzop  github-pr-f7b1c-lxd  localhost/localhost  3.6.12   unsupported  06:38:28Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-viz48n2y           active      1  any-charm      latest/beta  113  no       
+test-viz48n2y                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-viz48n2y/0*  active    idle   0        10.53.164.105          
+test-viz48n2y/0*                         active    idle   1        10.53.164.233          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.53.164.105  juju-5b93bb-0  ubuntu@24.04  github-runner  Running
+1        started  10.53.164.233  juju-5b93bb-1  ubuntu@22.04  github-runner  Running
+
+06:38:28 INFO Juju error logs:
+
+machine-1: 06:27:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:27:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-viz48n2y-0: 06:28:12 ERROR unit.test-viz48n2y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-viz48n2y-0: 06:28:13 ERROR unit.test-viz48n2y/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-0: 06:28:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:28:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-viz48n2y-0: 06:28:44 ERROR unit.test-viz48n2y/0.juju-log image:1: Missing image in image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 477, in _on_image_relation_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-viz48n2y-0/charm/./src/charm.py", line 514, in _check_image_ready
+    raise ImageNotFoundError("No image found in the image integration")
+errors.ImageNotFoundError: No image found in the image integration
+
+06:38:28 INFO Forgetting model main...

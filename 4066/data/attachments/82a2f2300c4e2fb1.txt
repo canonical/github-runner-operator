@@ -1,0 +1,33 @@
+06:25:24 WARNING unexpected facade SSHServer received from the controller
+06:25:24 INFO Adding model github-pr-f7b1c-lxd:test-charm-no-runner-rzop on cloud localhost
+06:25:24 WARNING unexpected facade SSHServer received from the controller
+06:25:24 WARNING unexpected facade SSHSession received from the controller
+06:25:24 WARNING unexpected facade SSHTunneler received from the controller
+06:25:24 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:25:26 INFO Deploying ch:amd64/noble/any-charm-113
+06:25:42 INFO Deploying local:jammy/github-runner-0
+06:25:42 INFO Waiting for model:
+  test-viz48n2y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:26:13 INFO Waiting for model:
+  test-viz48n2y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:26:43 INFO Waiting for model:
+  test-viz48n2y/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:27:13 INFO Waiting for model:
+  test-viz48n2y/0 [allocating] waiting: agent initialising
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:27:44 INFO Waiting for model:
+  test-viz48n2y/0 [executing] maintenance: installing charm software
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:28:14 INFO Waiting for model:
+  test-viz48n2y/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-viz48n2y/0 [allocating] waiting: waiting for machine
+06:28:44 INFO Waiting for model:
+  test-viz48n2y/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-viz48n2y/0 [executing] maintenance: installing charm software
+06:29:14 INFO Waiting for model:
+  test-viz48n2y/0 [idle] active: 
+06:29:24 INFO Waiting for model:
+  test-viz48n2y/0 [idle] active:
