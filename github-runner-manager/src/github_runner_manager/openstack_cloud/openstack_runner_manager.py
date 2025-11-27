@@ -197,7 +197,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         use_aproxy = service_config.use_aproxy
-        if not service_config.runner_proxy_config.proxy_address:
+        if (
+            not service_config.runner_proxy_config
+            or not service_config.runner_proxy_config.proxy_address
+        ):
             use_aproxy = False
         aproxy_redirect_ports = service_config.aproxy_redirect_ports
         if not aproxy_redirect_ports:
