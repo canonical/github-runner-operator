@@ -36,7 +36,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
     path = pytestconfig.getoption("--github-repository")
 
     if not token or not path:
-        pytest.skip(
+        pytest.fail(
             "GitHub configuration not provided. Use --github-token and --github-repository "
             "options or set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables."
         )
@@ -62,13 +62,15 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     region_name = pytestconfig.getoption("--openstack-region")
 
     # Only return config if all required parameters are provided
-    if all([auth_url, project, username, password, network, region_name]):
-        return OpenStackConfig(
-            auth_url=auth_url,
-            project=project,
-            username=username,
-            password=password,
-            network=network,
-            region_name=region_name,
-        )
-    return None
+    assert all(
+        [auth_url, project, username, password, network, region_name]
+    ), "All OpenStack configurations must be supplied"
+
+    return OpenStackConfig(
+        auth_url=auth_url,
+        project=project,
+        username=username,
+        password=password,
+        network=network,
+        region_name=region_name,
+    )

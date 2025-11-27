@@ -138,7 +138,7 @@ def application_with_external_contributor_disabled(
     tmp_path: Path,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig | None,
-    test_config: TestConfig,
+    test_config: "TestConfig",
 ) -> Iterator[RunningApplication]:
     """Start application with external contributor checks enabled (disabled access).
 
@@ -186,7 +186,7 @@ def application_with_external_contributor_enabled(
     tmp_path: Path,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig | None,
-    test_config: TestConfig,
+    test_config: "TestConfig",
 ) -> Iterator[RunningApplication]:
     """Start application with external contributor checks disabled (permissive mode).
 
