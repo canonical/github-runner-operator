@@ -181,7 +181,8 @@ def create_default_config(
             "proxy_config": openstack_proxy,
             "runner_proxy_config": runner_proxy,
         },
-        "non_reactive_configuration": {
+        "non_reactive_configuration": None,
+        "reactive_configuration": {
             "combinations": [
                 {
                     "image": {
@@ -189,11 +190,9 @@ def create_default_config(
                         "labels": ["noble", "x64"],
                     },
                     "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
-                    "base_virtual_machines": 1,
                 }
             ]
         },
-        "reactive_configuration": None,
         "openstack_configuration": {
             "vm_prefix": test_config.vm_prefix,
             "network": openstack_config.network,
