@@ -16,6 +16,11 @@ jobs:
     name: Integration tests for github-runner-manager
     runs-on: [self-hosted, pfe-ci]
     steps:
+      - name: Setup tmate session
+        uses: canonical/action-tmate@main
+        with:
+          detached: true
+
       - name: Checkout code
         uses: actions/checkout@v5.0.1
       - name: Setup Astral UV
