@@ -46,7 +46,9 @@ DISPATCH_E2E_TEST_RUN_WORKFLOW_FILENAME = "e2e_test_run.yaml"
 DISPATCH_E2E_TEST_RUN_OPENSTACK_WORKFLOW_FILENAME = "e2e_test_run_openstack.yaml"
 
 MONGODB_APP_NAME = "mongodb"
-DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 15}
+# 2025-11-26: Set deployment type to virtual-machine due to bug with snapd. See:
+# https://github.com/canonical/snapd/pull/16131
+DEFAULT_RUNNER_CONSTRAINTS = {"root-disk": 20 * 1024, "virt-type": "virtual-machine"}
 
 logger = logging.getLogger(__name__)
 
@@ -208,6 +210,7 @@ async def deploy_github_runner_charm(
         charm_file,
         application_name=app_name,
         base="ubuntu@22.04",
+        series="jammy",
         config=default_config,
         constraints=constraints or DEFAULT_RUNNER_CONSTRAINTS,
         **(deploy_kwargs or {}),
