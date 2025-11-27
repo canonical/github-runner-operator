@@ -13,6 +13,9 @@ from github_runner_manager.errors import RunnerCreateError
 
 logger = logging.getLogger(__name__)
 
+# Timeout for repo policy compliance service API calls in seconds
+REPO_POLICY_COMPLIANCE_TIMEOUT = 5 * 60
+
 
 # Disable pylint public method number check as this class can be extended in the future.
 class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
@@ -46,7 +49,11 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
         """
         url = urljoin(self.base_url, "one-time-token")
         try:
-            response = self._session.get(url, headers={"Authorization": f"Bearer {self.token}"})
+            response = self._session.get(
+                url,
+                headers={"Authorization": f"Bearer {self.token}"},
+                timeout=REPO_POLICY_COMPLIANCE_TIMEOUT,
+            )
             response.raise_for_status()
             return response.content.decode("utf-8")
         except requests.RequestException as exc:

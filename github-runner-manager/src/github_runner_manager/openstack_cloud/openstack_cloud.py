@@ -30,7 +30,10 @@ from paramiko.ssh_exception import NoValidConnectionsError
 from github_runner_manager.errors import KeyfileError, OpenStackError, SSHError
 from github_runner_manager.manager.models import InstanceID, RunnerIdentity, RunnerMetadata
 from github_runner_manager.openstack_cloud.configuration import OpenStackCredentials
-from github_runner_manager.openstack_cloud.constants import CREATE_SERVER_TIMEOUT
+from github_runner_manager.openstack_cloud.constants import (
+    CREATE_SERVER_TIMEOUT,
+    OPENSTACK_API_TIMEOUT,
+)
 from github_runner_manager.openstack_cloud.models import OpenStackServerConfig
 
 logger = logging.getLogger(__name__)
@@ -851,7 +854,7 @@ class OpenstackCloud:
             project_domain_name=self._credentials.project_domain_name,
         ) as conn:
             version_endpoint = conn.compute.get_endpoint()
-            resp = conn.session.get(version_endpoint)
+            resp = conn.session.get(version_endpoint, timeout=OPENSTACK_API_TIMEOUT)
             return resp.json()["version"]["version"]
 
     def _version_greater_than(self, version1: str, version2: str) -> bool:
