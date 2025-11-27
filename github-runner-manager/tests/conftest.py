@@ -16,6 +16,7 @@ def pytest_addoption(parser):
         "--github-token",
         action="store",
         help="GitHub personal access token for integration tests.",
+        default=os.getenv("INTEGRATION_TOKEN"),
     )
     parser.addoption(
         "--github-repository",
@@ -26,6 +27,7 @@ def pytest_addoption(parser):
         "--github-token-alt",
         action="store",
         help="Alternate GitHub token from a different user for fork testing.",
+        default=os.getenv("INTEGRATION_TOKEN_ALT"),
     )
     parser.addoption(
         "--openstack-auth-url",

@@ -23,14 +23,16 @@ jobs:
       - name: Install tox with UV
         run: uv tool install tox --with tox-uv
       - name: Run integration tests
-        run: uv run tox -e integration -- ./github-runner-manager/tests/integration/
+        working-directory: ./github-runner-manager/
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN_ALT: ${{ secrets.GITHUB_TOKEN_ALT }}
-          GITHUB_REPOSITORY: canonical/github-runner-operator
-          OS_AUTH_URL: ${{ secrets.OS_AUTH_URL }}
-          OS_PROJECT_NAME: ${{ secrets.OS_PROJECT_NAME }}
-          OS_USERNAME: ${{ secrets.OS_USERNAME }}
-          OS_PASSWORD: ${{ secrets.OS_PASSWORD }}
-          OS_NETWORK: ${{ secrets.OS_NETWORK }}
-          OS_REGION_NAME: ${{ secrets.OS_REGION_NAME }}
+          # GitHub configuration
+          INTEGRATION_TOKEN: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
+          INTEGRATION_TOKEN_ALT: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
+          # OpenStack configuration
+          OS_AUTH_URL: ${{ vars.INTEGRATION_TEST_OPENSTACK_AUTH_URL }}
+          OS_PROJECT_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_PROJECT_NAME }}
+          OS_USERNAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_USERNAME }}
+          OS_PASSWORD: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
+          OS_NETWORK: ${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}
+          OS_REGION_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}
+        run: tox -e integration -- -v --tb=native -s --github-repository=${{ vars.INTEGRATION_TEST_PATH }}
