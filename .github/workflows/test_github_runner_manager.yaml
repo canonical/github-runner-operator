@@ -42,7 +42,7 @@ jobs:
           OS_REGION_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}
         run: |
           tox -e integration -- -v --tb=native -s \
-            --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
+            --github-repository=${{ vars.INTEGRATION_TEST_PATH_2 }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
             --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
