@@ -89,10 +89,13 @@ def get_job_logs(run: WorkflowRun) -> str:
     if jobs.totalCount == 0:
         return ""
 
-    job = jobs[0]
-    logs_url = job.logs_url()
-    response = requests.get(logs_url)
-    return response.content.decode("utf-8")
+    logs = ""
+    for job in jobs:
+        logs_url = job.logs_url()
+        response = requests.get(logs_url)
+        logs += response.content.decode("utf-8")
+
+    return logs
 
 
 def close_pull_request(pr: PullRequest) -> None:
