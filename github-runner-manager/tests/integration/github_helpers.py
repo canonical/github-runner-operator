@@ -20,7 +20,7 @@ def create_fork_and_pr(
     """Create a PR from a forked repository.
 
     Args:
-        github_repository: The original repository.
+        upstream_repository: The original repository.
         forked_github_repository: The forked repository.
         test_id: Unique test identifier.
 

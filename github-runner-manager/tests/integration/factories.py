@@ -126,6 +126,7 @@ def create_default_config(
     if github_config is None:
         github_config = GitHubConfig(
             token="ghp_test_token_1234567890abcdef",
+            alt_token="ghp_test_alt_token_1234567890abcdef",
             path="test-org",
         )
 
