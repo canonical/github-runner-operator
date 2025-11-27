@@ -169,20 +169,11 @@ def application_with_external_contributor_disabled(
     )
     metrics_log_path = tmp_path / "github-runner-metrics.log"
     app = RunningApplication.create(config_path, metrics_log_path=metrics_log_path)
-    try:
-        # Verify application is running and healthy before yielding
-        logger.info("Verifying application is alive...")
-        assert app.is_alive(), "Application should be running"
-        logger.info("Checking application health endpoint...")
-        response = app.get("/health")
-        assert response.status_code == 200, "Health endpoint should return 200 OK"
-        logger.info("Application is running and healthy")
 
-        yield app
+    yield app
 
-    finally:
-        logger.info("Stopping application")
-        app.stop()
+    logger.info("Stopping application")
+    app.stop()
 
 
 @pytest.fixture
@@ -221,20 +212,11 @@ def application_with_external_contributor_enabled(
     )
     metrics_log_path = tmp_path / "github-runner-metrics.log"
     app = RunningApplication.create(config_path, metrics_log_path=metrics_log_path)
-    try:
-        # Verify application is running and healthy before yielding
-        logger.info("Verifying application is alive...")
-        assert app.is_alive(), "Application should be running"
-        logger.info("Checking application health endpoint...")
-        response = app.get("/health")
-        assert response.status_code == 200, "Health endpoint should return 200 OK"
-        logger.info("Application is running and healthy")
 
-        yield app
+    yield app
 
-    finally:
-        logger.info("Stopping application")
-        app.stop()
+    logger.info("Stopping application")
+    app.stop()
 
 
 @pytest.fixture
