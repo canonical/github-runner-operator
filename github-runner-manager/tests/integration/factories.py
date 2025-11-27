@@ -155,7 +155,8 @@ def create_default_config(
     runner_proxy = None
     if proxy_config and (proxy_config.http_proxy or proxy_config.https_proxy):
         runner_proxy = {
-            "proxy_address": proxy_config.https_proxy or proxy_config.http_proxy,
+            "http": proxy_config.http_proxy,
+            "https": proxy_config.https_proxy,
             "no_proxy": proxy_config.no_proxy,
         }
 
@@ -176,12 +177,16 @@ def create_default_config(
             "path": path_config,
         },
         "service_config": {
-            "use_aproxy": False,
+            "manager_proxy_command": None,
+            "proxy_config": runner_proxy,
+            "runner_proxy_config": openstack_proxy,
+            "use_aproxy": True,
+            "aproxy_exclude_addresses": [],
+            "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
             "ssh_debug_connections": [],
             "repo_policy_compliance": None,
-            "proxy_config": openstack_proxy,
-            "runner_proxy_config": runner_proxy,
+            "custom_pre_job_script": None,
         },
         "non_reactive_configuration": {
             "combinations": [
