@@ -65,43 +65,40 @@ def github_repository(github_config: GitHubConfig) -> Repository:
 
 
 @pytest.fixture(scope="module")
-def forked_github_repository(
-    github_repository: Repository, pytestconfig: pytest.Config
-) -> Iterator[Repository]:
+def upstream_repository(github_config: GitHubConfig) -> Repository:
+    """Get GitHub repository for testing.
+
+    Args:
+        github_config: GitHub configuration object.
+
+    Returns:
+        GitHub repository object.
+    """
+    auth = Token(github_config.alt_token)
+    github = Github(auth=auth)
+    return github.get_repo(github_config.path)
+
+
+@pytest.fixture(scope="module")
+def forked_github_repository(upstream_repository: Repository) -> Iterator[Repository]:
     """Create a fork of the test repository to simulate external contributor.
 
     This fixture uses an alternate GitHub token (if provided) to create a fork
     from a different user account, simulating an external contributor scenario.
 
     Args:
-        github_repository: The original repository.
-        pytestconfig: Pytest configuration object.
+        upstream_repository: The upstream repository using alt token.
 
     Yields:
         The forked repository.
     """
     # Try to get alternate token for creating fork
     # This simulates a different user (external contributor)
-    alt_token = pytestconfig.getoption("--github-token-alt", None)
-
-    if not alt_token:
-        logger.warning(
-            "Alternate GitHub token not provided. Skipping test requiring fork creation."
-        )
-        pytest.fail(
-            "Alternate GitHub token not provided. Use --github-token-alt option to test with "
-            "actual fork."
-        )
 
     logger.info(
-        "Creating fork of repository %s using alternate token", github_repository.full_name
+        "Creating fork of repository %s using alternate token", upstream_repository.full_name
     )
-    # Create fork using alternate token
-    alt_github = Github(auth=Token(token=alt_token))
-
-    # Get the repository using alternate token to create fork
-    alt_repo_ref = alt_github.get_repo(github_repository.full_name)
-    fork = alt_repo_ref.create_fork(name=f"test-fork-{secrets.token_hex(4)}")
+    fork = upstream_repository.create_fork(name=f"test-fork-{secrets.token_hex(4)}")
 
     logger.info("Waiting for fork to be ready (up to 5 attempts)...")
     # Wait for fork to be ready
@@ -221,14 +218,14 @@ def application_with_external_contributor_enabled(
 
 @pytest.fixture
 def external_contributor_pull_request(
-    github_repository: Repository,
+    upstream_repository: Repository,
     forked_github_repository: Repository,
     test_config: "TestConfig",
 ) -> Iterator[PullRequest]:
     """Create a pull request from forked repository simulating external contributor.
 
     Args:
-        github_repository: The original GitHub repository.
+        upstream_repository: The original GitHub repository.
         forked_github_repository: The forked repository (different user).
         test_config: Test configuration with unique identifiers.
 
@@ -239,7 +236,7 @@ def external_contributor_pull_request(
         "Creating pull request from fork to simulate external contributor (test_id: %s)",
         test_config.test_id,
     )
-    pr = create_fork_and_pr(github_repository, forked_github_repository, test_config.test_id)
+    pr = create_fork_and_pr(upstream_repository, forked_github_repository, test_config.test_id)
     logger.info("Pull request created: #%d - %s", pr.number, pr.title)
 
     yield pr
@@ -254,9 +251,7 @@ def external_contributor_pull_request(
     "application_with_external_contributor_disabled", "external_contributor_pull_request"
 )
 def test_external_contributor_disabled_default_security(
-    github_repository: Repository,
-    external_contributor_pull_request: PullRequest,
-    test_config: "TestConfig",
+    github_repository: Repository, external_contributor_pull_request: PullRequest
 ):
     """
     arrange: Application running with allow_external_contributor=False, forked repository \
@@ -304,9 +299,7 @@ def test_external_contributor_disabled_default_security(
     "application_with_external_contributor_enabled", "external_contributor_pull_request"
 )
 def test_external_contributor_enabled_permissive_mode(
-    github_repository: Repository,
-    external_contributor_pull_request: PullRequest,
-    test_config: "TestConfig",
+    github_repository: Repository, external_contributor_pull_request: PullRequest
 ):
     """
     arrange: Application running with allow_external_contributor=True, forked repository \

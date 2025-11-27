@@ -24,10 +24,12 @@ class GitHubConfig:
 
     Attributes:
         token: GitHub personal access token.
+        alt_token: Alternate GitHub personal access token for external contributor.
         path: GitHub path in <owner>/<repo> or <org> format.
     """
 
     token: str
+    alt_token: str
     path: str
 
 

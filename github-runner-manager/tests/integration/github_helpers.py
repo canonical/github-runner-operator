@@ -13,7 +13,7 @@ from github.WorkflowRun import WorkflowRun
 
 
 def create_fork_and_pr(
-    github_repository: Repository,
+    upstream_repository: Repository,
     forked_github_repository: Repository,
     test_id: str,
 ) -> PullRequest:
@@ -29,7 +29,7 @@ def create_fork_and_pr(
     """
     # Create a unique branch in the fork
     branch_name = f"test/{test_id}"
-    main_branch = forked_github_repository.get_branch(github_repository.default_branch)
+    main_branch = forked_github_repository.get_branch(upstream_repository.default_branch)
     forked_github_repository.create_git_ref(
         ref=f"refs/heads/{branch_name}", sha=main_branch.commit.sha
     )
@@ -44,14 +44,14 @@ def create_fork_and_pr(
     )
 
     # Create PR from fork to original repository
-    pr = forked_github_repository.create_pull(
+    pr = upstream_repository.create_pull(
         title=f"Test PR from fork {test_id}",
         body=(
             f"This is a test PR from a forked repository for testing "
             f"external contributor security. Test ID: {test_id}"
         ),
+        base=upstream_repository.default_branch,
         head=f"{forked_github_repository.owner.login}:{branch_name}",
-        base=f"{github_repository.owner.login}:{github_repository.default_branch}",
     )
 
     return pr

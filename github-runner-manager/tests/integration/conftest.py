@@ -33,15 +33,17 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
             environment variable is set.
     """
     token = pytestconfig.getoption("--github-token")
+    alt_token = pytestconfig.getoption("--github-token-alt", None)
     path = pytestconfig.getoption("--github-repository")
 
-    if not token or not path:
+    if not token or not alt_token or not path:
         pytest.fail(
-            "GitHub configuration not provided. Use --github-token and --github-repository "
-            "options or set INTEGRATION_TOKEN and GITHUB_REPOSITORY environment variables."
+            "GitHub configuration not provided. Use --github-token, --github-token-alt, and "
+            "--github-repository options or set INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT, and "
+            "GITHUB_REPOSITORY environment variables."
         )
 
-    return GitHubConfig(token=token, path=path)
+    return GitHubConfig(token=token, alt_token=alt_token, path=path)
 
 
 @pytest.fixture(scope="module")
