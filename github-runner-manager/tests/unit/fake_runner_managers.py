@@ -66,11 +66,23 @@ class FakeOpenstackCloud:
         return self._MOCK_COMPUTE_ENDPOINT
 
     @property
-    def session(self) -> dict:
+    def session(self) -> "FakeOpenstackCloud":
         """Fake the connection session attribute."""
+        return self
+
+    def get(self, endpoint: str, timeout: int | None = None) -> MagicMock:
+        """Fake the session.get method.
+        
+        Args:
+            endpoint: The endpoint to get.
+            timeout: The timeout for the request (ignored in mock).
+        
+        Returns:
+            A mock response object.
+        """
         compute_endpoint_mock = MagicMock()
         compute_endpoint_mock.json.return_value = self._MOCK_COMPUTE_ENDPOINT_RESPONSE
-        return {self._MOCK_COMPUTE_ENDPOINT: compute_endpoint_mock}
+        return compute_endpoint_mock
 
     def delete_server(
         self,
