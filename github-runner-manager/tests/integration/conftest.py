@@ -5,7 +5,7 @@
 
 import pytest
 
-from .factories import GitHubConfig, OpenStackConfig, TestConfig
+from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 
 
 @pytest.fixture
@@ -73,4 +73,35 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
         password=password,
         network=network,
         region_name=region_name,
+    )
+
+
+@pytest.fixture(scope="module")
+def proxy_config(pytestconfig: pytest.Config) -> ProxyConfig | None:
+    """Get proxy configuration from pytest options or environment.
+
+    Args:
+        pytestconfig: Pytest configuration object.
+
+    Returns:
+        Proxy configuration object, or None if no proxy is configured.
+    """
+    http_proxy = pytestconfig.getoption("--http-proxy")
+    https_proxy = pytestconfig.getoption("--https-proxy")
+    no_proxy = pytestconfig.getoption("--no-proxy")
+    openstack_http_proxy = pytestconfig.getoption("--openstack-http-proxy")
+    openstack_https_proxy = pytestconfig.getoption("--openstack-https-proxy")
+    openstack_no_proxy = pytestconfig.getoption("--openstack-no-proxy")
+
+    # Return None if no proxy is configured
+    if not any([http_proxy, https_proxy, openstack_http_proxy, openstack_https_proxy]):
+        return None
+
+    return ProxyConfig(
+        http_proxy=http_proxy,
+        https_proxy=https_proxy,
+        no_proxy=no_proxy,
+        openstack_http_proxy=openstack_http_proxy,
+        openstack_https_proxy=openstack_https_proxy,
+        openstack_no_proxy=openstack_no_proxy,
     )

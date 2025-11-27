@@ -40,4 +40,12 @@ jobs:
           OS_PASSWORD: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
           OS_NETWORK: ${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}
           OS_REGION_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}
-        run: tox -e integration -- -v --tb=native -s --github-repository=${{ vars.INTEGRATION_TEST_PATH }}
+        run: |
+          tox -e integration -- -v --tb=native -s \
+            --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
+            --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
+            --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
+            --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
+            --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
+            --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
+            --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}"

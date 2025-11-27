@@ -53,6 +53,27 @@ class OpenStackConfig:
 
 
 @dataclass
+class ProxyConfig:
+    """Proxy configuration for tests.
+
+    Attributes:
+        http_proxy: HTTP proxy URL.
+        https_proxy: HTTPS proxy URL.
+        no_proxy: Comma-separated list of hosts to exclude from proxy.
+        openstack_http_proxy: HTTP proxy for OpenStack operations.
+        openstack_https_proxy: HTTPS proxy for OpenStack operations.
+        openstack_no_proxy: No proxy configuration for OpenStack operations.
+    """
+
+    http_proxy: str | None = None
+    https_proxy: str | None = None
+    no_proxy: str | None = None
+    openstack_http_proxy: str | None = None
+    openstack_https_proxy: str | None = None
+    openstack_no_proxy: str | None = None
+
+
+@dataclass
 class TestConfig:
     """Test-specific configuration for parallel test execution.
 
@@ -80,6 +101,7 @@ def create_default_config(
     github_config: GitHubConfig | None = None,
     openstack_config: OpenStackConfig | None = None,
     test_config: TestConfig | None = None,
+    proxy_config: ProxyConfig | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -89,6 +111,7 @@ def create_default_config(
         openstack_config: OpenStack configuration. Defaults to test values.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
+        proxy_config: Proxy configuration. Defaults to no proxy.
 
     Returns:
         Configuration dictionary for the application.
@@ -120,6 +143,22 @@ def create_default_config(
     else:
         path_config = {"org": github_config.path, "group": "default"}
 
+    # Build proxy configuration
+    runner_proxy = None
+    if proxy_config and (proxy_config.http_proxy or proxy_config.https_proxy):
+        runner_proxy = {
+            "proxy_address": proxy_config.https_proxy or proxy_config.http_proxy,
+            "no_proxy": proxy_config.no_proxy,
+        }
+
+    openstack_proxy = None
+    if proxy_config and (proxy_config.openstack_http_proxy or proxy_config.openstack_https_proxy):
+        openstack_proxy = {
+            "http": proxy_config.openstack_http_proxy,
+            "https": proxy_config.openstack_https_proxy,
+            "no_proxy": proxy_config.openstack_no_proxy,
+        }
+
     return {
         "name": test_config.runner_name,
         "allow_external_contributor": allow_external_contributor,
@@ -133,8 +172,8 @@ def create_default_config(
             "dockerhub_mirror": None,
             "ssh_debug_connections": [],
             "repo_policy_compliance": None,
-            "proxy_config": None,
-            "runner_proxy_config": None,
+            "proxy_config": openstack_proxy,
+            "runner_proxy_config": runner_proxy,
         },
         "non_reactive_configuration": {
             "combinations": [

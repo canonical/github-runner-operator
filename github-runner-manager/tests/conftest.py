@@ -65,3 +65,39 @@ def pytest_addoption(parser):
         help="OpenStack region name for integration tests.",
         default=os.getenv("OS_REGION_NAME"),
     )
+    parser.addoption(
+        "--https-proxy",
+        action="store",
+        help="HTTPS proxy for runner configuration.",
+        default=os.getenv("HTTPS_PROXY"),
+    )
+    parser.addoption(
+        "--http-proxy",
+        action="store",
+        help="HTTP proxy for runner configuration.",
+        default=os.getenv("HTTP_PROXY"),
+    )
+    parser.addoption(
+        "--no-proxy",
+        action="store",
+        help="No proxy configuration for runner.",
+        default=os.getenv("NO_PROXY"),
+    )
+    parser.addoption(
+        "--openstack-https-proxy",
+        action="store",
+        help="HTTPS proxy for OpenStack runner operations.",
+        default=os.getenv("OPENSTACK_HTTPS_PROXY"),
+    )
+    parser.addoption(
+        "--openstack-http-proxy",
+        action="store",
+        help="HTTP proxy for OpenStack runner operations.",
+        default=os.getenv("OPENSTACK_HTTP_PROXY"),
+    )
+    parser.addoption(
+        "--openstack-no-proxy",
+        action="store",
+        help="No proxy configuration for OpenStack runner operations.",
+        default=os.getenv("OPENSTACK_NO_PROXY"),
+    )
