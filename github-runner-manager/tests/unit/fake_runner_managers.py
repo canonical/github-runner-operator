@@ -43,6 +43,9 @@ class FakeOpenstackCloud:
         self._injected_errors = {
             instance.name: exc for instance, exc in (server_to_errors or {}).items()
         }
+        # Create a consistent mock response for session.get calls
+        self._session_response_mock = MagicMock()
+        self._session_response_mock.json.return_value = self._MOCK_COMPUTE_ENDPOINT_RESPONSE
 
     def __enter__(self) -> "FakeOpenstackCloud":
         """Fake enter method for context entering."""
@@ -70,19 +73,17 @@ class FakeOpenstackCloud:
         """Fake the connection session attribute."""
         return self
 
-    def get(self, endpoint: str, timeout: int | None = None) -> MagicMock:
+    def get(self, url: str, timeout: int | None = None) -> MagicMock:
         """Fake the session.get method.
 
         Args:
-            endpoint: The endpoint to get.
+            url: The URL to get.
             timeout: The timeout for the request (ignored in mock).
 
         Returns:
             A mock response object.
         """
-        compute_endpoint_mock = MagicMock()
-        compute_endpoint_mock.json.return_value = self._MOCK_COMPUTE_ENDPOINT_RESPONSE
-        return compute_endpoint_mock
+        return self._session_response_mock
 
     def delete_server(
         self,
