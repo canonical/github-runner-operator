@@ -72,11 +72,11 @@ class FakeOpenstackCloud:
 
     def get(self, endpoint: str, timeout: int | None = None) -> MagicMock:
         """Fake the session.get method.
-        
+
         Args:
             endpoint: The endpoint to get.
             timeout: The timeout for the request (ignored in mock).
-        
+
         Returns:
             A mock response object.
         """
