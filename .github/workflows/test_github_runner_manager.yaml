@@ -22,6 +22,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install tox with UV
         run: uv tool install tox --with tox-uv
+      - name: Install the github-runner-manager application package
+        working-directory: ./github-runner-manager/
+        run: uv pip install -e .
       - name: Run integration tests
         working-directory: ./github-runner-manager/
         env:
