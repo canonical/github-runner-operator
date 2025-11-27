@@ -33,7 +33,7 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
             response = requests.get(
                 f"http://{host}:{port}/health", timeout=1, allow_redirects=False
             )
-            if response.status_code in (200, 404):  # Server is responding
+            if response.status_code in (200, 204, 404):  # Server is responding
                 return True
         except (requests.ConnectionError, requests.Timeout):
             time.sleep(0.5)
