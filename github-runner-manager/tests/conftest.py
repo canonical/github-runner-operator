@@ -101,3 +101,15 @@ def pytest_addoption(parser):
         help="No proxy configuration for OpenStack runner operations.",
         default=os.getenv("OPENSTACK_NO_PROXY"),
     )
+    parser.addoption(
+        "--openstack-flavor",
+        action="store",
+        help="OpenStack flavor name for runner instances.",
+        default=os.getenv("OPENSTACK_FLAVOR"),
+    )
+    parser.addoption(
+        "--openstack-image-id",
+        action="store",
+        help="OpenStack image ID for runner instances.",
+        default=os.getenv("OPENSTACK_IMAGE_ID"),
+    )

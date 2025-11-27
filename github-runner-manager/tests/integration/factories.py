@@ -42,6 +42,8 @@ class OpenStackConfig:
         password: OpenStack password.
         network: OpenStack network name.
         region_name: OpenStack region name.
+        flavor: OpenStack flavor name for runner instances.
+        image_id: OpenStack image ID for runner instances.
     """
 
     auth_url: str
@@ -50,6 +52,8 @@ class OpenStackConfig:
     password: str
     network: str
     region_name: str = "RegionOne"
+    flavor: str | None = None
+    image_id: str | None = None
 
 
 @dataclass
@@ -131,6 +135,8 @@ def create_default_config(
             password="test-password",
             network="test-network",
             region_name="RegionOne",
+            flavor="small",
+            image_id=None,
         )
 
     if test_config is None:
@@ -178,8 +184,11 @@ def create_default_config(
         "non_reactive_configuration": {
             "combinations": [
                 {
-                    "image": {"name": "noble", "labels": ["noble", "x64"]},
-                    "flavor": {"name": "small", "labels": ["small"]},
+                    "image": {
+                        "name": openstack_config.image_id or "noble",
+                        "labels": ["noble", "x64"],
+                    },
+                    "flavor": {"name": openstack_config.flavor or "small", "labels": ["small"]},
                     "base_virtual_machines": 1,
                 }
             ]
