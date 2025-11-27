@@ -18,7 +18,7 @@ from github.PullRequest import PullRequest
 from github.Repository import Repository
 
 from .application import RunningApplication
-from .factories import GitHubConfig, OpenStackConfig, create_default_config
+from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, create_default_config
 from .github_helpers import (
     close_pull_request,
     create_fork_and_pr,
@@ -139,6 +139,7 @@ def application_with_external_contributor_disabled(
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig | None,
     test_config: "TestConfig",
+    proxy_config: ProxyConfig | None,
 ) -> Iterator[RunningApplication]:
     """Start application with external contributor checks enabled (disabled access).
 
@@ -147,6 +148,7 @@ def application_with_external_contributor_disabled(
         github_config: GitHub configuration object.
         openstack_config: OpenStack configuration object or None.
         test_config: Test-specific configuration for unique identification.
+        proxy_config: Proxy configuration object or None.
 
     Yields:
         A running application instance.
@@ -156,6 +158,7 @@ def application_with_external_contributor_disabled(
         github_config=github_config,
         openstack_config=openstack_config,
         test_config=test_config,
+        proxy_config=proxy_config,
     )
     config_path = tmp_path / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
@@ -187,6 +190,7 @@ def application_with_external_contributor_enabled(
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig | None,
     test_config: "TestConfig",
+    proxy_config: ProxyConfig | None,
 ) -> Iterator[RunningApplication]:
     """Start application with external contributor checks disabled (permissive mode).
 
@@ -195,6 +199,7 @@ def application_with_external_contributor_enabled(
         github_config: GitHub configuration object.
         openstack_config: OpenStack configuration object or None.
         test_config: Test-specific configuration for unique identification.
+        proxy_config: Proxy configuration object or None.
 
     Yields:
         A running application instance.
@@ -204,6 +209,7 @@ def application_with_external_contributor_enabled(
         github_config=github_config,
         openstack_config=openstack_config,
         test_config=test_config,
+        proxy_config=proxy_config,
     )
     config_path = tmp_path / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
