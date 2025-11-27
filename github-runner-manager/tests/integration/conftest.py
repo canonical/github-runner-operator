@@ -29,7 +29,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
         GitHub configuration object.
 
     Raises:
-        pytest.skip: If neither --github-token option nor GITHUB_TOKEN
+        pytest.fail: If neither --github-token option nor INTEGRATION_TOKEN
             environment variable is set.
     """
     token = pytestconfig.getoption("--github-token")
@@ -38,7 +38,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
     if not token or not path:
         pytest.fail(
             "GitHub configuration not provided. Use --github-token and --github-repository "
-            "options or set GITHUB_TOKEN and GITHUB_REPOSITORY environment variables."
+            "options or set INTEGRATION_TOKEN and GITHUB_REPOSITORY environment variables."
         )
 
     return GitHubConfig(token=token, path=path)
