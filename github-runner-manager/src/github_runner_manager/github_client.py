@@ -35,7 +35,8 @@ from github_runner_manager.types_.github import JITConfig, JobInfo, SelfHostedRu
 
 logger = logging.getLogger(__name__)
 
-TIMEOUT_IN_SECS = 60
+# Timeout for GitHub API calls in seconds (5 minutes)
+TIMEOUT_IN_SECS = 5 * 60
 
 
 class GithubRunnerNotFoundError(Exception):
