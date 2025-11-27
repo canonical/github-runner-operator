@@ -3,8 +3,7 @@
 
 """Helper functions for GitHub integration testing."""
 
-from datetime import datetime, timezone
-from time import sleep
+from time import sleep, time
 
 import requests
 from github.GithubException import GithubException
@@ -58,43 +57,6 @@ def create_fork_and_pr(
     return pr
 
 
-def dispatch_workflow_and_get_run(
-    repository: Repository,
-    workflow_filename: str,
-    runner_label: str,
-) -> WorkflowRun | None:
-    """Dispatch a workflow and return the workflow run.
-
-    Args:
-        repository: Repository to dispatch workflow on.
-        workflow_filename: Workflow file to dispatch.
-        runner_label: Runner label to target.
-
-    Returns:
-        The workflow run object, or None if not found.
-    """
-    start_time = datetime.now(timezone.utc)
-    workflow = repository.get_workflow(id_or_file_name=workflow_filename)
-
-    # Dispatch the workflow
-    success = workflow.create_dispatch(
-        ref=repository.default_branch,
-        inputs={"runner": runner_label},
-    )
-
-    if not success:
-        return None
-
-    # Wait for the workflow run to appear (up to 2 minutes)
-    for _ in range(24):  # 24 * 5 = 120 seconds
-        sleep(5)
-        runs = workflow.get_runs(created=f">={start_time.isoformat(timespec='seconds')}")
-        if runs.totalCount > 0:
-            return runs[0]
-
-    return None
-
-
 def wait_for_workflow_completion(run: WorkflowRun, timeout: int = 600) -> bool:
     """Wait for a workflow run to complete.
 
@@ -105,8 +67,8 @@ def wait_for_workflow_completion(run: WorkflowRun, timeout: int = 600) -> bool:
     Returns:
         True if workflow completed, False if timeout.
     """
-    iterations = timeout // 10
-    for _ in range(iterations):
+    start_time = time()
+    while time() - start_time < timeout:
         run.update()
         if run.status == "completed":
             return True
@@ -143,3 +105,42 @@ def close_pull_request(pr: PullRequest) -> None:
         pr.edit(state="closed")
     except GithubException:
         pass  # Best effort cleanup
+
+
+def get_pr_workflow_runs(
+    repository: Repository,
+    pr: PullRequest,
+    workflow_name: str,
+    timeout: int = 120,
+) -> list[WorkflowRun]:
+    """Get workflow runs triggered by a pull request.
+
+    Args:
+        repository: The repository containing the workflow.
+        pr: The pull request that triggered the workflow.
+        workflow_name: The name of the workflow to look for.
+        timeout: Maximum time to wait for workflow runs to appear in seconds.
+
+    Returns:
+        List of workflow runs matching the criteria, sorted by created_at descending
+        (most recent first).
+    """
+    start_time = time()
+    while time() - start_time < timeout:
+        # Get all runs for this PR
+        all_runs = repository.get_workflow_runs(
+            event="pull_request",
+            head_sha=pr.head.sha,
+        )
+
+        # Filter by workflow name
+        matching_runs = [run for run in all_runs if run.name == workflow_name]
+
+        if matching_runs:
+            # Sort by created_at descending to get most recent first
+            matching_runs.sort(key=lambda r: r.created_at, reverse=True)
+            return matching_runs
+
+        sleep(5)
+
+    return []

@@ -22,8 +22,8 @@ from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, create_defaul
 from .github_helpers import (
     close_pull_request,
     create_fork_and_pr,
-    dispatch_workflow_and_get_run,
     get_job_logs,
+    get_pr_workflow_runs,
     wait_for_workflow_completion,
 )
 
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # Test workflow filename
-DISPATCH_TEST_WORKFLOW_FILENAME = "workflow_dispatch_test.yaml"
+PULL_REQUEST_WORKFLOW_NAME = "Pull request test"
 
 
 @pytest.fixture(scope="module")
@@ -255,26 +255,28 @@ def external_contributor_pull_request(
 )
 def test_external_contributor_disabled_default_security(
     github_repository: Repository,
+    external_contributor_pull_request: PullRequest,
     test_config: "TestConfig",
 ):
     """
     arrange: Application running with allow_external_contributor=False, forked repository \
         from external contributor.
-    act: Create PR from fork and dispatch workflow.
+    act: Create PR from fork and wait for pull_request_test workflow.
     assert: Workflow fails with "Insufficient user authorization" error in logs.
     """
     logger.info("Test started: test_external_contributor_disabled_default_security")
-    # Dispatch a workflow targeting this runner
-    # Use the unique test label to ensure this runner picks up the job
-    runner_label = test_config.labels[0]
-    logger.info("Dispatching workflow with runner label: %s", runner_label)
-    run = dispatch_workflow_and_get_run(
+
+    # Wait for the pull request workflow to be triggered
+    logger.info("Waiting for pull request workflow to be triggered...")
+    runs = get_pr_workflow_runs(
         repository=github_repository,
-        workflow_filename=DISPATCH_TEST_WORKFLOW_FILENAME,
-        runner_label=runner_label,
+        pr=external_contributor_pull_request,
+        workflow_name=PULL_REQUEST_WORKFLOW_NAME,
+        timeout=120,
     )
-    assert run is not None, "Workflow run should be created"
-    logger.info("Workflow run created: %s (run_id: %d)", run.html_url, run.id)
+    assert runs, "Pull request workflow should be triggered"
+    run = runs[0]
+    logger.info("Workflow run found: %s (run_id: %d)", run.html_url, run.id)
 
     # Wait for the workflow to complete
     logger.info("Waiting for workflow to complete (timeout: 600 seconds)...")
@@ -303,26 +305,28 @@ def test_external_contributor_disabled_default_security(
 )
 def test_external_contributor_enabled_permissive_mode(
     github_repository: Repository,
+    external_contributor_pull_request: PullRequest,
     test_config: "TestConfig",
 ):
     """
     arrange: Application running with allow_external_contributor=True, forked repository \
         from external contributor.
-    act: Create PR from fork and dispatch workflow.
+    act: Create PR from fork and wait for pull_request_test workflow.
     assert: Workflow succeeds with no authorization errors in logs.
     """
     logger.info("Test started: test_external_contributor_enabled_permissive_mode")
-    # Dispatch a workflow targeting this runner
-    # Use the unique test label to ensure this runner picks up the job
-    runner_label = test_config.labels[0]
-    logger.info("Dispatching workflow with runner label: %s", runner_label)
-    run = dispatch_workflow_and_get_run(
+
+    # Wait for the pull request workflow to be triggered
+    logger.info("Waiting for pull request workflow to be triggered...")
+    runs = get_pr_workflow_runs(
         repository=github_repository,
-        workflow_filename=DISPATCH_TEST_WORKFLOW_FILENAME,
-        runner_label=runner_label,
+        pr=external_contributor_pull_request,
+        workflow_name=PULL_REQUEST_WORKFLOW_NAME,
+        timeout=120,
     )
-    assert run is not None, "Workflow run should be created"
-    logger.info("Workflow run created: %s (run_id: %d)", run.html_url, run.id)
+    assert runs, "Pull request workflow should be triggered"
+    run = runs[0]
+    logger.info("Workflow run found: %s (run_id: %d)", run.html_url, run.id)
 
     # Wait for the workflow to complete
     logger.info("Waiting for workflow to complete (timeout: 600 seconds)...")
