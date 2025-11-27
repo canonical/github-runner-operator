@@ -167,7 +167,8 @@ def application_with_external_contributor_disabled(
         "Starting application with external contributor disabled (test_id: %s)",
         test_config.test_id,
     )
-    app = RunningApplication.create(config_path)
+    metrics_log_path = tmp_path / "github-runner-metrics.log"
+    app = RunningApplication.create(config_path, metrics_log_path=metrics_log_path)
     try:
         # Verify application is running and healthy before yielding
         logger.info("Verifying application is alive...")
@@ -218,7 +219,8 @@ def application_with_external_contributor_enabled(
         "Starting application with external contributor enabled (test_id: %s)",
         test_config.test_id,
     )
-    app = RunningApplication.create(config_path)
+    metrics_log_path = tmp_path / "github-runner-metrics.log"
+    app = RunningApplication.create(config_path, metrics_log_path=metrics_log_path)
     try:
         # Verify application is running and healthy before yielding
         logger.info("Verifying application is alive...")

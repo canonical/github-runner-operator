@@ -4,6 +4,7 @@
 """Test infrastructure for managing running application instances."""
 
 import multiprocessing
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -130,7 +131,11 @@ class RunningApplication:
 
     @classmethod
     def create(
-        cls, config_file_path: Path, host: str = "127.0.0.1", port: int = 8080
+        cls,
+        config_file_path: Path,
+        host: str = "127.0.0.1",
+        port: int = 8080,
+        metrics_log_path: Path | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -138,6 +143,8 @@ class RunningApplication:
             config_file_path: Path to the configuration file.
             host: Host to listen on. Defaults to 127.0.0.1.
             port: Port to listen on. If None, an available port is automatically selected.
+            metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
+                environment variable for the application process.
 
         Returns:
             A RunningApplication instance with the application running.
@@ -145,6 +152,10 @@ class RunningApplication:
         Raises:
             RuntimeError: If the application fails to start.
         """
+        # Set metrics log path if provided
+        if metrics_log_path:
+            os.environ["METRICS_LOG_PATH"] = str(metrics_log_path)
+
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
