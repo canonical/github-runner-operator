@@ -52,7 +52,7 @@ def create_fork_and_pr(
             f"external contributor security. Test ID: {test_id}"
         ),
         head=f"{forked_github_repository.owner.login}:{branch_name}",
-        base=github_repository.default_branch,
+        base=f"{github_repository.full_name}:{github_repository.default_branch}",
     )
 
     return pr
