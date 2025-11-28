@@ -36,10 +36,22 @@ def pytest_addoption(parser):
         default=os.getenv("OS_AUTH_URL"),
     )
     parser.addoption(
+        "--openstack-project-domain-name",
+        action="store",
+        help="OpenStack project domain name for integration tests.",
+        default=os.getenv("OS_PROJECT_DOMAIN_NAME"),
+    )
+    parser.addoption(
         "--openstack-project",
         action="store",
         help="OpenStack project name for integration tests.",
         default=os.getenv("OS_PROJECT_NAME"),
+    )
+    parser.addoption(
+        "--openstack-user-domain-name",
+        action="store",
+        help="OpenStack user domain name for integration tests.",
+        default=os.getenv("OS_USER_DOMAIN_NAME"),
     )
     parser.addoption(
         "--openstack-username",
