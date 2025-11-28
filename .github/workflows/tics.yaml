@@ -28,7 +28,13 @@ jobs:
           viewerUrl: https://canonical.tiobe.com/tiobeweb/TICS/api/cfg?name=default
           ticsAuthToken: ${{ secrets.TICSAUTHTOKEN }}
           installTics: true
-
+      - if: ${{ github.event_name == 'push' && cancelled() }}
+        name: Detach TICS QServer to prevent "project already connected" issue
+        env:
+          TICSAUTHTOKEN: ${{ secrets.TICSAUTHTOKEN }}
+        run: |
+          source ~/.profile
+          TICSMaintenance -project ${PROJECT} -detach
 concurrency:
   group: tics
   cancel-in-progress: false
