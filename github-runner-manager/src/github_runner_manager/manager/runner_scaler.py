@@ -136,6 +136,7 @@ class RunnerScaler:
             base_quantity = combination.base_virtual_machines
 
         openstack_runner_manager_config = OpenStackRunnerManagerConfig(
+            allow_external_contributor=application_configuration.allow_external_contributor,
             prefix=application_configuration.openstack_configuration.vm_prefix,
             credentials=application_configuration.openstack_configuration.credentials,
             server_config=server_config,

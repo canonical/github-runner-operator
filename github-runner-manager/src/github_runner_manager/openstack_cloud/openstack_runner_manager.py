@@ -182,6 +182,7 @@ class OpenStackRunnerManager(CloudRunnerManager):
             "metrics_exchange_path": str(METRICS_EXCHANGE_PATH),
             "do_repo_policy_check": False,
             "custom_pre_job_script": service_config.custom_pre_job_script,
+            "allow_external_contributor": self._config.allow_external_contributor,
         }
         repo_policy = self._get_repo_policy_compliance_client()
         if repo_policy is not None:
@@ -196,7 +197,10 @@ class OpenStackRunnerManager(CloudRunnerManager):
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
         use_aproxy = service_config.use_aproxy
-        if not service_config.runner_proxy_config.proxy_address:
+        if (
+            not service_config.runner_proxy_config
+            or not service_config.runner_proxy_config.proxy_address
+        ):
             use_aproxy = False
         aproxy_redirect_ports = service_config.aproxy_redirect_ports
         if not aproxy_redirect_ports:

@@ -38,6 +38,11 @@ class ApplicationConfiguration(BaseModel):
     """Main entry point for the Application Configuration.
 
     Attributes:
+        allow_external_contributor: Whether to allow runs from forked repository from an external
+            contributor. Enabling this option will enable all runs from forked repositories. By
+            default, runs from contribution authors being in COLLABORATOR, MEMBER or OWNER status
+            is allowed. See \
+            https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
@@ -48,6 +53,7 @@ class ApplicationConfiguration(BaseModel):
         reconcile_interval: Seconds to wait between reconciliation.
     """
 
+    allow_external_contributor: bool = False
     name: str
     extra_labels: list[str]
     github_config: github.GitHubConfiguration | None

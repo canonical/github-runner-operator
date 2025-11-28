@@ -20,6 +20,7 @@ import pytest_asyncio
 import yaml
 from git import Repo
 from github import Github, GithubException
+from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.github_client import GithubClient
@@ -182,8 +183,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     user_name = pytestconfig.getoption("--openstack-username")
     region_name = pytestconfig.getoption("--openstack-region-name")
     assert all(
-        val
-        for val in (
+        [
             auth_url,
             password,
             project_domain_name,
@@ -191,7 +191,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
             user_domain_name,
             user_name,
             region_name,
-        )
+        ]
     ), "Specify all OpenStack private endpoint options."
     return {
         "auth_url": auth_url,
@@ -626,7 +626,7 @@ async def tmate_ssh_server_unit_ip_fixture(
 @pytest.fixture(scope="module")
 def github_client(token: str) -> Github:
     """Returns the github client."""
-    gh = Github(token)
+    gh = Github(auth=Token(token=token))
     rate_limit = gh.get_rate_limit()
     logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
@@ -699,7 +699,6 @@ async def app_with_forked_repo(
     model: Model, basic_app: Application, forked_github_repository: Repository
 ) -> Application:
     """Application with no runner on a forked repo.
-
     Test should ensure it returns with the application in a good state and has
     one runner.
     """

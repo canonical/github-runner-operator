@@ -1,0 +1,328 @@
+# Copyright 2025 Canonical Ltd.
+# See LICENSE file for licensing details.
+
+"""Unit tests for pre-job script template and execution."""
+
+import json
+import os
+import subprocess
+from pathlib import Path
+from typing import Dict
+
+import pytest
+from jinja2 import Template
+
+# GitHub Actions default environment variables that are always present
+# Reference:
+# https://docs.github.com/en/actions/reference/workflows-and-actions/variables
+GITHUB_DEFAULT_ENV_VARS = {
+    "CI": "true",
+    "GITHUB_ACTION": "__run",
+    "GITHUB_ACTIONS": "true",
+    "GITHUB_ACTOR": "test-user",
+    "GITHUB_API_URL": "https://api.github.com",
+    "GITHUB_BASE_REF": "",
+    "GITHUB_ENV": "/tmp/github_env",
+    "GITHUB_EVENT_NAME": "pull_request",
+    "GITHUB_EVENT_PATH": "",  # Will be set dynamically in tests
+    "GITHUB_GRAPHQL_URL": "https://api.github.com/graphql",
+    "GITHUB_HEAD_REF": "feature-branch",
+    "GITHUB_JOB": "test-job",
+    "GITHUB_PATH": "/tmp/github_path",
+    "GITHUB_REF": "refs/pull/123/merge",
+    "GITHUB_REF_NAME": "123/merge",
+    "GITHUB_REF_TYPE": "branch",
+    "GITHUB_REPOSITORY": "canonical/github-runner-operator",
+    "GITHUB_REPOSITORY_OWNER": "canonical",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_RUN_ID": "1234567890",
+    "GITHUB_RUN_NUMBER": "42",
+    "GITHUB_SERVER_URL": "https://github.com",
+    "GITHUB_SHA": "abc123def456",
+    "GITHUB_WORKFLOW": "Test Workflow",
+    "GITHUB_WORKSPACE": "/home/runner/work/repo/repo",
+    "RUNNER_ARCH": "X64",
+    "RUNNER_NAME": "test-runner",
+    "RUNNER_OS": "Linux",
+    "RUNNER_TEMP": "/tmp",
+    "RUNNER_TOOL_CACHE": "/opt/hostedtoolcache",
+}
+
+
+@pytest.fixture
+def pre_job_template() -> Template:
+    """Load the pre-job.j2 template."""
+    template_path = (
+        Path(__file__).parent.parent.parent / "src/github_runner_manager/templates/pre-job.j2"
+    )
+    return Template(template_path.read_text())
+
+
+@pytest.fixture
+def github_env_vars(tmp_path: Path) -> Dict[str, str]:
+    """Provide GitHub Actions environment variables with temporary paths.
+
+    This fixture can be used as a base for parameterized tests requiring
+    different GitHub event contexts.
+    """
+    env_vars = GITHUB_DEFAULT_ENV_VARS.copy()
+    # Create temporary files for GitHub Actions file-based environment variables
+    env_vars["GITHUB_ENV"] = str(tmp_path / "github_env")
+    env_vars["GITHUB_PATH"] = str(tmp_path / "github_path")
+    # GITHUB_EVENT_PATH will be set per test
+    env_vars["GITHUB_EVENT_PATH"] = str(tmp_path / "event.json")
+
+    # Ensure PATH is set for subprocess execution
+    env_vars["PATH"] = os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin")
+
+    return env_vars
+
+
+@pytest.fixture
+def default_template_vars() -> Dict:
+    """Provide default template variables for pre-job script rendering.
+
+    This fixture returns the most common configuration with allow_external_contributor
+    disabled. Tests can override specific values as needed.
+    """
+    return {
+        "allow_external_contributor": False,
+        "issue_metrics": False,
+        "do_repo_policy_check": False,
+        "dockerhub_mirror": "",
+        "custom_pre_job_script": "",
+    }
+
+
+def _create_github_event_payload(
+    author_association: str,
+    event_type: str = "pull_request",
+) -> Dict:
+    """Create a GitHub event payload for testing.
+
+    Args:
+        author_association: The author's association with the repository
+            (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
+        event_type: The type of GitHub event (pull_request, push, etc.)
+
+    Returns:
+        A dictionary representing the GitHub event payload
+    """
+    payload = {
+        "action": event_type,
+        "number": 123,
+        "pull_request": {
+            "author_association": author_association,
+            "number": 123,
+            "title": "Test PR",
+            "user": {
+                "login": "test-user",
+                "type": "User",
+            },
+            "head": {
+                "ref": "feature-branch",
+                "sha": "abc123",
+            },
+            "base": {
+                "ref": "main",
+                "sha": "def456",
+            },
+        },
+        "repository": {
+            "name": "github-runner-operator",
+            "full_name": "canonical/github-runner-operator",
+            "owner": {
+                "login": "canonical",
+            },
+        },
+        "sender": {
+            "login": "test-user",
+        },
+    }
+    return payload
+
+
+def render_and_execute_script(
+    template: Template,
+    template_vars: Dict,
+    env_vars: Dict[str, str],
+    github_event: Dict,
+    tmp_path: Path,
+) -> subprocess.CompletedProcess:
+    """Render the pre-job template and execute it with given environment.
+
+    Args:
+        template: The Jinja2 template to render
+        template_vars: Variables to pass to the template
+        env_vars: Environment variables for script execution
+        github_event: GitHub event payload to write to GITHUB_EVENT_PATH
+        tmp_path: Temporary directory for files
+
+    Returns:
+        CompletedProcess with the result of script execution
+    """
+    # Render the template
+    script_content = template.render(**template_vars)
+    script_path = tmp_path / "pre-job.sh"
+    script_path.write_text(script_content)
+    script_path.chmod(0o755)
+
+    # Write GitHub event payload
+    event_path = tmp_path / "event.json"
+    event_path.write_text(json.dumps(github_event))
+    env_vars["GITHUB_EVENT_PATH"] = str(event_path)
+
+    # Execute the script
+    return subprocess.run(
+        [str(script_path)],
+        env=env_vars,
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+
+@pytest.mark.parametrize(
+    "author_association",
+    ["OWNER", "MEMBER", "COLLABORATOR"],
+)
+def test_allow_external_contributor_disabled_allows_trusted_roles(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    default_template_vars: Dict,
+):
+    """Test that OWNER/MEMBER/COLLABORATOR are all allowed."""
+    github_event = _create_github_event_payload(author_association=author_association)
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == 0, (
+        f"Expected exit code 0 for {author_association}, got {result.returncode}\n"
+        f"stderr: {result.stderr}"
+    )
+    assert f"Author association: {author_association}" in result.stderr
+    assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+    assert "Insufficient user authorization" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association",
+    ["CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE"],
+)
+def test_allow_external_contributor_disabled_blocks_untrusted_roles(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    default_template_vars: Dict,
+):
+    """Test that untrusted author associations are blocked."""
+    github_event = _create_github_event_payload(author_association=author_association)
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == 1, (
+        f"Expected exit code 1 for {author_association}, got {result.returncode}\n"
+        f"stderr: {result.stderr}"
+    )
+    assert f"Author association: {author_association}" in result.stderr
+    assert "Insufficient user authorization (author_association)" in result.stderr
+    assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
+
+
+def test_allow_external_contributor_enabled_skips_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    default_template_vars: Dict,
+):
+    """Test that check is skipped when allow_external_contributor=True."""
+    template_vars = {**default_template_vars, "allow_external_contributor": True}
+
+    # Even with CONTRIBUTOR, script should succeed
+    github_event = _create_github_event_payload(author_association="CONTRIBUTOR")
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=template_vars,
+        env_vars=github_env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert (
+        result.returncode == 0
+    ), f"Expected exit code 0, got {result.returncode}\nstderr: {result.stderr}"
+    # The check wasn't performed, so these messages shouldn't appear
+    assert "AUTHOR_ASSOCIATION" not in result.stderr
+    assert "Insufficient user authorization" not in result.stderr
+    assert "The contributor check has passed" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "github_event,description",
+    [
+        (
+            {
+                "ref": "refs/heads/main",
+                "repository": {
+                    "name": "github-runner-operator",
+                    "full_name": "canonical/github-runner-operator",
+                },
+            },
+            "missing pull_request field (push event)",
+        ),
+        (
+            {
+                "pull_request": {
+                    "number": 123,
+                    "title": "Test PR",
+                },
+                "repository": {
+                    "name": "github-runner-operator",
+                },
+            },
+            "missing author_association field",
+        ),
+    ],
+    ids=["no_pull_request", "no_author_association"],
+)
+def test_allow_external_contributor_null_or_missing_fields_blocked(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    github_event: Dict,
+    description: str,
+    default_template_vars: Dict,
+):
+    """Test that null/missing fields are blocked when check is enabled."""
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    # When pull_request or author_association is missing, jq returns "null"
+    # The check should fail as "null" != "OWNER|MEMBER|COLLABORATOR"
+    assert result.returncode == 1, (
+        f"Expected exit code 1 for {description}, got {result.returncode}\n"
+        f"stderr: {result.stderr}"
+    )
+    assert "Author association: null" in result.stderr
+    assert "Insufficient user authorization" in result.stderr
