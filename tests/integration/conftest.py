@@ -94,6 +94,7 @@ class OpenStackConfig:
         user_domain_name: OpenStack user domain to use.
         username: OpenStack user to use within the domain.
         region_name: OpenStack deployment region.
+        clouds_yaml_contents: Generated clouds.yaml configuration from OpenStack settings.
     """
 
     http_proxy: str
