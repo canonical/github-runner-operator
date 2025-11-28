@@ -44,6 +44,8 @@ class OpenStackConfig:
         password: OpenStack password.
         network: OpenStack network name.
         region_name: OpenStack region name.
+        user_domain_name: OpenStack user domain name.
+        project_domain_name: OpenStack project domain name.
         flavor: OpenStack flavor name for runner instances.
         image_id: OpenStack image ID for runner instances.
     """
@@ -54,6 +56,8 @@ class OpenStackConfig:
     password: str
     network: str
     region_name: str = "RegionOne"
+    user_domain_name: str = "Default"
+    project_domain_name: str = "Default"
     flavor: str | None = None
     image_id: str | None = None
 
@@ -210,8 +214,8 @@ def create_default_config(
                 "project_name": openstack_config.project,
                 "username": openstack_config.username,
                 "password": openstack_config.password,
-                "user_domain_name": "Default",
-                "project_domain_name": "Default",
+                "user_domain_name": openstack_config.user_domain_name,
+                "project_domain_name": openstack_config.project_domain_name,
                 "region_name": openstack_config.region_name,
             },
         },
