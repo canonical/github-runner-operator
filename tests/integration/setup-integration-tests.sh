@@ -27,6 +27,9 @@ server = "$DOCKERHUB_MIRROR"
     capabilities = ["pull", "resolve"]
 EOF
   cat /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml
+
+  microk8s stop
+  microk8s start
 fi
 
 # Get preferred source IP address for metallb
