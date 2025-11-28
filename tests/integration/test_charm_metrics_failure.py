@@ -14,6 +14,7 @@ from github_runner_manager.manager.vm_manager import PostJobStatus
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME
+from tests.integration.conftest import GitHubConfig
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     cancel_workflow_run,
@@ -57,7 +58,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     app: Application,
     forked_github_repository: Repository,
     forked_github_branch: Branch,
-    token: str,
+    github_config: GitHubConfig,
     https_proxy: str,
     instance_helper: OpenStackInstanceHelper,
 ):
@@ -72,7 +73,7 @@ async def test_charm_issues_metrics_for_failed_repo_policy(
     await setup_repo_policy(
         app=app,
         openstack_connection=instance_helper.openstack_connection,
-        token=token,
+        token=github_config.token,
         https_proxy=https_proxy,
     )
 
