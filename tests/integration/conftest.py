@@ -182,9 +182,8 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
     user_name = pytestconfig.getoption("--openstack-username")
     region_name = pytestconfig.getoption("--openstack-region-name")
-    if any(
-        not val
-        for val in (
+    assert all(
+        [
             auth_url,
             password,
             project_domain_name,
@@ -192,7 +191,7 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
             user_domain_name,
             user_name,
             region_name,
-        )
+        ]
     ), "Specify all OpenStack private endpoint options."
     return {
         "auth_url": auth_url,
