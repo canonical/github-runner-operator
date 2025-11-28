@@ -12,12 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  skip:
-    name: Skip
-    if: false
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "Skipping integration tests"
   openstack-integration-tests-private-endpoint:
     name: Integration test using private-endpoint
     uses: canonical/operator-workflows/.github/workflows/integration_test.yaml@main
