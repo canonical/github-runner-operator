@@ -57,6 +57,17 @@ jobs:
           sudo snap logs aproxy.aproxy | grep -Fq "example.com:443"
       - name: Install microk8s
         run: sudo snap install microk8s --classic
+      - name: Setup Dockerhub mirror for microk8s
+        run: |
+          sudo tee /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml > /dev/null << EOF
+          server = "$DOCKERHUB_MIRROR"
+
+          [host."$DOCKERHUB_MIRROR"]
+              capabilities = ["pull", "resolve"]
+          EOF
+          cat /var/snap/microk8s/current/args/certs.d/docker.io/hosts.toml
+      - name: Restart microk8s to apply mirror settings
+        run: microk8s stop && microk8s start
       - name: Wait for microk8s
         timeout-minutes: 10
         run: microk8s status --wait-ready
