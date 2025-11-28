@@ -5,7 +5,7 @@ jobs:
     name: TICS
     runs-on: [self-hosted, linux, amd64, tiobe, jammy]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Run Unit Tests (manager app)
