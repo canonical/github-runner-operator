@@ -20,6 +20,7 @@ from charm_state import (
     USE_APROXY_CONFIG_NAME,
     VIRTUAL_MACHINES_CONFIG_NAME,
 )
+from tests.integration.conftest import GitHubConfig, OpenStackConfig
 from tests.integration.helpers.common import (
     deploy_github_runner_charm,
     is_upgrade_charm_event_emitted,
@@ -35,15 +36,9 @@ async def test_charm_upgrade(
     ops_test: OpsTest,
     charm_file: str,
     app_name: str,
-    path: str,
-    token: str,
-    openstack_http_proxy: str,
-    openstack_https_proxy: str,
-    openstack_no_proxy: str,
+    github_config: GitHubConfig,
+    openstack_config: OpenStackConfig,
     tmp_path: pathlib.Path,
-    clouds_yaml_contents: str,
-    network_name: str,
-    flavor_name: str,
     image_builder: Application,
 ):
     """
@@ -74,17 +69,17 @@ async def test_charm_upgrade(
         model=model,
         charm_file=str(latest_stable_path),
         app_name=app_name,
-        path=path,
-        token=token,
-        http_proxy=openstack_http_proxy,
-        https_proxy=openstack_https_proxy,
-        no_proxy=openstack_no_proxy,
+        path=github_config.path,
+        token=github_config.token,
+        http_proxy=openstack_config.http_proxy,
+        https_proxy=openstack_config.https_proxy,
+        no_proxy=openstack_config.no_proxy,
         reconcile_interval=5,
         # override default virtual_machines=0 config.
         config={
-            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
-            OPENSTACK_NETWORK_CONFIG_NAME: network_name,
-            OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
+            OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
+            OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
+            OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
             USE_APROXY_CONFIG_NAME: "true",
             VIRTUAL_MACHINES_CONFIG_NAME: 0,
             BASE_VIRTUAL_MACHINES_CONFIG_NAME: 1,

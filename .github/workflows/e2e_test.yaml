@@ -38,7 +38,8 @@ jobs:
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
-        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}"
+        --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+        --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
 

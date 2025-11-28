@@ -8,6 +8,7 @@ import random
 import secrets
 import string
 import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 from time import sleep
 from typing import Any, AsyncGenerator, AsyncIterator, Generator, Iterator, Optional, cast
@@ -32,6 +33,7 @@ from pytest_operator.plugin import OpsTest
 from charm_state import (
     APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    DOCKERHUB_MIRROR_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
@@ -48,7 +50,7 @@ from tests.integration.helpers.common import (
     wait_for,
     wait_for_runner_ready,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, PrivateEndpointConfigs
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 from tests.status_name import ACTIVE
 
 DEFAULT_RECONCILE_INTERVAL = 2
@@ -58,6 +60,87 @@ IMAGE_BUILDER_INTEGRATION_TIMEOUT_IN_SECONDS = 30 * 60
 # The following line is required because we are using request.getfixturevalue in conjunction
 # with pytest-asyncio. See https://github.com/pytest-dev/pytest-asyncio/issues/112
 nest_asyncio.apply()
+
+
+@dataclass
+class GitHubConfig:
+    """GitHub configuration for tests.
+
+    Attributes:
+        token: GitHub personal access token.
+        path: GitHub repository path in <owner>/<repo> or <user>/<repo> format.
+    """
+
+    token: str
+    path: str
+
+
+@dataclass
+class OpenStackConfig:
+    """OpenStack configuration for tests.
+
+    Attributes:
+        http_proxy: HTTP proxy for OpenStack runners.
+        https_proxy: HTTPS proxy for OpenStack runners.
+        no_proxy: No proxy configuration for OpenStack runners.
+        network_name: Network to spawn test instances under.
+        flavor_name: Flavor to create testing instances with.
+        auth_url: OpenStack authentication URL (Keystone).
+        password: OpenStack password.
+        project_domain_name: OpenStack project domain to use.
+        project_name: OpenStack project to use within the domain.
+        user_domain_name: OpenStack user domain to use.
+        username: OpenStack user to use within the domain.
+        region_name: OpenStack deployment region.
+        test_image_id: Test image ID for mocking image builder (optional).
+        clouds_yaml_contents: Generated clouds.yaml configuration from OpenStack settings.
+    """
+
+    http_proxy: str
+    https_proxy: str
+    no_proxy: str
+    network_name: str
+    flavor_name: str
+    auth_url: str
+    password: str
+    project_domain_name: str
+    project_name: str
+    user_domain_name: str
+    username: str
+    region_name: str
+    test_image_id: Optional[str] = None
+
+    @property
+    def clouds_yaml_contents(self) -> str:
+        """Generate clouds.yaml contents from configuration."""
+        return string.Template(
+            Path("tests/integration/data/clouds.yaml.tmpl").read_text(encoding="utf-8")
+        ).substitute(
+            {
+                "auth_url": self.auth_url,
+                "password": self.password,
+                "project_domain_name": self.project_domain_name,
+                "project_name": self.project_name,
+                "user_domain_name": self.user_domain_name,
+                "username": self.username,
+                "region_name": self.region_name,
+            }
+        )
+
+
+@dataclass
+class ProxyConfig:
+    """Proxy configuration for tests.
+
+    Attributes:
+        http_proxy: HTTP proxy for runners.
+        https_proxy: HTTPS proxy for runners.
+        no_proxy: No proxy configuration for runners.
+    """
+
+    http_proxy: str
+    https_proxy: str
+    no_proxy: str
 
 
 @pytest.fixture(scope="module")
@@ -106,71 +189,71 @@ def charm_file(pytestconfig: pytest.Config) -> str:
 
 
 @pytest.fixture(scope="module")
-def path(pytestconfig: pytest.Config) -> str:
-    """Configured path setting."""
+def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
+    """Github configuration for tests.
+
+    Args:
+        pytestconfig: Pytest configuration object.
+
+    Returns:
+        GitHub configuration object.
+    """
+    token = pytestconfig.getoption("--token")
+    assert token, "Please specify the --token command line option"
+    tokens = {token.strip() for token in token.split(",")}
+    random_token = random.choice(list(tokens))
+
     path = pytestconfig.getoption("--path")
     assert path, (
         "Please specify the --path command line option with repository "
         "path of <org>/<repo> or <user>/<repo> format."
     )
-    return path
+
+    return GitHubConfig(token=random_token, path=path)
 
 
 @pytest.fixture(scope="module")
-def token(pytestconfig: pytest.Config) -> str:
-    """Configured token setting."""
-    token = pytestconfig.getoption("--token")
-    assert token, "Please specify the --token command line option"
-    tokens = {token.strip() for token in token.split(",")}
-    random_token = random.choice(list(tokens))
-    return random_token
+def proxy_config(pytestconfig: pytest.Config) -> ProxyConfig:
+    """Proxy configuration for tests.
 
+    Args:
+        pytestconfig: Pytest configuration object.
 
-@pytest.fixture(scope="module")
-def http_proxy(pytestconfig: pytest.Config) -> str:
-    """Configured http_proxy setting."""
+    Returns:
+        Proxy configuration object.
+    """
     http_proxy = pytestconfig.getoption("--http-proxy")
-    return "" if http_proxy is None else http_proxy
-
-
-@pytest.fixture(scope="module")
-def https_proxy(pytestconfig: pytest.Config) -> str:
-    """Configured https_proxy setting."""
     https_proxy = pytestconfig.getoption("--https-proxy")
-    return "" if https_proxy is None else https_proxy
+    no_proxy = pytestconfig.getoption("--no-proxy")
+
+    return ProxyConfig(
+        http_proxy="" if http_proxy is None else http_proxy,
+        https_proxy="" if https_proxy is None else https_proxy,
+        no_proxy="" if no_proxy is None else no_proxy,
+    )
 
 
 @pytest.fixture(scope="module")
-def no_proxy(pytestconfig: pytest.Config) -> str:
-    """Configured no_proxy setting."""
-    no_proxy = pytestconfig.getoption("--no-proxy")
-    return "" if no_proxy is None else no_proxy
+def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
+    """Openstack configuration for tests.
 
+    Args:
+        pytestconfig: Pytest configuration object.
 
-@pytest.fixture(scope="module", name="openstack_http_proxy")
-def openstack_http_proxy_fixture(pytestconfig: pytest.Config) -> str:
-    """Configured http_proxy setting for openstack runners."""
+    Returns:
+        OpenStack configuration object.
+    """
     http_proxy = pytestconfig.getoption("--openstack-http-proxy")
-    return "" if http_proxy is None else http_proxy
-
-
-@pytest.fixture(scope="module", name="openstack_https_proxy")
-def openstack_https_proxy_fixture(pytestconfig: pytest.Config) -> str:
-    """Configured https_proxy setting for openstack runners."""
     https_proxy = pytestconfig.getoption("--openstack-https-proxy")
-    return "" if https_proxy is None else https_proxy
-
-
-@pytest.fixture(scope="module", name="openstack_no_proxy")
-def openstack_no_proxy_fixture(pytestconfig: pytest.Config) -> str:
-    """Configured no_proxy setting for openstack runners."""
     no_proxy = pytestconfig.getoption("--openstack-no-proxy")
-    return "" if no_proxy is None else no_proxy
 
+    network_name = pytestconfig.getoption("--openstack-network-name")
+    assert network_name, "Please specify the --openstack-network-name command line option"
 
-@pytest.fixture(scope="module", name="private_endpoint_config")
-def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpointConfigs:
-    """The private endpoint configuration values."""
+    flavor_name = pytestconfig.getoption("--openstack-flavor-name")
+    assert flavor_name, "Please specify the --openstack-flavor-name command line option"
+
+    # OpenStack authentication details
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     password = pytestconfig.getoption("--openstack-password")
     assert (
@@ -179,8 +262,9 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
     project_name = pytestconfig.getoption("--openstack-project-name")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
-    user_name = pytestconfig.getoption("--openstack-username")
+    username = pytestconfig.getoption("--openstack-username")
     region_name = pytestconfig.getoption("--openstack-region-name")
+
     assert all(
         val
         for val in (
@@ -189,88 +273,51 @@ def private_endpoint_config_fixture(pytestconfig: pytest.Config) -> PrivateEndpo
             project_domain_name,
             project_name,
             user_domain_name,
-            user_name,
+            username,
             region_name,
         )
     ), "Specify all OpenStack private endpoint options."
-    return {
-        "auth_url": auth_url,
-        "password": str(password),
-        "project_domain_name": project_domain_name,
-        "project_name": project_name,
-        "user_domain_name": user_domain_name,
-        "username": user_name,
-        "region_name": region_name,
-    }
 
+    test_image_id = pytestconfig.getoption("--test-image-id")
 
-@pytest.fixture(scope="module", name="clouds_yaml_contents")
-def clouds_yaml_contents_fixture(private_endpoint_config: PrivateEndpointConfigs) -> str:
-    """The openstack private endpoint clouds yaml."""
-    return string.Template(
-        Path("tests/integration/data/clouds.yaml.tmpl").read_text(encoding="utf-8")
-    ).substitute(
-        {
-            "auth_url": private_endpoint_config["auth_url"],
-            "password": private_endpoint_config["password"],
-            "project_domain_name": private_endpoint_config["project_domain_name"],
-            "project_name": private_endpoint_config["project_name"],
-            "user_domain_name": private_endpoint_config["user_domain_name"],
-            "username": private_endpoint_config["username"],
-            "region_name": private_endpoint_config["region_name"],
-        }
+    return OpenStackConfig(
+        http_proxy="" if http_proxy is None else http_proxy,
+        https_proxy="" if https_proxy is None else https_proxy,
+        no_proxy="" if no_proxy is None else no_proxy,
+        network_name=network_name,
+        flavor_name=flavor_name,
+        auth_url=auth_url,
+        password=str(password),
+        project_domain_name=project_domain_name,
+        project_name=project_name,
+        user_domain_name=user_domain_name,
+        username=username,
+        region_name=region_name,
+        test_image_id=test_image_id,
     )
 
 
-@pytest.fixture(scope="module", name="network_name")
-def network_name_fixture(pytestconfig: pytest.Config) -> str:
-    """Network to use to spawn test instances under."""
-    network_name = pytestconfig.getoption("--openstack-network-name")
-    assert network_name, "Please specify the --openstack-network-name command line option"
-    return network_name
+@pytest.fixture(scope="module")
+def dockerhub_mirror(pytestconfig: pytest.Config) -> Optional[str]:
+    """The dockerhub mirror URL for tests.
 
-
-@pytest.fixture(scope="module", name="flavor_name")
-def flavor_name_fixture(pytestconfig: pytest.Config) -> str:
-    """Flavor to create testing instances with."""
-    flavor_name = pytestconfig.getoption("--openstack-flavor-name")
-    assert flavor_name, "Please specify the --openstack-flavor-name command line option"
-    return flavor_name
-
-
-@pytest.fixture(scope="module", name="openstack_test_image")
-def openstack_test_image_fixture(pytestconfig: pytest.Config) -> str:
-    """Image for testing openstack interfaces."""
-    test_image = pytestconfig.getoption("--openstack-test-image")
-    assert test_image, "Please specify the --openstack-test-image command line option"
-    return test_image
-
-
-@pytest.fixture(scope="module", name="openstack_test_flavor")
-def openstack_test_flavor_fixture(pytestconfig: pytest.Config) -> str:
-    """Flavor for testing openstack interfaces."""
-    test_flavor = pytestconfig.getoption("--openstack-test-flavor")
-    assert test_flavor, "Please specify the --openstack-test-flavor command line option"
-    return test_flavor
-
-
-@pytest.fixture(scope="module", name="test_image_id")
-def test_image_id_fixture(pytestconfig: pytest.Config) -> Optional[str]:
-    """The test image ID for mocking image builder."""
-    return pytestconfig.getoption("--test-image-id")
+    Returns:
+        The dockerhub mirror URL if provided, None otherwise.
+    """
+    return pytestconfig.getoption("--dockerhub-mirror")
 
 
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
-    clouds_yaml_contents: str,
+    openstack_config: OpenStackConfig,
     app_name: str,
     existing_app_suffix: str,
     request: pytest.FixtureRequest,
 ) -> Generator[Connection, None, None]:
     """The openstack connection instance."""
-    clouds_yaml = yaml.safe_load(clouds_yaml_contents)
+    clouds_yaml = yaml.safe_load(openstack_config.clouds_yaml_contents)
     clouds_yaml_path = Path.cwd() / "clouds.yaml"
-    clouds_yaml_path.write_text(data=clouds_yaml_contents, encoding="utf-8")
+    clouds_yaml_path.write_text(data=openstack_config.clouds_yaml_contents, encoding="utf-8")
     first_cloud = next(iter(clouds_yaml["clouds"].keys()))
     with openstack.connect(first_cloud) as connection:
         yield connection
@@ -298,22 +345,22 @@ def openstack_connection_fixture(
 
 
 @pytest_asyncio.fixture(scope="module")
-async def model(ops_test: OpsTest, http_proxy: str, https_proxy: str, no_proxy: str) -> Model:
+async def model(ops_test: OpsTest, proxy_config: ProxyConfig) -> Model:
     """Juju model used in the test."""
     assert ops_test.model is not None
     await ops_test.model.set_config(
         {
-            "juju-http-proxy": http_proxy,
-            "juju-https-proxy": https_proxy,
-            "juju-no-proxy": no_proxy,
+            "juju-http-proxy": proxy_config.http_proxy,
+            "juju-https-proxy": proxy_config.https_proxy,
+            "juju-no-proxy": proxy_config.no_proxy,
         }
     )
     return ops_test.model
 
 
 @pytest.fixture(scope="module")
-def runner_manager_github_client(token: str) -> GithubClient:
-    return GithubClient(token=token)
+def runner_manager_github_client(github_config: GitHubConfig) -> GithubClient:
+    return GithubClient(token=github_config.token)
 
 
 @pytest_asyncio.fixture(scope="module")
@@ -329,16 +376,14 @@ async def app_no_runner(
 
 @pytest_asyncio.fixture(scope="module")
 async def openstack_model_proxy(
-    openstack_http_proxy: str,
-    openstack_https_proxy: str,
-    openstack_no_proxy: str,
+    openstack_config: OpenStackConfig,
     model: Model,
 ) -> None:
     await model.set_config(
         {
-            "juju-http-proxy": openstack_http_proxy,
-            "juju-https-proxy": openstack_https_proxy,
-            "juju-no-proxy": openstack_no_proxy,
+            "juju-http-proxy": openstack_config.http_proxy,
+            "juju-https-proxy": openstack_config.https_proxy,
+            "juju-no-proxy": openstack_config.no_proxy,
             "logging-config": "<root>=INFO;unit=INFO",
         }
     )
@@ -346,25 +391,21 @@ async def openstack_model_proxy(
 
 @pytest_asyncio.fixture(scope="module", name="image_builder_config")
 async def image_builder_config_fixture(
-    private_endpoint_config: PrivateEndpointConfigs | None,
-    flavor_name: str,
-    network_name: str,
+    openstack_config: OpenStackConfig,
 ):
     """The image builder application default for OpenStack runners."""
-    if not private_endpoint_config:
-        raise ValueError("Private endpoints are required for testing OpenStack runners.")
     return {
         "build-interval": "12",
         "revision-history-limit": "2",
-        "openstack-auth-url": private_endpoint_config["auth_url"],
+        "openstack-auth-url": openstack_config.auth_url,
         # Bandit thinks this is a hardcoded password
-        "openstack-password": private_endpoint_config["password"],  # nosec: B105
-        "openstack-project-domain-name": private_endpoint_config["project_domain_name"],
-        "openstack-project-name": private_endpoint_config["project_name"],
-        "openstack-user-domain-name": private_endpoint_config["user_domain_name"],
-        "openstack-user-name": private_endpoint_config["username"],
-        "build-flavor": flavor_name,
-        "build-network": network_name,
+        "openstack-password": openstack_config.password,  # nosec: B105
+        "openstack-project-domain-name": openstack_config.project_domain_name,
+        "openstack-project-name": openstack_config.project_name,
+        "openstack-user-domain-name": openstack_config.user_domain_name,
+        "openstack-user-name": openstack_config.username,
+        "build-flavor": openstack_config.flavor_name,
+        "build-network": openstack_config.network_name,
         "architecture": "amd64",
     }
 
@@ -374,14 +415,14 @@ async def image_builder_fixture(
     model: Model,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
-    test_image_id: Optional[str],
+    openstack_config: OpenStackConfig,
     image_builder_config: dict,
     openstack_connection,
     request: pytest.FixtureRequest,
 ):
     """The image builder application for OpenStack runners.
 
-    If --test-image-id is provided, uses any-charm to mock the image relation.
+    If openstack_config.test_image_id is provided, uses any-charm to mock the image relation.
     Otherwise, deploys the real github-runner-image-builder charm.
     """
     if existing_app_suffix:
@@ -389,7 +430,7 @@ async def image_builder_fixture(
         yield model.applications[image_builder_app_name]
         return
 
-    if not test_image_id:
+    if not openstack_config.test_image_id:
         logging.info("Deploying image builder %s", image_builder_app_name)
         # Deploy the real github-runner-image-builder
         yield await model.deploy(
@@ -431,12 +472,15 @@ relation_changed, self._image_relation_changed)
 
                 def _image_relation_changed(self, event):
                     # Provide mock image relation data
-                    event.relation.data[self.unit]['id'] = '{test_image_id}'
+                    event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
             """
         ),
     }
-    logging.info("Deploying fake image builder via any-charm for image ID %s", test_image_id)
+    logging.info(
+        "Deploying fake image builder via any-charm for image ID %s",
+        openstack_config.test_image_id,
+    )
     yield await model.deploy(
         "any-charm",
         application_name=image_builder_app_name,
@@ -450,16 +494,11 @@ async def app_openstack_runner_fixture(
     model: Model,
     charm_file: str,
     app_name: str,
-    path: str,
-    token: str,
-    openstack_http_proxy: str,
-    openstack_https_proxy: str,
-    openstack_no_proxy: str,
-    clouds_yaml_contents: str,
-    network_name: str,
-    flavor_name: str,
+    github_config: GitHubConfig,
+    openstack_config: OpenStackConfig,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    dockerhub_mirror: Optional[str],
     request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
@@ -470,20 +509,21 @@ async def app_openstack_runner_fixture(
             model=model,
             charm_file=charm_file,
             app_name=app_name,
-            path=path,
-            token=token,
-            http_proxy=openstack_http_proxy,
-            https_proxy=openstack_https_proxy,
-            no_proxy=openstack_no_proxy,
+            path=github_config.path,
+            token=github_config.token,
+            http_proxy=openstack_config.http_proxy,
+            https_proxy=openstack_config.https_proxy,
+            no_proxy=openstack_config.no_proxy,
             reconcile_interval=DEFAULT_RECONCILE_INTERVAL,
             constraints={"root-disk": 50 * 1024, "mem": 2 * 1024, "virt-type": "virtual-machine"},
             config={
-                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: clouds_yaml_contents,
-                OPENSTACK_NETWORK_CONFIG_NAME: network_name,
-                OPENSTACK_FLAVOR_CONFIG_NAME: flavor_name,
-                USE_APROXY_CONFIG_NAME: bool(openstack_http_proxy),
+                OPENSTACK_CLOUDS_YAML_CONFIG_NAME: openstack_config.clouds_yaml_contents,
+                OPENSTACK_NETWORK_CONFIG_NAME: openstack_config.network_name,
+                OPENSTACK_FLAVOR_CONFIG_NAME: openstack_config.flavor_name,
+                USE_APROXY_CONFIG_NAME: bool(openstack_config.http_proxy),
                 APROXY_REDIRECT_PORTS_CONFIG_NAME: "1-3127,3129-65535",
                 LABELS_CONFIG_NAME: app_name,
+                **({DOCKERHUB_MIRROR_CONFIG_NAME: dockerhub_mirror} if dockerhub_mirror else {}),
             },
             wait_idle=False,
         )
@@ -541,11 +581,8 @@ async def app_runner(
     model: Model,
     charm_file: str,
     app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    github_config: GitHubConfig,
+    proxy_config: ProxyConfig,
 ) -> AsyncIterator[Application]:
     """Application to test runners."""
     # Use a different app_name so workflows can select runners from this deployment.
@@ -553,11 +590,11 @@ async def app_runner(
         model=model,
         charm_file=charm_file,
         app_name=f"{app_name}-test",
-        path=path,
-        token=token,
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
+        path=github_config.path,
+        token=github_config.token,
+        http_proxy=proxy_config.http_proxy,
+        https_proxy=proxy_config.https_proxy,
+        no_proxy=proxy_config.no_proxy,
         reconcile_interval=1,
     )
     return application
@@ -568,22 +605,19 @@ async def app_no_wait_fixture(
     model: Model,
     charm_file: str,
     app_name: str,
-    path: str,
-    token: str,
-    http_proxy: str,
-    https_proxy: str,
-    no_proxy: str,
+    github_config: GitHubConfig,
+    proxy_config: ProxyConfig,
 ) -> AsyncIterator[Application]:
     """Github runner charm application without waiting for active."""
     app: Application = await deploy_github_runner_charm(
         model=model,
         charm_file=charm_file,
         app_name=app_name,
-        path=path,
-        token=token,
-        http_proxy=http_proxy,
-        https_proxy=https_proxy,
-        no_proxy=no_proxy,
+        path=github_config.path,
+        token=github_config.token,
+        http_proxy=proxy_config.http_proxy,
+        https_proxy=proxy_config.https_proxy,
+        no_proxy=proxy_config.no_proxy,
         reconcile_interval=1,
         wait_idle=False,
     )
@@ -624,18 +658,18 @@ async def tmate_ssh_server_unit_ip_fixture(
 
 
 @pytest.fixture(scope="module")
-def github_client(token: str) -> Github:
+def github_client(github_config: GitHubConfig) -> Github:
     """Returns the github client."""
-    gh = Github(token)
+    gh = Github(github_config.token)
     rate_limit = gh.get_rate_limit()
     logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
 
 
 @pytest.fixture(scope="module")
-def github_repository(github_client: Github, path: str) -> Repository:
+def github_repository(github_client: Github, github_config: GitHubConfig) -> Repository:
     """Returns client to the Github repository."""
-    return github_client.get_repo(path)
+    return github_client.get_repo(github_config.path)
 
 
 @pytest.fixture(scope="module")

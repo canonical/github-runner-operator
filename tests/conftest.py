@@ -147,3 +147,9 @@ def pytest_addoption(parser: Parser):
         "image builder for faster testing deployment.",
         default=None,
     )
+    parser.addoption(
+        "--dockerhub-mirror",
+        action="store",
+        help="The DockerHub mirror URL to use for testing.",
+        default=None,
+    )
