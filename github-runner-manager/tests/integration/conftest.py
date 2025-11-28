@@ -62,12 +62,23 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     password = pytestconfig.getoption("--openstack-password")
     network = pytestconfig.getoption("--openstack-network")
     region_name = pytestconfig.getoption("--openstack-region")
+    user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
+    project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
     flavor = pytestconfig.getoption("--openstack-flavor")
     image_id = pytestconfig.getoption("--openstack-image-id")
 
     # Only return config if all required parameters are provided
     assert all(
-        [auth_url, project, username, password, network, region_name]
+        [
+            auth_url,
+            project,
+            project_domain_name,
+            username,
+            user_domain_name,
+            password,
+            network,
+            region_name,
+        ]
     ), "All OpenStack configurations must be supplied"
 
     return OpenStackConfig(
@@ -77,6 +88,8 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
         password=password,
         network=network,
         region_name=region_name,
+        user_domain_name=user_domain_name,
+        project_domain_name=project_domain_name,
         flavor=flavor,
         image_id=image_id,
     )
