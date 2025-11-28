@@ -14,22 +14,6 @@ from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 logger = logging.getLogger(__name__)
 
 
-@pytest.hookimpl(tryfirst=True, hookwrapper=True)
-def pytest_runtest_makereport(item, call):
-    """Hook to capture test outcome for fixtures.
-
-    Args:
-        item: Test item.
-        call: Test call information.
-
-    Yields:
-        Test report.
-    """
-    outcome = yield
-    rep = outcome.get_result()
-    setattr(item, f"rep_{rep.when}", rep)
-
-
 @pytest.fixture
 def test_config() -> TestConfig:
     """Create a unique test configuration for parallel test execution.
