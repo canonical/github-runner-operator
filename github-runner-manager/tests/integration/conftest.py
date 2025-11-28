@@ -3,9 +3,31 @@
 
 """Fixtures for github-runner-manager integration tests."""
 
+import logging
+from typing import Generator
+
+import openstack
 import pytest
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
+
+logger = logging.getLogger(__name__)
+
+
+@pytest.hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    """Hook to capture test outcome for fixtures.
+
+    Args:
+        item: Test item.
+        call: Test call information.
+
+    Yields:
+        Test report.
+    """
+    outcome = yield
+    rep = outcome.get_result()
+    setattr(item, f"rep_{rep.when}", rep)
 
 
 @pytest.fixture
@@ -124,3 +146,80 @@ def proxy_config(pytestconfig: pytest.Config) -> ProxyConfig | None:
         openstack_https_proxy=openstack_https_proxy,
         openstack_no_proxy=openstack_no_proxy,
     )
+
+
+@pytest.fixture(autouse=True)
+def openstack_cleanup(
+    openstack_config: OpenStackConfig, test_config: TestConfig, request: pytest.FixtureRequest
+) -> Generator[None, None, None]:
+    """Clean up OpenStack resources after test execution.
+
+    Args:
+        openstack_config: OpenStack configuration for connection.
+        test_config: Test configuration with unique VM prefix.
+        request: Pytest request fixture for accessing test outcome.
+
+    Yields:
+        None
+    """
+    yield
+
+    if not openstack_config:
+        return
+
+    logger.info("Cleaning up OpenStack resources with prefix: %s", test_config.vm_prefix)
+
+    try:
+        with openstack.connect(
+            auth_url=openstack_config.auth_url,
+            project_name=openstack_config.project,
+            username=openstack_config.username,
+            password=openstack_config.password,
+            user_domain_name=openstack_config.user_domain_name,
+            project_domain_name=openstack_config.project_domain_name,
+            region_name=openstack_config.region_name,
+        ) as conn:
+            # Clean up servers
+            servers = [
+                server
+                for server in conn.list_servers()
+                if server.name.startswith(test_config.vm_prefix)
+            ]
+            for server in servers:
+                logger.info("Fetching console log for server: %s", server.name)
+                try:
+                    console_log = conn.get_server_console(server.id)
+                    if console_log:
+                        logger.info("Console log for server %s:\n%s", server.name, console_log)
+                except Exception as log_error:
+                    logger.warning(
+                        "Failed to fetch console log for server %s: %s",
+                        server.name,
+                        log_error,
+                    )
+
+                logger.info("Deleting server: %s", server.name)
+                conn.delete_server(server.id, wait=True)
+
+            # Clean up keypairs
+            keypairs = [
+                keypair
+                for keypair in conn.list_keypairs()
+                if keypair.name.startswith(test_config.vm_prefix)
+            ]
+            for keypair in keypairs:
+                logger.info("Deleting keypair: %s", keypair.name)
+                conn.delete_keypair(keypair.name)
+
+            # Clean up security groups (if named with prefix)
+            security_groups = [
+                sg
+                for sg in conn.list_security_groups()
+                if sg.name.startswith(f"{test_config.vm_prefix}-")
+            ]
+            for sg in security_groups:
+                logger.info("Deleting security group: %s", sg.name)
+                conn.delete_security_group(sg.id)
+
+    except Exception as e:
+        logger.error("Failed to clean up OpenStack resources: %s", e)
