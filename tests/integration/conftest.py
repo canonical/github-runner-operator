@@ -33,6 +33,7 @@ from pytest_operator.plugin import OpsTest
 from charm_state import (
     APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
+    DOCKERHUB_MIRROR_CONFIG_NAME,
     LABELS_CONFIG_NAME,
     OPENSTACK_CLOUDS_YAML_CONFIG_NAME,
     OPENSTACK_FLAVOR_CONFIG_NAME,
@@ -308,6 +309,16 @@ def test_image_id_fixture(pytestconfig: pytest.Config) -> Optional[str]:
     return pytestconfig.getoption("--test-image-id")
 
 
+@pytest.fixture(scope="module")
+def dockerhub_mirror(pytestconfig: pytest.Config) -> Optional[str]:
+    """The dockerhub mirror URL for tests.
+
+    Returns:
+        The dockerhub mirror URL if provided, None otherwise.
+    """
+    return pytestconfig.getoption("--dockerhub-mirror")
+
+
 @pytest.fixture(scope="module", name="openstack_connection")
 def openstack_connection_fixture(
     openstack_config: OpenStackConfig,
@@ -496,6 +507,7 @@ async def app_openstack_runner_fixture(
     openstack_config: OpenStackConfig,
     existing_app_suffix: Optional[str],
     image_builder: Application,
+    dockerhub_mirror: Optional[str],
     request: pytest.FixtureRequest,
 ) -> AsyncIterator[Application]:
     """Application launching VMs and no runners."""
@@ -520,6 +532,7 @@ async def app_openstack_runner_fixture(
                 USE_APROXY_CONFIG_NAME: bool(openstack_config.http_proxy),
                 APROXY_REDIRECT_PORTS_CONFIG_NAME: "1-3127,3129-65535",
                 LABELS_CONFIG_NAME: app_name,
+                **({DOCKERHUB_MIRROR_CONFIG_NAME: dockerhub_mirror} if dockerhub_mirror else {}),
             },
             wait_idle=False,
         )
