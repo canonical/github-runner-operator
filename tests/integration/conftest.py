@@ -85,8 +85,6 @@ class OpenStackConfig:
         no_proxy: No proxy configuration for OpenStack runners.
         network_name: Network to spawn test instances under.
         flavor_name: Flavor to create testing instances with.
-        test_image: Image for testing openstack interfaces.
-        test_flavor: Flavor for testing openstack interfaces.
         auth_url: OpenStack authentication URL (Keystone).
         password: OpenStack password.
         project_domain_name: OpenStack project domain to use.
@@ -94,6 +92,7 @@ class OpenStackConfig:
         user_domain_name: OpenStack user domain to use.
         username: OpenStack user to use within the domain.
         region_name: OpenStack deployment region.
+        test_image_id: Test image ID for mocking image builder (optional).
         clouds_yaml_contents: Generated clouds.yaml configuration from OpenStack settings.
     """
 
@@ -102,8 +101,6 @@ class OpenStackConfig:
     no_proxy: str
     network_name: str
     flavor_name: str
-    test_image: str
-    test_flavor: str
     auth_url: str
     password: str
     project_domain_name: str
@@ -111,6 +108,7 @@ class OpenStackConfig:
     user_domain_name: str
     username: str
     region_name: str
+    test_image_id: Optional[str] = None
 
     @property
     def clouds_yaml_contents(self) -> str:
@@ -255,12 +253,6 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
     flavor_name = pytestconfig.getoption("--openstack-flavor-name")
     assert flavor_name, "Please specify the --openstack-flavor-name command line option"
 
-    test_image = pytestconfig.getoption("--openstack-test-image")
-    assert test_image, "Please specify the --openstack-test-image command line option"
-
-    test_flavor = pytestconfig.getoption("--openstack-test-flavor")
-    assert test_flavor, "Please specify the --openstack-test-flavor command line option"
-
     # OpenStack authentication details
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     password = pytestconfig.getoption("--openstack-password")
@@ -286,14 +278,14 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
         )
     ), "Specify all OpenStack private endpoint options."
 
+    test_image_id = pytestconfig.getoption("--test-image-id")
+
     return OpenStackConfig(
         http_proxy="" if http_proxy is None else http_proxy,
         https_proxy="" if https_proxy is None else https_proxy,
         no_proxy="" if no_proxy is None else no_proxy,
         network_name=network_name,
         flavor_name=flavor_name,
-        test_image=test_image,
-        test_flavor=test_flavor,
         auth_url=auth_url,
         password=str(password),
         project_domain_name=project_domain_name,
@@ -301,13 +293,8 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
         user_domain_name=user_domain_name,
         username=username,
         region_name=region_name,
+        test_image_id=test_image_id,
     )
-
-
-@pytest.fixture(scope="module", name="test_image_id")
-def test_image_id_fixture(pytestconfig: pytest.Config) -> Optional[str]:
-    """The test image ID for mocking image builder."""
-    return pytestconfig.getoption("--test-image-id")
 
 
 @pytest.fixture(scope="module")
@@ -428,14 +415,14 @@ async def image_builder_fixture(
     model: Model,
     existing_app_suffix: Optional[str],
     image_builder_app_name: str,
-    test_image_id: Optional[str],
+    openstack_config: OpenStackConfig,
     image_builder_config: dict,
     openstack_connection,
     request: pytest.FixtureRequest,
 ):
     """The image builder application for OpenStack runners.
 
-    If --test-image-id is provided, uses any-charm to mock the image relation.
+    If openstack_config.test_image_id is provided, uses any-charm to mock the image relation.
     Otherwise, deploys the real github-runner-image-builder charm.
     """
     if existing_app_suffix:
@@ -443,7 +430,7 @@ async def image_builder_fixture(
         yield model.applications[image_builder_app_name]
         return
 
-    if not test_image_id:
+    if not openstack_config.test_image_id:
         logging.info("Deploying image builder %s", image_builder_app_name)
         # Deploy the real github-runner-image-builder
         yield await model.deploy(
@@ -485,12 +472,15 @@ relation_changed, self._image_relation_changed)
 
                 def _image_relation_changed(self, event):
                     # Provide mock image relation data
-                    event.relation.data[self.unit]['id'] = '{test_image_id}'
+                    event.relation.data[self.unit]['id'] = '{openstack_config.test_image_id}'
                     event.relation.data[self.unit]['tags'] = 'jammy, amd64'
             """
         ),
     }
-    logging.info("Deploying fake image builder via any-charm for image ID %s", test_image_id)
+    logging.info(
+        "Deploying fake image builder via any-charm for image ID %s",
+        openstack_config.test_image_id,
+    )
     yield await model.deploy(
         "any-charm",
         application_name=image_builder_app_name,

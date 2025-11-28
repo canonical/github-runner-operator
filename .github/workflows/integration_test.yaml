@@ -41,7 +41,7 @@ jobs:
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
-        --openstack-test-image="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+        --test-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
@@ -75,7 +75,7 @@ jobs:
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
-        --openstack-test-image="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
+        --test-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
