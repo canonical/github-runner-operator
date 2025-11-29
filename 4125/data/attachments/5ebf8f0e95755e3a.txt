@@ -1,0 +1,42 @@
+12:55:49 WARNING unexpected facade SSHServer received from the controller
+12:55:49 INFO Adding model github-pr-244c9-lxd:test-charm-runner-sy96 on cloud localhost
+12:55:49 WARNING unexpected facade SSHServer received from the controller
+12:55:49 WARNING unexpected facade SSHSession received from the controller
+12:55:49 WARNING unexpected facade SSHTunneler received from the controller
+12:55:50 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+12:55:51 INFO Deploying ch:amd64/noble/any-charm-124
+12:56:04 INFO Deploying local:jammy/github-runner-0
+12:56:04 INFO Waiting for model:
+  test-jota5ln9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jota5ln9/0 [allocating] waiting: waiting for machine
+12:56:35 INFO Waiting for model:
+  test-jota5ln9/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jota5ln9/0 [allocating] waiting: waiting for machine
+12:57:05 INFO Waiting for model:
+  test-jota5ln9/0 [allocating] waiting: waiting for machine
+12:57:35 INFO Waiting for model:
+  test-jota5ln9/0 [allocating] waiting: agent initialising
+12:58:05 INFO Waiting for model:
+  test-jota5ln9/0 [executing] maintenance: installing charm software
+12:58:35 INFO Waiting for model:
+  test-jota5ln9/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-jota5ln9/0 [idle] active:
+12:59:03 INFO Waiting for model:
+  test-jota5ln9/0 [idle] active: 
+12:59:34 INFO Waiting for model:
+  test-jota5ln9/0 [idle] active: 
+12:59:36 INFO Current reconcile ID: fd046e8a-71ee-4ef1-b073-e184f72615cf
+12:59:36 INFO Waiting for reconcile ID: fd046e8a-71ee-4ef1-b073-e184f72615cf
+13:00:37 INFO Current reconcile ID: b008aaeb-3395-41b9-ae27-f0c0c5992cd8
+13:00:37 INFO Current reconcile ID: b008aaeb-3395-41b9-ae27-f0c0c5992cd8, expected reconcile ID: fd046e8a-71ee-4ef1-b073-e184f72615cf
+13:00:45 INFO Waiting for model:
+  test-jota5ln9/0 [idle] active: 
+13:01:16 INFO Waiting for model:
+  test-jota5ln9/0 [idle] active: 
+13:01:18 INFO Current reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
+13:01:18 INFO Waiting for reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
+13:02:19 INFO Current reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
+13:02:19 INFO Current reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3, expected reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
+13:02:19 INFO Waiting for reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
+13:03:20 INFO Current reconcile ID: 966bd684-617c-4b71-9126-032045dc6ebc
+13:03:20 INFO Current reconcile ID: 966bd684-617c-4b71-9126-032045dc6ebc, expected reconcile ID: 63f97b27-4956-4768-bc3c-382592a33ae3
