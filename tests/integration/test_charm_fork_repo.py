@@ -15,7 +15,7 @@ from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
-from tests.integration.conftest import GitHubConfig
+from tests.integration.conftest import GitHubConfig, ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_FAILURE_TEST_WORKFLOW_FILENAME,
     dispatch_workflow,
@@ -33,7 +33,7 @@ async def test_dispatch_workflow_failure(
     forked_github_branch: Branch,
     instance_helper: OpenStackInstanceHelper,
     github_config: GitHubConfig,
-    https_proxy: str,
+    proxy_config: ProxyConfig,
 ) -> None:
     """
     arrange: \
@@ -49,7 +49,7 @@ async def test_dispatch_workflow_failure(
         app=app_with_forked_repo,
         openstack_connection=instance_helper.openstack_connection,
         token=github_config.token,
-        https_proxy=https_proxy,
+        https_proxy=proxy_config.https_proxy,
     )
 
     workflow = forked_github_repository.get_workflow(
