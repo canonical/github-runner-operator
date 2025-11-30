@@ -14,6 +14,7 @@ from juju.model import Model
 from ops.model import ActiveStatus
 
 from charm_state import PATH_CONFIG_NAME
+from tests.integration.conftest import GitHubConfig
 from tests.integration.helpers.common import wait_for_runner_ready
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
@@ -27,7 +28,7 @@ async def test_path_config_change(
     model: Model,
     app_with_forked_repo: Application,
     github_repository: Repository,
-    path: str,
+    github_config: GitHubConfig,
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
@@ -45,7 +46,7 @@ async def test_path_config_change(
     logger.info("Ensure there is a runner (this calls reconcile)")
     await instance_helper.ensure_charm_has_runner(app_with_forked_repo)
 
-    await app_with_forked_repo.set_config({PATH_CONFIG_NAME: path})
+    await app_with_forked_repo.set_config({PATH_CONFIG_NAME: github_config.path})
 
     logger.info("Reconciling (again)")
     await wait_for_runner_ready(app=app_with_forked_repo)
