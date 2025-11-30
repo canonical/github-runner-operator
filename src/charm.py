@@ -46,6 +46,7 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus, WaitingSta
 import logrotate
 import manager_service
 from charm_state import (
+    ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     DEBUG_SSH_INTEGRATION_NAME,
     IMAGE_INTEGRATION_NAME,
     LABELS_CONFIG_NAME,
@@ -337,6 +338,14 @@ class GithubRunnerCharm(CharmBase):
             flush_runners = True
         if self.config[LABELS_CONFIG_NAME] != self._stored.labels:
             self._stored.labels = self.config[LABELS_CONFIG_NAME]
+            flush_runners = True
+        if (
+            self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]
+            != state.charm_config.allow_external_contributor
+        ):
+            self._stored.allow_external_contributor = self.config[
+                ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
+            ]
             flush_runners = True
 
         self._check_image_ready()
