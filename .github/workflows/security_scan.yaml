@@ -18,7 +18,7 @@ jobs:
       security-events: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4.3.1
 
       - name: Ensure .trivyignore exists
         run: |
@@ -30,7 +30,7 @@ jobs:
           fi
 
       - name: Run Trivy scan for logs
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -38,7 +38,7 @@ jobs:
           trivyignores: ".trivyignore"
 
       - name: Run Trivy scan for SARIF report
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -48,7 +48,7 @@ jobs:
           output: "trivy-results.sarif"
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3.29.6
+        uses: github/codeql-action/upload-sarif@v3.31.5
         with:
           sarif_file: "trivy-results.sarif"
 
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v4.3.1
 
       - name: Ensure .trivyignore exists
         run: |
@@ -76,7 +76,7 @@ jobs:
           fi
 
       - name: Run Trivy to generate SBOM
-        uses: aquasecurity/trivy-action@0.32.0
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: "fs"
           scan-ref: "."
