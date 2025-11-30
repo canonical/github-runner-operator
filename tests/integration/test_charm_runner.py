@@ -12,6 +12,7 @@ from juju.action import Action
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
+from tests.integration.conftest import GitHubConfig, ProxyConfig
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -137,8 +138,6 @@ async def test_custom_pre_job_script(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    token: str,
-    https_proxy: str,
 ) -> None:
     """
     arrange: A working application with one runner with a custom pre-job script enabled.
@@ -185,8 +184,8 @@ async def test_repo_policy_enabled(
     app: Application,
     github_repository: Repository,
     test_github_branch: Branch,
-    token: str,
-    https_proxy: str,
+    github_config: GitHubConfig,
+    proxy_config: ProxyConfig,
     instance_helper: OpenStackInstanceHelper,
 ) -> None:
     """
@@ -197,8 +196,8 @@ async def test_repo_policy_enabled(
     await setup_repo_policy(
         app=app,
         openstack_connection=instance_helper.openstack_connection,
-        token=token,
-        https_proxy=https_proxy,
+        token=github_config.token,
+        https_proxy=proxy_config.https_proxy,
     )
 
     await dispatch_workflow(
