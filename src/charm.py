@@ -198,6 +198,9 @@ class GithubRunnerCharm(CharmBase):
             path=self.config[PATH_CONFIG_NAME],  # for detecting changes
             token=self.config[TOKEN_CONFIG_NAME],  # for detecting changes
             labels=self.config[LABELS_CONFIG_NAME],  # for detecting changes
+            allow_external_contributor=self.config[
+                ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
+            ],  # for detecting changes
         )
 
         self.on.define_event("reconcile_runners", ReconcileRunnersEvent)
