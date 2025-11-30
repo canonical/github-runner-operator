@@ -1,0 +1,92 @@
+18:35:16 WARNING unexpected facade SSHServer received from the controller
+18:35:16 INFO Adding model github-pr-7c186-lxd:test-reactive-j65r on cloud localhost
+18:35:16 WARNING unexpected facade SSHServer received from the controller
+18:35:16 WARNING unexpected facade SSHSession received from the controller
+18:35:16 WARNING unexpected facade SSHTunneler received from the controller
+18:35:16 INFO GitHub token rate limit: Rate(reset=2025-11-30 19:01:10+00:00, remaining=4482, limit=5000)
+18:35:19 INFO Deploying ch:amd64/jammy/mongodb-249
+18:35:20 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:35:22 INFO Deploying ch:amd64/noble/any-charm-124
+18:35:43 INFO Deploying local:jammy/github-runner-0
+18:35:43 INFO Waiting for model:
+  test-ah8y1uma/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ah8y1uma/0 [allocating] waiting: waiting for machine
+18:36:13 INFO Waiting for model:
+  test-ah8y1uma/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ah8y1uma/0 [idle] active: 
+18:36:44 INFO Waiting for model:
+  test-ah8y1uma/0 [allocating] waiting: waiting for machine
+18:37:14 INFO Waiting for model:
+  test-ah8y1uma/0 [allocating] waiting: agent initialising
+18:37:45 INFO Waiting for model:
+  test-ah8y1uma/0 [executing] maintenance: installing charm software
+18:38:15 INFO Waiting for model:
+  test-ah8y1uma/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-ah8y1uma/0 [idle] active: 
+18:38:45 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:38:52 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:38:52 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:39:22 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:39:32 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:40:02 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:40:05 INFO Current reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:40:05 INFO Waiting for reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:41:06 INFO Current reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:41:06 INFO Current reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778, expected reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:41:06 INFO Waiting for reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:42:07 INFO Current reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:42:07 INFO Current reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc, expected reconcile ID: 84d3cdc6-529f-4bc8-a9ca-ba6033aa4778
+18:42:09 INFO Wait for condition not met, sleeping 10
+18:42:30 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:42:46 INFO Current reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:42:46 INFO Waiting for reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:43:47 INFO Current reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:43:47 INFO Current reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc, expected reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:43:47 INFO Waiting for reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:44:48 INFO Current reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:44:48 INFO Current reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83, expected reconcile ID: af9d0930-79fe-450c-84b0-db52df5339dc
+18:44:49 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:45:05 INFO Current reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:45:05 INFO Waiting for reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:46:06 INFO Current reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:46:06 INFO Current reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83, expected reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:46:06 INFO Waiting for reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:47:07 INFO Current reconcile ID: 8ce34855-8968-45ad-ae2d-e5f6df2cb157
+18:47:07 INFO Current reconcile ID: 8ce34855-8968-45ad-ae2d-e5f6df2cb157, expected reconcile ID: fa88e6da-dad1-481e-a78c-bace1fd80a83
+18:47:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764528240.694704, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.332232475280762}
+{"timestamp": 1764528238.0, "event": "runner_installed", "flavor": "test-ah8y1uma", "duration": 94.0}
+{"timestamp": 1764528244.0, "event": "runner_start", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 112.0}
+{"timestamp": 1764528249.0, "event": "runner_stop", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764528374.6584902, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.845491409301758}
+
+18:47:09 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764528240.694704, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.332232475280762}
+{"timestamp": 1764528238.0, "event": "runner_installed", "flavor": "test-ah8y1uma", "duration": 94.0}
+{"timestamp": 1764528244.0, "event": "runner_start", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 112.0}
+{"timestamp": 1764528249.0, "event": "runner_stop", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764528374.6584902, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.845491409301758}
+
+18:47:10 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764528240.694704, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.332232475280762}
+{"timestamp": 1764528238.0, "event": "runner_installed", "flavor": "test-ah8y1uma", "duration": 94.0}
+{"timestamp": 1764528244.0, "event": "runner_start", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 112.0}
+{"timestamp": 1764528249.0, "event": "runner_stop", "flavor": "test-ah8y1uma", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764528374.6584902, "event": "reconciliation", "flavor": "test-ah8y1uma", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.845491409301758}
+18:47:10 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:47:41 INFO Waiting for model:
+  test-ah8y1uma/0 [idle] active: 
+18:47:43 INFO Current reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
+18:47:43 INFO Waiting for reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
+18:48:44 INFO Current reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
+18:48:44 INFO Current reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527, expected reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
+18:48:44 INFO Waiting for reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
+18:49:45 INFO Current reconcile ID: ecf9c755-0922-41ea-a9dc-0ab0e0f5a407
+18:49:45 INFO Current reconcile ID: ecf9c755-0922-41ea-a9dc-0ab0e0f5a407, expected reconcile ID: 41911e31-a107-4ca2-95e1-901516ed4527
