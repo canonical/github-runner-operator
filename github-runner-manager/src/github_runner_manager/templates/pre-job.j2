@@ -134,9 +134,9 @@ jq -n \
 {% endif %}
 
 {% if not allow_external_contributor %}
-  # Only check author association for pull request events
-  if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
-    AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association' "$GITHUB_EVENT_PATH")
+  # Check author association for events that can be triggered by external contributors
+  if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" || "${GITHUB_EVENT_NAME}" == "pull_request_review" || "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" || "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
+    AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // .issue.author_association // .review.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
     logger -s "Author association: $AUTHOR_ASSOCIATION"
 
     if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
@@ -146,7 +146,7 @@ jq -n \
 
     logger -s "The contributor check has passed, proceeding to execute jobs"
   else
-    logger -s "Skipping contributor check for non-pull request event: ${GITHUB_EVENT_NAME}"
+    logger -s "Skipping contributor check for event: ${GITHUB_EVENT_NAME}"
   fi
 {% endif %}
 
