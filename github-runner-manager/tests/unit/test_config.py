@@ -23,7 +23,6 @@ from src.github_runner_manager.configuration import (
     ProxyConfig,
     QueueConfig,
     ReactiveConfiguration,
-    RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
 )
@@ -79,9 +78,6 @@ service_config:
     https: http://httpsrunnerproxy.example.com:3128
     no_proxy: 127.0.0.1
   use_aproxy: false
-  repo_policy_compliance:
-    token: token
-    url: https://compliance.example.com
   ssh_debug_connections:
   - ed25519_fingerprint: SHA256:ed25519
     host: 10.10.10.10
@@ -132,10 +128,6 @@ def app_config_fixture() -> ApplicationConfiguration:
                     ed25519_fingerprint="SHA256:ed25519",
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",  # type: ignore
-            ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[

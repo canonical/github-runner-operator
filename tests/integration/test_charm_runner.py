@@ -12,7 +12,7 @@ from juju.action import Action
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME
-from tests.integration.conftest import GitHubConfig, ProxyConfig
+# Remove unused imports since they were only used in the removed repo policy test
 from tests.integration.helpers.common import (
     DISPATCH_TEST_WORKFLOW_FILENAME,
     DISPATCH_WAIT_TEST_WORKFLOW_FILENAME,
@@ -22,7 +22,7 @@ from tests.integration.helpers.common import (
     wait_for_reconcile,
     wait_for_runner_ready,
 )
-from tests.integration.helpers.openstack import OpenStackInstanceHelper, setup_repo_policy
+from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 
 @pytest_asyncio.fixture(scope="function", name="app")
@@ -173,37 +173,3 @@ logger -s "SSH config: $(cat ~/.ssh/config)"
     logs = get_job_logs(workflow_run.jobs("latest")[0])
     assert "SSH config" in logs
     assert "proxycommand socat - PROXY:squid.internal:%h:%p,proxyport=3128" in logs
-
-
-# WARNING: the test below sets up repo policy which affects all tests coming after it. It should
-# be the last test in the file.
-@pytest.mark.openstack
-@pytest.mark.asyncio
-@pytest.mark.abort_on_fail
-async def test_repo_policy_enabled(
-    app: Application,
-    github_repository: Repository,
-    test_github_branch: Branch,
-    github_config: GitHubConfig,
-    proxy_config: ProxyConfig,
-    instance_helper: OpenStackInstanceHelper,
-) -> None:
-    """
-    arrange: A working application with one runner with repo policy enabled.
-    act: Dispatch a workflow.
-    assert: Workflow run successfully passed.
-    """
-    await setup_repo_policy(
-        app=app,
-        openstack_connection=instance_helper.openstack_connection,
-        token=github_config.token,
-        https_proxy=proxy_config.https_proxy,
-    )
-
-    await dispatch_workflow(
-        app=app,
-        branch=test_github_branch,
-        github_repository=github_repository,
-        conclusion="success",
-        workflow_id_or_name=DISPATCH_TEST_WORKFLOW_FILENAME,
-    )

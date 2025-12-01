@@ -19,7 +19,6 @@ from github_runner_manager.configuration import (
     ProxyConfig,
     QueueConfig,
     ReactiveConfiguration,
-    RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
     UserInfo,
@@ -147,10 +146,6 @@ def application_configuration_fixture() -> ApplicationConfiguration:
                     ed25519_fingerprint="SHA256:ed25519",
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[
@@ -328,10 +323,6 @@ def test_build_runner_scaler(
                     ed25519_fingerprint="SHA256:ed25519",
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
         ),
     )
     reactive_process_config = runner_scaler._reactive_config
@@ -376,10 +367,6 @@ def test_build_runner_scaler(
                         ed25519_fingerprint="SHA256:ed25519",
                     )
                 ],
-                repo_policy_compliance=RepoPolicyComplianceConfig(
-                    token="token",
-                    url="https://compliance.example.com",
-                ),
             ),
         ),
         github_token="githubtoken",
