@@ -344,7 +344,7 @@ class GithubRunnerCharm(CharmBase):
             flush_runners = True
         if (
             self.config[ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME]
-            != state.charm_config.allow_external_contributor
+            != self._stored.allow_external_contributor
         ):
             self._stored.allow_external_contributor = self.config[
                 ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME
