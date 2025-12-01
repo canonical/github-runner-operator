@@ -1,0 +1,1011 @@
+07:51:56 INFO Application log: 
+2025-12-01 07:36:31,843 - INFO - root - Starting GitHub runner manager service version: 0.7.0
+2025-12-01 07:36:31,853 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-01 07:36:31,855 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-01 07:36:31,855 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-01 07:36:31,855 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-01 07:36:31,856 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:36:31,856 - INFO - github_runner_manager.reconcile_service - Reconcile ID: a413495a-ee1f-4d3c-84a5-1375ebd2b845
+2025-12-01 07:36:31,891 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 0. max_quantity: 0.
+2025-12-01 07:36:31,891 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:36:31,891 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:36:32,291 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:36:33,827 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:36:34,797 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:36:36,274 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:36:36,274 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:36:36,274 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:36:36,308 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:36:36,308 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:36:36,308 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:36:36,309 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:36:36,309 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:36:36,309 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:36:36,309 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:36:37,769 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:36:38,741 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:36:38,741 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 0
+2025-12-01 07:36:38,741 - INFO - github_runner_manager.manager.runner_scaler - No changes to the number of runners.
+2025-12-01 07:36:38,741 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:36:40,354 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:36:41,455 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:36:41,455 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:36:41,455 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:36:41,455 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:36:41,455 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:36:41,456 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:36:41,456 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:36:41,457 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:36:41,457 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 0
+2025-12-01 07:36:41,457 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:36:46,143 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:36:46] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:36:46,155 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:36:46] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:36:46,166 - INFO - github_runner_manager.http_server - Attempting to acquire the lock: unlocked
+2025-12-01 07:36:46,166 - INFO - github_runner_manager.http_server - Flushing runners...
+2025-12-01 07:36:46,235 - INFO - github_runner_manager.http_server - Flushing busy: False
+2025-12-01 07:36:46,235 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:36:46,235 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:36:46,698 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:36:48,879 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:36:49,756 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:36:51,240 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:36:51,240 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:36:51,240 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:36:51,276 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.manager.runner_manager - runner_manager::flush_runners. mode FlushMode.FLUSH_IDLE
+2025-12-01 07:36:51,277 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:36:52,764 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Runners to clean up: set()
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Runners to flush: set()
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Deleting platform runners: []
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Deleted runners: []
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:36:53,663 - INFO - github_runner_manager.manager.runner_manager - Deleting VMs: []
+2025-12-01 07:36:53,664 - INFO - github_runner_manager.manager.runner_manager - Deleted VMs: []
+2025-12-01 07:36:53,664 - INFO - github_runner_manager.http_server - Flushed 0 runners
+2025-12-01 07:36:53,664 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:36:53] "[35m[1mPOST /runner/flush?flush-busy=False HTTP/1.1[0m" 204 -
+2025-12-01 07:37:26,366 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:37:26] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:37:26,379 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:37:26,414 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:37:26,829 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:37:28,436 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:37:29,435 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:37:29,436 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:37:29] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:37:33,038 - INFO - root - Starting GitHub runner manager service version: 0.7.0
+2025-12-01 07:37:33,050 - INFO - github_runner_manager.http_server - Starting the server...
+ * Serving Flask app 'github_runner_manager.http_server'
+ * Debug mode: off
+2025-12-01 07:37:33,052 - INFO - werkzeug - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:55555
+2025-12-01 07:37:33,052 - INFO - werkzeug - [33mPress CTRL+C to quit[0m
+2025-12-01 07:37:33,052 - INFO - github_runner_manager.reconcile_service - Starting the reconcile service...
+2025-12-01 07:37:33,053 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:37:33,053 - INFO - github_runner_manager.reconcile_service - Reconcile ID: f7034f6a-e94e-45dd-b987-862bcf23bc1f
+2025-12-01 07:37:33,093 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:37:33,093 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:37:33,093 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:37:33,495 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:37:35,028 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:37:35,955 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:37:37,397 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:37:37,397 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:37:37,397 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:37:37,435 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:37:37,435 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:37:37,435 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:37:37,435 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:37:37,436 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:37:37,436 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:37:37,436 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:37:39,060 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:37:39,944 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:37:39,945 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:37:39,945 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:37:40,511 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-0f84f6287494'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233163', url=None))
+2025-12-01 07:37:41,867 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-0f84f6287494
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:37:41,870 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-0f84f6287494
+2025-12-01 07:37:41,902 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-0f84f6287494
+2025-12-01 07:37:41,902 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-0f84f6287494 from platform after creation failed
+2025-12-01 07:37:41,902 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233163']
+2025-12-01 07:37:42,337 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-0f84f6287494
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-0f84f6287494'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233163', url=None)) openstack runner
+2025-12-01 07:37:42,338 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:37:44,464 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:37:45,284 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:37:45,285 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:37:45,285 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:37:45,285 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:37:47,334 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:37:47] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:39:45,318 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:39:45,318 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 83f63fd7-8116-4037-9f61-13ce488b8f91
+2025-12-01 07:39:45,356 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:39:45,356 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:39:45,356 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:39:45,805 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:39:47,776 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:39:48,678 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:39:50,057 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:39:50,057 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:39:50,057 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:39:50,098 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:39:50,098 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:39:50,099 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:39:50,099 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:39:50,099 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:39:50,099 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:39:50,099 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:39:51,843 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:39:52,769 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:39:52,769 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:39:52,769 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:39:53,338 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-0b6028abf028'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233169', url=None))
+2025-12-01 07:39:54,839 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-0b6028abf028
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:39:54,840 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-0b6028abf028
+2025-12-01 07:39:54,870 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-0b6028abf028
+2025-12-01 07:39:54,870 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-0b6028abf028 from platform after creation failed
+2025-12-01 07:39:54,870 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233169']
+2025-12-01 07:39:55,323 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-0b6028abf028
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-0b6028abf028'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233169', url=None)) openstack runner
+2025-12-01 07:39:55,324 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:39:56,823 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:39:57,643 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:39:57,643 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:39:57,643 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:39:57,643 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:39:57,644 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:40:07,707 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:40:07] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:40:07,719 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:40:07,755 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:40:08,171 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:40:09,715 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:40:10,793 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:40:10,794 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:40:10] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:40:42,734 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:40:42] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:40:42,745 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:40:42,779 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:40:43,183 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:40:44,676 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:40:45,573 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:40:45,575 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:40:45] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:41:17,784 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:41:17] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:41:17,796 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:41:17,831 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:41:18,225 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:41:19,683 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:41:20,544 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:41:20,545 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:41:20] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:41:51,909 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:41:51] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:41:51,923 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:41:51,959 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:41:52,376 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:41:53,913 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:41:54,751 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:41:54,752 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:41:54] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:41:57,670 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:41:57,670 - INFO - github_runner_manager.reconcile_service - Reconcile ID: f23cb5dc-3080-4f5d-b856-3377528888af
+2025-12-01 07:41:57,715 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:41:57,715 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:41:57,715 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:41:58,111 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:41:59,595 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:42:00,535 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:42:02,041 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:42:02,041 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:42:02,041 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:42:02,078 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:42:02,078 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:42:02,079 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:42:02,079 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:42:02,079 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:42:02,079 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:42:02,079 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:42:03,615 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:42:04,556 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:42:04,556 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:42:04,556 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:42:05,178 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-f4488c5c38b8'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233176', url=None))
+2025-12-01 07:42:06,501 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-f4488c5c38b8
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:42:06,501 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-f4488c5c38b8
+2025-12-01 07:42:06,527 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-f4488c5c38b8
+2025-12-01 07:42:06,528 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-f4488c5c38b8 from platform after creation failed
+2025-12-01 07:42:06,528 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233176']
+2025-12-01 07:42:07,195 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-f4488c5c38b8
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-f4488c5c38b8'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233176', url=None)) openstack runner
+2025-12-01 07:42:07,196 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:42:08,715 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:42:09,712 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:42:09,713 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:42:09,713 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:42:09,713 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:42:26,971 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:42:26] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:42:26,982 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:42:27,017 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:42:27,930 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:42:29,688 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:42:30,631 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:42:30,632 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:42:30] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:43:02,004 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:43:02] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:43:02,015 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:43:02,057 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:43:02,577 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:43:04,091 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:43:04,983 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:43:04,984 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:43:04] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:43:37,077 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:43:37] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:43:37,089 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:43:37,124 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:43:37,550 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:43:39,003 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:43:40,013 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:43:40,014 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:43:40] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:44:09,814 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:44:09,814 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 0dc678f4-595a-4c0e-ae0e-a3cab9a7be3a
+2025-12-01 07:44:09,957 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:44:09,957 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:44:09,957 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:44:10,348 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:44:11,938 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:44:12,360 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:44:12] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:44:12,371 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:44:12,410 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:44:12,826 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:44:12,916 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:44:14,397 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:44:14,438 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:44:14,438 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:44:14,438 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:44:14,476 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:44:14,477 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:44:15,369 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:44:15,370 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:44:15] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:44:15,948 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:44:16,801 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:44:16,801 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:44:16,801 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:44:17,347 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-c4f0d49b9256'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233180', url=None))
+2025-12-01 07:44:18,824 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-c4f0d49b9256
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:44:18,824 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-c4f0d49b9256
+2025-12-01 07:44:18,857 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-c4f0d49b9256
+2025-12-01 07:44:18,857 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-c4f0d49b9256 from platform after creation failed
+2025-12-01 07:44:18,857 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233180']
+2025-12-01 07:44:19,467 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-c4f0d49b9256
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-c4f0d49b9256'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233180', url=None)) openstack runner
+2025-12-01 07:44:19,468 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:44:20,993 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:44:21,871 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:44:21,872 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:44:21,872 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:44:21,872 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:44:47,284 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:44:47] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:44:47,296 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:44:47,334 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:44:47,769 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:44:50,105 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:44:51,249 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:44:51,250 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:44:51] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:45:23,311 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:45:23] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:45:23,322 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:45:23,366 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:45:23,767 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:45:25,275 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:45:26,280 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:45:26,281 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:45:26] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:45:58,367 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:45:58] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:45:58,378 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:45:58,419 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:45:58,825 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:46:00,200 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:46:01,307 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:46:01,309 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:46:01] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:46:21,964 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:46:21,964 - INFO - github_runner_manager.reconcile_service - Reconcile ID: e7e5df4c-7e3d-4370-bc9c-0d1170294da8
+2025-12-01 07:46:22,000 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:46:22,000 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:46:22,000 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:46:22,427 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:46:24,171 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:46:25,164 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:46:26,620 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:46:26,620 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:46:26,620 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:46:26,656 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:46:26,657 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:46:28,282 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:46:29,249 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:46:29,250 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:46:29,250 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:46:29,753 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-cbce57e5e280'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233184', url=None))
+2025-12-01 07:46:31,399 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-cbce57e5e280
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:46:31,401 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-cbce57e5e280
+2025-12-01 07:46:31,428 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-cbce57e5e280
+2025-12-01 07:46:31,428 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-cbce57e5e280 from platform after creation failed
+2025-12-01 07:46:31,428 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233184']
+2025-12-01 07:46:31,910 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-cbce57e5e280
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-cbce57e5e280'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233184', url=None)) openstack runner
+2025-12-01 07:46:31,911 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:46:33,656 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:46:33,768 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:46:33] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:46:33,782 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:46:33,818 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:46:34,217 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:46:34,585 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:46:34,586 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:46:34,587 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:46:34,587 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:46:34,588 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:46:36,753 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:46:37,729 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:46:37,729 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:46:37] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:47:09,610 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:47:09] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:47:09,624 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:47:09,663 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:47:10,063 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:47:11,567 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:47:12,520 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:47:12,521 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:47:12] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:47:44,596 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:47:44] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:47:44,608 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:47:44,643 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:47:45,035 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:47:46,622 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:47:47,623 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:47:47,624 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:47:47] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:48:19,678 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:48:19] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:48:19,690 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:48:19,728 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:48:20,225 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:48:22,575 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:48:28,241 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:48:28,242 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:48:28] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:48:34,688 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:48:34,689 - INFO - github_runner_manager.reconcile_service - Reconcile ID: c60c80cf-7fb5-4280-b612-2efdf269a778
+2025-12-01 07:48:34,723 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:48:34,723 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:48:34,723 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:48:35,119 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:48:36,520 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:48:37,449 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:48:38,891 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:48:38,892 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:48:38,892 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:48:38,931 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:48:38,932 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:48:40,332 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:48:41,186 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:48:41,187 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:48:41,187 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:48:41,716 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-dd9c6615ad80'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233188', url=None))
+2025-12-01 07:48:43,429 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-dd9c6615ad80
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:48:43,429 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-dd9c6615ad80
+2025-12-01 07:48:43,457 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-dd9c6615ad80
+2025-12-01 07:48:43,457 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-dd9c6615ad80 from platform after creation failed
+2025-12-01 07:48:43,457 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233188']
+2025-12-01 07:48:43,901 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-dd9c6615ad80
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-dd9c6615ad80'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233188', url=None)) openstack runner
+2025-12-01 07:48:43,901 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:48:45,344 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:48:46,356 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:48:46,356 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:48:46,357 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:48:59,781 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:48:59] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:48:59,793 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:48:59,829 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:49:00,230 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:49:01,651 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:49:02,497 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:49:02,498 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:49:02] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:49:34,827 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:49:34] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:49:34,838 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:49:34,881 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:49:35,277 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:49:37,022 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:49:37,880 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:49:37,881 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:49:37] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:50:09,890 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:50:09] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:50:09,901 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:50:09,937 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:50:10,391 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:50:12,322 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:50:13,296 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:50:13,297 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:50:13] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:50:44,980 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:50:44] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:50:44,991 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:50:45,033 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:50:45,462 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:50:46,456 - INFO - github_runner_manager.reconcile_service - Start reconciliation
+2025-12-01 07:50:46,456 - INFO - github_runner_manager.reconcile_service - Reconcile ID: 86939477-e8c0-414d-b739-74a8eb4a0232
+2025-12-01 07:50:46,508 - INFO - github_runner_manager.manager.runner_scaler - Start reconcile. base_quantity 1. max_quantity: 0.
+2025-12-01 07:50:46,508 - INFO - github_runner_manager.manager.runner_manager - runner_manager::cleanup
+2025-12-01 07:50:46,508 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:50:46,961 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:50:47,020 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:50:47,935 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:50:47,936 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:50:47] "GET /runner/check HTTP/1.1" 200 -
+2025-12-01 07:50:48,464 - INFO - github_runner_manager.manager.runner_manager - VMs: []
+2025-12-01 07:50:49,396 - INFO - github_runner_manager.manager.runner_manager - Runner health: RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:50:50,860 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up SSH key files
+2025-12-01 07:50:50,860 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Found 0 key files, clean up 0 key files
+2025-12-01 07:50:50,860 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Cleaning up openstack keypairs
+2025-12-01 07:50:50,898 - INFO - github_runner_manager.manager.runner_manager - Cleaning up platform runners: []
+2025-12-01 07:50:50,898 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: []
+2025-12-01 07:50:50,898 - INFO - github_runner_manager.manager.runner_manager - Cleaned up platform runners: []
+2025-12-01 07:50:50,898 - INFO - github_runner_manager.manager.runner_manager - Extracting metrics from VMs: []
+2025-12-01 07:50:50,898 - INFO - github_runner_manager.manager.runner_manager - Cleaning up VMs: []
+2025-12-01 07:50:50,899 - INFO - github_runner_manager.manager.runner_manager - Cleaned up VMs: []
+2025-12-01 07:50:50,899 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:50:52,375 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:50:53,261 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:50:53,261 - INFO - github_runner_manager.manager.runner_scaler - Reconcile runners from 0 to 1
+2025-12-01 07:50:53,261 - INFO - github_runner_manager.manager.runner_manager - Creating 1 runners
+2025-12-01 07:50:53,866 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Creating openstack server with RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-da2cbca15e85'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233190', url=None))
+2025-12-01 07:50:55,192 - ERROR - github_runner_manager.openstack_cloud.openstack_cloud - Failed to create openstack server test-ttbceroq-0-n-da2cbca15e85
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+2025-12-01 07:50:55,192 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleting key: test-ttbceroq-0-n-da2cbca15e85
+2025-12-01 07:50:55,222 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Deleted key: test-ttbceroq-0-n-da2cbca15e85
+2025-12-01 07:50:55,222 - WARNING - github_runner_manager.manager.runner_manager - Deleting runner test-ttbceroq-0-n-da2cbca15e85 from platform after creation failed
+2025-12-01 07:50:55,223 - INFO - github_runner_manager.platform.github_provider - Delete runners from GitHub provider: ['233190']
+2025-12-01 07:50:55,682 - ERROR - github_runner_manager.manager.runner_manager - Failed to spawn a runner.
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 290, in launch_instance
+    server = conn.create_server(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/decorator.py", line 235, in fun
+    return caller(func, *(extras + args), **kw)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_utils.py", line 233, in func_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/cloud/_compute.py", line 1075, in create_server
+    server = self.compute.create_server(**kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/compute/v2/_proxy.py", line 741, in create_server
+    return self._create(_server.Server, **attrs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/proxy.py", line 770, in _create
+    return res.create(self, base_path=base_path)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1463, in create
+    self._translate_response(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/resource.py", line 1231, in _translate_response
+    exceptions.raise_from_response(response, error_message=error_message)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/openstack/exceptions.py", line 264, in raise_from_response
+    raise cls(
+openstack.exceptions.ForbiddenException: ForbiddenException: 403: Client Error for url: https://nova.ps7.canonical.com:8774/v2.1/servers, Maximum number of ports exceeded
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 110, in create_runner
+    instance = self._openstack_cloud.launch_instance(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 180, in exception_handling_wrapper
+    return func(*args, **kwargs)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_cloud.py", line 327, in launch_instance
+    raise OpenStackError(f"Failed to create openstack server {instance_id}") from err
+github_runner_manager.errors.OpenStackError: Failed to create openstack server test-ttbceroq-0-n-da2cbca15e85
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 206, in _spawn_runners
+    return (RunnerManager._create_runner(create_runner_args_sequence[0]),)
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/manager/runner_manager.py", line 539, in _create_runner
+    args.cloud_runner_manager.create_runner(
+  File "/opt/pipx/venvs/github-runner-manager/lib/python3.10/site-packages/github_runner_manager/openstack_cloud/openstack_runner_manager.py", line 117, in create_runner
+    raise RunnerCreateError(
+github_runner_manager.errors.RunnerCreateError: Failed to create RunnerIdentity(instance_id=InstanceID('test-ttbceroq-0-n-da2cbca15e85'), metadata=RunnerMetadata(platform_name=<Platform.GITHUB: 'github'>, runner_id='233190', url=None)) openstack runner
+2025-12-01 07:50:55,683 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:50:57,173 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:50:58,082 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Found 0 busy runners: []
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Found 0 idle runners: []
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Found 0 offline runners that are healthy: []
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Found 0 unhealthy runners: []
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Current available runners (idle + healthy offline): set()
+2025-12-01 07:50:58,083 - INFO - github_runner_manager.manager.runner_scaler - Current active runners: set()
+2025-12-01 07:50:58,084 - INFO - github_runner_manager.manager.runner_scaler - Finished reconciliation.
+2025-12-01 07:50:58,084 - INFO - github_runner_manager.reconcile_service - Change in number of runner after reconcile: 1
+2025-12-01 07:50:58,084 - INFO - github_runner_manager.reconcile_service - End reconciliation
+2025-12-01 07:51:20,041 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:51:20] "[35m[1mGET /health HTTP/1.1[0m" 204 -
+2025-12-01 07:51:20,052 - INFO - github_runner_manager.http_server - Checking runners...
+2025-12-01 07:51:20,087 - INFO - github_runner_manager.openstack_cloud.openstack_cloud - Getting all openstack servers managed by the charm
+2025-12-01 07:51:20,545 - WARNING - github_runner_manager.openstack_cloud.openstack_cloud - The maximum compute API version 2.96 is greater than the supported version 2.91. Using the maximum supported version.
+2025-12-01 07:51:21,983 - INFO - github_runner_manager.manager.runner_manager - list vms response: []
+2025-12-01 07:51:23,004 - INFO - github_runner_manager.manager.runner_manager - runner health response RunnersHealthResponse(requested_runners=[], failed_requested_runners=[], non_requested_runners=[])
+2025-12-01 07:51:23,005 - INFO - werkzeug - 127.0.0.1 - - [01/Dec/2025 07:51:23] "GET /runner/check HTTP/1.1" 200 -
+
+07:51:57 INFO Reactive log: 
+cat: '/var/log/reactive_runner/*.log': No such file or directory
+
+07:51:58 INFO Metrics log: 
+{"timestamp": 1764574601.4564807, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.564321517944336}
+{"timestamp": 1764574665.285027, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.190755605697632}
+{"timestamp": 1764574797.6442504, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.287785291671753}
+{"timestamp": 1764574929.7128065, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.99747896194458}
+{"timestamp": 1764575061.871782, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.914414882659912}
+{"timestamp": 1764575194.5865223, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 12.585912942886353}
+{"timestamp": 1764575326.3573368, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.633270978927612}
+{"timestamp": 1764575458.083762, "event": "reconciliation", "flavor": "test-ttbceroq", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.574944734573364}
+
+07:51:58 INFO OpenStack servers: []
+07:51:59 INFO Model status:
+
+Model                      Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-no-runner-6h73  github-pr-932c5-lxd  localhost/localhost  3.6.12   unsupported  07:51:59Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ttbceroq           active      1  any-charm      latest/beta  124  no       
+test-ttbceroq                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-ttbceroq/0*  active    idle   0        10.121.234.30          
+test-ttbceroq/0*                         active    idle   1        10.121.234.168         
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.121.234.30   juju-4ef868-0  ubuntu@24.04  github-runner  Running
+1        started  10.121.234.168  juju-4ef868-1  ubuntu@22.04  github-runner  Running
+
+07:51:59 INFO Juju error logs:
+
+machine-0: 07:32:48 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 07:32:48 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:34:27 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 07:34:27 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ttbceroq-0: 07:36:25 ERROR unit.test-ttbceroq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ttbceroq-0: 07:36:27 ERROR unit.test-ttbceroq/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ttbceroq-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+07:51:59 INFO Forgetting model main...
