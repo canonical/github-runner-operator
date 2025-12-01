@@ -25,7 +25,6 @@ from github_runner_manager.openstack_cloud.constants import (
 )
 from github_runner_manager.openstack_cloud.models import OpenStackRunnerManagerConfig
 from github_runner_manager.openstack_cloud.openstack_cloud import OpenstackCloud, OpenstackInstance
-from github_runner_manager.repo_policy_compliance_client import RepoPolicyComplianceClient
 from github_runner_manager.utilities import set_env_var
 
 logger = logging.getLogger(__name__)
@@ -184,15 +183,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             "custom_pre_job_script": service_config.custom_pre_job_script,
             "allow_external_contributor": self._config.allow_external_contributor,
         }
-        repo_policy = self._get_repo_policy_compliance_client()
-        if repo_policy is not None:
-            pre_job_contents_dict.update(
-                {
-                    "repo_policy_base_url": repo_policy.base_url,
-                    "repo_policy_one_time_token": repo_policy.get_one_time_token(),
-                    "do_repo_policy_check": True,
-                }
-            )
 
         pre_job_contents = jinja.get_template("pre-job.j2").render(pre_job_contents_dict)
 
@@ -221,19 +211,6 @@ class OpenStackRunnerManager(CloudRunnerManager):
             ssh_debug_info=ssh_debug_info,
             runner_proxy_config=service_config.runner_proxy_config,
         )
-
-    def _get_repo_policy_compliance_client(self) -> RepoPolicyComplianceClient | None:
-        """Get repo policy compliance client.
-
-        Returns:
-            The repo policy compliance client.
-        """
-        if (service_config := self._config.service_config).repo_policy_compliance is not None:
-            return RepoPolicyComplianceClient(
-                service_config.repo_policy_compliance.url,
-                service_config.repo_policy_compliance.token,
-            )
-        return None
 
     def delete_vms(
         self, instance_ids: Sequence[InstanceID], wait: bool = False, timeout: int = 60 * 10
