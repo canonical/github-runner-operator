@@ -733,6 +733,7 @@ async def app_with_forked_repo(
     model: Model, basic_app: Application, forked_github_repository: Repository
 ) -> Application:
     """Application with no runner on a forked repo.
+
     Test should ensure it returns with the application in a good state and has
     one runner.
     """
