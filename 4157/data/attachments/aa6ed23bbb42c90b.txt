@@ -1,0 +1,89 @@
+18:31:53 WARNING unexpected facade SSHServer received from the controller
+18:31:53 INFO Adding model github-pr-932c5-lxd:test-reactive-dvfl on cloud localhost
+18:31:54 WARNING unexpected facade SSHServer received from the controller
+18:31:54 WARNING unexpected facade SSHSession received from the controller
+18:31:54 WARNING unexpected facade SSHTunneler received from the controller
+18:31:54 INFO GitHub token rate limit: Rate(reset=2025-12-01 19:17:03+00:00, remaining=4699, limit=5000)
+18:31:58 INFO Deploying ch:amd64/jammy/mongodb-249
+18:31:59 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:32:01 INFO Deploying ch:amd64/noble/any-charm-124
+18:32:21 INFO Deploying local:jammy/github-runner-0
+18:32:21 INFO Waiting for model:
+  test-ctkzkl74/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ctkzkl74/0 [allocating] waiting: waiting for machine
+18:32:51 INFO Waiting for model:
+  test-ctkzkl74/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ctkzkl74/0 [idle] active: 
+18:33:21 INFO Waiting for model:
+  test-ctkzkl74/0 [allocating] waiting: waiting for machine
+18:33:52 INFO Waiting for model:
+  test-ctkzkl74/0 [allocating] waiting: agent initialising
+18:34:22 INFO Waiting for model:
+  test-ctkzkl74/0 [executing] maintenance: installing charm software
+18:34:52 INFO Waiting for model:
+  test-ctkzkl74/0 [executing] maintenance: Update image for runners
+18:35:17 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:35:17 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:35:48 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:35:55 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:36:26 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:36:28 INFO Current reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:36:28 INFO Waiting for reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:37:29 INFO Current reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:37:29 INFO Current reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e, expected reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:37:29 INFO Waiting for reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:38:30 INFO Current reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:38:30 INFO Current reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6, expected reconcile ID: 53617e6a-4916-4299-8d96-6ec47687ad5e
+18:38:33 INFO Wait for condition not met, sleeping 10
+18:38:54 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:39:10 INFO Current reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:39:10 INFO Waiting for reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:40:11 INFO Current reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:40:11 INFO Current reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6, expected reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:40:11 INFO Waiting for reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:41:12 INFO Current reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:41:12 INFO Current reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1, expected reconcile ID: d85b303e-ea6f-4371-b74a-f5e377b8efe6
+18:41:12 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:41:29 INFO Current reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:41:29 INFO Waiting for reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:42:30 INFO Current reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:42:30 INFO Current reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1, expected reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:42:30 INFO Waiting for reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:43:31 INFO Current reconcile ID: e2a5a0f3-f796-49ae-9848-d7d6c202554a
+18:43:31 INFO Current reconcile ID: e2a5a0f3-f796-49ae-9848-d7d6c202554a, expected reconcile ID: 2fd30950-0d4d-4a3a-82ba-afe7a05355d1
+18:43:32 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764614403.0, "event": "runner_installed", "flavor": "test-ctkzkl74", "duration": 75.0}
+{"timestamp": 1764614409.0, "event": "runner_start", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 92.0}
+{"timestamp": 1764614414.0, "event": "runner_stop", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764614431.3340967, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.619138240814209}
+{"timestamp": 1764614561.1883597, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.744604110717773}
+
+18:43:33 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764614403.0, "event": "runner_installed", "flavor": "test-ctkzkl74", "duration": 75.0}
+{"timestamp": 1764614409.0, "event": "runner_start", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 92.0}
+{"timestamp": 1764614414.0, "event": "runner_stop", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764614431.3340967, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.619138240814209}
+{"timestamp": 1764614561.1883597, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.744604110717773}
+
+18:43:34 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1764614403.0, "event": "runner_installed", "flavor": "test-ctkzkl74", "duration": 75.0}
+{"timestamp": 1764614409.0, "event": "runner_start", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 6.0, "queue_duration": 92.0}
+{"timestamp": 1764614414.0, "event": "runner_stop", "flavor": "test-ctkzkl74", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 5.0, "job_conclusion": "success"}
+{"timestamp": 1764614431.3340967, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.619138240814209}
+{"timestamp": 1764614561.1883597, "event": "reconciliation", "flavor": "test-ctkzkl74", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.744604110717773}
+18:43:34 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:44:04 INFO Waiting for model:
+  test-ctkzkl74/0 [idle] active: 
+18:44:07 INFO Current reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
+18:44:07 INFO Waiting for reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
+18:45:08 INFO Current reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
+18:45:08 INFO Current reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3, expected reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
+18:45:08 INFO Waiting for reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
+18:46:09 INFO Current reconcile ID: a90f4b2b-e03c-49b5-b235-355b2b79707f
+18:46:09 INFO Current reconcile ID: a90f4b2b-e03c-49b5-b235-355b2b79707f, expected reconcile ID: 3f305d5e-eb2e-493f-b7f1-2eef5ba0cca3
