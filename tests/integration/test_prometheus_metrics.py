@@ -41,7 +41,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
     k8s_juju.offer(
-        "prometheus-k8s",
+        f"{k8s_juju.model}.prometheus-k8s",
         endpoint="receive-remote-write",
     )
     return k8s_juju.status().apps["prometheus-k8s"]
@@ -54,7 +54,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
     k8s_juju.offer(
-        "grafana-k8s",
+        f"{k8s_juju.model}.grafana-k8s",
         endpoint="grafana-dashboard",
     )
     return k8s_juju.status().apps["grafana-k8s"]
