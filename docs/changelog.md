@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-12-01
+
+- Added timeouts to API calls (Openstack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application. 
+
 ## 2025-11-30
 
 - Added a new configuration option `allow-external-contributor` as an non-external replacement for
