@@ -29,6 +29,15 @@ jq -n \
 
     if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
       logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
+      
+      # Write post-job metrics with external contributor check failure status
+      jq -n \
+        --argjson timestamp "$timestamp" \
+        '{
+          "timestamp": $timestamp,
+          "status": "external-contributor-check-failure"
+        }' > "{{ metrics_exchange_path }}/post-job-metrics.json" || true
+      
       exit 1
     fi
 
