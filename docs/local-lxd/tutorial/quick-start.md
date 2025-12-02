@@ -75,7 +75,6 @@ juju add-model github-runner-tutorial
 ### Deploy the GitHub runner charm
 
 The charm requires a GitHub personal access token with `repo` access, which can be created following the instructions [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic).
-A user with `admin` access for the repository/org is required, otherwise, the repo-policy-compliance will fail the job.
 For information on token scopes, see [How to change GitHub personal access token](https://charmhub.io/github-runner/docs/local-lxd-how-to-change-token).
 
 Once the personal access token is created, the charm can be deployed with:
@@ -120,12 +119,6 @@ jobs:
 ```
 
 Upon pushing the changes, under the `Actions` tab of the GitHub repository, the workflow run should appear after a while. The workflow should complete successfully.
-
-If the workflow failed at the `Set up runner` step with the following message:
-
-> This job has failed to pass a repository policy compliance check as defined in the https://github.com/canonical/repo-policy-compliance repository. The specific failure is listed below. Please update the settings on this project to fix the relevant policy.
-
-The repository setting does not comply with the best practice enforce by the charm. See [How to comply with repository policies](https://charmhub.io/github-runner/docs/local-lxd-how-to-repo-policy).
 
 ### Clean up the environment
 
