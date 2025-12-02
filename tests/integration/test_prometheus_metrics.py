@@ -33,10 +33,6 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
     with jubilant.temp_model(keep=keep_models, controller="microk8s") as juju:
-        # Currently juju has no way of switching controller context, this is required to operate
-        # in the right controller's right model when using multiple controllers.
-        # See: https://github.com/canonical/jubilant/issues/158
-        juju.model = f"microk8s:{juju.model}"
         yield juju
 
 
