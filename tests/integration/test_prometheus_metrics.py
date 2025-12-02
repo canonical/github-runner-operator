@@ -4,7 +4,6 @@
 """Module for collecting metrics related to the reconciliation process."""
 
 import logging
-import subprocess
 from typing import Any, Generator, cast
 
 import jubilant
@@ -33,10 +32,6 @@ def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju,
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
     with jubilant.temp_model(keep=keep_models, controller="microk8s") as juju:
-        # Currently juju has no way of switching controller context, this is required to operate
-        # in the right controller's right model when using multiple controllers.
-        # See: https://github.com/canonical/jubilant/issues/158
-        juju.model = f"microk8s:{juju.model}"
         yield juju
 
 
@@ -45,24 +40,10 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
-    model_controller_name = k8s_juju.model
-    logger.info("Model controller: %s", model_controller_name)
-    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
-    controller, model = model_controller_name.split(":")
-    logger.info("Controller: %s, Model: %s", controller, model)
-    # juju.offer has no controller parameter. Use the cli directly.
-    result = subprocess.run(
-        [
-            k8s_juju.cli_binary,
-            "offer",
-            "-c",
-            controller,
-            f"{model}.prometheus-k8s:receive-remote-write",
-        ]
+    k8s_juju.offer(
+        f"{k8s_juju.model}.prometheus-k8s",
+        endpoint="receive-remote-write",
     )
-    assert (
-        result.returncode == 0
-    ), f"failed to create prometheus offer: {str(result.stdout)} {str(result.stderr)}"
     return k8s_juju.status().apps["prometheus-k8s"]
 
 
@@ -72,17 +53,10 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
-    model_controller_name = k8s_juju.model
-    assert model_controller_name, f"model & controller name not set: {model_controller_name}"
-    controller, model = model_controller_name.split(":")
-    logger.info("Controller: %s, Model: %s", controller, model)
-    # juju.offer has no controller parameter. Use the cli directly.
-    result = subprocess.run(
-        [k8s_juju.cli_binary, "offer", "-c", controller, f"{model}.grafana-k8s:grafana-dashboard"]
+    k8s_juju.offer(
+        f"{k8s_juju.model}.grafana-k8s",
+        endpoint="grafana-dashboard",
     )
-    assert (
-        result.returncode == 0
-    ), f"failed to create grafana offer: {str(result.stdout)} {str(result.stderr)}"
     return k8s_juju.status().apps["grafana-k8s"]
 
 
@@ -136,30 +110,14 @@ async def test_prometheus_metrics(
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
     # k8s_juju.model and juju.model already has <controller>: prefixed.
-    result = subprocess.run(
-        [
-            k8s_juju.cli_binary,
-            "consume",
-            "-m",
-            str(juju.model),
-            f"{str(k8s_juju.model)}.prometheus-k8s",
-        ]
+    juju.consume(
+        f"{k8s_juju.model}.prometheus-k8s",
+        alias="prometheus-k8s",
     )
-    assert (
-        result.returncode == 0
-    ), f"failed to consume prometheus offer: {str(result.stdout)} {str(result.stderr)}"
-    result = subprocess.run(
-        [
-            k8s_juju.cli_binary,
-            "consume",
-            "-m",
-            str(juju.model),
-            f"{str(k8s_juju.model)}.grafana-k8s",
-        ]
+    juju.consume(
+        f"{k8s_juju.model}.grafana-k8s",
+        alias="grafana-k8s",
     )
-    assert (
-        result.returncode == 0
-    ), f"failed to consume grafana offer: {str(result.stdout)} {str(result.stderr)}"
 
     juju.integrate("grafana-agent", prometheus_offer_name)
     juju.integrate("grafana-agent", grafana_offer_name)
