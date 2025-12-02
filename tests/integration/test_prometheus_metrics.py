@@ -111,11 +111,11 @@ async def test_prometheus_metrics(
     grafana_offer_name = "grafana-k8s"
     # k8s_juju.model and juju.model already has <controller>: prefixed.
     juju.consume(
-        f"{str(k8s_juju.model)}.prometheus-k8s",
+        f"{k8s_juju.model}.prometheus-k8s",
         alias="prometheus-k8s",
     )
     juju.consume(
-        f"{str(k8s_juju.model)}.grafana-k8s",
+        f"{k8s_juju.model}.grafana-k8s",
         alias="grafana-k8s",
     )
 
