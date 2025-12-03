@@ -130,6 +130,7 @@ def complete_charm_state_fixture():
             no_proxy="10.0.0.1",
         ),
         charm_config=charm_state.CharmConfig(
+            allow_external_contributor=False,
             dockerhub_mirror="https://docker.example.com",
             labels=("label1", "label2"),
             openstack_clouds_yaml=OpenStackCloudsYAML(
@@ -149,10 +150,6 @@ def complete_charm_state_fixture():
             ),
             path=GitHubOrg(org="canonical", group="group"),
             reconcile_interval=5,
-            repo_policy_compliance=charm_state.RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
             token="githubtoken",
             manager_proxy_command="ssh -W %h:%p example.com",
             use_aproxy=True,

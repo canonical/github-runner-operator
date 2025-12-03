@@ -38,6 +38,11 @@ class ApplicationConfiguration(BaseModel):
     """Main entry point for the Application Configuration.
 
     Attributes:
+        allow_external_contributor: Whether to allow runs from forked repository from an external
+            contributor. Enabling this option will enable all runs from forked repositories. By
+            default, runs from contribution authors being in COLLABORATOR, MEMBER or OWNER status
+            is allowed. See \
+            https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
         name: Name to identify the manager. Used for metrics.
         extra_labels: Extra labels to add to the runner.
         github_config: GitHub configuration.
@@ -48,6 +53,7 @@ class ApplicationConfiguration(BaseModel):
         reconcile_interval: Seconds to wait between reconciliation.
     """
 
+    allow_external_contributor: bool = False
     name: str
     extra_labels: list[str]
     github_config: github.GitHubConfiguration | None
@@ -83,7 +89,6 @@ class SupportServiceConfig(BaseModel):
         aproxy_redirect_ports: A list of ports to redirect to the aproxy proxy.
         dockerhub_mirror: The dockerhub mirror to use for runners.
         ssh_debug_connections: The information on the ssh debug services.
-        repo_policy_compliance: The configuration of the repo policy compliance service.
         custom_pre_job_script: The custom pre-job script to run before the job.
     """
 
@@ -95,7 +100,6 @@ class SupportServiceConfig(BaseModel):
     aproxy_redirect_ports: list[str] = []
     dockerhub_mirror: str | None
     ssh_debug_connections: "list[SSHDebugConnection]"
-    repo_policy_compliance: "RepoPolicyComplianceConfig | None"
     custom_pre_job_script: str | None
 
     @root_validator(pre=False, skip_on_failure=True)
@@ -187,18 +191,6 @@ class SSHDebugConnection(BaseModel):
     use_runner_http_proxy: bool = False
     local_proxy_host: str = "127.0.0.1"
     local_proxy_port: int = 3129
-
-
-class RepoPolicyComplianceConfig(BaseModel):
-    """Configuration for the repo policy compliance service.
-
-    Attributes:
-        token: Token for the repo policy compliance service.
-        url: URL of the repo policy compliance service.
-    """
-
-    token: str
-    url: AnyHttpUrl
 
 
 class NonReactiveConfiguration(BaseModel):

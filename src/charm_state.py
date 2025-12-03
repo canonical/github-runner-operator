@@ -16,14 +16,7 @@ from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
 from github_runner_manager.configuration import ProxyConfig, SSHDebugConnection
 from github_runner_manager.configuration.github import GitHubPath, parse_github_path
 from ops import CharmBase
-from pydantic import (
-    AnyHttpUrl,
-    BaseModel,
-    MongoDsn,
-    ValidationError,
-    create_model_from_typeddict,
-    validator,
-)
+from pydantic import BaseModel, MongoDsn, ValidationError, create_model_from_typeddict, validator
 
 from errors import MissingMongoDBError
 from models import AnyHttpsUrl, FlavorLabel, OpenStackCloudsYAML
@@ -36,6 +29,7 @@ ARCHITECTURES_X86 = {"x86_64"}
 
 CHARM_STATE_PATH = Path("charm_state.json")
 
+ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME = "allow-external-contributor"
 BASE_VIRTUAL_MACHINES_CONFIG_NAME = "base-virtual-machines"
 DOCKERHUB_MIRROR_CONFIG_NAME = "dockerhub-mirror"
 FLAVOR_LABEL_COMBINATIONS_CONFIG_NAME = "flavor-label-combinations"
@@ -48,9 +42,6 @@ OPENSTACK_NETWORK_CONFIG_NAME = "openstack-network"
 OPENSTACK_FLAVOR_CONFIG_NAME = "openstack-flavor"
 PATH_CONFIG_NAME = "path"
 RECONCILE_INTERVAL_CONFIG_NAME = "reconcile-interval"
-# bandit thinks this is a hardcoded password
-REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME = "repo-policy-compliance-token"  # nosec
-REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME = "repo-policy-compliance-url"
 RUNNER_HTTP_PROXY_CONFIG_NAME = "runner-http-proxy"
 SENSITIVE_PLACEHOLDER = "*****"
 TEST_MODE_CONFIG_NAME = "test-mode"
@@ -165,58 +156,21 @@ def _parse_labels(labels: str) -> tuple[str, ...]:
     return tuple(valid_labels)
 
 
-class RepoPolicyComplianceConfig(BaseModel):
-    """Configuration for the repo policy compliance service.
-
-    Attributes:
-        token: Token for the repo policy compliance service.
-        url: URL of the repo policy compliance service.
-    """
-
-    token: str
-    url: AnyHttpUrl
-
-    @classmethod
-    def from_charm(cls, charm: CharmBase) -> "RepoPolicyComplianceConfig":
-        """Initialize the config from charm.
-
-        Args:
-            charm: The charm instance.
-
-        Raises:
-            CharmConfigInvalidError: If an invalid configuration was set.
-
-        Returns:
-            Current repo-policy-compliance config.
-        """
-        token = charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME)
-        if not token:
-            raise CharmConfigInvalidError(
-                f"Missing {REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME} configuration"
-            )
-        url = charm.config.get(REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME)
-        if not url:
-            raise CharmConfigInvalidError(
-                f"Missing {REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME} configuration"
-            )
-
-        # pydantic allows string to be passed as AnyHttpUrl, mypy complains about it
-        return cls(url=url, token=token)  # type: ignore
-
-
 class CharmConfig(BaseModel):
     """General charm configuration.
 
     Some charm configurations are grouped into other configuration models.
 
     Attributes:
+        allow_external_contributor: Whether to allow runs from forked repositories with from
+            an external contributor with author association status less than COLLABORATOR. See \
+            https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
         dockerhub_mirror: Private docker registry as dockerhub mirror for the runners to use.
         labels: Additional runner labels to append to default (i.e. os, flavor, architecture).
         openstack_clouds_yaml: The openstack clouds.yaml configuration.
         path: GitHub repository path in the format '<owner>/<repo>', or the GitHub organization
             name.
         reconcile_interval: Time between each reconciliation of runners in minutes.
-        repo_policy_compliance: Configuration for the repo policy compliance service.
         token: GitHub personal access token for GitHub API.
         manager_proxy_command: ProxyCommand for the SSH connection from the manager to the runner.
         use_aproxy: Whether to use aproxy in the runner.
@@ -226,12 +180,12 @@ class CharmConfig(BaseModel):
         runner_manager_log_level: The log level of the runner manager application.
     """
 
+    allow_external_contributor: bool
     dockerhub_mirror: AnyHttpsUrl | None
     labels: tuple[str, ...]
     openstack_clouds_yaml: OpenStackCloudsYAML
     path: GitHubPath | None
     reconcile_interval: int
-    repo_policy_compliance: RepoPolicyComplianceConfig | None
     token: str | None
     manager_proxy_command: str | None
     use_aproxy: bool
@@ -488,20 +442,10 @@ class CharmConfig(BaseModel):
         except ValueError as exc:
             raise CharmConfigInvalidError(f"Invalid {LABELS_CONFIG_NAME} config: {exc}") from exc
 
-        repo_policy_compliance = None
-        if charm.config.get(REPO_POLICY_COMPLIANCE_TOKEN_CONFIG_NAME) or charm.config.get(
-            REPO_POLICY_COMPLIANCE_URL_CONFIG_NAME
-        ):
-            if not openstack_clouds_yaml:
-                raise CharmConfigInvalidError(
-                    "Cannot use repo-policy-compliance config without using OpenStack."
-                )
-            repo_policy_compliance = RepoPolicyComplianceConfig.from_charm(charm)
-
         manager_proxy_command = (
             cast(str, charm.config.get(MANAGER_SSH_PROXY_COMMAND_CONFIG_NAME, "")) or None
         )
-        use_aproxy = bool(charm.config.get(USE_APROXY_CONFIG_NAME))
+        use_aproxy = cast(bool, charm.config.get(USE_APROXY_CONFIG_NAME, False))
 
         custom_pre_job_script = (
             cast(str, charm.config.get(CUSTOM_PRE_JOB_SCRIPT_CONFIG_NAME, "")) or None
@@ -512,12 +456,14 @@ class CharmConfig(BaseModel):
         )
         # pydantic allows to pass str as AnyHttpUrl, mypy complains about it
         return cls(
+            allow_external_contributor=cast(
+                bool, charm.config.get(ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME, False)
+            ),
             dockerhub_mirror=dockerhub_mirror,  # type: ignore
             labels=labels,
             openstack_clouds_yaml=openstack_clouds_yaml,
             path=github_config.path if github_config else None,
             reconcile_interval=reconcile_interval,
-            repo_policy_compliance=repo_policy_compliance,
             token=github_config.token if github_config else None,
             manager_proxy_command=manager_proxy_command,
             use_aproxy=use_aproxy,

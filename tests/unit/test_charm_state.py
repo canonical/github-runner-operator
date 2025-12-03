@@ -15,6 +15,7 @@ from pydantic.networks import IPv4Address
 
 import charm_state
 from charm_state import (
+    ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME,
     APROXY_EXCLUDE_ADDRESSES_CONFIG_NAME,
     APROXY_REDIRECT_PORTS_CONFIG_NAME,
     BASE_VIRTUAL_MACHINES_CONFIG_NAME,
@@ -341,6 +342,7 @@ def test_charm_config_from_charm_valid():
     """
     mock_charm = MockGithubRunnerCharmFactory()
     mock_charm.config = {
+        ALLOW_EXTERNAL_CONTRIBUTOR_CONFIG_NAME: "False",
         PATH_CONFIG_NAME: "owner/repo",
         RECONCILE_INTERVAL_CONFIG_NAME: "5",
         DOCKERHUB_MIRROR_CONFIG_NAME: "https://example.com",
@@ -392,6 +394,7 @@ cat > ~/.ssh/config <<EOF
     assert result.token == "abc123"
     assert "openssl s_client" in result.manager_proxy_command
     assert result.custom_pre_job_script == custom_pre_job_script
+    assert not result.allow_external_contributor
 
 
 def test_openstack_image_from_charm_no_connections():

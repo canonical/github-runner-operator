@@ -19,7 +19,6 @@ from github_runner_manager.configuration import (
     ProxyConfig,
     QueueConfig,
     ReactiveConfiguration,
-    RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
     UserInfo,
@@ -147,10 +146,6 @@ def application_configuration_fixture() -> ApplicationConfiguration:
                     ed25519_fingerprint="SHA256:ed25519",
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[
@@ -300,6 +295,7 @@ def test_build_runner_scaler(
     assert runner_scaler._manager.manager_name == "app_name"
     assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
+        allow_external_contributor=False,
         prefix="unit_name",
         credentials=OpenStackCredentials(
             auth_url="auth_url",
@@ -327,10 +323,6 @@ def test_build_runner_scaler(
                     ed25519_fingerprint="SHA256:ed25519",
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
         ),
     )
     reactive_process_config = runner_scaler._reactive_config
@@ -345,6 +337,7 @@ def test_build_runner_scaler(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         cloud_runner_manager=OpenStackRunnerManagerConfig(
+            allow_external_contributor=False,
             prefix="unit_name",
             credentials=OpenStackCredentials(
                 auth_url="auth_url",
@@ -374,10 +367,6 @@ def test_build_runner_scaler(
                         ed25519_fingerprint="SHA256:ed25519",
                     )
                 ],
-                repo_policy_compliance=RepoPolicyComplianceConfig(
-                    token="token",
-                    url="https://compliance.example.com",
-                ),
             ),
         ),
         github_token="githubtoken",

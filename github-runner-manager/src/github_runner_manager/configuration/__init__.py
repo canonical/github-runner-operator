@@ -12,7 +12,6 @@ from github_runner_manager.configuration.base import (  # noqa: F401
     ProxyConfig,
     QueueConfig,
     ReactiveConfiguration,
-    RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
     UserInfo,

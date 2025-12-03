@@ -29,12 +29,15 @@ class OpenStackRunnerManagerConfig:
     """Configuration for OpenStack runner manager.
 
     Attributes:
+        allow_external_contributor: Whether to allow runs from forked repository from an external
+            contributor.
         prefix: The prefix of the runner names.
         credentials: The OpenStack authorization information.
         server_config: The configuration for OpenStack server.
         service_config: The configuration for supporting services.
     """
 
+    allow_external_contributor: bool
     prefix: str
     credentials: OpenStackCredentials
     server_config: OpenStackServerConfig | None
