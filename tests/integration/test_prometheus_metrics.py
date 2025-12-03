@@ -26,12 +26,14 @@ from tests.integration.helpers.openstack import OpenStackInstanceHelper
 
 logger = logging.getLogger(__name__)
 
+MICROK8S_CONTROLLER_NAME = "microk8s"
+
 
 @pytest_asyncio.fixture(scope="module", name="k8s_juju")
 def k8s_juju_fixture(request: pytest.FixtureRequest) -> Generator[jubilant.Juju, None, None]:
     """The machine model for K8s charms."""
     keep_models = cast(bool, request.config.getoption("--keep-models"))
-    with jubilant.temp_model(keep=keep_models, controller="microk8s") as juju:
+    with jubilant.temp_model(keep=keep_models, controller=MICROK8S_CONTROLLER_NAME) as juju:
         yield juju
 
 
@@ -43,6 +45,7 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     k8s_juju.offer(
         f"{k8s_juju.model}.prometheus-k8s",
         endpoint="receive-remote-write",
+        controller=MICROK8S_CONTROLLER_NAME,
     )
     return k8s_juju.status().apps["prometheus-k8s"]
 
@@ -56,6 +59,7 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.offer(
         f"{k8s_juju.model}.grafana-k8s",
         endpoint="grafana-dashboard",
+        controller=MICROK8S_CONTROLLER_NAME,
     )
     return k8s_juju.status().apps["grafana-k8s"]
 
