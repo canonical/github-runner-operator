@@ -278,7 +278,7 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
         ]
     ), "Specify all OpenStack private endpoint options."
 
-    test_image_id = pytestconfig.getoption("--test-image-id")
+    test_image_id = pytestconfig.getoption("--openstack-image-id")
 
     return OpenStackConfig(
         http_proxy="" if http_proxy is None else http_proxy,
