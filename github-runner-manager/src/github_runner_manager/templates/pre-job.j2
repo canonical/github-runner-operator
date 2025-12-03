@@ -135,6 +135,8 @@ jq -n \
 
 {% if not allow_external_contributor %}
   # Check author association for events that can be triggered by external contributors
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+  # This does not cover all possible events, only the most common ones that can be triggered by external contributors.
   if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" || "${GITHUB_EVENT_NAME}" == "pull_request_review" || "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" || "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
     AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // .issue.author_association // .review.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
     logger -s "Author association: $AUTHOR_ASSOCIATION"

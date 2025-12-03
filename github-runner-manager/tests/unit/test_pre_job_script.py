@@ -103,31 +103,13 @@ def _create_github_event_payload(
     Args:
         author_association: The author's association with the repository
             (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
-        event_type: The type of GitHub event (pull_request, push, etc.)
+        event_type: The type of GitHub event (pull_request, push, issue_comment, etc.)
 
     Returns:
         A dictionary representing the GitHub event payload
     """
-    payload = {
-        "action": event_type,
-        "number": 123,
-        "pull_request": {
-            "author_association": author_association,
-            "number": 123,
-            "title": "Test PR",
-            "user": {
-                "login": "test-user",
-                "type": "User",
-            },
-            "head": {
-                "ref": "feature-branch",
-                "sha": "abc123",
-            },
-            "base": {
-                "ref": "main",
-                "sha": "def456",
-            },
-        },
+    # Base payload common to all events
+    base_payload = {
         "repository": {
             "name": "github-runner-operator",
             "full_name": "canonical/github-runner-operator",
@@ -139,7 +121,155 @@ def _create_github_event_payload(
             "login": "test-user",
         },
     }
-    return payload
+
+    # Event-specific payloads
+    if event_type == "pull_request":
+        return {
+            **base_payload,
+            "action": "opened",
+            "number": 123,
+            "pull_request": {
+                "author_association": author_association,
+                "number": 123,
+                "title": "Test PR",
+                "user": {
+                    "login": "test-user",
+                    "type": "User",
+                },
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                },
+            },
+        }
+
+    elif event_type == "pull_request_target":
+        return {
+            **base_payload,
+            "action": "opened",
+            "number": 123,
+            "pull_request": {
+                "author_association": author_association,
+                "number": 123,
+                "title": "Test PR Target",
+                "user": {
+                    "login": "test-user",
+                    "type": "User",
+                },
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                },
+            },
+        }
+
+    elif event_type == "pull_request_review":
+        return {
+            **base_payload,
+            "action": "submitted",
+            "pull_request": {
+                "number": 123,
+                "title": "Test PR for Review",
+            },
+            "review": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "state": "approved",
+                "body": "LGTM",
+            },
+        }
+
+    elif event_type == "pull_request_review_comment":
+        return {
+            **base_payload,
+            "action": "created",
+            "pull_request": {
+                "number": 123,
+                "title": "Test PR for Review Comment",
+            },
+            "comment": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "body": "Good catch!",
+            },
+        }
+
+    elif event_type == "issue_comment":
+        return {
+            **base_payload,
+            "action": "created",
+            "issue": {
+                "author_association": author_association,
+                "number": 456,
+                "title": "Test Issue",
+                "user": {
+                    "login": "test-user",
+                },
+            },
+            "comment": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "body": "This is a comment",
+            },
+        }
+
+    elif event_type == "push":
+        return {
+            **base_payload,
+            "ref": "refs/heads/main",
+            "before": "def456",
+            "after": "abc123",
+            "commits": [
+                {
+                    "id": "abc123",
+                    "message": "Test commit",
+                    "author": {
+                        "name": "test-user",
+                        "email": "test@example.com",
+                    },
+                }
+            ],
+        }
+
+    elif event_type == "workflow_dispatch":
+        return {
+            **base_payload,
+            "ref": "refs/heads/main",
+            "inputs": {},
+        }
+
+    elif event_type == "schedule":
+        return {
+            **base_payload,
+            "schedule": "0 0 * * *",
+        }
+
+    else:
+        # Default fallback for unknown event types
+        return {
+            **base_payload,
+            "action": "unknown",
+        }
 
 
 def render_and_execute_script(
@@ -318,11 +448,152 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
         tmp_path=tmp_path,
     )
 
-    # When pull_request or author_association is missing, jq returns "null"
-    # The check should fail as "null" != "OWNER|MEMBER|COLLABORATOR"
+    # When pull_request or author_association is missing, jq returns empty string
+    # The check should fail as "" != "OWNER|MEMBER|COLLABORATOR"
     assert result.returncode == 1, (
         f"Expected exit code 1 for {description}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert "Author association: null" in result.stderr
+    assert "Author association: " in result.stderr
     assert "Insufficient user authorization" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "event_type,author_association,expected_exit_code",
+    [
+        # Events that trigger author association checks
+        ("pull_request", "OWNER", 0),
+        ("pull_request", "MEMBER", 0),
+        ("pull_request", "COLLABORATOR", 0),
+        ("pull_request", "CONTRIBUTOR", 1),
+        ("pull_request_target", "OWNER", 0),
+        ("pull_request_target", "CONTRIBUTOR", 1),
+        ("pull_request_review", "MEMBER", 0),
+        ("pull_request_review", "FIRST_TIME_CONTRIBUTOR", 1),
+        ("pull_request_review_comment", "COLLABORATOR", 0),
+        ("pull_request_review_comment", "NONE", 1),
+        ("issue_comment", "OWNER", 0),
+        ("issue_comment", "CONTRIBUTOR", 1),
+        # Events that skip author association checks
+        ("push", "CONTRIBUTOR", 0),  # Should be skipped
+        ("workflow_dispatch", "CONTRIBUTOR", 0),  # Should be skipped
+        ("schedule", "CONTRIBUTOR", 0),  # Should be skipped
+    ],
+    ids=[
+        "pr_owner_allowed",
+        "pr_member_allowed",
+        "pr_collaborator_allowed",
+        "pr_contributor_blocked",
+        "pr_target_owner_allowed",
+        "pr_target_contributor_blocked",
+        "pr_review_member_allowed",
+        "pr_review_first_time_blocked",
+        "pr_review_comment_collaborator_allowed",
+        "pr_review_comment_none_blocked",
+        "issue_comment_owner_allowed",
+        "issue_comment_contributor_blocked",
+        "push_skipped",
+        "workflow_dispatch_skipped",
+        "schedule_skipped",
+    ],
+)
+def test_author_association_check_by_event_type(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    event_type: str,
+    author_association: str,
+    expected_exit_code: int,
+    default_template_vars: Dict,
+):
+    """Test author association checks for different GitHub event types."""
+    # Update environment to match the event type
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for {event_type} with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Check for appropriate log messages
+    if event_type in [
+        "pull_request",
+        "pull_request_target",
+        "pull_request_review",
+        "pull_request_review_comment",
+        "issue_comment",
+    ]:
+        # These events should trigger the author association check
+        assert f"Author association: {author_association}" in result.stderr
+
+        if expected_exit_code == 0:
+            assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+            assert "Insufficient user authorization" not in result.stderr
+        else:
+            assert "Insufficient user authorization (author_association)" in result.stderr
+            assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
+    else:
+        # These events should skip the author association check
+        assert f"Skipping contributor check for event: {event_type}" in result.stderr
+        assert "Author association:" not in result.stderr
+        assert "Insufficient user authorization" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "event_type",
+    [
+        "push",
+        "workflow_dispatch",
+        "schedule",
+        "release",
+        "deployment",
+        "unknown_event",
+    ],
+)
+def test_events_skip_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that non-contributor events skip the author association check."""
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    github_event = _create_github_event_payload(
+        author_association="CONTRIBUTOR",  # This would normally be blocked
+        event_type=event_type,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    # All these events should succeed regardless of author association
+    assert (
+        result.returncode == 0
+    ), f"Expected exit code 0 for {event_type}, got {result.returncode}\nstderr: {result.stderr}"
+
+    # Should skip the contributor check
+    assert f"Skipping contributor check for event: {event_type}" in result.stderr
+    assert "Author association:" not in result.stderr
+    assert "Insufficient user authorization" not in result.stderr
