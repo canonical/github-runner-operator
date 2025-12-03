@@ -300,6 +300,7 @@ def test_build_runner_scaler(
     assert runner_scaler._manager.manager_name == "app_name"
     assert runner_scaler._manager._labels == ["label1", "label2", "arm64", "noble", "flavorlabel"]
     assert runner_scaler._manager._cloud._config == OpenStackRunnerManagerConfig(
+        allow_external_contributor=False,
         prefix="unit_name",
         credentials=OpenStackCredentials(
             auth_url="auth_url",
@@ -345,6 +346,7 @@ def test_build_runner_scaler(
             token="githubtoken", path=GitHubOrg(org="canonical", group="group")
         ),
         cloud_runner_manager=OpenStackRunnerManagerConfig(
+            allow_external_contributor=False,
             prefix="unit_name",
             credentials=OpenStackCredentials(
                 auth_url="auth_url",

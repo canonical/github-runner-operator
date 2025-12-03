@@ -88,15 +88,26 @@ options:
   repo-policy-compliance-token:
     type: string
     description: >-
+      DEPRECATED, please use allow-external-contributor configuration option instead.
       The token to authenticate with the repository-policy-compliance service in order to
       generate one-time-tokens. This option requires the repo-policy-compliance-url to be set.
       If not set, the repository-policy-compliance service will not be used.
   repo-policy-compliance-url:
     type: string
     description: >-
+      DEPRECATED, please use allow-external-contributor configuration option instead
       The URL to the repository-policy-compliance service. This option requires the
       repo-policy-compliance-token to be set. If not set, the repository-policy-compliance service
       will not be used. This option is only supported when using OpenStack Cloud.
+  allow-external-contributor:
+    type: boolean
+    default: True
+    description: >-
+      EXPERIMENTAL
+      Whether to allow runs from forked repository from an external contributor. Enabling this
+      option will enable all runs from forked repositories. By default, runs from contribution
+      authors being in COLLABORATOR, MEMBER or OWNER status is allowed. See
+      https://docs.github.com/en/graphql/reference/enums#commentauthorassociation.
   test-mode:
     type: string
     description: >-

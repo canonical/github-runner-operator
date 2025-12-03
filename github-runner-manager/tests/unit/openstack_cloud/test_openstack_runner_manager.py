@@ -45,6 +45,7 @@ def openstack_runner_manager_fixture(
     service_config_mock.ssh_debug_connections = []
     service_config_mock.repo_policy_compliance = None
     config = OpenStackRunnerManagerConfig(
+        allow_external_contributor=False,
         prefix="test",
         credentials=MagicMock(),
         server_config=MagicMock(),

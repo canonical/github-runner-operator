@@ -21,6 +21,7 @@ import pytest_asyncio
 import yaml
 from git import Repo
 from github import Github, GithubException
+from github.Auth import Token
 from github.Branch import Branch
 from github.Repository import Repository
 from github_runner_manager.github_client import GithubClient
@@ -266,8 +267,7 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
     region_name = pytestconfig.getoption("--openstack-region-name")
 
     assert all(
-        val
-        for val in (
+        [
             auth_url,
             password,
             project_domain_name,
@@ -275,7 +275,7 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
             user_domain_name,
             username,
             region_name,
-        )
+        ]
     ), "Specify all OpenStack private endpoint options."
 
     test_image_id = pytestconfig.getoption("--test-image-id")
@@ -660,7 +660,7 @@ async def tmate_ssh_server_unit_ip_fixture(
 @pytest.fixture(scope="module")
 def github_client(github_config: GitHubConfig) -> Github:
     """Returns the github client."""
-    gh = Github(github_config.token)
+    gh = Github(auth=Token(token=github_config.token))
     rate_limit = gh.get_rate_limit()
     logging.info("GitHub token rate limit: %s", rate_limit.rate)
     return gh
