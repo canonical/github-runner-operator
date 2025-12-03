@@ -53,7 +53,7 @@ StandardError=syslog
 RestartSec=1
 SyslogIdentifier=tmate-http-proxy
 
-ExecStart=socat -v TCP-LISTEN:{{ssh_debug_info.local_proxy_port}},fork,bind={{ssh_debug_info.local_proxy_host}} PROXY:{{runner_proxy_config.proxy_host}}:{{ssh_debug_info['host']}}:{{ssh_debug_info['port']}}{% if runner_proxy_config.proxy_port %},proxyport={{runner_proxy_config.proxy_port}}{% endif %}
+ExecStart=socat TCP-LISTEN:{{ssh_debug_info.local_proxy_port}},fork,bind={{ssh_debug_info.local_proxy_host}} PROXY:{{runner_proxy_config.proxy_host}}:{{ssh_debug_info['host']}}:{{ssh_debug_info['port']}}{% if runner_proxy_config.proxy_port %},proxyport={{runner_proxy_config.proxy_port}}{% endif %}
 Restart=always
 
 [Install]
