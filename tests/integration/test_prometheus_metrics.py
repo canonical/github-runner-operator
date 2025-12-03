@@ -113,14 +113,18 @@ async def test_prometheus_metrics(
     """
     prometheus_offer_name = "prometheus-k8s"
     grafana_offer_name = "grafana-k8s"
-    # k8s_juju.model and juju.model already has <controller>: prefixed.
+    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
+    # juju.consume expects only the model name.
+    k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     juju.consume(
-        f"{k8s_juju.model}.prometheus-k8s",
+        f"{k8s_juju_model_name}.prometheus-k8s",
         alias="prometheus-k8s",
+        controller=MICROK8S_CONTROLLER_NAME,
     )
     juju.consume(
-        f"{k8s_juju.model}.grafana-k8s",
+        f"{k8s_juju_model_name}.grafana-k8s",
         alias="grafana-k8s",
+        controller=MICROK8S_CONTROLLER_NAME,
     )
 
     juju.integrate("grafana-agent", prometheus_offer_name)
