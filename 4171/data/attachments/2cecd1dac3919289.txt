@@ -1,0 +1,2 @@
+18:20:22 INFO cli: juju add-model --no-switch jubilant-9b9c2eb1 --controller microk8s
+18:20:22 INFO cli: juju deploy --model microk8s:microk8s:jubilant-9b9c2eb1 prometheus-k8s --channel 1/stable

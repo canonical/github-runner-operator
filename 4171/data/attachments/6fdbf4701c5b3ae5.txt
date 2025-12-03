@@ -1,0 +1,360 @@
+18:18:57 WARNING unexpected facade SSHServer received from the controller
+18:18:57 INFO Adding model github-pr-30db0-lxd:test-debug-ssh-1651 on cloud localhost
+18:18:58 WARNING unexpected facade SSHServer received from the controller
+18:18:58 WARNING unexpected facade SSHSession received from the controller
+18:18:58 WARNING unexpected facade SSHTunneler received from the controller
+18:18:58 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:19:00 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:13 INFO Deploying local:jammy/github-runner-0
+18:19:13 INFO Waiting for model:
+  test-ywuzbmad/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ywuzbmad/0 [allocating] waiting: waiting for machine
+18:19:43 INFO Waiting for model:
+  test-ywuzbmad/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ywuzbmad/0 [allocating] waiting: waiting for machine
+18:20:13 INFO Waiting for model:
+  test-ywuzbmad/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ywuzbmad/0 [idle] active: 
+18:20:44 INFO Waiting for model:
+  test-ywuzbmad/0 [allocating] waiting: waiting for machine
+18:21:14 INFO Waiting for model:
+  test-ywuzbmad/0 [allocating] waiting: agent initialising
+18:21:44 INFO Waiting for model:
+  test-ywuzbmad/0 [executing] maintenance: installing charm software
+18:22:15 INFO Waiting for model:
+  test-ywuzbmad/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ywuzbmad/0 [idle] active: 
+18:22:45 INFO Deploying ch:amd64/noble/tmate-ssh-server-22
+18:22:45 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:45 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:23:15 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:23:46 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: waiting for machine
+18:24:16 INFO Waiting for model:
+  tmate-ssh-server/0 [allocating] waiting: agent initialising
+18:24:46 INFO Waiting for model:
+  tmate-ssh-server/0 [executing] maintenance: Installing packages.
+18:25:16 INFO Waiting for model:
+  tmate-ssh-server/0 [idle] active: 
+18:25:28 INFO GitHub token rate limit: Rate(reset=2025-12-02 18:36:27+00:00, remaining=4596, limit=5000)
+18:25:31 INFO Waiting for model:
+  test-ywuzbmad/0 [executing] maintenance: Added debug-ssh relation
+18:26:01 INFO Waiting for model:
+  test-ywuzbmad/0 [idle] active: 
+18:26:12 INFO Current reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:26:12 INFO Waiting for reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:27:13 INFO Current reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:27:13 INFO Current reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d, expected reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:27:13 INFO Waiting for reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:28:14 INFO Current reconcile ID: c0df6f65-6c23-49b6-b877-72af4f9099e2
+18:28:14 INFO Current reconcile ID: c0df6f65-6c23-49b6-b877-72af4f9099e2, expected reconcile ID: 45a14a34-43d6-44d8-9e1b-bc5504570d4d
+18:28:19 INFO [TEST SETUP] Run command sudo iptables -t nat -A OUTPUT -p tcp -d 10.15.128.235 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022 on test-ywuzbmad-0-n-9679c65ba166
+18:28:19 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.232', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:99:34:fd'}]])
+18:28:20 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ywuzbmad-0-n-9679c65ba166.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.232 sudo iptables -t nat -A OUTPUT -p tcp -d 10.15.128.235 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022'
+18:28:21 INFO Run command 'sudo iptables -t nat -A OUTPUT -p tcp -d 10.15.128.235 --dport 10022 -j DNAT --to-destination 127.0.0.1:10022' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.232' (ED25519) to the list of known hosts.
+'
+18:28:22 INFO [TEST SETUP] Exposing port 10022 on test-ywuzbmad-0-n-9679c65ba166
+18:28:22 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.232', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:99:34:fd'}]])
+18:28:23 INFO ssh tunnel command ssh -fNT -R 10022:10.15.128.235:10022 -i /home/runner-manager/.ssh/test-ywuzbmad-0-n-9679c65ba166.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.232 &
+18:28:24 INFO ssh tunnel result 0 None None
+18:28:25 INFO [TEST SETUP] Run command nc -z localhost 10022 on test-ywuzbmad-0-n-9679c65ba166
+18:28:25 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.232', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:99:34:fd'}]])
+18:28:26 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ywuzbmad-0-n-9679c65ba166.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.232 nc -z localhost 10022'
+18:28:27 INFO Run command 'nc -z localhost 10022' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 10022 port [tcp/*] succeeded!
+'
+18:28:27 INFO Dispatching workflow_dispatch_ssh_debug.yaml workflow.
+18:28:29 INFO Wait for condition not met, sleeping 10
+18:28:39 INFO Wait for condition not met, sleeping 60
+18:29:40 INFO Wait for condition not met, sleeping 60
+18:30:40 INFO Wait for condition not met, sleeping 60
+18:31:41 INFO Wait for condition not met, sleeping 60
+18:32:41 INFO Wait for condition not met, sleeping 60
+18:33:43 INFO Logs: ﻿2025-12-02T18:28:33.4654295Z Current runner version: '2.328.0'
+2025-12-02T18:28:33.4659457Z Runner name: 'test-ywuzbmad-0-n-9679c65ba166'
+2025-12-02T18:28:33.4660088Z Runner group name: 'Default'
+2025-12-02T18:28:33.4660872Z Machine name: 'github-runner'
+2025-12-02T18:28:33.4664213Z ##[group]GITHUB_TOKEN Permissions
+2025-12-02T18:28:33.4666044Z Actions: write
+2025-12-02T18:28:33.4666470Z ArtifactMetadata: write
+2025-12-02T18:28:33.4667036Z Attestations: write
+2025-12-02T18:28:33.4667482Z Checks: write
+2025-12-02T18:28:33.4667852Z Contents: write
+2025-12-02T18:28:33.4668769Z Deployments: write
+2025-12-02T18:28:33.4669163Z Discussions: write
+2025-12-02T18:28:33.4669567Z Issues: write
+2025-12-02T18:28:33.4669997Z Metadata: read
+2025-12-02T18:28:33.4670418Z Models: read
+2025-12-02T18:28:33.4670794Z Packages: write
+2025-12-02T18:28:33.4671288Z Pages: write
+2025-12-02T18:28:33.4671707Z PullRequests: write
+2025-12-02T18:28:33.4672108Z RepositoryProjects: write
+2025-12-02T18:28:33.4672610Z SecurityEvents: write
+2025-12-02T18:28:33.4673178Z Statuses: write
+2025-12-02T18:28:33.4673706Z ##[endgroup]
+2025-12-02T18:28:33.4675366Z Secret source: Actions
+2025-12-02T18:28:33.4675877Z Prepare workflow directory
+2025-12-02T18:28:33.4993396Z Prepare all required actions
+2025-12-02T18:28:33.5023355Z Getting action download info
+2025-12-02T18:28:33.9675190Z Download action repository 'canonical/action-tmate@main' (SHA:9b97a9841908b14434f882e73376b171f5896bb5)
+2025-12-02T18:28:34.6423391Z Complete job name: workflow-dispatch-tests
+2025-12-02T18:28:34.6770400Z A job started hook has been configured by the self-hosted runner administrator
+2025-12-02T18:28:34.6929834Z ##[group]Run '/home/ubuntu/actions-runner/pre-job.sh'
+2025-12-02T18:28:34.6952263Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2025-12-02T18:28:34.6952940Z ##[endgroup]
+2025-12-02T18:28:34.7159951Z <13>Dec  2 18:28:34 ubuntu: A private docker registry is setup as a dockerhub mirror for this self-hosted runner.
+2025-12-02T18:28:34.7169606Z <13>Dec  2 18:28:34 ubuntu: The docker daemon on this self-hosted runner is configured to use the dockerhub mirror.
+2025-12-02T18:28:34.7185297Z <13>Dec  2 18:28:34 ubuntu: The URL to the private docker registry is in the DOCKERHUB_MIRROR environment variable.
+2025-12-02T18:28:34.7199480Z <13>Dec  2 18:28:34 ubuntu: For microk8s, see instructions here: https://microk8s.io/docs/dockerhub-limits
+2025-12-02T18:28:34.7361019Z ##[group]Run canonical/action-tmate@main
+2025-12-02T18:28:34.7361466Z with:
+2025-12-02T18:28:34.7361752Z   sudo: auto
+2025-12-02T18:28:34.7362045Z   install-dependencies: true
+2025-12-02T18:28:34.7362414Z   limit-access-to-actor: auto
+2025-12-02T18:28:34.7362769Z   detached: false
+2025-12-02T18:28:34.7363084Z   connect-timeout-seconds: 600
+2025-12-02T18:28:34.7363449Z   msys2-location: C:\msys64
+2025-12-02T18:28:34.7363943Z   github-token: ***
+2025-12-02T18:28:34.7364263Z ##[endgroup]
+2025-12-02T18:28:35.3393314Z Hit:1 http://az1.clouds.archive.ubuntu.com/ubuntu noble InRelease
+2025-12-02T18:28:35.3681383Z Hit:2 http://az1.clouds.archive.ubuntu.com/ubuntu noble-updates InRelease
+2025-12-02T18:28:35.4009671Z Hit:3 http://az1.clouds.archive.ubuntu.com/ubuntu noble-backports InRelease
+2025-12-02T18:28:50.8271690Z Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
+2025-12-02T18:28:51.6703080Z Reading package lists...
+2025-12-02T18:28:51.7125112Z Reading package lists...
+2025-12-02T18:28:51.8819448Z Building dependency tree...
+2025-12-02T18:28:51.8823025Z Reading state information...
+2025-12-02T18:28:52.0664402Z openssh-client is already the newest version (1:9.6p1-3ubuntu13.14).
+2025-12-02T18:28:52.0670049Z openssh-client set to manually installed.
+2025-12-02T18:28:52.0670983Z xz-utils is already the newest version (5.6.1+really5.4.5-1ubuntu0.2).
+2025-12-02T18:28:52.0671490Z xz-utils set to manually installed.
+2025-12-02T18:28:52.0671877Z 0 upgraded, 0 newly installed, 0 to remove and 11 not upgraded.
+2025-12-02T18:28:52.0932206Z Reading package lists...
+2025-12-02T18:28:52.2626605Z Building dependency tree...
+2025-12-02T18:28:52.2650584Z Reading state information...
+2025-12-02T18:28:52.4039809Z The following additional packages will be installed:
+2025-12-02T18:28:52.4043885Z   libevent-2.1-7t64 libmsgpackc2
+2025-12-02T18:28:52.4262022Z The following NEW packages will be installed:
+2025-12-02T18:28:52.4262832Z   libevent-2.1-7t64 libmsgpackc2 tmate
+2025-12-02T18:28:52.4530092Z 0 upgraded, 3 newly installed, 0 to remove and 11 not upgraded.
+2025-12-02T18:28:52.4530652Z Need to get 459 kB of archives.
+2025-12-02T18:28:52.4531040Z After this operation, 1205 kB of additional disk space will be used.
+2025-12-02T18:28:52.4539480Z Get:1 http://az1.clouds.archive.ubuntu.com/ubuntu noble/main amd64 libevent-2.1-7t64 amd64 2.1.12-stable-9ubuntu2 [145 kB]
+2025-12-02T18:28:52.4571041Z Get:2 http://az1.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 libmsgpackc2 amd64 4.0.0-3build1 [15.3 kB]
+2025-12-02T18:28:52.4603992Z Get:3 http://az1.clouds.archive.ubuntu.com/ubuntu noble/universe amd64 tmate amd64 2.4.0-2build3 [299 kB]
+2025-12-02T18:28:52.6985955Z Fetched 459 kB in 0s (22.1 MB/s)
+2025-12-02T18:28:52.7272270Z Selecting previously unselected package libevent-2.1-7t64:amd64.
+2025-12-02T18:28:52.7489573Z (Reading database ... 
+2025-12-02T18:28:52.7503364Z (Reading database ... 5%
+2025-12-02T18:28:52.7504122Z (Reading database ... 10%
+2025-12-02T18:28:52.7504717Z (Reading database ... 15%
+2025-12-02T18:28:52.7505401Z (Reading database ... 20%
+2025-12-02T18:28:52.7505585Z (Reading database ... 25%
+2025-12-02T18:28:52.7505742Z (Reading database ... 30%
+2025-12-02T18:28:52.7505913Z (Reading database ... 35%
+2025-12-02T18:28:52.7506068Z (Reading database ... 40%
+2025-12-02T18:28:52.7506230Z (Reading database ... 45%
+2025-12-02T18:28:52.7506392Z (Reading database ... 50%
+2025-12-02T18:28:52.7506546Z (Reading database ... 55%
+2025-12-02T18:28:52.7506704Z (Reading database ... 60%
+2025-12-02T18:28:52.7939362Z (Reading database ... 65%
+2025-12-02T18:28:52.8252552Z (Reading database ... 70%
+2025-12-02T18:28:52.8551055Z (Reading database ... 75%
+2025-12-02T18:28:52.8783714Z (Reading database ... 80%
+2025-12-02T18:28:52.9068233Z (Reading database ... 85%
+2025-12-02T18:28:52.9394085Z (Reading database ... 90%
+2025-12-02T18:28:52.9982178Z (Reading database ... 95%
+2025-12-02T18:28:52.9984641Z (Reading database ... 100%
+2025-12-02T18:28:52.9985428Z (Reading database ... 153931 files and directories currently installed.)
+2025-12-02T18:28:53.0014591Z Preparing to unpack .../libevent-2.1-7t64_2.1.12-stable-9ubuntu2_amd64.deb ...
+2025-12-02T18:28:53.0086964Z Unpacking libevent-2.1-7t64:amd64 (2.1.12-stable-9ubuntu2) ...
+2025-12-02T18:28:53.0422718Z Selecting previously unselected package libmsgpackc2:amd64.
+2025-12-02T18:28:53.0514854Z Preparing to unpack .../libmsgpackc2_4.0.0-3build1_amd64.deb ...
+2025-12-02T18:28:53.0533439Z Unpacking libmsgpackc2:amd64 (4.0.0-3build1) ...
+2025-12-02T18:28:53.0800782Z Selecting previously unselected package tmate.
+2025-12-02T18:28:53.0894614Z Preparing to unpack .../tmate_2.4.0-2build3_amd64.deb ...
+2025-12-02T18:28:53.0917608Z Unpacking tmate (2.4.0-2build3) ...
+2025-12-02T18:28:53.1427286Z Setting up libmsgpackc2:amd64 (4.0.0-3build1) ...
+2025-12-02T18:28:53.1485651Z Setting up libevent-2.1-7t64:amd64 (2.1.12-stable-9ubuntu2) ...
+2025-12-02T18:28:53.1542016Z Setting up tmate (2.4.0-2build3) ...
+2025-12-02T18:28:53.1607346Z Processing triggers for man-db (2.12.0-4build2) ...
+2025-12-02T18:28:53.8788222Z Processing triggers for libc-bin (2.39-0ubuntu8.6) ...
+2025-12-02T18:28:54.3082656Z 
+2025-12-02T18:28:54.3085512Z Running kernel seems to be up-to-date.
+2025-12-02T18:28:54.3086720Z 
+2025-12-02T18:28:54.3087839Z No services need to be restarted.
+2025-12-02T18:28:54.3089822Z 
+2025-12-02T18:28:54.3089916Z No containers need to be restarted.
+2025-12-02T18:28:54.3090972Z 
+2025-12-02T18:28:54.3091538Z No user sessions are running outdated binaries.
+2025-12-02T18:28:54.3092114Z 
+2025-12-02T18:28:54.3092387Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2025-12-02T18:28:55.1580409Z Created symlink /etc/systemd/system/multi-user.target.wants/tmate-proxy.service → /etc/systemd/system/tmate-proxy.service.
+2025-12-02T18:28:58.7560204Z ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:28:58.7607687Z 
+2025-12-02T18:28:58.7622450Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:28:58.7623001Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:03.7659820Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:03.7661936Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:08.7716796Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:08.7720104Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:13.7772647Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:13.7774261Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:18.7819906Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:18.7820863Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:23.7875341Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:23.7875992Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:28.7931214Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:28.7932448Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:33.7985163Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:33.7985570Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:38.8039649Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:38.8040140Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:43.8093476Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:43.8093908Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:48.8146946Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:48.8160311Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:53.8204366Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:53.8205045Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:58.8233365Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:29:58.8234090Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:03.8291770Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:03.8292373Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:08.8331826Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:08.8334332Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:13.8387507Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:13.8388474Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:18.8444309Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:18.8445476Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:23.8499178Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:23.8499557Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:28.8552683Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:28.8554177Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:33.8572495Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:33.8573608Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:38.8624557Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:38.8626841Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:43.8680275Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:43.8681786Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:48.8736445Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:48.8736932Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:53.8792184Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:53.8792674Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:58.8813032Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:30:58.8813838Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:03.8865030Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:03.8865645Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:08.8918446Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:08.8919024Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:13.8971962Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:13.8972535Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:18.9026148Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:18.9026564Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:23.9052083Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:23.9052699Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:28.9106632Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:28.9107108Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:33.9162171Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:33.9163359Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:38.9215533Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:38.9216703Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:43.9266929Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:43.9268819Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:48.9323636Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:48.9324317Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:53.9378828Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:53.9380560Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:58.9434389Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:31:58.9434873Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:03.9486661Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:03.9487429Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:08.9539765Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:08.9542694Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:13.9594637Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:13.9595123Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:18.9648797Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:18.9651326Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:23.9703384Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:23.9704738Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:28.9763582Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:28.9764111Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:33.9818010Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:33.9818493Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:38.9870171Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:38.9870832Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:43.9921461Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:43.9921999Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:48.9965295Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:48.9965699Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:53.9976210Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:53.9976807Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:58.9988245Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:32:58.9994840Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:04.0045090Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:04.0045617Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:09.0098274Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:09.0098937Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:14.0151985Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:14.0152835Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:19.0206104Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:19.0206600Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:24.0260479Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:24.0260903Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:29.0313841Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:29.0314372Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:34.0368458Z SSH: ssh -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:34.0369017Z or: ssh -i <path-to-private-SSH-key> -p10022 N5KWe3S3sEVdCC2WrSqCBRmTp@10.15.128.235
+2025-12-02T18:33:34.7356938Z ##[error]The action 'Setup tmate session' has timed out after 5 minutes.
+2025-12-02T18:33:34.7422199Z Post job cleanup.
+2025-12-02T18:33:34.8084748Z Cleaning up orphan processes
+2025-12-02T18:33:34.8630456Z Terminate orphan process: pid (3003) (tmate)
+2025-12-02T18:33:34.8694384Z Terminate orphan process: pid (3004) (bash)
+18:33:45 INFO Model status:
+
+Model                Controller           Cloud/Region         Version  SLA          Timestamp
+test-debug-ssh-1651  github-pr-30db0-lxd  localhost/localhost  3.6.12   unsupported  18:33:45Z
+
+App                                   Version  Status  Scale  Charm             Channel      Rev  Exposed  Message
+github-runner-image-builder-ywuzbmad           active      1  any-charm         latest/beta  124  no       
+test-ywuzbmad                                  active      1  github-runner                    0  no       
+tmate-ssh-server                               active      1  tmate-ssh-server  latest/edge   22  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports      Message
+github-runner-image-builder-ywuzbmad/0*  active    idle   0        10.15.128.89               
+test-ywuzbmad/0*                         active    idle   1        10.15.128.99               
+tmate-ssh-server/0*                      active    idle   2        10.15.128.235   10022/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.15.128.89   juju-26bed2-0  ubuntu@24.04  github-runner  Running
+1        started  10.15.128.99   juju-26bed2-1  ubuntu@22.04  github-runner  Running
+2        started  10.15.128.235  juju-26bed2-2  ubuntu@24.04  github-runner  Running
+
+18:33:45 INFO Juju error logs:
+
+machine-0: 18:20:02 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:20:02 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:03 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:03 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ywuzbmad-0: 18:22:04 ERROR unit.test-ywuzbmad/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ywuzbmad-0: 18:22:05 ERROR unit.test-ywuzbmad/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ywuzbmad-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+machine-2: 18:24:13 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-2: 18:24:13 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+
+18:33:45 INFO Forgetting model main...
