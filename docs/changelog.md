@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-12-03
+
+- Deprecate `repo-policy-complinace` service.
+
 ## 2025-12-01
 
 - Added timeouts to API calls (Openstack,GitHub,Repo policy compliance) to fix a hanging GitHub runner manager application. 
