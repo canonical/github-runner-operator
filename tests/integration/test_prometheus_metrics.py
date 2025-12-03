@@ -42,8 +42,11 @@ def prometheus_app_fixture(k8s_juju: jubilant.Juju):
     """Deploy prometheus charm."""
     k8s_juju.deploy("prometheus-k8s", channel="1/stable")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "prometheus-k8s"))
+    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
+    # juju.consume expects only the model name.
+    k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
-        f"{k8s_juju.model}.prometheus-k8s",
+        f"{k8s_juju_model_name}.prometheus-k8s",
         endpoint="receive-remote-write",
         controller=MICROK8S_CONTROLLER_NAME,
     )
@@ -56,8 +59,11 @@ def grafana_app_fixture(k8s_juju: jubilant.Juju, prometheus_app: AppStatus):
     k8s_juju.deploy("grafana-k8s", channel="1/stable")
     k8s_juju.integrate("grafana-k8s:grafana-source", f"{prometheus_app.charm_name}:grafana-source")
     k8s_juju.wait(lambda status: jubilant.all_active(status, "grafana-k8s", "prometheus-k8s"))
+    # k8s_juju.model and juju.model already has <controller>: prefixed. we must split them since
+    # juju.consume expects only the model name.
+    k8s_juju_model_name = k8s_juju.model.split(":", 1)[1]
     k8s_juju.offer(
-        f"{k8s_juju.model}.grafana-k8s",
+        f"{k8s_juju_model_name}.grafana-k8s",
         endpoint="grafana-dashboard",
         controller=MICROK8S_CONTROLLER_NAME,
     )
