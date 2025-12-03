@@ -33,6 +33,10 @@ class RepoPolicyComplianceClient:  # pylint: disable=too-few-public-methods
             url: Base URL to the repo policy compliance service.
             charm_token: Charm token configured for the repo policy compliance service.
         """
+        logger.warning(
+            "Repo policy compliance service is marked for deprecation. "
+            "Consider using `allow_external_contributor` option instead."
+        )
         self._session = self._create_session()
         self.base_url = url
         self.token = charm_token
