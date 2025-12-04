@@ -79,6 +79,7 @@ def pytest_addoption(parser: Parser):
         "--openstack-network-name",
         action="store",
         help="The Openstack network to create testing instances under.",
+        default=os.environ.get("OS_NETWORK"),
     )
     parser.addoption(
         "--openstack-flavor-name",
@@ -141,7 +142,7 @@ def pytest_addoption(parser: Parser):
         default=None,
     )
     parser.addoption(
-        "--test-image-id",
+        "--openstack-image-id",
         action="store",
         help="The image ID to use for testing. If provided, any-charm will be used to mock the "
         "image builder for faster testing deployment.",

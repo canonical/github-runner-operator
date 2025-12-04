@@ -25,20 +25,13 @@ jobs:
         -m=openstack \
         --log-format="%(asctime)s %(levelname)s %(message)s" \
         --path="${{ vars.INTEGRATION_TEST_PATH }}" \
-        --openstack-auth-url="${{ vars.INTEGRATION_TEST_OPENSTACK_AUTH_URL }}" \
-        --openstack-project-domain-name="${{ vars.INTEGRATION_TEST_OPENSTACK_PROJECT_DOMAIN_NAME }}" \
-        --openstack-project-name="${{ vars.INTEGRATION_TEST_OPENSTACK_PROJECT_NAME }}" \
-        --openstack-user-domain-name="${{ vars.INTEGRATION_TEST_OPENSTACK_USER_DOMAIN_NAME }}" \
-        --openstack-username="${{ vars.INTEGRATION_TEST_OPENSTACK_USERNAME }}" \
-        --openstack-region-name="${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}" \
-        --openstack-network-name="${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}" \
-        --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
         --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
         --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
         --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
         --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
         --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
         --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
+        --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
         --dockerhub-mirror="${{ vars.INTEGRATION_TEST_DOCKERHUB_MIRROR }}"
       self-hosted-runner: true
       self-hosted-runner-label: pfe-ci
