@@ -114,10 +114,10 @@ def pytest_addoption(parser):
         default=os.getenv("OPENSTACK_NO_PROXY"),
     )
     parser.addoption(
-        "--openstack-flavor",
+        "--openstack-flavor-name",
         action="store",
         help="OpenStack flavor name for runner instances.",
-        default=os.getenv("OPENSTACK_FLAVOR"),
+        default=os.getenv("OPENSTACK_FLAVOR_NAME"),
     )
     parser.addoption(
         "--openstack-image-id",
