@@ -102,6 +102,7 @@ def default_template_vars() -> Dict:
 def _create_github_event_payload(
     author_association: str,
     event_type: str = "pull_request",
+    is_fork: bool = False,
 ) -> Dict:
     """Create a GitHub event payload for testing.
 
@@ -109,6 +110,7 @@ def _create_github_event_payload(
         author_association: The author's association with the repository
             (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
         event_type: The type of GitHub event (pull_request, push, issue_comment, etc.)
+        is_fork: Whether to simulate a fork PR (only applies to PR events)
 
     Returns:
         A dictionary representing the GitHub event payload
@@ -126,6 +128,11 @@ def _create_github_event_payload(
             "login": "test-user",
         },
     }
+
+    # Determine head repo based on is_fork parameter
+    head_repo_full_name = (
+        "external-user/github-runner-operator" if is_fork else "canonical/github-runner-operator"
+    )
 
     # Event-specific payloads
     if event_type == "pull_request":
@@ -145,7 +152,7 @@ def _create_github_event_payload(
                     "ref": "feature-branch",
                     "sha": "abc123",
                     "repo": {
-                        "full_name": "canonical/github-runner-operator",
+                        "full_name": head_repo_full_name,
                     },
                 },
                 "base": {
@@ -175,7 +182,7 @@ def _create_github_event_payload(
                     "ref": "feature-branch",
                     "sha": "abc123",
                     "repo": {
-                        "full_name": "canonical/github-runner-operator",
+                        "full_name": head_repo_full_name,
                     },
                 },
                 "base": {
@@ -199,7 +206,7 @@ def _create_github_event_payload(
                     "ref": "feature-branch",
                     "sha": "abc123",
                     "repo": {
-                        "full_name": "canonical/github-runner-operator",
+                        "full_name": head_repo_full_name,
                     },
                 },
                 "base": {
@@ -231,7 +238,7 @@ def _create_github_event_payload(
                     "ref": "feature-branch",
                     "sha": "abc123",
                     "repo": {
-                        "full_name": "canonical/github-runner-operator",
+                        "full_name": head_repo_full_name,
                     },
                 },
                 "base": {
@@ -311,24 +318,6 @@ def _create_github_event_payload(
         }
 
 
-def _make_fork_pr(github_event: Dict, fork_repo: str = "external-user/github-runner-operator") -> Dict:
-    """Convert a GitHub event payload to simulate a fork PR.
-    
-    Args:
-        github_event: The base GitHub event payload
-        fork_repo: The full name of the fork repository (default: external-user/github-runner-operator)
-    
-    Returns:
-        A new event payload with head repo set to fork (deep copy to avoid side effects)
-    """
-    # Create a deep copy to avoid modifying the original
-    event = copy.deepcopy(github_event)
-    if "pull_request" in event and "head" in event["pull_request"]:
-        if "repo" in event["pull_request"]["head"]:
-            event["pull_request"]["head"]["repo"]["full_name"] = fork_repo
-    return event
-
-
 def render_and_execute_script(
     template: Template,
     template_vars: Dict,
@@ -381,15 +370,16 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
     default_template_vars: Dict,
 ):
     """Test that OWNER/MEMBER/COLLABORATOR are all allowed (for fork PRs)."""
-    github_event = _create_github_event_payload(author_association=author_association)
-    # Make it a fork PR to test the author association logic
-    github_event = _make_fork_pr(github_event)
+    fork_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+    )
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=github_env_vars,
-        github_event=github_event,
+        github_event=fork_event,
         tmp_path=tmp_path,
     )
 
@@ -414,15 +404,16 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
     default_template_vars: Dict,
 ):
     """Test that untrusted author associations are blocked (for fork PRs)."""
-    github_event = _create_github_event_payload(author_association=author_association)
-    # Make it a fork PR to test the author association logic
-    github_event = _make_fork_pr(github_event)
+    fork_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+    )
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=github_env_vars,
-        github_event=github_event,
+        github_event=fork_event,
         tmp_path=tmp_path,
     )
 
@@ -572,21 +563,21 @@ def test_author_association_check_by_event_type(
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = event_type
 
-    github_event = _create_github_event_payload(
-        author_association=author_association,
-        event_type=event_type,
-    )
-
     # For PR-related events (except issue_comment), make them fork PRs to test author association logic
     # Internal PRs skip the check, so we need fork PRs to test the actual authorization logic
-    if event_type in PR_EVENTS:
-        github_event = _make_fork_pr(github_event)
+    is_fork = event_type in PR_EVENTS
+    
+    event_payload = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+        is_fork=is_fork,
+    )
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=env_vars,
-        github_event=github_event,
+        github_event=event_payload,
         tmp_path=tmp_path,
     )
 
@@ -668,20 +659,12 @@ def test_events_skip_author_association_check(
 @pytest.mark.parametrize(
     "author_association,event_type",
     [
-        ("CONTRIBUTOR", "pull_request"),
-        ("FIRST_TIME_CONTRIBUTOR", "pull_request"),
-        ("NONE", "pull_request"),
-        ("CONTRIBUTOR", "pull_request_target"),
-        ("CONTRIBUTOR", "pull_request_review"),
-        ("CONTRIBUTOR", "pull_request_review_comment"),
-    ],
-    ids=[
-        "pr_internal_contributor",
-        "pr_internal_first_time",
-        "pr_internal_none",
-        "pr_target_internal_contributor",
-        "pr_review_internal_contributor",
-        "pr_review_comment_internal_contributor",
+        pytest.param("CONTRIBUTOR", "pull_request", id="pr_internal_contributor"),
+        pytest.param("FIRST_TIME_CONTRIBUTOR", "pull_request", id="pr_internal_first_time"),
+        pytest.param("NONE", "pull_request", id="pr_internal_none"),
+        pytest.param("CONTRIBUTOR", "pull_request_target", id="pr_target_internal_contributor"),
+        pytest.param("CONTRIBUTOR", "pull_request_review", id="pr_review_internal_contributor"),
+        pytest.param("CONTRIBUTOR", "pull_request_review_comment", id="pr_review_comment_internal_contributor"),
     ],
 )
 def test_internal_pr_skips_author_association_check(
@@ -705,6 +688,7 @@ def test_internal_pr_skips_author_association_check(
     github_event = _create_github_event_payload(
         author_association=author_association,
         event_type=event_type,
+        is_fork=False,
     )
 
     result = render_and_execute_script(
@@ -733,32 +717,18 @@ def test_internal_pr_skips_author_association_check(
 @pytest.mark.parametrize(
     "author_association,expected_exit_code,event_type",
     [
-        ("OWNER", 0, "pull_request"),
-        ("MEMBER", 0, "pull_request"),
-        ("COLLABORATOR", 0, "pull_request"),
-        ("CONTRIBUTOR", 1, "pull_request"),
-        ("FIRST_TIME_CONTRIBUTOR", 1, "pull_request"),
-        ("NONE", 1, "pull_request"),
-        ("OWNER", 0, "pull_request_target"),
-        ("CONTRIBUTOR", 1, "pull_request_target"),
-        ("MEMBER", 0, "pull_request_review"),
-        ("CONTRIBUTOR", 1, "pull_request_review"),
-        ("COLLABORATOR", 0, "pull_request_review_comment"),
-        ("NONE", 1, "pull_request_review_comment"),
-    ],
-    ids=[
-        "fork_pr_owner_allowed",
-        "fork_pr_member_allowed",
-        "fork_pr_collaborator_allowed",
-        "fork_pr_contributor_blocked",
-        "fork_pr_first_time_blocked",
-        "fork_pr_none_blocked",
-        "fork_pr_target_owner_allowed",
-        "fork_pr_target_contributor_blocked",
-        "fork_pr_review_member_allowed",
-        "fork_pr_review_contributor_blocked",
-        "fork_pr_review_comment_collaborator_allowed",
-        "fork_pr_review_comment_none_blocked",
+        pytest.param("OWNER", 0, "pull_request", id="fork_pr_owner_allowed"),
+        pytest.param("MEMBER", 0, "pull_request", id="fork_pr_member_allowed"),
+        pytest.param("COLLABORATOR", 0, "pull_request", id="fork_pr_collaborator_allowed"),
+        pytest.param("CONTRIBUTOR", 1, "pull_request", id="fork_pr_contributor_blocked"),
+        pytest.param("FIRST_TIME_CONTRIBUTOR", 1, "pull_request", id="fork_pr_first_time_blocked"),
+        pytest.param("NONE", 1, "pull_request", id="fork_pr_none_blocked"),
+        pytest.param("OWNER", 0, "pull_request_target", id="fork_pr_target_owner_allowed"),
+        pytest.param("CONTRIBUTOR", 1, "pull_request_target", id="fork_pr_target_contributor_blocked"),
+        pytest.param("MEMBER", 0, "pull_request_review", id="fork_pr_review_member_allowed"),
+        pytest.param("CONTRIBUTOR", 1, "pull_request_review", id="fork_pr_review_contributor_blocked"),
+        pytest.param("COLLABORATOR", 0, "pull_request_review_comment", id="fork_pr_review_comment_collaborator_allowed"),
+        pytest.param("NONE", 1, "pull_request_review_comment", id="fork_pr_review_comment_none_blocked"),
     ],
 )
 def test_fork_pr_performs_author_association_check(
@@ -780,18 +750,17 @@ def test_fork_pr_performs_author_association_check(
     env_vars["GITHUB_EVENT_NAME"] = event_type
 
     # Create payload with different head and base repo (fork PR)
-    github_event = _create_github_event_payload(
+    fork_event = _create_github_event_payload(
         author_association=author_association,
         event_type=event_type,
+        is_fork=True,
     )
-    # Change head repo to simulate a fork
-    github_event = _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=env_vars,
-        github_event=github_event,
+        github_event=fork_event,
         tmp_path=tmp_path,
     )
 
@@ -816,20 +785,12 @@ def test_fork_pr_performs_author_association_check(
 @pytest.mark.parametrize(
     "author_association,expected_exit_code,event_type",
     [
-        ("OWNER", 0, "pull_request"),
-        ("MEMBER", 0, "pull_request"),
-        ("COLLABORATOR", 0, "pull_request"),
-        ("CONTRIBUTOR", 1, "pull_request"),
-        ("OWNER", 0, "pull_request_target"),
-        ("CONTRIBUTOR", 1, "pull_request_target"),
-    ],
-    ids=[
-        "missing_repo_owner_allowed",
-        "missing_repo_member_allowed",
-        "missing_repo_collaborator_allowed",
-        "missing_repo_contributor_blocked",
-        "missing_repo_target_owner_allowed",
-        "missing_repo_target_contributor_blocked",
+        pytest.param("OWNER", 0, "pull_request", id="missing_repo_owner_allowed"),
+        pytest.param("MEMBER", 0, "pull_request", id="missing_repo_member_allowed"),
+        pytest.param("COLLABORATOR", 0, "pull_request", id="missing_repo_collaborator_allowed"),
+        pytest.param("CONTRIBUTOR", 1, "pull_request", id="missing_repo_contributor_blocked"),
+        pytest.param("OWNER", 0, "pull_request_target", id="missing_repo_target_owner_allowed"),
+        pytest.param("CONTRIBUTOR", 1, "pull_request_target", id="missing_repo_target_contributor_blocked"),
     ],
 )
 def test_missing_repo_info_performs_author_association_check(
@@ -890,20 +851,12 @@ def test_missing_repo_info_performs_author_association_check(
 @pytest.mark.parametrize(
     "author_association,expected_exit_code",
     [
-        ("OWNER", 0),
-        ("MEMBER", 0),
-        ("COLLABORATOR", 0),
-        ("CONTRIBUTOR", 1),
-        ("FIRST_TIME_CONTRIBUTOR", 1),
-        ("NONE", 1),
-    ],
-    ids=[
-        "issue_comment_owner_allowed",
-        "issue_comment_member_allowed",
-        "issue_comment_collaborator_allowed",
-        "issue_comment_contributor_blocked",
-        "issue_comment_first_time_blocked",
-        "issue_comment_none_blocked",
+        pytest.param("OWNER", 0, id="issue_comment_owner_allowed"),
+        pytest.param("MEMBER", 0, id="issue_comment_member_allowed"),
+        pytest.param("COLLABORATOR", 0, id="issue_comment_collaborator_allowed"),
+        pytest.param("CONTRIBUTOR", 1, id="issue_comment_contributor_blocked"),
+        pytest.param("FIRST_TIME_CONTRIBUTOR", 1, id="issue_comment_first_time_blocked"),
+        pytest.param("NONE", 1, id="issue_comment_none_blocked"),
     ],
 )
 def test_issue_comment_always_performs_author_association_check(
