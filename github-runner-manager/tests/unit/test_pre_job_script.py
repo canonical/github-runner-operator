@@ -869,3 +869,73 @@ def test_missing_repo_info_performs_author_association_check(
     else:
         assert "Insufficient user authorization (author_association)" in result.stderr
         assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code",
+    [
+        ("OWNER", 0),
+        ("MEMBER", 0),
+        ("COLLABORATOR", 0),
+        ("CONTRIBUTOR", 1),
+        ("FIRST_TIME_CONTRIBUTOR", 1),
+        ("NONE", 1),
+    ],
+    ids=[
+        "issue_comment_owner_allowed",
+        "issue_comment_member_allowed",
+        "issue_comment_collaborator_allowed",
+        "issue_comment_contributor_blocked",
+        "issue_comment_first_time_blocked",
+        "issue_comment_none_blocked",
+    ],
+)
+def test_issue_comment_always_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    default_template_vars: Dict,
+):
+    """Test that issue_comment events always perform author association check.
+    
+    Unlike PR events, issue_comment does not distinguish between internal and fork PRs.
+    The author association check is always performed regardless of repository context.
+    """
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = "issue_comment"
+
+    # Create issue_comment event payload
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type="issue_comment",
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for issue_comment with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # issue_comment should always perform the author association check
+    assert f"Author association: {author_association}" in result.stderr
+    
+    # Should NOT see fork detection messages (those are only for PR events)
+    assert "Internal PR detected" not in result.stderr
+    assert "Fork PR detected" not in result.stderr
+    assert "Repository information unavailable" not in result.stderr
+
+    if expected_exit_code == 0:
+        assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+        assert "Insufficient user authorization" not in result.stderr
+    else:
+        assert "Insufficient user authorization (author_association)" in result.stderr
+        assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
