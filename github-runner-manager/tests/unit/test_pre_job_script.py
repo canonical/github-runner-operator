@@ -3,6 +3,7 @@
 
 """Unit tests for pre-job script template and execution."""
 
+import copy
 import json
 import os
 import subprocess
@@ -318,12 +319,14 @@ def _make_fork_pr(github_event: Dict, fork_repo: str = "external-user/github-run
         fork_repo: The full name of the fork repository (default: external-user/github-runner-operator)
     
     Returns:
-        Modified event payload with head repo set to fork
+        A new event payload with head repo set to fork (deep copy to avoid side effects)
     """
-    if "pull_request" in github_event and "head" in github_event["pull_request"]:
-        if "repo" in github_event["pull_request"]["head"]:
-            github_event["pull_request"]["head"]["repo"]["full_name"] = fork_repo
-    return github_event
+    # Create a deep copy to avoid modifying the original
+    event = copy.deepcopy(github_event)
+    if "pull_request" in event and "head" in event["pull_request"]:
+        if "repo" in event["pull_request"]["head"]:
+            event["pull_request"]["head"]["repo"]["full_name"] = fork_repo
+    return event
 
 
 def render_and_execute_script(
@@ -380,7 +383,7 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
     """Test that OWNER/MEMBER/COLLABORATOR are all allowed (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
     # Make it a fork PR to test the author association logic
-    _make_fork_pr(github_event)
+    github_event = _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -413,7 +416,7 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
     """Test that untrusted author associations are blocked (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
     # Make it a fork PR to test the author association logic
-    _make_fork_pr(github_event)
+    github_event = _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -577,7 +580,7 @@ def test_author_association_check_by_event_type(
     # For PR-related events (except issue_comment), make them fork PRs to test author association logic
     # Internal PRs skip the check, so we need fork PRs to test the actual authorization logic
     if event_type in PR_EVENTS:
-        _make_fork_pr(github_event)
+        github_event = _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -772,7 +775,7 @@ def test_fork_pr_performs_author_association_check(
         event_type=event_type,
     )
     # Change head repo to simulate a fork
-    _make_fork_pr(github_event)
+    github_event = _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
