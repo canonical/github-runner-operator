@@ -1,0 +1,101 @@
+18:17:25 WARNING unexpected facade SSHServer received from the controller
+18:17:25 INFO Adding model github-pr-dfddc-lxd:test-charm-fork-path-change-r75a on cloud localhost
+18:17:26 WARNING unexpected facade SSHServer received from the controller
+18:17:26 WARNING unexpected facade SSHSession received from the controller
+18:17:26 WARNING unexpected facade SSHTunneler received from the controller
+18:17:26 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:17:28 INFO Deploying ch:amd64/noble/any-charm-124
+18:17:45 INFO Deploying local:jammy/github-runner-0
+18:17:45 INFO Waiting for model:
+  test-j456bnop/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j456bnop/0 [allocating] waiting: waiting for machine
+18:18:16 INFO Waiting for model:
+  test-j456bnop/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-j456bnop/0 [allocating] waiting: agent initialising
+18:18:46 INFO Waiting for model:
+  test-j456bnop/0 [allocating] waiting: waiting for machine
+18:19:16 INFO Waiting for model:
+  test-j456bnop/0 [allocating] waiting: waiting for machine
+18:19:47 INFO Waiting for model:
+  test-j456bnop/0 [allocating] waiting: agent initialising
+18:20:17 INFO Waiting for model:
+  test-j456bnop/0 [executing] maintenance: installing charm software
+18:20:47 INFO Waiting for model:
+  test-j456bnop/0 [executing] maintenance: installing charm software
+18:21:18 INFO Waiting for model:
+  test-j456bnop/0 [executing] active: 
+18:21:34 INFO GitHub token rate limit: Rate(reset=2025-12-05 18:26:50+00:00, remaining=4723, limit=5000)
+18:21:45 INFO test_path_config_change
+18:21:45 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:22:15 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:22:37 INFO Ensure there is a runner (this calls reconcile)
+18:22:37 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:23:07 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:23:10 INFO Current reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:23:10 INFO Waiting for reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:24:11 INFO Current reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:24:11 INFO Current reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd, expected reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:24:11 INFO Waiting for reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:25:12 INFO Current reconcile ID: 211562b1-4352-4716-85a1-8ab0aa456eee
+18:25:12 INFO Current reconcile ID: 211562b1-4352-4716-85a1-8ab0aa456eee, expected reconcile ID: dba98470-15be-49f0-9f62-ede5afc640dd
+18:25:15 INFO Reconciling (again)
+18:25:15 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:25:45 INFO Waiting for model:
+  test-j456bnop/0 [idle] active: 
+18:25:53 INFO Current reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:25:53 INFO Waiting for reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:26:54 INFO Current reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:26:54 INFO Current reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf, expected reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:26:54 INFO Waiting for reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:27:55 INFO Current reconcile ID: 7c75ee2d-36eb-452a-8869-f48c3b7d6405
+18:27:55 INFO Current reconcile ID: 7c75ee2d-36eb-452a-8869-f48c3b7d6405, expected reconcile ID: 4341b909-d12d-4fb8-a0d5-b5f93c5191bf
+18:29:42 INFO runners: ['test-j456bnop-0-n-e6648b22f410']
+18:29:43 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-b7787c5700ea"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-56f28a940a43"), SelfHostedActionsRunner(name="test-an2e5rqh-0-n-f826ba376f25"), SelfHostedActionsRunner(name="test-b63bjwch-0-n-846683ee69a0"), SelfHostedActionsRunner(name="test-d2eotr3g-0-n-d71e2e9f15d8"), SelfHostedActionsRunner(name="test-duhnc3v0-0-n-84d5691a5d3e"), SelfHostedActionsRunner(name="test-ecf5f421-0-n-9d196fb22aac"), SelfHostedActionsRunner(name="test-h0aqhrzb-0-n-e01407acd824"), SelfHostedActionsRunner(name="test-iu412jsc-0-n-63bc3bca4f67"), SelfHostedActionsRunner(name="test-j10t1gdp-0-n-d73095da0d12"), SelfHostedActionsRunner(name="test-j456bnop-0-n-e6648b22f410"), SelfHostedActionsRunner(name="test-j7bbne1l-0-n-02a23cac60b0"), SelfHostedActionsRunner(name="test-jxfev8x5-0-n-eadb36736b83"), SelfHostedActionsRunner(name="test-k1f8furs-0-n-c67891fb2521"), SelfHostedActionsRunner(name="test-m96tdi3t-0-n-766e82018b9d"), SelfHostedActionsRunner(name="test-mkdal3uq-0-n-ce20c5b5c85d"), SelfHostedActionsRunner(name="test-mzz69vjw-0-n-da2f2970d8a1"), SelfHostedActionsRunner(name="test-nwqwjpbw-0-n-1ffcd982d760"), SelfHostedActionsRunner(name="test-otqx8ef5-0-n-0d564f4a3b0b"), SelfHostedActionsRunner(name="test-s0qchvvs-0-n-7085bb85d2cc"), SelfHostedActionsRunner(name="test-s6kgsrji-0-n-c6171f230fef"), SelfHostedActionsRunner(name="test-zhoobor0-0-n-120dd390720a"), SelfHostedActionsRunner(name="test-zsvbhew8-0-n-0bd827d1b1a4")]
+18:29:43 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-r75a  github-pr-dfddc-lxd  localhost/localhost  3.6.12   unsupported  18:29:43Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-j456bnop           active      1  any-charm      latest/beta  124  no       
+test-j456bnop                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-j456bnop/0*  active    idle   0        10.238.153.21          
+test-j456bnop/0*                         active    idle   1        10.238.153.93          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.238.153.21  juju-6b9f3d-0  ubuntu@24.04  github-runner  Running
+1        started  10.238.153.93  juju-6b9f3d-1  ubuntu@22.04  github-runner  Running
+
+18:29:44 INFO Juju error logs:
+
+machine-0: 18:18:12 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:18:12 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:28 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:19:28 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-j456bnop-0: 18:20:53 ERROR unit.test-j456bnop/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-j456bnop-0: 18:20:55 ERROR unit.test-j456bnop/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-j456bnop-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:29:44 INFO Forgetting model main...
