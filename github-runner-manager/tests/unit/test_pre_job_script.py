@@ -48,6 +48,10 @@ GITHUB_DEFAULT_ENV_VARS = {
     "RUNNER_TOOL_CACHE": "/opt/hostedtoolcache",
 }
 
+# PR-related event types that support fork detection
+PR_EVENTS = ["pull_request", "pull_request_target", "pull_request_review", "pull_request_review_comment"]
+
+
 
 @pytest.fixture
 def pre_job_template() -> Template:
@@ -306,6 +310,22 @@ def _create_github_event_payload(
         }
 
 
+def _make_fork_pr(github_event: Dict, fork_repo: str = "external-user/github-runner-operator") -> Dict:
+    """Convert a GitHub event payload to simulate a fork PR.
+    
+    Args:
+        github_event: The base GitHub event payload
+        fork_repo: The full name of the fork repository (default: external-user/github-runner-operator)
+    
+    Returns:
+        Modified event payload with head repo set to fork
+    """
+    if "pull_request" in github_event and "head" in github_event["pull_request"]:
+        if "repo" in github_event["pull_request"]["head"]:
+            github_event["pull_request"]["head"]["repo"]["full_name"] = fork_repo
+    return github_event
+
+
 def render_and_execute_script(
     template: Template,
     template_vars: Dict,
@@ -360,7 +380,7 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
     """Test that OWNER/MEMBER/COLLABORATOR are all allowed (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
     # Make it a fork PR to test the author association logic
-    github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
+    _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -393,7 +413,7 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
     """Test that untrusted author associations are blocked (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
     # Make it a fork PR to test the author association logic
-    github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
+    _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -556,9 +576,8 @@ def test_author_association_check_by_event_type(
 
     # For PR-related events (except issue_comment), make them fork PRs to test author association logic
     # Internal PRs skip the check, so we need fork PRs to test the actual authorization logic
-    if event_type in ["pull_request", "pull_request_target", "pull_request_review", "pull_request_review_comment"]:
-        if "pull_request" in github_event and "head" in github_event["pull_request"]:
-            github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
+    if event_type in PR_EVENTS:
+        _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -753,13 +772,7 @@ def test_fork_pr_performs_author_association_check(
         event_type=event_type,
     )
     # Change head repo to simulate a fork
-    if "pull_request" in github_event and "head" in github_event["pull_request"]:
-        github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
-    # Ensure base repo info is present
-    if "pull_request" in github_event and "base" in github_event["pull_request"]:
-        github_event["pull_request"]["base"]["repo"] = {
-            "full_name": "canonical/github-runner-operator",
-        }
+    _make_fork_pr(github_event)
 
     result = render_and_execute_script(
         template=pre_job_template,
