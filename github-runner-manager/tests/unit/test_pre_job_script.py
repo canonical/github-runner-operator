@@ -692,7 +692,12 @@ def test_internal_pr_skips_author_association_check(
     event_type: str,
     default_template_vars: Dict,
 ):
-    """Test that internal PRs (same repo) skip author association check regardless of role."""
+    """
+    arrange: given an internal PR event (head and base repos match) with any author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is skipped and the script succeeds regardless of the
+        author's association level.
+    """
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = event_type
 
@@ -765,7 +770,12 @@ def test_fork_pr_performs_author_association_check(
     event_type: str,
     default_template_vars: Dict,
 ):
-    """Test that fork PRs (different repos) perform author association check."""
+    """
+    arrange: given a fork PR event (head and base repos differ) with a specific author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is performed and the script exits with the expected code
+        based on whether the author has sufficient permissions (OWNER/MEMBER/COLLABORATOR).
+    """
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = event_type
 
@@ -831,7 +841,13 @@ def test_missing_repo_info_performs_author_association_check(
     event_type: str,
     default_template_vars: Dict,
 ):
-    """Test that missing repo info triggers author association check."""
+    """
+    arrange: given a PR event with missing repository information and a specific author
+        association.
+    act: when the pre-job script is executed.
+    assert: the author association check is performed as a safety fallback and the script exits
+        with the expected code based on the author's permissions.
+    """
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = event_type
 
@@ -898,10 +914,11 @@ def test_issue_comment_always_performs_author_association_check(
     expected_exit_code: int,
     default_template_vars: Dict,
 ):
-    """Test that issue_comment events always perform author association check.
-    
-    Unlike PR events, issue_comment does not distinguish between internal and fork PRs.
-    The author association check is always performed regardless of repository context.
+    """
+    arrange: given an issue_comment event with a specific author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is always performed (no fork detection for issue_comment
+        events) and the script exits with the expected code based on the author's permissions.
     """
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = "issue_comment"
