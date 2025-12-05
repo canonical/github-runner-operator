@@ -146,6 +146,9 @@ def _create_github_event_payload(
                 "base": {
                     "ref": "main",
                     "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
                 },
             },
         }
@@ -173,6 +176,9 @@ def _create_github_event_payload(
                 "base": {
                     "ref": "main",
                     "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
                 },
             },
         }
@@ -184,6 +190,20 @@ def _create_github_event_payload(
             "pull_request": {
                 "number": 123,
                 "title": "Test PR for Review",
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
             },
             "review": {
                 "author_association": author_association,
@@ -202,6 +222,20 @@ def _create_github_event_payload(
             "pull_request": {
                 "number": 123,
                 "title": "Test PR for Review Comment",
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
             },
             "comment": {
                 "author_association": author_association,
@@ -323,8 +357,10 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
     author_association: str,
     default_template_vars: Dict,
 ):
-    """Test that OWNER/MEMBER/COLLABORATOR are all allowed."""
+    """Test that OWNER/MEMBER/COLLABORATOR are all allowed (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
+    # Make it a fork PR to test the author association logic
+    github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -354,8 +390,10 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
     author_association: str,
     default_template_vars: Dict,
 ):
-    """Test that untrusted author associations are blocked."""
+    """Test that untrusted author associations are blocked (for fork PRs)."""
     github_event = _create_github_event_payload(author_association=author_association)
+    # Make it a fork PR to test the author association logic
+    github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
 
     result = render_and_execute_script(
         template=pre_job_template,
@@ -516,6 +554,12 @@ def test_author_association_check_by_event_type(
         event_type=event_type,
     )
 
+    # For PR-related events (except issue_comment), make them fork PRs to test author association logic
+    # Internal PRs skip the check, so we need fork PRs to test the actual authorization logic
+    if event_type in ["pull_request", "pull_request_target", "pull_request_review", "pull_request_review_comment"]:
+        if "pull_request" in github_event and "head" in github_event["pull_request"]:
+            github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
+
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
@@ -597,3 +641,215 @@ def test_events_skip_author_association_check(
     assert f"Skipping contributor check for event: {event_type}" in result.stderr
     assert "Author association:" not in result.stderr
     assert "Insufficient user authorization" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,event_type",
+    [
+        ("CONTRIBUTOR", "pull_request"),
+        ("FIRST_TIME_CONTRIBUTOR", "pull_request"),
+        ("NONE", "pull_request"),
+        ("CONTRIBUTOR", "pull_request_target"),
+        ("CONTRIBUTOR", "pull_request_review"),
+        ("CONTRIBUTOR", "pull_request_review_comment"),
+    ],
+    ids=[
+        "pr_internal_contributor",
+        "pr_internal_first_time",
+        "pr_internal_none",
+        "pr_target_internal_contributor",
+        "pr_review_internal_contributor",
+        "pr_review_comment_internal_contributor",
+    ],
+)
+def test_internal_pr_skips_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that internal PRs (same repo) skip author association check regardless of role."""
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload with matching head and base repo (internal PR)
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    # Internal PR should succeed regardless of author association
+    assert result.returncode == 0, (
+        f"Expected exit code 0 for internal {event_type} with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Should log that it's an internal PR and skip the check
+    assert "Internal PR detected" in result.stderr
+    assert "skipping author association check" in result.stderr
+    assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+    # Should NOT perform the author association check
+    assert "Author association: " not in result.stderr
+    assert "Insufficient user authorization" not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code,event_type",
+    [
+        ("OWNER", 0, "pull_request"),
+        ("MEMBER", 0, "pull_request"),
+        ("COLLABORATOR", 0, "pull_request"),
+        ("CONTRIBUTOR", 1, "pull_request"),
+        ("FIRST_TIME_CONTRIBUTOR", 1, "pull_request"),
+        ("NONE", 1, "pull_request"),
+        ("OWNER", 0, "pull_request_target"),
+        ("CONTRIBUTOR", 1, "pull_request_target"),
+        ("MEMBER", 0, "pull_request_review"),
+        ("CONTRIBUTOR", 1, "pull_request_review"),
+        ("COLLABORATOR", 0, "pull_request_review_comment"),
+        ("NONE", 1, "pull_request_review_comment"),
+    ],
+    ids=[
+        "fork_pr_owner_allowed",
+        "fork_pr_member_allowed",
+        "fork_pr_collaborator_allowed",
+        "fork_pr_contributor_blocked",
+        "fork_pr_first_time_blocked",
+        "fork_pr_none_blocked",
+        "fork_pr_target_owner_allowed",
+        "fork_pr_target_contributor_blocked",
+        "fork_pr_review_member_allowed",
+        "fork_pr_review_contributor_blocked",
+        "fork_pr_review_comment_collaborator_allowed",
+        "fork_pr_review_comment_none_blocked",
+    ],
+)
+def test_fork_pr_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that fork PRs (different repos) perform author association check."""
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload with different head and base repo (fork PR)
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+    )
+    # Change head repo to simulate a fork
+    if "pull_request" in github_event and "head" in github_event["pull_request"]:
+        github_event["pull_request"]["head"]["repo"]["full_name"] = "external-user/github-runner-operator"
+    # Ensure base repo info is present
+    if "pull_request" in github_event and "base" in github_event["pull_request"]:
+        github_event["pull_request"]["base"]["repo"] = {
+            "full_name": "canonical/github-runner-operator",
+        }
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for fork {event_type} with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Should log that it's a fork PR and perform the check
+    assert "Fork PR detected" in result.stderr
+    assert "performing author association check" in result.stderr
+    assert f"Author association: {author_association}" in result.stderr
+
+    if expected_exit_code == 0:
+        assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+        assert "Insufficient user authorization" not in result.stderr
+    else:
+        assert "Insufficient user authorization (author_association)" in result.stderr
+        assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code,event_type",
+    [
+        ("OWNER", 0, "pull_request"),
+        ("MEMBER", 0, "pull_request"),
+        ("COLLABORATOR", 0, "pull_request"),
+        ("CONTRIBUTOR", 1, "pull_request"),
+        ("OWNER", 0, "pull_request_target"),
+        ("CONTRIBUTOR", 1, "pull_request_target"),
+    ],
+    ids=[
+        "missing_repo_owner_allowed",
+        "missing_repo_member_allowed",
+        "missing_repo_collaborator_allowed",
+        "missing_repo_contributor_blocked",
+        "missing_repo_target_owner_allowed",
+        "missing_repo_target_contributor_blocked",
+    ],
+)
+def test_missing_repo_info_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that missing repo info triggers author association check."""
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload without repo information
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+    )
+    # Remove repo info from head
+    if "pull_request" in github_event and "head" in github_event["pull_request"]:
+        if "repo" in github_event["pull_request"]["head"]:
+            del github_event["pull_request"]["head"]["repo"]
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for {event_type} with missing repo info "
+        f"and {author_association}, got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Should log that repo info is unavailable and perform the check
+    assert "Repository information unavailable" in result.stderr
+    assert "performing author association check" in result.stderr
+    assert f"Author association: {author_association}" in result.stderr
+
+    if expected_exit_code == 0:
+        assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
+        assert "Insufficient user authorization" not in result.stderr
+    else:
+        assert "Insufficient user authorization (author_association)" in result.stderr
+        assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
