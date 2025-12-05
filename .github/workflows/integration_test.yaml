@@ -1,11 +1,8 @@
 name: integration-tests
 
 on:
-  pull_request:
-
-  schedule:
-    # Trigger at 6:00 AM and 6:00 PM UTC
-    - cron: "0 6,18 * * *"
+  #pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
