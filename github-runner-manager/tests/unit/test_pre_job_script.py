@@ -801,126 +801,90 @@ def test_internal_pr_skips_author_association_check(
 
 
 @pytest.mark.parametrize(
-    "author_association,expected_exit_code,event_type,expected_logs,forbidden_logs",
+    "author_association,expected_exit_code,event_type,expected_log",
     [
         pytest.param(
             "OWNER",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_owner_allowed",
         ),
         pytest.param(
             "MEMBER",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_member_allowed",
         ),
         pytest.param(
             "COLLABORATOR",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_collaborator_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_contributor_blocked",
         ),
         pytest.param(
             "FIRST_TIME_CONTRIBUTOR",
             1,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_first_time_blocked",
         ),
         pytest.param(
             "NONE",
             1,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_none_blocked",
         ),
         pytest.param(
             "OWNER",
             0,
             "pull_request_target",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_target_owner_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
             "pull_request_target",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_target_contributor_blocked",
         ),
         pytest.param(
             "MEMBER",
             0,
             "pull_request_review",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_review_member_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
             "pull_request_review",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_review_contributor_blocked",
         ),
         pytest.param(
             "COLLABORATOR",
             0,
             "pull_request_review_comment",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="fork_pr_review_comment_collaborator_allowed",
         ),
         pytest.param(
             "NONE",
             1,
             "pull_request_review_comment",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="fork_pr_review_comment_none_blocked",
         ),
     ],
@@ -932,7 +896,7 @@ def test_fork_pr_performs_author_association_check(
     author_association: str,
     expected_exit_code: int,
     event_type: str,
-    expected_logs: list,
+    expected_log: str,
     default_template_vars: Dict,
 ):
     """Test that fork PRs perform author association checks.
@@ -964,75 +928,57 @@ def test_fork_pr_performs_author_association_check(
         f"Expected exit code {expected_exit_code} for fork {event_type} with "
         f"{author_association}, got {result.returncode}\nstderr: {result.stderr}"
     )
-
-    # Check for expected log messages
-    for log_message in expected_logs:
-        assert (
-            log_message in result.stderr
-        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
+    assert (
+        LOG_FORK_PR_CHECK in result.stderr
+    ), f"Expected log message '{LOG_FORK_PR_CHECK}' not found in stderr: {result.stderr}"
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"
 
 
 @pytest.mark.parametrize(
-    "author_association,expected_exit_code,event_type,expected_logs",
+    "author_association,expected_exit_code,event_type,expected_log",
     [
         pytest.param(
             "OWNER",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="missing_repo_owner_allowed",
         ),
         pytest.param(
             "MEMBER",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="missing_repo_member_allowed",
         ),
         pytest.param(
             "COLLABORATOR",
             0,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="missing_repo_collaborator_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
             "pull_request",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="missing_repo_contributor_blocked",
         ),
         pytest.param(
             "OWNER",
             0,
             "pull_request_target",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_CHECK_PASSED,
-            ],
+            LOG_CHECK_PASSED,
             id="missing_repo_target_owner_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
             "pull_request_target",
-            [
-                LOG_FORK_PR_CHECK,
-                LOG_AUTH_FAILED,
-            ],
+            LOG_AUTH_FAILED,
             id="missing_repo_target_contributor_blocked",
         ),
     ],
@@ -1044,7 +990,7 @@ def test_missing_repo_info_performs_author_association_check(
     author_association: str,
     expected_exit_code: int,
     event_type: str,
-    expected_logs: list,
+    expected_log: str,
     default_template_vars: Dict,
 ):
     """Test author association check when repository information is missing.
@@ -1081,15 +1027,16 @@ def test_missing_repo_info_performs_author_association_check(
         f"and {author_association}, got {result.returncode}\nstderr: {result.stderr}"
     )
 
-    # Check for expected log messages
-    for log_message in expected_logs:
-        assert (
-            log_message in result.stderr
-        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
+    assert (
+        LOG_FORK_PR_CHECK in result.stderr
+    ), f"Expected log message '{LOG_FORK_PR_CHECK}' not found in stderr: {result.stderr}"
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"
 
 
 @pytest.mark.parametrize(
-    "author_association,expected_exit_code,expected_logs",
+    "author_association,expected_exit_code,expected_log",
     [
         pytest.param(
             "OWNER",
