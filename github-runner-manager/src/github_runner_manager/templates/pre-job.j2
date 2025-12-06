@@ -138,61 +138,59 @@ jq -n \
   # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
   # This does not cover all possible events, only the most common ones that can be triggered by external contributors.
   
-  # Determine event type
-  IS_PR_EVENT=false
-  if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" || "${GITHUB_EVENT_NAME}" == "pull_request_review" || "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
-    IS_PR_EVENT=true
-  fi
-  logger -s "IS_PR_EVENT: $IS_PR_EVENT"
+  # Determine event type using regex
+  IS_PR_EVENT=$([[ "$GITHUB_EVENT_NAME" =~ ^(pull_request|pull_request_target|pull_request_review|pull_request_review_comment)$ ]] && echo true || echo false)
+  logger -s "IS_PR_EVENT: $IS_PR_EVENT, GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
   
-  # Handle PR context events - check if internal or fork PR
+  # For PR events, check if internal or fork PR
   if [[ "$IS_PR_EVENT" == "true" ]]; then
     PR_HEAD_REPO=$(jq -r '.pull_request.head.repo.full_name // empty' "$GITHUB_EVENT_PATH")
     PR_BASE_REPO=$(jq -r '.pull_request.base.repo.full_name // empty' "$GITHUB_EVENT_PATH")
     
     # Check if this is an internal PR (same repository)
-    IS_INTERNAL_PR=false
-    if [[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" && "$PR_HEAD_REPO" == "$PR_BASE_REPO" ]]; then
-      IS_INTERNAL_PR=true
-    fi
+    IS_INTERNAL_PR=$([[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" && "$PR_HEAD_REPO" == "$PR_BASE_REPO" ]] && echo true || echo false)
     logger -s "IS_INTERNAL_PR: $IS_INTERNAL_PR (head: $PR_HEAD_REPO, base: $PR_BASE_REPO)"
-    
-    # Skip check for internal PRs, perform check for fork PRs
-    if [[ "$IS_INTERNAL_PR" == "true" ]]; then
-      logger -s "Internal PR detected, skipping author association check"
-      logger -s "The contributor check has passed, proceeding to execute jobs"
+  fi
+  
+  # Skip check for internal PRs, perform check for external PRs and issue comments
+  if [[ "$IS_PR_EVENT" == "true" && "$IS_INTERNAL_PR" == "true" ]]; then
+    logger -s "Internal PR detected, skipping author association check"
+    logger -s "The contributor check has passed, proceeding to execute jobs"
+  
+  # Perform author association check for fork PRs
+  elif [[ "$IS_PR_EVENT" == "true" && "$IS_INTERNAL_PR" == "false" ]]; then
+    # Fork PR or repo info unavailable - perform author association check
+    if [[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" ]]; then
+      logger -s "Fork PR detected, performing author association check"
     else
-      # Fork PR or repo info unavailable - perform author association check
-      if [[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" ]]; then
-        logger -s "Fork PR detected, performing author association check"
-      else
-        logger -s "Repository information unavailable, performing author association check"
-      fi
-      
-      # Get author association from appropriate field based on event type
-      if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" ]]; then
-        AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // empty' "$GITHUB_EVENT_PATH")
-      elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review" ]]; then
-        AUTHOR_ASSOCIATION=$(jq -r '.review.author_association // empty' "$GITHUB_EVENT_PATH")
-      elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
-        AUTHOR_ASSOCIATION=$(jq -r '.comment.author_association // empty' "$GITHUB_EVENT_PATH")
-      fi
-      logger -s "Author association: $AUTHOR_ASSOCIATION"
-
-      if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
-        logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
-        exit 1
-      fi
-
-      logger -s "The contributor check has passed, proceeding to execute jobs"
+      logger -s "Repository information unavailable, performing author association check"
     fi
+    
+    # Get author association from appropriate field based on event type
+    if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" ]]; then
+      AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // empty' "$GITHUB_EVENT_PATH")
+    elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review" ]]; then
+      AUTHOR_ASSOCIATION=$(jq -r '.review.author_association // empty' "$GITHUB_EVENT_PATH")
+    elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
+      AUTHOR_ASSOCIATION=$(jq -r '.comment.author_association // empty' "$GITHUB_EVENT_PATH")
+    fi
+    logger -s "Author association: $AUTHOR_ASSOCIATION"
+
+    IS_ALLOWED_AUTHOR=$([[ "$AUTHOR_ASSOCIATION" == "OWNER" || "$AUTHOR_ASSOCIATION" == "MEMBER" || "$AUTHOR_ASSOCIATION" == "COLLABORATOR" ]] && echo true || echo false)
+    if [[ "$IS_ALLOWED_AUTHOR" == "false" ]]; then
+      logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
+      exit 1
+    fi
+
+    logger -s "The contributor check has passed, proceeding to execute jobs"
   
   # Handle issue context events - always perform author association check
   elif [[ "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
     AUTHOR_ASSOCIATION=$(jq -r '.issue.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
     logger -s "Author association: $AUTHOR_ASSOCIATION"
 
-    if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
+    IS_ALLOWED_AUTHOR=$([[ "$AUTHOR_ASSOCIATION" == "OWNER" || "$AUTHOR_ASSOCIATION" == "MEMBER" || "$AUTHOR_ASSOCIATION" == "COLLABORATOR" ]] && echo true || echo false)
+    if [[ "$IS_ALLOWED_AUTHOR" == "false" ]]; then
       logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
       exit 1
     fi
