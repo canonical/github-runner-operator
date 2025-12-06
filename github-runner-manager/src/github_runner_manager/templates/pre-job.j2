@@ -142,17 +142,15 @@ jq -n \
   IS_PR_EVENT=$([[ "$GITHUB_EVENT_NAME" =~ ^(pull_request|pull_request_target|pull_request_review|pull_request_review_comment)$ ]] && echo true || echo false)
   logger -s "IS_PR_EVENT: $IS_PR_EVENT, GITHUB_EVENT_NAME: $GITHUB_EVENT_NAME"
   
-  # For PR events, check if internal or fork PR
-  if [[ "$IS_PR_EVENT" == "true" ]]; then
-    PR_HEAD_REPO=$(jq -r '.pull_request.head.repo.full_name // empty' "$GITHUB_EVENT_PATH")
-    PR_BASE_REPO=$(jq -r '.pull_request.base.repo.full_name // empty' "$GITHUB_EVENT_PATH")
-    
-    # Check if this is an internal PR (same repository)
-    IS_INTERNAL_PR=$([[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" && "$PR_HEAD_REPO" == "$PR_BASE_REPO" ]] && echo true || echo false)
-    logger -s "IS_INTERNAL_PR: $IS_INTERNAL_PR (head: $PR_HEAD_REPO, base: $PR_BASE_REPO)"
-  fi
+  # Extract PR repository information (will be empty for non-PR events)
+  PR_HEAD_REPO=$(jq -r '.pull_request.head.repo.full_name // empty' "$GITHUB_EVENT_PATH")
+  PR_BASE_REPO=$(jq -r '.pull_request.base.repo.full_name // empty' "$GITHUB_EVENT_PATH")
   
-  # Skip check for internal PRs, perform check for external PRs and issue comments
+  # Check if this is an internal PR (same repository)
+  IS_INTERNAL_PR=$([[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" && "$PR_HEAD_REPO" == "$PR_BASE_REPO" ]] && echo true || echo false)
+  logger -s "IS_INTERNAL_PR: $IS_INTERNAL_PR (head: $PR_HEAD_REPO, base: $PR_BASE_REPO)"
+  
+  # Skip check for internal PRs
   if [[ "$IS_PR_EVENT" == "true" && "$IS_INTERNAL_PR" == "true" ]]; then
     logger -s "Internal PR detected, skipping author association check"
     logger -s "The contributor check has passed, proceeding to execute jobs"
