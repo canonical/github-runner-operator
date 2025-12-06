@@ -1,0 +1,52 @@
+06:17:21 WARNING unexpected facade SSHServer received from the controller
+06:17:21 INFO Adding model github-pr-dfddc-lxd:test-charm-metrics-success-qhzy on cloud localhost
+06:17:21 WARNING unexpected facade SSHServer received from the controller
+06:17:21 WARNING unexpected facade SSHSession received from the controller
+06:17:21 WARNING unexpected facade SSHTunneler received from the controller
+06:17:21 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:17:23 INFO Deploying ch:amd64/noble/any-charm-124
+06:17:39 INFO Deploying local:jammy/github-runner-0
+06:17:40 INFO Waiting for model:
+  test-ntp1vh0t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ntp1vh0t/0 [allocating] waiting: waiting for machine
+06:18:10 INFO Waiting for model:
+  test-ntp1vh0t/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ntp1vh0t/0 [allocating] waiting: waiting for machine
+06:18:40 INFO Waiting for model:
+  test-ntp1vh0t/0 [allocating] waiting: waiting for machine
+06:19:10 INFO Waiting for model:
+  test-ntp1vh0t/0 [allocating] waiting: waiting for machine
+06:19:40 INFO Waiting for model:
+  test-ntp1vh0t/0 [executing] maintenance: installing charm software
+06:20:10 INFO Waiting for model:
+  test-ntp1vh0t/0 [executing] maintenance: installing charm software
+06:20:41 INFO Waiting for model:
+  test-ntp1vh0t/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-ntp1vh0t/0 [idle] active:
+06:21:02 INFO Waiting for model:
+  test-ntp1vh0t/0 [idle] active: 
+06:21:32 INFO Waiting for model:
+  test-ntp1vh0t/0 [idle] active: 
+06:21:35 INFO Current reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:21:35 INFO Waiting for reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:22:36 INFO Current reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:22:36 INFO Current reconcile ID: d86012a7-d523-407e-90fe-538d276c0610, expected reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:22:36 INFO Waiting for reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:23:37 INFO Current reconcile ID: a501abd4-55c0-47b7-95f6-9c9feaf02a34
+06:23:37 INFO Current reconcile ID: a501abd4-55c0-47b7-95f6-9c9feaf02a34, expected reconcile ID: d86012a7-d523-407e-90fe-538d276c0610
+06:23:41 INFO Waiting for model:
+  test-ntp1vh0t/0 [idle] active: 
+06:24:11 INFO Waiting for model:
+  test-ntp1vh0t/0 [idle] active: 
+06:24:14 INFO Current reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:24:14 INFO Waiting for reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:25:15 INFO Current reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:25:15 INFO Current reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5, expected reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:25:15 INFO Waiting for reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:26:16 INFO Current reconcile ID: 35bb3aa4-cc92-4592-9f7d-a2db2007bb2c
+06:26:16 INFO Current reconcile ID: 35bb3aa4-cc92-4592-9f7d-a2db2007bb2c, expected reconcile ID: 27d88aa9-983f-4c69-80f1-0d830cbf7ef5
+06:26:17 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765002073.1646094, "event": "reconciliation", "flavor": "test-ntp1vh0t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.576559782028198}
+{"timestamp": 1765002200.6906524, "event": "reconciliation", "flavor": "test-ntp1vh0t", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.439908027648926}
+{"timestamp": 1765002159.0, "event": "runner_installed", "flavor": "test-ntp1vh0t", "duration": 88.0}
+{"timestamp": 1765002234.536335, "event": "reconciliation", "flavor": "test-ntp1vh0t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.796865940093994}
+{"timestamp": 1765002361.1713126, "event": "reconciliation", "flavor": "test-ntp1vh0t", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.511207342147827}
