@@ -138,24 +138,45 @@ jq -n \
   # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
   # This does not cover all possible events, only the most common ones that can be triggered by external contributors.
   
-  # Handle PR context events - check if internal or fork PR
+  # Determine event type
+  IS_PR_EVENT=false
   if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" || "${GITHUB_EVENT_NAME}" == "pull_request_review" || "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
+    IS_PR_EVENT=true
+  fi
+  logger -s "IS_PR_EVENT: $IS_PR_EVENT"
+  
+  # Handle PR context events - check if internal or fork PR
+  if [[ "$IS_PR_EVENT" == "true" ]]; then
     PR_HEAD_REPO=$(jq -r '.pull_request.head.repo.full_name // empty' "$GITHUB_EVENT_PATH")
     PR_BASE_REPO=$(jq -r '.pull_request.base.repo.full_name // empty' "$GITHUB_EVENT_PATH")
     
-    # Skip check for internal PRs (same repository)
+    # Check if this is an internal PR (same repository)
+    IS_INTERNAL_PR=false
     if [[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" && "$PR_HEAD_REPO" == "$PR_BASE_REPO" ]]; then
-      logger -s "Internal PR detected (head: $PR_HEAD_REPO, base: $PR_BASE_REPO), skipping author association check"
+      IS_INTERNAL_PR=true
+    fi
+    logger -s "IS_INTERNAL_PR: $IS_INTERNAL_PR (head: $PR_HEAD_REPO, base: $PR_BASE_REPO)"
+    
+    # Skip check for internal PRs, perform check for fork PRs
+    if [[ "$IS_INTERNAL_PR" == "true" ]]; then
+      logger -s "Internal PR detected, skipping author association check"
       logger -s "The contributor check has passed, proceeding to execute jobs"
-    # Perform check for fork PRs or when repo info unavailable
     else
+      # Fork PR or repo info unavailable - perform author association check
       if [[ -n "$PR_HEAD_REPO" && -n "$PR_BASE_REPO" ]]; then
-        logger -s "Fork PR detected (head: $PR_HEAD_REPO, base: $PR_BASE_REPO), performing author association check"
+        logger -s "Fork PR detected, performing author association check"
       else
         logger -s "Repository information unavailable, performing author association check"
       fi
       
-      AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // .issue.author_association // .review.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
+      # Get author association from appropriate field based on event type
+      if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" ]]; then
+        AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // empty' "$GITHUB_EVENT_PATH")
+      elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review" ]]; then
+        AUTHOR_ASSOCIATION=$(jq -r '.review.author_association // empty' "$GITHUB_EVENT_PATH")
+      elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
+        AUTHOR_ASSOCIATION=$(jq -r '.comment.author_association // empty' "$GITHUB_EVENT_PATH")
+      fi
       logger -s "Author association: $AUTHOR_ASSOCIATION"
 
       if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
