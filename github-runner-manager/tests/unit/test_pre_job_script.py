@@ -56,20 +56,13 @@ PR_EVENTS = [
     "pull_request_review_comment",
 ]
 
-# Log message constants for test assertions
-LOG_AUTHOR_ASSOCIATION = "Author association:"
-
-LOG_CONTRIBUTOR_CHECK_PASSED = "The contributor check has passed, proceeding to execute jobs"
-LOG_INSUFFICIENT_AUTHORIZATION = "Insufficient user authorization"
-LOG_ONLY_TRUSTED_ROLES = "Only OWNER, MEMBER, or COLLABORATOR may run workflows"
-
-LOG_FORK_PR_DETECTED = "Fork PR detected"
-LOG_INTERNAL_PR_DETECTED = "Internal PR detected"
-LOG_REPO_INFO_UNAVAILABLE = "Repository information unavailable"
-LOG_PERFORMING_AUTHOR_CHECK = "performing author association check"
-LOG_SKIPPING_AUTHOR_CHECK = "skipping author association check"
-
-LOG_SKIP_EVENT = "Skipping contributor check for event:"
+LOG_SKIPPED_CHECK = "Contributor check skipped for event:"
+LOG_INTERNAL_PR = "Internal PR detected - contributor check skipped"
+LOG_FORK_PR_CHECK = "Fork PR or missing repository detected - performing contributor check"
+LOG_AUTH_FAILED = (
+    "Insufficient user authorization - only OWNER, MEMBER, or COLLABORATOR may run workflows"
+)
+LOG_CHECK_PASSED = "Contributor check passed - proceeding to execute jobs"
 
 
 @pytest.fixture
@@ -405,9 +398,9 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
         f"Expected exit code 0 for {author_association}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert f"Author association: {author_association}" in result.stderr
-    assert LOG_CONTRIBUTOR_CHECK_PASSED in result.stderr
-    assert LOG_INSUFFICIENT_AUTHORIZATION not in result.stderr
+    assert f"Author association: {author_association}, is allowed: true" in result.stderr
+    assert LOG_CHECK_PASSED in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -439,9 +432,8 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
         f"Expected exit code 1 for {author_association}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert f"Author association: {author_association}" in result.stderr
-    assert LOG_INSUFFICIENT_AUTHORIZATION in result.stderr
-    assert LOG_ONLY_TRUSTED_ROLES in result.stderr
+    assert f"Author association: {author_association}, is allowed: false" in result.stderr
+    assert LOG_AUTH_FAILED in result.stderr
 
 
 def test_allow_external_contributor_enabled_skips_check(
@@ -469,8 +461,8 @@ def test_allow_external_contributor_enabled_skips_check(
     ), f"Expected exit code 0, got {result.returncode}\nstderr: {result.stderr}"
     # The check wasn't performed, so these messages shouldn't appear
     assert "AUTHOR_ASSOCIATION" not in result.stderr
-    assert LOG_INSUFFICIENT_AUTHORIZATION not in result.stderr
-    assert "The contributor check has passed" not in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
+    assert LOG_CHECK_PASSED not in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -526,35 +518,32 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
         f"stderr: {result.stderr}"
     )
     assert "Author association: " in result.stderr
-    assert LOG_INSUFFICIENT_AUTHORIZATION in result.stderr
+    assert LOG_AUTH_FAILED in result.stderr
 
 
 @pytest.mark.parametrize(
-    "event_type,author_association,expected_exit_code,expected_logs,forbidden_logs",
+    "event_type,author_association,expected_exit_code,expected_logs",
     [
         # Events that trigger author association checks - success cases
         pytest.param(
             "pull_request",
             "OWNER",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_owner_allowed",
         ),
         pytest.param(
             "pull_request",
             "MEMBER",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_member_allowed",
         ),
         pytest.param(
             "pull_request",
             "COLLABORATOR",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_collaborator_allowed",
         ),
         # Events that trigger author association checks - failure cases
@@ -563,19 +552,16 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "CONTRIBUTOR",
             1,
             [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
             ],
-            [],
             id="pr_contributor_blocked",
         ),
         pytest.param(
             "pull_request_target",
             "OWNER",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_target_owner_allowed",
         ),
         pytest.param(
@@ -583,19 +569,16 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "CONTRIBUTOR",
             1,
             [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
             ],
-            [],
             id="pr_target_contributor_blocked",
         ),
         pytest.param(
             "pull_request_review",
             "MEMBER",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_review_member_allowed",
         ),
         pytest.param(
@@ -603,19 +586,16 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "FIRST_TIME_CONTRIBUTOR",
             1,
             [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
             ],
-            [],
             id="pr_review_first_time_blocked",
         ),
         pytest.param(
             "pull_request_review_comment",
             "COLLABORATOR",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
             id="pr_review_comment_collaborator_allowed",
         ),
         pytest.param(
@@ -623,19 +603,16 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "NONE",
             1,
             [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
             ],
-            [],
             id="pr_review_comment_none_blocked",
         ),
         pytest.param(
             "issue_comment",
             "OWNER",
             0,
-            [LOG_AUTHOR_ASSOCIATION, LOG_CONTRIBUTOR_CHECK_PASSED],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_CHECK_PASSED],
             id="issue_comment_owner_allowed",
         ),
         pytest.param(
@@ -643,11 +620,8 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "CONTRIBUTOR",
             1,
             [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="issue_comment_contributor_blocked",
         ),
         # Events that skip author association checks
@@ -655,24 +629,21 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
             "push",
             "CONTRIBUTOR",
             0,
-            [LOG_SKIP_EVENT],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_SKIPPED_CHECK],
             id="push_skipped",
         ),
         pytest.param(
             "workflow_dispatch",
             "CONTRIBUTOR",
             0,
-            [LOG_SKIP_EVENT],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_SKIPPED_CHECK],
             id="workflow_dispatch_skipped",
         ),
         pytest.param(
             "schedule",
             "CONTRIBUTOR",
             0,
-            [LOG_SKIP_EVENT],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
+            [LOG_SKIPPED_CHECK],
             id="schedule_skipped",
         ),
     ],
@@ -685,7 +656,6 @@ def test_author_association_check_by_event_type(
     author_association: str,
     expected_exit_code: int,
     expected_logs: list,
-    forbidden_logs: list,
     default_template_vars: Dict,
 ):
     """Test author association checks for different GitHub event types."""
@@ -722,12 +692,6 @@ def test_author_association_check_by_event_type(
         assert (
             log_message in result.stderr
         ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
-
-    # Check that forbidden log messages are not present
-    for log_message in forbidden_logs:
-        assert (
-            log_message not in result.stderr
-        ), f"Forbidden log message '{log_message}' found in stderr: {result.stderr}"
 
 
 @pytest.mark.parametrize(
@@ -771,8 +735,8 @@ def test_events_skip_author_association_check(
     ), f"Expected exit code 0 for {event_type}, got {result.returncode}\nstderr: {result.stderr}"
 
     # Should skip the contributor check
-    assert f"Skipping contributor check for event: {event_type}" in result.stderr
-    assert LOG_INSUFFICIENT_AUTHORIZATION not in result.stderr
+    assert f"Contributor check skipped for event: {event_type}" in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -798,7 +762,8 @@ def test_internal_pr_skips_author_association_check(
     event_type: str,
     default_template_vars: Dict,
 ):
-    """
+    """Test that internal PRs skip author association checks.
+
     arrange: given an internal PR event (head and base repos match) with any author association.
     act: when the pre-job script is executed.
     assert: the author association check is skipped and the script succeeds regardless of the
@@ -829,11 +794,10 @@ def test_internal_pr_skips_author_association_check(
     )
 
     # Should log that it's an internal PR and skip the check
-    assert LOG_INTERNAL_PR_DETECTED in result.stderr
-    assert LOG_SKIPPING_AUTHOR_CHECK in result.stderr
-    assert LOG_CONTRIBUTOR_CHECK_PASSED in result.stderr
+    assert LOG_INTERNAL_PR in result.stderr
+    assert LOG_CHECK_PASSED in result.stderr
     # Should NOT perform the author association check
-    assert LOG_INSUFFICIENT_AUTHORIZATION not in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -844,12 +808,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_owner_allowed",
         ),
         pytest.param(
@@ -857,12 +818,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_member_allowed",
         ),
         pytest.param(
@@ -870,12 +828,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_collaborator_allowed",
         ),
         pytest.param(
@@ -883,13 +838,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_contributor_blocked",
         ),
         pytest.param(
@@ -897,13 +848,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_first_time_blocked",
         ),
         pytest.param(
@@ -911,13 +858,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_none_blocked",
         ),
         pytest.param(
@@ -925,12 +868,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request_target",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_target_owner_allowed",
         ),
         pytest.param(
@@ -938,13 +878,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request_target",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_target_contributor_blocked",
         ),
         pytest.param(
@@ -952,12 +888,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request_review",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_review_member_allowed",
         ),
         pytest.param(
@@ -965,13 +898,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request_review",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_review_contributor_blocked",
         ),
         pytest.param(
@@ -979,12 +908,9 @@ def test_internal_pr_skips_author_association_check(
             0,
             "pull_request_review_comment",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="fork_pr_review_comment_collaborator_allowed",
         ),
         pytest.param(
@@ -992,13 +918,9 @@ def test_internal_pr_skips_author_association_check(
             1,
             "pull_request_review_comment",
             [
-                LOG_FORK_PR_DETECTED,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="fork_pr_review_comment_none_blocked",
         ),
     ],
@@ -1011,7 +933,6 @@ def test_fork_pr_performs_author_association_check(
     expected_exit_code: int,
     event_type: str,
     expected_logs: list,
-    forbidden_logs: list,
     default_template_vars: Dict,
 ):
     """Test that fork PRs perform author association checks.
@@ -1050,27 +971,18 @@ def test_fork_pr_performs_author_association_check(
             log_message in result.stderr
         ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
 
-    # Check that forbidden log messages are not present
-    for log_message in forbidden_logs:
-        assert (
-            log_message not in result.stderr
-        ), f"Forbidden log message '{log_message}' found in stderr: {result.stderr}"
-
 
 @pytest.mark.parametrize(
-    "author_association,expected_exit_code,event_type,expected_logs,forbidden_logs",
+    "author_association,expected_exit_code,event_type,expected_logs",
     [
         pytest.param(
             "OWNER",
             0,
             "pull_request",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="missing_repo_owner_allowed",
         ),
         pytest.param(
@@ -1078,12 +990,9 @@ def test_fork_pr_performs_author_association_check(
             0,
             "pull_request",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="missing_repo_member_allowed",
         ),
         pytest.param(
@@ -1091,12 +1000,9 @@ def test_fork_pr_performs_author_association_check(
             0,
             "pull_request",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="missing_repo_collaborator_allowed",
         ),
         pytest.param(
@@ -1104,13 +1010,9 @@ def test_fork_pr_performs_author_association_check(
             1,
             "pull_request",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="missing_repo_contributor_blocked",
         ),
         pytest.param(
@@ -1118,12 +1020,9 @@ def test_fork_pr_performs_author_association_check(
             0,
             "pull_request_target",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
+                LOG_FORK_PR_CHECK,
+                LOG_CHECK_PASSED,
             ],
-            [LOG_INSUFFICIENT_AUTHORIZATION],
             id="missing_repo_target_owner_allowed",
         ),
         pytest.param(
@@ -1131,13 +1030,9 @@ def test_fork_pr_performs_author_association_check(
             1,
             "pull_request_target",
             [
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_PERFORMING_AUTHOR_CHECK,
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
+                LOG_FORK_PR_CHECK,
+                LOG_AUTH_FAILED,
             ],
-            [],
             id="missing_repo_target_contributor_blocked",
         ),
     ],
@@ -1150,7 +1045,6 @@ def test_missing_repo_info_performs_author_association_check(
     expected_exit_code: int,
     event_type: str,
     expected_logs: list,
-    forbidden_logs: list,
     default_template_vars: Dict,
 ):
     """Test author association check when repository information is missing.
@@ -1193,104 +1087,44 @@ def test_missing_repo_info_performs_author_association_check(
             log_message in result.stderr
         ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
 
-    # Check that forbidden log messages are not present
-    for log_message in forbidden_logs:
-        assert (
-            log_message not in result.stderr
-        ), f"Forbidden log message '{log_message}' found in stderr: {result.stderr}"
-
 
 @pytest.mark.parametrize(
-    "author_association,expected_exit_code,expected_logs,forbidden_logs",
+    "author_association,expected_exit_code,expected_logs",
     [
         pytest.param(
             "OWNER",
             0,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-            ],
+            LOG_CHECK_PASSED,
             id="issue_comment_owner_allowed",
         ),
         pytest.param(
             "MEMBER",
             0,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-            ],
+            LOG_CHECK_PASSED,
             id="issue_comment_member_allowed",
         ),
         pytest.param(
             "COLLABORATOR",
             0,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_CONTRIBUTOR_CHECK_PASSED,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-            ],
+            LOG_CHECK_PASSED,
             id="issue_comment_collaborator_allowed",
         ),
         pytest.param(
             "CONTRIBUTOR",
             1,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-            ],
+            LOG_AUTH_FAILED,
             id="issue_comment_contributor_blocked",
         ),
         pytest.param(
             "FIRST_TIME_CONTRIBUTOR",
             1,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-            ],
+            LOG_AUTH_FAILED,
             id="issue_comment_first_time_blocked",
         ),
         pytest.param(
             "NONE",
             1,
-            [
-                LOG_AUTHOR_ASSOCIATION,
-                LOG_INSUFFICIENT_AUTHORIZATION,
-                LOG_ONLY_TRUSTED_ROLES,
-            ],
-            [
-                LOG_INTERNAL_PR_DETECTED,
-                LOG_FORK_PR_DETECTED,
-                LOG_REPO_INFO_UNAVAILABLE,
-            ],
+            LOG_AUTH_FAILED,
             id="issue_comment_none_blocked",
         ),
     ],
@@ -1301,8 +1135,7 @@ def test_issue_comment_always_performs_author_association_check(
     tmp_path: Path,
     author_association: str,
     expected_exit_code: int,
-    expected_logs: list,
-    forbidden_logs: list,
+    expected_log: str,
     default_template_vars: Dict,
 ):
     """Test that issue_comment events always perform author association checks.
@@ -1334,14 +1167,6 @@ def test_issue_comment_always_performs_author_association_check(
         f"got {result.returncode}\nstderr: {result.stderr}"
     )
 
-    # Check for expected log messages
-    for log_message in expected_logs:
-        assert (
-            log_message in result.stderr
-        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
-
-    # Check that forbidden log messages are not present
-    for log_message in forbidden_logs:
-        assert (
-            log_message not in result.stderr
-        ), f"Forbidden log message '{log_message}' found in stderr: {result.stderr}"
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"
