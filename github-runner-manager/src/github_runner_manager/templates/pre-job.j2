@@ -172,21 +172,21 @@ jq -n \
     elif [[ "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" ]]; then
       AUTHOR_ASSOCIATION=$(jq -r '.comment.author_association // empty' "$GITHUB_EVENT_PATH")
     fi
-    logger -s "Author association: $AUTHOR_ASSOCIATION"
-
-    IS_ALLOWED_AUTHOR=$([[ "$AUTHOR_ASSOCIATION" == "OWNER" || "$AUTHOR_ASSOCIATION" == "MEMBER" || "$AUTHOR_ASSOCIATION" == "COLLABORATOR" ]] && echo true || echo false)
-    if [[ "$IS_ALLOWED_AUTHOR" == "false" ]]; then
-      logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
-      exit 1
-    fi
-
-    logger -s "The contributor check has passed, proceeding to execute jobs"
   
   # Handle issue context events - always perform author association check
   elif [[ "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
     AUTHOR_ASSOCIATION=$(jq -r '.issue.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
+  
+  # Skip check for other events
+  else
+    logger -s "Skipping contributor check for event: ${GITHUB_EVENT_NAME}"
+  fi
+  
+  # Perform author association validation (common for fork PRs and issue comments)
+  # AUTHOR_ASSOCIATION will be set for fork PRs and issue_comment events
+  if [[ ("$IS_PR_EVENT" == "true" && "$IS_INTERNAL_PR" == "false") || "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
     logger -s "Author association: $AUTHOR_ASSOCIATION"
-
+    
     IS_ALLOWED_AUTHOR=$([[ "$AUTHOR_ASSOCIATION" == "OWNER" || "$AUTHOR_ASSOCIATION" == "MEMBER" || "$AUTHOR_ASSOCIATION" == "COLLABORATOR" ]] && echo true || echo false)
     if [[ "$IS_ALLOWED_AUTHOR" == "false" ]]; then
       logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
@@ -194,10 +194,6 @@ jq -n \
     fi
 
     logger -s "The contributor check has passed, proceeding to execute jobs"
-  
-  # Skip check for other events
-  else
-    logger -s "Skipping contributor check for event: ${GITHUB_EVENT_NAME}"
   fi
 {% endif %}
 
