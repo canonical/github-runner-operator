@@ -1,0 +1,47 @@
+18:18:15 WARNING unexpected facade SSHServer received from the controller
+18:18:15 INFO Adding model github-pr-dfddc-lxd:test-charm-runner-i64q on cloud localhost
+18:18:15 WARNING unexpected facade SSHServer received from the controller
+18:18:15 WARNING unexpected facade SSHSession received from the controller
+18:18:15 WARNING unexpected facade SSHTunneler received from the controller
+18:18:15 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:18:19 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:37 INFO Deploying local:jammy/github-runner-0
+18:18:37 INFO Waiting for model:
+  test-ntaxl7u7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ntaxl7u7/0 [allocating] waiting: waiting for machine
+18:19:07 INFO Waiting for model:
+  test-ntaxl7u7/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-ntaxl7u7/0 [executing] maintenance: installing charm software
+18:19:37 INFO Waiting for model:
+  test-ntaxl7u7/0 [allocating] waiting: waiting for machine
+18:20:08 INFO Waiting for model:
+  test-ntaxl7u7/0 [allocating] waiting: agent initialising
+18:20:38 INFO Waiting for model:
+  test-ntaxl7u7/0 [executing] maintenance: installing charm software
+18:21:08 INFO Waiting for model:
+  test-ntaxl7u7/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-ntaxl7u7/0 [idle] active: 
+18:21:38 INFO Waiting for model:
+  test-ntaxl7u7/0 [idle] active:
+18:21:45 INFO Waiting for model:
+  test-ntaxl7u7/0 [idle] active: 
+18:22:15 INFO Waiting for model:
+  test-ntaxl7u7/0 [idle] active: 
+18:22:18 INFO Current reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:22:18 INFO Waiting for reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:23:19 INFO Current reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:23:19 INFO Current reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df, expected reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:23:19 INFO Waiting for reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:24:20 INFO Current reconcile ID: bc1a64e4-5e94-4d18-b922-89fb973bb5cc
+18:24:20 INFO Current reconcile ID: bc1a64e4-5e94-4d18-b922-89fb973bb5cc, expected reconcile ID: 27c74d77-fd7b-405c-8b0d-30dca0cb65df
+18:24:27 INFO Waiting for model:
+  test-ntaxl7u7/0 [idle] active: 
+18:24:57 INFO Waiting for model:
+  test-ntaxl7u7/0 [idle] active: 
+18:25:00 INFO Current reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
+18:25:00 INFO Waiting for reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
+18:26:01 INFO Current reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
+18:26:01 INFO Current reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7, expected reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
+18:26:01 INFO Waiting for reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
+18:27:02 INFO Current reconcile ID: 3a623d23-fe29-43b9-b17f-0765227b8d42
+18:27:02 INFO Current reconcile ID: 3a623d23-fe29-43b9-b17f-0765227b8d42, expected reconcile ID: 957dd20f-f94d-494b-bd4a-3609914c44e7
