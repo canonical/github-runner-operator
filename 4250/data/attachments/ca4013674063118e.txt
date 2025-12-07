@@ -1,0 +1,94 @@
+06:31:59 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:32:29 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:32:32 INFO Current reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:32:32 INFO Waiting for reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:33:34 INFO Current reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:33:34 INFO Current reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8, expected reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:33:34 INFO Waiting for reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:34:35 INFO Current reconcile ID: e0632354-2606-4393-aeff-24dc05c829f2
+06:34:35 INFO Current reconcile ID: e0632354-2606-4393-aeff-24dc05c829f2, expected reconcile ID: a64197d0-e460-4d49-bb5f-9be743a152b8
+06:34:35 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:35:05 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:35:13 INFO Current reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:35:13 INFO Waiting for reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:36:14 INFO Current reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:36:14 INFO Current reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482, expected reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:36:14 INFO Waiting for reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:37:15 INFO Current reconcile ID: d56ee401-085b-4374-b02c-b79347554f27
+06:37:15 INFO Current reconcile ID: d56ee401-085b-4374-b02c-b79347554f27, expected reconcile ID: 7b4da01d-5e42-483d-a58e-5c482b8f5482
+06:37:19 INFO Wait for condition not met, sleeping 30
+06:38:01 INFO [TEST SETUP] Run command pkill -9 run.sh on test-sfkyova4-0-n-8395eb5cf595
+06:38:01 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.11', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:79:26:97'}]])
+06:38:02 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-sfkyova4-0-n-8395eb5cf595.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.11 pkill -9 run.sh'
+06:38:03 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.11' (ED25519) to the list of known hosts.
+'
+06:38:06 INFO Runner test-sfkyova4-0-n-8395eb5cf595 status: online
+06:38:06 INFO Runner still marked as online, waiting for it to be marked offline
+06:39:06 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:39:37 INFO Waiting for model:
+  test-sfkyova4/0 [idle] active: 
+06:39:39 INFO Current reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:39:39 INFO Waiting for reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:40:40 INFO Current reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:40:40 INFO Current reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867, expected reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:40:40 INFO Waiting for reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:41:41 INFO Current reconcile ID: f3c7c0b0-2e32-48ee-b67b-e76f2c151e9e
+06:41:41 INFO Current reconcile ID: f3c7c0b0-2e32-48ee-b67b-e76f2c151e9e, expected reconcile ID: 5f6d834f-bad4-4a6a-ba18-91f9cf77b867
+06:41:42 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765089126.4225397, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.182433128356934}
+{"timestamp": 1765089252.2659385, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.726388454437256}
+{"timestamp": 1765089283.869798, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 7.939722299575806}
+{"timestamp": 1765089410.5191004, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 6.587543487548828}
+{"timestamp": 1765089367.0, "event": "runner_installed", "flavor": "test-sfkyova4", "duration": 84.0}
+{"timestamp": 1765089443.0, "event": "runner_start", "flavor": "test-sfkyova4", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 76.0, "queue_duration": 2.0}
+{"timestamp": 1765089483.0, "event": "runner_stop", "flavor": "test-sfkyova4", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1765089539.7341924, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.124327898025513}
+{"timestamp": 1765089554.2524464, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.460177659988403}
+{"timestamp": 1765089680.688866, "event": "reconciliation", "flavor": "test-sfkyova4", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.373093366622925}
+06:41:43 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-cu8i  github-pr-dfddc-lxd  localhost/localhost  3.6.12   unsupported  06:41:43Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-sfkyova4           active      1  any-charm      latest/beta  124  no       
+test-sfkyova4                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-sfkyova4/0*  active    idle   0        10.24.173.178             
+test-sfkyova4/0*                         active    idle   1        10.24.173.85    8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.24.173.178  juju-62402c-0  ubuntu@24.04  github-runner  Running
+1        started  10.24.173.85   juju-62402c-1  ubuntu@22.04  github-runner  Running
+
+06:41:43 INFO Juju error logs:
+
+machine-0: 06:19:20 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:19:20 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:16 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:20:16 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-sfkyova4-0: 06:21:25 ERROR unit.test-sfkyova4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-sfkyova4-0: 06:21:26 ERROR unit.test-sfkyova4/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-sfkyova4-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:41:43 INFO Forgetting model main...
