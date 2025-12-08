@@ -818,27 +818,24 @@ def test_pre_job_script_with_real_workflow_data(
     """
     # Load real workflow data
     workflow_data_path = (
-        Path(__file__).parent.parent
-        / "data"
-        / "workflows"
-        / f"{workflow_name}.json"
+        Path(__file__).parent.parent / "data" / "workflows" / f"{workflow_name}.json"
     )
-    
+
     assert workflow_data_path.exists(), f"Workflow data file not found: {workflow_data_path}"
-    
+
     with open(workflow_data_path) as f:
         github_event = json.load(f)
-    
+
     # Update environment to match the event type
     env_vars = github_env_vars.copy()
     env_vars["GITHUB_EVENT_NAME"] = workflow_name
-    
+
     # For PR events, update repo info from the real data
     if "pull_request" in workflow_name and "repository" in github_event:
         repo_info = github_event["repository"]
         env_vars["GITHUB_REPOSITORY"] = repo_info["full_name"]
         env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
-    
+
     # For push events, update repo and ref info
     if workflow_name == "push" and "repository" in github_event:
         repo_info = github_event["repository"]
@@ -846,7 +843,7 @@ def test_pre_job_script_with_real_workflow_data(
         env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
         if "ref" in github_event:
             env_vars["GITHUB_REF"] = github_event["ref"]
-    
+
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
@@ -854,12 +851,12 @@ def test_pre_job_script_with_real_workflow_data(
         github_event=github_event,
         tmp_path=tmp_path,
     )
-    
+
     assert result.returncode == expected_exit_code, (
         f"Expected exit code {expected_exit_code} for real {workflow_name} event, "
         f"got {result.returncode}\nstderr: {result.stderr}"
     )
-    
+
     # Check for expected log messages
     for log_message in expected_logs:
         assert (
