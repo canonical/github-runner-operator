@@ -695,6 +695,179 @@ def test_author_association_check_by_event_type(
 
 
 @pytest.mark.parametrize(
+    "workflow_name,expected_exit_code,expected_logs",
+    [
+        # Pull request events - these are internal PRs (same repo)
+        pytest.param(
+            "pull_request",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_internal",
+        ),
+        pytest.param(
+            "pull_request_target",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_target_internal",
+        ),
+        pytest.param(
+            "pull_request_review",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_review_internal",
+        ),
+        # Issue comment - always performs author association check
+        pytest.param(
+            "issue_comment",
+            0,
+            [LOG_CHECK_PASSED],
+            id="real_issue_comment_owner",
+        ),
+        # Events that skip contributor checks
+        pytest.param(
+            "push",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_push_skipped",
+        ),
+        pytest.param(
+            "workflow_dispatch",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_workflow_dispatch_skipped",
+        ),
+        pytest.param(
+            "release",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_release_skipped",
+        ),
+        pytest.param(
+            "create",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_create_skipped",
+        ),
+        pytest.param(
+            "delete",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_delete_skipped",
+        ),
+        pytest.param(
+            "issues",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_issues_skipped",
+        ),
+        pytest.param(
+            "label",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_label_skipped",
+        ),
+        pytest.param(
+            "gollum",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_gollum_skipped",
+        ),
+        pytest.param(
+            "discussion",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_discussion_skipped",
+        ),
+        pytest.param(
+            "discussion_comment",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_discussion_comment_skipped",
+        ),
+        pytest.param(
+            "branch_protection_rule",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_branch_protection_rule_skipped",
+        ),
+        pytest.param(
+            "workflow_run",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_workflow_run_skipped",
+        ),
+    ],
+)
+def test_pre_job_script_with_real_workflow_data(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    workflow_name: str,
+    expected_exit_code: int,
+    expected_logs: list,
+    default_template_vars: Dict,
+):
+    """Test pre-job script behavior using real GitHub workflow event data.
+
+    This test uses actual GitHub event payloads from tests/data/workflows/
+    to verify that the pre-job script handles real-world scenarios correctly.
+
+    arrange: Given a real GitHub event payload from the test data directory
+    act: When the pre-job script is executed with the real event data
+    assert: The script exits with the expected code and logs the expected messages
+    """
+    # Load real workflow data
+    workflow_data_path = (
+        Path(__file__).parent.parent
+        / "data"
+        / "workflows"
+        / f"{workflow_name}.json"
+    )
+    
+    assert workflow_data_path.exists(), f"Workflow data file not found: {workflow_data_path}"
+    
+    with open(workflow_data_path) as f:
+        github_event = json.load(f)
+    
+    # Update environment to match the event type
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = workflow_name
+    
+    # For PR events, update repo info from the real data
+    if "pull_request" in workflow_name and "repository" in github_event:
+        repo_info = github_event["repository"]
+        env_vars["GITHUB_REPOSITORY"] = repo_info["full_name"]
+        env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
+    
+    # For push events, update repo and ref info
+    if workflow_name == "push" and "repository" in github_event:
+        repo_info = github_event["repository"]
+        env_vars["GITHUB_REPOSITORY"] = repo_info["full_name"]
+        env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
+        if "ref" in github_event:
+            env_vars["GITHUB_REF"] = github_event["ref"]
+    
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+    
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for real {workflow_name} event, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+    
+    # Check for expected log messages
+    for log_message in expected_logs:
+        assert (
+            log_message in result.stderr
+        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
+
+
+@pytest.mark.parametrize(
     "event_type",
     [
         "push",
