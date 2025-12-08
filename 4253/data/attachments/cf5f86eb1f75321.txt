@@ -1,0 +1,88 @@
+06:19:37 INFO GitHub token rate limit: Rate(reset=2025-12-08 07:04:10+00:00, remaining=4989, limit=5000)
+06:19:49 WARNING unexpected facade SSHServer received from the controller
+06:19:49 INFO Adding model github-pr-dfddc-lxd:test-charm-metrics-failure-et9s on cloud localhost
+06:19:49 WARNING unexpected facade SSHServer received from the controller
+06:19:49 WARNING unexpected facade SSHSession received from the controller
+06:19:49 WARNING unexpected facade SSHTunneler received from the controller
+06:19:50 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:19:52 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:08 INFO Deploying local:jammy/github-runner-0
+06:20:08 INFO Waiting for model:
+  test-vya4806h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vya4806h/0 [allocating] waiting: waiting for machine
+06:20:38 INFO Waiting for model:
+  test-vya4806h/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-vya4806h/0 [idle] active: 
+06:21:08 INFO Waiting for model:
+  test-vya4806h/0 [allocating] waiting: waiting for machine
+06:21:38 INFO Waiting for model:
+  test-vya4806h/0 [allocating] waiting: agent initialising
+06:22:09 INFO Waiting for model:
+  test-vya4806h/0 [executing] maintenance: installing charm software
+06:22:39 INFO Waiting for model:
+  test-vya4806h/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-vya4806h/0 [idle] active: 
+06:23:10 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:23:17 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:23:47 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:23:49 INFO Current reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:23:49 INFO Waiting for reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:24:50 INFO Current reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:24:50 INFO Current reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9, expected reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:24:50 INFO Waiting for reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:25:52 INFO Current reconcile ID: 90daf573-5514-448e-a058-0a62194b5c19
+06:25:52 INFO Current reconcile ID: 90daf573-5514-448e-a058-0a62194b5c19, expected reconcile ID: 9f21ad5a-a020-47e8-aa5a-0ab098bd77a9
+06:26:31 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:27:01 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:27:05 INFO Current reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:27:05 INFO Waiting for reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:28:06 INFO Current reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:28:06 INFO Current reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95, expected reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:28:06 INFO Waiting for reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:29:07 INFO Current reconcile ID: 8d379b3a-96f8-4adb-b9e8-9dc08bddb91d
+06:29:07 INFO Current reconcile ID: 8d379b3a-96f8-4adb-b9e8-9dc08bddb91d, expected reconcile ID: 1ec14e79-2d89-4100-8164-fc9d27c6bb95
+06:29:11 INFO [TEST SETUP] Exposing port 8080 on test-vya4806h-0-n-36a62fa0a46b
+06:29:11 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ba:91:73'}]])
+06:29:12 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-vya4806h-0-n-36a62fa0a46b.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.202 &
+06:29:13 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.202' (ED25519) to the list of known hosts.
+
+06:29:14 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-vya4806h-0-n-36a62fa0a46b
+06:29:14 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ba:91:73'}]])
+06:29:15 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vya4806h-0-n-36a62fa0a46b.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.202 nc -z localhost 8080'
+06:29:16 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+06:29:17 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-vya4806h-0-n-36a62fa0a46b
+06:29:17 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.202', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:ba:91:73'}]])
+06:29:18 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-vya4806h-0-n-36a62fa0a46b.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.202 curl http://localhost:8080'
+06:29:19 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  87898      0 --:--:-- --:--:-- --:--:--  101k
+'
+06:29:21 INFO Wait for condition not met, sleeping 10
+06:29:32 INFO Wait for condition not met, sleeping 60
+06:30:32 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:31:02 INFO Waiting for model:
+  test-vya4806h/0 [idle] active: 
+06:31:05 INFO Current reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:31:05 INFO Waiting for reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:32:06 INFO Current reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:32:06 INFO Current reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902, expected reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:32:06 INFO Waiting for reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:33:07 INFO Current reconcile ID: 4a4eb5da-3d26-4862-90e0-066cf639dac8
+06:33:07 INFO Current reconcile ID: 4a4eb5da-3d26-4862-90e0-066cf639dac8, expected reconcile ID: 2f866133-ef69-47a2-8208-4ef272ef0902
+06:33:08 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765175293.0, "event": "runner_installed", "flavor": "test-vya4806h", "duration": 94.0}
+{"timestamp": 1765175366.0, "event": "runner_start", "flavor": "test-vya4806h", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "idle": 73.0, "queue_duration": 2.0}
+{"timestamp": 1765175366.0, "event": "runner_stop", "flavor": "test-vya4806h", "workflow": "Workflow Dispatch Failure Tests 2a34f8b1-41e4-4bcb-9bbf-7a74e6c482f7", "repo": "yanksyoon/test-github-runner-operator", "github_event": "workflow_dispatch", "status": "repo-policy-check-failure", "status_info": {"code": 403}, "job_duration": 0.0, "job_conclusion": "failure"}
+{"timestamp": 1765175445.8073, "event": "reconciliation", "flavor": "test-vya4806h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 12.14107632637024}
+{"timestamp": 1765175571.769711, "event": "reconciliation", "flavor": "test-vya4806h", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 5.819790601730347}
