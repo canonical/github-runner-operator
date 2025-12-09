@@ -26,25 +26,27 @@ jobs:
         working-directory: ./github-runner-manager/
         env:
           # GitHub configuration
-          INTEGRATION_TOKEN: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
-          INTEGRATION_TOKEN_ALT: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
+          # INTEGRATION_TOKEN, INTEGRATION_TOKEN_ALT
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_1 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_1 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_2 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_2 }}
           # OpenStack configuration
-          OS_AUTH_URL: ${{ vars.INTEGRATION_TEST_OPENSTACK_AUTH_URL }}
-          OS_PROJECT_DOMAIN_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_PROJECT_DOMAIN_NAME }}
-          OS_PROJECT_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_PROJECT_NAME }}
-          OS_USER_DOMAIN_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_USER_DOMAIN_NAME }}
-          OS_USERNAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_USERNAME }}
-          OS_PASSWORD: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
-          OS_NETWORK: ${{ vars.INTEGRATION_TEST_OPENSTACK_NETWORK_NAME }}
-          OS_REGION_NAME: ${{ vars.INTEGRATION_TEST_OPENSTACK_REGION_NAME }}
+          # OS_AUTH_URL, OS_PROJECT_DOMAIN_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_USERNAME, OS_PASSWORD, OS_NETWORK, OS_REGION_NAME
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_3 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_3 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_4 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_4 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_5 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_5 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_6 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_6 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_7 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_7 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_8 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_8 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_9 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_9 }}
+          ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
         run: |
           tox -e integration -- -v --tb=native -s \
-            --github-repository=${{ vars.INTEGRATION_TEST_PATH_2 }} \
+            --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \
             --no-proxy="${{ vars.INTEGRATION_TEST_NO_PROXY }}" \
             --openstack-https-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTPS_PROXY }}" \
             --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
             --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
-            --openstack-flavor="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
+            --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
             --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"

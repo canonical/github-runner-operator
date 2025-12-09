@@ -48,6 +48,22 @@ GITHUB_DEFAULT_ENV_VARS = {
     "RUNNER_TOOL_CACHE": "/opt/hostedtoolcache",
 }
 
+# PR-related event types that support fork detection
+PR_EVENTS = [
+    "pull_request",
+    "pull_request_target",
+    "pull_request_review",
+    "pull_request_review_comment",
+]
+
+LOG_SKIPPED_CHECK = "Contributor check skipped for event:"
+LOG_INTERNAL_PR = "Internal PR detected - contributor check skipped"
+LOG_FORK_PR_CHECK = "Fork PR or missing repository detected - performing contributor check"
+LOG_AUTH_FAILED = (
+    "Insufficient user authorization - only OWNER, MEMBER, or COLLABORATOR may run workflows"
+)
+LOG_CHECK_PASSED = "Contributor check passed - proceeding to execute jobs"
+
 
 @pytest.fixture
 def pre_job_template() -> Template:
@@ -97,37 +113,21 @@ def default_template_vars() -> Dict:
 def _create_github_event_payload(
     author_association: str,
     event_type: str = "pull_request",
+    is_fork: bool = False,
 ) -> Dict:
     """Create a GitHub event payload for testing.
 
     Args:
         author_association: The author's association with the repository
             (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
-        event_type: The type of GitHub event (pull_request, push, etc.)
+        event_type: The type of GitHub event (pull_request, push, issue_comment, etc.)
+        is_fork: Whether to simulate a fork PR (only applies to PR events)
 
     Returns:
         A dictionary representing the GitHub event payload
     """
-    payload = {
-        "action": event_type,
-        "number": 123,
-        "pull_request": {
-            "author_association": author_association,
-            "number": 123,
-            "title": "Test PR",
-            "user": {
-                "login": "test-user",
-                "type": "User",
-            },
-            "head": {
-                "ref": "feature-branch",
-                "sha": "abc123",
-            },
-            "base": {
-                "ref": "main",
-                "sha": "def456",
-            },
-        },
+    # Base payload common to all events
+    base_payload = {
         "repository": {
             "name": "github-runner-operator",
             "full_name": "canonical/github-runner-operator",
@@ -139,7 +139,194 @@ def _create_github_event_payload(
             "login": "test-user",
         },
     }
-    return payload
+
+    # Determine head repo based on is_fork parameter
+    head_repo_full_name = (
+        "external-user/github-runner-operator" if is_fork else "canonical/github-runner-operator"
+    )
+
+    # Event-specific payloads
+    if event_type == "pull_request":
+        return {
+            **base_payload,
+            "action": "opened",
+            "number": 123,
+            "pull_request": {
+                "author_association": author_association,
+                "number": 123,
+                "title": "Test PR",
+                "user": {
+                    "login": "test-user",
+                    "type": "User",
+                },
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": head_repo_full_name,
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+            },
+        }
+
+    elif event_type == "pull_request_target":
+        return {
+            **base_payload,
+            "action": "opened",
+            "number": 123,
+            "pull_request": {
+                "author_association": author_association,
+                "number": 123,
+                "title": "Test PR Target",
+                "user": {
+                    "login": "test-user",
+                    "type": "User",
+                },
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": head_repo_full_name,
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+            },
+        }
+
+    elif event_type == "pull_request_review":
+        return {
+            **base_payload,
+            "action": "submitted",
+            "pull_request": {
+                "number": 123,
+                "title": "Test PR for Review",
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": head_repo_full_name,
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+            },
+            "review": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "state": "approved",
+                "body": "LGTM",
+            },
+        }
+
+    elif event_type == "pull_request_review_comment":
+        return {
+            **base_payload,
+            "action": "created",
+            "pull_request": {
+                "number": 123,
+                "title": "Test PR for Review Comment",
+                "head": {
+                    "ref": "feature-branch",
+                    "sha": "abc123",
+                    "repo": {
+                        "full_name": head_repo_full_name,
+                    },
+                },
+                "base": {
+                    "ref": "main",
+                    "sha": "def456",
+                    "repo": {
+                        "full_name": "canonical/github-runner-operator",
+                    },
+                },
+            },
+            "comment": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "body": "Good catch!",
+            },
+        }
+
+    elif event_type == "issue_comment":
+        return {
+            **base_payload,
+            "action": "created",
+            "issue": {
+                "author_association": author_association,
+                "number": 456,
+                "title": "Test Issue",
+                "user": {
+                    "login": "test-user",
+                },
+            },
+            "comment": {
+                "author_association": author_association,
+                "user": {
+                    "login": "test-user",
+                },
+                "body": "This is a comment",
+            },
+        }
+
+    elif event_type == "push":
+        return {
+            **base_payload,
+            "ref": "refs/heads/main",
+            "before": "def456",
+            "after": "abc123",
+            "commits": [
+                {
+                    "id": "abc123",
+                    "message": "Test commit",
+                    "author": {
+                        "name": "test-user",
+                        "email": "test@example.com",
+                    },
+                }
+            ],
+        }
+
+    elif event_type == "workflow_dispatch":
+        return {
+            **base_payload,
+            "ref": "refs/heads/main",
+            "inputs": {},
+        }
+
+    elif event_type == "schedule":
+        return {
+            **base_payload,
+            "schedule": "0 0 * * *",
+        }
+
+    else:
+        # Default fallback for unknown event types
+        return {
+            **base_payload,
+            "action": "unknown",
+        }
 
 
 def render_and_execute_script(
@@ -193,14 +380,17 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
     author_association: str,
     default_template_vars: Dict,
 ):
-    """Test that OWNER/MEMBER/COLLABORATOR are all allowed."""
-    github_event = _create_github_event_payload(author_association=author_association)
+    """Test that OWNER/MEMBER/COLLABORATOR are all allowed (for fork PRs)."""
+    fork_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+    )
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=github_env_vars,
-        github_event=github_event,
+        github_event=fork_event,
         tmp_path=tmp_path,
     )
 
@@ -208,9 +398,9 @@ def test_allow_external_contributor_disabled_allows_trusted_roles(
         f"Expected exit code 0 for {author_association}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert f"Author association: {author_association}" in result.stderr
-    assert "The contributor check has passed, proceeding to execute jobs" in result.stderr
-    assert "Insufficient user authorization" not in result.stderr
+    assert f"Author association: {author_association}, is allowed: true" in result.stderr
+    assert LOG_CHECK_PASSED in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
 
 
 @pytest.mark.parametrize(
@@ -224,14 +414,17 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
     author_association: str,
     default_template_vars: Dict,
 ):
-    """Test that untrusted author associations are blocked."""
-    github_event = _create_github_event_payload(author_association=author_association)
+    """Test that untrusted author associations are blocked (for fork PRs)."""
+    fork_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+    )
 
     result = render_and_execute_script(
         template=pre_job_template,
         template_vars=default_template_vars,
         env_vars=github_env_vars,
-        github_event=github_event,
+        github_event=fork_event,
         tmp_path=tmp_path,
     )
 
@@ -239,9 +432,8 @@ def test_allow_external_contributor_disabled_blocks_untrusted_roles(
         f"Expected exit code 1 for {author_association}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert f"Author association: {author_association}" in result.stderr
-    assert "Insufficient user authorization (author_association)" in result.stderr
-    assert "Only OWNER, MEMBER, or COLLABORATOR may run workflows" in result.stderr
+    assert f"Author association: {author_association}, is allowed: false" in result.stderr
+    assert LOG_AUTH_FAILED in result.stderr
 
 
 def test_allow_external_contributor_enabled_skips_check(
@@ -269,14 +461,14 @@ def test_allow_external_contributor_enabled_skips_check(
     ), f"Expected exit code 0, got {result.returncode}\nstderr: {result.stderr}"
     # The check wasn't performed, so these messages shouldn't appear
     assert "AUTHOR_ASSOCIATION" not in result.stderr
-    assert "Insufficient user authorization" not in result.stderr
-    assert "The contributor check has passed" not in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
+    assert LOG_CHECK_PASSED not in result.stderr
 
 
 @pytest.mark.parametrize(
     "github_event,description",
     [
-        (
+        pytest.param(
             {
                 "ref": "refs/heads/main",
                 "repository": {
@@ -285,8 +477,9 @@ def test_allow_external_contributor_enabled_skips_check(
                 },
             },
             "missing pull_request field (push event)",
+            id="no_pull_request",
         ),
-        (
+        pytest.param(
             {
                 "pull_request": {
                     "number": 123,
@@ -297,9 +490,9 @@ def test_allow_external_contributor_enabled_skips_check(
                 },
             },
             "missing author_association field",
+            id="no_author_association",
         ),
     ],
-    ids=["no_pull_request", "no_author_association"],
 )
 def test_allow_external_contributor_null_or_missing_fields_blocked(
     pre_job_template: Template,
@@ -318,11 +511,779 @@ def test_allow_external_contributor_null_or_missing_fields_blocked(
         tmp_path=tmp_path,
     )
 
-    # When pull_request or author_association is missing, jq returns "null"
-    # The check should fail as "null" != "OWNER|MEMBER|COLLABORATOR"
+    # When pull_request or author_association is missing, jq returns empty string
+    # The check should fail as "" != "OWNER|MEMBER|COLLABORATOR"
     assert result.returncode == 1, (
         f"Expected exit code 1 for {description}, got {result.returncode}\n"
         f"stderr: {result.stderr}"
     )
-    assert "Author association: null" in result.stderr
-    assert "Insufficient user authorization" in result.stderr
+    assert "Author association: " in result.stderr
+    assert LOG_AUTH_FAILED in result.stderr
+
+
+@pytest.mark.parametrize(
+    "event_type,author_association,expected_exit_code,expected_logs",
+    [
+        # Events that trigger author association checks - success cases
+        pytest.param(
+            "pull_request",
+            "OWNER",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_owner_allowed",
+        ),
+        pytest.param(
+            "pull_request",
+            "MEMBER",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_member_allowed",
+        ),
+        pytest.param(
+            "pull_request",
+            "COLLABORATOR",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_collaborator_allowed",
+        ),
+        # Events that trigger author association checks - failure cases
+        pytest.param(
+            "pull_request",
+            "CONTRIBUTOR",
+            1,
+            [
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
+            ],
+            id="pr_contributor_blocked",
+        ),
+        pytest.param(
+            "pull_request_target",
+            "OWNER",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_target_owner_allowed",
+        ),
+        pytest.param(
+            "pull_request_target",
+            "CONTRIBUTOR",
+            1,
+            [
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
+            ],
+            id="pr_target_contributor_blocked",
+        ),
+        pytest.param(
+            "pull_request_review",
+            "MEMBER",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_review_member_allowed",
+        ),
+        pytest.param(
+            "pull_request_review",
+            "FIRST_TIME_CONTRIBUTOR",
+            1,
+            [
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
+            ],
+            id="pr_review_first_time_blocked",
+        ),
+        pytest.param(
+            "pull_request_review_comment",
+            "COLLABORATOR",
+            0,
+            [LOG_CHECK_PASSED, LOG_FORK_PR_CHECK],
+            id="pr_review_comment_collaborator_allowed",
+        ),
+        pytest.param(
+            "pull_request_review_comment",
+            "NONE",
+            1,
+            [
+                LOG_AUTH_FAILED,
+                LOG_FORK_PR_CHECK,
+            ],
+            id="pr_review_comment_none_blocked",
+        ),
+        pytest.param(
+            "issue_comment",
+            "OWNER",
+            0,
+            [LOG_CHECK_PASSED],
+            id="issue_comment_owner_allowed",
+        ),
+        pytest.param(
+            "issue_comment",
+            "CONTRIBUTOR",
+            1,
+            [
+                LOG_AUTH_FAILED,
+            ],
+            id="issue_comment_contributor_blocked",
+        ),
+        # Events that skip author association checks
+        pytest.param(
+            "push",
+            "CONTRIBUTOR",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="push_skipped",
+        ),
+        pytest.param(
+            "workflow_dispatch",
+            "CONTRIBUTOR",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="workflow_dispatch_skipped",
+        ),
+        pytest.param(
+            "schedule",
+            "CONTRIBUTOR",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="schedule_skipped",
+        ),
+    ],
+)
+def test_author_association_check_by_event_type(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    event_type: str,
+    author_association: str,
+    expected_exit_code: int,
+    expected_logs: list,
+    default_template_vars: Dict,
+):
+    """Test author association checks for different GitHub event types."""
+    # Update environment to match the event type
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # For PR-related events (except issue_comment), make them fork PRs to test author
+    # association logic. Internal PRs skip the check, so we need fork PRs to test the
+    # actual authorization logic
+    is_fork = event_type in PR_EVENTS
+
+    event_payload = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+        is_fork=is_fork,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=event_payload,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for {event_type} with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Check for expected log messages
+    for log_message in expected_logs:
+        assert (
+            log_message in result.stderr
+        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
+
+
+@pytest.mark.parametrize(
+    "workflow_name,expected_exit_code,expected_logs",
+    [
+        # Pull request events - these are internal PRs (same repo)
+        pytest.param(
+            "pull_request",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_internal",
+        ),
+        pytest.param(
+            "pull_request_target",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_target_internal",
+        ),
+        pytest.param(
+            "pull_request_review",
+            0,
+            [LOG_INTERNAL_PR, LOG_CHECK_PASSED],
+            id="real_pull_request_review_internal",
+        ),
+        # Issue comment - always performs author association check
+        pytest.param(
+            "issue_comment",
+            0,
+            [LOG_CHECK_PASSED],
+            id="real_issue_comment_owner",
+        ),
+        # Events that skip contributor checks
+        pytest.param(
+            "push",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_push_skipped",
+        ),
+        pytest.param(
+            "workflow_dispatch",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_workflow_dispatch_skipped",
+        ),
+        pytest.param(
+            "release",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_release_skipped",
+        ),
+        pytest.param(
+            "create",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_create_skipped",
+        ),
+        pytest.param(
+            "delete",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_delete_skipped",
+        ),
+        pytest.param(
+            "issues",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_issues_skipped",
+        ),
+        pytest.param(
+            "label",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_label_skipped",
+        ),
+        pytest.param(
+            "gollum",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_gollum_skipped",
+        ),
+        pytest.param(
+            "discussion",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_discussion_skipped",
+        ),
+        pytest.param(
+            "discussion_comment",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_discussion_comment_skipped",
+        ),
+        pytest.param(
+            "branch_protection_rule",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_branch_protection_rule_skipped",
+        ),
+        pytest.param(
+            "workflow_run",
+            0,
+            [LOG_SKIPPED_CHECK],
+            id="real_workflow_run_skipped",
+        ),
+    ],
+)
+def test_pre_job_script_with_real_workflow_data(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    workflow_name: str,
+    expected_exit_code: int,
+    expected_logs: list,
+    default_template_vars: Dict,
+):
+    """Test pre-job script behavior using real GitHub workflow event data.
+
+    This test uses actual GitHub event payloads from tests/data/workflows/
+    to verify that the pre-job script handles real-world scenarios correctly.
+
+    arrange: Given a real GitHub event payload from the test data directory
+    act: When the pre-job script is executed with the real event data
+    assert: The script exits with the expected code and logs the expected messages
+    """
+    # Load real workflow data
+    workflow_data_path = (
+        Path(__file__).parent.parent / "data" / "workflows" / f"{workflow_name}.json"
+    )
+
+    assert workflow_data_path.exists(), f"Workflow data file not found: {workflow_data_path}"
+
+    with open(workflow_data_path) as f:
+        github_event = json.load(f)
+
+    # Update environment to match the event type
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = workflow_name
+
+    # For PR events, update repo info from the real data
+    if "pull_request" in workflow_name and "repository" in github_event:
+        repo_info = github_event["repository"]
+        env_vars["GITHUB_REPOSITORY"] = repo_info["full_name"]
+        env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
+
+    # For push events, update repo and ref info
+    if workflow_name == "push" and "repository" in github_event:
+        repo_info = github_event["repository"]
+        env_vars["GITHUB_REPOSITORY"] = repo_info["full_name"]
+        env_vars["GITHUB_REPOSITORY_OWNER"] = repo_info["owner"]["login"]
+        if "ref" in github_event:
+            env_vars["GITHUB_REF"] = github_event["ref"]
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for real {workflow_name} event, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Check for expected log messages
+    for log_message in expected_logs:
+        assert (
+            log_message in result.stderr
+        ), f"Expected log message '{log_message}' not found in stderr: {result.stderr}"
+
+
+@pytest.mark.parametrize(
+    "event_type",
+    [
+        "push",
+        "workflow_dispatch",
+        "schedule",
+        "release",
+        "deployment",
+        "unknown_event",
+    ],
+)
+def test_events_skip_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that non-contributor events skip the author association check."""
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    github_event = _create_github_event_payload(
+        author_association="CONTRIBUTOR",  # This would normally be blocked
+        event_type=event_type,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    # All these events should succeed regardless of author association
+    assert (
+        result.returncode == 0
+    ), f"Expected exit code 0 for {event_type}, got {result.returncode}\nstderr: {result.stderr}"
+
+    # Should skip the contributor check
+    assert f"Contributor check skipped for event: {event_type}" in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,event_type",
+    [
+        pytest.param("CONTRIBUTOR", "pull_request", id="pr_internal_contributor"),
+        pytest.param("FIRST_TIME_CONTRIBUTOR", "pull_request", id="pr_internal_first_time"),
+        pytest.param("NONE", "pull_request", id="pr_internal_none"),
+        pytest.param("CONTRIBUTOR", "pull_request_target", id="pr_target_internal_contributor"),
+        pytest.param("CONTRIBUTOR", "pull_request_review", id="pr_review_internal_contributor"),
+        pytest.param(
+            "CONTRIBUTOR",
+            "pull_request_review_comment",
+            id="pr_review_comment_internal_contributor",
+        ),
+    ],
+)
+def test_internal_pr_skips_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    event_type: str,
+    default_template_vars: Dict,
+):
+    """Test that internal PRs skip author association checks.
+
+    arrange: given an internal PR event (head and base repos match) with any author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is skipped and the script succeeds regardless of the
+        author's association level.
+    """
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload with matching head and base repo (internal PR)
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+        is_fork=False,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    # Internal PR should succeed regardless of author association
+    assert result.returncode == 0, (
+        f"Expected exit code 0 for internal {event_type} with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    # Should log that it's an internal PR and skip the check
+    assert LOG_INTERNAL_PR in result.stderr
+    assert LOG_CHECK_PASSED in result.stderr
+    # Should NOT perform the author association check
+    assert LOG_AUTH_FAILED not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code,event_type,expected_log",
+    [
+        pytest.param(
+            "OWNER",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="fork_pr_owner_allowed",
+        ),
+        pytest.param(
+            "MEMBER",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="fork_pr_member_allowed",
+        ),
+        pytest.param(
+            "COLLABORATOR",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="fork_pr_collaborator_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            "pull_request",
+            LOG_AUTH_FAILED,
+            id="fork_pr_contributor_blocked",
+        ),
+        pytest.param(
+            "FIRST_TIME_CONTRIBUTOR",
+            1,
+            "pull_request",
+            LOG_AUTH_FAILED,
+            id="fork_pr_first_time_blocked",
+        ),
+        pytest.param(
+            "NONE",
+            1,
+            "pull_request",
+            LOG_AUTH_FAILED,
+            id="fork_pr_none_blocked",
+        ),
+        pytest.param(
+            "OWNER",
+            0,
+            "pull_request_target",
+            LOG_CHECK_PASSED,
+            id="fork_pr_target_owner_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            "pull_request_target",
+            LOG_AUTH_FAILED,
+            id="fork_pr_target_contributor_blocked",
+        ),
+        pytest.param(
+            "MEMBER",
+            0,
+            "pull_request_review",
+            LOG_CHECK_PASSED,
+            id="fork_pr_review_member_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            "pull_request_review",
+            LOG_AUTH_FAILED,
+            id="fork_pr_review_contributor_blocked",
+        ),
+        pytest.param(
+            "COLLABORATOR",
+            0,
+            "pull_request_review_comment",
+            LOG_CHECK_PASSED,
+            id="fork_pr_review_comment_collaborator_allowed",
+        ),
+        pytest.param(
+            "NONE",
+            1,
+            "pull_request_review_comment",
+            LOG_AUTH_FAILED,
+            id="fork_pr_review_comment_none_blocked",
+        ),
+    ],
+)
+def test_fork_pr_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    event_type: str,
+    expected_log: str,
+    default_template_vars: Dict,
+):
+    """Test that fork PRs perform author association checks.
+
+    arrange: given a fork PR event (head and base repos differ) with a specific author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is performed and the script exits with the expected code
+        based on whether the author has sufficient permissions (OWNER/MEMBER/COLLABORATOR).
+    """
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload with different head and base repo (fork PR)
+    fork_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+        is_fork=True,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=fork_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for fork {event_type} with "
+        f"{author_association}, got {result.returncode}\nstderr: {result.stderr}"
+    )
+    assert (
+        LOG_FORK_PR_CHECK in result.stderr
+    ), f"Expected log message '{LOG_FORK_PR_CHECK}' not found in stderr: {result.stderr}"
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code,event_type,expected_log",
+    [
+        pytest.param(
+            "OWNER",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="missing_repo_owner_allowed",
+        ),
+        pytest.param(
+            "MEMBER",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="missing_repo_member_allowed",
+        ),
+        pytest.param(
+            "COLLABORATOR",
+            0,
+            "pull_request",
+            LOG_CHECK_PASSED,
+            id="missing_repo_collaborator_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            "pull_request",
+            LOG_AUTH_FAILED,
+            id="missing_repo_contributor_blocked",
+        ),
+        pytest.param(
+            "OWNER",
+            0,
+            "pull_request_target",
+            LOG_CHECK_PASSED,
+            id="missing_repo_target_owner_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            "pull_request_target",
+            LOG_AUTH_FAILED,
+            id="missing_repo_target_contributor_blocked",
+        ),
+    ],
+)
+def test_missing_repo_info_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    event_type: str,
+    expected_log: str,
+    default_template_vars: Dict,
+):
+    """Test author association check when repository information is missing.
+
+    arrange: given a PR event with missing repository information and a specific author
+        association.
+    act: when the pre-job script is executed.
+    assert: the author association check is performed as a safety fallback and the script exits
+        with the expected code based on the author's permissions.
+    """
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = event_type
+
+    # Create payload without repo information
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type=event_type,
+    )
+    # Remove repo info from head
+    if "pull_request" in github_event and "head" in github_event["pull_request"]:
+        if "repo" in github_event["pull_request"]["head"]:
+            del github_event["pull_request"]["head"]["repo"]
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for {event_type} with missing repo info "
+        f"and {author_association}, got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    assert (
+        LOG_FORK_PR_CHECK in result.stderr
+    ), f"Expected log message '{LOG_FORK_PR_CHECK}' not found in stderr: {result.stderr}"
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"
+
+
+@pytest.mark.parametrize(
+    "author_association,expected_exit_code,expected_log",
+    [
+        pytest.param(
+            "OWNER",
+            0,
+            LOG_CHECK_PASSED,
+            id="issue_comment_owner_allowed",
+        ),
+        pytest.param(
+            "MEMBER",
+            0,
+            LOG_CHECK_PASSED,
+            id="issue_comment_member_allowed",
+        ),
+        pytest.param(
+            "COLLABORATOR",
+            0,
+            LOG_CHECK_PASSED,
+            id="issue_comment_collaborator_allowed",
+        ),
+        pytest.param(
+            "CONTRIBUTOR",
+            1,
+            LOG_AUTH_FAILED,
+            id="issue_comment_contributor_blocked",
+        ),
+        pytest.param(
+            "FIRST_TIME_CONTRIBUTOR",
+            1,
+            LOG_AUTH_FAILED,
+            id="issue_comment_first_time_blocked",
+        ),
+        pytest.param(
+            "NONE",
+            1,
+            LOG_AUTH_FAILED,
+            id="issue_comment_none_blocked",
+        ),
+    ],
+)
+def test_issue_comment_always_performs_author_association_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    expected_exit_code: int,
+    expected_log: str,
+    default_template_vars: Dict,
+):
+    """Test that issue_comment events always perform author association checks.
+
+    arrange: given an issue_comment event with a specific author association.
+    act: when the pre-job script is executed.
+    assert: the author association check is always performed (no fork detection for issue_comment
+        events) and the script exits with the expected code based on the author's permissions.
+    """
+    env_vars = github_env_vars.copy()
+    env_vars["GITHUB_EVENT_NAME"] = "issue_comment"
+
+    # Create issue_comment event payload
+    github_event = _create_github_event_payload(
+        author_association=author_association,
+        event_type="issue_comment",
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=env_vars,
+        github_event=github_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == expected_exit_code, (
+        f"Expected exit code {expected_exit_code} for issue_comment with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+
+    assert (
+        expected_log in result.stderr
+    ), f"Expected log message '{expected_log}' not found in stderr: {result.stderr}"

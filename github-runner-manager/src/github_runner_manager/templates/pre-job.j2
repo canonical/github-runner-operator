@@ -23,28 +23,101 @@ jq -n \
 
 {% if not allow_external_contributor %}
   # Check author association for events that can be triggered by external contributors
-  if [[ "${GITHUB_EVENT_NAME}" == "pull_request" || "${GITHUB_EVENT_NAME}" == "pull_request_target" || "${GITHUB_EVENT_NAME}" == "pull_request_review" || "${GITHUB_EVENT_NAME}" == "pull_request_review_comment" || "${GITHUB_EVENT_NAME}" == "issue_comment" ]]; then
-    AUTHOR_ASSOCIATION=$(jq -r '.pull_request.author_association // .issue.author_association // .review.author_association // .comment.author_association // empty' "$GITHUB_EVENT_PATH")
-    logger -s "Author association: $AUTHOR_ASSOCIATION"
+  # https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows
+  # This does not cover all possible events, only the most common ones that can be triggered by external contributors.
+  
+  check_author_association() {
+    local event_name="$1"
+    local event_path="$2"
+    
 
-    if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
-      logger -p user.error -s "Insufficient user authorization (author_association). Only OWNER, MEMBER, or COLLABORATOR may run workflows."
+    # Skip check for non-contributor events
+    if [[ "$event_name" != "pull_request" && "$event_name" != "pull_request_target" && 
+          "$event_name" != "pull_request_review" && "$event_name" != "pull_request_review_comment" && 
+          "$event_name" != "issue_comment" ]]; then
+      logger -s "Contributor check skipped for event: $event_name"
+      return 0
+    fi
+    
+    # Helper function to check if author association is allowed
+    is_author_allowed() {
+      local ALLOWED_AUTHORIZATIONS=("OWNER" "MEMBER" "COLLABORATOR")
+      local author="$1"
+      local auth
+      for auth in "${ALLOWED_AUTHORIZATIONS[@]}"; do
+        if [[ "$author" == "$auth" ]]; then
+          return 0
+        fi
+      done
+      return 1
+    }
+    
+    # Handle issue comment events - always check author association
+    if [[ "$event_name" == "issue_comment" ]]; then
+      local author_association=$(jq -r '.comment.author_association // empty' "$event_path")
+      local is_allowed=$(is_author_allowed "$author_association" && echo "true" || echo "false")
       
-      # Write post-job metrics with external contributor check failure status
-      jq -n \
+      logger -s "Author association: $author_association, is allowed: $is_allowed"
+      
+      if [[ "$is_allowed" == "false" ]]; then
+        logger -p user.error -s "Insufficient user authorization - only OWNER, MEMBER, or COLLABORATOR may run workflows"
+        return 1
+      fi
+      return 0
+    fi
+    
+    # Extract PR repository information for PR events
+    local pr_head_repo=$(jq -r '.pull_request.head.repo.full_name // empty' "$event_path")
+    local pr_base_repo=$(jq -r '.pull_request.base.repo.full_name // empty' "$event_path")
+    
+    # Check if this is an internal PR (same repository)
+    local is_internal_pr=$([[ -n "$pr_head_repo" && -n "$pr_base_repo" && "$pr_head_repo" == "$pr_base_repo" ]] && echo true || echo false)
+    logger -s "IS_INTERNAL_PR: $is_internal_pr (head: $pr_head_repo, base: $pr_base_repo)"
+    
+    # Skip check for internal PRs
+    if [[ "$is_internal_pr" == "true" ]]; then
+      logger -s "Internal PR detected - contributor check skipped"
+      return 0
+    fi
+    
+    # Fork PR or missing repository info - perform author association check
+    logger -s "PR HEAD repo: $pr_head_repo, PR BASE repo: $pr_base_repo"
+    logger -s "Fork PR or missing repository detected - performing contributor check"
+    
+    # Get author association from appropriate field based on event type
+    local author_association=""
+    if [[ "$event_name" == "pull_request" || "$event_name" == "pull_request_target" ]]; then
+      author_association=$(jq -r '.pull_request.author_association // empty' "$event_path")
+    elif [[ "$event_name" == "pull_request_review" ]]; then
+      author_association=$(jq -r '.review.author_association // empty' "$event_path")
+    elif [[ "$event_name" == "pull_request_review_comment" ]]; then
+      author_association=$(jq -r '.comment.author_association // empty' "$event_path")
+    fi
+    
+    local is_allowed=$(is_author_allowed "$author_association" && echo "true" || echo "false")
+    logger -s "Author association: $author_association, is allowed: $is_allowed"
+    
+    if [[ "$is_allowed" == "false" ]]; then
+      logger -p user.error -s "Insufficient user authorization - only OWNER, MEMBER, or COLLABORATOR may run workflows"
+      return 1
+    fi
+    
+    return 0
+  }
+  
+  # Perform the author association check
+  check_author_association "$GITHUB_EVENT_NAME" "$GITHUB_EVENT_PATH"
+  if [[ $? -ne 0 ]]; then
+    logger -s "Contributor check failed - aborting job execution"
+    jq -n \
         --argjson timestamp "$timestamp" \
         '{
           "timestamp": $timestamp,
           "status": "external-contributor-check-failure"
         }' > "{{ metrics_exchange_path }}/post-job-metrics.json" || true
-      
-      exit 1
-    fi
-
-    logger -s "The contributor check has passed, proceeding to execute jobs"
-  else
-    logger -s "Skipping contributor check for event: ${GITHUB_EVENT_NAME}"
+    exit 1
   fi
+  logger -s "Contributor check passed - proceeding to execute jobs"
 {% endif %}
 
 if [[ -n "$DOCKERHUB_MIRROR" ]]; then

@@ -247,6 +247,7 @@ def external_contributor_pull_request(
     logger.info("Pull request closed successfully")
 
 
+@pytest.mark.skip(reason="Integration tests with GitHub disabled")
 @pytest.mark.usefixtures(
     "application_with_external_contributor_disabled", "external_contributor_pull_request"
 )
@@ -295,6 +296,7 @@ def test_external_contributor_disabled_default_security(
     )
 
 
+@pytest.mark.skip(reason="Integration tests with GitHub disabled")
 @pytest.mark.usefixtures(
     "application_with_external_contributor_enabled", "external_contributor_pull_request"
 )

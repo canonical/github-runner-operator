@@ -45,8 +45,8 @@ When `allow-external-contributor` is set to `false`, outside collaborators can s
 1. External contributors create pull requests as usual
 2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
 3. If the code is safe, the maintainer can:
-   - Approve and merge the pull request (workflows will run with the maintainer's permissions)
-   - Add the contributor as a collaborator if they will be contributing regularly
+  - Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
+  - Manually trigger workflow runs if needed (via workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners, eliminating the need for manual comment-based approval workflows.
 

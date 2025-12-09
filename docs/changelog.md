@@ -2,9 +2,13 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
-## 2025-12-03
+## 2025-12-09
 
 - Deprecate `repo-policy-complinace` service.
+
+## 2025-12-05
+
+- Modified pre-job script to distinguish between internal PRs and fork PRs when applying author association checks. Internal PRs (where head and base repositories match) now skip the author association check, allowing team members to run workflows on their internal branches. Fork PRs continue to enforce OWNER/MEMBER/COLLABORATOR requirements for security.
 
 ## 2025-12-01
 

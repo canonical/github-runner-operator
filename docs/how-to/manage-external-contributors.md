@@ -64,12 +64,14 @@ When `allow-external-contributor` is set to `false`, external contributors can s
 1. External contributors create pull requests as usual
 2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
 3. If the code is safe, the maintainer can:
-   - Approve and merge the pull request (workflows will run with the maintainer's permissions)
-   - Manually trigger workflow runs if needed
+  - Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
+  - Manually trigger workflow runs if needed (via workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
 
 ## Troubleshooting
+
+This section covers troubleshooting for common issues that users may encounter.
 
 ### Workflows not running for external contributors
 
@@ -77,20 +79,21 @@ If workflows are not running for external contributors when `allow-external-cont
 
 1. Check the runner logs for authorization errors
 2. Verify the user's author association in the GitHub repository
-3. Consider temporarily enabling external contributor access for testing
 
 ### Workflows running for untrusted users
 
 If you notice workflows running for users who shouldn't have access:
 
-1. Set `allow-external-contributor=false` immediately
+1. Set `allow-external-contributor=false`
 2. Review repository collaborator permissions
 3. Check for any bypass rules in branch protection settings
 4. Audit recent workflow runs in the GitHub Actions tab
 
 ## Migration from repo-policy-compliance
 
-If you were previously using the `repo-policy-compliance` charm, the `allow-external-contributor` configuration provides similar security controls with a simpler configuration model. The key differences are:
+If you were previously using the `repo-policy-compliance` charm, the `allow-external-contributor`
+configuration provides similar security controls with a simpler configuration model. The key
+differences are:
 
 - No separate charm deployment required
 - Configuration is handled directly through the github-runner charm
@@ -102,4 +105,3 @@ To migrate:
 1. Remove the `repo-policy-compliance` charm integration
 2. Configure `allow-external-contributor=false` on the github-runner charm  
 3. Verify that external contributor workflows are properly restricted
-4. Update any documentation referencing the old policy service
