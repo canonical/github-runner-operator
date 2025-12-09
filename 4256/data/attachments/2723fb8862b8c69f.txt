@@ -1,0 +1,68 @@
+00:32:22 WARNING unexpected facade SSHServer received from the controller
+00:32:22 INFO Adding model github-pr-dfddc-lxd:test-charm-upgrade-kch6 on cloud localhost
+00:32:22 WARNING unexpected facade SSHServer received from the controller
+00:32:22 WARNING unexpected facade SSHSession received from the controller
+00:32:22 WARNING unexpected facade SSHTunneler received from the controller
+00:32:23 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+00:32:25 INFO Deploying ch:amd64/noble/any-charm-124
+00:32:39 INFO Deploying local:jammy/github-runner-0
+00:32:39 INFO Waiting for model:
+  test-u0wdkb8v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u0wdkb8v/0 [allocating] waiting: waiting for machine
+00:33:09 INFO Waiting for model:
+  test-u0wdkb8v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u0wdkb8v/0 [executing] maintenance: installing charm software
+00:33:39 INFO Waiting for model:
+  test-u0wdkb8v/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-u0wdkb8v/0 [idle] active: 
+00:34:09 INFO Waiting for model:
+  test-u0wdkb8v/0 [allocating] waiting: agent initialising
+00:34:39 INFO Waiting for model:
+  test-u0wdkb8v/0 [executing] maintenance: installing charm software
+00:35:09 INFO Waiting for model:
+  test-u0wdkb8v/0 [idle] active: 
+00:37:06 INFO Waiting for model:
+  test-u0wdkb8v/0 [idle] active:
+00:37:37 INFO Model status:
+
+Model                    Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-upgrade-kch6  github-pr-dfddc-lxd  localhost/localhost  3.6.12   unsupported  00:37:37Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-u0wdkb8v           active      1  any-charm      latest/beta  124  no       
+test-u0wdkb8v                                  active      1  github-runner                 1  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-u0wdkb8v/0*  active    idle   0        10.230.68.103          
+test-u0wdkb8v/0*                         active    idle   1        10.230.68.252          
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.230.68.103  juju-ca31ef-0  ubuntu@24.04  github-runner  Running
+1        started  10.230.68.252  juju-ca31ef-1  ubuntu@22.04  github-runner  Running
+
+00:37:38 INFO Juju error logs:
+
+machine-0: 00:33:04 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 00:33:04 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 00:33:56 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 00:33:56 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-u0wdkb8v-0: 00:34:46 ERROR unit.test-u0wdkb8v/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 342, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-u0wdkb8v-0: 00:34:48 ERROR unit.test-u0wdkb8v/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 118, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 313, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-u0wdkb8v-0/charm/./src/charm.py", line 512, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+00:37:38 INFO Forgetting model main...
