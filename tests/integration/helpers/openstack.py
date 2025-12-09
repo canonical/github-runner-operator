@@ -1,9 +1,8 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
 import logging
-import secrets
 from asyncio import sleep
-from typing import Optional, TypedDict
+from typing import TypedDict
 
 import openstack.connection
 from github_runner_manager import constants
