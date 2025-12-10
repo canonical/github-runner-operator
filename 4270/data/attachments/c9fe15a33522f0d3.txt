@@ -1,0 +1,53 @@
+18:18:22 WARNING unexpected facade SSHServer received from the controller
+18:18:22 INFO Adding model github-pr-42766-lxd:test-charm-metrics-success-ib55 on cloud localhost
+18:18:22 WARNING unexpected facade SSHServer received from the controller
+18:18:22 WARNING unexpected facade SSHSession received from the controller
+18:18:22 WARNING unexpected facade SSHTunneler received from the controller
+18:18:23 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:18:25 INFO Deploying ch:amd64/noble/any-charm-124
+18:18:41 INFO Deploying local:jammy/github-runner-0
+18:18:41 INFO Waiting for model:
+  test-m05edeaf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m05edeaf/0 [allocating] waiting: waiting for machine
+18:19:11 INFO Waiting for model:
+  test-m05edeaf/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-m05edeaf/0 [allocating] waiting: agent initialising
+18:19:42 INFO Waiting for model:
+  test-m05edeaf/0 [allocating] waiting: waiting for machine
+18:20:12 INFO Waiting for model:
+  test-m05edeaf/0 [allocating] waiting: waiting for machine
+18:20:42 INFO Waiting for model:
+  test-m05edeaf/0 [allocating] waiting: agent initialising
+18:21:12 INFO Waiting for model:
+  test-m05edeaf/0 [executing] maintenance: installing charm software
+18:21:43 INFO Waiting for model:
+  test-m05edeaf/0 [executing] maintenance: installing charm software
+18:22:13 INFO Waiting for model:
+  test-m05edeaf/0 [idle] active:
+18:22:28 INFO Waiting for model:
+  test-m05edeaf/0 [idle] active: 
+18:22:58 INFO Waiting for model:
+  test-m05edeaf/0 [idle] active: 
+18:23:01 INFO Current reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:23:01 INFO Waiting for reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:24:02 INFO Current reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:24:02 INFO Current reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d, expected reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:24:02 INFO Waiting for reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:25:03 INFO Current reconcile ID: 79de20ad-cd3d-47ae-9fb3-de0ef51071e4
+18:25:03 INFO Current reconcile ID: 79de20ad-cd3d-47ae-9fb3-de0ef51071e4, expected reconcile ID: 9d1935d4-1458-4709-8001-ffc1a955459d
+18:25:07 INFO Waiting for model:
+  test-m05edeaf/0 [idle] active: 
+18:25:37 INFO Waiting for model:
+  test-m05edeaf/0 [idle] active: 
+18:25:40 INFO Current reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:25:40 INFO Waiting for reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:26:41 INFO Current reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:26:41 INFO Current reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654, expected reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:26:41 INFO Waiting for reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:27:42 INFO Current reconcile ID: 2f1b059f-081a-4568-b9a9-127392f24d73
+18:27:42 INFO Current reconcile ID: 2f1b059f-081a-4568-b9a9-127392f24d73, expected reconcile ID: e5f1a7d0-5490-48c7-83e8-c6b677fc2654
+18:27:43 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765304559.3715153, "event": "reconciliation", "flavor": "test-m05edeaf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 9.847237825393677}
+{"timestamp": 1765304687.4011993, "event": "reconciliation", "flavor": "test-m05edeaf", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.960675954818726}
+{"timestamp": 1765304645.0, "event": "runner_installed", "flavor": "test-m05edeaf", "duration": 88.0}
+{"timestamp": 1765304723.6573143, "event": "reconciliation", "flavor": "test-m05edeaf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.18189001083374}
+{"timestamp": 1765304852.211583, "event": "reconciliation", "flavor": "test-m05edeaf", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.407527208328247}
