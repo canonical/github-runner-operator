@@ -1,0 +1,89 @@
+18:42:52 INFO Waiting for model:
+  test-t6dje4id/0 [idle] active: 
+18:43:22 INFO Waiting for model:
+  test-t6dje4id/0 [idle] active: 
+18:43:24 INFO Current reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:43:24 INFO Waiting for reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:44:25 INFO Current reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:44:25 INFO Current reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052, expected reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:44:25 INFO Waiting for reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:45:26 INFO Current reconcile ID: b0c4a84d-8ec2-4d8f-a130-27017d78848f
+18:45:26 INFO Current reconcile ID: b0c4a84d-8ec2-4d8f-a130-27017d78848f, expected reconcile ID: 8448fd63-b50e-4405-849e-183ad17fa052
+18:45:30 INFO [TEST SETUP] Exposing port 8080 on test-t6dje4id-0-n-25f85f9f8af3
+18:45:30 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.36', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:cf:29'}]])
+18:45:31 INFO ssh tunnel command ssh -fNT -R 8080:localhost:8080 -i /home/runner-manager/.ssh/test-t6dje4id-0-n-25f85f9f8af3.key -o "StrictHostKeyChecking no" -o "ControlPersist yes" ubuntu@10.151.122.36 &
+18:45:32 INFO ssh tunnel result 0 None Warning: Permanently added '10.151.122.36' (ED25519) to the list of known hosts.
+
+18:45:34 INFO [TEST SETUP] Run command nc -z localhost 8080 on test-t6dje4id-0-n-25f85f9f8af3
+18:45:34 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.36', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:cf:29'}]])
+18:45:35 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-t6dje4id-0-n-25f85f9f8af3.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.36 nc -z localhost 8080'
+18:45:36 INFO Run command 'nc -z localhost 8080' in runner with result 0: 'None' 'Connection to localhost (127.0.0.1) 8080 port [tcp/http-alt] succeeded!
+'
+18:45:36 INFO [TEST SETUP] Run command curl http://localhost:8080 on test-t6dje4id-0-n-25f85f9f8af3
+18:45:36 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.36', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:dc:cf:29'}]])
+18:45:37 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-t6dje4id-0-n-25f85f9f8af3.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.36 curl http://localhost:8080'
+18:45:38 INFO Run command 'curl http://localhost:8080' in runner with result 0: '<!doctype html>
+<html lang=en>
+<title>404 Not Found</title>
+<h1>Not Found</h1>
+<p>The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.</p>
+' '  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   207  100   207    0     0  85537      0 --:--:-- --:--:-- --:--:--  101k
+'
+18:45:40 INFO Wait for condition not met, sleeping 10
+18:45:51 INFO Wait for condition not met, sleeping 60
+18:46:51 INFO Waiting for model:
+  test-t6dje4id/0 [idle] active: 
+18:47:21 INFO Waiting for model:
+  test-t6dje4id/0 [idle] active: 
+18:47:24 INFO Current reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:47:24 INFO Waiting for reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:48:25 INFO Current reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:48:25 INFO Current reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70, expected reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:48:25 INFO Waiting for reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:49:26 INFO Current reconcile ID: 0845468c-1c52-4fa4-971f-bf5587418608
+18:49:26 INFO Current reconcile ID: 0845468c-1c52-4fa4-971f-bf5587418608, expected reconcile ID: e230a651-accf-4299-96ff-c8e3651f9a70
+18:49:27 INFO Model status:
+
+Model                   Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-runner-k07f  github-pr-42766-lxd  localhost/localhost  3.6.12   unsupported  18:49:27Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-t6dje4id           active      1  any-charm      latest/beta  124  no       
+test-t6dje4id                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-t6dje4id/0*  active    idle   0        10.115.230.189            
+test-t6dje4id/0*                         active    idle   1        10.115.230.52   8080/tcp  
+
+Machine  State    Address         Inst id        Base          AZ             Message
+0        started  10.115.230.189  juju-e03928-0  ubuntu@24.04  github-runner  Running
+1        started  10.115.230.52   juju-e03928-1  ubuntu@22.04  github-runner  Running
+
+18:49:27 INFO Juju error logs:
+
+machine-0: 18:19:21 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:21 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:23 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:23 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-t6dje4id-0: 18:21:49 ERROR unit.test-t6dje4id/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-t6dje4id-0: 18:21:50 ERROR unit.test-t6dje4id/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-t6dje4id-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:49:27 INFO Forgetting model main...

@@ -1,0 +1,66 @@
+18:18:32 WARNING unexpected facade SSHServer received from the controller
+18:18:32 INFO Adding model github-pr-42766-lxd:test-reactive-2sq4 on cloud localhost
+18:18:32 WARNING unexpected facade SSHServer received from the controller
+18:18:32 WARNING unexpected facade SSHSession received from the controller
+18:18:32 WARNING unexpected facade SSHTunneler received from the controller
+18:18:32 INFO GitHub token rate limit: Rate(reset=2025-12-10 18:29:29+00:00, remaining=4982, limit=5000)
+18:18:36 INFO Deploying ch:amd64/jammy/mongodb-249
+18:18:37 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+18:18:39 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:02 INFO Deploying local:jammy/github-runner-0
+18:19:02 INFO Waiting for model:
+  test-gocjomyh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gocjomyh/0 [allocating] waiting: waiting for machine
+18:19:33 INFO Waiting for model:
+  test-gocjomyh/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-gocjomyh/0 [executing] maintenance: installing charm software
+18:20:03 INFO Waiting for model:
+  test-gocjomyh/0 [allocating] waiting: waiting for machine
+18:20:33 INFO Waiting for model:
+  test-gocjomyh/0 [allocating] waiting: agent initialising
+18:21:03 INFO Waiting for model:
+  test-gocjomyh/0 [executing] maintenance: installing charm software
+18:21:33 INFO Waiting for model:
+  test-gocjomyh/0 [executing] maintenance: installing charm software
+18:22:04 INFO Waiting for model:
+  test-gocjomyh/0 [executing] maintenance: Update image for runners
+18:22:21 WARNING relate is deprecated and will be removed. Use integrate instead.
+18:22:21 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:22:51 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+  mongodb/0 [idle] active: 
+18:23:00 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+18:23:30 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+18:23:32 INFO Current reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:23:32 INFO Waiting for reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:24:34 INFO Current reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:24:34 INFO Current reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80, expected reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:24:34 INFO Waiting for reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:25:35 INFO Current reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:25:35 INFO Current reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2, expected reconcile ID: 0234b9e1-f246-4cff-8315-3f4c67dd9b80
+18:25:37 INFO Wait for condition not met, sleeping 10
+18:25:58 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+18:26:14 INFO Current reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:26:14 INFO Waiting for reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:27:15 INFO Current reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:27:15 INFO Current reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2, expected reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:27:15 INFO Waiting for reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:28:16 INFO Current reconcile ID: c61cf961-51f2-4804-89f5-938caf7831a4
+18:28:16 INFO Current reconcile ID: c61cf961-51f2-4804-89f5-938caf7831a4, expected reconcile ID: 775c65eb-e721-423b-b1a8-173d73a8bdb2
+18:28:17 INFO Queue item payload: {"labels": ["x64", "test-gocjomyh"], "url": "https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/57701279902", "ignored_noise": "foobar"}, headers: {'X-Process-Count': 1}
+18:28:17 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+18:28:47 INFO Waiting for model:
+  test-gocjomyh/0 [idle] active: 
+18:28:50 INFO Current reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f
+18:28:50 INFO Waiting for reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f
+18:29:51 INFO Current reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f
+18:29:51 INFO Current reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f, expected reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f
+18:29:51 INFO Waiting for reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f
+18:30:52 INFO Current reconcile ID: 89c5a250-227c-45ce-be6e-427495e0b01a
+18:30:52 INFO Current reconcile ID: 89c5a250-227c-45ce-be6e-427495e0b01a, expected reconcile ID: 81973fda-1417-4440-bfa7-4b63cca4693f

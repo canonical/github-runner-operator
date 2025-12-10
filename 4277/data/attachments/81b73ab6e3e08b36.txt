@@ -1,0 +1,93 @@
+18:33:06 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:33:36 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:33:38 INFO Current reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:33:38 INFO Waiting for reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:34:39 INFO Current reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:34:39 INFO Current reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc, expected reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:34:39 INFO Waiting for reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:35:40 INFO Current reconcile ID: 24e84aa9-5048-45dd-b36e-e52404f1d139
+18:35:40 INFO Current reconcile ID: 24e84aa9-5048-45dd-b36e-e52404f1d139, expected reconcile ID: 08b4149f-19db-44b5-9ea6-339f83a389bc
+18:35:40 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:36:10 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:36:19 INFO Current reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:36:19 INFO Waiting for reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:37:20 INFO Current reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:37:20 INFO Current reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09, expected reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:37:20 INFO Waiting for reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:38:21 INFO Current reconcile ID: dc689161-0007-4007-b2d7-ba7180a87036
+18:38:21 INFO Current reconcile ID: dc689161-0007-4007-b2d7-ba7180a87036, expected reconcile ID: 3ad84f80-6852-4c36-a730-afaab7cdcd09
+18:38:27 INFO Wait for condition not met, sleeping 30
+18:39:09 INFO [TEST SETUP] Run command pkill -9 run.sh on test-e42gsqc5-0-n-4eba64244ca6
+18:39:09 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.94', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:48:11:e0'}]])
+18:39:10 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-e42gsqc5-0-n-4eba64244ca6.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.94 pkill -9 run.sh'
+18:39:11 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.94' (ED25519) to the list of known hosts.
+'
+18:39:13 INFO Runner test-e42gsqc5-0-n-4eba64244ca6 status: online
+18:39:13 INFO Runner still marked as online, waiting for it to be marked offline
+18:40:14 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:40:44 INFO Waiting for model:
+  test-e42gsqc5/0 [idle] active: 
+18:40:46 INFO Current reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:40:46 INFO Waiting for reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:41:47 INFO Current reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:41:47 INFO Current reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007, expected reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:41:47 INFO Waiting for reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:42:48 INFO Current reconcile ID: c3c8f4a5-a173-4600-8092-ea650c2da305
+18:42:48 INFO Current reconcile ID: c3c8f4a5-a173-4600-8092-ea650c2da305, expected reconcile ID: b38efb8b-e8ac-4405-8bbb-05c067b22007
+18:42:49 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765391593.6687016, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.776697158813477}
+{"timestamp": 1765391721.0738983, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 7.285853147506714}
+{"timestamp": 1765391757.6011431, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 16.010331392288208}
+{"timestamp": 1765391884.8876839, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 7.158902645111084}
+{"timestamp": 1765391860.0, "event": "runner_installed", "flavor": "test-e42gsqc5", "duration": 105.0}
+{"timestamp": 1765391910.0, "event": "runner_start", "flavor": "test-e42gsqc5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 50.0, "queue_duration": 2.0}
+{"timestamp": 1765391950.0, "event": "runner_stop", "flavor": "test-e42gsqc5", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 40.0, "job_conclusion": "cancelled"}
+{"timestamp": 1765392026.6987104, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.60567831993103}
+{"timestamp": 1765392153.2326415, "event": "reconciliation", "flavor": "test-e42gsqc5", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.418887376785278}
+18:42:50 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-pzl3  github-pr-42766-lxd  localhost/localhost  3.6.12   unsupported  18:42:50Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-e42gsqc5           active      1  any-charm      latest/beta  124  no       
+test-e42gsqc5                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-e42gsqc5/0*  active    idle   0        10.6.185.156              
+test-e42gsqc5/0*                         active    idle   1        10.6.185.84     8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.6.185.156  juju-5c3978-0  ubuntu@24.04  github-runner  Running
+1        started  10.6.185.84   juju-5c3978-1  ubuntu@22.04  github-runner  Running
+
+18:42:50 INFO Juju error logs:
+
+machine-0: 18:19:30 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:19:30 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:43 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:20:43 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-e42gsqc5-0: 18:22:29 ERROR unit.test-e42gsqc5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-e42gsqc5-0: 18:22:30 ERROR unit.test-e42gsqc5/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-e42gsqc5-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:42:50 INFO Forgetting model main...
