@@ -6,7 +6,7 @@ This document describes the security design of the GitHub runner charm. The char
 
 The charm manages GitHub self-hosted runners to run GitHub Actions jobs. This allows users on GitHub to execute code on the servers hosting the runners, which poses a remote code execution risk if the code is not trusted. Therefore, the charm should only spawn runners to trusted organizations or repositories.
 
-For external contributor security, see [How to manage external contributors securely](../how-to/manage-external-contributors) for configuration options and recommended practices.
+For external contributor security, see [How to manage external contributors securely](../how-to/manage-external-contributors.md) for configuration options and recommended practices.
 
 ### Good practices
 
