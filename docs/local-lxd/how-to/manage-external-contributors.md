@@ -71,6 +71,8 @@ This approach ensures that all code from external contributors is reviewed by tr
 
 ## Troubleshooting
 
+This section covers troubleshooting for common issues that users may encounter.
+
 ### Workflows not running for external contributors
 
 If workflows are not running for external contributors when `allow-external-contributor=false`:
