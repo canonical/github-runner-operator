@@ -11,7 +11,7 @@ In this guide, we'll explain how to configure external contributor access and re
 The charm checks the GitHub author association for the following events that can be triggered by external contributors:
 
 - `pull_request` - Pull requests from external contributors
-- `pull_request_target` - Pull request targeting (designed for handling PRs from forks)  
+- `pull_request_target` - Pull request targeting (designed for handling PRs from forks)
 - `pull_request_review` - Pull request reviews from external contributors
 - `pull_request_review_comment` - Comments on pull request diffs from external contributors
 - `issue_comment` - Comments on issues or pull requests from external contributors
@@ -25,8 +25,9 @@ juju config github-runner allow-external-contributor=false
 ```
 
 With this setting, only users with the following GitHub author associations can trigger workflows:
+
 - `OWNER` - Repository or organization owners
-- `MEMBER` - Organization members  
+- `MEMBER` - Organization members
 - `COLLABORATOR` - Users with explicit collaborator access
 
 ### Enabling external contributor access
@@ -54,7 +55,7 @@ Create the following branch protection rules using the instructions [here](https
 - Branch name pattern `**` with `Require signed commits` enabled.
 - Branch name pattern matching only the default branch of the repository, such as `main`, with the following enabled:
   - `Dismiss stale pull request approvals when new commits are pushed`
-  - `Required signed commits`  
+  - `Required signed commits`
   - `Do not allow bypassing the above settings`
 
 ### Working with external contributors
@@ -64,8 +65,9 @@ When `allow-external-contributor` is set to `false`, external contributors can s
 1. External contributors create pull requests as usual
 2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
 3. If the code is safe, the maintainer can:
-  - Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
-  - Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
+
+- Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
+- Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners.
 
@@ -88,20 +90,3 @@ If you notice workflows running for users who shouldn't have access:
 2. Review repository collaborator permissions
 3. Check for any bypass rules in branch protection settings
 4. Audit recent workflow runs in the GitHub Actions tab
-
-## Migration from repo-policy-compliance
-
-If you were previously using the `repo-policy-compliance` charm, the `allow-external-contributor`
-configuration provides similar security controls with a simpler configuration model. The key
-differences are:
-
-- No separate charm deployment required
-- Configuration is handled directly through the github-runner charm
-- Broader event coverage (includes PR reviews and comments)
-- Simplified allow/deny model instead of complex policy rules
-
-To migrate:
-
-1. Remove the `repo-policy-compliance` charm integration
-2. Configure `allow-external-contributor=false` on the github-runner charm  
-3. Verify that external contributor workflows are properly restricted

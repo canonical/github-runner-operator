@@ -89,18 +89,3 @@ If you notice workflows running for users who shouldn't have access:
 2. Review repository collaborator permissions
 3. Check for any bypass rules in branch protection settings
 4. Audit recent workflow runs in the GitHub Actions tab
-
-## Migration from repo-policy-compliance
-
-If you were previously using the `repo-policy-compliance` functionality, the `allow-external-contributor` configuration provides similar security controls with a simpler configuration model. The key differences are:
-
-- No separate service deployment required
-- Configuration is handled directly through the github-runner charm
-- Broader event coverage (includes PR reviews and comments)
-- Simplified allow/deny model instead of complex policy rules
-
-To migrate:
-
-1. Update your charm configuration to use `allow-external-contributor=false`
-2. Verify that external contributor workflows are properly restricted
-3. Update any documentation referencing the old policy service

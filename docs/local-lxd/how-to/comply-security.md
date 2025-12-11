@@ -49,12 +49,3 @@ When `allow-external-contributor` is set to `false`, outside collaborators can s
   - Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
 
 This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners, eliminating the need for manual comment-based approval workflows.
-
-## Migration from repo-policy-compliance
-
-If you were previously using the repo-policy-compliance functionality, the `allow-external-contributor` configuration provides similar security controls:
-
-1. Update your charm configuration to use `allow-external-contributor=false`
-2. Verify that external contributor workflows are properly restricted
-
-The new approach provides broader security coverage and simpler configuration compared to the previous policy compliance system.

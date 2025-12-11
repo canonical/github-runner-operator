@@ -14,8 +14,6 @@ from github_runner_manager.manager.vm_manager import PostJobStatus
 from juju.application import Application
 
 from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME, PATH_CONFIG_NAME
-
-# Removed unused imports that were only used in removed repo policy test
 from tests.integration.helpers.charm_metrics import (
     assert_events_after_reconciliation,
     cancel_workflow_run,

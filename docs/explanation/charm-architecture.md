@@ -118,7 +118,13 @@ BlockedStatus. The charm will automatically recover from this state once the rat
 ## External contributor access control
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-The charm provides security controls for managing external contributor access through the `allow-external-contributor` configuration option. When set to `false`, the charm restricts workflow execution to users with COLLABORATOR, MEMBER, or OWNER status for the following GitHub events:
+The charm provides security controls for managing external contributor access through the `allow-external-contributor` configuration option.
+External contributors are defined as users not in COLLABORATOR, MEMBER, or OWNER status. For
+example, pull requests from fork repositories from users not in COLLABORATOR, MEMBER or OWNER
+status would be considered requests from an external contributor. Internal requests such as
+an internal PR from a renovate bot account would not be considered an event from an external
+contributor.
+When set to `false`, the charm restricts workflow execution to external contributors for the following GitHub events:
 
 - `pull_request` - Pull requests from external contributors
 - `pull_request_target` - Pull request targeting (designed for handling PRs from forks)
