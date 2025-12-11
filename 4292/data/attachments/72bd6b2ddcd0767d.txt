@@ -1,0 +1,94 @@
+06:34:18 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:34:49 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:34:51 INFO Current reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:34:51 INFO Waiting for reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:35:52 INFO Current reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:35:52 INFO Current reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c, expected reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:35:52 INFO Waiting for reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:36:53 INFO Current reconcile ID: 5cfb3103-35f0-4388-b0e5-ad77efed1c34
+06:36:53 INFO Current reconcile ID: 5cfb3103-35f0-4388-b0e5-ad77efed1c34, expected reconcile ID: e25577ec-0677-489d-83c7-88364bdbef8c
+06:36:53 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:37:24 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:37:33 INFO Current reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:37:33 INFO Waiting for reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:38:34 INFO Current reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:38:34 INFO Current reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7, expected reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:38:34 INFO Waiting for reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:39:35 INFO Current reconcile ID: 0ed46e45-3f67-40b8-bcee-067929948484
+06:39:35 INFO Current reconcile ID: 0ed46e45-3f67-40b8-bcee-067929948484, expected reconcile ID: a1f519d4-6617-42b0-a4e3-91596bafe7e7
+06:39:41 INFO Wait for condition not met, sleeping 30
+06:40:24 INFO [TEST SETUP] Run command pkill -9 run.sh on test-ynswu5u9-0-n-cb162690d186
+06:40:24 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.33', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:b3:7c:b4'}]])
+06:40:25 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-ynswu5u9-0-n-cb162690d186.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.33 pkill -9 run.sh'
+06:40:26 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.33' (ED25519) to the list of known hosts.
+'
+06:40:29 INFO Runner test-ynswu5u9-0-n-cb162690d186 status: online
+06:40:29 INFO Runner still marked as online, waiting for it to be marked offline
+06:41:30 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:42:00 INFO Waiting for model:
+  test-ynswu5u9/0 [idle] active: 
+06:42:03 INFO Current reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:42:03 INFO Waiting for reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:43:04 INFO Current reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:43:04 INFO Current reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c, expected reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:43:04 INFO Waiting for reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:44:05 INFO Current reconcile ID: 57014e98-dbbc-4d25-b455-c13a43d0362a
+06:44:05 INFO Current reconcile ID: 57014e98-dbbc-4d25-b455-c13a43d0362a, expected reconcile ID: 751902f5-c69f-4137-8037-7cfec0b77d8c
+06:44:06 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765434867.8113723, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.204842567443848}
+{"timestamp": 1765434995.8905141, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.05797553062439}
+{"timestamp": 1765435025.4440565, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.672661304473877}
+{"timestamp": 1765435154.1702027, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 1, "active_runners": 0, "expected_runners": 1, "duration": 8.607198715209961}
+{"timestamp": 1765435104.0, "event": "runner_installed", "flavor": "test-ynswu5u9", "duration": 81.0}
+{"timestamp": 1765435184.0, "event": "runner_start", "flavor": "test-ynswu5u9", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 80.0, "queue_duration": 2.0}
+{"timestamp": 1765435225.0, "event": "runner_stop", "flavor": "test-ynswu5u9", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 41.0, "job_conclusion": "cancelled"}
+{"timestamp": 1765435286.0499554, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 11.822004556655884}
+{"timestamp": 1765435299.7013645, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.511072158813477}
+{"timestamp": 1765435428.855037, "event": "reconciliation", "flavor": "test-ynswu5u9", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.060169458389282}
+06:44:07 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-cskf  github-pr-5a0fd-lxd  localhost/localhost  3.6.12   unsupported  06:44:07Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-ynswu5u9           active      1  any-charm      latest/beta  124  no       
+test-ynswu5u9                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-ynswu5u9/0*  active    idle   0        10.88.134.83              
+test-ynswu5u9/0*                         active    idle   1        10.88.134.159   8080/tcp  
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.88.134.83   juju-05d76e-0  ubuntu@24.04  github-runner  Running
+1        started  10.88.134.159  juju-05d76e-1  ubuntu@22.04  github-runner  Running
+
+06:44:07 INFO Juju error logs:
+
+machine-0: 06:21:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 06:21:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 06:22:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-ynswu5u9-0: 06:23:38 ERROR unit.test-ynswu5u9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-ynswu5u9-0: 06:23:40 ERROR unit.test-ynswu5u9/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-ynswu5u9-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+06:44:07 INFO Forgetting model main...
