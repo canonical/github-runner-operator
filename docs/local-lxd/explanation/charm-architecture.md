@@ -6,6 +6,7 @@ Conceptually, the charm can be divided into the following:
 - Management of the virtual machine image
 - Management of the network
 - GitHub API usage
+- Management of [Python web service for checking GitHub repository settings](https://github.com/canonical/repo-policy-compliance)
 - Management of dependencies
 
 ## LXD ephemeral virtual machines
@@ -91,22 +92,18 @@ The charm requires a GitHub personal access token for the [`token` configuration
 - Requesting a list of self-hosted runners configured in an organization or repository
 - Deleting self-hosted runners
 
+The token is also passed to [repo-policy-compliance](https://github.com/canonical/repo-policy-compliance) to access GitHub API for the service.
+
 Note that the GitHub API uses a [rate-limiting mechanism](https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28). When this limit is reached, the charm may not be able to perform the necessary operations and may go into
 BlockedStatus. The charm will automatically recover from this state once the rate limit is reset, but using a different token with a higher rate limit may be a better solution depending on your deployment requirements.
 
 <!-- vale Canonical.007-Headings-sentence-case = NO -->
-## External contributor access control
+## GitHub repository setting check
 <!-- vale Canonical.007-Headings-sentence-case = YES -->
 
-The charm provides security controls for managing external contributor access through the `allow-external-contributor` configuration option. When set to `false`, the charm restricts workflow execution to users with COLLABORATOR, MEMBER, or OWNER status for the following GitHub events:
+The [`repo-policy-compliance`](https://github.com/canonical/repo-policy-compliance) charm contains a [Flask application](https://flask.palletsprojects.com/) hosted on [Gunicorn](https://gunicorn.org/) that provides a RESTful HTTP API to check the settings of GitHub repositories. This ensures the GitHub repository settings do not allow the execution of code not reviewed by maintainers on the self-hosted runners.
 
-- `pull_request` - Pull requests from external contributors
-- `pull_request_target` - Pull request targeting (designed for handling PRs from forks)
-- `pull_request_review` - Pull request reviews from external contributors  
-- `pull_request_review_comment` - Comments on pull request diffs from external contributors
-- `issue_comment` - Comments on issues or pull requests from external contributors
-
-Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#about-pre--and-post-job-scripts), the self-hosted runners check the author association of the user triggering the workflow. If the user does not have sufficient permissions, the runner will output an error message and stop execution to prevent unauthorized code from running.
+Using the [pre-job script](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/running-scripts-before-or-after-a-job#about-pre--and-post-job-scripts), the self-hosted runners call the Python web service to check if the GitHub repository settings for the job are compliant. If not compliant, it will output an error message and force stop the runner to prevent code from being executed.
 
 ## Dependencies management
 
@@ -114,6 +111,8 @@ Upon installing or upgrading the charm, the kernel will be upgraded, and the Juj
 
 The charm installs the following dependencies:
 
+- For running `repo-policy-compliance`:
+  - Gunicorn
 - For firewall to prevent runners from accessing web service on the denylist
   - nftables
 - For virtualization and virtual machine management
@@ -127,6 +126,7 @@ These dependencies can be regularly updated using the [`landscape-client` charm]
 
 The charm installs the following dependencies and regularly updates them:
 
+- repo-policy-compliance
 - GitHub self-hosted runner application
 
 The charm checks if the installed versions are the latest and performs upgrades if needed before creating new virtual machines for runners.

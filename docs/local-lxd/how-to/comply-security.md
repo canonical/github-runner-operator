@@ -2,29 +2,9 @@
 
 According to GitHub, running code inside the GitHub self-hosted runner [poses a significant security risk of arbitrary code execution](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#self-hosted-runner-security). The self-hosted runners managed by the charm are isolated in its own single-use virtual machine instance. In addition, the charm enforces some repository settings to ensure all code running on the self-hosted runners is reviewed by someone trusted.
 
-The charm provides the `allow-external-contributor` configuration option to control whether workflows triggered by external contributors can execute on the self-hosted runners. When set to `false`, only users with COLLABORATOR, MEMBER, or OWNER status can trigger workflows from pull requests, reviews, and comments.
+The repository settings are enforced with the [repo-policy-compliance Python library](https://github.com/canonical/repo-policy-compliance). The enforced rules differ depending on how the GitHub Actions workflow is triggered. The details can be found in the [README](https://github.com/canonical/repo-policy-compliance/blob/main/README.md).
 
-In this guide, a recommended set of policies and security practices will be presented.
-
-## External contributor access control
-
-Configure the charm to restrict external contributor access:
-
-```bash
-juju config github-runner allow-external-contributor=false
-```
-
-With this setting, workflows will only run for users with the following GitHub author associations:
-- `OWNER` - Repository or organization owners
-- `MEMBER` - Organization members  
-- `COLLABORATOR` - Users with explicit collaborator access
-
-The charm checks author associations for these events:
-- `pull_request` - Pull requests from external contributors
-- `pull_request_target` - Pull request targeting (designed for handling PRs from forks)
-- `pull_request_review` - Pull request reviews from external contributors
-- `pull_request_review_comment` - Comments on pull request diffs from external contributors
-- `issue_comment` - Comments on issues or pull requests from external contributors
+In this guide, a recommended set of policies will be presented, but any set repository settings that passes the [Python library](https://github.com/canonical/repo-policy-compliance) checks will work with the self-hosted runners managed by this charm.
 
 ## Recommended policy
 
@@ -40,12 +20,4 @@ With these settings, the common workflow of creating branches with pull requests
 
 ### Working with outside collaborators
 
-When `allow-external-contributor` is set to `false`, outside collaborators can still contribute through the following secure workflow:
-
-1. External contributors create pull requests as usual
-2. A repository maintainer with COLLABORATOR, MEMBER, or OWNER status reviews the code
-3. If the code is safe, the maintainer can:
-  - Approve and merge the pull request to another branch (workflows will run with the maintainer's permissions)
-  - Manually trigger workflow runs if needed (using workflow dispatch on the target branch)
-
-This approach ensures that all code from external contributors is reviewed by trusted users before execution on self-hosted runners, eliminating the need for manual comment-based approval workflows.
+Generally, outside collaborators are not completely trusted, but still would need to contribute in some manner. As such, this charm requires pull requests by outside collaborators to be reviewed by someone with `write` permission or above. Once the review is completed, the reviewer should add a comment including the following string: `/canonical/self-hosted-runners/run-workflows <commit SHA>`, where `<commit SHA>` is the commit SHA of the approved commit. Once posted, the self-hosted runners will run the workflow for this commit.

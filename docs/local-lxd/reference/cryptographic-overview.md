@@ -28,6 +28,7 @@ The following cryptographic technologies are used internally by our product:
 
 ### TLS
 - Communication with GitHub is done via TLS v1.3
+- [The `repo-policy-compliance` tool](https://github.com/canonical/repo-policy-compliance) communicates with the [GitHub API](https://docs.github.com/en/rest?apiVersion=2022-11-28) using TLS v1.3.
 - Communication with the OpenStack API uses TLS v1.3.
 
 ### Signature verification
