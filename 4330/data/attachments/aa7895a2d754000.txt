@@ -1,0 +1,72 @@
+18:28:41 INFO GitHub token rate limit: Rate(reset=2025-12-12 18:34:23+00:00, remaining=4550, limit=5000)
+18:28:45 INFO Waiting for model:
+  test-veaem037/0 [idle] active: 
+18:29:15 INFO Waiting for model:
+  test-veaem037/0 [idle] active: 
+18:29:17 INFO Current reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:29:17 INFO Waiting for reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:30:18 INFO Current reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:30:18 INFO Current reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45, expected reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:30:18 INFO Waiting for reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:31:19 INFO Current reconcile ID: fcb5dcc7-b02b-465a-ba10-24e6deb91a3a
+18:31:19 INFO Current reconcile ID: fcb5dcc7-b02b-465a-ba10-24e6deb91a3a, expected reconcile ID: dcca05b5-0cce-4f07-94b3-c532333ede45
+18:31:26 INFO Wait for condition not met, sleeping 10
+18:31:36 INFO Waiting for model:
+  test-veaem037/0 [idle] active: 
+18:32:07 INFO Waiting for model:
+  test-veaem037/0 [idle] active: 
+18:32:09 INFO Current reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:32:09 INFO Waiting for reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:33:10 INFO Current reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:33:10 INFO Current reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483, expected reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:33:10 INFO Waiting for reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:34:11 INFO Current reconcile ID: 88874d18-a2d5-43cb-acfd-b12e0299ac9b
+18:34:11 INFO Current reconcile ID: 88874d18-a2d5-43cb-acfd-b12e0299ac9b, expected reconcile ID: fae04622-4cc4-41b6-b313-0840100d3483
+18:34:12 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765564260.0, "event": "runner_installed", "flavor": "test-veaem037", "duration": 125.0}
+{"timestamp": 1765564290.0, "event": "runner_start", "flavor": "test-veaem037", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 30.0, "queue_duration": 2.0}
+{"timestamp": 1765564294.0, "event": "runner_stop", "flavor": "test-veaem037", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1765564313.0298905, "event": "reconciliation", "flavor": "test-veaem037", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 15.098637580871582}
+{"timestamp": 1765564440.123409, "event": "reconciliation", "flavor": "test-veaem037", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 6.97367000579834}
+18:34:13 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-success-x1k8  github-pr-683c8-lxd  localhost/localhost  3.6.12   unsupported  18:34:13Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-veaem037           active      1  any-charm      latest/beta  124  no       
+test-veaem037                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-veaem037/0*  active    idle   0        10.97.224.188          
+test-veaem037/0*                         active    idle   1        10.97.224.16           
+
+Machine  State    Address        Inst id        Base          AZ             Message
+0        started  10.97.224.188  juju-ea2e19-0  ubuntu@24.04  github-runner  Running
+1        started  10.97.224.16   juju-ea2e19-1  ubuntu@22.04  github-runner  Running
+
+18:34:14 INFO Juju error logs:
+
+machine-0: 18:20:31 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 18:20:31 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 18:21:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-veaem037-0: 18:22:46 ERROR unit.test-veaem037/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-veaem037-0: 18:22:47 ERROR unit.test-veaem037/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-veaem037-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+18:34:14 INFO Forgetting model main...
