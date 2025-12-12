@@ -147,12 +147,12 @@ class PostJobStatus(str, Enum):
     Attributes:
         NORMAL: Represents a normal post-job.
         ABNORMAL: Represents an error with post-job.
-        REPO_POLICY_CHECK_FAILURE: Represents an error with repo-policy-compliance check.
+        EXTERNAL_CONTRIBUTOR_CHECK_FAILURE: Represents a failure in external contributor check.
     """
 
     NORMAL = "normal"
     ABNORMAL = "abnormal"
-    REPO_POLICY_CHECK_FAILURE = "repo-policy-check-failure"
+    EXTERNAL_CONTRIBUTOR_CHECK_FAILURE = "external-contributor-check-failure"
 
 
 class CodeInformation(BaseModel):

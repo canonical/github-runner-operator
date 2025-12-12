@@ -203,25 +203,3 @@ class MockGhapiActions:
             runner_id: Placeholder for runner id.
         """
         pass
-
-
-class MockRepoPolicyComplianceClient:
-    """Mock for RepoPolicyComplianceClient."""
-
-    def __init__(self, session=None, url=None, charm_token=None):
-        """Placeholder method for initialization.
-
-        Args:
-            session: Placeholder for requests session.
-            url: Placeholder for repo policy compliance url.
-            charm_token: Placeholder for charm token.
-        """
-        pass
-
-    def get_one_time_token(self) -> str:
-        """Generate a test token value.
-
-        Returns:
-            A test token value.
-        """
-        return "MOCK_TOKEN_" + secrets.token_hex(8)
