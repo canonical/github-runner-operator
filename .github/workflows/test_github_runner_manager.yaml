@@ -30,7 +30,7 @@ jobs:
         run: uv tool install tox --with tox-uv
       - name: configure DockerHub mirror
         run: |
-          echo '{"registry-mirrors": ["$DOCKERHUB_MIRROR"]}' | sudo tee /etc/docker/daemon.json
+          echo "{\"registry-mirrors\": [\"$DOCKERHUB_MIRROR\"]}" | sudo tee /etc/docker/daemon.json
           sudo systemctl restart docker.service
       - name: Run integration tests - ${{ matrix.test-module }}
         working-directory: ./github-runner-manager/
