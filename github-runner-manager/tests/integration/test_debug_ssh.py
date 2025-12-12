@@ -136,8 +136,8 @@ def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
     """
     keys_dir = tmp_path / "keys"
     keys_dir.mkdir(parents=True, exist_ok=True)
-    rsa_key_path = keys_dir / "id_rsa"
-    ed_key_path = keys_dir / "id_ed25519"
+    rsa_key_path = keys_dir / "ssh_host_rsa_key"
+    ed_key_path = keys_dir / "ssh_host_ed25519_key"
 
     subprocess.run(
         [
@@ -200,10 +200,14 @@ def tmate_ssh_server(
     # mount the generated keys at /keys so the server can use them.
     container: Container = client.containers.run(
         tmate_image,
+        command=["-h", "0.0.0.0", "-p", "10022", "-k", "/keys/"],
+        environment={"SSH_KEYS_PATH": "/keys"},
         detach=True,
         name=name,
-        ports={"22/tcp": "10022/tcp"},
+        ports={"10022/tcp": "10022/tcp"},
         volumes={tmate_keys.keys_dir: {"bind": "/keys", "mode": "ro"}},
+        user="root",
+        cap_add=["SYS_ADMIN"],
         remove=False,
     )
     container.reload()
