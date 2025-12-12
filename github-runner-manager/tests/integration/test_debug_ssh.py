@@ -216,7 +216,8 @@ def tmate_ssh_server(
     port = get_container_mapped_port(container, "22/tcp")
     if port is None or not wait_for_tcp_port(host, port):
         try:
-            container.remove(force=True)
+            print("debug")
+            # container.remove(force=True)
         except Exception as exc:
             logger.error("Failed to remove tmate container: %s", exc)
             pass
@@ -230,7 +231,8 @@ def tmate_ssh_server(
     )
 
     try:
-        container.remove(force=True)
+        print("debug")
+        # container.remove(force=True)
     except Exception as exc:
         logger.error("Failed to remove tmate container: %s", exc)
 
