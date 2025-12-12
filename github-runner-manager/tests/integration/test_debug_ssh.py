@@ -6,7 +6,7 @@
 import logging
 import socket
 import subprocess
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from time import sleep
@@ -216,8 +216,7 @@ def tmate_ssh_server(
     port = get_container_mapped_port(container, "10022/tcp")
     if port is None or not wait_for_tcp_port(host, port):
         try:
-            print("debug")
-            # container.remove(force=True)
+            container.remove(force=True)
         except Exception as exc:
             logger.error("Failed to remove tmate container: %s", exc)
             pass
@@ -231,8 +230,7 @@ def tmate_ssh_server(
     )
 
     try:
-        print("debug")
-        # container.remove(force=True)
+        container.remove(force=True)
     except Exception as exc:
         logger.error("Failed to remove tmate container: %s", exc)
 
@@ -276,7 +274,7 @@ def application_with_tmate_ssh_server(
         ],
     )
     config_path = tmp_path / "config.yaml"
-    config_path.write_text(yaml.dump(config), encoding="utf-8")
+    config_path.write_text(yaml.dump(asdict(config)), encoding="utf-8")
 
     logger.info(
         "Starting application with SSH debug configuration (test_id: %s)",
