@@ -319,7 +319,7 @@ def test_tmate_ssh_connection(
     assert wait_for_workflow_completion(
         workflow_run, timeout=900
     ), "Workflow did not complete successfully or timed out."
-    logs = get_job_logs(workflow_run.jobs("latest")[0])
+    logs = get_job_logs(workflow_run)
 
     assert tmate_ssh_server.host in logs, "Tmate ssh server IP not found in action logs."
     assert (
