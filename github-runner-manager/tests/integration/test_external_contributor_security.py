@@ -37,34 +37,6 @@ PULL_REQUEST_WORKFLOW_NAME = "Pull request test"
 
 
 @pytest.fixture(scope="module")
-def github_token(github_config: GitHubConfig) -> str:
-    """Get GitHub token from github_config.
-
-    Args:
-        github_config: GitHub configuration object.
-
-    Returns:
-        GitHub personal access token.
-    """
-    return github_config.token
-
-
-@pytest.fixture(scope="module")
-def github_repository(github_config: GitHubConfig) -> Repository:
-    """Get GitHub repository for testing.
-
-    Args:
-        github_config: GitHub configuration object.
-
-    Returns:
-        GitHub repository object.
-    """
-    auth = Token(github_config.token)
-    github = Github(auth=auth)
-    return github.get_repo(github_config.path)
-
-
-@pytest.fixture(scope="module")
 def upstream_repository(github_config: GitHubConfig) -> Repository:
     """Get GitHub repository for testing.
 
@@ -154,8 +126,8 @@ def application_with_external_contributor_disabled(
         allow_external_contributor=False,
         github_config=github_config,
         openstack_config=openstack_config,
-        test_config=test_config,
         proxy_config=proxy_config,
+        test_config=test_config,
     )
     config_path = tmp_path / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
@@ -197,8 +169,8 @@ def application_with_external_contributor_enabled(
         allow_external_contributor=True,
         github_config=github_config,
         openstack_config=openstack_config,
-        test_config=test_config,
         proxy_config=proxy_config,
+        test_config=test_config,
     )
     config_path = tmp_path / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")

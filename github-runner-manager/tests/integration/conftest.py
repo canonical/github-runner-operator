@@ -8,6 +8,9 @@ from typing import Generator
 
 import openstack
 import pytest
+from github import Github
+from github.Auth import Token
+from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 
@@ -15,13 +18,14 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def test_config() -> TestConfig:
+def test_config(pytestconfig: pytest.Config) -> TestConfig:
     """Create a unique test configuration for parallel test execution.
 
     Returns:
         Test configuration with unique identifiers.
     """
-    return TestConfig()
+    debug_log_dir = pytestconfig.getoption("--debug-log-dir")
+    return TestConfig(debug_log_dir=debug_log_dir)
 
 
 @pytest.fixture(scope="module")
@@ -70,7 +74,7 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     region_name = pytestconfig.getoption("--openstack-region")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
-    flavor = pytestconfig.getoption("--openstack-flavor")
+    flavor = pytestconfig.getoption("--openstack-flavor-name")
     image_id = pytestconfig.getoption("--openstack-image-id")
 
     # Only return config if all required parameters are provided
@@ -174,6 +178,9 @@ def openstack_cleanup(
                 try:
                     console_log = conn.get_server_console(server.id)
                     if console_log:
+                        test_config.debug_log_dir.mkdir(parents=True, exist_ok=True)
+                        log_file = test_config.debug_log_dir / f"{server.name}_console.log"
+                        log_file.write_text(console_log, encoding="utf-8")
                         logger.info("Console log for server %s:\n%s", server.name, console_log)
                 except Exception as log_error:
                     logger.warning(
@@ -207,3 +214,31 @@ def openstack_cleanup(
 
     except Exception as e:
         logger.error("Failed to clean up OpenStack resources: %s", e)
+
+
+@pytest.fixture(scope="module")
+def github_token(github_config: GitHubConfig) -> str:
+    """Get GitHub token from github_config.
+
+    Args:
+        github_config: GitHub configuration object.
+
+    Returns:
+        GitHub personal access token.
+    """
+    return github_config.token
+
+
+@pytest.fixture(scope="module")
+def github_repository(github_config: GitHubConfig) -> Repository:
+    """Get GitHub repository for testing.
+
+    Args:
+        github_config: GitHub configuration object.
+
+    Returns:
+        GitHub repository object.
+    """
+    auth = Token(github_config.token)
+    github = Github(auth=auth)
+    return github.get_repo(github_config.path)

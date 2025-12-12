@@ -3,13 +3,18 @@
 
 """Helper functions for GitHub integration testing."""
 
+import logging
+from datetime import datetime, timezone
 from time import sleep, time
 
 import requests
 from github.GithubException import GithubException
 from github.PullRequest import PullRequest
 from github.Repository import Repository
+from github.Workflow import Workflow
 from github.WorkflowRun import WorkflowRun
+
+logger = logging.getLogger(__name__)
 
 
 def create_fork_and_pr(
@@ -147,3 +152,68 @@ def get_pr_workflow_runs(
         sleep(5)
 
     return []
+
+
+def dispatch_workflow(
+    repository: Repository,
+    workflow_filename: str,
+    ref: str,
+    inputs: dict[str, str] | None = None,
+) -> Workflow:
+    """Dispatch a workflow_dispatch workflow.
+
+    Args:
+        repository: The repository containing the workflow.
+        workflow_filename: The workflow file name (e.g., 'workflow_dispatch_test.yaml').
+        ref: The git ref (branch/tag/SHA) to run the workflow on.
+        inputs: Dictionary of input parameters for the workflow.
+
+    Returns:
+        True if dispatch was successful, False otherwise.
+    """
+    workflow = repository.get_workflow(workflow_filename)
+    assert workflow.create_dispatch(ref=ref, inputs=inputs or {}), (
+        "Failed to create dispatch event."
+        f"Workflow: {workflow_filename}, Ref: {ref}, Inputs: {inputs}"
+    )
+    return workflow
+
+
+def get_workflow_dispatch_run(
+    workflow: Workflow,
+    ref: str,
+    timeout: int = 120,
+    dispatch_time: datetime | None = None,
+) -> WorkflowRun:
+    """Get the most recent workflow run after dispatching.
+
+    Args:
+        workflow: The workflow object.
+        ref: The git ref the workflow was dispatched on.
+        timeout: Maximum time to wait for the run to appear in seconds.
+        dispatch_time: The time the workflow was dispatched. If None, uses \
+            current time.
+
+    Returns:
+        The most recent workflow run, or None if not found.
+    """
+    # Record current time as a baseline
+    dispatch_time = dispatch_time or datetime.now(timezone.utc)
+    start_time = time()
+
+    while time() - start_time < timeout:
+        try:
+            runs = workflow.get_runs(branch=ref)
+
+            # Find runs created after dispatch time
+            for run in runs:
+                if run.created_at >= dispatch_time:
+                    return run
+
+        except GithubException:
+            logger.warning("Error fetching workflow runs", exc_info=True)
+            pass
+
+        sleep(5)
+
+    raise TimeoutError(f"Timed out waiting for workflow run of {workflow.name} on ref {ref}.")
