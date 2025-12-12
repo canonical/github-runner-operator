@@ -127,7 +127,7 @@ def wait_for_tcp_port(host: str, port: int, attempts: int = 30, interval: float 
     return False
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
     """Generate SSH keypairs under `tmp_path/keys` and compute SHA256 fingerprints.
 
@@ -178,13 +178,13 @@ def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
     )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def tmate_image(pytestconfig):
     """Return the tmate image to use for SSH server testing."""
     return pytestconfig.getoption("--tmate-image")
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def tmate_ssh_server(
     tmate_keys: TmateKeys, test_config: TestConfig, tmate_image: str
 ) -> Generator[TmateServer, None, None]:
@@ -231,7 +231,7 @@ def tmate_ssh_server(
         logger.error("Failed to remove tmate container: %s", exc)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def application_with_tmate_ssh_server(
     tmp_path: Path,
     github_config: GitHubConfig,
