@@ -1,0 +1,67 @@
+06:19:54 WARNING unexpected facade SSHServer received from the controller
+06:19:54 INFO Adding model github-pr-9c30a-lxd:test-reactive-2pwu on cloud localhost
+06:19:54 WARNING unexpected facade SSHServer received from the controller
+06:19:54 WARNING unexpected facade SSHSession received from the controller
+06:19:54 WARNING unexpected facade SSHTunneler received from the controller
+06:19:55 INFO GitHub token rate limit: Rate(reset=2025-12-12 07:15:18+00:00, remaining=4985, limit=5000)
+06:19:58 INFO Deploying ch:amd64/jammy/mongodb-249
+06:19:59 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:20:01 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:23 INFO Deploying local:jammy/github-runner-0
+06:20:23 INFO Waiting for model:
+  test-fch510ql/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fch510ql/0 [allocating] waiting: waiting for machine
+06:20:53 INFO Waiting for model:
+  test-fch510ql/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-fch510ql/0 [allocating] waiting: agent initialising
+06:21:23 INFO Waiting for model:
+  test-fch510ql/0 [allocating] waiting: waiting for machine
+06:21:54 INFO Waiting for model:
+  test-fch510ql/0 [allocating] waiting: agent initialising
+06:22:24 INFO Waiting for model:
+  test-fch510ql/0 [executing] maintenance: installing charm software
+06:22:55 INFO Waiting for model:
+  test-fch510ql/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-fch510ql/0 [idle] active: 
+06:23:25 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:23:32 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:23:32 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:24:02 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:24:11 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:24:41 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:24:44 INFO Current reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:24:44 INFO Waiting for reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:25:45 INFO Current reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:25:45 INFO Current reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e, expected reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:25:45 INFO Waiting for reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:26:46 INFO Current reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:26:46 INFO Current reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a, expected reconcile ID: b8992fdb-4fab-477a-b65f-dddb8d62023e
+06:26:49 INFO Wait for condition not met, sleeping 10
+06:27:10 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:27:26 INFO Current reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:27:26 INFO Waiting for reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:28:27 INFO Current reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:28:27 INFO Current reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a, expected reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:28:27 INFO Waiting for reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:29:28 INFO Current reconcile ID: 9ccf43ce-593c-4a53-84f0-8be6857ce7f3
+06:29:28 INFO Current reconcile ID: 9ccf43ce-593c-4a53-84f0-8be6857ce7f3, expected reconcile ID: 96893cc1-45d8-48e8-912c-57f36668d00a
+06:29:28 INFO Queue item payload: {"labels": ["x64", "test-fch510ql"], "url": "https://api.github.com/repos/canonical/github-runner-operator/actions/jobs/57865472777", "ignored_noise": "foobar"}, headers: {'X-Process-Count': 1}
+06:29:28 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:29:58 INFO Waiting for model:
+  test-fch510ql/0 [idle] active: 
+06:30:01 INFO Current reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
+06:30:01 INFO Waiting for reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
+06:31:02 INFO Current reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
+06:31:02 INFO Current reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea, expected reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
+06:31:02 INFO Waiting for reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
+06:32:03 INFO Current reconcile ID: f263c785-8d31-4668-85c5-55ffa3e51124
+06:32:03 INFO Current reconcile ID: f263c785-8d31-4668-85c5-55ffa3e51124, expected reconcile ID: 5255be51-7e44-4d51-8006-31345d6a2cea
