@@ -6,7 +6,7 @@
 import logging
 import socket
 import subprocess
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from time import sleep
@@ -274,7 +274,7 @@ def application_with_tmate_ssh_server(
         ],
     )
     config_path = tmp_path / "config.yaml"
-    config_path.write_text(yaml.dump(asdict(config)), encoding="utf-8")
+    config_path.write_text(yaml.dump(config), encoding="utf-8")
 
     logger.info(
         "Starting application with SSH debug configuration (test_id: %s)",

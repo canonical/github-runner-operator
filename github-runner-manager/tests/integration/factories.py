@@ -5,7 +5,7 @@
 
 import secrets
 import string
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 
@@ -213,7 +213,9 @@ def create_default_config(
             "aproxy_exclude_addresses": [],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
-            "ssh_debug_connections": ssh_debug_connections or [],
+            "ssh_debug_connections": [
+                asdict(connection) for connection in ssh_debug_connections or []
+            ],
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },
