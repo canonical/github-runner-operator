@@ -22,7 +22,7 @@ jq -n \
 {% endif %}
 
 {% if do_repo_policy_check %}
-  logger -s "Repo policy check is marked for deprecation. Consider using `allow_external_contributor` instead"
+  logger -s "Repo policy check is marked for deprecation. Consider using 'allow_external_contributor' instead"
 
     # Log common env variables.
     logger -s "GITHUB_EVENT_NAME: ${GITHUB_EVENT_NAME}, \
