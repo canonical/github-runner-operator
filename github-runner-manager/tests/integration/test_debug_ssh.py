@@ -184,9 +184,6 @@ def tmate_image(pytestconfig):
     return pytestconfig.getoption("--tmate-image")
 
 
-pytest.fixture(scope="session")(tmate_image)
-
-
 @pytest.fixture(scope="session")
 def tmate_ssh_server(
     tmate_keys: TmateKeys, test_config: TestConfig, tmate_image: str
