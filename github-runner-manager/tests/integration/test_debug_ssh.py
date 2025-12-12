@@ -216,7 +216,7 @@ def tmate_ssh_server(
         except Exception as exc:
             logger.error("Failed to remove tmate container: %s", exc)
             pass
-        pytest.fail("Failed to get tmate container SSH port")
+        pytest.fail(f"Failed to get tmate container SSH port: {port}")
 
     yield TmateServer(
         host=host,
