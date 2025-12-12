@@ -106,12 +106,36 @@ class TestConfig:
         self.vm_prefix = f"test-runner-{self.test_id}"
 
 
+@dataclass
+class SSHDebugConfiguration:
+    """SSH connection information for debug workflow.
+
+    Attributes:
+        host: The SSH relay server host IP address inside the VPN.
+        port: The SSH relay server port.
+        rsa_fingerprint: The host SSH server public RSA key fingerprint.
+        ed25519_fingerprint: The host SSH server public ed25519 key fingerprint.
+        use_runner_http_proxy: Whether to use runner proxy for the SSH connection.
+        local_proxy_host: Local host to use for proxying.
+        local_proxy_port: Local port to use for proxying.
+    """
+
+    host: str
+    port: int = 0
+    rsa_fingerprint: str = ""
+    ed25519_fingerprint: str = ""
+    use_runner_http_proxy: bool = False
+    local_proxy_host: str = "127.0.0.1"
+    local_proxy_port: int = 3129
+
+
 def create_default_config(
     allow_external_contributor: bool = False,
     github_config: GitHubConfig | None = None,
     openstack_config: OpenStackConfig | None = None,
-    test_config: TestConfig | None = None,
     proxy_config: ProxyConfig | None = None,
+    ssh_debug_connections: list[SSHDebugConfiguration] | None = None,
+    test_config: TestConfig | None = None,
 ) -> dict[str, Any]:
     """Create a default test configuration dictionary.
 
@@ -189,7 +213,7 @@ def create_default_config(
             "aproxy_exclude_addresses": [],
             "aproxy_redirect_ports": ["1-3127", "3129-65535"],
             "dockerhub_mirror": None,
-            "ssh_debug_connections": [],
+            "ssh_debug_connections": ssh_debug_connections or [],
             "repo_policy_compliance": None,
             "custom_pre_job_script": None,
         },

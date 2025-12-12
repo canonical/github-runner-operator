@@ -8,6 +8,9 @@ from typing import Generator
 
 import openstack
 import pytest
+from github import Github
+from github.Auth import Token
+from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 
@@ -207,3 +210,31 @@ def openstack_cleanup(
 
     except Exception as e:
         logger.error("Failed to clean up OpenStack resources: %s", e)
+
+
+@pytest.fixture(scope="module")
+def github_token(github_config: GitHubConfig) -> str:
+    """Get GitHub token from github_config.
+
+    Args:
+        github_config: GitHub configuration object.
+
+    Returns:
+        GitHub personal access token.
+    """
+    return github_config.token
+
+
+@pytest.fixture(scope="module")
+def github_repository(github_config: GitHubConfig) -> Repository:
+    """Get GitHub repository for testing.
+
+    Args:
+        github_config: GitHub configuration object.
+
+    Returns:
+        GitHub repository object.
+    """
+    auth = Token(github_config.token)
+    github = Github(auth=auth)
+    return github.get_repo(github_config.path)

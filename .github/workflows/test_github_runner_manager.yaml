@@ -15,6 +15,12 @@ jobs:
   application-integration-tests:
     name: Integration tests for github-runner-manager
     runs-on: [self-hosted, pfe-ci]
+    strategy:
+      fail-fast: false
+      matrix:
+        test-module:
+          - test_debug_ssh
+          # - test_external_contributor_security
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
@@ -22,7 +28,7 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install tox with UV
         run: uv tool install tox --with tox-uv
-      - name: Run integration tests
+      - name: Run integration tests - ${{ matrix.test-module }}
         working-directory: ./github-runner-manager/
         env:
           # GitHub configuration
@@ -41,6 +47,7 @@ jobs:
           ${{ vars.INTEGRATION_TEST_SECRET_ENV_NAME_10 }}: ${{ secrets.INTEGRATION_TEST_SECRET_ENV_VALUE_10 }}
         run: |
           tox -e integration -- -v --tb=native -s \
+            tests/integration/${{ matrix.test-module }}.py \
             --github-repository=${{ vars.INTEGRATION_TEST_PATH }} \
             --https-proxy="${{ vars.INTEGRATION_TEST_HTTPS_PROXY }}" \
             --http-proxy="${{ vars.INTEGRATION_TEST_HTTP_PROXY }}" \

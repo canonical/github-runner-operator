@@ -125,3 +125,11 @@ def pytest_addoption(parser):
         help="OpenStack image ID for runner instances.",
         default=os.getenv("OPENSTACK_IMAGE_ID"),
     )
+    parser.addoption(
+        "--tmate-image",
+        action="store",
+        help="Tmate image for SSH server.",
+        default=os.getenv(
+            "TMATE_IMAGE", "ghcr.io/canonical/tmate-ssh-server/tmate-ssh-server:latest"
+        ),
+    )

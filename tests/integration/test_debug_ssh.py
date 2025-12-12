@@ -5,13 +5,16 @@
 import logging
 
 import pytest
+import pytest_asyncio
 from github.Branch import Branch
 from github.Repository import Repository
 from juju.application import Application
 from juju.model import Model
 
+from charm_state import BASE_VIRTUAL_MACHINES_CONFIG_NAME
 from tests.integration.helpers.common import dispatch_workflow, get_job_logs
 from tests.integration.helpers.openstack import OpenStackInstanceHelper
+from tests.status_name import ACTIVE
 
 logger = logging.getLogger(__name__)
 
@@ -20,8 +23,21 @@ SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
 pytestmark = pytest.mark.openstack
 
 
-async def test_ssh_debug(
+@pytest_asyncio.fixture(scope="module", name="app_no_wait_tmate")
+async def app_no_wait_tmate_fixture(
     model: Model,
+    app_openstack_runner,
+    tmate_ssh_server_app: Application,
+):
+    """Application to check tmate ssh with openstack without waiting for active."""
+    application = app_openstack_runner
+    await application.relate("debug-ssh", f"{tmate_ssh_server_app.name}:debug-ssh")
+    await application.set_config({BASE_VIRTUAL_MACHINES_CONFIG_NAME: "1"})
+    await model.wait_for_idle(apps=[tmate_ssh_server_app.name], status=ACTIVE, timeout=60 * 30)
+    return application
+
+
+async def test_ssh_debug(
     app_no_wait_tmate: Application,
     github_repository: Repository,
     test_github_branch: Branch,
@@ -38,10 +54,10 @@ async def test_ssh_debug(
     unit = app_no_wait_tmate.units[0]
     # We need the runner to connect to the current machine, instead of the tmate_ssh_server unit,
     # as the tmate_ssh_server is not routable.
-    dnat_comman_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {tmate_ssh_server_unit_ip} --dport 10022 -j DNAT --to-destination 127.0.0.1:10022"
+    dnat_command_in_runner = f"sudo iptables -t nat -A OUTPUT -p tcp -d {tmate_ssh_server_unit_ip} --dport 10022 -j DNAT --to-destination 127.0.0.1:10022"
     _, _, _ = await instance_helper.run_in_instance(
         unit,
-        dnat_comman_in_runner,
+        dnat_command_in_runner,
         assert_on_failure=True,
     )
     await instance_helper.expose_to_instance(unit=unit, port=10022, host=tmate_ssh_server_unit_ip)
