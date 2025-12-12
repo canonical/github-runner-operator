@@ -18,13 +18,14 @@ logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
-def test_config() -> TestConfig:
+def test_config(pytestconfig: pytest.Config) -> TestConfig:
     """Create a unique test configuration for parallel test execution.
 
     Returns:
         Test configuration with unique identifiers.
     """
-    return TestConfig()
+    debug_log_dir = pytestconfig.getoption("--debug-log-dir")
+    return TestConfig(debug_log_dir=debug_log_dir)
 
 
 @pytest.fixture(scope="module")
@@ -177,6 +178,9 @@ def openstack_cleanup(
                 try:
                     console_log = conn.get_server_console(server.id)
                     if console_log:
+                        test_config.debug_log_dir.mkdir(parents=True, exist_ok=True)
+                        log_file = test_config.debug_log_dir / f"{server.name}_console.log"
+                        log_file.write_text(console_log, encoding="utf-8")
                         logger.info("Console log for server %s:\n%s", server.name, console_log)
                 except Exception as log_error:
                     logger.warning(

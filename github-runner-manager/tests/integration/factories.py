@@ -6,6 +6,7 @@
 import secrets
 import string
 from dataclasses import asdict, dataclass, field
+from pathlib import Path
 from typing import Any
 
 
@@ -88,12 +89,14 @@ class TestConfig:
     """Test-specific configuration for parallel test execution.
 
     Attributes:
+        debug_log_dir: Directory to store debug logs.
         test_id: Unique identifier for this test run.
         runner_name: Name prefix for the runner manager.
         labels: Extra labels to identify runners from this test.
         vm_prefix: Prefix for VM names to avoid conflicts.
     """
 
+    debug_log_dir: Path = Path("/tmp/github-runner-manager-test-logs")
     test_id: str = field(default_factory=_generate_test_id)
     runner_name: str = field(init=False)
     labels: list[str] = field(init=False)
