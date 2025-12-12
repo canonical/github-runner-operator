@@ -213,7 +213,7 @@ def tmate_ssh_server(
     container.reload()
 
     host = "127.0.0.1"
-    port = get_container_mapped_port(container, "22/tcp")
+    port = get_container_mapped_port(container, "10022/tcp")
     if port is None or not wait_for_tcp_port(host, port):
         try:
             print("debug")
