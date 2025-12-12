@@ -73,7 +73,7 @@ def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     region_name = pytestconfig.getoption("--openstack-region")
     user_domain_name = pytestconfig.getoption("--openstack-user-domain-name")
     project_domain_name = pytestconfig.getoption("--openstack-project-domain-name")
-    flavor = pytestconfig.getoption("--openstack-flavor")
+    flavor = pytestconfig.getoption("--openstack-flavor-name")
     image_id = pytestconfig.getoption("--openstack-image-id")
 
     # Only return config if all required parameters are provided
