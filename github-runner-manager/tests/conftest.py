@@ -129,7 +129,5 @@ def pytest_addoption(parser):
         "--tmate-image",
         action="store",
         help="Tmate image for SSH server.",
-        default=os.getenv(
-            "TMATE_IMAGE", "ghcr.io/canonical/tmate-ssh-server/tmate-ssh-server:latest"
-        ),
+        default=os.getenv("TMATE_IMAGE", "tmate/tmate-ssh-server:latest"),
     )
