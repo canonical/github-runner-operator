@@ -1,0 +1,26 @@
+06:18:31 WARNING unexpected facade SSHServer received from the controller
+06:18:31 INFO Adding model github-pr-683c8-lxd:test-charm-no-runner-cx0c on cloud localhost
+06:18:31 WARNING unexpected facade SSHServer received from the controller
+06:18:31 WARNING unexpected facade SSHSession received from the controller
+06:18:31 WARNING unexpected facade SSHTunneler received from the controller
+06:18:31 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+06:18:33 INFO Deploying ch:amd64/noble/any-charm-124
+06:18:49 INFO Deploying local:jammy/github-runner-0
+06:18:49 INFO Waiting for model:
+  test-xknnqpk6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xknnqpk6/0 [allocating] waiting: waiting for machine
+06:19:19 INFO Waiting for model:
+  test-xknnqpk6/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-xknnqpk6/0 [executing] active: 
+06:19:49 INFO Waiting for model:
+  test-xknnqpk6/0 [allocating] waiting: waiting for machine
+06:20:20 INFO Waiting for model:
+  test-xknnqpk6/0 [allocating] waiting: waiting for machine
+06:20:50 INFO Waiting for model:
+  test-xknnqpk6/0 [executing] maintenance: installing charm software
+06:21:20 INFO Waiting for model:
+  test-xknnqpk6/0 [executing] maintenance: installing charm software
+06:21:50 INFO Waiting for model:
+  test-xknnqpk6/0 [executing] maintenance: Update image for runners
+06:22:11 INFO Waiting for model:
+  test-xknnqpk6/0 [idle] active:
