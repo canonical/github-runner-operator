@@ -44,27 +44,34 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
+def _start_cli_server(
+    config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None
+) -> None:
     """Start the CLI server in a separate process.
 
     Args:
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
+        log_file_path: Path to the log file. If None, logs to stderr.
     """
     runner = CliRunner()
+    args = [
+        "--config-file",
+        str(config_file_path),
+        "--host",
+        host,
+        "--port",
+        str(port),
+        "--log-level",
+        "DEBUG",
+    ]
+    if log_file_path:
+        args.extend(["--log-file", str(log_file_path)])
+
     result = runner.invoke(
         main,
-        [
-            "--config-file",
-            str(config_file_path),
-            "--host",
-            host,
-            "--port",
-            str(port),
-            "--log-level",
-            "DEBUG",
-        ],
+        args,
         catch_exceptions=False,
     )
     if result.exit_code != 0:
@@ -141,6 +148,7 @@ class RunningApplication:
         host: str = "127.0.0.1",
         port: int = 8080,
         metrics_log_path: Path | None = None,
+        log_file_path: Path | None = None,
     ) -> "RunningApplication":
         """Create and start a new application instance.
 
@@ -150,6 +158,7 @@ class RunningApplication:
             port: Port to listen on. If None, an available port is automatically selected.
             metrics_log_path: Path to the metrics log file. If provided, sets METRICS_LOG_PATH
                 environment variable for the application process.
+            log_file_path: Path to the application log file. If None, logs to stderr.
 
         Returns:
             A RunningApplication instance with the application running.
@@ -164,7 +173,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host),
+            args=(config_file_path, port, host, log_file_path),
         )
         process.start()
 

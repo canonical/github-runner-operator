@@ -62,7 +62,7 @@ jobs:
             --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
             --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"
             --debug-log-dir="/tmp/github-runner-manager-test-logs"
-      - name: Print OpenStack debug logs
+      - name: Print debug logs
         if: ${{ failure() }}
         run: |
           echo "Printing debug logs from /tmp/github-runner-manager-test-logs"

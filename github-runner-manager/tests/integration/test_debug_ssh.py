@@ -281,7 +281,10 @@ def application_with_tmate_ssh_server(
         test_config.test_id,
     )
     metrics_log_path = tmp_path / "github-runner-metrics.log"
-    app = RunningApplication.create(config_path, metrics_log_path=metrics_log_path)
+    log_file_path = test_config.debug_log_dir / f"application-{test_config.test_id}.log"
+    app = RunningApplication.create(
+        config_path, metrics_log_path=metrics_log_path, log_file_path=log_file_path
+    )
 
     yield app
 

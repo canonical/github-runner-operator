@@ -25,8 +25,9 @@ def test_config(pytestconfig: pytest.Config) -> TestConfig:
     Returns:
         Test configuration with unique identifiers.
     """
-    debug_log_dir = pytestconfig.getoption("--debug-log-dir")
-    return TestConfig(debug_log_dir=Path(debug_log_dir))
+    debug_log_dir = Path(pytestconfig.getoption("--debug-log-dir"))
+    debug_log_dir.mkdir(parents=True, exist_ok=True)
+    return TestConfig(debug_log_dir=debug_log_dir)
 
 
 @pytest.fixture(scope="module")
@@ -179,7 +180,6 @@ def openstack_cleanup(
                 try:
                     console_log = conn.get_server_console(server.id)
                     if console_log:
-                        test_config.debug_log_dir.mkdir(parents=True, exist_ok=True)
                         log_file = test_config.debug_log_dir / f"{server.name}_console.log"
                         log_file.write_text(console_log, encoding="utf-8")
                         logger.info("Console log for server %s:\n%s", server.name, console_log)
