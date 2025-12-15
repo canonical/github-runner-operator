@@ -1,6 +1,6 @@
 #  Copyright 2025 Canonical Ltd.
 #  See LICENSE file for licensing details.
-from github_runner_manager.configuration import (
+from github_runner_manager.configuration.base import (
     ApplicationConfiguration,
     Flavor,
     Image,
@@ -9,7 +9,6 @@ from github_runner_manager.configuration import (
     ProxyConfig,
     QueueConfig,
     ReactiveConfiguration,
-    RepoPolicyComplianceConfig,
     SSHDebugConnection,
     SupportServiceConfig,
 )
@@ -69,10 +68,6 @@ def test_create_application_configuration(
                     local_proxy_port=3129,
                 )
             ],
-            repo_policy_compliance=RepoPolicyComplianceConfig(
-                token="token",
-                url="https://compliance.example.com",
-            ),
         ),
         non_reactive_configuration=NonReactiveConfiguration(
             combinations=[
