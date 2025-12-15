@@ -4,6 +4,7 @@
 """Fixtures for github-runner-manager integration tests."""
 
 import logging
+from pathlib import Path
 from typing import Generator
 
 import openstack
@@ -25,7 +26,7 @@ def test_config(pytestconfig: pytest.Config) -> TestConfig:
         Test configuration with unique identifiers.
     """
     debug_log_dir = pytestconfig.getoption("--debug-log-dir")
-    return TestConfig(debug_log_dir=debug_log_dir)
+    return TestConfig(debug_log_dir=Path(debug_log_dir))
 
 
 @pytest.fixture(scope="module")
