@@ -312,3 +312,17 @@ def github_branch(
         logger.info("Deleted test branch: %s", test_branch)
     except Exception as e:
         logger.warning("Failed to delete test branch %s: %s", test_branch, e)
+
+
+@pytest.fixture(scope="module")
+def tmp_test_dir(tmp_path_factory) -> Path:
+    """Create a temporary test directory.
+
+    Args:
+        tmp_path_factory: Pytest fixture for creating temporary directories.
+
+    Returns:
+        Path to the created temporary test directory.
+    """
+    test_dir = tmp_path_factory.mktemp("integration_test")
+    return test_dir

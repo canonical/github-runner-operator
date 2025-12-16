@@ -117,13 +117,13 @@ def get_container_mapped_port(
 
 
 @pytest.fixture(scope="module")
-def tmate_keys(tmp_path_factory) -> Generator[TmateKeys, None, None]:
+def tmate_keys(tmp_test_dir: Path) -> Generator[TmateKeys, None, None]:
     """Generate SSH keypairs under `tmp_path/keys` and compute SHA256 fingerprints.
 
     Yields a dict with `keys_dir`, `rsa_key`, `ed_key`, `rsa_fingerprint`, and
     `ed25519_fingerprint`.
     """
-    keys_dir = tmp_path_factory.mktemp("tmate-ssh-keys")
+    keys_dir = tmp_test_dir / "keys"
     keys_dir.mkdir(parents=True, exist_ok=True)
     rsa_key_path = keys_dir / "ssh_host_rsa_key"
     ed_key_path = keys_dir / "ssh_host_ed25519_key"
@@ -226,7 +226,7 @@ def tmate_ssh_server(
 
 @pytest.fixture(scope="module")
 def application_with_tmate_ssh_server(
-    tmp_path: Path,
+    tmp_test_dir: Path,
     github_config: GitHubConfig,
     openstack_config: OpenStackConfig | None,
     test_config: TestConfig,
@@ -236,7 +236,7 @@ def application_with_tmate_ssh_server(
     """Start application with external contributor checks enabled (disabled access).
 
     Args:
-        tmp_path: Pytest fixture providing temporary directory.
+        tmp_test_dir: Pytest fixture providing temporary directory.
         github_config: GitHub configuration object.
         openstack_config: OpenStack configuration object or None.
         test_config: Test-specific configuration for unique identification.
@@ -262,14 +262,14 @@ def application_with_tmate_ssh_server(
             )
         ],
     )
-    config_path = tmp_path / "config.yaml"
+    config_path = tmp_test_dir / "config.yaml"
     config_path.write_text(yaml.dump(config), encoding="utf-8")
 
     logger.info(
         "Starting application with SSH debug configuration (test_id: %s)",
         test_config.test_id,
     )
-    metrics_log_path = tmp_path / "github-runner-metrics.log"
+    metrics_log_path = tmp_test_dir / "github-runner-metrics.log"
     log_file_path = test_config.debug_log_dir / f"application-{test_config.test_id}.log"
     app = RunningApplication.create(
         config_path, metrics_log_path=metrics_log_path, log_file_path=log_file_path
