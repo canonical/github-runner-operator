@@ -4,7 +4,6 @@
 """Integration tests for tmate ssh connection."""
 
 import logging
-import socket
 import subprocess
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -16,6 +15,7 @@ import docker
 import pytest
 import yaml
 from docker.models.containers import Container
+from github.Branch import Branch
 from github.Repository import Repository
 
 from .application import RunningApplication
@@ -285,6 +285,7 @@ def application_with_tmate_ssh_server(
 def test_tmate_ssh_connection(
     test_config: TestConfig,
     github_repository: Repository,
+    github_branch: Branch,
     tmate_ssh_server: TmateServer,
 ):
     """Test that a tmate SSH connection can be established via the runner manager.
@@ -296,17 +297,18 @@ def test_tmate_ssh_connection(
     Args:
         test_config: Test-specific configuration for unique identification.
         github_repository: Fixture providing the GitHub repository object.
+        github_branch: Fixture providing the GitHub branch object.
         tmate_ssh_server: Fixture providing the tmate SSH server connection info.
     """
     dispatch_time = datetime.now(timezone.utc)
     workflow = dispatch_workflow(
         repository=github_repository,
         workflow_filename=SSH_DEBUG_WORKFLOW_FILE_NAME,
-        ref="main",
+        ref=github_branch,
         inputs={"runner": test_config.labels[0]},
     )
     workflow_run = get_workflow_dispatch_run(
-        workflow=workflow, ref="main", dispatch_time=dispatch_time
+        workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
     assert wait_for_workflow_completion(
         workflow_run, timeout=900

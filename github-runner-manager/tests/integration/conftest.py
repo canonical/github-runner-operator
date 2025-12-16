@@ -4,6 +4,8 @@
 """Fixtures for github-runner-manager integration tests."""
 
 import logging
+import subprocess
+import time
 from pathlib import Path
 from typing import Generator
 
@@ -11,6 +13,7 @@ import openstack
 import pytest
 from github import Github
 from github.Auth import Token
+from github.Branch import Branch
 from github.Repository import Repository
 
 from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
@@ -243,3 +246,69 @@ def github_repository(github_config: GitHubConfig) -> Repository:
     auth = Token(github_config.token)
     github = Github(auth=auth)
     return github.get_repo(github_config.path)
+
+
+@pytest.fixture(scope="module")
+def github_branch(
+    github_repository: Repository, test_config: TestConfig
+) -> Generator[Branch, None, None]:
+    """Create a new branch for testing, from latest commit in current branch.
+
+    Args:
+        github_repository: GitHub repository object.
+
+    Yields:
+        Branch object for the created test branch.
+    """
+    test_branch = f"test-{test_config.test_id}"
+
+    # Get the current Git branch dynamically
+    result = subprocess.run(
+        ["/usr/bin/git", "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    current_branch_name = result.stdout.strip()
+    logger.info("Using current Git branch: %s", current_branch_name)
+
+    working_branch = github_repository.get_branch(current_branch_name)
+    branch_ref = github_repository.create_git_ref(
+        ref=f"refs/heads/{test_branch}", sha=working_branch.commit.sha
+    )
+
+    # Wait for branch to be available, GitHub is eventually consistent
+    timeout = 60
+    retry_delay = 1
+    start_time = time.time()
+    branch = None
+
+    while time.time() - start_time < timeout:
+        try:
+            branch = github_repository.get_branch(test_branch)
+            logger.info(
+                "Created test branch: %s at SHA: %s", test_branch, working_branch.commit.sha
+            )
+            break
+        except Exception as e:
+            elapsed = time.time() - start_time
+            if elapsed < timeout:
+                logger.debug(
+                    "Branch %s not yet available (elapsed: %.1fs), retrying in %ds: %s",
+                    test_branch,
+                    elapsed,
+                    retry_delay,
+                    e,
+                )
+                time.sleep(retry_delay)
+            else:
+                logger.error("Failed to get branch %s after %.1fs", test_branch, elapsed)
+                raise
+
+    yield branch
+
+    try:
+        branch_ref.delete()
+        logger.info("Deleted test branch: %s", test_branch)
+    except Exception as e:
+        logger.warning("Failed to delete test branch %s: %s", test_branch, e)

@@ -8,6 +8,7 @@ from datetime import datetime, timezone
 from time import sleep, time
 
 import requests
+from github.Branch import Branch
 from github.GithubException import GithubException
 from github.PullRequest import PullRequest
 from github.Repository import Repository
@@ -157,7 +158,7 @@ def get_pr_workflow_runs(
 def dispatch_workflow(
     repository: Repository,
     workflow_filename: str,
-    ref: str,
+    ref: str | Branch,
     inputs: dict[str, str] | None = None,
 ) -> Workflow:
     """Dispatch a workflow_dispatch workflow.
@@ -181,7 +182,7 @@ def dispatch_workflow(
 
 def get_workflow_dispatch_run(
     workflow: Workflow,
-    ref: str,
+    ref: str | Branch,
     timeout: int = 120,
     dispatch_time: datetime | None = None,
 ) -> WorkflowRun:
