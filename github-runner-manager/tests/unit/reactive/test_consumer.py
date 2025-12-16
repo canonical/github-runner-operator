@@ -357,7 +357,8 @@ def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: Magi
 
     _assert_queue_is_empty(queue_config.queue_name)
 
-    # First sleep is exponential backoff for retry (count=2: 20s), second is from _spawn_runner (60s)
+    # First sleep is exponential backoff for retry (count=2: 20s),
+    # second is from _spawn_runner (60s)
     mock_sleep.assert_has_calls([mock.call(20), mock.call(WAIT_TIME_IN_SEC)])
 
 
