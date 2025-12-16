@@ -116,14 +116,14 @@ def get_container_mapped_port(
     return None
 
 
-@pytest.fixture
-def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
+@pytest.fixture(scope="module")
+def tmate_keys(tmp_path_factory) -> Generator[TmateKeys, None, None]:
     """Generate SSH keypairs under `tmp_path/keys` and compute SHA256 fingerprints.
 
     Yields a dict with `keys_dir`, `rsa_key`, `ed_key`, `rsa_fingerprint`, and
     `ed25519_fingerprint`.
     """
-    keys_dir = tmp_path / "keys"
+    keys_dir = tmp_path_factory.mktemp("tmate-ssh-keys")
     keys_dir.mkdir(parents=True, exist_ok=True)
     rsa_key_path = keys_dir / "ssh_host_rsa_key"
     ed_key_path = keys_dir / "ssh_host_ed25519_key"
@@ -167,13 +167,13 @@ def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
     )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def tmate_image(pytestconfig):
     """Return the tmate image to use for SSH server testing."""
     return pytestconfig.getoption("--tmate-image")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def tmate_ssh_server(
     tmate_keys: TmateKeys, test_config: TestConfig, tmate_image: str
 ) -> Generator[TmateServer, None, None]:
@@ -224,7 +224,7 @@ def tmate_ssh_server(
         logger.error("Failed to remove tmate container: %s", exc)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def application_with_tmate_ssh_server(
     tmp_path: Path,
     github_config: GitHubConfig,

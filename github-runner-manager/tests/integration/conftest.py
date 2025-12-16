@@ -21,7 +21,7 @@ from .factories import GitHubConfig, OpenStackConfig, ProxyConfig, TestConfig
 logger = logging.getLogger(__name__)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def test_config(pytestconfig: pytest.Config) -> TestConfig:
     """Create a unique test configuration for parallel test execution.
 
@@ -141,7 +141,7 @@ def proxy_config(pytestconfig: pytest.Config) -> ProxyConfig | None:
     )
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope="module")
 def openstack_cleanup(
     openstack_config: OpenStackConfig, test_config: TestConfig, request: pytest.FixtureRequest
 ) -> Generator[None, None, None]:
