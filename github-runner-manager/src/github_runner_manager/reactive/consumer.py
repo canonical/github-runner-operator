@@ -30,7 +30,7 @@ PROCESS_COUNT_HEADER_NAME = "X-Process-Count"
 WAIT_TIME_IN_SEC = 60
 RETRY_LIMIT = 5
 # Exponential backoff configuration for message retries
-BACKOFF_BASE_SECONDS = 10
+BACKOFF_BASE_SECONDS = 60
 BACKOFF_MAX_SECONDS = 300
 # This control message is for testing. The reactive process will stop consuming messages
 # when the message is sent. This message does not come from the router.
@@ -75,19 +75,6 @@ class QueueError(Exception):
     """Raised when an error when communicating with the queue occurs."""
 
 
-def _calculate_backoff_time(retry_count: int) -> int:
-    """Calculate exponential backoff time for retries.
-
-    Args:
-        retry_count: The current retry count (starting from 1).
-
-    Returns:
-        The backoff time in seconds, capped at BACKOFF_MAX_SECONDS.
-    """
-    backoff_time = BACKOFF_BASE_SECONDS * (2 ** (retry_count - 1))
-    return min(backoff_time, BACKOFF_MAX_SECONDS)
-
-
 def get_queue_size(queue_config: QueueConfig) -> int:
     """Get the size of the message queue.
 
@@ -106,6 +93,19 @@ def get_queue_size(queue_config: QueueConfig) -> int:
                 return simple_queue.qsize()
     except KombuError as exc:
         raise QueueError("Error when communicating with the queue") from exc
+
+
+def _calculate_backoff_time(retry_count: int) -> int:
+    """Calculate exponential backoff time for retries.
+
+    Args:
+        retry_count: The current retry count (starting from 1).
+
+    Returns:
+        The backoff time in seconds, capped at BACKOFF_MAX_SECONDS.
+    """
+    backoff_time = BACKOFF_BASE_SECONDS * (2 ** (retry_count - 1))
+    return min(backoff_time, BACKOFF_MAX_SECONDS)
 
 
 # Ignore `consume` too complex as it is pending re-design.

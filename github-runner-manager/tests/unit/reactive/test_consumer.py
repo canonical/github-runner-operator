@@ -357,9 +357,9 @@ def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: Magi
 
     _assert_queue_is_empty(queue_config.queue_name)
 
-    # First sleep is exponential backoff for retry (count=2: 20s),
+    # First sleep is exponential backoff for retry (count=2: 120s),
     # second is from _spawn_runner (60s)
-    mock_sleep.assert_has_calls([mock.call(20), mock.call(WAIT_TIME_IN_SEC)])
+    mock_sleep.assert_has_calls([mock.call(120), mock.call(WAIT_TIME_IN_SEC)])
 
 
 def test_consume_retried_job_failure(queue_config: QueueConfig, mock_sleep: MagicMock):
@@ -394,8 +394,8 @@ def test_consume_retried_job_failure(queue_config: QueueConfig, mock_sleep: Magi
         queue_config.queue_name, job_details.json(), headers={PROCESS_COUNT_HEADER_NAME: 2}
     )
 
-    # Sleep with exponential backoff for retry count 2: 20 seconds
-    mock_sleep.assert_called_once_with(20)
+    # Sleep with exponential backoff for retry count 2: 120 seconds
+    mock_sleep.assert_called_once_with(120)
 
 
 def test_consume_retried_job_failure_past_limit(queue_config: QueueConfig, mock_sleep: MagicMock):
@@ -492,12 +492,11 @@ def _assert_msg_has_been_requeued(
 @pytest.mark.parametrize(
     "retry_count,expected_backoff",
     [
-        pytest.param(1, 10, id="first retry - 10 seconds"),
-        pytest.param(2, 20, id="second retry - 20 seconds"),
-        pytest.param(3, 40, id="third retry - 40 seconds"),
-        pytest.param(4, 80, id="fourth retry - 80 seconds"),
-        pytest.param(5, 160, id="fifth retry - 160 seconds"),
-        pytest.param(6, 300, id="sixth retry - capped at max 300 seconds"),
+        pytest.param(1, 60, id="first retry - 60 seconds"),
+        pytest.param(2, 120, id="second retry - 120 seconds"),
+        pytest.param(3, 240, id="third retry - 240 seconds"),
+        pytest.param(4, 300, id="fourth retry - capped at max 300 seconds"),
+        pytest.param(5, 300, id="fifth retry - capped at max 300 seconds"),
         pytest.param(10, 300, id="high retry count - capped at max 300 seconds"),
     ],
 )
