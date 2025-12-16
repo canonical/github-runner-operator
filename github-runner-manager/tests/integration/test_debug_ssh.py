@@ -116,17 +116,6 @@ def get_container_mapped_port(
     return None
 
 
-def wait_for_tcp_port(host: str, port: int, attempts: int = 30, interval: float = 0.5) -> bool:
-    """Wait until a TCP connection to (host, port) succeeds or return False on timeout."""
-    for _ in range(attempts):
-        try:
-            with socket.create_connection((host, port), timeout=1):
-                return True
-        except OSError:
-            sleep(interval)
-    return False
-
-
 @pytest.fixture
 def tmate_keys(tmp_path: Path) -> Generator[TmateKeys, None, None]:
     """Generate SSH keypairs under `tmp_path/keys` and compute SHA256 fingerprints.
@@ -214,7 +203,7 @@ def tmate_ssh_server(
 
     host = "127.0.0.1"
     port = get_container_mapped_port(container, "10022/tcp")
-    if port is None or not wait_for_tcp_port(host, port):
+    if port is None:
         try:
             container.remove(force=True)
         except Exception as exc:
