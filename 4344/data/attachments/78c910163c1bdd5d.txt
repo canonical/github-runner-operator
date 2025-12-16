@@ -1,0 +1,38 @@
+02:34:06 WARNING unexpected facade SSHServer received from the controller
+02:34:06 INFO Adding model github-pr-0df78-lxd:test-charm-metrics-success-x7ed on cloud localhost
+02:34:06 WARNING unexpected facade SSHServer received from the controller
+02:34:06 WARNING unexpected facade SSHSession received from the controller
+02:34:06 WARNING unexpected facade SSHTunneler received from the controller
+02:34:06 INFO Deploying fake image builder via any-charm for image ID a03a9239-9e72-4b54-ad7d-f85dec8c01d2
+02:34:08 INFO Deploying ch:amd64/noble/any-charm-124
+02:34:23 INFO Deploying local:jammy/github-runner-0
+02:34:23 INFO Waiting for model:
+  test-hlntoq4b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hlntoq4b/0 [allocating] waiting: waiting for machine
+02:34:53 INFO Waiting for model:
+  test-hlntoq4b/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-hlntoq4b/0 [idle] active: 
+02:35:23 INFO Waiting for model:
+  test-hlntoq4b/0 [allocating] waiting: waiting for machine
+02:35:54 INFO Waiting for model:
+  test-hlntoq4b/0 [allocating] waiting: waiting for machine
+02:36:24 INFO Waiting for model:
+  test-hlntoq4b/0 [executing] maintenance: installing charm software
+02:36:54 INFO Waiting for model:
+  test-hlntoq4b/0 [executing] maintenance: installing charm software
+02:37:24 INFO Waiting for model:
+  test-hlntoq4b/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-hlntoq4b/0 [idle] active: 
+02:37:55 INFO Waiting for model:
+  test-hlntoq4b/0 [idle] active:
+02:38:00 INFO Waiting for model:
+  test-hlntoq4b/0 [idle] active: 
+02:38:30 INFO Waiting for model:
+  test-hlntoq4b/0 [idle] active: 
+02:38:33 INFO Current reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
+02:38:33 INFO Waiting for reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
+02:39:33 INFO Current reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
+02:39:33 INFO Current reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23, expected reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
+02:39:33 INFO Waiting for reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
+02:40:34 INFO Current reconcile ID: 82f9bde0-f58f-4141-b12e-4ee36d111d29
+02:40:34 INFO Current reconcile ID: 82f9bde0-f58f-4141-b12e-4ee36d111d29, expected reconcile ID: d98f7423-9dce-4360-96d3-26667bf60b23
