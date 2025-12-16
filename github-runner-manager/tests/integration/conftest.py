@@ -262,19 +262,16 @@ def github_branch(
     """
     test_branch = f"test-{test_config.test_id}"
 
-    # Get the current Git branch dynamically
-    result = subprocess.run(
-        ["/usr/bin/git", "rev-parse", "--abbrev-ref", "HEAD"],
+    sha_result = subprocess.run(
+        ["/usr/bin/git", "rev-parse", "HEAD"],
         capture_output=True,
         text=True,
         check=True,
     )
-    current_branch_name = result.stdout.strip()
-    logger.info("Using current Git branch: %s", current_branch_name)
+    current_commit_sha = sha_result.stdout.strip()
 
-    working_branch = github_repository.get_branch(current_branch_name)
     branch_ref = github_repository.create_git_ref(
-        ref=f"refs/heads/{test_branch}", sha=working_branch.commit.sha
+        ref=f"refs/heads/{test_branch}", sha=current_commit_sha
     )
 
     # Wait for branch to be available, GitHub is eventually consistent
@@ -286,9 +283,7 @@ def github_branch(
     while time.time() - start_time < timeout:
         try:
             branch = github_repository.get_branch(test_branch)
-            logger.info(
-                "Created test branch: %s at SHA: %s", test_branch, working_branch.commit.sha
-            )
+            logger.info("Created test branch: %s at SHA: %s", test_branch, current_commit_sha)
             break
         except Exception as e:
             elapsed = time.time() - start_time
