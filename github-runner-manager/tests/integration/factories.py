@@ -146,9 +146,10 @@ def create_default_config(
         allow_external_contributor: Whether to allow external contributors.
         github_config: GitHub configuration. Defaults to test values.
         openstack_config: OpenStack configuration. Defaults to test values.
+        proxy_config: Proxy configuration. Defaults to no proxy.
+        ssh_debug_connections: SSH debug connection configurations.
         test_config: Test-specific configuration for parallel execution.
             Defaults to new unique values.
-        proxy_config: Proxy configuration. Defaults to no proxy.
 
     Returns:
         Configuration dictionary for the application.
