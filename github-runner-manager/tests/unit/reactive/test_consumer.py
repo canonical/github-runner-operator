@@ -495,16 +495,16 @@ def _assert_msg_has_been_requeued(
         pytest.param(1, 60, id="first retry - 60 seconds"),
         pytest.param(2, 120, id="second retry - 120 seconds"),
         pytest.param(3, 240, id="third retry - 240 seconds"),
-        pytest.param(4, 300, id="fourth retry - capped at max 300 seconds"),
-        pytest.param(5, 300, id="fifth retry - capped at max 300 seconds"),
-        pytest.param(10, 300, id="high retry count - capped at max 300 seconds"),
+        pytest.param(4, 480, id="fourth retry - 480 seconds"),
+        pytest.param(5, 960, id="fifth retry - 960 seconds"),
+        pytest.param(10, 30720, id="high retry count - 30720 seconds"),
     ],
 )
 def test_calculate_backoff_time(retry_count: int, expected_backoff: int):
     """
     arrange: Given a retry count.
     act: Call _calculate_backoff_time.
-    assert: The correct exponential backoff time is returned, capped at the maximum.
+    assert: The correct exponential backoff time is returned.
     """
     from github_runner_manager.reactive.consumer import _calculate_backoff_time
 

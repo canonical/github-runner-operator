@@ -31,7 +31,6 @@ WAIT_TIME_IN_SEC = 60
 RETRY_LIMIT = 5
 # Exponential backoff configuration for message retries
 BACKOFF_BASE_SECONDS = 60
-BACKOFF_MAX_SECONDS = 300
 # This control message is for testing. The reactive process will stop consuming messages
 # when the message is sent. This message does not come from the router.
 END_PROCESSING_PAYLOAD = "__END__"
@@ -102,10 +101,9 @@ def _calculate_backoff_time(retry_count: int) -> int:
         retry_count: The current retry count (starting from 1).
 
     Returns:
-        The backoff time in seconds, capped at BACKOFF_MAX_SECONDS.
+        The backoff time in seconds.
     """
-    backoff_time = BACKOFF_BASE_SECONDS * (2 ** (retry_count - 1))
-    return min(backoff_time, BACKOFF_MAX_SECONDS)
+    return BACKOFF_BASE_SECONDS * (2 ** (retry_count - 1))
 
 
 # Ignore `consume` too complex as it is pending re-design.
