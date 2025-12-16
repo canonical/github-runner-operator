@@ -331,7 +331,7 @@ def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: Magi
     arrange: A job placed in the message queue which is processed before.
     act: Call consume.
     assert: A runner is spawned, the message is removed from the queue, and sleep is called two
-        times.
+        times with exponential backoff for the retry and normal wait time for spawn check.
     """
     labels = {secrets.token_hex(16), secrets.token_hex(16)}
     job_details = consumer.JobDetails(
@@ -357,14 +357,15 @@ def test_consume_retried_job_success(queue_config: QueueConfig, mock_sleep: Magi
 
     _assert_queue_is_empty(queue_config.queue_name)
 
-    mock_sleep.assert_has_calls([mock.call(WAIT_TIME_IN_SEC), mock.call(WAIT_TIME_IN_SEC)])
+    # First sleep is exponential backoff for retry (count=2: 20s), second is from _spawn_runner (60s)
+    mock_sleep.assert_has_calls([mock.call(20), mock.call(WAIT_TIME_IN_SEC)])
 
 
 def test_consume_retried_job_failure(queue_config: QueueConfig, mock_sleep: MagicMock):
     """
     arrange: A job placed in the message queue which is processed before. Mock runner spawn fail.
     act: Call consume.
-    assert: The message requeued. Sleep called once.
+    assert: The message requeued. Sleep called once with exponential backoff.
     """
     labels = {secrets.token_hex(16), secrets.token_hex(16)}
     job_details = consumer.JobDetails(
@@ -392,7 +393,8 @@ def test_consume_retried_job_failure(queue_config: QueueConfig, mock_sleep: Magi
         queue_config.queue_name, job_details.json(), headers={PROCESS_COUNT_HEADER_NAME: 2}
     )
 
-    mock_sleep.assert_called_once_with(WAIT_TIME_IN_SEC)
+    # Sleep with exponential backoff for retry count 2: 20 seconds
+    mock_sleep.assert_called_once_with(20)
 
 
 def test_consume_retried_job_failure_past_limit(queue_config: QueueConfig, mock_sleep: MagicMock):
@@ -484,3 +486,26 @@ def _assert_msg_has_been_requeued(
             assert msg.payload == payload
             if headers is not None:
                 assert msg.headers == headers
+
+
+@pytest.mark.parametrize(
+    "retry_count,expected_backoff",
+    [
+        pytest.param(1, 10, id="first retry - 10 seconds"),
+        pytest.param(2, 20, id="second retry - 20 seconds"),
+        pytest.param(3, 40, id="third retry - 40 seconds"),
+        pytest.param(4, 80, id="fourth retry - 80 seconds"),
+        pytest.param(5, 160, id="fifth retry - 160 seconds"),
+        pytest.param(6, 300, id="sixth retry - capped at max 300 seconds"),
+        pytest.param(10, 300, id="high retry count - capped at max 300 seconds"),
+    ],
+)
+def test_calculate_backoff_time(retry_count: int, expected_backoff: int):
+    """
+    arrange: Given a retry count.
+    act: Call _calculate_backoff_time.
+    assert: The correct exponential backoff time is returned, capped at the maximum.
+    """
+    from github_runner_manager.reactive.consumer import _calculate_backoff_time
+
+    assert _calculate_backoff_time(retry_count) == expected_backoff
