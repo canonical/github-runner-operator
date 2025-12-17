@@ -4,7 +4,9 @@
 """Integration tests for tmate ssh connection."""
 
 import logging
+import socket
 import subprocess
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,11 +14,13 @@ from time import sleep
 from typing import Generator, Iterator
 
 import docker
+import openstack
 import pytest
 import yaml
 from docker.models.containers import Container
 from github.Branch import Branch
 from github.Repository import Repository
+from openstack.compute.v2.server import Server as OpenstackServer
 
 from .application import RunningApplication
 from .factories import (
@@ -37,6 +41,165 @@ from .github_helpers import (
 logger = logging.getLogger(__name__)
 
 SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
+
+
+def wait_for_runner(
+    openstack_connection: openstack.connection.Connection,
+    test_config: TestConfig,
+    timeout: int = 300,
+    interval: int = 5,
+) -> tuple[OpenstackServer, str] | tuple[None, None]:
+    """Wait for an OpenStack runner to be created and return it with its IP.
+
+    Args:
+        openstack_connection: OpenStack connection object.
+        test_config: Test configuration with VM prefix.
+        timeout: Maximum time to wait in seconds.
+        interval: Time between checks in seconds.
+
+    Returns:
+        Tuple of (runner, ip) if found, or (None, None) if not found within timeout.
+    """
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        servers = [
+            server
+            for server in openstack_connection.list_servers()
+            if server.name.startswith(test_config.vm_prefix)
+        ]
+        if servers:
+            runner = servers[0]
+            logger.info("Found runner: %s", runner.name)
+
+            # Get runner IP
+            ip = None
+            for network_addresses in runner.addresses.values():
+                for address in network_addresses:
+                    ip = address["addr"]
+                    break
+                if ip:
+                    break
+
+            if ip:
+                return runner, ip
+
+        time.sleep(interval)
+
+    return None, None
+
+
+def wait_for_ssh(runner_ip: str, port: int = 22, timeout: int = 120, interval: int = 2) -> bool:
+    """Wait for SSH port to become available on the runner.
+
+    Args:
+        runner_ip: IP address of the runner.
+        port: SSH port to check (default: 22).
+        timeout: Maximum time to wait in seconds.
+        interval: Time between connection attempts in seconds.
+
+    Returns:
+        True if SSH is available, False if timeout reached.
+    """
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        try:
+            with socket.create_connection((runner_ip, port), timeout=5):
+                logger.info("SSH port %d is now available on %s", port, runner_ip)
+                return True
+        except (socket.timeout, socket.error, OSError):
+            time.sleep(interval)
+
+    logger.error("SSH port %d never became available on %s", port, runner_ip)
+    return False
+
+
+def setup_reverse_ssh_tunnel(
+    runner: OpenstackServer,
+    runner_ip: str,
+    tmate_ssh_server: TmateServer,
+) -> bool:
+    """Setup reverse SSH tunnel and DNAT rules for tmate server access.
+
+    Args:
+        runner: OpenStack server object for the runner.
+        runner_ip: IP address of the runner.
+        tmate_ssh_server: Tmate SSH server configuration.
+
+    Returns:
+        True if tunnel and DNAT were successfully established, False otherwise.
+    """
+    key_name = runner.name
+    key_path = Path.home() / ".ssh" / f"{key_name}.key"
+
+    logger.info("Waiting for SSH on runner %s at %s...", runner.name, runner_ip)
+    if not wait_for_ssh(runner_ip):
+        logger.error("SSH never became available on runner %s", runner_ip)
+        return False
+
+    # Setup DNAT rule to redirect tmate server traffic to localhost tunnel endpoint
+    dnat_cmd = (
+        f"sudo iptables -t nat -A OUTPUT -p tcp "
+        f"-d {tmate_ssh_server.host} --dport {tmate_ssh_server.port} "
+        f"-j DNAT --to-destination 127.0.0.1:3129"
+    )
+
+    logger.info("Configuring DNAT rule on runner")
+    try:
+        subprocess.run(
+            [
+                "/usr/bin/ssh",
+                "-i",
+                str(key_path),
+                "-o",
+                "StrictHostKeyChecking=no",
+                "-o",
+                "UserKnownHostsFile=/dev/null",
+                f"ubuntu@{runner_ip}",
+                dnat_cmd,
+            ],
+            check=True,
+            timeout=30,
+            capture_output=True,
+            text=True,
+        )
+        logger.info("DNAT rule configured on runner")
+    except subprocess.CalledProcessError as e:
+        logger.error("Failed to setup DNAT rule: %s, stderr: %s", e, e.stderr)
+        return False
+
+    # Setup reverse SSH tunnel: runner's localhost:3129 -> test host's tmate server
+    ssh_cmd = [
+        "/usr/bin/ssh",
+        "-fNT",
+        "-R",
+        f"3129:{tmate_ssh_server.host}:{tmate_ssh_server.port}",
+        "-i",
+        str(key_path),
+        "-o",
+        "StrictHostKeyChecking=no",
+        "-o",
+        "UserKnownHostsFile=/dev/null",
+        "-o",
+        "ServerAliveInterval=60",
+        "-o",
+        "ExitOnForwardFailure=yes",
+        f"ubuntu@{runner_ip}",
+    ]
+    logger.info("Setting up reverse SSH tunnel: %s", " ".join(ssh_cmd))
+    try:
+        result = subprocess.run(ssh_cmd, check=True, timeout=30, capture_output=True, text=True)
+        if result.returncode == 0:
+            logger.info("Reverse SSH tunnel established")
+            return True
+        else:
+            logger.error("SSH tunnel command failed: %s", result.stderr)
+            return False
+    except subprocess.TimeoutExpired:
+        logger.error("SSH tunnel command timed out")
+        return False
+    except subprocess.CalledProcessError as e:
+        logger.error("Failed to setup reverse SSH tunnel: %s, stderr: %s", e, e.stderr)
+        return False
 
 
 def compute_ssh_fingerprint(pub_path: str) -> str:
@@ -233,19 +396,22 @@ def tmate_ssh_server(
 def application_with_tmate_ssh_server(
     tmp_test_dir: Path,
     github_config: GitHubConfig,
-    openstack_config: OpenStackConfig | None,
+    openstack_config: OpenStackConfig,
+    openstack_connection: openstack.connection.Connection,
     test_config: TestConfig,
     proxy_config: ProxyConfig | None,
     tmate_ssh_server: TmateServer,
 ) -> Iterator[RunningApplication]:
-    """Start application with external contributor checks enabled (disabled access).
+    """Start application with tmate SSH server and reverse proxy for runner access.
 
     Args:
         tmp_test_dir: Pytest fixture providing temporary directory.
         github_config: GitHub configuration object.
         openstack_config: OpenStack configuration object or None.
+        openstack_connection: OpenStack connection object or None.
         test_config: Test-specific configuration for unique identification.
         proxy_config: Proxy configuration object or None.
+        tmate_ssh_server: Tmate SSH server fixture.
 
     Yields:
         A running application instance.
@@ -279,6 +445,16 @@ def application_with_tmate_ssh_server(
     app = RunningApplication.create(
         config_path, metrics_log_path=metrics_log_path, log_file_path=log_file_path
     )
+
+    # Wait for runner to be created and setup reverse SSH tunnel
+    logger.info("Waiting for OpenStack runner to be created...")
+    runner, ip = wait_for_runner(openstack_connection, test_config)
+
+    if not runner or not ip:
+        pytest.fail("Failed to find OpenStack runner within timeout")
+
+    if not setup_reverse_ssh_tunnel(runner, ip, tmate_ssh_server):
+        pytest.fail("Failed to setup reverse SSH tunnel to tmate server")
 
     yield app
 
@@ -322,5 +498,5 @@ def test_tmate_ssh_connection(
 
     assert tmate_ssh_server.host in logs, "Tmate ssh server IP not found in action logs."
     assert (
-        tmate_ssh_server.port in logs
+        str(tmate_ssh_server.port) in logs
     ), "Tmate ssh server connection port not found in action logs."
