@@ -62,12 +62,6 @@ version = importlib.metadata.version("github-runner-manager")
     help="The log level for the application.",
 )
 @click.option(
-    "--log-file",
-    type=click.Path(dir_okay=False, writable=True),
-    default=None,
-    help="The file path to write logs to. If not provided, logs to stderr.",
-)
-@click.option(
     "--python-path",
     type=str,
     default="",
@@ -80,7 +74,6 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
     port: int,
     debug: bool,
     log_level: str,
-    log_file: str | None,
     python_path: str,
 ) -> None:  # pragma: no cover
     """Start the reconcile service.
@@ -91,18 +84,12 @@ def main(  # pylint: disable=too-many-arguments, too-many-positional-arguments
         port: The port to listen on the HTTP server.
         debug: Whether to start the application in debug mode.
         log_level: The log level.
-        log_file: The file path to write logs to. If None, logs to stderr.
         python_path: The PYTHONPATH to access the github-runner-manager library.
     """
     python_path_config = python_path if python_path else None
-    log_stream = (
-        open(log_file, "a", encoding="utf-8", buffering=1)  # use line buffered writer
-        if log_file
-        else sys.stderr
-    )
     logging.basicConfig(
         level=log_level,
-        stream=log_stream,
+        stream=sys.stderr,
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     )
     logging.info("Starting GitHub runner manager service version: %s", version)

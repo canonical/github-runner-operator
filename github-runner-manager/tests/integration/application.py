@@ -44,9 +44,7 @@ def wait_for_server(host: str, port: int, timeout: float = 10.0) -> bool:
     return False
 
 
-def _start_cli_server(
-    config_file_path: Path, port: int, host: str = "127.0.0.1", log_file_path: Path | None = None
-) -> None:
+def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1") -> None:
     """Start the CLI server in a separate process.
 
     Args:
@@ -66,8 +64,6 @@ def _start_cli_server(
         "--log-level",
         "DEBUG",
     ]
-    if log_file_path:
-        args.extend(["--log-file", str(log_file_path)])
 
     result = runner.invoke(
         main,
@@ -173,7 +169,7 @@ class RunningApplication:
         # Start the server process
         process = multiprocessing.Process(
             target=_start_cli_server,
-            args=(config_file_path, port, host, log_file_path),
+            args=(config_file_path, port, host),
         )
         process.start()
 
