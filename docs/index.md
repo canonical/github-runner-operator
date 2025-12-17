@@ -90,6 +90,7 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Set base image](local-lxd/how-to/set-base-image.md)
   1. [Reference](local-lxd/reference)
     1. [Actions](local-lxd/reference/actions.md)
+    1. [Charm architecture](local-lxd/reference/charm-architecture.md)
     1. [Configurations](local-lxd/reference/configurations.md)
     1. [COS Integration](local-lxd/reference/cos.md)
     1. [GitHub runner cryptographic overview](local-lxd/reference/cryptographic-overview.md)
@@ -98,7 +99,6 @@ Thinking about using the GitHub runner charm for your next project? [Get in touc
     1. [Token scopes](local-lxd/reference/token-scopes.md)
   1. [Explanation](local-lxd/explanation)
     1. [ARM64](local-lxd/explanation/arm64.md)
-    1. [Charm architecture](local-lxd/reference/charm-architecture.md)
     1. [Security](explanation/security.md)
     1. [SSH Debug](local-lxd/explanation/ssh-debug.md)
 <!-- vale Canonical.004-Canonical-product-names = YES -->
