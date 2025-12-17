@@ -219,6 +219,11 @@ def tmate_ssh_server(
     )
 
     try:
+        log_path = test_config.debug_log_dir / "tmate-server.log"
+        log_path.write_text(
+            container.logs(stdout=True, stderr=True, stream=False).decode("utf-8"),
+            encoding="utf-8",
+        )
         container.remove(force=True)
     except Exception as exc:
         logger.error("Failed to remove tmate container: %s", exc)
