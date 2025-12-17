@@ -320,8 +320,8 @@ def tmate_keys(tmp_test_dir: Path) -> Generator[TmateKeys, None, None]:
         check=True,
     )
 
-    rsa_fingerprint = compute_ssh_fingerprint(rsa_key_path.with_suffix(".pub"))
-    ed25519_fingerprint = compute_ssh_fingerprint(ed_key_path.with_suffix(".pub"))
+    rsa_fingerprint = compute_ssh_fingerprint(str(rsa_key_path.with_suffix(".pub")))
+    ed25519_fingerprint = compute_ssh_fingerprint(str(ed_key_path.with_suffix(".pub")))
 
     yield TmateKeys(
         keys_dir=str(keys_dir),
