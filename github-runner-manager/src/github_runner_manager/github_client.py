@@ -39,6 +39,9 @@ logger = logging.getLogger(__name__)
 # Timeout for GitHub API calls in seconds (5 minutes)
 TIMEOUT_IN_SECS = 5 * 60
 
+# Status code used for non-HTTP errors in metrics
+STATUS_CODE_NOT_AVAILABLE = "n/a"
+
 # Prometheus metrics for GitHub API calls
 GITHUB_API_REQUESTS_TOTAL = Counter(
     name="github_api_requests_total",
@@ -125,19 +128,25 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             raise PlatformApiError from exc
         except URLError as exc:
             # Increment error counter with status_code="n/a" for non-HTTP errors
-            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+            _safe_increment_metric(
+                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+            )
 
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
             # Increment error counter with status_code="n/a" for non-HTTP errors
-            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+            _safe_increment_metric(
+                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+            )
 
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
             # Increment error counter with status_code="n/a" for non-HTTP errors
-            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+            _safe_increment_metric(
+                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+            )
 
             logger.warning("Timeout in GitHub request: %s", exc)
             raise PlatformApiError from exc
