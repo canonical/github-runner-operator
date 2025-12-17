@@ -1,0 +1,101 @@
+02:12:33 WARNING unexpected facade SSHServer received from the controller
+02:12:33 INFO Adding model github-pr-7cec1-lxd:test-charm-fork-path-change-ye8u on cloud localhost
+02:12:33 WARNING unexpected facade SSHServer received from the controller
+02:12:33 WARNING unexpected facade SSHSession received from the controller
+02:12:33 WARNING unexpected facade SSHTunneler received from the controller
+02:12:33 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+02:12:35 INFO Deploying ch:amd64/noble/any-charm-124
+02:12:51 INFO Deploying local:jammy/github-runner-0
+02:12:51 INFO Waiting for model:
+  test-wpjw9sit/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wpjw9sit/0 [allocating] waiting: waiting for machine
+02:13:21 INFO Waiting for model:
+  test-wpjw9sit/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-wpjw9sit/0 [allocating] waiting: agent initialising
+02:13:51 INFO Waiting for model:
+  test-wpjw9sit/0 [allocating] waiting: waiting for machine
+02:14:21 INFO Waiting for model:
+  test-wpjw9sit/0 [allocating] waiting: waiting for machine
+02:14:52 INFO Waiting for model:
+  test-wpjw9sit/0 [executing] waiting: agent initialising
+02:15:22 INFO Waiting for model:
+  test-wpjw9sit/0 [executing] maintenance: installing charm software
+02:15:52 INFO Waiting for model:
+  test-wpjw9sit/0 [executing] maintenance: installing charm software
+02:16:23 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:16:35 INFO GitHub token rate limit: Rate(reset=2025-12-17 03:03:09+00:00, remaining=4779, limit=5000)
+02:16:46 INFO test_path_config_change
+02:16:46 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:17:17 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:17:39 INFO Ensure there is a runner (this calls reconcile)
+02:17:39 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:18:09 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:18:12 INFO Current reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:18:12 INFO Waiting for reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:19:13 INFO Current reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:19:13 INFO Current reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56, expected reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:19:13 INFO Waiting for reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:20:14 INFO Current reconcile ID: 8898ca61-6abe-4d68-934b-c4a72905bdaf
+02:20:14 INFO Current reconcile ID: 8898ca61-6abe-4d68-934b-c4a72905bdaf, expected reconcile ID: cbaa6032-62f4-46bf-b1ca-0ffc57314e56
+02:20:18 INFO Reconciling (again)
+02:20:19 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:20:49 INFO Waiting for model:
+  test-wpjw9sit/0 [idle] active: 
+02:20:58 INFO Current reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:20:58 INFO Waiting for reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:21:59 INFO Current reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:21:59 INFO Current reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9, expected reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:21:59 INFO Waiting for reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:23:00 INFO Current reconcile ID: 9c548734-7ec1-42b5-ad01-b31f0c7c231a
+02:23:00 INFO Current reconcile ID: 9c548734-7ec1-42b5-ad01-b31f0c7c231a, expected reconcile ID: 29815f39-1593-47a6-a700-c9b95be7cae9
+02:24:14 INFO runners: ['test-wpjw9sit-0-n-39a26004aa92']
+02:24:15 INFO runners in github repo: [SelfHostedActionsRunner(name="amd-noble-stg-private-endpoint-ps7-1-n-4ee297991cb4"), SelfHostedActionsRunner(name="os-amd-noble-staging-ps7-1-n-943181d5e2ea"), SelfHostedActionsRunner(name="test-aqsu7pey-0-n-423afb66a4bf"), SelfHostedActionsRunner(name="test-byi4l9ak-0-n-4ec5f1e0d6a7"), SelfHostedActionsRunner(name="test-d2cty5v2-0-n-53048aebd34f"), SelfHostedActionsRunner(name="test-dj8rqgqn-0-n-cdf5f993c0a8"), SelfHostedActionsRunner(name="test-duqppkdb-0-n-0dd92de91edc"), SelfHostedActionsRunner(name="test-eclbs6e4-0-n-4e70e16a4bec"), SelfHostedActionsRunner(name="test-h7iaq1tz-0-n-5cb4cda3b237"), SelfHostedActionsRunner(name="test-h8o6i816-0-n-8aa6ecb577c4"), SelfHostedActionsRunner(name="test-i92taon8-0-n-f2d2a19bc74c"), SelfHostedActionsRunner(name="test-isqo81wb-0-n-99972d04b6d6"), SelfHostedActionsRunner(name="test-itu2sym0-0-n-eb4a16021395"), SelfHostedActionsRunner(name="test-kb3aalu6-0-n-f5cd06fb2803"), SelfHostedActionsRunner(name="test-kd43b1vo-0-n-547487b9dcf3"), SelfHostedActionsRunner(name="test-lkabixr6-0-n-83caa4297461"), SelfHostedActionsRunner(name="test-n8bixmu3-0-n-ba7bb2f14a4d"), SelfHostedActionsRunner(name="test-oa1maz53-0-n-57a16ae466d7"), SelfHostedActionsRunner(name="test-odt58nw4-0-n-ccfe0d0f3b9a"), SelfHostedActionsRunner(name="test-olzxi9o5-0-n-9e06b3437a24"), SelfHostedActionsRunner(name="test-p0bj40y7-0-n-97d75d4b7961"), SelfHostedActionsRunner(name="test-pheg7miz-0-n-913af0f3d596"), SelfHostedActionsRunner(name="test-qm6xu3s3-0-n-95ebe0b13148"), SelfHostedActionsRunner(name="test-rdf6il31-0-n-f61343b8f0d4"), SelfHostedActionsRunner(name="test-runner-uop3s6g0-n-e839e5b98eef"), SelfHostedActionsRunner(name="test-s2kg79uj-0-n-3f6b67d72c0d"), SelfHostedActionsRunner(name="test-s6fzaqj3-0-n-bb308734e57b"), SelfHostedActionsRunner(name="test-sn142xxd-0-n-5077ea2089dd"), SelfHostedActionsRunner(name="test-v0odfxgx-0-n-bdd7dd19aca8"), SelfHostedActionsRunner(name="test-wpjw9sit-0-n-39a26004aa92"), SelfHostedActionsRunner(name="test-xpbibcj4-0-n-04ce78603223"), SelfHostedActionsRunner(name="test-yrnz9i59-0-n-7c13c2b07784")]
+02:24:15 INFO Model status:
+
+Model                             Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-fork-path-change-ye8u  github-pr-7cec1-lxd  localhost/localhost  3.6.12   unsupported  02:24:15Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-wpjw9sit           active      1  any-charm      latest/beta  124  no       
+test-wpjw9sit                                  active      1  github-runner                 0  no       
+
+Unit                                     Workload  Agent  Machine  Public address  Ports  Message
+github-runner-image-builder-wpjw9sit/0*  active    idle   0        10.8.240.132           
+test-wpjw9sit/0*                         active    idle   1        10.8.240.134           
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.8.240.132  juju-366bcd-0  ubuntu@24.04  github-runner  Running
+1        started  10.8.240.134  juju-366bcd-1  ubuntu@22.04  github-runner  Running
+
+02:24:15 INFO Juju error logs:
+
+machine-0: 02:13:17 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 02:13:17 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 02:14:25 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 02:14:25 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-wpjw9sit-0: 02:15:54 ERROR unit.test-wpjw9sit/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-wpjw9sit-0: 02:15:56 ERROR unit.test-wpjw9sit/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-wpjw9sit-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+02:24:15 INFO Forgetting model main...

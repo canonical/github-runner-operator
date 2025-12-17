@@ -1,0 +1,93 @@
+02:26:56 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:27:26 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:27:28 INFO Current reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:27:28 INFO Waiting for reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:28:29 INFO Current reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:28:29 INFO Current reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f, expected reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:28:29 INFO Waiting for reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:29:30 INFO Current reconcile ID: 4430112c-3d65-4825-a300-c79c31b6fa8f
+02:29:30 INFO Current reconcile ID: 4430112c-3d65-4825-a300-c79c31b6fa8f, expected reconcile ID: 12474e31-fb15-4738-aa34-7a0492c3b98f
+02:29:30 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:30:00 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:30:09 INFO Current reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:30:09 INFO Waiting for reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:31:10 INFO Current reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:31:10 INFO Current reconcile ID: 213d1916-1001-485f-8165-f89878bf0624, expected reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:31:10 INFO Waiting for reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:32:11 INFO Current reconcile ID: 261c1440-43d9-40bf-bc8e-a740cceefb04
+02:32:11 INFO Current reconcile ID: 261c1440-43d9-40bf-bc8e-a740cceefb04, expected reconcile ID: 213d1916-1001-485f-8165-f89878bf0624
+02:33:47 INFO [TEST SETUP] Run command pkill -9 run.sh on test-qcdnv6l3-0-n-442c976b4604
+02:33:47 WARNING dict_values([[{'version': 4, 'addr': '10.151.122.248', 'OS-EXT-IPS:type': 'fixed', 'OS-EXT-IPS-MAC:mac_addr': 'fa:16:3e:60:83:ae'}]])
+02:33:48 WARNING ssh_cmd: su - ubuntu -c 'ssh -i /home/runner-manager/.ssh/test-qcdnv6l3-0-n-442c976b4604.key -o "StrictHostKeyChecking no" ubuntu@10.151.122.248 pkill -9 run.sh'
+02:33:49 INFO Run command 'pkill -9 run.sh' in runner with result 0: 'None' 'Warning: Permanently added '10.151.122.248' (ED25519) to the list of known hosts.
+'
+02:33:52 INFO Runner test-qcdnv6l3-0-n-442c976b4604 status: online
+02:33:52 INFO Runner still marked as online, waiting for it to be marked offline
+02:34:52 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:35:22 INFO Waiting for model:
+  test-qcdnv6l3/0 [idle] active: 
+02:35:25 INFO Current reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:35:25 INFO Waiting for reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:36:26 INFO Current reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:36:26 INFO Current reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7, expected reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:36:26 INFO Waiting for reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:37:27 INFO Current reconcile ID: 050403ae-ccd0-4795-819f-0fcbf29547fe
+02:37:27 INFO Current reconcile ID: 050403ae-ccd0-4795-819f-0fcbf29547fe, expected reconcile ID: 1d96fb09-7ff7-494e-b2cc-ed3f902790a7
+02:37:28 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1765938425.945634, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.05579137802124}
+{"timestamp": 1765938554.270526, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.238080024719238}
+{"timestamp": 1765938582.235444, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 10.555588006973267}
+{"timestamp": 1765938711.16935, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 1, "duration": 8.85486125946045}
+{"timestamp": 1765938841.0529578, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 1, "expected_runners": 1, "duration": 9.84046983718872}
+{"timestamp": 1765938772.0, "event": "runner_installed", "flavor": "test-qcdnv6l3", "duration": 192.0}
+{"timestamp": 1765938809.0, "event": "runner_start", "flavor": "test-qcdnv6l3", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 37.0, "queue_duration": 2.0}
+{"timestamp": 1765938828.0, "event": "runner_stop", "flavor": "test-qcdnv6l3", "workflow": "Workflow Dispatch Crash Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "abnormal", "status_info": {"code": 137}, "job_duration": 19.0, "job_conclusion": "cancelled"}
+{"timestamp": 1765938910.4821491, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 16.952596426010132}
+{"timestamp": 1765939044.592518, "event": "reconciliation", "flavor": "test-qcdnv6l3", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.991113424301147}
+02:37:29 INFO Model status:
+
+Model                            Controller           Cloud/Region         Version  SLA          Timestamp
+test-charm-metrics-failure-a562  github-pr-7cec1-lxd  localhost/localhost  3.6.12   unsupported  02:37:29Z
+
+App                                   Version  Status  Scale  Charm          Channel      Rev  Exposed  Message
+github-runner-image-builder-qcdnv6l3           active      1  any-charm      latest/beta  124  no       
+test-qcdnv6l3                                  active      1  github-runner                 0  yes      
+
+Unit                                     Workload  Agent  Machine  Public address  Ports     Message
+github-runner-image-builder-qcdnv6l3/0*  active    idle   0        10.4.138.236              
+test-qcdnv6l3/0*                         active    idle   1        10.4.138.187    8080/tcp  
+
+Machine  State    Address       Inst id        Base          AZ             Message
+0        started  10.4.138.236  juju-0a11a4-0  ubuntu@24.04  github-runner  Running
+1        started  10.4.138.187  juju-0a11a4-1  ubuntu@22.04  github-runner  Running
+
+02:37:29 INFO Juju error logs:
+
+machine-0: 02:13:32 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-0: 02:13:32 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 02:14:39 ERROR juju.worker.dependency "kvm-container-provisioner" manifold worker returned unexpected error: container types not yet available
+machine-1: 02:14:39 ERROR juju.worker.dependency "lxd-container-provisioner" manifold worker returned unexpected error: container types not yet available
+unit-test-qcdnv6l3-0: 02:16:15 ERROR unit.test-qcdnv6l3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 354, in _on_config_changed
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+unit-test-qcdnv6l3-0: 02:16:16 ERROR unit.test-qcdnv6l3/0.juju-log Missing image integration.
+Traceback (most recent call last):
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 119, in func_with_catch_errors
+    func(self, event)
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 317, in _on_start
+    self._check_image_ready()
+  File "/var/lib/juju/agents/unit-test-qcdnv6l3-0/charm/./src/charm.py", line 524, in _check_image_ready
+    raise ImageIntegrationMissingError("No image integration found")
+errors.ImageIntegrationMissingError: No image integration found
+
+02:37:29 INFO Forgetting model main...
