@@ -43,6 +43,38 @@ logger = logging.getLogger(__name__)
 SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
 
 
+@dataclass
+class TmateKeys:
+    """Structured representation of generated tmate SSH key artifacts.
+
+    Attributes:
+        keys_dir: Path to directory containing key files.
+        rsa_fingerprint: SHA256 fingerprint for the RSA public key.
+        ed25519_fingerprint: SHA256 fingerprint for the Ed25519 public key.
+    """
+
+    keys_dir: str
+    rsa_fingerprint: str
+    ed25519_fingerprint: str
+
+
+@dataclass
+class TmateServer:
+    """Structured representation of a running tmate SSH server.
+
+    Attributes:
+        host: The SSH server host.
+        port: The mapped SSH port on the host.
+        rsa_fingerprint: SHA256 fingerprint for the RSA public key.
+        ed25519_fingerprint: SHA256 fingerprint for the Ed25519 public key.
+    """
+
+    host: str
+    port: int
+    rsa_fingerprint: str
+    ed25519_fingerprint: str
+
+
 def wait_for_runner(
     openstack_connection: openstack.connection.Connection,
     test_config: TestConfig,
@@ -222,38 +254,6 @@ def compute_ssh_fingerprint(pub_path: str) -> str:
     except Exception:
         pass
     return ""
-
-
-@dataclass
-class TmateKeys:
-    """Structured representation of generated tmate SSH key artifacts.
-
-    Attributes:
-        keys_dir: Path to directory containing key files.
-        rsa_fingerprint: SHA256 fingerprint for the RSA public key.
-        ed25519_fingerprint: SHA256 fingerprint for the Ed25519 public key.
-    """
-
-    keys_dir: str
-    rsa_fingerprint: str
-    ed25519_fingerprint: str
-
-
-@dataclass
-class TmateServer:
-    """Structured representation of a running tmate SSH server.
-
-    Attributes:
-        host: The SSH server host.
-        port: The mapped SSH port on the host.
-        rsa_fingerprint: SHA256 fingerprint for the RSA public key.
-        ed25519_fingerprint: SHA256 fingerprint for the Ed25519 public key.
-    """
-
-    host: str
-    port: int
-    rsa_fingerprint: str
-    ed25519_fingerprint: str
 
 
 def get_container_mapped_port(
