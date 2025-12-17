@@ -60,7 +60,7 @@ jobs:
             --openstack-http-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_HTTP_PROXY }}" \
             --openstack-no-proxy="${{ vars.INTEGRATION_TEST_OPENSTACK_NO_PROXY }}" \
             --openstack-flavor-name="${{ vars.INTEGRATION_TEST_OPENSTACK_FLAVOR_NAME }}" \
-            --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}"
+            --openstack-image-id="${{ vars.INTEGRATION_TEST_IMAGE_ID }}" \
             --debug-log-dir="/tmp/github-runner-manager-test-logs"
       - name: Print debug logs
         if: ${{ failure() }}
@@ -72,6 +72,3 @@ jobs:
             cat "$log_file"
             echo "================================="
           done
-      - name: Setup tmate session
-        if: ${{ failure() }}
-        uses: canonical/action-tmate@main
