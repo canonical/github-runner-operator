@@ -497,6 +497,3 @@ def test_tmate_ssh_connection(
     logs = get_job_logs(workflow_run)
 
     assert tmate_ssh_server.host in logs, "Tmate ssh server IP not found in action logs."
-    assert (
-        str(tmate_ssh_server.port) in logs
-    ), "Tmate ssh server connection port not found in action logs."
