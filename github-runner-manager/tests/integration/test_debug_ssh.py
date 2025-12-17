@@ -348,11 +348,12 @@ def tmate_ssh_server(
     name = f"test-tmate-{test_config.test_id}"
     client = docker.from_env()
 
+    host = "127.0.0.1"
     # Run container detached and publish port 22 to a 10022 host port,
     # mount the generated keys at /keys so the server can use them.
     container: Container = client.containers.run(
         tmate_image,
-        command=["-h", "0.0.0.0", "-p", "10022", "-k", "/keys/"],
+        command=["-h", host, "-p", "10022", "-k", "/keys/"],
         environment={"SSH_KEYS_PATH": "/keys"},
         detach=True,
         name=name,
@@ -364,7 +365,6 @@ def tmate_ssh_server(
     )
     container.reload()
 
-    host = "127.0.0.1"
     port = get_container_mapped_port(container, "10022/tcp")
     if port is None:
         try:
