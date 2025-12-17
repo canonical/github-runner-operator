@@ -6,6 +6,10 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 - Moved charm-architecture documents from Explanation to Reference category.
 
+## 2025-12-16
+
+- Implemented exponential backoff strategy for reactive consumer message retries to reduce load on dependencies during sustained failures. The backoff starts at 60 seconds and doubles with each retry, capped at 1800 seconds (30 minutes).
+
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
