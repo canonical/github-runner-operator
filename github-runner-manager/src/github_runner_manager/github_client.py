@@ -20,6 +20,7 @@ from fastcore.net import (  # pylint: disable=no-name-in-module
 )
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
+from prometheus_client import Counter
 from requests import RequestException
 from typing_extensions import assert_never
 
@@ -38,6 +39,18 @@ logger = logging.getLogger(__name__)
 # Timeout for GitHub API calls in seconds (5 minutes)
 TIMEOUT_IN_SECS = 5 * 60
 
+# Prometheus metrics for GitHub API calls
+GITHUB_API_REQUESTS_TOTAL = Counter(
+    name="github_api_requests_total",
+    documentation="Total number of GitHub API requests by endpoint",
+    labelnames=["endpoint"],
+)
+GITHUB_API_ERRORS_TOTAL = Counter(
+    name="github_api_errors_total",
+    documentation="Total number of GitHub API errors by endpoint and status code",
+    labelnames=["endpoint", "status_code"],
+)
+
 
 class GithubRunnerNotFoundError(Exception):
     """Represents an error when the runner could not be found on GitHub."""
@@ -47,6 +60,20 @@ class GithubRunnerNotFoundError(Exception):
 ParamT = ParamSpec("ParamT")  # pylint: disable=invalid-name
 # Return type of the function decorated with retry
 ReturnT = TypeVar("ReturnT")
+
+
+def _safe_increment_metric(metric: Counter, **labels: str) -> None:
+    """Safely increment a Prometheus metric, ignoring any errors.
+
+    Args:
+        metric: The Prometheus metric to increment.
+        labels: The labels to apply to the metric.
+    """
+    try:
+        metric.labels(**labels).inc()
+    except Exception:  # pylint: disable=broad-except
+        # Silently ignore metrics errors to avoid disrupting API calls
+        pass
 
 
 def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
@@ -74,10 +101,20 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         Returns:
             The decorated function.
         """
+        endpoint = func.__name__
+
+        # Increment request counter
+        _safe_increment_metric(GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint)
+
         try:
             return func(*args, **kwargs)
         # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
+            # Increment error counter with actual HTTP status code
+            _safe_increment_metric(
+                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
+            )
+
             if exc.code in (401, 403):
                 if exc.code == 401:
                     msg = "Invalid token."
@@ -87,12 +124,21 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except URLError as exc:
+            # Increment error counter with status_code="n/a" for non-HTTP errors
+            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
+            # Increment error counter with status_code="n/a" for non-HTTP errors
+            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
+            # Increment error counter with status_code="n/a" for non-HTTP errors
+            _safe_increment_metric(GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code="n/a")
+
             logger.warning("Timeout in GitHub request: %s", exc)
             raise PlatformApiError from exc
 
