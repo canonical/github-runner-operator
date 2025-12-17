@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-12-17
+
+- Moved charm-architecture.md from Explanation to Reference category.
+
 This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-12-10
