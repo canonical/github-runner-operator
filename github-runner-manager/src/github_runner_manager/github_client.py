@@ -65,20 +65,6 @@ ParamT = ParamSpec("ParamT")  # pylint: disable=invalid-name
 ReturnT = TypeVar("ReturnT")
 
 
-def _safe_increment_metric(metric: Counter, **labels: str) -> None:
-    """Safely increment a Prometheus metric, ignoring any errors.
-
-    Args:
-        metric: The Prometheus metric to increment.
-        labels: The labels to apply to the metric.
-    """
-    try:
-        metric.labels(**labels).inc()
-    except Exception:  # pylint: disable=broad-except
-        # Silently ignore metrics errors to avoid disrupting API calls
-        pass
-
-
 def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
     """Catch HTTP errors and raise custom exceptions.
 
@@ -106,14 +92,12 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         endpoint = func.__name__
 
-        # Increment request counter
         _safe_increment_metric(GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint)
 
         try:
             return func(*args, **kwargs)
         # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
-            # Increment error counter with actual HTTP status code
             _safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
             )
@@ -127,7 +111,6 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except URLError as exc:
-            # Increment error counter with status_code="n/a" for non-HTTP errors
             _safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
@@ -135,7 +118,6 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
-            # Increment error counter with status_code="n/a" for non-HTTP errors
             _safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
@@ -143,7 +125,6 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
-            # Increment error counter with status_code="n/a" for non-HTTP errors
             _safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
@@ -152,6 +133,19 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             raise PlatformApiError from exc
 
     return wrapper
+
+
+def _safe_increment_metric(metric: Counter, **labels: str) -> None:
+    """Safely increment a Prometheus metric, ignoring any errors.
+
+    Args:
+        metric: The Prometheus metric to increment.
+        labels: The labels to apply to the metric.
+    """
+    try:
+        metric.labels(**labels).inc()
+    except Exception:  # pylint: disable=broad-except
+        logger.exception("Failed to increment Prometheus metric")
 
 
 class GithubClient:
