@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-12-17
+
+- Skip contributor check on private-repositories.
+
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the

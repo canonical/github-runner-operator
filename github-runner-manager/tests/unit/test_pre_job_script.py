@@ -114,6 +114,7 @@ def _create_github_event_payload(
     author_association: str,
     event_type: str = "pull_request",
     is_fork: bool = False,
+    is_private: bool = False,
 ) -> Dict:
     """Create a GitHub event payload for testing.
 
@@ -122,6 +123,7 @@ def _create_github_event_payload(
             (OWNER, MEMBER, COLLABORATOR, CONTRIBUTOR, FIRST_TIME_CONTRIBUTOR, NONE, etc.)
         event_type: The type of GitHub event (pull_request, push, issue_comment, etc.)
         is_fork: Whether to simulate a fork PR (only applies to PR events)
+        is_private: Whether the repository is private
 
     Returns:
         A dictionary representing the GitHub event payload
@@ -131,6 +133,7 @@ def _create_github_event_payload(
         "repository": {
             "name": "github-runner-operator",
             "full_name": "canonical/github-runner-operator",
+            "private": is_private,
             "owner": {
                 "login": "canonical",
             },
@@ -463,6 +466,45 @@ def test_allow_external_contributor_enabled_skips_check(
     assert "AUTHOR_ASSOCIATION" not in result.stderr
     assert LOG_AUTH_FAILED not in result.stderr
     assert LOG_CHECK_PASSED not in result.stderr
+
+
+@pytest.mark.parametrize(
+    "author_association",
+    ["CONTRIBUTOR", "FIRST_TIME_CONTRIBUTOR", "NONE"],
+)
+def test_private_repository_skips_contributor_check(
+    pre_job_template: Template,
+    github_env_vars: Dict[str, str],
+    tmp_path: Path,
+    author_association: str,
+    default_template_vars: Dict,
+):
+    """Test that contributor check is skipped for private repositories.
+
+    Private repositories don't allow external contributors to trigger workflows,
+    so the check should be skipped regardless of author association.
+    """
+    # Create a fork PR event for a private repository
+    private_repo_event = _create_github_event_payload(
+        author_association=author_association,
+        is_fork=True,
+        is_private=True,
+    )
+
+    result = render_and_execute_script(
+        template=pre_job_template,
+        template_vars=default_template_vars,
+        env_vars=github_env_vars,
+        github_event=private_repo_event,
+        tmp_path=tmp_path,
+    )
+
+    assert result.returncode == 0, (
+        f"Expected exit code 0 for private repository with {author_association}, "
+        f"got {result.returncode}\nstderr: {result.stderr}"
+    )
+    assert "Private repository detected - contributor check skipped" in result.stderr
+    assert LOG_AUTH_FAILED not in result.stderr
 
 
 @pytest.mark.parametrize(

@@ -142,6 +142,12 @@ jq -n \
     local event_name="$1"
     local event_path="$2"
     
+    # Check if repository is private
+    local is_private=$(jq -r '.repository.private // false' "$event_path")
+    if [[ "$is_private" == "true" ]]; then
+      logger -s "Private repository detected - contributor check skipped"
+      return 0
+    fi
 
     # Skip check for non-contributor events
     if [[ "$event_name" != "pull_request" && "$event_name" != "pull_request_target" && 
