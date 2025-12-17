@@ -51,7 +51,6 @@ def _start_cli_server(config_file_path: Path, port: int, host: str = "127.0.0.1"
         config_file_path: Path to the configuration file.
         port: Port to listen on.
         host: Host to listen on.
-        log_file_path: Path to the log file. If None, logs to stderr.
     """
     runner = CliRunner()
     args = [
