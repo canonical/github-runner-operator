@@ -5,6 +5,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 ## 2025-12-17
 
 - Extend contributor check on private-repositories to contributors.
+- Moved charm-architecture documents from Explanation to Reference category.
 
 ## 2025-12-16
 
