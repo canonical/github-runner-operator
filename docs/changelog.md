@@ -2,6 +2,10 @@
 
 This changelog documents user-relevant changes to the GitHub runner charm.
 
+## 2025-12-18
+
+- Added Prometheus metrics for GitHub API monitoring to track request volume and errors by endpoint, helping diagnose rate-limit and token issues in production.
+
 ## 2025-12-10
 
 - Removed apt update step in cloud-init of the VM creation step since it is now applied in the
