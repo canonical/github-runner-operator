@@ -29,8 +29,6 @@ jobs:
       - name: Install tox with UV
         run: uv tool install tox --with tox-uv
       - name: configure DockerHub mirror
-        env:
-          DOCKERHUB_MIRROR: ${{ vars.DOCKERHUB_MIRROR }}
         run: |
           echo "{\"registry-mirrors\": [\"$DOCKERHUB_MIRROR\"]}" | sudo tee /etc/docker/daemon.json
           sudo systemctl restart docker.service
