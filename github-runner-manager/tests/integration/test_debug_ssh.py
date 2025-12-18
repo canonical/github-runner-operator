@@ -490,8 +490,7 @@ def test_tmate_ssh_connection(
         ref=github_branch,
         inputs={"runner": test_config.labels[0]},
     )
-    # Note: The workflow will fail or timeout if the SSH connection cannot be established.
-    # This test waits up to 900 seconds for workflow completion.
+    # The workflow is expected to fail due to timeout.
     workflow_run = get_workflow_dispatch_run(
         workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
@@ -499,10 +498,9 @@ def test_tmate_ssh_connection(
         workflow_run, timeout=900
     ), "Workflow did not complete or timed out."
 
-    # Verify workflow succeeded (SSH connection was established)
-    assert workflow_run.conclusion == "success", (
-        f"Workflow did not succeed. Conclusion: {workflow_run.conclusion}"
-    )
+    assert (
+        workflow_run.conclusion == "success"
+    ), f"Workflow did not succeed. Conclusion: {workflow_run.conclusion}"
 
     logs = get_job_logs(workflow_run)
 
