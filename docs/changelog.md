@@ -4,7 +4,7 @@ This changelog documents user-relevant changes to the GitHub runner charm.
 
 ## 2025-12-17
 
-- Skip contributor check on private-repositories.
+- Extend contributor check on private-repositories to contributors.
 
 ## 2025-12-16
 
