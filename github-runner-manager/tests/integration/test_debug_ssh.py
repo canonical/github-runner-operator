@@ -351,7 +351,7 @@ def tmate_ssh_server(
     client = docker.from_env()
 
     host = "127.0.0.1"
-    # Run container detached and publish port 22 to a TMATE_SSH_PORT host port,
+    # Run container detached and publish port 22 to host port (defined by TMATE_SSH_PORT constant),
     # mount the generated keys at /keys so the server can use them.
     container: Container = client.containers.run(
         tmate_image,
@@ -499,7 +499,6 @@ def test_tmate_ssh_connection(
     ), "Workflow did not complete or timed out."
 
     # Verify workflow succeeded (SSH connection was established)
-    workflow_run.update()
     assert workflow_run.conclusion == "success", (
         f"Workflow did not succeed. Conclusion: {workflow_run.conclusion}"
     )
