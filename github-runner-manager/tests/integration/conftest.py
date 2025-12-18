@@ -62,7 +62,7 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
 
 @pytest.fixture(scope="module")
-def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
+def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
     """Get OpenStack configuration from pytest options or environment.
 
     Args:
