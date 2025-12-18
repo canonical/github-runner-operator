@@ -551,7 +551,7 @@ def test_public_repository_blocks_contributor(
         f"Expected exit code 1 for public repository with CONTRIBUTOR, "
         f"got {result.returncode}\nstderr: {result.stderr}"
     )
-    assert f"Author association: CONTRIBUTOR, is allowed: false" in result.stderr
+    assert "Author association: CONTRIBUTOR, is allowed: false" in result.stderr
     assert LOG_AUTH_FAILED in result.stderr
     # Should not see private repo message for public repos
     assert "Private repository - extended authorization includes CONTRIBUTOR" not in result.stderr
