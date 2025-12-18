@@ -213,7 +213,6 @@ def get_workflow_dispatch_run(
 
         except GithubException:
             logger.warning("Error fetching workflow runs", exc_info=True)
-            pass
 
         sleep(5)
 

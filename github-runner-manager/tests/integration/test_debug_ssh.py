@@ -41,6 +41,7 @@ from .github_helpers import (
 logger = logging.getLogger(__name__)
 
 SSH_DEBUG_WORKFLOW_FILE_NAME = "workflow_dispatch_ssh_debug.yaml"
+TMATE_SSH_PORT = 10022
 
 
 @dataclass
@@ -251,8 +252,8 @@ def compute_ssh_fingerprint(pub_path: str) -> str:
         parts = out.split()
         if len(parts) >= 2 and parts[1].startswith("SHA256:"):
             return parts[1]
-    except Exception:
-        pass
+    except (OSError, subprocess.SubprocessError) as exc:
+        logger.error("Failed to compute SSH fingerprint for %s: %s", pub_path, exc)
     return ""
 
 
@@ -349,15 +350,15 @@ def tmate_ssh_server(
     client = docker.from_env()
 
     host = "127.0.0.1"
-    # Run container detached and publish port 22 to a 10022 host port,
+    # Run container detached and publish port 22 to a TMATE_SSH_PORT host port,
     # mount the generated keys at /keys so the server can use them.
     container: Container = client.containers.run(
         tmate_image,
-        command=["-h", host, "-p", "10022", "-k", "/keys/"],
+        command=["-h", host, "-p", str(TMATE_SSH_PORT), "-k", "/keys/"],
         environment={"SSH_KEYS_PATH": "/keys"},
         detach=True,
         name=name,
-        ports={"10022/tcp": "10022/tcp"},
+        ports={f"{TMATE_SSH_PORT}/tcp": f"{TMATE_SSH_PORT}/tcp"},
         volumes={tmate_keys.keys_dir: {"bind": "/keys", "mode": "ro"}},
         user="root",
         cap_add=["SYS_ADMIN"],
@@ -365,13 +366,12 @@ def tmate_ssh_server(
     )
     container.reload()
 
-    port = get_container_mapped_port(container, "10022/tcp")
+    port = get_container_mapped_port(container, f"{TMATE_SSH_PORT}/tcp")
     if port is None:
         try:
             container.remove(force=True)
-        except Exception as exc:
+        except docker.errors.DockerException as exc:
             logger.error("Failed to remove tmate container: %s", exc)
-            pass
         pytest.fail(f"Failed to get tmate container SSH port: {port}")
 
     yield TmateServer(
@@ -488,12 +488,19 @@ def test_tmate_ssh_connection(
         ref=github_branch,
         inputs={"runner": test_config.labels[0]},
     )
+    # The workflow will timeout waiting for SSH connection, expect failure
     workflow_run = get_workflow_dispatch_run(
         workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
     assert wait_for_workflow_completion(
         workflow_run, timeout=900
-    ), "Workflow did not complete successfully or timed out."
+    ), "Workflow did not complete or timed out."
+    
+    # Verify workflow succeeded (SSH connection was established)
+    assert workflow_run.conclusion == "success", (
+        f"Workflow did not succeed. Conclusion: {workflow_run.conclusion}"
+    )
+    
     logs = get_job_logs(workflow_run)
 
     assert tmate_ssh_server.host in logs, "Tmate ssh server IP not found in action logs."
