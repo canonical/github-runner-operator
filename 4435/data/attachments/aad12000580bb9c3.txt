@@ -1,0 +1,36 @@
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 INFO Adding model github-pr-b73ad-lxd:test-charm-metrics-success-r9dw on cloud localhost
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 WARNING unexpected facade SSHSession received from the controller
+06:19:36 WARNING unexpected facade SSHTunneler received from the controller
+06:19:36 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:38 INFO Deploying ch:amd64/noble/any-charm-124
+06:19:53 INFO Deploying local:jammy/github-runner-0
+06:19:53 INFO Waiting for model:
+  test-jz923ner/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jz923ner/0 [allocating] waiting: waiting for machine
+06:20:23 INFO Waiting for model:
+  test-jz923ner/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-jz923ner/0 [executing] maintenance: installing charm software
+06:20:53 INFO Waiting for model:
+  test-jz923ner/0 [allocating] waiting: waiting for machine
+06:21:24 INFO Waiting for model:
+  test-jz923ner/0 [allocating] waiting: agent initialising
+06:21:54 INFO Waiting for model:
+  test-jz923ner/0 [executing] maintenance: installing charm software
+06:22:24 INFO Waiting for model:
+  test-jz923ner/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-jz923ner/0 [executing] active: 
+06:22:54 INFO Waiting for model:
+  test-jz923ner/0 [idle] active:
+06:23:04 INFO Waiting for model:
+  test-jz923ner/0 [idle] active: 
+06:23:34 INFO Waiting for model:
+  test-jz923ner/0 [idle] active: 
+06:23:37 INFO Current reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72
+06:23:37 INFO Waiting for reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72
+06:24:38 INFO Current reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72
+06:24:38 INFO Current reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72, expected reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72
+06:24:38 INFO Waiting for reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72
+06:25:39 INFO Current reconcile ID: f0a49022-768b-49cf-859b-71fef426d907
+06:25:39 INFO Current reconcile ID: f0a49022-768b-49cf-859b-71fef426d907, expected reconcile ID: 2ad3bfb0-c3fe-45db-b140-c878ea4f9a72

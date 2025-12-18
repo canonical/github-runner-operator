@@ -1,0 +1,105 @@
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 INFO Adding model github-pr-b73ad-lxd:test-reactive-k3cl on cloud localhost
+06:19:36 WARNING unexpected facade SSHServer received from the controller
+06:19:36 WARNING unexpected facade SSHSession received from the controller
+06:19:36 WARNING unexpected facade SSHTunneler received from the controller
+06:19:37 INFO GitHub token rate limit: Rate(reset=2025-12-18 06:21:51+00:00, remaining=2158, limit=5000)
+06:19:41 INFO Deploying ch:amd64/jammy/mongodb-249
+06:19:41 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+06:19:44 INFO Deploying ch:amd64/noble/any-charm-124
+06:20:01 INFO Deploying local:jammy/github-runner-0
+06:20:01 INFO Waiting for model:
+  test-lfn94yll/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lfn94yll/0 [allocating] waiting: waiting for machine
+06:20:32 INFO Waiting for model:
+  test-lfn94yll/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-lfn94yll/0 [allocating] waiting: agent initialising
+06:21:02 INFO Waiting for model:
+  test-lfn94yll/0 [allocating] waiting: waiting for machine
+06:21:32 INFO Waiting for model:
+  test-lfn94yll/0 [allocating] waiting: agent initialising
+06:22:02 INFO Waiting for model:
+  test-lfn94yll/0 [executing] maintenance: installing charm software
+06:22:33 INFO Waiting for model:
+  test-lfn94yll/0 [executing] maintenance: Update image for runners
+  github-runner-image-builder-lfn94yll/0 [idle] active: 
+06:23:03 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:23:08 WARNING relate is deprecated and will be removed. Use integrate instead.
+06:23:09 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:23:39 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+  mongodb/0 [idle] active: 
+06:23:47 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:24:17 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:24:20 INFO Current reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:24:20 INFO Waiting for reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:25:21 INFO Current reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:25:21 INFO Current reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9, expected reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:25:21 INFO Waiting for reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:26:22 INFO Current reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:26:22 INFO Current reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f, expected reconcile ID: 34c5c363-2863-449e-ae6d-ac7ba2aae1f9
+06:26:24 INFO Wait for condition not met, sleeping 10
+06:26:45 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:27:01 INFO Current reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:27:01 INFO Waiting for reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:28:02 INFO Current reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:28:02 INFO Current reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f, expected reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:28:02 INFO Waiting for reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:29:03 INFO Current reconcile ID: c55c86ee-cd01-4a3b-b72a-443b37a662e3
+06:29:03 INFO Current reconcile ID: c55c86ee-cd01-4a3b-b72a-443b37a662e3, expected reconcile ID: 5172f8d5-12db-4ee1-8198-d66383ba677f
+06:29:04 INFO Wait for condition not met, sleeping 60
+06:30:04 INFO Wait for condition not met, sleeping 60
+06:31:04 INFO Wait for condition not met, sleeping 60
+06:32:05 INFO Wait for condition not met, sleeping 60
+06:33:05 INFO Wait for condition not met, sleeping 60
+06:34:05 INFO Wait for condition not met, sleeping 60
+06:35:06 INFO Wait for condition not met, sleeping 60
+06:36:06 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:36:22 INFO Current reconcile ID: 4452da0a-6394-47f6-9c6c-746e75e46c71
+06:36:22 INFO Waiting for reconcile ID: 4452da0a-6394-47f6-9c6c-746e75e46c71
+06:37:23 INFO Current reconcile ID: 2c6e1766-dabf-4278-9bf2-1842b9962187
+06:37:23 INFO Current reconcile ID: 2c6e1766-dabf-4278-9bf2-1842b9962187, expected reconcile ID: 4452da0a-6394-47f6-9c6c-746e75e46c71
+06:37:24 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766039301.481941, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.973621368408203}
+{"timestamp": 1766039430.5242383, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.921392440795898}
+{"timestamp": 1766039561.670355, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.02569031715393}
+{"timestamp": 1766039691.520385, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.75908088684082}
+{"timestamp": 1766039694.0, "event": "runner_installed", "flavor": "test-lfn94yll", "duration": 271.0}
+{"timestamp": 1766039701.0, "event": "runner_start", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 514.0}
+{"timestamp": 1766039705.0, "event": "runner_stop", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1766039825.5477374, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.91835069656372}
+
+06:37:26 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766039301.481941, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.973621368408203}
+{"timestamp": 1766039430.5242383, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.921392440795898}
+{"timestamp": 1766039561.670355, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.02569031715393}
+{"timestamp": 1766039691.520385, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.75908088684082}
+{"timestamp": 1766039694.0, "event": "runner_installed", "flavor": "test-lfn94yll", "duration": 271.0}
+{"timestamp": 1766039701.0, "event": "runner_start", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 514.0}
+{"timestamp": 1766039705.0, "event": "runner_stop", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1766039825.5477374, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.91835069656372}
+
+06:37:27 INFO File content of /var/log/github-runner-metrics.log: {"timestamp": 1766039301.481941, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.973621368408203}
+{"timestamp": 1766039430.5242383, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 8.921392440795898}
+{"timestamp": 1766039561.670355, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 11.02569031715393}
+{"timestamp": 1766039691.520385, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 9.75908088684082}
+{"timestamp": 1766039694.0, "event": "runner_installed", "flavor": "test-lfn94yll", "duration": 271.0}
+{"timestamp": 1766039701.0, "event": "runner_start", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "idle": 7.0, "queue_duration": 514.0}
+{"timestamp": 1766039705.0, "event": "runner_stop", "flavor": "test-lfn94yll", "workflow": "Workflow Dispatch Tests", "repo": "canonical/github-runner-operator", "github_event": "workflow_dispatch", "status": "normal", "job_duration": 4.0, "job_conclusion": "success"}
+{"timestamp": 1766039825.5477374, "event": "reconciliation", "flavor": "test-lfn94yll", "crashed_runners": 0, "idle_runners": 0, "active_runners": 0, "expected_runners": 0, "duration": 13.91835069656372}
+06:37:27 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:37:57 INFO Waiting for model:
+  test-lfn94yll/0 [idle] active: 
+06:37:59 INFO Current reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
+06:37:59 INFO Waiting for reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
+06:39:00 INFO Current reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
+06:39:00 INFO Current reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0, expected reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
+06:39:00 INFO Waiting for reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
+06:40:01 INFO Current reconcile ID: abfa4a27-f292-4fdf-8f83-5e91ee829bae
+06:40:01 INFO Current reconcile ID: abfa4a27-f292-4fdf-8f83-5e91ee829bae, expected reconcile ID: 9d088041-3a03-4d60-a578-6dbfbbb651f0
