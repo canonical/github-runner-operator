@@ -351,8 +351,9 @@ def tmate_ssh_server(
     client = docker.from_env()
 
     host = "127.0.0.1"
-    # Run container detached and publish port 22 to host port (defined by TMATE_SSH_PORT constant),
-    # mount the generated keys at /keys so the server can use them.
+    # Run container detached and map container's internal SSH port 22 to host port
+    # (defined by TMATE_SSH_PORT constant), mount the generated keys at /keys
+    # so the server can use them.
     container: Container = client.containers.run(
         tmate_image,
         command=["-h", host, "-p", str(TMATE_SSH_PORT), "-k", "/keys/"],
@@ -489,8 +490,8 @@ def test_tmate_ssh_connection(
         ref=github_branch,
         inputs={"runner": test_config.labels[0]},
     )
-    # Note: This workflow will timeout if SSH connection cannot be established.
-    # The test expects the workflow to succeed, indicating successful SSH connection.
+    # Note: The workflow will fail or timeout if the SSH connection cannot be established.
+    # This test waits up to 900 seconds for workflow completion.
     workflow_run = get_workflow_dispatch_run(
         workflow=workflow, ref=github_branch, dispatch_time=dispatch_time
     )
