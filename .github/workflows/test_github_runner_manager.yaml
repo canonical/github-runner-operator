@@ -20,7 +20,6 @@ jobs:
       matrix:
         test-module:
           - test_debug_ssh
-          # - test_external_contributor_security
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.1
