@@ -14,6 +14,7 @@ from time import sleep
 from typing import Generator, Iterator
 
 import docker
+import docker.errors
 import openstack
 import pytest
 import yaml
@@ -252,7 +253,7 @@ def compute_ssh_fingerprint(pub_path: str) -> str:
         parts = out.split()
         if len(parts) >= 2 and parts[1].startswith("SHA256:"):
             return parts[1]
-    except (OSError, subprocess.SubprocessError) as exc:
+    except (OSError, FileNotFoundError) as exc:
         logger.error("Failed to compute SSH fingerprint for %s: %s", pub_path, exc)
     return ""
 
