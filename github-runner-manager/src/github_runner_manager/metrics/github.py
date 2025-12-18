@@ -20,16 +20,13 @@ logger = logging.getLogger(__name__)
 
 # Status code used for non-HTTP errors in metrics
 STATUS_CODE_NOT_AVAILABLE = "n/a"
+# Status code used for successful HTTP requests
+STATUS_CODE_SUCCESS = "2xx"
 
 # Prometheus metrics for GitHub API calls
 GITHUB_API_REQUESTS_TOTAL = Counter(
     name="github_api_requests_total",
-    documentation="Total number of GitHub API requests by endpoint",
-    labelnames=["endpoint"],
-)
-GITHUB_API_ERRORS_TOTAL = Counter(
-    name="github_api_errors_total",
-    documentation="Total number of GitHub API errors by endpoint and status code",
+    documentation="Total number of GitHub API requests by endpoint and status code",
     labelnames=["endpoint", "status_code"],
 )
 

@@ -26,9 +26,9 @@ from typing_extensions import assert_never
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID
 from github_runner_manager.metrics.github import (
-    GITHUB_API_ERRORS_TOTAL,
     GITHUB_API_REQUESTS_TOTAL,
     STATUS_CODE_NOT_AVAILABLE,
+    STATUS_CODE_SUCCESS,
 )
 from github_runner_manager.metrics.utils import safe_increment_metric
 from github_runner_manager.platform.platform_provider import (
@@ -82,14 +82,16 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         endpoint = func.__name__
 
-        safe_increment_metric(GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint)
-
         try:
-            return func(*args, **kwargs)
+            result = func(*args, **kwargs)
+            safe_increment_metric(
+                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_SUCCESS
+            )
+            return result
         # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
             safe_increment_metric(
-                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
+                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
             )
 
             if exc.code in (401, 403):
@@ -102,21 +104,21 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             raise PlatformApiError from exc
         except URLError as exc:
             safe_increment_metric(
-                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
             safe_increment_metric(
-                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
             safe_increment_metric(
-                GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
+                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
             logger.warning("Timeout in GitHub request: %s", exc)
