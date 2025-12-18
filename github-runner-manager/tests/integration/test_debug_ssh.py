@@ -253,7 +253,7 @@ def compute_ssh_fingerprint(pub_path: str) -> str:
         parts = out.split()
         if len(parts) >= 2 and parts[1].startswith("SHA256:"):
             return parts[1]
-    except (OSError, FileNotFoundError) as exc:
+    except OSError as exc:
         logger.error("Failed to compute SSH fingerprint for %s: %s", pub_path, exc)
     return ""
 
@@ -499,6 +499,7 @@ def test_tmate_ssh_connection(
     ), "Workflow did not complete or timed out."
 
     # Verify workflow succeeded (SSH connection was established)
+    workflow_run.update()
     assert workflow_run.conclusion == "success", (
         f"Workflow did not succeed. Conclusion: {workflow_run.conclusion}"
     )
