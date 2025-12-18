@@ -8,7 +8,7 @@ Migrate to PyGithub in the future. PyGithub is still lacking some API such as ge
 import functools
 import logging
 from datetime import datetime
-from typing import Callable, ParamSpec, TypeVar
+from typing import Any, Callable, ParamSpec, TypeVar
 from urllib.error import HTTPError, URLError
 
 import requests
@@ -55,6 +55,91 @@ ParamT = ParamSpec("ParamT")  # pylint: disable=invalid-name
 ReturnT = TypeVar("ReturnT")
 
 
+class _MetricsTrackingProxy:  # pylint: disable=too-few-public-methods
+    """Proxy class that tracks metrics for API method calls."""
+
+    def __init__(self, target: Any, endpoint_prefix: str):
+        """Initialize the proxy.
+
+        Args:
+            target: The target object to proxy.
+            endpoint_prefix: Prefix for endpoint names in metrics.
+        """
+        self._target = target
+        self._endpoint_prefix = endpoint_prefix
+
+    def __getattr__(self, name: str) -> Any:
+        """Intercept attribute access to track metrics.
+
+        Args:
+            name: Attribute name.
+
+        Returns:
+            The attribute, wrapped if it's a callable.
+        """
+        attr = getattr(self._target, name)
+        if callable(attr):
+            endpoint = f"{self._endpoint_prefix}.{name}"
+
+            def wrapper(*args: Any, **kwargs: Any) -> Any:
+                """Wrap the method call to track metrics.
+
+                Args:
+                    args: Positional arguments for the wrapped method.
+                    kwargs: Keyword arguments for the wrapped method.
+
+                Raises:
+                    HTTPError: If the API call returns an HTTP error.
+                    URLError: If there's a URL-related error.
+                    RequestException: If there's a request-related error.
+                    TimeoutError: If the request times out.
+
+                Returns:
+                    The result of the wrapped method call.
+                """
+                try:
+                    result = attr(*args, **kwargs)
+                    safe_increment_metric(
+                        GITHUB_API_REQUESTS_TOTAL,
+                        endpoint=endpoint,
+                        status_code=STATUS_CODE_SUCCESS,
+                    )
+                    return result
+                except HTTPError as exc:
+                    safe_increment_metric(
+                        GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
+                    )
+                    raise
+                except (URLError, RequestException, TimeoutError):
+                    safe_increment_metric(
+                        GITHUB_API_REQUESTS_TOTAL,
+                        endpoint=endpoint,
+                        status_code=STATUS_CODE_NOT_AVAILABLE,
+                    )
+                    raise
+
+            return wrapper
+        # For non-callables, return another proxy to handle nested attributes
+        return _MetricsTrackingProxy(attr, f"{self._endpoint_prefix}.{name}")
+
+
+class _InstrumentedGhApi(GhApi):
+    """GhApi client instrumented with metrics tracking."""
+
+    def __getattr__(self, name: str) -> Any:
+        """Intercept attribute access to add metrics tracking.
+
+        Args:
+            name: Attribute name.
+
+        Returns:
+            The attribute, wrapped with metrics tracking if applicable.
+        """
+        attr = super().__getattr__(name)
+        # Return a proxy that will track metrics for method calls
+        return _MetricsTrackingProxy(attr, name)
+
+
 def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, ReturnT]:
     """Catch HTTP errors and raise custom exceptions.
 
@@ -80,20 +165,10 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         Returns:
             The decorated function.
         """
-        endpoint = func.__name__
-
         try:
-            result = func(*args, **kwargs)
-            safe_increment_metric(
-                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_SUCCESS
-            )
-            return result
+            return func(*args, **kwargs)
         # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
-            safe_increment_metric(
-                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
-            )
-
             if exc.code in (401, 403):
                 if exc.code == 401:
                     msg = "Invalid token."
@@ -103,24 +178,12 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except URLError as exc:
-            safe_increment_metric(
-                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
-            )
-
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
-            safe_increment_metric(
-                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
-            )
-
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
-            safe_increment_metric(
-                GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
-            )
-
             logger.warning("Timeout in GitHub request: %s", exc)
             raise PlatformApiError from exc
 
@@ -137,7 +200,7 @@ class GithubClient:
             token: GitHub personal token for API requests.
         """
         self._token = token
-        self._client = GhApi(token=self._token)
+        self._client = _InstrumentedGhApi(token=self._token)
 
     @catch_http_errors
     def get_runner(self, path: GitHubPath, prefix: str, runner_id: int) -> SelfHostedRunner:
