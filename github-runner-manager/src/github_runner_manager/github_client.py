@@ -20,12 +20,17 @@ from fastcore.net import (  # pylint: disable=no-name-in-module
 )
 from ghapi.all import GhApi, pages
 from ghapi.page import paged
-from prometheus_client import Counter
 from requests import RequestException
 from typing_extensions import assert_never
 
 from github_runner_manager.configuration.github import GitHubOrg, GitHubPath, GitHubRepo
 from github_runner_manager.manager.models import InstanceID
+from github_runner_manager.metrics.github import (
+    GITHUB_API_ERRORS_TOTAL,
+    GITHUB_API_REQUESTS_TOTAL,
+    STATUS_CODE_NOT_AVAILABLE,
+)
+from github_runner_manager.metrics.utils import safe_increment_metric
 from github_runner_manager.platform.platform_provider import (
     DeleteRunnerBusyError,
     JobNotFoundError,
@@ -38,21 +43,6 @@ logger = logging.getLogger(__name__)
 
 # Timeout for GitHub API calls in seconds (5 minutes)
 TIMEOUT_IN_SECS = 5 * 60
-
-# Status code used for non-HTTP errors in metrics
-STATUS_CODE_NOT_AVAILABLE = "n/a"
-
-# Prometheus metrics for GitHub API calls
-GITHUB_API_REQUESTS_TOTAL = Counter(
-    name="github_api_requests_total",
-    documentation="Total number of GitHub API requests by endpoint",
-    labelnames=["endpoint"],
-)
-GITHUB_API_ERRORS_TOTAL = Counter(
-    name="github_api_errors_total",
-    documentation="Total number of GitHub API errors by endpoint and status code",
-    labelnames=["endpoint", "status_code"],
-)
 
 
 class GithubRunnerNotFoundError(Exception):
@@ -92,13 +82,13 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
         """
         endpoint = func.__name__
 
-        _safe_increment_metric(GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint)
+        safe_increment_metric(GITHUB_API_REQUESTS_TOTAL, endpoint=endpoint)
 
         try:
             return func(*args, **kwargs)
         # The ghapi module uses urllib. The HTTPError and URLError are urllib exceptions.
         except HTTPError as exc:
-            _safe_increment_metric(
+            safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=str(exc.code)
             )
 
@@ -111,21 +101,21 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except URLError as exc:
-            _safe_increment_metric(
+            safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
             logger.warning("General error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except RequestException as exc:
-            _safe_increment_metric(
+            safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
             logger.warning("Error in GitHub request: %s", exc)
             raise PlatformApiError from exc
         except TimeoutError as exc:
-            _safe_increment_metric(
+            safe_increment_metric(
                 GITHUB_API_ERRORS_TOTAL, endpoint=endpoint, status_code=STATUS_CODE_NOT_AVAILABLE
             )
 
@@ -133,19 +123,6 @@ def catch_http_errors(func: Callable[ParamT, ReturnT]) -> Callable[ParamT, Retur
             raise PlatformApiError from exc
 
     return wrapper
-
-
-def _safe_increment_metric(metric: Counter, **labels: str) -> None:
-    """Safely increment a Prometheus metric, ignoring any errors.
-
-    Args:
-        metric: The Prometheus metric to increment.
-        labels: The labels to apply to the metric.
-    """
-    try:
-        metric.labels(**labels).inc()
-    except Exception:  # pylint: disable=broad-except
-        logger.exception("Failed to increment Prometheus metric")
 
 
 class GithubClient:
