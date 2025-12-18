@@ -62,14 +62,17 @@ def github_config(pytestconfig: pytest.Config) -> GitHubConfig:
 
 
 @pytest.fixture(scope="module")
-def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig | None:
+def openstack_config(pytestconfig: pytest.Config) -> OpenStackConfig:
     """Get OpenStack configuration from pytest options or environment.
 
     Args:
         pytestconfig: Pytest configuration object.
 
     Returns:
-        OpenStack configuration object, or None if not all parameters are provided.
+        OpenStack configuration object.
+
+    Raises:
+        AssertionError: If not all required parameters are provided.
     """
     auth_url = pytestconfig.getoption("--openstack-auth-url")
     project = pytestconfig.getoption("--openstack-project")
