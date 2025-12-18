@@ -1,0 +1,47 @@
+18:19:15 WARNING unexpected facade SSHServer received from the controller
+18:19:15 INFO Adding model github-pr-b73ad-lxd:test-charm-runner-0p76 on cloud localhost
+18:19:15 WARNING unexpected facade SSHServer received from the controller
+18:19:15 WARNING unexpected facade SSHSession received from the controller
+18:19:15 WARNING unexpected facade SSHTunneler received from the controller
+18:19:15 INFO Deploying fake image builder via any-charm for image ID 1ad6e456-fa35-47ef-988f-1e793a60f258
+18:19:17 INFO Deploying ch:amd64/noble/any-charm-124
+18:19:32 INFO Deploying local:jammy/github-runner-0
+18:19:32 INFO Waiting for model:
+  test-rs2sqnuq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rs2sqnuq/0 [allocating] waiting: waiting for machine
+18:20:02 INFO Waiting for model:
+  test-rs2sqnuq/0 [allocating] waiting: waiting for machine
+  github-runner-image-builder-rs2sqnuq/0 [idle] active: 
+18:20:32 INFO Waiting for model:
+  test-rs2sqnuq/0 [allocating] waiting: waiting for machine
+18:21:02 INFO Waiting for model:
+  test-rs2sqnuq/0 [allocating] waiting: installing agent
+18:21:32 INFO Waiting for model:
+  test-rs2sqnuq/0 [executing] maintenance: installing charm software
+18:22:02 INFO Waiting for model:
+  test-rs2sqnuq/0 [executing] blocked: Please provide image integration.
+  github-runner-image-builder-rs2sqnuq/0 [idle] active: 
+18:22:33 INFO Waiting for model:
+  test-rs2sqnuq/0 [idle] active:
+18:22:39 INFO Waiting for model:
+  test-rs2sqnuq/0 [idle] active: 
+18:23:09 INFO Waiting for model:
+  test-rs2sqnuq/0 [idle] active: 
+18:23:12 INFO Current reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:23:12 INFO Waiting for reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:24:13 INFO Current reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:24:13 INFO Current reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da, expected reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:24:13 INFO Waiting for reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:25:14 INFO Current reconcile ID: 867688fb-9a16-4eeb-a105-c5e9252de2e9
+18:25:14 INFO Current reconcile ID: 867688fb-9a16-4eeb-a105-c5e9252de2e9, expected reconcile ID: dd7ea507-f076-43ce-ad19-3f33d3c878da
+18:25:22 INFO Waiting for model:
+  test-rs2sqnuq/0 [idle] active: 
+18:25:53 INFO Waiting for model:
+  test-rs2sqnuq/0 [idle] active: 
+18:25:55 INFO Current reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
+18:25:55 INFO Waiting for reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
+18:26:56 INFO Current reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
+18:26:56 INFO Current reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7, expected reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
+18:26:56 INFO Waiting for reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
+18:27:57 INFO Current reconcile ID: e8f2f6a8-8292-4884-8876-34af2bb63df3
+18:27:57 INFO Current reconcile ID: e8f2f6a8-8292-4884-8876-34af2bb63df3, expected reconcile ID: c8d0f9b8-cfe1-4d82-ab2b-545f9d60a7e7
